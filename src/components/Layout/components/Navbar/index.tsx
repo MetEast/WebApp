@@ -3,6 +3,7 @@ import { TypeNavbarItem } from 'src/types/layout-types';
 import NavbarItem from './components/NavbarItem';
 import { Box } from '@mui/material';
 import { Home24Filled, AppFolder24Filled, Box24Filled, Person24Filled } from '@fluentui/react-icons';
+import { useLocation } from 'react-router-dom';
 
 const navbarItemList: Array<TypeNavbarItem> = [
     {
@@ -28,6 +29,8 @@ const navbarItemList: Array<TypeNavbarItem> = [
 ];
 
 const Navbar: React.FC = (): JSX.Element => {
+    const location = useLocation();
+
     return <Box sx={{
         width: "100%",
         position: "fixed",
@@ -40,7 +43,9 @@ const Navbar: React.FC = (): JSX.Element => {
             paddingRight: '35px',
             paddingBottom: '30px',
         }}>
-            {navbarItemList.map((item, index) => <NavbarItem key={`navbaritem-${index}`} data={item} />)}
+            {navbarItemList.map((item, index) =>
+                <NavbarItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />)
+            }
         </Box>
     </Box>
 };
