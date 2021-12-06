@@ -1,7 +1,8 @@
-import React from "react"
+import { IFluentIconsProps } from '@fluentui/react-icons';
+import React from 'react';
 
 export type TypeNavbarItem = {
-    icon: React.FC,
-    title: string,
-    url: string
-}
+    icon: React.FC<React.HTMLAttributes<HTMLSpanElement> & IFluentIconsProps>;
+    title: string;
+    url: string;
+};
