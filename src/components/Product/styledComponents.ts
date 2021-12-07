@@ -14,8 +14,8 @@ export const ProductMainContainer = styled(Box)``;
 
 export const ProductNameTypography = styled(Typography)`
     font-weight: 700;
-    font-size: 1.375rem;
-    line-height: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
 `;
 
 export const ProductPriceTypography = styled(Typography)`
