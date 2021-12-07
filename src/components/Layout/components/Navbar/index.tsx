@@ -8,46 +8,54 @@ import { useLocation } from 'react-router-dom';
 const navbarItemList: Array<TypeNavbarItem> = [
     {
         icon: Home24Filled,
-        title: "Home",
-        url: "/"
+        title: 'Home',
+        url: '/',
     },
     {
         icon: AppFolder24Filled,
-        title: "Explore",
-        url: "/explore"
+        title: 'Explore',
+        url: '/explore',
     },
     {
         icon: Box24Filled,
-        title: "Blind Box",
-        url: "/blind-box"
+        title: 'Blind Box',
+        url: '/blind-box',
     },
     {
         icon: Person24Filled,
-        title: "Profile",
-        url: "/profile"
-    }
+        title: 'Profile',
+        url: '/profile',
+    },
 ];
 
 const Navbar: React.FC = (): JSX.Element => {
     const location = useLocation();
 
-    return <Box sx={{
-        width: "100%",
-        position: "fixed",
-        bottom: 0,
-    }}>
-        <Box sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            paddingLeft: '35px',
-            paddingRight: '35px',
-            paddingBottom: '30px',
-        }}>
-            {navbarItemList.map((item, index) =>
-                <NavbarItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />)
-            }
+    return (
+        <Box
+            sx={{
+                width: '100%',
+                position: 'fixed',
+                bottom: 0,
+                background: 'white',
+                zIndex: 10,
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    paddingLeft: '2.25rem',
+                    paddingRight: '2.25rem',
+                    paddingBottom: '2rem',
+                }}
+            >
+                {navbarItemList.map((item, index) => (
+                    <NavbarItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
+                ))}
+            </Box>
         </Box>
-    </Box>
+    );
 };
 
 export default Navbar;
