@@ -2,7 +2,7 @@ import { Typography, Box, Button } from '@mui/material';
 import React from 'react';
 import { H2Typography } from 'src/core/typographies';
 
-const GetStarted: React.FC = (): JSX.Element => {
+const ConnectDID: React.FC = (): JSX.Element => {
     return (
         <Box
             sx={{
@@ -27,4 +27,4 @@ const GetStarted: React.FC = (): JSX.Element => {
     );
 };
 
-export default GetStarted;
+export default ConnectDID;
