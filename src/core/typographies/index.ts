@@ -12,6 +12,12 @@ export const H2Typography = styled(Typography)`
     line-height: 2.25rem;
 `;
 
+export const H5Typography = styled(Typography)`
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+`;
+
 export const H6Typography = styled(Typography)`
     font-size: 0.75rem;
     font-weight: 500;
