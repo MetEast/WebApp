@@ -2,12 +2,14 @@ import React from 'react';
 import { H2Typography, H5Typography } from 'src/core/typographies';
 import { Button, Box } from '@mui/material';
 import { TypeNotification } from 'src/types/notification-types';
-import NotificationItem from './NotificationItem';
+import NotificationItem from './components/NotificationItem';
+import NoNotifications from './components/NoNotifications';
 
 const dummyNotificationList: Array<TypeNotification> = [
     {
         title: 'You have a new bid!',
-        content: 'Your CryptoGirl#19 project has just been bid by a VKWR909981 user for E 100.00Your CryptoGirl#19 project has just been bid by a VKWR909981 user for E 100.00Your CryptoGirl#19 project has just been bid by a VKWR909981 user for E 100.00',
+        content:
+            'Your CryptoGirl#19 project has just been bid by a VKWR909981 user for E 100.00Your CryptoGirl#19 project has just been bid by a VKWR909981 user for E 100.00Your CryptoGirl#19 project has just been bid by a VKWR909981 user for E 100.00',
         date: '2021-09-03',
     },
     {
@@ -30,7 +32,9 @@ const dummyNotificationList: Array<TypeNotification> = [
 ];
 
 const Notifications: React.FC = (): JSX.Element => {
-    return (
+    const notificationList = dummyNotificationList;
+
+    return notificationList.length ? (
         <>
             <Button variant="outlined" sx={{ paddingTop: '0.4rem', paddingBottom: '0.4rem' }}>
                 Back
@@ -49,6 +53,8 @@ const Notifications: React.FC = (): JSX.Element => {
                 ))}
             </Box>
         </>
+    ) : (
+        <NoNotifications />
     );
 };
 
