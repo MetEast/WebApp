@@ -10,7 +10,7 @@ export interface IProductProps {
 const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     return <ProductContainer>
         <ProductImageContainer>
-            <img src={product.image} />
+            <img src={product.image} alt="" />
         </ProductImageContainer>
         {!onlyShowImage && <ProductMainContainer>
             <ProductNameTypography>{product.name}</ProductNameTypography>
