@@ -57,8 +57,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 <FormControl fullWidth>
                     <InputLabel id="sort-select-label">Sort By</InputLabel>
                     <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
+                        labelId="sort-select-label"
+                        id="sort-select"
                         value={sortBy}
                         label="Sort By"
                         onChange={handleChangeSortBy}
@@ -82,6 +82,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
             <Box width="100%" ml={-4} mb={2} position="fixed" bottom="100px" textAlign="center" maxWidth="800px">
                 <Button variant="contained">Filters (2)</Button>
             </Box>
+
+
         </>
     );
 };
