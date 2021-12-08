@@ -1,6 +1,8 @@
 import { createTheme, ThemeOptions } from '@mui/material';
 
-const themeOptions: ThemeOptions = {};
+const themeOptions: ThemeOptions = {
+    spacing: (factor: number) => `${factor * 0.5}rem`,
+};
 
 const theme = createTheme(themeOptions);
 
