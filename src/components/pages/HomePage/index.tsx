@@ -1,57 +1,15 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import Product from 'src/components/Product';
-import { TypeProduct } from 'src/types/product-types';
-import { H3Typography } from 'src/core/typographies';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-
-const products: Array<TypeProduct> = [
-    {
-        image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
-        name: 'Example product',
-        price: 100,
-        likes: 10,
-    },
-    {
-        image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
-        name: 'Example product',
-        price: 100,
-        likes: 10,
-    },
-    {
-        image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
-        name: 'Example product',
-        price: 100,
-        likes: 10,
-    },
-    {
-        image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
-        name: 'Example product',
-        price: 100,
-        likes: 10,
-    },
-    {
-        image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
-        name: 'Example product',
-        price: 100,
-        likes: 10,
-    },
-    {
-        image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
-        name: 'Example product',
-        price: 100,
-        likes: 10,
-    },
-    {
-        image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
-        name: 'Example product',
-        price: 100,
-        likes: 10,
-    },
-];
+import { TypeProduct } from 'src/types/product-types';
+import { dummyProducts } from 'src/constants/dummyData';
+import { H3Typography } from 'src/core/typographies';
 
 const HomePage: React.FC = (): JSX.Element => {
+    const products: Array<TypeProduct> = dummyProducts;
+
     return (
         <>
             <Box>
