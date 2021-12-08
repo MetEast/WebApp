@@ -79,6 +79,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     </Grid>
                 ))}
             </Grid>
+            <Box width="100%" ml={-4} mb={2} position="fixed" bottom="100px" textAlign="center" maxWidth="800px">
+                <Button variant="contained">Filters (2)</Button>
+            </Box>
         </>
     );
 };
