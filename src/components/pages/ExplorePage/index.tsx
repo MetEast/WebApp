@@ -1,19 +1,35 @@
 import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
-import { TextField, Box, Grid, Button } from '@mui/material';
+import {
+    TextField,
+    Box,
+    Grid,
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+} from '@mui/material';
 import React, { useState } from 'react';
 import Product from 'src/components/Product';
 import { dummyProducts } from 'src/constants/dummyData';
+import { enmSortOptionValues, sortOptions } from 'src/constants/select-constants';
 import { H2Typography } from 'src/core/typographies';
 import { TypeProduct } from 'src/types/product-types';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
+    const [sortBy, setSortBy] = useState<string>(enmSortOptionValues.low_to_high);
 
     const productList: Array<TypeProduct> = dummyProducts;
 
+    const handleChangeSortBy = (e: SelectChangeEvent) => {
+        setSortBy(e.target.value);
+    };
+
     return (
         <>
-            <H2Typography>Explore</H2Typography>
+            <H2Typography mb={3.5}>Explore</H2Typography>
 
             <Box display="flex">
                 <TextField label="Search" fullWidth />
@@ -35,6 +51,25 @@ const ExplorePage: React.FC = (): JSX.Element => {
                         </Button>
                     </Box>
                 </Box>
+            </Box>
+
+            <Box mt={2}>
+                <FormControl fullWidth>
+                    <InputLabel id="sort-select-label">Sort By</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={sortBy}
+                        label="Sort By"
+                        onChange={handleChangeSortBy}
+                    >
+                        {sortOptions.map((item, index) => (
+                            <MenuItem key={`sort-option-${index}`} value={item.value}>
+                                {item.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
 
             <Grid container mt={2.5} spacing={3}>
