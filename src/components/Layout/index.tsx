@@ -5,8 +5,10 @@ import Navbar from './components/Navbar';
 const Layout: React.FC = ({ children }): JSX.Element => {
     return (
         <>
-            <Box padding={4} paddingBottom={16}>
-                {children}
+            <Box pt={4} pb={16} display="flex" justifyContent="center">
+                <Box width="100%" maxWidth="800px">
+                    {children}
+                </Box>
             </Box>
             <Navbar />
         </>
