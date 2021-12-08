@@ -33,6 +33,13 @@ theme.components = {
             },
         },
     },
+    MuiOutlinedInput: {
+        styleOverrides: {
+            notchedOutline: {
+                borderRadius: '0.5rem',
+            },
+        },
+    },
 };
 
 export default theme;
