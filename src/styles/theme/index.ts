@@ -33,6 +33,13 @@ theme.components = {
             },
         },
     },
+    MuiTextField: {
+        styleOverrides: {
+            root: {
+                backgroundColor: 'var(--color-gray)',
+            },
+        },
+    },
     MuiOutlinedInput: {
         styleOverrides: {
             notchedOutline: {
