@@ -24,17 +24,17 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
                     <ProductImageContainer>
                         <img src={product.image} alt="" />
                     </ProductImageContainer>
-                    {!onlyShowImage && (
-                        <ProductMainContainer>
-                            <ProductNameTypography>{product.name}</ProductNameTypography>
-                            <ProductPriceTypography>{`ELA ${product.price.toFixed(2)}`}</ProductPriceTypography>
-                            <ProductLikesContainer>
-                                <ProductLikesTypography>{`${product.likes} likes`}</ProductLikesTypography>
-                            </ProductLikesContainer>
-                        </ProductMainContainer>
-                    )}
                 </a>
             </Link>
+            {!onlyShowImage && (
+                <ProductMainContainer>
+                    <ProductNameTypography>{product.name}</ProductNameTypography>
+                    <ProductPriceTypography>{`ELA ${product.price.toFixed(2)}`}</ProductPriceTypography>
+                    <ProductLikesContainer>
+                        <ProductLikesTypography>{`${product.likes} likes`}</ProductLikesTypography>
+                    </ProductLikesContainer>
+                </ProductMainContainer>
+            )}
         </ProductContainer>
     );
 };
