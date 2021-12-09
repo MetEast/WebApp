@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Grid } from '@mui/material';
 import { H2Typography, H3Typography, H5Typography, H6Typography } from 'src/core/typographies';
 import { ProductImageContainer } from '../Product/styledComponents';
 import { AuthorImage } from './styledComponents';
@@ -43,10 +43,48 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
             </Box>
             <H6Typography>Accepted currencies:</H6Typography>
 
-            <Box>
-                <Box>
-                    <AuthorImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" alt="" />
+            <Box mt={3.5}>
+                <Box display="flex">
+                    <Box>
+                        <AuthorImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" alt="" />
+                    </Box>
+                    <Box ml={1} display="flex" alignItems="center">
+                        <H5Typography>Author's name</H5Typography>
+                    </Box>
                 </Box>
+                <H6Typography>
+                    One Sentence Introduction. One Sentence Introduction. One Sentence Introduction.
+                </H6Typography>
+            </Box>
+
+            <H3Typography mt={6}>Chain Informations</H3Typography>
+            <Box mt={1}>
+                <Grid container>
+                    <Grid item xs={4}>
+                        <H6Typography>Chain Name</H6Typography>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <H6Typography>Elastos Smart Chain</H6Typography>
+                    </Grid>
+                </Grid>
+                <Grid container>
+                    <Grid item xs={4}>
+                        <H6Typography>Platform ID</H6Typography>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <H6Typography>574</H6Typography>
+                    </Grid>
+                </Grid>
+                <Grid container>
+                    <Grid item xs={4}>
+                        <H6Typography>Chain ID</H6Typography>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <H6Typography sx={{ wordWrap: 'break-word', color: 'var(--color-base)' }}>
+                            0x0548d861114855da46bcf8739885b4627c2372700fa1a4bdf43e7a2d7e13667d
+                        </H6Typography>
+                    </Grid>
+                </Grid>
             </Box>
         </Box>
     );
