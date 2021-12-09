@@ -23,7 +23,7 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
             <ProductImageContainer mt={2}>
                 <img
                     src={
-                        'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png'
+                        'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png'
                     }
                     alt=""
                 />

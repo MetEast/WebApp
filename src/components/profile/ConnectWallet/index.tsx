@@ -14,7 +14,7 @@ const ConnectWallet: React.FC<IConnectWalletProps> = ({ onClickConnect, onClickN
         <>
             <Button onClick={onClickNotifications} color='inherit'><Chat24Filled /></Button>
             <Box pt={2.5} pb={2.5}>
-                <ProfileCoverImage src="https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png" />
+                <ProfileCoverImage src="https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png" />
             </Box>
             <Box>
                 <ProfileImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" />
