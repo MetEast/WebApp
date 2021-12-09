@@ -20,11 +20,9 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
     return (
         <ProductContainer>
             <Link to={`/buy-now/${product.id}`}>
-                <a>
-                    <ProductImageContainer>
-                        <img src={product.image} alt="" />
-                    </ProductImageContainer>
-                </a>
+                <ProductImageContainer>
+                    <img src={product.image} alt="" />
+                </ProductImageContainer>
             </Link>
             {!onlyShowImage && (
                 <ProductMainContainer>
