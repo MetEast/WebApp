@@ -6,12 +6,13 @@ import { H2Typography, H6Typography } from 'src/core/typographies';
 
 export interface IConnectWalletProps {
     onClickConnect: () => void;
+    onClickNotifications: () => void;
 }
 
-const ConnectWallet: React.FC<IConnectWalletProps> = ({ onClickConnect }): JSX.Element => {
+const ConnectWallet: React.FC<IConnectWalletProps> = ({ onClickConnect, onClickNotifications }): JSX.Element => {
     return (
         <>
-            <Chat24Filled />
+            <Button onClick={onClickNotifications} color='inherit'><Chat24Filled /></Button>
             <Box pt={2.5} pb={2.5}>
                 <ProfileCoverImage src="https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png" />
             </Box>

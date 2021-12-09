@@ -28,7 +28,7 @@ const FilterModal: React.FC<IFilterModalProps> = ({
         } else {
             clearAll();
         }
-    }, [open]);
+    }, [open, _filters, _filterRange]);
 
     const handleSelectFilter = (filter: enmFilterOption) => {
         if (!filters.includes(filter)) {

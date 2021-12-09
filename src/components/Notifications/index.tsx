@@ -5,12 +5,16 @@ import NotificationItem from './components/NotificationItem';
 import NoNotifications from './components/NoNotifications';
 import { dummyNotificationList } from 'src/constants/dummyData';
 
-const Notifications: React.FC = (): JSX.Element => {
+export interface INotificationsProps {
+    onClose: () => void;
+}
+
+const Notifications: React.FC<INotificationsProps> = ({ onClose }): JSX.Element => {
     const notificationList = dummyNotificationList;
 
     return notificationList.length ? (
         <>
-            <Button variant="outlined" sx={{ paddingTop: '0.4rem', paddingBottom: '0.4rem' }}>
+            <Button variant="outlined" sx={{ paddingTop: '0.4rem', paddingBottom: '0.4rem' }} onClick={onClose}>
                 Back
             </Button>
             <H2Typography mt={2}>Notifications</H2Typography>

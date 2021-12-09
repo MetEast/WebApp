@@ -7,7 +7,7 @@ const NoNotifications: React.FC = (): JSX.Element => {
         <Box pl={1.5} pr={1.5} sx={{ paddingTop: '80px' }} textAlign="center">
             <H2Typography>You Currently Have No Notifications</H2Typography>
             <Box mt={4}>
-                <img src="/assets/images/no-notifications.svg" />
+                <img src="/assets/images/no-notifications.svg" alt="" />
             </Box>
             <Box mt={6}>
                 <Button variant="contained" fullWidth>
