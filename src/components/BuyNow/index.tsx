@@ -98,6 +98,10 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
                     ['Minted by', 'Nickname', '8.88ELA', '2022/02/28 10:00'],
                 ]}
             />
+
+            <Box textAlign="center" mt={2}>
+                <Button variant="outlined">View More...</Button>
+            </Box>
         </Box>
     );
 };
