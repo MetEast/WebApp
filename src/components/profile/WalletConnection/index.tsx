@@ -3,7 +3,11 @@ import { Box, Button } from '@mui/material';
 import { H2Typography, H5Typography } from 'src/core/typographies';
 import { WalletButtonIconContainer, WalletConnectionButton } from './styledComponents';
 
-const WalletConnection: React.FC = (): JSX.Element => {
+export interface IWalletConnectionProps {
+    onClickClose: () => void;
+}
+
+const WalletConnection: React.FC<IWalletConnectionProps> = ({ onClickClose }): JSX.Element => {
     return (
         <Box sx={{ paddingTop: '60px' }}>
             <Box sx={{ marginBottom: '60px', textAlign: 'center' }}>
@@ -30,7 +34,9 @@ const WalletConnection: React.FC = (): JSX.Element => {
                 </Box>
             </Box>
             <Box sx={{ marginTop: '50px', textAlign: 'center' }}>
-                <Button variant="contained">Close</Button>
+                <Button variant="contained" onClick={onClickClose}>
+                    Close
+                </Button>
             </Box>
         </Box>
     );

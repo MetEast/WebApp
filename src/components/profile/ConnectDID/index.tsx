@@ -2,7 +2,11 @@ import { Typography, Box, Button } from '@mui/material';
 import React from 'react';
 import { H2Typography } from 'src/core/typographies';
 
-const ConnectDID: React.FC = (): JSX.Element => {
+export interface IConnectDIDProps {
+    onClickConnect: () => void;
+}
+
+const ConnectDID: React.FC<IConnectDIDProps> = ({ onClickConnect }): JSX.Element => {
     return (
         <Box
             sx={{
@@ -16,9 +20,13 @@ const ConnectDID: React.FC = (): JSX.Element => {
             </Typography>
             <Box mt={4} mb={1}>
                 <Box mb={2}>
-                    <Button variant="contained">Connect Elastos Essentials</Button>
+                    <Button variant="contained" onClick={onClickConnect}>
+                        Connect Elastos Essentials
+                    </Button>
                 </Box>
-                <Button variant="outlined">Generate Temporary Identity</Button>
+                <Button variant="outlined" onClick={onClickConnect}>
+                    Generate Temporary Identity
+                </Button>
             </Box>
             <Typography fontWeight={500} fontSize={'0.75rem'} lineHeight={'1.25rem'}>
                 Remember to add did backup option if Temp Identity is used

@@ -4,7 +4,11 @@ import React from 'react';
 import { ProfileCoverImage, ProfileImage } from './styledComponents';
 import { H2Typography, H6Typography } from 'src/core/typographies';
 
-const ConnectWallet: React.FC = (): JSX.Element => {
+export interface IConnectWalletProps {
+    onClickConnect: () => void;
+}
+
+const ConnectWallet: React.FC<IConnectWalletProps> = ({ onClickConnect }): JSX.Element => {
     return (
         <>
             <Chat24Filled />
@@ -30,7 +34,7 @@ const ConnectWallet: React.FC = (): JSX.Element => {
                 </Grid>
             </Grid>
             <Box mt={2.5}>
-                <Button variant="contained" fullWidth>
+                <Button variant="contained" fullWidth onClick={onClickConnect}>
                     Connect Wallet
                 </Button>
             </Box>
