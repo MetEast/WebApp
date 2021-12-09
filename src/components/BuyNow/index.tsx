@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button, Box, Grid } from '@mui/material';
-import { H2Typography, H3Typography, H5Typography, H6Typography } from 'src/core/typographies';
+import { H2Typography, H3Typography, H4Typography, H5Typography, H6Typography } from 'src/core/typographies';
 import { ProductImageContainer } from '../Product/styledComponents';
 import { AuthorImage } from './styledComponents';
+import StandardTable from '../tables/StandardTable';
 
 export interface IBuyNowProps {}
 
@@ -57,7 +58,7 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
                 </H6Typography>
             </Box>
 
-            <H3Typography mt={6}>Chain Informations</H3Typography>
+            <H4Typography mt={6}>Chain Informations</H4Typography>
             <Box mt={1}>
                 <Grid container>
                     <Grid item xs={4}>
@@ -86,6 +87,17 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
                     </Grid>
                 </Grid>
             </Box>
+
+            <H4Typography mt={4}>Latest Events</H4Typography>
+            <StandardTable
+                titles={['TYPE', 'USER', 'PRICE', 'DATE']}
+                rows={[
+                    ['Sold to', 'Nickname', '8.88ELA', '2022/02/28 10:00'],
+                    ['Bid from', 'Nickname', '8.88ELA', '2022/02/28 10:00'],
+                    ['Listed by', 'Nickname', '8.88ELA', '2022/02/28 10:00'],
+                    ['Minted by', 'Nickname', '8.88ELA', '2022/02/28 10:00'],
+                ]}
+            />
         </Box>
     );
 };
