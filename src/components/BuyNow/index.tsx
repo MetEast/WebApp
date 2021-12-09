@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Box } from '@mui/material';
 import { H2Typography, H3Typography, H5Typography, H6Typography } from 'src/core/typographies';
 import { ProductImageContainer } from '../Product/styledComponents';
+import { AuthorImage } from './styledComponents';
 
 export interface IBuyNowProps {}
 
@@ -21,12 +22,7 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
             <H6Typography>Sold by ElastosArt</H6Typography>
 
             <ProductImageContainer mt={2}>
-                <img
-                    src={
-                        'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png'
-                    }
-                    alt=""
-                />
+                <img src={'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png'} alt="" />
             </ProductImageContainer>
 
             <H5Typography>
@@ -46,6 +42,12 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
                 <Button variant="contained">Buy Now</Button>
             </Box>
             <H6Typography>Accepted currencies:</H6Typography>
+
+            <Box>
+                <Box>
+                    <AuthorImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" alt="" />
+                </Box>
+            </Box>
         </Box>
     );
 };
