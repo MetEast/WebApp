@@ -29,42 +29,49 @@ export const dummyNotificationList: Array<TypeNotification> = [
 
 export const dummyProducts: Array<TypeProduct> = [
     {
+        id: "0",
         image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
         name: 'Example product',
         price: 100,
         likes: 10,
     },
     {
+        id: "1",
         image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
         name: 'Example product',
         price: 100,
         likes: 10,
     },
     {
+        id: "2",
         image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
         name: 'Example product',
         price: 100,
         likes: 10,
     },
     {
+        id: "3",
         image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
         name: 'Example product',
         price: 100,
         likes: 10,
     },
     {
+        id: "4",
         image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
         name: 'Example product',
         price: 100,
         likes: 10,
     },
     {
+        id: "5",
         image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
         name: 'Example product',
         price: 100,
         likes: 10,
     },
     {
+        id: "6",
         image: 'https://www.freecodecamp.org/news/content/images/size/w2000/2021/03/Advanced-NFT-Deployment---1-.png',
         name: 'Example product',
         price: 100,
