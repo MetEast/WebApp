@@ -4,6 +4,7 @@ import { H2Typography, H3Typography, H4Typography, H5Typography, H6Typography } 
 import { ProductImageContainer } from '../Product/styledComponents';
 import { AuthorImage } from './styledComponents';
 import StandardTable from '../tables/StandardTable';
+import { Flag20Filled, Link20Filled } from '@fluentui/react-icons';
 
 export interface IBuyNowProps {}
 
@@ -14,9 +15,15 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
                 <Button variant="outlined">Back</Button>
                 <Box display="flex">
                     <Box mr={1}>
-                        <Button variant="outlined">Share</Button>
+                        <Button variant="outlined" sx={{ paddingTop: '9px', paddingBottom: '9px', lineHeight: 1 }}>
+                            <Link20Filled />
+                            Share
+                        </Button>
                     </Box>
-                    <Button variant="outlined">Flag</Button>
+                    <Button variant="outlined" sx={{ paddingTop: '4px', paddingBottom: '4px', lineHeight: 1 }}>
+                        <Flag20Filled />
+                        Flag
+                    </Button>
                 </Box>
             </Box>
             <H2Typography>Artwork Title</H2Typography>
