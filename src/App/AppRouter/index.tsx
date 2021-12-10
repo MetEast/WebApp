@@ -8,6 +8,7 @@ import BlindBoxPage from 'src/components/pages/BlindBoxPage';
 import ExplorePage from 'src/components/pages/ExplorePage';
 import HomePage from 'src/components/pages/HomePage';
 import ProfilePage from 'src/components/pages/ProfilePage';
+import TransactionSuccess from 'src/components/TransactionSuccess';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -66,6 +67,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <TransactionPending />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/transaction-success"
+                    element={
+                        <Layout>
+                            <TransactionSuccess />
                         </Layout>
                     }
                 />

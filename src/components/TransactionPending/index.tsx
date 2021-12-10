@@ -11,7 +11,7 @@ const TransactionPending: React.FC<ITransactionPendingProps> = (): JSX.Element =
 
     useEffect(() => {
         sleep(2000).then(() => {
-            navigate('/');
+            navigate('/transaction-success');
         });
     }, [navigate]);
 
