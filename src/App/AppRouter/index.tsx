@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import BuyNow from 'src/components/BuyNow';
+import BuyNowSummary from 'src/components/BuyNowSummary';
 import Layout from 'src/components/Layout';
 import BlindBoxPage from 'src/components/pages/BlindBoxPage';
 import ExplorePage from 'src/components/pages/ExplorePage';
@@ -40,6 +41,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <ProfilePage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/buy-now/:id/summary"
+                    element={
+                        <Layout>
+                            <BuyNowSummary />
                         </Layout>
                     }
                 />

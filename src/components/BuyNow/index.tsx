@@ -5,10 +5,21 @@ import { ProductImageContainer } from '../Product/styledComponents';
 import { AuthorImage } from './styledComponents';
 import StandardTable from '../tables/StandardTable';
 import { Flag20Filled, Link20Filled } from '@fluentui/react-icons';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export interface IBuyNowProps {}
 
 const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
+    const params = useParams();
+
+    const projectId = params.id!;
+
+    const navigate = useNavigate();
+
+    const handleClickBuyNow = () => {
+        navigate(`/buy-now/${projectId}/summary`);
+    };
+
     return (
         <Box>
             <Box mb={1} display="flex" justifyContent="space-between">
@@ -47,7 +58,9 @@ const BuyNow: React.FC<IBuyNowProps> = (): JSX.Element => {
             </Box>
 
             <Box pt={1} pb={1}>
-                <Button variant="contained">Buy Now</Button>
+                <Button variant="contained" onClick={handleClickBuyNow} fullWidth>
+                    Buy Now
+                </Button>
             </Box>
             <H6Typography>Accepted currencies:</H6Typography>
 
