@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import BuyNow from 'src/components/BuyNow';
+import TransactionPending from 'src/components/TransactionPending';
 import BuyNowSummary from 'src/components/BuyNowSummary';
 import Layout from 'src/components/Layout';
 import BlindBoxPage from 'src/components/pages/BlindBoxPage';
@@ -57,6 +58,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <BuyNow />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/transaction-pending"
+                    element={
+                        <Layout>
+                            <TransactionPending />
                         </Layout>
                     }
                 />

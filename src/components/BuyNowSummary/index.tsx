@@ -16,6 +16,10 @@ const BuyNowSummary: React.FC<IBuyNowSummaryProps> = (): JSX.Element => {
         navigate(`/buy-now/${projectId}`);
     };
 
+    const handleClickConfirm = () => {
+        navigate(`/transaction-pending`);
+    };
+
     return (
         <Box>
             <Box>
@@ -67,7 +71,7 @@ const BuyNowSummary: React.FC<IBuyNowSummaryProps> = (): JSX.Element => {
             </Box>
 
             <Box textAlign="center" mt={6}>
-                <Button variant="contained" fullWidth sx={{ maxWidth: '220px' }}>
+                <Button variant="contained" fullWidth sx={{ maxWidth: '220px' }} onClick={handleClickConfirm}>
                     Confirm
                 </Button>
                 <H6Typography mt={3} sx={{ fontWeight: 700 }}>
