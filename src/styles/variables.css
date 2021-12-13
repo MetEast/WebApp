@@ -1,4 +1,6 @@
 :root {
     --color-base: #1890FF;
     --color-gray: #F1F1F1;
+    --color-success: #27AE60;
+    --color-error: #EB5757;
 }
