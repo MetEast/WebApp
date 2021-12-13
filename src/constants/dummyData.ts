@@ -34,6 +34,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Example product',
         price: 100,
         likes: 10,
+        comingSoon: true,
     },
     {
         id: "1",
@@ -48,6 +49,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Example product',
         price: 100,
         likes: 10,
+        comingSoon: true,
     },
     {
         id: "3",

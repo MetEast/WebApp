@@ -4,4 +4,5 @@ export type TypeProduct = {
     name: string;
     price: number;
     likes: number;
+    comingSoon?: boolean;
 };
