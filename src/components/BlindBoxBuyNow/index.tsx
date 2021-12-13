@@ -22,7 +22,7 @@ const BlindBoxBuyNow: React.FC<IBlindBoxBuyNowProps> = (): JSX.Element => {
     const navigate = useNavigate();
 
     const handleClickBuyNow = () => {
-        navigate(`/buy-now/${projectId}/summary`);
+        navigate(`/choose-amount/${projectId}`);
     };
 
     return (

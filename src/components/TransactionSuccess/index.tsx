@@ -15,7 +15,7 @@ const TransactionSuccess: React.FC<ITransactionSuccessProps> = (): JSX.Element =
 
     return (
         <Box>
-            <Box mt={7} textAlign="center">
+            <Box mt={3} textAlign="center">
                 <H6Typography sx={{ fontWeight: 700 }}>Success!</H6Typography>
             </Box>
             <Box mt={3} textAlign="center">

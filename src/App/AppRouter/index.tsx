@@ -10,6 +10,8 @@ import HomePage from 'src/components/pages/HomePage';
 import ProfilePage from 'src/components/pages/ProfilePage';
 import TransactionSuccess from 'src/components/TransactionSuccess';
 import BlindBoxBuyNow from 'src/components/BlindBoxBuyNow';
+import ChooseAmount from 'src/components/ChooseAmount';
+import BlindBuyNowSummary from 'src/components/BlindBuyNowSummary';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -84,6 +86,22 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <BlindBoxBuyNow />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/choose-amount/:id"
+                    element={
+                        <Layout>
+                            <ChooseAmount />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/blind-buy-now/:id/summary"
+                    element={
+                        <Layout>
+                            <BlindBuyNowSummary />
                         </Layout>
                     }
                 />
