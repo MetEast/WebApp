@@ -21,7 +21,7 @@ export interface IBlindBoxProductProps {
 const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product }): JSX.Element => {
     return (
         <ProductContainer>
-            <Link to={`/buy-now/${product.id}`}>
+            <Link to={`/blind-buy-now/${product.id}`}>
                 <ProductImageContainer>
                     <img src={product.image} alt="" />
                     <HeartIconContainer>
@@ -35,19 +35,19 @@ const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product }): JSX.Elem
                 <Box display="flex" justifyContent="space-between">
                     <Box>
                         <H5Typography sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
-                            <ShoppingBagDismiss20Filled />
+                            <ShoppingBagDismiss20Filled style={{ paddingTop: '0.25rem' }} />
                             &nbsp;24 Sold
                         </H5Typography>
                     </Box>
                     <Box>
                         <H5Typography sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
-                            <BuildingShop20Filled />
+                            <BuildingShop20Filled style={{ paddingTop: '0.25rem' }} />
                             &nbsp;200 In Stock
                         </H5Typography>
                     </Box>
                     <Box>
                         <H5Typography sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
-                            <Heart20Filled />
+                            <Heart20Filled style={{ paddingTop: '0.25rem' }} />
                             &nbsp;88 Likes
                         </H5Typography>
                     </Box>

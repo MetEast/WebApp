@@ -9,6 +9,7 @@ import ExplorePage from 'src/components/pages/ExplorePage';
 import HomePage from 'src/components/pages/HomePage';
 import ProfilePage from 'src/components/pages/ProfilePage';
 import TransactionSuccess from 'src/components/TransactionSuccess';
+import BlindBoxBuyNow from 'src/components/BlindBoxBuyNow';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -75,6 +76,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <TransactionSuccess />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/blind-buy-now/:id"
+                    element={
+                        <Layout>
+                            <BlindBoxBuyNow />
                         </Layout>
                     }
                 />
