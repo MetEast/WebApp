@@ -14,7 +14,7 @@ const WalletConnection: React.FC<IWalletConnectionProps> = ({ onClickClose }): J
                 <H2Typography>Choose Wallet</H2Typography>
             </Box>
             <Box pl={4} pr={4}>
-                <WalletConnectionButton fullWidth>
+                <WalletConnectionButton fullWidth onClick={onClickClose}>
                     <Box>
                         <WalletButtonIconContainer>
                             <img src="/assets/icons/elastos-essential.svg" alt="" />
@@ -23,7 +23,7 @@ const WalletConnection: React.FC<IWalletConnectionProps> = ({ onClickClose }): J
                     </Box>
                 </WalletConnectionButton>
                 <Box mt={6}>
-                    <WalletConnectionButton fullWidth>
+                    <WalletConnectionButton fullWidth onClick={onClickClose}>
                         <Box>
                             <WalletButtonIconContainer>
                                 <img src="/assets/icons/metamask-alt.svg" alt="" />

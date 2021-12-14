@@ -4,12 +4,11 @@ import React from 'react';
 import { ProfileCoverImage, ProfileImage } from './styledComponents';
 import { H2Typography, H6Typography } from 'src/core/typographies';
 
-export interface IConnectWalletProps {
-    onClickConnect: () => void;
+export interface IPrivateProfileProps {
     onClickNotifications: () => void;
 }
 
-const PrivateProfile: React.FC<IConnectWalletProps> = ({ onClickConnect, onClickNotifications }): JSX.Element => {
+const PrivateProfile: React.FC<IPrivateProfileProps> = ({ onClickNotifications }): JSX.Element => {
     return (
         <>
             <Button onClick={onClickNotifications} color="inherit">
@@ -36,11 +35,6 @@ const PrivateProfile: React.FC<IConnectWalletProps> = ({ onClickConnect, onClick
                     <Button variant="outlined">Edit Profile</Button>
                 </Grid>
             </Grid>
-            <Box mt={2.5}>
-                <Button variant="contained" fullWidth onClick={onClickConnect}>
-                    Connect Wallet
-                </Button>
-            </Box>
         </>
     );
 };
