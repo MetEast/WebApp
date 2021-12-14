@@ -3,6 +3,7 @@ import { Chat24Filled, Person24Filled, Wallet24Filled } from '@fluentui/react-ic
 import React from 'react';
 import { ProfileCoverImage, ProfileImage } from './styledComponents';
 import { H2Typography, H4Typography, H5Typography, H6Typography } from 'src/core/typographies';
+import NftTabs from './NftTabs';
 
 export interface IPrivateProfileProps {
     onClickNotifications: () => void;
@@ -64,6 +65,10 @@ const PrivateProfile: React.FC<IPrivateProfileProps> = ({ onClickNotifications }
                         <Button variant="outlined">Details</Button>
                     </Grid>
                 </Grid>
+            </Box>
+            <Box mt={2.25}>
+                <H4Typography mb={1}>Your NFTs</H4Typography>
+                <NftTabs />
             </Box>
         </>
     );
