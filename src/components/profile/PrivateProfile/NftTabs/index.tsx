@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Grid, styled, TextField } from '@mui/material';
 import { H5Typography, H6Typography } from 'src/core/typographies';
@@ -36,7 +35,7 @@ const TabPanel: React.FC<ITabPanelProps> = ({ value, index, children, ...other }
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <>{children}</>
                 </Box>
             )}
         </div>
