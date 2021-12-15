@@ -4,12 +4,19 @@ import React from 'react';
 import { ProfileCoverImage, ProfileImage } from './styledComponents';
 import { H2Typography, H4Typography, H5Typography, H6Typography } from 'src/core/typographies';
 import NftTabs from './NftTabs';
+import { useNavigate } from 'react-router-dom';
 
 export interface IPrivateProfileProps {
     onClickNotifications: () => void;
 }
 
 const PrivateProfile: React.FC<IPrivateProfileProps> = ({ onClickNotifications }): JSX.Element => {
+    const navigate = useNavigate();
+
+    const handleClickEditProfile = () => {
+        navigate('/profile/edit');
+    };
+
     return (
         <>
             <Button onClick={onClickNotifications} color="inherit">
@@ -47,7 +54,9 @@ const PrivateProfile: React.FC<IPrivateProfileProps> = ({ onClickNotifications }
                     <Button variant="contained">Create NFT</Button>
                 </Grid>
                 <Grid item xs={6}>
-                    <Button variant="outlined">Edit Profile</Button>
+                    <Button variant="outlined" onClick={handleClickEditProfile}>
+                        Edit Profile
+                    </Button>
                 </Grid>
             </Grid>
             <Box mt={2.25}>

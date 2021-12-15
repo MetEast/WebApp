@@ -12,6 +12,7 @@ import TransactionSuccess from 'src/components/TransactionSuccess';
 import BlindBoxBuyNow from 'src/components/BlindBoxBuyNow';
 import ChooseAmount from 'src/components/ChooseAmount';
 import BlindBuyNowSummary from 'src/components/BlindBuyNowSummary';
+import EditProfile from 'src/components/profile/EditProfile';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -46,6 +47,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <ProfilePage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/profile/edit"
+                    element={
+                        <Layout>
+                            <EditProfile />
                         </Layout>
                     }
                 />
