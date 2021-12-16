@@ -13,6 +13,10 @@ import BlindBoxBuyNow from 'src/components/BlindBoxBuyNow';
 import ChooseAmount from 'src/components/ChooseAmount';
 import BlindBuyNowSummary from 'src/components/BlindBuyNowSummary';
 import EditProfile from 'src/components/profile/EditProfile';
+import CreateNft from 'src/components/nft/CreateNft';
+import ConfirmCreateNft from 'src/components/nft/CreateNft/ConfirmCreateNft';
+import CreateNftSuccess from 'src/components/nft/CreateNft/CreateNftSuccess';
+import CreateNftError from 'src/components/nft/CreateNft/CreateNftError';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -111,6 +115,38 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <BlindBuyNowSummary />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/nft/create"
+                    element={
+                        <Layout>
+                            <CreateNft />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/nft/create/confirm"
+                    element={
+                        <Layout>
+                            <ConfirmCreateNft />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/nft/create/success"
+                    element={
+                        <Layout>
+                            <CreateNftSuccess />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/nft/create/error"
+                    element={
+                        <Layout>
+                            <CreateNftError />
                         </Layout>
                     }
                 />
