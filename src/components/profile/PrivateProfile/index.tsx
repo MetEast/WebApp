@@ -17,6 +17,10 @@ const PrivateProfile: React.FC<IPrivateProfileProps> = ({ onClickNotifications }
         navigate('/profile/edit');
     };
 
+    const handleClickCreateNft = () => {
+        navigate('/nft/create');
+    };
+
     return (
         <>
             <Button onClick={onClickNotifications} color="inherit">
@@ -51,7 +55,9 @@ const PrivateProfile: React.FC<IPrivateProfileProps> = ({ onClickNotifications }
             </Grid>
             <Grid container mt={2.25}>
                 <Grid item xs={6}>
-                    <Button variant="contained">Create NFT</Button>
+                    <Button variant="contained" onClick={handleClickCreateNft}>
+                        Create NFT
+                    </Button>
                 </Grid>
                 <Grid item xs={6}>
                     <Button variant="outlined" onClick={handleClickEditProfile}>
