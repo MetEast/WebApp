@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
 import { H5Typography, H2Typography, H4Typography } from 'src/core/typographies';
+import { DetailsItemContainer, DetailsItemLeftTypography } from '../styledComponents';
 
 export interface INftDetailsAcquiredProps {}
 
@@ -27,18 +28,18 @@ const NftDetailsAcquired: React.FC<INftDetailsAcquiredProps> = (): JSX.Element =
             <Box mt={3}>
                 <H4Typography>Purchase Details</H4Typography>
 
-                <Box mt={2} display="flex" justifyContent="space-between">
-                    <H5Typography sx={{ fontWeight: 600 }}>DATE</H5Typography>
+                <DetailsItemContainer>
+                    <DetailsItemLeftTypography>DATE</DetailsItemLeftTypography>
                     <H5Typography>2022/02/28 10:00</H5Typography>
-                </Box>
-                <Box mt={2} display="flex" justifyContent="space-between">
-                    <H5Typography sx={{ fontWeight: 600 }}>PRICE</H5Typography>
+                </DetailsItemContainer>
+                <DetailsItemContainer>
+                    <DetailsItemLeftTypography>PRICE</DetailsItemLeftTypography>
                     <H5Typography>800 ELA</H5Typography>
-                </Box>
-                <Box mt={2} display="flex" justifyContent="space-between">
-                    <H5Typography sx={{ fontWeight: 600 }}>SELLER</H5Typography>
+                </DetailsItemContainer>
+                <DetailsItemContainer>
+                    <DetailsItemLeftTypography>SELLER</DetailsItemLeftTypography>
                     <H5Typography>Seller Nickname / Blind Box</H5Typography>
-                </Box>
+                </DetailsItemContainer>
             </Box>
         </Box>
     );
