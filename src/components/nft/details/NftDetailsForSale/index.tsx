@@ -5,7 +5,14 @@ import { DetailsItemContainer, DetailsItemLeftTypography, NftDetailsSmallButton 
 
 export interface INftDetailsForSaleProps {}
 
+export enum enmSaleType {
+    BuyNow = 'Buy Now',
+    Auction = 'Auction',
+}
+
 const NftDetailsForSale: React.FC<INftDetailsForSaleProps> = (): JSX.Element => {
+    const saleType = enmSaleType.Auction;
+
     return (
         <Box>
             <Box mb={3} display="flex" justifyContent="space-between">
@@ -31,11 +38,11 @@ const NftDetailsForSale: React.FC<INftDetailsForSaleProps> = (): JSX.Element => 
                 </Box>
                 <DetailsItemContainer>
                     <DetailsItemLeftTypography>Sale Type</DetailsItemLeftTypography>
-                    <H5Typography>Buy Now</H5Typography>
+                    <H5Typography>{saleType}</H5Typography>
                 </DetailsItemContainer>
                 <DetailsItemContainer>
                     <DetailsItemLeftTypography display="flex" alignItems="center">
-                        Sale Price
+                        {saleType === enmSaleType.Auction ? 'Sale Price' : 'Minimum Price'}
                     </DetailsItemLeftTypography>
                     <Box display="flex">
                         <H5Typography display="flex" alignItems="center" mr={0.5}>
@@ -45,7 +52,12 @@ const NftDetailsForSale: React.FC<INftDetailsForSaleProps> = (): JSX.Element => 
                     </Box>
                 </DetailsItemContainer>
             </Box>
-            <Box mt={10}>
+            {saleType === enmSaleType.Auction && (
+                <Box mt={2.5}>
+                    <Button variant="contained" fullWidth>View Bids</Button>
+                </Box>
+            )}
+            <Box mt={3}>
                 <H4Typography>Purchase Details</H4Typography>
 
                 <DetailsItemContainer>
