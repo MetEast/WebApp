@@ -24,7 +24,7 @@ const NftDetailsAcquired: React.FC<INftDetailsAcquiredProps> = (): JSX.Element =
                     <Button variant="outlined">View Transactions History</Button>
                 </Box>
             </Box>
-            <Box mt={10}>
+            <Box mt={3}>
                 <H4Typography>Purchase Details</H4Typography>
 
                 <Box mt={2} display="flex" justifyContent="space-between">
