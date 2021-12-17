@@ -8,7 +8,9 @@ export interface ICreateNftSuccessProps {}
 const CreateNftSuccess: React.FC<ICreateNftSuccessProps> = (): JSX.Element => {
     const navigate = useNavigate();
 
-    const handleClickViewOnExplorer = () => {};
+    const handleClickViewOnExplorer = () => {
+        navigate('/');
+    };
 
     return (
         <Box textAlign="center">
