@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
 import { H5Typography, H2Typography, H4Typography } from 'src/core/typographies';
-import { DetailsItemContainer, DetailsItemLeftTypography } from '../styledComponents';
+import { DetailsItemContainer, DetailsItemLeftTypography, NftDetailsSmallButton } from '../styledComponents';
 
 export interface INftDetailsAcquiredProps {}
 
@@ -22,7 +22,7 @@ const NftDetailsAcquired: React.FC<INftDetailsAcquiredProps> = (): JSX.Element =
                 </Button>
 
                 <Box mt={3}>
-                    <Button variant="outlined">View Transactions History</Button>
+                    <NftDetailsSmallButton variant="outlined">View Transactions History</NftDetailsSmallButton>
                 </Box>
             </Box>
             <Box mt={3}>
