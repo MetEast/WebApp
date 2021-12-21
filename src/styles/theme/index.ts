@@ -17,7 +17,6 @@ theme.components = {
     MuiButton: {
         styleOverrides: {
             root: {
-                textTransform: 'none',
                 borderRadius: '4px',
                 fontWeight: 500,
                 fontSize: '1rem',
