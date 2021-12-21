@@ -1,4 +1,4 @@
-import { BuildingShop20Filled, Heart20Filled, Heart28Filled, ShoppingBagDismiss20Filled } from '@fluentui/react-icons';
+import { BuildingShop20Filled, Heart20Filled, Heart24Filled, ShoppingBagDismiss20Filled } from '@fluentui/react-icons';
 import { Box } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -25,7 +25,7 @@ const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product }): JSX.Elem
                 <ProductImageContainer>
                     <img src={product.image} alt="" />
                     <HeartIconContainer>
-                        <Heart28Filled />
+                        <Heart24Filled />
                     </HeartIconContainer>
                 </ProductImageContainer>
             </Link>

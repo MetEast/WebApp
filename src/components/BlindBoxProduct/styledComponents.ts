@@ -60,8 +60,9 @@ export const HeartIconContainer = styled(Box)`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 12px 16px;
-    border: 1px solid var(--color-base);
+    width: 40px;
+    height: 40px;
     color: var(--color-base);
-    border-radius: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);;
 `;
