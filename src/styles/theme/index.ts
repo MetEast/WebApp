@@ -18,7 +18,7 @@ theme.components = {
         styleOverrides: {
             root: {
                 textTransform: 'none',
-                borderRadius: '12px',
+                borderRadius: '4px',
                 fontWeight: 500,
                 fontSize: '1rem',
                 lineHeight: '1.125rem',
