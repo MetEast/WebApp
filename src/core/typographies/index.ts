@@ -1,15 +1,21 @@
 import { styled, Typography } from '@mui/material';
 
-export const H3Typography = styled(Typography)`
-    font-size: 1.375rem;
+export const H1Typography = styled(Typography)`
+    font-size: 2.625rem;
     font-weight: 700;
-    line-height: 1.5rem;
+    line-height: 2.65rem;
 `;
 
 export const H2Typography = styled(Typography)`
     font-size: 2rem;
     font-weight: 700;
     line-height: 2.25rem;
+`;
+
+export const H3Typography = styled(Typography)`
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.5rem;
 `;
 
 export const H4Typography = styled(Typography)`
