@@ -6,13 +6,15 @@ import { TypeProduct } from 'src/types/product-types';
 import { dummyProducts } from 'src/constants/dummyData';
 import Product from 'src/components/Product';
 import BlindBoxProduct from 'src/components/BlindBoxProduct';
+import { H1Typography } from 'src/core/typographies';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const products: Array<TypeProduct> = dummyProducts;
 
     return (
         <>
-            <Box>
+            <H1Typography>Blind Boxes</H1Typography>
+            <Box mt={3}>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {products.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
