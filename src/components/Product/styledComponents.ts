@@ -14,12 +14,12 @@ export const ProductMainContainer = styled(Box)``;
 
 export const ProductNameTypography = styled(Typography)`
     font-weight: 700;
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.25rem;
 `;
 
 export const ProductPriceTypography = styled(Typography)`
-    font-weight: 400;
+    font-weight: 500;
     font-size: 0.875rem;
     line-height: 1.25rem;
 `;

@@ -31,7 +31,7 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
                     <ProductNameTypography>{product.name}</ProductNameTypography>
                     <Stack direction="row" spacing={1}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" />
-                        <ProductPriceTypography>{`ELA ${product.price.toFixed(2)}`}</ProductPriceTypography>
+                        <ProductPriceTypography>{`${product.price.toFixed(2)} ELA`}</ProductPriceTypography>
                     </Stack>
                     <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>} sx={{ marginTop: 1 }}>
                         Buy Now
