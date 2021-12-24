@@ -19,9 +19,9 @@ const NavbarItem: React.FC<INavbarItemProps> = ({ data: { icon: Icon, title, url
     return (
         <Button onClick={handleClick}>
             <Box color="black">
-                <Box display="flex" justifyContent="center">
+                {/* <Box display="flex" justifyContent="center">
                     <Icon />
-                </Box>
+                </Box> */}
                 <NavbarItemTypography sx={isSelected ? { fontWeight: '700' } : {}}>{title}</NavbarItemTypography>
             </Box>
         </Button>
