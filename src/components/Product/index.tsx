@@ -9,7 +9,9 @@ import {
     ProductPriceTypography,
     ProductLikesContainer,
     ProductLikesTypography,
+    BuyNowBtn,
 } from './styledComponents';
+import { Stack, Button } from '@mui/material';
 
 export interface IProductProps {
     product: TypeProduct;
@@ -27,10 +29,16 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
             {!onlyShowImage && (
                 <ProductMainContainer>
                     <ProductNameTypography>{product.name}</ProductNameTypography>
-                    <ProductPriceTypography>{`ELA ${product.price.toFixed(2)}`}</ProductPriceTypography>
-                    <ProductLikesContainer>
+                    <Stack direction="row" spacing={1}>
+                        <img src="/assets/icons/elatos-ela.svg" alt="" />
+                        <ProductPriceTypography>{`ELA ${product.price.toFixed(2)}`}</ProductPriceTypography>
+                    </Stack>
+                    <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>} sx={{ marginTop: 1 }}>
+                        Buy Now
+                    </BuyNowBtn>
+                    {/* <ProductLikesContainer>
                         <ProductLikesTypography>{`${product.likes} likes`}</ProductLikesTypography>
-                    </ProductLikesContainer>
+                    </ProductLikesContainer> */}
                 </ProductMainContainer>
             )}
         </ProductContainer>

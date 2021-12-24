@@ -1,4 +1,4 @@
-import { styled, Box, Typography } from '@mui/material';
+import { styled, Box, Typography, Button } from '@mui/material';
 
 export const ProductContainer = styled(Box)``;
 
@@ -30,4 +30,11 @@ export const ProductLikesTypography = styled(Typography)`
     font-weight: 500;
     font-size: 0.75rem;
     line-height: 1.25rem;
+`;
+
+export const BuyNowBtn = styled(Button)`
+    background: #E8F4FF;
+    color: #1890FF;
+    border-radius: 8px;
+    padding: 8px 16px;
 `;
