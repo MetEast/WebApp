@@ -1,5 +1,5 @@
-import { TypeNotification } from "src/types/notification-types";
-import { TypeProduct } from "src/types/product-types";
+import { TypeNotification } from 'src/types/notification-types';
+import { TypeProduct } from 'src/types/product-types';
 
 export const dummyNotificationList: Array<TypeNotification> = [
     {
@@ -29,7 +29,7 @@ export const dummyNotificationList: Array<TypeNotification> = [
 
 export const dummyProducts: Array<TypeProduct> = [
     {
-        id: "0",
+        id: '0',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price: 199,
@@ -37,14 +37,14 @@ export const dummyProducts: Array<TypeProduct> = [
         comingSoon: true,
     },
     {
-        id: "1",
+        id: '1',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
     },
     {
-        id: "2",
+        id: '2',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price: 199,
@@ -52,28 +52,28 @@ export const dummyProducts: Array<TypeProduct> = [
         comingSoon: true,
     },
     {
-        id: "3",
+        id: '3',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
     },
     {
-        id: "4",
+        id: '4',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
     },
     {
-        id: "5",
+        id: '5',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
     },
     {
-        id: "6",
+        id: '6',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price: 199,
