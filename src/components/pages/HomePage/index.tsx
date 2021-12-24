@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { TypeProduct } from 'src/types/product-types';
 import { dummyProducts } from 'src/constants/dummyData';
-import { H3Typography } from 'src/core/typographies';
+import { H2Typography, H3Typography } from 'src/core/typographies';
 
 const HomePage: React.FC = (): JSX.Element => {
     const products: Array<TypeProduct> = dummyProducts;
@@ -22,7 +22,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 </Swiper>
             </Box>
             <Box mt={4}>
-                <H3Typography mb={1}>New Products</H3Typography>
+                <H2Typography mb={1}>New Products</H2Typography>
                 <Swiper slidesPerView={2} autoplay={{ delay: 4000 }} spaceBetween={8}>
                     {products.map((product, index) => (
                         <SwiperSlide key={`new-product-${index}`}>
@@ -32,11 +32,11 @@ const HomePage: React.FC = (): JSX.Element => {
                 </Swiper>
             </Box>
             <Box mt={4}>
-                <H3Typography mb={1}>Popular Collections</H3Typography>
+                <H2Typography mb={1}>Popular Collections</H2Typography>
                 <Swiper slidesPerView={2} autoplay={{ delay: 3000 }} spaceBetween={8}>
                     {products.map((product, index) => (
                         <SwiperSlide key={`popular-collection-${index}`}>
-                            <Product product={product} onlyShowImage />
+                            <Product product={product} />
                         </SwiperSlide>
                     ))}
                 </Swiper>

@@ -4,7 +4,7 @@ export const ProductContainer = styled(Box)``;
 
 export const ProductImageContainer = styled(Box)`
     img {
-        border-radius: 8px;
+        border-radius: 18px;
         width: 100%;
         height: 100%;
     }
@@ -37,4 +37,7 @@ export const BuyNowBtn = styled(Button)`
     color: #1890FF;
     border-radius: 8px;
     padding: 8px 16px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
 `;
