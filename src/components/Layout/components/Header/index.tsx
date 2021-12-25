@@ -36,12 +36,12 @@ const Header: React.FC = (): JSX.Element => {
                 <Typography fontSize={32} fontWeight={500}>
                     Meteast
                 </Typography>
-                <Box>
+                <Stack direction="row" spacing={4}>
                     {menuItemsList.map((item, index) => (
                         <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
                     ))}
-                </Box>
-                <Box>
+                </Stack>
+                <Stack direction="row" spacing={1}>
                     <Button>
                         <img src="/assets/icons/notification.svg" alt="" />
                     </Button>
@@ -49,7 +49,7 @@ const Header: React.FC = (): JSX.Element => {
                         <img src="/assets/icons/profile.svg" alt="" />
                     </Button>
                     <CreateNFTButton>Create NFT</CreateNFTButton>
-                </Box>
+                </Stack>
             </Stack>
         </Box>
     );
