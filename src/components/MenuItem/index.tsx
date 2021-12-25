@@ -1,15 +1,15 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
-import { TypeNavbarItem } from 'src/types/layout-types';
-import { NavbarItemTypography } from './styledComponents';
+import { TypeMenuItem } from 'src/types/layout-types';
+import { MenuItemTypography } from './styledComponents';
 import { useNavigate } from 'react-router-dom';
 
-export interface INavbarItemProps {
-    data: TypeNavbarItem;
+export interface IMenuItemProps {
+    data: TypeMenuItem;
     isSelected: boolean;
 }
 
-const NavbarItem: React.FC<INavbarItemProps> = ({ data: { icon: Icon, title, url }, isSelected }): JSX.Element => {
+const MenuItem: React.FC<IMenuItemProps> = ({ data: { icon: Icon, title, url }, isSelected }): JSX.Element => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -22,10 +22,10 @@ const NavbarItem: React.FC<INavbarItemProps> = ({ data: { icon: Icon, title, url
                 {/* <Box display="flex" justifyContent="center">
                     <Icon />
                 </Box> */}
-                <NavbarItemTypography sx={isSelected ? { fontWeight: '700' } : {}}>{title}</NavbarItemTypography>
+                <MenuItemTypography sx={isSelected ? { fontWeight: '700' } : {}}>{title}</MenuItemTypography>
             </Box>
         </Button>
     );
 };
 
-export default NavbarItem;
+export default MenuItem;

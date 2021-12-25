@@ -1,11 +1,11 @@
 import React from 'react';
-import { TypeNavbarItem } from 'src/types/layout-types';
-import NavbarItem from './components/NavbarItem';
+import { TypeMenuItem } from 'src/types/layout-types';
+import MenuItem from '../../../MenuItem';
 import { Box } from '@mui/material';
 import { Home24Filled, AppFolder24Filled, Box24Filled, Person24Filled } from '@fluentui/react-icons';
 import { useLocation } from 'react-router-dom';
 
-const navbarItemList: Array<TypeNavbarItem> = [
+const navbarItemList: Array<TypeMenuItem> = [
     {
         icon: Home24Filled,
         title: 'Home',
@@ -52,7 +52,7 @@ const Navbar: React.FC = (): JSX.Element => {
                 }}
             >
                 {navbarItemList.map((item, index) => (
-                    <NavbarItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
+                    <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
                 ))}
             </Box>
         </Box>

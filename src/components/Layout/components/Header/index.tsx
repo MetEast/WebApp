@@ -1,6 +1,8 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Button, Box, Typography, Stack } from '@mui/material';
 import { useLocation } from 'react-router-dom';
+import MenuItem from '../../../MenuItem';
+import { CreateNFTButton } from './styles';
 
 const menuItemsList = [
     {
@@ -30,7 +32,25 @@ const Header: React.FC = (): JSX.Element => {
                 zIndex: 10,
             }}
         >
-            <Typography fontSize={32} fontWeight={500}>Meteast</Typography>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Typography fontSize={32} fontWeight={500}>
+                    Meteast
+                </Typography>
+                <Box>
+                    {menuItemsList.map((item, index) => (
+                        <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
+                    ))}
+                </Box>
+                <Box>
+                    <Button>
+                        <img src="/assets/icons/notification.svg" alt="" />
+                    </Button>
+                    <Button>
+                        <img src="/assets/icons/profile.svg" alt="" />
+                    </Button>
+                    <CreateNFTButton>Create NFT</CreateNFTButton>
+                </Box>
+            </Stack>
         </Box>
     );
 };
