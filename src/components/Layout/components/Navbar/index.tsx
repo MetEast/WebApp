@@ -8,12 +8,12 @@ import { useLocation } from 'react-router-dom';
 const navbarItemList: Array<TypeNavbarItem> = [
     {
         icon: Home24Filled,
-        title: 'active',
+        title: 'Home',
         url: '/',
     },
     {
         icon: AppFolder24Filled,
-        title: 'Gallery',
+        title: 'Explore',
         url: '/explore',
     },
     {
