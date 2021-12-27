@@ -4,6 +4,7 @@ import MenuItem from '../../../MenuItem';
 import { Box } from '@mui/material';
 import { Home24Filled, AppFolder24Filled, Box24Filled, Person24Filled } from '@fluentui/react-icons';
 import { useLocation } from 'react-router-dom';
+import Container from '../../../Container';
 
 const navbarItemList: Array<TypeMenuItem> = [
     {
@@ -41,20 +42,22 @@ const Navbar: React.FC = (): JSX.Element => {
                 zIndex: 10,
             }}
         >
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    paddingLeft: '2.25rem',
-                    paddingRight: '2.25rem',
-                    paddingTop: '0.5rem',
-                    paddingBottom: '1.5rem',
-                }}
-            >
-                {navbarItemList.map((item, index) => (
-                    <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
-                ))}
-            </Box>
+            <Container>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        paddingLeft: '2.25rem',
+                        paddingRight: '2.25rem',
+                        paddingTop: '0.5rem',
+                        paddingBottom: '1.5rem',
+                    }}
+                >
+                    {navbarItemList.map((item, index) => (
+                        <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
+                    ))}
+                </Box>
+            </Container>
         </Box>
     );
 };
