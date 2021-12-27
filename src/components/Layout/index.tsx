@@ -7,13 +7,38 @@ import Container from '../Container';
 const Layout: React.FC = ({ children }): JSX.Element => {
     return (
         <>
-            <Header />
-            <Container>
-                <Box paddingY={16}>
-                    {children}
-                </Box>
-            </Container>
-            <Navbar />
+            <Box
+                sx={{
+                    width: '100%',
+                    paddingY: 3,
+                    position: 'fixed',
+                    top: 0,
+                    background: '#FFFFFF',
+                    zIndex: 10,
+                    display: { xs: 'none', md: 'block' },
+                }}
+            >
+                <Container>
+                    <Header />
+                </Container>
+            </Box>
+            <Box paddingTop={{ xs: 4, md: 12 }} paddingBottom={{ xs: 12, md: 4 }}>
+                <Container>{children}</Container>
+            </Box>
+            <Box
+                sx={{
+                    width: '100%',
+                    position: 'fixed',
+                    bottom: 0,
+                    background: 'white',
+                    zIndex: 10,
+                    display: { md: 'none' },
+                }}
+            >
+                <Container>
+                    <Navbar />
+                </Container>
+            </Box>
         </>
     );
 };
