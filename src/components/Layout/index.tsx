@@ -7,7 +7,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
     return (
         <>
             <Header />
-            <Box p={4} pb={16} display="flex" justifyContent="center">
+            <Box marginTop={14} pb={16} display="flex" justifyContent="center" sx={{ overflow: 'hidden', zIndex: 0 }}>
                 <Box width="100%" maxWidth="800px">
                     {children}
                 </Box>

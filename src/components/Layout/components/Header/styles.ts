@@ -8,4 +8,7 @@ export const CreateNFTButton = styled(Button)`
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.125rem;
+    &:hover {
+        background: #0870ef;
+    }
 `;

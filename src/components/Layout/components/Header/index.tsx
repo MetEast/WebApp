@@ -26,14 +26,15 @@ const Header: React.FC = (): JSX.Element => {
         <Box
             sx={{
                 width: '100%',
+                paddingY: 3,
                 position: 'fixed',
                 top: 0,
-                background: '#EEEEEE',
+                background: '#FFFFFF',
                 zIndex: 10,
             }}
         >
             <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography fontSize={32} fontWeight={500}>
+                <Typography fontSize={32} fontWeight={900} sx={{ textTransform: 'uppercase' }}>
                     Meteast
                 </Typography>
                 <Stack direction="row" spacing={4}>
