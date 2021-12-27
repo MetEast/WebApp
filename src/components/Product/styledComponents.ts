@@ -8,6 +8,27 @@ export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
     }
 `;
 
+export const LikeBtn = styled(Box)`
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    background: #ffffffcc;
+    display: none;
+    place-content: center;
+
+    ${(props) => props.theme.breakpoints.up('lg')} {
+        display: grid;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
+`;
+
 export const BuyNowBtn = styled(Button)`
     background: #e8f4ff;
     color: #1890ff;

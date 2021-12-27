@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
-import { ProductImageContainer, BuyNowBtn } from './styledComponents';
+import { ProductImageContainer, BuyNowBtn, LikeBtn } from './styledComponents';
 import { Box, Stack, Typography } from '@mui/material';
 
 export interface IProductProps {
@@ -15,6 +15,11 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
             <Link to={`/buy-now/${product.id}`}>
                 <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
+                    {!onlyShowImage && (
+                        <LikeBtn>
+                            <img src="/assets/icons/like.svg" alt="" />
+                        </LikeBtn>
+                    )}
                 </ProductImageContainer>
             </Link>
             {!onlyShowImage && (
@@ -37,7 +42,11 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
                         <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(
                             2,
                         )} ELA`}</Typography>
-                        <Typography fontWeight={400} fontSize={12}>{`~$480.00`}</Typography>
+                        <Typography
+                            fontWeight={400}
+                            fontSize={12}
+                            display={{ xs: 'none', lg: 'block' }}
+                        >{`~$480.00`}</Typography>
                     </Stack>
                     <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>}>Buy Now</BuyNowBtn>
                 </Stack>
