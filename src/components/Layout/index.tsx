@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import Header from './components/Header';
-import Navbar from './components/Navbar';
+import Header from '../Header';
+import Navbar from '../Navbar';
 import Container from '../Container';
 
 const Layout: React.FC = ({ children }): JSX.Element => {

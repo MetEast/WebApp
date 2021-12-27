@@ -1,10 +1,10 @@
 import React from 'react';
 import { TypeMenuItem } from 'src/types/layout-types';
-import MenuItem from '../../../MenuItem';
+import MenuItem from '../MenuItem';
 import { Box } from '@mui/material';
 import { Home24Filled, AppFolder24Filled, Box24Filled, Person24Filled } from '@fluentui/react-icons';
 import { useLocation } from 'react-router-dom';
-import Container from '../../../Container';
+import Container from '../Container';
 
 const navbarItemList: Array<TypeMenuItem> = [
     {

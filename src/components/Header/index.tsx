@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Box, Typography, Stack } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import MenuItem from '../../../MenuItem';
+import MenuItem from '../MenuItem';
 import { CreateNFTButton } from './styles';
-import Container from '../../../Container';
+import Container from '../Container';
 
 const menuItemsList = [
     {
