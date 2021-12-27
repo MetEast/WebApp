@@ -2,11 +2,11 @@ import { styled, Box, Typography, Button } from '@mui/material';
 
 export const ProductContainer = styled(Box)``;
 
-export const ProductImageContainer = styled(Box)`
+export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
     img {
         border-radius: 18px;
         width: 100%;
-        height: 100%;
+        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : '100%')};
     }
 `;
 
@@ -33,8 +33,8 @@ export const ProductLikesTypography = styled(Typography)`
 `;
 
 export const BuyNowBtn = styled(Button)`
-    background: #E8F4FF;
-    color: #1890FF;
+    background: #e8f4ff;
+    color: #1890ff;
     border-radius: 8px;
     padding: 8px 16px;
     font-size: 0.875rem;
