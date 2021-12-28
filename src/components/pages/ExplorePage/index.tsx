@@ -1,16 +1,5 @@
 import { Grid24Filled, GridDots24Filled, DismissCircle24Filled } from '@fluentui/react-icons';
-import {
-    TextField,
-    Box,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Stack,
-} from '@mui/material';
+import { Box, Grid, Button, Stack } from '@mui/material';
 import React, { useState } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
 import Product from 'src/components/Product';
@@ -20,9 +9,10 @@ import { filterOptions } from 'src/constants/filter-constants';
 import { enmSortOptionValues, sortOptions } from 'src/constants/select-constants';
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
-import { FilterItemTypography } from './styledComponents';
+import { FilterItemTypography, FilterButton } from './styles';
 import SearchField from '../../SearchField';
 import SortByButton from '../../SortBy';
+import { ReactComponent as FilterIcon } from '../../../assets/icons/filter.svg';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
@@ -66,11 +56,10 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     placeholder="SORT BY"
                     handleClick={handleChangeSortBy}
                 />
-                {/* <Box ml={-4} mb={2} textAlign="center">
-                    <Button variant="contained" onClick={handleClickFilterButton}>
-                        Filters ({filters.length})
-                    </Button>
-                </Box> */}
+                <FilterButton onClick={handleClickFilterButton}>
+                    <FilterIcon width={18} height={18} fill="#1890FF" />
+                    {`Filter`}
+                </FilterButton>
                 <Box display="flex" alignItems="center">
                     <Box ml={2}>
                         <Button
