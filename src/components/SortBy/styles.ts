@@ -27,4 +27,5 @@ export const ListItemsWrapper = styled(Box)<{ isOpen: boolean }>`
     position: absolute;
     background: white;
     border-radius: 4px;
+    z-index: 10;
 `;

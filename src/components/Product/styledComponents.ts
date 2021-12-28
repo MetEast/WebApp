@@ -1,6 +1,7 @@
 import { styled, Box, Button } from '@mui/material';
 
 export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
+    position: relative;
     img {
         border-radius: 18px;
         width: 100%;
@@ -19,7 +20,7 @@ export const LikeBtn = styled(Box)`
     display: none;
     place-content: center;
 
-    ${(props) => props.theme.breakpoints.up('lg')} {
+    ${(props) => props.theme.breakpoints.up('sm')} {
         display: grid;
     }
 
