@@ -1,18 +1,16 @@
-import { Grid24Filled, GridDots24Filled, DismissCircle24Filled } from '@fluentui/react-icons';
-import { Box, Grid, Button, Stack } from '@mui/material';
+import { DismissCircle24Filled } from '@fluentui/react-icons';
+import { Box, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
 import Product from 'src/components/Product';
+import OptionsBar from 'src/components/OptionsBar';
 import { dummyProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
-import { FilterItemTypography, FilterButton } from './styles';
-import SearchField from '../../SearchField';
-import SortByButton from '../../SortBy';
-import { ReactComponent as FilterIcon } from '../../../assets/icons/filter.svg';
+import { FilterItemTypography } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ExplorePage: React.FC = (): JSX.Element => {
@@ -58,41 +56,14 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     ))}
                 </Swiper>
             </Box>
-            <Stack direction="row" spacing={2} marginTop={5}>
-                <SearchField />
-                <SortByButton
-                    options={sortOptions}
-                    title={sortBy?.label}
-                    placeholder="SORT BY"
-                    handleClick={handleChangeSortBy}
-                />
-                <FilterButton onClick={handleClickFilterButton}>
-                    <FilterIcon width={18} height={18} fill="#1890FF" />
-                    {`Filter`}
-                </FilterButton>
-                <Box display="flex" borderRadius={3} overflow="hidden" sx={{ background: '#E8F4FF' }}>
-                    <Button
-                        onClick={() => setProductViewMode('grid1')}
-                        sx={{
-                            borderRadius: 3,
-                            color: productViewMode === 'grid1' ? 'white' : 'var(--color-base)',
-                            background: productViewMode === 'grid1' ? '#1890FF' : 'auto',
-                        }}
-                    >
-                        <Grid24Filled />
-                    </Button>
-                    <Button
-                        onClick={() => setProductViewMode('grid2')}
-                        sx={{
-                            borderRadius: 3,
-                            color: productViewMode === 'grid2' ? 'white' : 'var(--color-base)',
-                            background: productViewMode === 'grid2' ? '#1890FF' : 'auto',
-                        }}
-                    >
-                        <GridDots24Filled />
-                    </Button>
-                </Box>
-            </Stack>
+            <OptionsBar
+                sortOptions={sortOptions}
+                sortSelected={sortBy}
+                handleSortChange={handleChangeSortBy}
+                handleClickFilterButton={handleClickFilterButton}
+                productViewMode={productViewMode}
+                setProductViewMode={setProductViewMode}
+            />
             <Box display="flex" mt={3}>
                 {filters.map((item, index) => (
                     <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>
