@@ -6,13 +6,14 @@ import Product from 'src/components/Product';
 import { dummyProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
-import { enmSortOptionValues, sortOptions } from 'src/constants/select-constants';
+import { sortOptions } from 'src/constants/select-constants';
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { FilterItemTypography, FilterButton } from './styles';
 import SearchField from '../../SearchField';
 import SortByButton from '../../SortBy';
 import { ReactComponent as FilterIcon } from '../../../assets/icons/filter.svg';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
@@ -48,7 +49,16 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     return (
         <>
-            <Stack direction="row" spacing={2}>
+            <Box>
+                <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
+                    {productList.map((product, index) => (
+                        <SwiperSlide key={`banner-carousel-${index}`}>
+                            <Product product={product} onlyShowImage />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            </Box>
+            <Stack direction="row" spacing={2} marginTop={5}>
                 <SearchField />
                 <SortByButton
                     options={sortOptions}
@@ -90,9 +100,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     </FilterItemTypography>
                 ))}
             </Box>
-            <Grid container mt={2.5} spacing={3}>
+            <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
-                    <Grid item xs={productViewMode === 'grid1' ? 12 : 6} key={`explore-product-${index}`}>
+                    <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
                         <Product product={item} />
                     </Grid>
                 ))}
