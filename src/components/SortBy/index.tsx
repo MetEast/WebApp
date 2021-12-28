@@ -14,8 +14,7 @@ const SortByButton: React.FC<SelectProps> = ({ title, children, placeholder = ''
 
     return (
         <Box
-            width="auto"
-            minWidth={200}
+            width={200}
             onClick={() => {
                 setIsOpen(!isOpen);
             }}
@@ -25,7 +24,7 @@ const SortByButton: React.FC<SelectProps> = ({ title, children, placeholder = ''
                 {title ? title : placeholder}
                 <KeyboardArrowDownIcon className="arrow-icon" />
             </SortByBtn>
-            <ListItemsWrapper isOpen={isOpen}>
+            <ListItemsWrapper width={200} isOpen={isOpen}>
                 <Stack>{children}</Stack>
             </ListItemsWrapper>
         </Box>
