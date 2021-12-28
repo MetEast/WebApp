@@ -1,4 +1,4 @@
 export type SortOption = {
-    label: string;
-    value: string;
+    label: string | undefined;
+    value: string | undefined;
 };

@@ -18,13 +18,15 @@ import { dummyProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { enmSortOptionValues, sortOptions } from 'src/constants/select-constants';
+import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { FilterItemTypography } from './styledComponents';
 import SearchField from '../../SearchField';
+import SortByButton from '../../SortBy';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
-    const [sortBy, setSortBy] = useState<string>(enmSortOptionValues.low_to_high);
+    const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
@@ -32,7 +34,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const productList: Array<TypeProduct> = dummyProducts;
 
     const handleChangeSortBy = (e: SelectChangeEvent) => {
-        setSortBy(e.target.value);
+        // setSortBy(e.target.value);
     };
 
     const handleCloseFilterModal = () => {
@@ -55,9 +57,11 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     return (
         <>
-            <Stack direction="row">
+            <Stack direction="row" spacing={2}>
                 <SearchField />
-                <FormControl>
+                <SortByButton>
+                    </SortByButton>
+                {/* <FormControl>
                     <InputLabel id="sort-select-label">Sort By</InputLabel>
                     <Select
                         labelId="sort-select-label"
@@ -72,12 +76,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
-                <Box ml={-4} mb={2} textAlign="center">
+                </FormControl> */}
+                {/* <Box ml={-4} mb={2} textAlign="center">
                     <Button variant="contained" onClick={handleClickFilterButton}>
                         Filters ({filters.length})
                     </Button>
-                </Box>
+                </Box> */}
                 <Box display="flex" alignItems="center">
                     <Box ml={2}>
                         <Button
