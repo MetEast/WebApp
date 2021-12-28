@@ -60,23 +60,27 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     <FilterIcon width={18} height={18} fill="#1890FF" />
                     {`Filter`}
                 </FilterButton>
-                <Box display="flex" alignItems="center">
-                    <Box ml={2}>
-                        <Button
-                            onClick={() => setProductViewMode('grid1')}
-                            sx={{ color: productViewMode === 'grid1' ? 'var(--color-base)' : 'black' }}
-                        >
-                            <Grid24Filled />
-                        </Button>
-                    </Box>
-                    <Box>
-                        <Button
-                            onClick={() => setProductViewMode('grid2')}
-                            sx={{ color: productViewMode === 'grid2' ? 'var(--color-base)' : 'black' }}
-                        >
-                            <GridDots24Filled />
-                        </Button>
-                    </Box>
+                <Box display="flex" borderRadius={3} overflow="hidden" sx={{ background: '#E8F4FF' }}>
+                    <Button
+                        onClick={() => setProductViewMode('grid1')}
+                        sx={{
+                            borderRadius: 3,
+                            color: productViewMode === 'grid1' ? 'white' : 'var(--color-base)',
+                            background: productViewMode === 'grid1' ? '#1890FF' : 'auto',
+                        }}
+                    >
+                        <Grid24Filled />
+                    </Button>
+                    <Button
+                        onClick={() => setProductViewMode('grid2')}
+                        sx={{
+                            borderRadius: 3,
+                            color: productViewMode === 'grid2' ? 'white' : 'var(--color-base)',
+                            background: productViewMode === 'grid2' ? '#1890FF' : 'auto',
+                        }}
+                    >
+                        <GridDots24Filled />
+                    </Button>
                 </Box>
             </Stack>
             <Box display="flex" mt={3}>
