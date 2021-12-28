@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
@@ -6,26 +6,45 @@ import { TypeProduct } from 'src/types/product-types';
 import { dummyProducts } from 'src/constants/dummyData';
 import Product from 'src/components/Product';
 import BlindBoxProduct from 'src/components/BlindBoxProduct';
-import { H1Typography } from 'src/core/typographies';
+import OptionsBar from 'src/components/OptionsBar';
+import { sortOptions } from 'src/constants/select-constants';
+import { SortOption } from 'src/types/select-types';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
-    const products: Array<TypeProduct> = dummyProducts;
+    const [sortBy, setSortBy] = useState<SortOption>();
+    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
+
+    const productList: Array<TypeProduct> = dummyProducts;
+
+    const handleChangeSortBy = (value: string) => {
+        const item = sortOptions.find((option) => option.value === value);
+        setSortBy(item);
+    };
+
+    const handleClickFilterButton = () => {};
 
     return (
         <>
-            <H1Typography>Blind Boxes</H1Typography>
-            <Box mt={3}>
+            <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                    {products.map((product, index) => (
+                    {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
                             <Product product={product} onlyShowImage />
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </Box>
-            <Grid container mt={2.5} spacing={3}>
-                {products.map((item, index) => (
-                    <Grid item xs={12} key={`explore-product-${index}`}>
+            <OptionsBar
+                sortOptions={sortOptions}
+                sortSelected={sortBy}
+                handleSortChange={handleChangeSortBy}
+                handleClickFilterButton={handleClickFilterButton}
+                productViewMode={productViewMode}
+                setProductViewMode={setProductViewMode}
+            />
+            <Grid container mt={2} spacing={4}>
+                {productList.map((item, index) => (
+                    <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
                         <BlindBoxProduct product={item} />
                     </Grid>
                 ))}

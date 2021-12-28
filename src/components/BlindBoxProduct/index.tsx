@@ -1,69 +1,57 @@
-import { BuildingShop20Filled, Heart20Filled, Heart24Filled, ShoppingBagDismiss20Filled } from '@fluentui/react-icons';
-import { Box } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { H3Typography, H5Typography } from 'src/core/typographies';
 import { TypeProduct } from 'src/types/product-types';
-import {
-    ProductContainer,
-    ProductImageContainer,
-    ProductMainContainer,
-    ProductPriceTypography,
-    ComingSoonBadge,
-    SoldOutBadge,
-    HeartIconContainer,
-} from './styledComponents';
+import { ProductImageContainer, BuyNowBtn, LikeBtn } from './styles';
+import { Box, Stack, Typography } from '@mui/material';
 
 export interface IBlindBoxProductProps {
     product: TypeProduct;
+    onlyShowImage?: boolean;
 }
 
-const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product }): JSX.Element => {
+const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     return (
-        <ProductContainer>
-            <Link to={`/blind-buy-now/${product.id}`}>
-                <ProductImageContainer>
+        <Box>
+            <Link to={`/buy-now/${product.id}`}>
+                <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
-                    <HeartIconContainer>
-                        <Heart24Filled />
-                    </HeartIconContainer>
+                    {!onlyShowImage && (
+                        <LikeBtn>
+                            <img src="/assets/icons/like.svg" alt="" />
+                        </LikeBtn>
+                    )}
                 </ProductImageContainer>
             </Link>
-
-            <ProductMainContainer mt={2}>
-                <H3Typography mb={1}>{product.name}</H3Typography>
-                <Box display="flex" justifyContent="space-between">
-                    <Box>
-                        <H5Typography sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
-                            <ShoppingBagDismiss20Filled style={{ paddingTop: '0.25rem' }} />
-                            &nbsp;24 Sold
-                        </H5Typography>
-                    </Box>
-                    <Box>
-                        <H5Typography sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
-                            <BuildingShop20Filled style={{ paddingTop: '0.25rem' }} />
-                            &nbsp;200 In Stock
-                        </H5Typography>
-                    </Box>
-                    <Box>
-                        <H5Typography sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
-                            <Heart20Filled style={{ paddingTop: '0.25rem' }} />
-                            &nbsp;88 Likes
-                        </H5Typography>
-                    </Box>
-                </Box>
-                <ProductPriceTypography mt={5}>{`ELA ${product.price.toFixed(2)}`}</ProductPriceTypography>
-            </ProductMainContainer>
-            {product.comingSoon ? (
-                <ComingSoonBadge>
-                    <H5Typography color="inherit">Coming Soon: 2022/02/28 10:00</H5Typography>
-                </ComingSoonBadge>
-            ) : (
-                <SoldOutBadge>
-                    <H5Typography color="inherit">Sold Out</H5Typography>
-                </SoldOutBadge>
+            {!onlyShowImage && (
+                <Stack spacing={1}>
+                    <Typography fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
+                        {product.name}
+                    </Typography>
+                    <Stack direction="row" alignItems="center" spacing={1} display={{ xs: 'none', lg: 'flex' }}>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <img src="/assets/icons/creator.svg" width={14} height={14} alt="" />
+                            <Typography fontWeight={500} fontSize={12}>{`by Nickname`}</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <img src="/assets/icons/like.svg" width={14} height={14} alt="" />
+                            <Typography fontWeight={500} fontSize={12}>{`${product.likes} likes`}</Typography>
+                        </Stack>
+                    </Stack>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                        <img src="/assets/icons/elatos-ela.svg" alt="" />
+                        <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(
+                            2,
+                        )} ELA`}</Typography>
+                        <Typography
+                            fontWeight={400}
+                            fontSize={12}
+                            display={{ xs: 'none', lg: 'block' }}
+                        >{`~$480.00`}</Typography>
+                    </Stack>
+                    <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>}>Buy Now</BuyNowBtn>
+                </Stack>
             )}
-        </ProductContainer>
+        </Box>
     );
 };
 
