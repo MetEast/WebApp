@@ -22,7 +22,7 @@ import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { FilterItemTypography } from './styledComponents';
 import SearchField from '../../SearchField';
-import SortByButton from '../../SortBy';
+import SortByButton, { SelectItem } from '../../SortBy';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
@@ -33,8 +33,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     const productList: Array<TypeProduct> = dummyProducts;
 
-    const handleChangeSortBy = (e: SelectChangeEvent) => {
-        // setSortBy(e.target.value);
+    const handleChangeSortBy = (value: string) => {
+        const item = sortOptions.find((option) => option.value === value);
+        setSortBy(item);
     };
 
     const handleCloseFilterModal = () => {
@@ -59,24 +60,16 @@ const ExplorePage: React.FC = (): JSX.Element => {
         <>
             <Stack direction="row" spacing={2}>
                 <SearchField />
-                <SortByButton>
-                    </SortByButton>
-                {/* <FormControl>
-                    <InputLabel id="sort-select-label">Sort By</InputLabel>
-                    <Select
-                        labelId="sort-select-label"
-                        id="sort-select"
-                        value={sortBy}
-                        label="Sort By"
-                        onChange={handleChangeSortBy}
-                    >
-                        {sortOptions.map((item, index) => (
-                            <MenuItem key={`sort-option-${index}`} value={item.value}>
-                                {item.label}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl> */}
+                <SortByButton title={sortBy?.label} placeholder="SORT BY">
+                    {sortOptions.map((item, index) => (
+                        <SelectItem
+                            key={`sort-option-${index}`}
+                            title={item.label}
+                            value={item.value}
+                            handleClick={handleChangeSortBy}
+                        />
+                    ))}
+                </SortByButton>
                 {/* <Box ml={-4} mb={2} textAlign="center">
                     <Button variant="contained" onClick={handleClickFilterButton}>
                         Filters ({filters.length})
