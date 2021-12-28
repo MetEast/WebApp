@@ -4,12 +4,13 @@ import { Box, Button, Stack } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface SelectProps {
+    options: { label: string; value: string }[];
     title?: string;
-    children: React.ReactElement<SelectItemProps> | React.ReactElement<SelectItemProps>[];
     placeholder?: string;
+    handleClick: (value: string) => void;
 }
 
-const SortByButton: React.FC<SelectProps> = ({ title, children, placeholder = '' }) => {
+const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '', handleClick }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -25,19 +26,28 @@ const SortByButton: React.FC<SelectProps> = ({ title, children, placeholder = ''
                 <KeyboardArrowDownIcon className="arrow-icon" />
             </SortByBtn>
             <ListItemsWrapper width={200} isOpen={isOpen}>
-                <Stack>{children}</Stack>
+                <Stack>
+                    {options.map((item, index) => (
+                        <SelectItem
+                            key={`sort-option-${index}`}
+                            title={item.label}
+                            value={item.value}
+                            handleClick={handleClick}
+                        />
+                    ))}
+                </Stack>
             </ListItemsWrapper>
         </Box>
     );
 };
 
 interface SelectItemProps {
-    handleClick: (idx: string) => void;
+    handleClick: (value: string) => void;
     title: string;
     value: string;
 }
 
-export const SelectItem: React.FC<SelectItemProps> = ({ title, value, handleClick }) => {
+const SelectItem: React.FC<SelectItemProps> = ({ title, value, handleClick }) => {
     return <Button onClick={(e) => handleClick(value)}>{title}</Button>;
 };
 

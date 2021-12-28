@@ -22,7 +22,7 @@ import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { FilterItemTypography } from './styledComponents';
 import SearchField from '../../SearchField';
-import SortByButton, { SelectItem } from '../../SortBy';
+import SortByButton from '../../SortBy';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
@@ -60,16 +60,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
         <>
             <Stack direction="row" spacing={2}>
                 <SearchField />
-                <SortByButton title={sortBy?.label} placeholder="SORT BY">
-                    {sortOptions.map((item, index) => (
-                        <SelectItem
-                            key={`sort-option-${index}`}
-                            title={item.label}
-                            value={item.value}
-                            handleClick={handleChangeSortBy}
-                        />
-                    ))}
-                </SortByButton>
+                <SortByButton
+                    options={sortOptions}
+                    title={sortBy?.label}
+                    placeholder="SORT BY"
+                    handleClick={handleChangeSortBy}
+                />
                 {/* <Box ml={-4} mb={2} textAlign="center">
                     <Button variant="contained" onClick={handleClickFilterButton}>
                         Filters ({filters.length})
