@@ -47,3 +47,16 @@ export const ProfileImage = styled('img')`
     border-radius: 50%;
     background: white;
 `;
+
+export const ProfilesMainButton = styled(Button)<{ active: boolean }>`
+    height: ${({ active }) => (active ? '56px' : '40px')};
+    background: ${({ active }) => (active ? '#1890FF' : '#E8F4FF')};
+    color: ${({ active }) => (active ? 'white' : '#1890FF')};
+    border-radius: ${({ active }) => (active ? '16px' : '12px')};
+    padding: ${({ active }) => (active ? '0 32px' : '0 18px')};
+    font-size: ${({ active }) => (active ? '18px' : '16px')};
+    font-weight: 700;
+    &:hover {
+        background: ${({ active }) => (active ? '#0870DF' : '#D8E4EF')};
+    }
+`;

@@ -11,10 +11,11 @@ import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
-import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage } from './styles';
+import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, ProfilesMainButton } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const PrivateProfilePage: React.FC = (): JSX.Element => {
+    const [mainButtonSelected, setMainButtonSelected] = useState<'earnings' | 'createnft' | 'editprofile'>('createnft');
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
@@ -50,6 +51,18 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
         if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
     };
 
+    const handleEarningsBtnClicked = () => {
+        setMainButtonSelected('earnings');
+    };
+
+    const handleCreateNFTBtnClicked = () => {
+        setMainButtonSelected('createnft');
+    };
+
+    const handleEditProfileBtnClicked = () => {
+        setMainButtonSelected('editprofile');
+    };
+
     return (
         <>
             <Box>
@@ -61,28 +74,52 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                     ))}
                 </Swiper>
             </Box>
-            <ProfileImageWrapper>
-                <ProfileImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" />
-            </ProfileImageWrapper>
-            <Stack direction="row" justifyContent="space-between" marginTop={-6}>
-                <Box>
-                    <Typography fontSize={20} fontWeight={900}>
-                        420.00 ELA
+            <Box>
+                <ProfileImageWrapper>
+                    <ProfileImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" />
+                </ProfileImageWrapper>
+                <Stack direction="row" justifyContent="space-between" marginTop={-6}>
+                    <Box>
+                        <Typography fontSize={20} fontWeight={900}>
+                            420.00 ELA
+                        </Typography>
+                        <Typography fontSize={16} fontWeight={400}>
+                            Total Earned
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Typography fontSize={20} fontWeight={900}>
+                            6.80 ELA
+                        </Typography>
+                        <Typography fontSize={16} fontWeight={400}>
+                            Earned Today
+                        </Typography>
+                    </Box>
+                </Stack>
+                <Stack alignItems="center">
+                    <Typography fontSize={56} fontWeight={700}>
+                        Mary S. Megmore
                     </Typography>
-                    <Typography fontSize={16} fontWeight={400}>
-                        Total Earned
-                    </Typography>
-                </Box>
-                <Box>
-                    <Typography fontSize={20} fontWeight={900}>
-                        6.80 ELA
-                    </Typography>
-                    <Typography fontSize={16} fontWeight={400}>
-                        Earned Today
-                    </Typography>
-                </Box>
-            </Stack>
-            <Typography fontSize={42} fontWeight={700}>
+                    <Stack direction="row" alignItems="center" spacing={2} marginTop={2}>
+                        <ProfilesMainButton active={mainButtonSelected === 'earnings'} onClick={handleEarningsBtnClicked}>
+                            Earnings
+                        </ProfilesMainButton>
+                        <ProfilesMainButton
+                            active={mainButtonSelected === 'createnft'}
+                            onClick={handleCreateNFTBtnClicked}
+                        >
+                            Create NFT
+                        </ProfilesMainButton>
+                        <ProfilesMainButton
+                            active={mainButtonSelected === 'editprofile'}
+                            onClick={handleEditProfileBtnClicked}
+                        >
+                            Edit Profile
+                        </ProfilesMainButton>
+                    </Stack>
+                </Stack>
+            </Box>
+            <Typography fontSize={42} fontWeight={700} marginTop={3}>
                 your NFTs
             </Typography>
             <Stack direction="row" alignItems="center" spacing={2} marginTop={1}>
