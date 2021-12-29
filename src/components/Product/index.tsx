@@ -37,6 +37,7 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
                             <Typography fontWeight={500} fontSize={12}>{`${product.likes} likes`}</Typography>
                         </Stack>
                     </Stack>
+                    <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>}>Buy Now</BuyNowBtn>
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" />
                         <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(
@@ -48,7 +49,6 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
                             display={{ xs: 'none', lg: 'block' }}
                         >{`~$480.00`}</Typography>
                     </Stack>
-                    <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>}>Buy Now</BuyNowBtn>
                 </Stack>
             )}
         </Box>
