@@ -14,7 +14,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     position: 'fixed',
                     top: 0,
                     background: '#FFFFFF',
-                    zIndex: 10,
+                    zIndex: 20,
                     display: { xs: 'none', md: 'block' },
                 }}
             >
@@ -31,7 +31,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     position: 'fixed',
                     bottom: 0,
                     background: 'white',
-                    zIndex: 10,
+                    zIndex: 20,
                     display: { md: 'none' },
                 }}
             >
