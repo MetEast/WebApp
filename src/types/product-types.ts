@@ -1,7 +1,7 @@
 export enum enmSaleStatus {
-    ComingSoon = 'ComingSoon',
-    SaleEnds = 'SaleEnds',
-    SaleEnded = 'SaleEnded',
+    ComingSoon = 'Coming Soon',
+    SaleEnds = 'Sale Ends',
+    SaleEnded = 'Sale Ended',
 }
 
 export type TypeProduct = {
@@ -11,4 +11,5 @@ export type TypeProduct = {
     price: number;
     likes: number;
     saleStatus: enmSaleStatus;
+    saleTime?: string;
 };

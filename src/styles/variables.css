@@ -4,4 +4,10 @@
     --color-success: #27AE60;
     --color-error: #EB5757;
     --color-warning: #F2994A;
+    --color-badge-comingsoon-bg: #C9F5DC;
+    --color-badge-comingsoon-text: #1EA557;
+    --color-badge-saleends-bg: #FFEAD8;
+    --color-badge-saleends-text: #E0822C;
+    --color-badge-saleended-bg: #FFE2E2;
+    --color-badge-saleended-text: #EB5757;
 }

@@ -35,6 +35,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         saleStatus: enmSaleStatus.ComingSoon,
+        saleTime: "2022/02/28 10:00"
     },
     {
         id: '1',
@@ -43,6 +44,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         saleStatus: enmSaleStatus.SaleEnds,
+        saleTime: "2022/02/28 10:00"
     },
     {
         id: '2',
@@ -59,6 +61,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         saleStatus: enmSaleStatus.ComingSoon,
+        saleTime: "2022/02/28 10:00"
     },
     {
         id: '4',
@@ -67,6 +70,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         saleStatus: enmSaleStatus.SaleEnds,
+        saleTime: "2022/02/28 10:00"
     },
     {
         id: '5',
@@ -83,5 +87,6 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         saleStatus: enmSaleStatus.ComingSoon,
+        saleTime: "2022/02/28 10:00"
     },
 ];

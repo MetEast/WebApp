@@ -1,11 +1,17 @@
 import React from 'react';
-import { Box } from '@mui/material';
 import { Container } from './styles';
+import { TypeProduct } from 'src/types/product-types';
 
-const SaleStatusBadge: React.FC = (): JSX.Element => {
+interface SaleStatusBadgeProps {
+    product: TypeProduct;
+}
+
+const SaleStatusBadge: React.FC<SaleStatusBadgeProps> = ({ product }): JSX.Element => {
     return (
         <>
-            <Container>Sale Ends: 2022/02/28 10:00</Container>
+            <Container saleStatus={product.saleStatus}>{`${product.saleStatus}${
+                product.saleTime ? `: ${product.saleTime}` : ''
+            }`}</Container>
         </>
     );
 };

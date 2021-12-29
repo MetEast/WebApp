@@ -49,7 +49,7 @@ const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product, onlyShowIma
                             display={{ xs: 'none', lg: 'block' }}
                         >{`~$480.00`}</Typography>
                     </Stack>
-                    <SaleStatusBadge />
+                    <SaleStatusBadge product={product} />
                 </Stack>
             )}
         </Box>
