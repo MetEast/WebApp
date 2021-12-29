@@ -1,4 +1,4 @@
-import { styled, Typography, Button } from '@mui/material';
+import { styled, Typography, Button, Box } from '@mui/material';
 
 export const FilterItemTypography = styled(Typography)`
     border: 1px solid var(--color-base);
@@ -30,4 +30,20 @@ export const FilterButton = styled(Button)<{ selected: boolean }>`
         background: ${({ selected }) => (selected ? '#1890FF' : '#E8F4FF')};
         color: ${({ selected }) => (selected ? 'white' : '#1890FF')};
     }
+`;
+
+export const ProfileImageWrapper = styled(Box)`
+    display: grid;
+    place-content: center;
+    margin-top: -90px;
+    position: relative;
+    z-index: 10;
+`;
+
+export const ProfileImage = styled('img')`
+    width: 180px;
+    height: 180px;
+    padding: 4px;
+    border-radius: 50%;
+    background: white;
 `;
