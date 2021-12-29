@@ -3,6 +3,7 @@ import { Button, Box, Typography, Stack } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import MenuItem from '../MenuItem';
 import { CreateNFTButton } from './styles';
+import { useNavigate } from 'react-router-dom';
 
 const menuItemsList = [
     {
@@ -20,6 +21,7 @@ const menuItemsList = [
 ];
 
 const Header: React.FC = (): JSX.Element => {
+    const navigate = useNavigate();
     const location = useLocation();
 
     return (
@@ -36,7 +38,11 @@ const Header: React.FC = (): JSX.Element => {
                 <Button>
                     <img src="/assets/icons/notification.svg" alt="" />
                 </Button>
-                <Button>
+                <Button
+                    onClick={() => {
+                        navigate('/profile');
+                    }}
+                >
                     <img src="/assets/icons/profile.svg" alt="" />
                 </Button>
                 <CreateNFTButton>Create NFT</CreateNFTButton>
