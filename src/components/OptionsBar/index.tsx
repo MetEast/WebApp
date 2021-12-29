@@ -6,8 +6,9 @@ import { SortOption } from 'src/types/select-types';
 import { FilterButton } from './styles';
 import { ReactComponent as FilterIcon } from '../../assets/icons/filter.svg';
 import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
+import { SpacingProps } from '@mui/system';
 
-interface OptionsBarProps {
+interface OptionsBarProps extends SpacingProps {
     sortOptions: SortOption[];
     sortSelected?: SortOption;
     handleSortChange: (value: string) => void;
@@ -23,9 +24,10 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     handleClickFilterButton,
     productViewMode,
     setProductViewMode,
+    ...otherProps
 }): JSX.Element => {
     return (
-        <Stack direction="row" spacing={2} marginTop={5}>
+        <Stack direction="row" spacing={2} {...otherProps}>
             <SearchField />
             <SortByButton
                 options={sortOptions}

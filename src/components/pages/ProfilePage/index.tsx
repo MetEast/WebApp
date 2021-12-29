@@ -5,7 +5,7 @@ import PrivateProfile from 'src/components/profile/PrivateProfile';
 import PrivateProfilePage from './profile';
 
 const ProfilePage: React.FC = (): JSX.Element => {
-    const [step, setStep] = useState<number>(2);
+    const [step, setStep] = useState<number>(1);
 
     const handleClick = (newStep: number) => () => {
         setStep(newStep);

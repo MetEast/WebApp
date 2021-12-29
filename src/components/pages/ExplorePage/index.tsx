@@ -63,6 +63,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 handleClickFilterButton={handleClickFilterButton}
                 productViewMode={productViewMode}
                 setProductViewMode={setProductViewMode}
+                marginTop={5}
             />
             <Box display="flex" mt={3}>
                 {filters.map((item, index) => (

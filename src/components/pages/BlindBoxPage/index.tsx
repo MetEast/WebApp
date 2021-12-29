@@ -41,6 +41,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 handleClickFilterButton={handleClickFilterButton}
                 productViewMode={productViewMode}
                 setProductViewMode={setProductViewMode}
+                marginTop={5}
             />
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (

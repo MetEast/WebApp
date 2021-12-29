@@ -1,5 +1,5 @@
 import { DismissCircle24Filled } from '@fluentui/react-icons';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
 import Product from 'src/components/Product';
@@ -56,6 +56,9 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                     ))}
                 </Swiper>
             </Box>
+            <Typography fontSize={42} fontWeight={700}>
+                your NFTs
+            </Typography>
             <OptionsBar
                 sortOptions={sortOptions}
                 sortSelected={sortBy}
