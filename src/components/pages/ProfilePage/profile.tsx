@@ -15,7 +15,7 @@ import { FilterItemTypography, FilterButton } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const PrivateProfilePage: React.FC = (): JSX.Element => {
-    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
+    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
@@ -64,8 +64,8 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
             <Typography fontSize={42} fontWeight={700}>
                 your NFTs
             </Typography>
-            <Stack direction="row">
-                <Stack direction="row" spacing={2}>
+            <Stack direction="row" alignItems="center" spacing={2} marginTop={1}>
+                <Stack direction="row" spacing={1}>
                     {nftGalleryFilterButtonsList.map((items) => (
                         <FilterButton
                             selected={items.label === nftGalleryFilterBtnSelected}
@@ -83,7 +83,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                     handleClickFilterButton={handleClickFilterButton}
                     productViewMode={productViewMode}
                     setProductViewMode={setProductViewMode}
-                    marginTop={5}
+                    filterBtnHidden
                 />
             </Stack>
             <Box display="flex" mt={3}>
