@@ -1,5 +1,5 @@
 import { TypeNotification } from 'src/types/notification-types';
-import { TypeProduct } from 'src/types/product-types';
+import { TypeProduct, enmSaleStatus } from 'src/types/product-types';
 
 export const dummyNotificationList: Array<TypeNotification> = [
     {
@@ -34,7 +34,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        comingSoon: true,
+        saleStatus: enmSaleStatus.ComingSoon,
     },
     {
         id: '1',
@@ -42,6 +42,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
+        saleStatus: enmSaleStatus.SaleEnds,
     },
     {
         id: '2',
@@ -49,7 +50,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        comingSoon: true,
+        saleStatus: enmSaleStatus.SaleEnded,
     },
     {
         id: '3',
@@ -57,6 +58,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
+        saleStatus: enmSaleStatus.ComingSoon,
     },
     {
         id: '4',
@@ -64,6 +66,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
+        saleStatus: enmSaleStatus.SaleEnds,
     },
     {
         id: '5',
@@ -71,6 +74,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
+        saleStatus: enmSaleStatus.SaleEnded,
     },
     {
         id: '6',
@@ -78,5 +82,6 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
+        saleStatus: enmSaleStatus.ComingSoon,
     },
 ];

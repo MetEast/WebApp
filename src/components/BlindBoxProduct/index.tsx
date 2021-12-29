@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
-import { ProductImageContainer, BuyNowBtn, LikeBtn } from './styles';
+import { ProductImageContainer, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
+import SaleStatusBadge from '../SaleStatusBadge';
 
 export interface IBlindBoxProductProps {
     product: TypeProduct;
@@ -48,7 +49,7 @@ const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product, onlyShowIma
                             display={{ xs: 'none', lg: 'block' }}
                         >{`~$480.00`}</Typography>
                     </Stack>
-                    <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>}>Buy Now</BuyNowBtn>
+                    <SaleStatusBadge />
                 </Stack>
             )}
         </Box>
