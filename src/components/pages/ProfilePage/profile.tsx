@@ -1,5 +1,5 @@
 import { DismissCircle24Filled } from '@fluentui/react-icons';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, Stack } from '@mui/material';
 import React, { useState } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
 import Product from 'src/components/Product';
@@ -8,9 +8,10 @@ import { dummyProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
+import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
-import { FilterItemTypography } from './styles';
+import { FilterItemTypography, FilterButton } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const PrivateProfilePage: React.FC = (): JSX.Element => {
@@ -19,8 +20,12 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
+    const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
+        nftGalleryFilterBtnTypes.All,
+    );
 
     const productList: Array<TypeProduct> = dummyProducts;
+    const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
 
     const handleChangeSortBy = (value: string) => {
         const item = sortOptions.find((option) => option.value === value);
@@ -59,14 +64,28 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
             <Typography fontSize={42} fontWeight={700}>
                 your NFTs
             </Typography>
-            <OptionsBar
-                sortOptions={sortOptions}
-                sortSelected={sortBy}
-                handleSortChange={handleChangeSortBy}
-                handleClickFilterButton={handleClickFilterButton}
-                productViewMode={productViewMode}
-                setProductViewMode={setProductViewMode}
-            />
+            <Stack direction="row">
+                <Stack direction="row" spacing={2}>
+                    {nftGalleryFilterButtonsList.map((items) => (
+                        <FilterButton
+                            selected={items.label === nftGalleryFilterBtnSelected}
+                            onClick={() => setNftGalleryFilterBtnSelected(items.label)}
+                        >
+                            {items.label}
+                            <p>{items.value}</p>
+                        </FilterButton>
+                    ))}
+                </Stack>
+                <OptionsBar
+                    sortOptions={sortOptions}
+                    sortSelected={sortBy}
+                    handleSortChange={handleChangeSortBy}
+                    handleClickFilterButton={handleClickFilterButton}
+                    productViewMode={productViewMode}
+                    setProductViewMode={setProductViewMode}
+                    marginTop={5}
+                />
+            </Stack>
             <Box display="flex" mt={3}>
                 {filters.map((item, index) => (
                     <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>

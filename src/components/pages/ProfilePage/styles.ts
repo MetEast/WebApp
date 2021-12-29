@@ -16,11 +16,18 @@ export const FilterItemTypography = styled(Typography)`
     line-height: 1rem;
 `;
 
-export const FilterButton = styled(Button)`
-    background: #e8f4ff;
-    padding: 8px 20px;
+export const FilterButton = styled(Button)<{ selected: boolean }>`
+    padding: 0 16px;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
-    color: #1890ff;
+    background: ${({ selected }) => (selected ? '#e8f4ff' : 'white')};
+    color: ${({ selected }) => (selected ? '#1890ff' : 'black')};
+    p {
+        margin: 8px 0 8px 8px;
+        padding: 4px 12px;
+        border-radius: 8px;
+        background: ${({ selected }) => (selected ? '#1890FF' : '#E8F4FF')};
+        color: ${({ selected }) => (selected ? 'white' : '#1890FF')};
+    }
 `;
