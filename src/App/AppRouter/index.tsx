@@ -8,6 +8,7 @@ import BlindBoxPage from 'src/pages/BlindBoxPage';
 import ExplorePage from 'src/pages/ExplorePage';
 import HomePage from 'src/pages/HomePage';
 import ProfilePage from 'src/pages/ProfilePage';
+import BlindBoxProduct from 'src/pages/BlindBoxProduct';
 import TransactionSuccess from 'src/components/TransactionSuccess';
 import BlindBoxBuyNow from 'src/components/BlindBoxBuyNow';
 import ChooseAmount from 'src/components/ChooseAmount';
@@ -58,6 +59,15 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </Layout>
                     }
                 />
+                <Route
+                    path="/blind-box/product/:id"
+                    element={
+                        <Layout>
+                            <BlindBoxProduct />
+                        </Layout>
+                    }
+                />
+
                 <Route
                     path="/profile/edit"
                     element={

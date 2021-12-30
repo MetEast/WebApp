@@ -13,7 +13,7 @@ export interface IBlindBoxProductProps {
 const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     return (
         <Box>
-            <Link to={`/buy-now/${product.id}`}>
+            <Link to={`/blind-box/product/${product.id}`}>
                 <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
