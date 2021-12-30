@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { TypeProduct } from 'src/types/product-types';
 import { blindboxNFTProducts } from 'src/constants/dummyData';
-import BlindBoxProduct from 'src/components/BlindBoxProduct';
+import BlindBoxGalleryItem from 'src/components/BlindBoxGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
 import { sortOptions } from 'src/constants/select-constants';
 import { SortOption } from 'src/types/select-types';
@@ -28,7 +28,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <BlindBoxProduct product={product} onlyShowImage />
+                            <BlindBoxGalleryItem product={product} onlyShowImage />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -45,7 +45,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
-                        <BlindBoxProduct product={item} />
+                        <BlindBoxGalleryItem product={item} />
                     </Grid>
                 ))}
             </Grid>

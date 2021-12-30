@@ -5,12 +5,12 @@ import { ProductImageContainer, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
 import SaleStatusBadge from '../SaleStatusBadge';
 
-export interface IBlindBoxProductProps {
+export interface BlindBoxGalleryItemProps {
     product: TypeProduct;
     onlyShowImage?: boolean;
 }
 
-const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product, onlyShowImage = false }): JSX.Element => {
+const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     return (
         <Box>
             <Link to={`/blind-box/product/${product.id}`}>
@@ -56,4 +56,4 @@ const BlindBoxProduct: React.FC<IBlindBoxProductProps> = ({ product, onlyShowIma
     );
 };
 
-export default BlindBoxProduct;
+export default BlindBoxGalleryItem;
