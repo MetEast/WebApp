@@ -65,13 +65,13 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
-            <Box display="flex" mt={3}>
+            {/* <Box display="flex" mt={3}>
                 {filters.map((item, index) => (
                     <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>
                         {filterOptions[item]} <DismissCircle24Filled style={{ display: 'flex', marginLeft: '4px' }} />
                     </FilterItemTypography>
                 ))}
-            </Box>
+            </Box> */}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
