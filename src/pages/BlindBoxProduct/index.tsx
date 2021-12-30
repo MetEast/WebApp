@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
-import { Box, Grid } from '@mui/material';
+import React from 'react';
+import { Stack } from '@mui/material';
+import ProductPageHeader from 'src/components/ProductPageHeader';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
-    return <>BlindBoxProduct</>;
+    return (
+        <>
+            <ProductPageHeader />
+        </>
+    );
 };
 
 export default BlindBoxProduct;
