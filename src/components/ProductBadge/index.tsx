@@ -3,12 +3,12 @@ import { Container } from './styles';
 import { enmSaleStatus, enumSingleNFTType } from 'src/types/product-types';
 import { SpacingProps } from '@mui/system';
 
-interface SaleStatusBadgeProps extends SpacingProps {
+interface ProductBadgeProps extends SpacingProps {
     saleStatus: enmSaleStatus | enumSingleNFTType;
     content?: string;
 }
 
-const SaleStatusBadge: React.FC<SaleStatusBadgeProps> = ({ saleStatus, content, ...otherProps }): JSX.Element => {
+const ProductBadge: React.FC<ProductBadgeProps> = ({ saleStatus, content, ...otherProps }): JSX.Element => {
     const styles = {
         [enmSaleStatus.ComingSoon]: {
             background: 'var(--color-badge-comingsoon-bg)',
@@ -41,4 +41,4 @@ const SaleStatusBadge: React.FC<SaleStatusBadgeProps> = ({ saleStatus, content, 
     );
 };
 
-export default SaleStatusBadge;
+export default ProductBadge;

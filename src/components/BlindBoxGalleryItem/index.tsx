@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
 import { ProductImageContainer, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
-import SaleStatusBadge from '../SaleStatusBadge';
+import ProductBadge from '../ProductBadge';
 
 export interface BlindBoxGalleryItemProps {
     product: TypeProduct;
@@ -38,7 +38,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
                             <Typography fontWeight={500} fontSize={12}>{`${product.likes} likes`}</Typography>
                         </Stack>
                     </Stack>
-                    <SaleStatusBadge saleStatus={product.type} content={product.saleTime} />
+                    <ProductBadge saleStatus={product.type} content={product.saleTime} />
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" />
                         <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(
