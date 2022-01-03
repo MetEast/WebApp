@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
 import { ProductImageContainer, BuyNowBtn, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
+import ProductBadge from '../ProductBadge';
 
 export interface ExploreGalleryItemProps {
     product: TypeProduct;
@@ -37,7 +38,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                             <Typography fontWeight={500} fontSize={12}>{`${product.likes} likes`}</Typography>
                         </Stack>
                     </Stack>
-                    <BuyNowBtn startIcon={<img src="/assets/icons/buy-now.svg" alt=""></img>}>Buy Now</BuyNowBtn>
+                    <ProductBadge saleStatus={product.type} content={product.saleTime} />
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" />
                         <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(

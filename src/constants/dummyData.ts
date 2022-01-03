@@ -99,7 +99,6 @@ export const singleNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enumSingleNFTType.BuyNow,
-        saleTime: "2022/02/28 10:00"
     },
     {
         id: '1',
@@ -108,7 +107,6 @@ export const singleNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enumSingleNFTType.BuyNow,
-        saleTime: "2022/02/28 10:00"
     },
     {
         id: '2',
@@ -125,7 +123,6 @@ export const singleNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enumSingleNFTType.BuyNow,
-        saleTime: "2022/02/28 10:00"
     },
     {
         id: '4',
@@ -134,7 +131,6 @@ export const singleNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enumSingleNFTType.BuyNow,
-        saleTime: "2022/02/28 10:00"
     },
     {
         id: '5',
@@ -151,7 +147,6 @@ export const singleNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enumSingleNFTType.BuyNow,
-        saleTime: "2022/02/28 10:00"
     },
 ];
 
