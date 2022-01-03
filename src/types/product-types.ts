@@ -4,12 +4,17 @@ export enum enmSaleStatus {
     SaleEnded = 'Sale Ended',
 }
 
+export enum enumSingleNFTType {
+    BuyNow = 'Buy Now',
+    OnAuction = 'On Auction',
+}
+
 export type TypeProduct = {
     id: string;
     image: string;
     name: string;
     price: number;
     likes: number;
-    saleStatus: enmSaleStatus;
+    type: enmSaleStatus | enumSingleNFTType;
     saleTime?: string;
 };

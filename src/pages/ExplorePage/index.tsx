@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
-import { dummyProducts } from 'src/constants/dummyData';
+import { singleNFTProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
@@ -20,7 +20,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
 
-    const productList: Array<TypeProduct> = dummyProducts;
+    const productList: Array<TypeProduct> = singleNFTProducts;
 
     const handleChangeSortBy = (value: string) => {
         const item = sortOptions.find((option) => option.value === value);
