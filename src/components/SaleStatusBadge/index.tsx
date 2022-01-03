@@ -1,18 +1,16 @@
 import React from 'react';
 import { Container } from './styles';
-import { TypeProduct } from 'src/types/product-types';
+import { enmSaleStatus } from 'src/types/product-types';
+import { SpacingProps } from '@mui/system';
 
-interface SaleStatusBadgeProps {
-    product: TypeProduct;
+interface SaleStatusBadgeProps extends SpacingProps {
+    saleStatus: enmSaleStatus;
+    content?: string;
 }
 
-const SaleStatusBadge: React.FC<SaleStatusBadgeProps> = ({ product }): JSX.Element => {
+const SaleStatusBadge: React.FC<SaleStatusBadgeProps> = ({ saleStatus, content, ...otherProps }): JSX.Element => {
     return (
-        <>
-            <Container saleStatus={product.saleStatus}>{`${product.saleStatus}${
-                product.saleTime ? `: ${product.saleTime}` : ''
-            }`}</Container>
-        </>
+        <Container saleStatus={saleStatus} {...otherProps}>{`${saleStatus}${content ? `: ${content}` : ''}`}</Container>
     );
 };
 
