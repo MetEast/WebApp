@@ -9,6 +9,15 @@ export enum enumSingleNFTType {
     OnAuction = 'On Auction',
 }
 
+export enum enumBadgeType {
+    ComingSoon = 'Coming Soon',
+    SaleEnds = 'Sale Ends',
+    SaleEnded = 'Sale Ended',
+    BuyNow = 'Buy Now',
+    OnAuction = 'On Auction',
+    ReservePriceNotMet = 'Reserve Price Not Met',
+}
+
 export type TypeProduct = {
     id: string;
     image: string;

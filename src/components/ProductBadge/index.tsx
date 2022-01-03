@@ -1,41 +1,45 @@
 import React from 'react';
 import { Container } from './styles';
-import { enmSaleStatus, enumSingleNFTType } from 'src/types/product-types';
-import { SpacingProps } from '@mui/system';
+import { enumBadgeType } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
 import { Typography } from '@mui/material';
 
-interface ProductBadgeProps extends SpacingProps {
-    saleStatus: enmSaleStatus | enumSingleNFTType;
+interface ProductBadgeProps {
+    badgeType: enumBadgeType;
     content?: string;
 }
 
-const ProductBadge: React.FC<ProductBadgeProps> = ({ saleStatus, content, ...otherProps }): JSX.Element => {
+const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.Element => {
     const styles = {
-        [enmSaleStatus.ComingSoon]: {
+        [enumBadgeType.ComingSoon]: {
             background: '#C9F5DC',
             color: '#1EA557',
             icon: '',
         },
-        [enmSaleStatus.SaleEnds]: {
+        [enumBadgeType.SaleEnds]: {
             background: '#FFEAD8',
             color: '#E0822C',
             icon: '',
         },
-        [enmSaleStatus.SaleEnded]: {
+        [enumBadgeType.SaleEnded]: {
             background: '#FDEEEE',
             color: '#EB5757',
             icon: '',
         },
-        [enumSingleNFTType.BuyNow]: {
+        [enumBadgeType.BuyNow]: {
             background: '#E8F4FF',
             color: '#1890FF',
             icon: <Icon icon="ph:lightning" />,
         },
-        [enumSingleNFTType.OnAuction]: {
+        [enumBadgeType.OnAuction]: {
             background: '#E8F4FF',
             color: '#1890FF',
             icon: <Icon icon="ph:scales" />,
+        },
+        [enumBadgeType.ReservePriceNotMet]: {
+            background: '#BF21F11A',
+            color: '#BF21F1',
+            icon: '',
         },
     };
 
@@ -44,12 +48,11 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ saleStatus, content, ...oth
             direction="row"
             alignItems="center"
             spacing={1}
-            sx={{ background: styles[saleStatus].background, color: styles[saleStatus].color }}
-            {...otherProps}
+            sx={{ background: styles[badgeType].background, color: styles[badgeType].color }}
         >
-            {styles[saleStatus].icon !== '' && styles[saleStatus].icon}
-            <Typography fontSize={14} fontWeight={500} color={styles[saleStatus].color}>
-                {`${saleStatus}${content ? `: ${content}` : ''}`}
+            {styles[badgeType].icon !== '' && styles[badgeType].icon}
+            <Typography fontSize={14} fontWeight={500} color={styles[badgeType].color}>
+                {`${badgeType}${content ? `: ${content}` : ''}`}
             </Typography>
         </Container>
     );

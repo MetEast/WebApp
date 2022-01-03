@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stack, Grid, Typography, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import ProductBadge from 'src/components/ProductBadge';
+import ProductBadgeContainer from 'src/components/ProductBadgeContainer';
 import { ProductImageContainer, LikeBtn, BuyNowBtn } from './styles';
 import { enmSaleStatus } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
@@ -49,7 +49,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             </Typography>
                         </Stack>
                     </Stack>
-                    <ProductBadge saleStatus={enmSaleStatus.ComingSoon} content="2022/02/28  10:00" marginTop={3} />
+                    <ProductBadgeContainer
+                        saleStatus={enmSaleStatus.ComingSoon}
+                        content="2022/02/28 10:00"
+                        marginTop={3}
+                    />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" />
                         <Typography fontSize={20} fontWeight={500}>
