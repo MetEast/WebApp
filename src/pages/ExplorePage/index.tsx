@@ -2,7 +2,7 @@ import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
-import Product from 'src/components/Product';
+import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
 import { dummyProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -51,7 +51,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Product product={product} onlyShowImage />
+                            <ExploreGalleryItem product={product} onlyShowImage />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -65,17 +65,10 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
-            {/* <Box display="flex" mt={3}>
-                {filters.map((item, index) => (
-                    <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>
-                        {filterOptions[item]} <DismissCircle24Filled style={{ display: 'flex', marginLeft: '4px' }} />
-                    </FilterItemTypography>
-                ))}
-            </Box> */}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
-                        <Product product={item} />
+                        <ExploreGalleryItem product={item} />
                     </Grid>
                 ))}
             </Grid>
