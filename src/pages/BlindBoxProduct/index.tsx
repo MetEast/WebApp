@@ -15,7 +15,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     <ProductImageContainer>
                         <img src={'/assets/images/blindbox/blindbox-nft-template2.png'} alt="" />
                         <LikeBtn>
-                            <img src="/assets/icons/like.svg" alt="" />
+                            <Icon icon="ph:heart" fontSize={20} color="black" />
                         </LikeBtn>
                     </ProductImageContainer>
                 </Grid>

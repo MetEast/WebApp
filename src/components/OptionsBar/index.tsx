@@ -4,9 +4,9 @@ import SearchField from '../SearchField';
 import SortByButton from '../SortBy';
 import { SortOption } from 'src/types/select-types';
 import { FilterButton } from './styles';
-import { ReactComponent as FilterIcon } from '../../assets/icons/filter.svg';
 import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
 import { SpacingProps } from '@mui/system';
+import { Icon } from '@iconify/react';
 
 interface OptionsBarProps extends SpacingProps {
     sortOptions: SortOption[];
@@ -39,7 +39,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
             />
             {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>
-                    <FilterIcon width={18} height={18} fill="#1890FF" />
+                    <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: 4 }} />
                     {`Filter`}
                 </FilterButton>
             )}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SortByBtn, ListItemsWrapper } from './styles';
 import { Box, Button, Stack } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Icon } from '@iconify/react';
 
 interface SelectProps {
     options: { label: string; value: string }[];
@@ -21,7 +22,7 @@ const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '',
             }}
         >
             <SortByBtn fullWidth isOpen={isOpen}>
-                <img src="/assets/icons/sortby.svg" alt="" />
+                <Icon icon="ph:sort-ascending" fontSize={24} />
                 {title ? title : placeholder}
                 <KeyboardArrowDownIcon className="arrow-icon" />
             </SortByBtn>

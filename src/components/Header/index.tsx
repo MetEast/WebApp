@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import MenuItem from '../MenuItem';
 import { CreateNFTButton } from './styles';
 import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 
 const menuItemsList = [
     {
@@ -36,14 +37,14 @@ const Header: React.FC = (): JSX.Element => {
             </Stack>
             <Stack direction="row" spacing={1}>
                 <Button>
-                    <img src="/assets/icons/notification.svg" alt="" />
+                    <Icon icon="ph:chat-circle" fontSize={24} color="black" />
                 </Button>
                 <Button
                     onClick={() => {
                         navigate('/profile');
                     }}
                 >
-                    <img src="/assets/icons/profile.svg" alt="" />
+                    <Icon icon="ph:user" fontSize={24} color="black" />
                 </Button>
                 <CreateNFTButton>Create NFT</CreateNFTButton>
             </Stack>

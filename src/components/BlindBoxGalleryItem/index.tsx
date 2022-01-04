@@ -4,6 +4,7 @@ import { TypeProduct } from 'src/types/product-types';
 import { ProductImageContainer, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
+import { Icon } from '@iconify/react';
 
 export interface BlindBoxGalleryItemProps {
     product: TypeProduct;
@@ -18,7 +19,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
                         <LikeBtn>
-                            <img src="/assets/icons/like.svg" alt="" />
+                            <Icon icon="ph:heart" fontSize={20} color="black" />
                         </LikeBtn>
                     )}
                 </ProductImageContainer>
@@ -30,11 +31,11 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={1} display={{ xs: 'none', lg: 'flex' }}>
                         <Stack direction="row" alignItems="center" spacing={1}>
-                            <img src="/assets/icons/soldsale.svg" width={16} height={16} alt="" />
+                            <Icon icon="ph:handshake" />
                             <Typography fontWeight={500} fontSize={12}>{`24 sold`}</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center" spacing={1}>
-                            <img src="/assets/icons/like.svg" width={14} height={14} alt="" />
+                            <Icon icon="ph:heart" />
                             <Typography fontWeight={500} fontSize={12}>{`${product.likes} likes`}</Typography>
                         </Stack>
                     </Stack>
