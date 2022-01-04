@@ -1,14 +1,16 @@
 import React from 'react';
 import { Stack, Grid, Typography } from '@mui/material';
 
-interface ComponentProps {}
+interface ComponentProps {
+    vertically?: boolean;
+}
 
-const SingleNFTMoreInfo: React.FC<ComponentProps> = (): JSX.Element => {
+const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ vertically = false }): JSX.Element => {
     return (
-        <Grid container marginTop={5} columnSpacing={5}>
-            <Grid item xs={4}>
+        <Grid container marginTop={5} columnSpacing={5} rowGap={5}>
+            <Grid item xs={vertically ? 12 : 4} order={vertically ? 2 : 1}>
                 <Stack spacing={1}>
-                    <Typography fontSize={22} fontWeight={700}>
+                    <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
                         About the author
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={1}>
@@ -23,20 +25,24 @@ const SingleNFTMoreInfo: React.FC<ComponentProps> = (): JSX.Element => {
                     </Typography>
                 </Stack>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={vertically ? 12 : 4} order={vertically ? 1 : 2}>
                 <Stack spacing={1}>
-                    <Typography fontSize={22} fontWeight={700}>
-                        Project Description
+                    <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+                        Project description
                     </Typography>
                     <Typography fontSize={14} fontWeight={400}>
                         One Sentence Introduction. One Sentence Introduction. One Sentence Introduction. One Sentence
-                        Introduction. One Sentence Introduction. One Sentence Introduction.
+                        Introduction. One Sentence Introduction. One Sentence Introduction.One Sentence Introduction.
+                        One Sentence Introduction. One Sentence Introduction.One Sentence Introduction. One Sentence
+                        Introduction. One Sentence Introduction.One Sentence Introduction. One Sentence Introduction.
+                        One Sentence Introduction.One Sentence Introduction. One Sentence Introduction. One Sentence
+                        Introduction.
                     </Typography>
                 </Stack>
             </Grid>
-            <Grid item xs={4}>
-                <Typography fontSize={22} fontWeight={700}>
-                    Chain Details
+            <Grid item xs={vertically ? 12 : 4} order={3}>
+                <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+                    Chain details
                 </Typography>
                 <Grid
                     container
