@@ -94,7 +94,7 @@ export const dummyProducts: Array<TypeProduct> = [
 export const singleNFTProducts: Array<TypeProduct> = [
     {
         id: '0',
-        image: '/assets/images/blindbox/blindbox-nft-template1.png',
+        image: '/assets/images/explore/singlenft-template1.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
@@ -102,7 +102,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
     },
     {
         id: '1',
-        image: '/assets/images/blindbox/blindbox-nft-template1.png',
+        image: '/assets/images/explore/singlenft-template2.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
@@ -110,7 +110,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
     },
     {
         id: '2',
-        image: '/assets/images/blindbox/blindbox-nft-template2.png',
+        image: '/assets/images/explore/singlenft-template3.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
@@ -118,7 +118,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
     },
     {
         id: '3',
-        image: '/assets/images/blindbox/blindbox-nft-template3.png',
+        image: '/assets/images/explore/singlenft-template4.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
@@ -126,7 +126,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
     },
     {
         id: '4',
-        image: '/assets/images/blindbox/blindbox-nft-template4.png',
+        image: '/assets/images/explore/singlenft-template1.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
@@ -134,7 +134,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
     },
     {
         id: '5',
-        image: '/assets/images/blindbox/blindbox-nft-template1.png',
+        image: '/assets/images/explore/singlenft-template2.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
@@ -142,7 +142,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
     },
     {
         id: '6',
-        image: '/assets/images/blindbox/blindbox-nft-template2.png',
+        image: '/assets/images/explore/singlenft-template3.png',
         name: 'Project Title',
         price: 199,
         likes: 10,
