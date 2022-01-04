@@ -1,13 +1,14 @@
 import React from 'react';
 import { Stack, Grid, Typography } from '@mui/material';
+import { SpacingProps } from '@mui/system';
 
-interface ComponentProps {
+interface ComponentProps extends SpacingProps {
     vertically?: boolean;
 }
 
-const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ vertically = false }): JSX.Element => {
+const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ vertically = false, ...otherProps }): JSX.Element => {
     return (
-        <Grid container marginTop={5} columnSpacing={5} rowGap={5}>
+        <Grid container columnSpacing={5} rowGap={5} {...otherProps}>
             <Grid item xs={vertically ? 12 : 4} order={vertically ? 2 : 1}>
                 <Stack spacing={1}>
                     <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>

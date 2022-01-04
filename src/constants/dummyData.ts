@@ -2,6 +2,7 @@ import { TypeNotification } from 'src/types/notification-types';
 import {
     TypeProduct,
     TypeSingleNFTTransaction,
+    TypeSingleNFTBid,
     enmSaleStatus,
     enumSingleNFTType,
     enumTransactionType,
@@ -228,3 +229,13 @@ export const singleNFTTransactions: Array<TypeSingleNFTTransaction> = [
     { type: enumTransactionType.ForSale, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
     { type: enumTransactionType.CreatedBy, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
 ];
+
+export const singleNFTBids: Array<TypeSingleNFTBid> = [
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+];
+

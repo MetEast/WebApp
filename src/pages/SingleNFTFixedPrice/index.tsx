@@ -44,7 +44,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     <PriceHistoryView />
                 </Grid>
             </Grid>
-            <SingleNFTMoreInfo />
+            <SingleNFTMoreInfo marginTop={5} />
         </>
     );
 };

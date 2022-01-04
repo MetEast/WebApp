@@ -43,3 +43,9 @@ export type TypeSingleNFTTransaction = {
     price: number;
     time: string;
 };
+
+export type TypeSingleNFTBid = {
+    user: string;
+    price: number;
+    time: string;
+};
