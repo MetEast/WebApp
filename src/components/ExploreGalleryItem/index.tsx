@@ -5,6 +5,7 @@ import { ProductImageContainer, BuyNowBtn, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
+import { enumSingleNFTType } from 'src/types/product-types';
 
 export interface ExploreGalleryItemProps {
     product: TypeProduct;
@@ -12,9 +13,15 @@ export interface ExploreGalleryItemProps {
 }
 
 const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage = false }): JSX.Element => {
+    const getUrl = () => {
+        if (product.type === enumSingleNFTType.BuyNow) return `/explore/single-nft/fixed-price/${product.id}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/explore/single-nft/auction/${product.id}`;
+        else return `/`;
+    };
+
     return (
         <Box>
-            <Link to={`/buy-now/${product.id}`}>
+            <Link to={getUrl()}>
                 <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (

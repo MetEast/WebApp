@@ -4,11 +4,13 @@ import BuyNow from 'src/components/BuyNow';
 import TransactionPending from 'src/components/TransactionPending';
 import BuyNowSummary from 'src/components/BuyNowSummary';
 import Layout from 'src/components/Layout';
-import BlindBoxPage from 'src/pages/BlindBoxPage';
-import ExplorePage from 'src/pages/ExplorePage';
 import HomePage from 'src/pages/HomePage';
-import ProfilePage from 'src/pages/ProfilePage';
+import ExplorePage from 'src/pages/ExplorePage';
+import SingleNFTFixedPrice from 'src/pages/SingleNFTFixedPrice';
+import SingleNFTAuction from 'src/pages/SingleNFTAuction';
+import BlindBoxPage from 'src/pages/BlindBoxPage';
 import BlindBoxProduct from 'src/pages/BlindBoxProduct';
+import ProfilePage from 'src/pages/ProfilePage';
 import TransactionSuccess from 'src/components/TransactionSuccess';
 import BlindBoxBuyNow from 'src/components/BlindBoxBuyNow';
 import ChooseAmount from 'src/components/ChooseAmount';
@@ -56,6 +58,22 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <ProfilePage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/explore/single-nft/fixed-price/:id"
+                    element={
+                        <Layout>
+                            <SingleNFTFixedPrice />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/explore/single-nft/auction/:id"
+                    element={
+                        <Layout>
+                            <SingleNFTAuction />
                         </Layout>
                     }
                 />
