@@ -46,7 +46,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                             <Typography fontWeight={500} fontSize={12}>{`${product.likes} likes`}</Typography>
                         </Stack>
                     </Stack>
-                    <ProductBadgeContainer saleStatus={product.type} content={product.saleTime} />
+                    <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" />
                         <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(

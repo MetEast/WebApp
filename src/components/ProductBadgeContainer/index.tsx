@@ -1,16 +1,16 @@
 import React from 'react';
 import { Container } from './styles';
-import { enmSaleStatus, enumSingleNFTType, enumBadgeType } from 'src/types/product-types';
+import { enumBlindBoxNFTType, enumSingleNFTType, enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
 import { SpacingProps } from '@mui/system';
 
 interface ProductBadgeContainerProps extends SpacingProps {
-    saleStatus: enmSaleStatus | enumSingleNFTType;
+    nfttype: enumBlindBoxNFTType | enumSingleNFTType;
     content?: string;
 }
 
 const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
-    saleStatus,
+    nfttype,
     content,
     ...otherProps
 }): JSX.Element => {
@@ -26,13 +26,13 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     );
 
     const child = {
-        [enmSaleStatus.ComingSoon]: {
+        [enumBlindBoxNFTType.ComingSoon]: {
             element: badgeComingSoon,
         },
-        [enmSaleStatus.SaleEnds]: {
+        [enumBlindBoxNFTType.SaleEnds]: {
             element: badgeSaleEnds,
         },
-        [enmSaleStatus.SaleEnded]: {
+        [enumBlindBoxNFTType.SaleEnded]: {
             element: badgeSaleEnded,
         },
         [enumSingleNFTType.BuyNow]: {
@@ -44,7 +44,7 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     };
     return (
         <Container direction="row" alignItems="center" spacing={1} {...otherProps}>
-            {child[saleStatus].element}
+            {child[nfttype].element}
         </Container>
     );
 };

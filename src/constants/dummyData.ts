@@ -3,7 +3,7 @@ import {
     TypeProduct,
     TypeSingleNFTTransaction,
     TypeSingleNFTBid,
-    enmSaleStatus,
+    enumBlindBoxNFTType,
     enumSingleNFTType,
     enumTransactionType,
 } from 'src/types/product-types';
@@ -41,7 +41,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.ComingSoon,
+        type: enumBlindBoxNFTType.ComingSoon,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -50,7 +50,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnds,
+        type: enumBlindBoxNFTType.SaleEnds,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -59,7 +59,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnded,
+        type: enumBlindBoxNFTType.SaleEnded,
     },
     {
         id: '3',
@@ -67,7 +67,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.ComingSoon,
+        type: enumBlindBoxNFTType.ComingSoon,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -76,7 +76,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnds,
+        type: enumBlindBoxNFTType.SaleEnds,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -85,7 +85,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnded,
+        type: enumBlindBoxNFTType.SaleEnded,
     },
     {
         id: '6',
@@ -93,7 +93,7 @@ export const dummyProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.ComingSoon,
+        type: enumBlindBoxNFTType.ComingSoon,
         saleTime: '2022/02/28 10:00',
     },
 ];
@@ -164,7 +164,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.ComingSoon,
+        type: enumBlindBoxNFTType.ComingSoon,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -173,7 +173,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnds,
+        type: enumBlindBoxNFTType.SaleEnds,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -182,7 +182,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnded,
+        type: enumBlindBoxNFTType.SaleEnded,
     },
     {
         id: '3',
@@ -190,7 +190,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.ComingSoon,
+        type: enumBlindBoxNFTType.ComingSoon,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -199,7 +199,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnds,
+        type: enumBlindBoxNFTType.SaleEnds,
         saleTime: '2022/02/28 10:00',
     },
     {
@@ -208,7 +208,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.SaleEnded,
+        type: enumBlindBoxNFTType.SaleEnded,
     },
     {
         id: '6',
@@ -216,7 +216,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         name: 'Project Title',
         price: 199,
         likes: 10,
-        type: enmSaleStatus.ComingSoon,
+        type: enumBlindBoxNFTType.ComingSoon,
         saleTime: '2022/02/28 10:00',
     },
 ];

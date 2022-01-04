@@ -1,4 +1,4 @@
-export enum enmSaleStatus {
+export enum enumBlindBoxNFTType {
     ComingSoon = 'Coming Soon',
     SaleEnds = 'Sale Ends',
     SaleEnded = 'Sale Ended',
@@ -7,6 +7,14 @@ export enum enmSaleStatus {
 export enum enumSingleNFTType {
     BuyNow = 'Buy Now',
     OnAuction = 'On Auction',
+}
+
+export enum enumMyNFTType {
+    BuyNow = 'Buy Now',
+    OnAuction = 'On Auction',
+    Created = 'Created',
+    Sold = 'Sold',
+    Acquired = 'Acquired',
 }
 
 export enum enumBadgeType {
@@ -33,7 +41,7 @@ export type TypeProduct = {
     name: string;
     price: number;
     likes: number;
-    type: enmSaleStatus | enumSingleNFTType;
+    type: enumBlindBoxNFTType | enumSingleNFTType;
     saleTime?: string;
 };
 
