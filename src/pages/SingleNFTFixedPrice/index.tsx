@@ -6,6 +6,7 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     return (
@@ -25,6 +26,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
                     <ELAPrice ela_price={199} usd_price={480} marginTop={3} />
+                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton>
                 </Grid>
             </Grid>
         </>

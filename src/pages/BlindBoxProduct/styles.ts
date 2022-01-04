@@ -1,13 +1,1 @@
 import { styled, Box, Button } from '@mui/material';
-
-export const BuyNowBtn = styled(Button)`
-    height: 56px;
-    background: #1890ff;
-    color: white;
-    border-radius: 16px;
-    font-size: 18px;
-    font-weight: 700;
-    &:hover {
-        background: #0870ef;
-    }
-`;
