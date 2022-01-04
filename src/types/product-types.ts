@@ -19,6 +19,14 @@ export enum enumBadgeType {
     Museum = 'Museum',
 }
 
+export enum enumTransactionType {
+    Bid = 'Bid',
+    OnAuction = 'On Auction',
+    SoldTo = 'Sold To',
+    ForSale = 'For Sale',
+    CreatedBy = 'Created By',
+}
+
 export type TypeProduct = {
     id: string;
     image: string;
@@ -27,4 +35,11 @@ export type TypeProduct = {
     likes: number;
     type: enmSaleStatus | enumSingleNFTType;
     saleTime?: string;
+};
+
+export type TypeSingleNFTTransaction = {
+    type: enumTransactionType;
+    user: string;
+    price: number;
+    time: string;
 };

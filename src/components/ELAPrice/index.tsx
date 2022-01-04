@@ -4,7 +4,7 @@ import { SpacingProps } from '@mui/system';
 
 export interface ComponentProps extends SpacingProps {
     ela_price: number;
-    usd_price: number;
+    usd_price?: number;
 }
 
 const ELAPrice: React.FC<ComponentProps> = ({ ela_price, usd_price, ...otherProps }): JSX.Element => {
@@ -14,9 +14,11 @@ const ELAPrice: React.FC<ComponentProps> = ({ ela_price, usd_price, ...otherProp
             <Typography fontSize={20} fontWeight={500}>
                 {`${ela_price.toFixed(2)} ELA`}
             </Typography>
-            <Typography fontSize={12} fontWeight={400}>
-                {`~$${usd_price.toFixed(2)}`}
-            </Typography>
+            {usd_price && (
+                <Typography fontSize={12} fontWeight={400}>
+                    {`~$${usd_price.toFixed(2)}`}
+                </Typography>
+            )}
         </Stack>
     );
 };

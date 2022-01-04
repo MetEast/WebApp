@@ -1,5 +1,11 @@
 import { TypeNotification } from 'src/types/notification-types';
-import { TypeProduct, enmSaleStatus, enumSingleNFTType } from 'src/types/product-types';
+import {
+    TypeProduct,
+    TypeSingleNFTTransaction,
+    enmSaleStatus,
+    enumSingleNFTType,
+    enumTransactionType,
+} from 'src/types/product-types';
 
 export const dummyNotificationList: Array<TypeNotification> = [
     {
@@ -35,7 +41,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.ComingSoon,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '1',
@@ -44,7 +50,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.SaleEnds,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '2',
@@ -61,7 +67,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.ComingSoon,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '4',
@@ -70,7 +76,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.SaleEnds,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '5',
@@ -87,7 +93,7 @@ export const dummyProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.ComingSoon,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
 ];
 
@@ -158,7 +164,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.ComingSoon,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '1',
@@ -167,7 +173,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.SaleEnds,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '2',
@@ -184,7 +190,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.ComingSoon,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '4',
@@ -193,7 +199,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.SaleEnds,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
     {
         id: '5',
@@ -210,6 +216,15 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         price: 199,
         likes: 10,
         type: enmSaleStatus.ComingSoon,
-        saleTime: "2022/02/28 10:00"
+        saleTime: '2022/02/28 10:00',
     },
+];
+
+export const singleNFTTransactions: Array<TypeSingleNFTTransaction> = [
+    { type: enumTransactionType.Bid, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { type: enumTransactionType.Bid, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { type: enumTransactionType.OnAuction, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { type: enumTransactionType.SoldTo, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { type: enumTransactionType.ForSale, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { type: enumTransactionType.CreatedBy, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
 ];
