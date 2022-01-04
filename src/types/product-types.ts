@@ -16,6 +16,7 @@ export enum enumBadgeType {
     BuyNow = 'Buy Now',
     OnAuction = 'On Auction',
     ReservePriceNotMet = 'Reserve Price Not Met',
+    Museum = 'Museum',
 }
 
 export type TypeProduct = {

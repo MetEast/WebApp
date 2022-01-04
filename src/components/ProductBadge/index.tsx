@@ -41,6 +41,11 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
             color: '#BF21F1',
             icon: '',
         },
+        [enumBadgeType.Museum]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
     };
 
     return (

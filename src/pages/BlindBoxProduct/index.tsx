@@ -1,11 +1,11 @@
 import React from 'react';
 import { Stack, Grid, Typography, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import ProductBadgeContainer from 'src/components/ProductBadgeContainer';
 import { BuyNowBtn } from './styles';
-import { enmSaleStatus } from 'src/types/product-types';
-import { Icon } from '@iconify/react';
+import { enumBadgeType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
+import ProductSnippets from 'src/components/ProductSnippets';
+import ProductBadge from 'src/components/ProductBadge';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     return (
@@ -19,37 +19,10 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     <Typography fontSize={56} fontWeight={700}>
                         Sculpting with the Heart
                     </Typography>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:handshake" />
-                            <Typography fontWeight={500} fontSize={12}>
-                                24 Sold
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:storefront" />
-                            <Typography fontWeight={500} fontSize={12}>
-                                200 In Stock
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:heart" />
-                            <Typography fontWeight={500} fontSize={12}>
-                                88 likes
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:eye" />
-                            <Typography fontWeight={500} fontSize={12}>
-                                4800 Views
-                            </Typography>
-                        </Stack>
+                    <ProductSnippets sold={24} instock={200} likes={88} views={4800} />
+                    <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
+                        <ProductBadge badgeType={enumBadgeType.ComingSoon} content="2022/02/28 10:00" />
                     </Stack>
-                    <ProductBadgeContainer
-                        saleStatus={enmSaleStatus.ComingSoon}
-                        content="2022/02/28 10:00"
-                        marginTop={3}
-                    />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" />
                         <Typography fontSize={20} fontWeight={500}>

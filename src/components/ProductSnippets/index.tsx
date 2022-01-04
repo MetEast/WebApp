@@ -1,0 +1,43 @@
+import React from 'react';
+import { Stack, Typography } from '@mui/material';
+import { Icon } from '@iconify/react';
+
+export interface ComponentProps {
+    sold: number;
+    instock: number;
+    likes: number;
+    views: number;
+}
+
+const ProductSnippets: React.FC<ComponentProps> = ({ sold, instock, likes, views }): JSX.Element => {
+    return (
+        <Stack direction="row" alignItems="center" spacing={1}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <Icon icon="ph:handshake" />
+                <Typography fontWeight={500} fontSize={12}>
+                    {`${sold} Sold`}
+                </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <Icon icon="ph:storefront" />
+                <Typography fontWeight={500} fontSize={12}>
+                    {`${instock} In Stock`}
+                </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <Icon icon="ph:heart" />
+                <Typography fontWeight={500} fontSize={12}>
+                    {`${likes} likes`}
+                </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <Icon icon="ph:eye" />
+                <Typography fontWeight={500} fontSize={12}>
+                    {`${views} Views`}
+                </Typography>
+            </Stack>
+        </Stack>
+    );
+};
+
+export default ProductSnippets;
