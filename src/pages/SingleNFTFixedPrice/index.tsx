@@ -8,6 +8,7 @@ import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import SingleNFTTransactionTable from 'src/components/SingleNFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
+import AboutAuthor from 'src/components/SingleNFT/AboutAuthor';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { singleNFTTransactions } from 'src/constants/dummyData';
 import { TypeSingleNFTTransaction } from 'src/types/product-types';
@@ -41,6 +42,11 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={6}>
                     <PriceHistoryView />
+                </Grid>
+            </Grid>
+            <Grid container marginTop={5} columnSpacing={5}>
+                <Grid item xs={4}>
+                    <AboutAuthor />
                 </Grid>
             </Grid>
         </>
