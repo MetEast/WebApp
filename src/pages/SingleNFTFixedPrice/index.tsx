@@ -5,6 +5,7 @@ import { enumBadgeType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
+import ELAPrice from 'src/components/ELAPrice';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     return (
@@ -23,6 +24,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.BuyNow} />
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
+                    <ELAPrice ela_price={199} usd_price={480} marginTop={3} />
                 </Grid>
             </Grid>
         </>

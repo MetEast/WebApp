@@ -6,6 +6,7 @@ import { enumBadgeType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
+import ELAPrice from 'src/components/ELAPrice';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     return (
@@ -23,15 +24,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.ComingSoon} content="2022/02/28 10:00" />
                     </Stack>
-                    <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <img src="/assets/icons/elatos-ela.svg" alt="" />
-                        <Typography fontSize={20} fontWeight={500}>
-                            199.00 ELA
-                        </Typography>
-                        <Typography fontSize={12} fontWeight={400}>
-                            ~$480.00
-                        </Typography>
-                    </Stack>
+                    <ELAPrice ela_price={199} usd_price={480} marginTop={3} />
                     <BuyNowBtn sx={{ marginTop: 3, width: '100%' }}>buy now</BuyNowBtn>
                 </Grid>
             </Grid>
