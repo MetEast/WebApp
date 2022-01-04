@@ -2,9 +2,10 @@ import React from 'react';
 import { Stack, Grid, Typography, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductBadgeContainer from 'src/components/ProductBadgeContainer';
-import { ProductImageContainer, LikeBtn, BuyNowBtn } from './styles';
+import { BuyNowBtn } from './styles';
 import { enmSaleStatus } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
+import ProductImageContainer from 'src/components/ProductImageContainer';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     return (
@@ -12,12 +13,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>
-                    <ProductImageContainer>
-                        <img src={'/assets/images/blindbox/blindbox-nft-template2.png'} alt="" />
-                        <LikeBtn>
-                            <Icon icon="ph:heart" fontSize={20} color="black" />
-                        </LikeBtn>
-                    </ProductImageContainer>
+                    <ProductImageContainer imgurl={'/assets/images/blindbox/blindbox-nft-template2.png'} />
                 </Grid>
                 <Grid item xs={6}>
                     <Typography fontSize={56} fontWeight={700}>
