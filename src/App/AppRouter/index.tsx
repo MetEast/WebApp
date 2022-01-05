@@ -24,10 +24,6 @@ import CreateNft from 'src/components/nft/CreateNft';
 import ConfirmCreateNft from 'src/components/nft/CreateNft/ConfirmCreateNft';
 import CreateNftSuccess from 'src/components/nft/CreateNft/CreateNftSuccess';
 import CreateNftError from 'src/components/nft/CreateNft/CreateNftError';
-import NftDetailsMinted from 'src/components/nft/details/NftDetailsMinted';
-import NftDetailsAcquired from 'src/components/nft/details/NftDetailsAcquired';
-import NftDetailsSold from 'src/components/nft/details/NftDetailsSold';
-import NftDetailsForSale from 'src/components/nft/details/NftDetailsForSale';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -215,38 +211,6 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <CreateNftError />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="nft/details/minted"
-                    element={
-                        <Layout>
-                            <NftDetailsMinted />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="nft/details/acquired"
-                    element={
-                        <Layout>
-                            <NftDetailsAcquired />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="nft/details/sold"
-                    element={
-                        <Layout>
-                            <NftDetailsSold />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="nft/details/for-sale"
-                    element={
-                        <Layout>
-                            <NftDetailsForSale />
                         </Layout>
                     }
                 />
