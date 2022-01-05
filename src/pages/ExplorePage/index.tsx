@@ -14,7 +14,7 @@ import { FilterItemTypography } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ExplorePage: React.FC = (): JSX.Element => {
-    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
+    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);

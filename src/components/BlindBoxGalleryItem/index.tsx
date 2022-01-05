@@ -6,6 +6,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
+import ProductSnippets from 'src/components/ProductSnippets';
 
 export interface BlindBoxGalleryItemProps {
     product: TypeProduct;
@@ -30,16 +31,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
                     <Typography fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
                         {product.name}
                     </Typography>
-                    <Stack direction="row" alignItems="center" spacing={1} display={{ xs: 'none', lg: 'flex' }}>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:handshake" />
-                            <Typography fontWeight={500} fontSize={12}>{`24 sold`}</Typography>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:heart" />
-                            <Typography fontWeight={500} fontSize={12}>{`${product.likes} likes`}</Typography>
-                        </Stack>
-                    </Stack>
+                    <ProductSnippets sold={24} likes={88} />
                     <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
                     <ELAPrice ela_price={199} usd_price={480} />
                 </Stack>

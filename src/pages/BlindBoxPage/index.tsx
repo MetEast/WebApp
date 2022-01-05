@@ -11,7 +11,7 @@ import { SortOption } from 'src/types/select-types';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [sortBy, setSortBy] = useState<SortOption>();
-    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid1');
+    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
 
     const productList: Array<TypeProduct> = blindboxNFTProducts;
 

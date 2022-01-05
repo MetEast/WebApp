@@ -29,7 +29,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     <Typography fontSize={56} fontWeight={700}>
                         Sculpting with the Heart
                     </Typography>
-                    <ProductSnippets sold={24} instock={200} likes={88} views={4800} />
+                    <ProductSnippets nickname="Nickname" likes={88} views={4800} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.ForSale} />
                         <ProductBadge badgeType={enumBadgeType.Museum} />
