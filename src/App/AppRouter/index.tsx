@@ -11,6 +11,10 @@ import SingleNFTAuction from 'src/pages/SingleNFTAuction';
 import BlindBoxPage from 'src/pages/BlindBoxPage';
 import BlindBoxProduct from 'src/pages/BlindBoxProduct';
 import ProfilePage from 'src/pages/ProfilePage';
+import MyNFTBuyNow from 'src/pages/MyNFT/BuyNow';
+import MyNFTAuction from 'src/pages/MyNFT/Auction';
+import MyNFTCreated from 'src/pages/MyNFT/Created';
+import MyNFTSold from 'src/pages/MyNFT/Sold';
 import TransactionSuccess from 'src/components/TransactionSuccess';
 import BlindBoxBuyNow from 'src/components/BlindBoxBuyNow';
 import ChooseAmount from 'src/components/ChooseAmount';
@@ -82,6 +86,38 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <BlindBoxProduct />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/mynft/buynow/:id"
+                    element={
+                        <Layout>
+                            <MyNFTBuyNow />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/mynft/auction/:id"
+                    element={
+                        <Layout>
+                            <MyNFTAuction />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/mynft/created/:id"
+                    element={
+                        <Layout>
+                            <MyNFTCreated />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/mynft/sold/:id"
+                    element={
+                        <Layout>
+                            <MyNFTSold />
                         </Layout>
                     }
                 />

@@ -5,7 +5,7 @@ import { ProductImageContainer, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
-import { enumSingleNFTType } from 'src/types/product-types';
+import { enumMyNFTType } from 'src/types/product-types';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -14,10 +14,11 @@ export interface ComponentProps {
 
 const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     const getUrl = () => {
-        // if (product.type === enumSingleNFTType.BuyNow) return `/explore/single-nft/fixed-price/${product.id}`;
-        // else if (product.type === enumSingleNFTType.OnAuction) return `/explore/single-nft/auction/${product.id}`;
-        // else return `/`;
-        return `/`;
+        if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.id}`;
+        else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.id}`;
+        else if (product.type === enumMyNFTType.Created) return `/mynft/created/${product.id}`;
+        else if (product.type === enumMyNFTType.Sold) return `/mynft/sold/${product.id}`;
+        else return `#`;
     };
 
     return (
