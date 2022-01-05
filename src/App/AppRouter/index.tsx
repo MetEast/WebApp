@@ -113,14 +113,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </Layout>
                     }
                 />
-                <Route
+                {/* <Route
                     path="/mynft/sold/:id"
                     element={
                         <Layout>
                             <MyNFTSold />
                         </Layout>
                     }
-                />
+                /> */}
 
                 <Route
                     path="/profile/edit"
