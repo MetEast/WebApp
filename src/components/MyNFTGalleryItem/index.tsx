@@ -6,6 +6,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumMyNFTType } from 'src/types/product-types';
+import ELAPrice from 'src/components/ELAPrice';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -49,17 +50,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage = f
                         </Stack>
                     </Stack>
                     <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                        <img src="/assets/icons/elatos-ela.svg" alt="" />
-                        <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(
-                            2,
-                        )} ELA`}</Typography>
-                        <Typography
-                            fontWeight={400}
-                            fontSize={12}
-                            display={{ xs: 'none', lg: 'block' }}
-                        >{`~$480.00`}</Typography>
-                    </Stack>
+                    <ELAPrice ela_price={199} usd_price={480} />
                 </Stack>
             )}
         </Box>

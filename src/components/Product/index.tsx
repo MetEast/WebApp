@@ -4,6 +4,7 @@ import { TypeProduct } from 'src/types/product-types';
 import { ProductImageContainer, BuyNowBtn, LikeBtn } from './styledComponents';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
+import ELAPrice from 'src/components/ELAPrice';
 
 export interface IProductProps {
     product: TypeProduct;
@@ -39,17 +40,7 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
                         </Stack>
                     </Stack>
                     <BuyNowBtn startIcon={<Icon icon="ph:lightning" />}>Buy Now</BuyNowBtn>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                        <img src="/assets/icons/elatos-ela.svg" alt="" />
-                        <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(
-                            2,
-                        )} ELA`}</Typography>
-                        <Typography
-                            fontWeight={400}
-                            fontSize={12}
-                            display={{ xs: 'none', lg: 'block' }}
-                        >{`~$480.00`}</Typography>
-                    </Stack>
+                    <ELAPrice ela_price={199} usd_price={480} />
                 </Stack>
             )}
         </Box>

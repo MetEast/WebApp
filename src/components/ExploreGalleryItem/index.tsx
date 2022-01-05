@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
-import { ProductImageContainer, BuyNowBtn, LikeBtn } from './styles';
+import { ProductImageContainer, LikeBtn } from './styles';
 import { Box, Stack, Typography } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType } from 'src/types/product-types';
+import ELAPrice from 'src/components/ELAPrice';
 
 export interface ExploreGalleryItemProps {
     product: TypeProduct;
@@ -47,17 +48,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                         </Stack>
                     </Stack>
                     <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                        <img src="/assets/icons/elatos-ela.svg" alt="" />
-                        <Typography fontWeight={500} fontSize={{ xs: 14, lg: 20 }}>{`${product.price.toFixed(
-                            2,
-                        )} ELA`}</Typography>
-                        <Typography
-                            fontWeight={400}
-                            fontSize={12}
-                            display={{ xs: 'none', lg: 'block' }}
-                        >{`~$480.00`}</Typography>
-                    </Stack>
+                    <ELAPrice ela_price={199} usd_price={480} />
                 </Stack>
             )}
         </Box>
