@@ -1,15 +1,15 @@
 import React from 'react';
 import { Box, Stack, Grid, Typography } from '@mui/material';
 import { ViewAllBtn } from './styles';
-import { TypeSingleNFTTransaction } from 'src/types/product-types';
+import { TypeNFTTransaction } from 'src/types/product-types';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import ELAPrice from 'src/components/ELAPrice';
 
 interface ComponentProps {
-    transactionsList: Array<TypeSingleNFTTransaction>;
+    transactionsList: Array<TypeNFTTransaction>;
 }
 
-const SingleNFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JSX.Element => {
+const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JSX.Element => {
     const transactionsTblColumns = [
         { value: 'Type', width: 3 },
         { value: 'User', width: 3 },
@@ -56,4 +56,4 @@ const SingleNFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList 
     );
 };
 
-export default SingleNFTTransactionTable;
+export default NFTTransactionTable;

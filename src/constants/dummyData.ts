@@ -1,7 +1,7 @@
 import { TypeNotification } from 'src/types/notification-types';
 import {
     TypeProduct,
-    TypeSingleNFTTransaction,
+    TypeNFTTransaction,
     TypeSingleNFTBid,
     enumBlindBoxNFTType,
     enumSingleNFTType,
@@ -295,7 +295,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
 ];
 
-export const singleNFTTransactions: Array<TypeSingleNFTTransaction> = [
+export const nftTransactions: Array<TypeNFTTransaction> = [
     { type: enumTransactionType.Bid, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
     { type: enumTransactionType.Bid, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
     { type: enumTransactionType.OnAuction, user: 'Nickname', price: 199, time: '2022/02/28  10:00' },

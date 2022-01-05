@@ -6,15 +6,15 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import SingleNFTTransactionTable from 'src/components/SingleNFTTransactionTable';
+import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { singleNFTTransactions } from 'src/constants/dummyData';
-import { TypeSingleNFTTransaction } from 'src/types/product-types';
+import { nftTransactions } from 'src/constants/dummyData';
+import { TypeNFTTransaction } from 'src/types/product-types';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
-    const transactionsList: Array<TypeSingleNFTTransaction> = singleNFTTransactions;
+    const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
 
     return (
         <>
@@ -38,7 +38,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>
-                    <SingleNFTTransactionTable transactionsList={transactionsList} />
+                    <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>
                 <Grid item xs={6}>
                     <PriceHistoryView />

@@ -48,7 +48,7 @@ export type TypeProduct = {
     saleTime?: string;
 };
 
-export type TypeSingleNFTTransaction = {
+export type TypeNFTTransaction = {
     type: enumTransactionType;
     user: string;
     price: number;

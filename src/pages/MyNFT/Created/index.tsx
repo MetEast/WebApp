@@ -9,10 +9,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
-import SingleNFTTransactionTable from 'src/components/SingleNFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { TypeSingleNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types';
-import { singleNFTTransactions, singleNFTBids } from 'src/constants/dummyData';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     return (

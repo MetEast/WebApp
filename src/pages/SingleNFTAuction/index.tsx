@@ -9,14 +9,14 @@ import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
-import SingleNFTTransactionTable from 'src/components/SingleNFTTransactionTable';
+import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { TypeSingleNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types';
-import { singleNFTTransactions, singleNFTBids } from 'src/constants/dummyData';
+import { TypeNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types';
+import { nftTransactions, singleNFTBids } from 'src/constants/dummyData';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const bidsList: Array<TypeSingleNFTBid> = singleNFTBids;
-    const transactionsList: Array<TypeSingleNFTTransaction> = singleNFTTransactions;
+    const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
 
     return (
         <>
@@ -46,7 +46,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 <Grid item xs={8}>
                     <Stack spacing={10}>
                         <SingleNFTBidsTable bidsList={bidsList} />
-                        <SingleNFTTransactionTable transactionsList={transactionsList} />
+                        <NFTTransactionTable transactionsList={transactionsList} />
                         <PriceHistoryView />
                     </Stack>
                 </Grid>
