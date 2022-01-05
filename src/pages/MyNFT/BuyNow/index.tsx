@@ -7,12 +7,11 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton, CancelSaleButton } from 'src/components/Buttons/styles';
-import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
-import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
-import SingleNFTTransactionTable from 'src/components/SingleNFTTransactionTable';
+import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
+import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
+import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { TypeSingleNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types';
-import { singleNFTTransactions, singleNFTBids } from 'src/constants/dummyData';
+import ProductTransHistory from 'src/components/ProductTransHistory';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     return (
@@ -37,6 +36,16 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         <PrimaryButton sx={{ width: '100%' }}>Buy Now</PrimaryButton>
                     </Stack>
                 </Grid>
+            </Grid>
+            <Grid container marginTop={5} columnSpacing={5}>
+                <Grid item xs={6}>
+                    <Stack spacing={3}>
+                        <AboutAuthor />
+                        <PriceHistoryView />
+                        <ProductTransHistory />
+                    </Stack>
+                </Grid>
+                <Grid item xs={6}></Grid>
             </Grid>
         </>
     );
