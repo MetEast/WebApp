@@ -37,7 +37,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     <ELAPrice ela_price={199} usd_price={480} marginTop={3} />
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                         <CancelSaleButton sx={{ width: '100%' }}>Cancel Sale</CancelSaleButton>
-                        <PrimaryButton sx={{ width: '100%' }}>Buy Now</PrimaryButton>
+                        <PrimaryButton sx={{ width: '100%' }}>Change Price</PrimaryButton>
                     </Stack>
                 </Grid>
             </Grid>

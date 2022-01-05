@@ -23,3 +23,15 @@ export const CancelSaleButton = styled(Button)`
         background: #fddede;
     }
 `;
+
+export const ChangePriceButton = styled(Button)`
+    height: 56px;
+    background: #e8f4ff;
+    color: #1890ff;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    &:hover {
+        background: #d8e4ff;
+    }
+`;
