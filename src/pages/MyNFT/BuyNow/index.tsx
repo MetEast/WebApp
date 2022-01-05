@@ -12,8 +12,12 @@ import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescript
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
+import NFTTransactionTable from 'src/components/NFTTransactionTable';
+import { nftTransactions } from 'src/constants/dummyData';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
+    const transactionsList = nftTransactions;
+
     return (
         <>
             <ProductPageHeader />
@@ -45,7 +49,13 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         <ProductTransHistory />
                     </Stack>
                 </Grid>
-                <Grid item xs={6}></Grid>
+                <Grid item xs={6}>
+                    <Stack spacing={3}>
+                        <ProjectDescription />
+                        <NFTTransactionTable transactionsList={transactionsList} />
+                        <ChainDetails />
+                    </Stack>
+                </Grid>
             </Grid>
         </>
     );
