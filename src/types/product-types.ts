@@ -22,6 +22,7 @@ export enum enumBadgeType {
     SaleEnds = 'Sale Ends',
     SaleEnded = 'Sale Ended',
     BuyNow = 'Buy Now',
+    ForSale = 'For Sale',
     OnAuction = 'On Auction',
     ReservePriceNotMet = 'Reserve Price Not Met',
     Museum = 'Museum',
