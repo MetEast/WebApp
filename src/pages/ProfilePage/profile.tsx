@@ -2,9 +2,9 @@ import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid, Typography, Stack } from '@mui/material';
 import React, { useState } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
-import Product from 'src/components/Product';
+import MyNFTGalleryItem from 'src/components/MyNFTGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
-import { dummyProducts } from 'src/constants/dummyData';
+import { myNFTProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
@@ -25,7 +25,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
         nftGalleryFilterBtnTypes.All,
     );
 
-    const productList: Array<TypeProduct> = dummyProducts;
+    const productList: Array<TypeProduct> = myNFTProducts;
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
 
     const handleChangeSortBy = (value: string) => {
@@ -69,7 +69,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Product product={product} onlyShowImage />
+                            <MyNFTGalleryItem product={product} onlyShowImage />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -154,7 +154,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
-                        <Product product={item} />
+                        <MyNFTGalleryItem product={item} />
                     </Grid>
                 ))}
             </Grid>

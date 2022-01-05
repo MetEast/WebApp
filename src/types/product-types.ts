@@ -1,20 +1,20 @@
 export enum enumBlindBoxNFTType {
-    ComingSoon = 'Coming Soon',
-    SaleEnds = 'Sale Ends',
-    SaleEnded = 'Sale Ended',
+    ComingSoon = 'BlindBoxNFT - Coming Soon',
+    SaleEnds = 'BlindBoxNFT - Sale Ends',
+    SaleEnded = 'BlindBoxNFT - Sale Ended',
 }
 
 export enum enumSingleNFTType {
-    BuyNow = 'Buy Now',
-    OnAuction = 'On Auction',
+    BuyNow = 'SingleNFT - Buy Now',
+    OnAuction = 'SingleNFT - On Auction',
 }
 
 export enum enumMyNFTType {
-    BuyNow = 'Buy Now',
-    OnAuction = 'On Auction',
-    Created = 'Created',
-    Sold = 'Sold',
-    Acquired = 'Acquired',
+    BuyNow = 'MyNFT - Buy Now',
+    OnAuction = 'MyNFT - On Auction',
+    Created = 'MyNFT - Created',
+    Sold = 'MyNFT - Sold',
+    // Acquired = 'MyNFT - Acquired',
 }
 
 export enum enumBadgeType {
@@ -25,6 +25,8 @@ export enum enumBadgeType {
     OnAuction = 'On Auction',
     ReservePriceNotMet = 'Reserve Price Not Met',
     Museum = 'Museum',
+    Created = 'Created',
+    Sold = 'Sold',
 }
 
 export enum enumTransactionType {
@@ -41,7 +43,7 @@ export type TypeProduct = {
     name: string;
     price: number;
     likes: number;
-    type: enumBlindBoxNFTType | enumSingleNFTType;
+    type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     saleTime?: string;
 };
 
