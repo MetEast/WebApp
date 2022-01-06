@@ -60,3 +60,20 @@ export type TypeSingleNFTBid = {
     price: number;
     time: string;
 };
+
+
+export type TypeCollectible = {
+    blockNumber: number;
+    createTime: string;
+    description: string;
+    did: {
+        version: string;
+        did: string;
+    }
+    didUri: string;
+    holder: string;
+    kind: string;
+    name: string;
+    thumbnail: string;
+    tokenIndex: number;
+};

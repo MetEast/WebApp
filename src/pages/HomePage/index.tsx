@@ -1,16 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { TypeProduct } from 'src/types/product-types';
+import { TypeProduct, enumSingleNFTType, TypeCollectible } from 'src/types/product-types';
 import { newNFTProducts } from 'src/constants/dummyData';
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
+import { getThumbnail } from 'src/services/sleep';
 
 const HomePage: React.FC = (): JSX.Element => {
-    const productList: Array<TypeProduct> = newNFTProducts;
+    // const productList: Array<TypeProduct> = newNFTProducts;
+    const [productList, setProductList] = useState([]);
+    var productsList: any = [];
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`).then(response => {
+            response.json().then(jsonCollectibles => {
+                // console.log(jsonCollectibles)
+                jsonCollectibles.data.result.forEach(function (itemObject: TypeCollectible, id: number) {
+                    var product: TypeProduct = {id: "", name: "", image: "", price: 0, likes: 0, type: enumSingleNFTType.BuyNow, saleTime: ""};
+                    product.id = id.toString();
+                    product.name = itemObject.name;
+                    product.image = getThumbnail(itemObject.thumbnail);
+                    product.price = itemObject.blockNumber % 1000;
+                    product.likes = itemObject.tokenIndex;
+                    product.type = enumSingleNFTType.BuyNow;
+                    productsList.push(product);
+                });
+                // console.log(productsList);
+                setProductList(productsList);
+            })
+        }).catch(e => {
+            console.log(e)
+            // if(e.code !== e.ABORT_ERR)
+            //     setLoadingTransactions(false);
+        });
+        // const resCollectibles = await fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`);
+        // const jsonCollectibles = await resCollectibles.json();
+        // const newCollectibles = jsonCollectibles.data.result;
+    }, []);
 
     const theme = useTheme();
     const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
