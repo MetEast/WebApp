@@ -9,6 +9,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
+import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -38,7 +39,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <BuyBlindBox />
+                <OrderSummary />
             </ModalDialog>
         </>
     );

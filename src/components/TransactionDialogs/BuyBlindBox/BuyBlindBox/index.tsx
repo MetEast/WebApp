@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Stack, TextField, Typography } from '@mui/material';
-import { TitleTypography, PageNumberTypography } from '../../styles';
+import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { IconBtn } from './styles';
 import ELAPrice from 'src/components/ELAPrice';
 import { Icon } from '@iconify/react';
@@ -14,8 +14,8 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     return (
         <Stack spacing={5}>
             <Stack alignItems="center">
-                <PageNumberTypography>1 of 2</PageNumberTypography>
-                <TitleTypography>Buy Blind Box</TitleTypography>
+                <PageNumberTypo>1 of 2</PageNumberTypo>
+                <DialogTitleTypo>Buy Blind Box</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center">
                 <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
@@ -68,7 +68,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 </Typography>
                 <ELAPrice ela_price={199} usd_price={480} />
             </Stack>
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={2}>
                 <SecondaryButton sx={{ width: 152 }}>close</SecondaryButton>
                 <PrimaryButton sx={{ width: 152 }}>Confirm</PrimaryButton>
             </Stack>
