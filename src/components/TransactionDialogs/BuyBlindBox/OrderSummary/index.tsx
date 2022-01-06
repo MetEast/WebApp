@@ -3,6 +3,7 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { TitleTypo, LabelTypo } from './styles';
+import WarningTypo from '../../components/WarningTypo';
 
 export interface ComponentProps {}
 
@@ -61,9 +62,9 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     <SecondaryButton sx={{ width: 152 }}>Back</SecondaryButton>
                     <PrimaryButton sx={{ width: 152 }}>Confirm</PrimaryButton>
                 </Stack>
-                <Typography fontSize={12} fontWeight={400} width={240} textAlign="center">
-                    ⚠️ In case of payment problems, please contact the official customer service
-                </Typography>
+                <WarningTypo width={240}>
+                    In case of payment problems, please contact the official customer service
+                </WarningTypo>
             </Stack>
         </Stack>
     );

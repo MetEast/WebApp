@@ -9,7 +9,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
-import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
+import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -39,7 +39,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <BlindBoxContents />
+                <MintNFT />
             </ModalDialog>
         </>
     );

@@ -13,7 +13,7 @@ const ModalDialog: React.FC<ComponentProps> = ({ open, onClose, children }): JSX
             open={open}
             onClose={onClose}
             sx={{ background: '#1890FF90' }}
-            PaperProps={{ sx: { padding: 8, borderRadius: 8 } }}
+            PaperProps={{ sx: { maxWidth: '100%', padding: 8, borderRadius: 8 } }}
         >
             {children}
         </Dialog>
