@@ -82,3 +82,11 @@ export type TypeNewProduct = {
     tokenId: string;
     size: number;
 };
+
+export type TypeNewTransaction = {
+    blockNumber: number;
+    timestamp: string;
+    from: string;
+    price: string;
+    event: string;
+};

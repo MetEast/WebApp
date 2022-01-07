@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'; // ---
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { enumBadgeType, enumSingleNFTType, TypeNewProduct } from 'src/types/product-types'; // ---
+import { enumBadgeType, enumSingleNFTType, TypeNewProduct, TypeNewTransaction, enumTransactionType } from 'src/types/product-types'; // ---
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -11,19 +11,21 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { nftTransactions } from 'src/constants/dummyData';
+// import { nftTransactions } from 'src/constants/dummyData';
 import { TypeNFTTransaction } from 'src/types/product-types';
-import { getThumbnail, getTime } from 'src/services/sleep'; // ---
+import { getThumbnail, getTime, reduceHexAddress } from 'src/services/sleep'; // ---
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
-    const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
+    // const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
     // get product details from server
     const params = useParams(); // params.id
     const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""});
+    const [transactionsList, setTransactionsList] = useState([]);
+    var _latestTransList: any = [];
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonProductDetails => {
-                // console.log(jsonProductDetails);
+                console.log(jsonProductDetails);
                 var item: TypeNewProduct = jsonProductDetails.data;
                 var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
@@ -41,6 +43,29 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 let saleTime = getTime(item.createTime);
                 product.saleTime = saleTime.date + " " + saleTime.time;                
                 setProductDetail(product);
+            });
+        }).catch(err => {
+            console.log(err)
+        });
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1`).then(response => {
+            response.json().then(jsonTransList => {
+                // console.log(jsonTransList);
+                jsonTransList.data.forEach(function (itemObject: TypeNewTransaction) {
+                    var _transaction: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: ""};
+                     // no proper data
+                    if(itemObject.event === "ChangeOrderPrice") _transaction.type = enumTransactionType.OnAuction;
+                    else if(itemObject.event === "BuyOrder") _transaction.type = enumTransactionType.SoldTo;
+                    else if(itemObject.event === "CreateOrderForSale") _transaction.type = enumTransactionType.ForSale;
+                    else if(itemObject.event === "Mint") _transaction.type = enumTransactionType.CreatedBy;
+                    else _transaction.type = enumTransactionType.Bid;
+                    _transaction.user = reduceHexAddress(itemObject.from);  // no proper data
+                    _transaction.price = parseInt(itemObject.price) / 1e15;  // no proper data
+                    let saleTime = getTime(itemObject.timestamp);
+                    _transaction.time = saleTime.date + " " + saleTime.time;
+                    _latestTransList.push(_transaction);
+                });
+                setTransactionsList(_latestTransList);
             });
         }).catch(err => {
             console.log(err)
