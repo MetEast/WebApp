@@ -12,7 +12,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [amount, setAmount] = useState<number>(1);
 
     return (
-        <Stack spacing={5}>
+        <Stack spacing={5} width={320}>
             <Stack alignItems="center">
                 <PageNumberTypo>1 of 2</PageNumberTypo>
                 <DialogTitleTypo>Buy Blind Box</DialogTitleTypo>
@@ -69,8 +69,8 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <ELAPrice ela_price={199} usd_price={480} />
             </Stack>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton sx={{ width: 152 }}>close</SecondaryButton>
-                <PrimaryButton sx={{ width: 152 }}>Confirm</PrimaryButton>
+                <SecondaryButton fullWidth>close</SecondaryButton>
+                <PrimaryButton fullWidth>Confirm</PrimaryButton>
             </Stack>
         </Stack>
     );

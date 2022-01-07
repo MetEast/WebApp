@@ -7,50 +7,32 @@ import WarningTypo from '../../components/WarningTypo';
 
 export interface ComponentProps {}
 
-const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     return (
-        <Stack spacing={5} width={320}>
+        <Stack spacing={5} width={340}>
             <Stack alignItems="center">
                 <PageNumberTypo>2 of 2</PageNumberTypo>
-                <DialogTitleTypo>Order Summary</DialogTitleTypo>
+                <DialogTitleTypo>Check NFT Details</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
-                <Grid container width={200}>
+                <Grid container>
                     <Grid item xs={6}>
                         <TitleTypo>Item</TitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>Product Title</LabelTypo>
+                        <LabelTypo>Nickname</LabelTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <TitleTypo>Unit Price</TitleTypo>
+                        <TitleTypo>Collection</TitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>25.00 ELA</LabelTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TitleTypo>Amount</TitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <LabelTypo>2</LabelTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TitleTypo>Subtotal</TitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <LabelTypo>50.00 ELA</LabelTypo>
+                        <LabelTypo>Collection Name</LabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <TitleTypo>Tx Fees</TitleTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <LabelTypo>0.22 ELA</LabelTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TitleTypo>Total</TitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <LabelTypo>50.12 ELA</LabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
@@ -59,7 +41,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     Available: 0.22 ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton fullWidth>Back</SecondaryButton>
+                    <SecondaryButton fullWidth>Close</SecondaryButton>
                     <PrimaryButton fullWidth>Confirm</PrimaryButton>
                 </Stack>
                 <WarningTypo width={240}>
@@ -70,4 +52,4 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     );
 };
 
-export default OrderSummary;
+export default CheckNFTDetails;
