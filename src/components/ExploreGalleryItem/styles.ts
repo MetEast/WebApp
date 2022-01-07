@@ -6,6 +6,8 @@ export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
         border-radius: 18px;
         width: 100%;
         height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : '100%')};
+        height: 320px;
+        max-height: 40vw;
     }
 `;
 
