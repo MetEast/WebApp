@@ -90,3 +90,14 @@ export type TypeNewTransaction = {
     price: string;
     event: string;
 };
+
+export type TypeProductPrice = {
+    onlyDate: string;
+    price: number;
+    tokenId: string;
+};
+
+export type TypeChartAxis = {
+    x: string;
+    y: number;
+}

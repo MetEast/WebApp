@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // ---
+import { useParams } from 'react-router-dom';
 import { Box, Stack, Typography } from '@mui/material';
 import Chart from 'react-apexcharts';
 import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
+import { TypeProductPrice, TypeChartAxis } from 'src/types/product-types'; // ---
 
 interface ComponentProps {}
 
@@ -65,26 +67,47 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const series = [
         {
             data: [
-                { x: '01/01/2021', y: 10 },
-                { x: '01/21/2021', y: 60 },
-                { x: '02/06/2021', y: 40 },
-                { x: '03/06/2021', y: 30 },
-                { x: '04/06/2021', y: 20 },
-                { x: '04/17/2021', y: 30 },
-                { x: '05/06/2021', y: 40 },
-                { x: '06/06/2021', y: 60 },
-                { x: '07/06/2021', y: 50 },
-                { x: '08/06/2021', y: 40 },
-                { x: '09/06/2021', y: 60 },
-                { x: '10/06/2021', y: 80 },
-                { x: '11/06/2021', y: 90 },
-                { x: '12/06/2021', y: 70 },
+                { x: '01/01/2021', y: 0 },
+                { x: '01/02/2021', y: 0 },
+                { x: '01/03/2021', y: 0 },
+                { x: '01/04/2021', y: 0 },
+                { x: '01/05/2021', y: 0 },
+                { x: '01/16/2021', y: 0 },
+                { x: '01/07/2021', y: 0 },
+                { x: '01/08/2021', y: 0 },
+                { x: '01/09/2021', y: 0 },
+                { x: '01/10/2021', y: 0 },
+                { x: '01/11/2021', y: 0 },
+                { x: '01/12/2021', y: 0 }
             ],
         },
     ];
 
+
     const [chartOptions, setChartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
+
+    // get product details from server
+    const params = useParams(); // params.id
+    var _latestPriceList: any = [];
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`).then(response => {
+            response.json().then(jsonPriceList => {
+                // console.log(jsonPriceList);
+                if (jsonPriceList.data.length > 0) {
+                    jsonPriceList.data.forEach(function (itemObject: TypeProductPrice) {
+                        var _price: TypeChartAxis = {x: "01/01/2022", y: 0};
+                        _price.y = itemObject.price / 1e18;  // no proper data
+                        _price.x = itemObject.onlyDate.slice(5, 7) + "/" + itemObject.onlyDate.slice(8, 10) + "/" + itemObject.onlyDate.slice(0, 4);
+                        _latestPriceList.push(_price);
+                    });
+                    setChartSeries([{data: _latestPriceList}]);
+                }
+            });
+        }).catch(err => {
+            console.log(err)
+        });
+    }, []);
 
     return (
         <Box>
