@@ -1,8 +1,7 @@
 import React from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
-import { DialogTitleTypo, PageNumberTypo } from '../../styles';
+import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
-import { TitleTypo, LabelTypo } from './styles';
 import WarningTypo from '../../components/WarningTypo';
 
 export interface ComponentProps {}
@@ -17,34 +16,34 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
                 <Grid container rowSpacing={0.5}>
                     <Grid item xs={6}>
-                        <TitleTypo>Item</TitleTypo>
+                        <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>Product Title</LabelTypo>
+                        <DetailedInfoLabelTypo>Product Title</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <TitleTypo>Bid Amount</TitleTypo>
+                        <DetailedInfoTitleTypo>Bid Amount</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>25.00 ELA</LabelTypo>
+                        <DetailedInfoLabelTypo>25.00 ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <TitleTypo>Expires in</TitleTypo>
+                        <DetailedInfoTitleTypo>Expires in</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>7 days</LabelTypo>
+                        <DetailedInfoLabelTypo>7 days</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <TitleTypo>Tx Fees</TitleTypo>
+                        <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>0.22 ELA</LabelTypo>
+                        <DetailedInfoLabelTypo>0.22 ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <TitleTypo>Total</TitleTypo>
+                        <DetailedInfoTitleTypo>Total</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo sx={{ fontWeight: 700 }}>50.00 ELA</LabelTypo>
+                        <DetailedInfoLabelTypo sx={{ fontWeight: 700 }}>50.00 ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>

@@ -9,6 +9,8 @@ import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
+import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
+import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
 import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {

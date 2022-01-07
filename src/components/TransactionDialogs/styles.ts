@@ -12,3 +12,13 @@ export const PageNumberTypo = styled(Typography)`
     font-weight: 500;
     color: #1890ff;
 `;
+
+export const DetailedInfoTitleTypo = styled(Typography)`
+    font-size: 14px;
+    font-weight: 600;
+`;
+
+export const DetailedInfoLabelTypo = styled(Typography)`
+    font-size: 16px;
+    font-weight: 400;
+`;

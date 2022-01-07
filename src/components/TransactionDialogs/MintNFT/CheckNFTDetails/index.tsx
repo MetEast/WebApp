@@ -1,8 +1,7 @@
 import React from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
-import { DialogTitleTypo, PageNumberTypo } from '../../styles';
+import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
-import { TitleTypo, LabelTypo } from './styles';
 import WarningTypo from '../../components/WarningTypo';
 
 export interface ComponentProps {}
@@ -17,22 +16,22 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
                 <Grid container>
                     <Grid item xs={6}>
-                        <TitleTypo>Item</TitleTypo>
+                        <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>Nickname</LabelTypo>
+                        <DetailedInfoLabelTypo>Nickname</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <TitleTypo>Collection</TitleTypo>
+                        <DetailedInfoTitleTypo>Collection</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>Collection Name</LabelTypo>
+                        <DetailedInfoLabelTypo>Collection Name</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <TitleTypo>Tx Fees</TitleTypo>
+                        <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <LabelTypo>0.22 ELA</LabelTypo>
+                        <DetailedInfoLabelTypo>0.22 ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
