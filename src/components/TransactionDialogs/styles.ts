@@ -5,6 +5,7 @@ export const DialogTitleTypo = styled(Typography)`
     font-weight: 700;
     line-height: 44px;
     text-align: center;
+    text-transform: capitalize;
 `;
 
 export const PageNumberTypo = styled(Typography)`
