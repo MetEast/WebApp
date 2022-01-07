@@ -11,6 +11,7 @@ import ModalDialog from 'src/components/ModalDialog';
 import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
 import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
+import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
 import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
@@ -20,6 +21,7 @@ import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
+import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -49,7 +51,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <PurchaseSuccess />
+                <WaitingConfirm />
             </ModalDialog>
         </>
     );
