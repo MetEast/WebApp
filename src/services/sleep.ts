@@ -16,16 +16,15 @@ export const getThumbnail = (id: string) => {
 // Get time from timestamp //
 export const getTime = (timestamp: string) => {
   const date = new Date(parseInt(timestamp) * 1000);
-  const pieces = date.toUTCString().split(" ");
-  const [wd, d, m, y] = pieces;
-  const dateStr = [m, d, y].join("-");
+  const dateStr = date.toISOString().slice(0, 10);
+
 
   let hours = date.getUTCHours();
-  const suffix = hours >= 12 ? "PM":"AM";
-  hours = hours > 12 ? hours - 12 : hours;
   hours = parseInt(hours.toString().padStart(2,'0'));
   const min = date.getUTCMinutes().toString().padStart(2,'0');
-  const sec = date.getUTCSeconds().toString().padStart(2,'0');
-  const timeStr = [hours, min, sec].join(':').concat(" ").concat([suffix, "+UTC"].join(' '));
+  const timeStr = [hours, min].join(':');
   return {'date':dateStr, 'time':timeStr};
 };
+
+// Get Abbrevation of hex addres //
+export const reduceHexAddress = (strAddress: string) => strAddress?`${strAddress.substring(0, 5)}...${strAddress.substring(strAddress.length - 3, strAddress.length)}`:'';
