@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Stack, Typography, Grid, Box } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
 import Select from '../../components/Select';
-import WarningTypo from '../../components/WarningTypo';
-import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 
 export interface ComponentProps {}
