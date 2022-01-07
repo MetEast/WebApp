@@ -16,6 +16,7 @@ import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlace
 import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
 import CheckSaleDetails from 'src/components/TransactionDialogs/ListNFT/CheckSaleDetails';
 import ArtworkIsNowForSale from 'src/components/TransactionDialogs/ListNFT/ArtworkIsNowForSale';
+import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -45,7 +46,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <ArtworkIsNowForSale />
+                <AcceptBid />
             </ModalDialog>
         </>
     );
