@@ -45,6 +45,8 @@ export type TypeProduct = {
     price_ela: number;
     price_usd: number;
     likes: number;
+    views: number;
+    author: string;
     type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     saleTime?: string;
 };
@@ -62,7 +64,7 @@ export type TypeSingleNFTBid = {
     time: string;
 };
 
-
+// ---
 export type TypeNewProduct = {
     blockNumber: number;
     createTime: string;
@@ -77,5 +79,6 @@ export type TypeNewProduct = {
     name: string;
     thumbnail: string;
     tokenIndex: string;
+    tokenId: string;
     size: number;
 };
