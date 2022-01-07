@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { TypeProduct, enumSingleNFTType, TypeCollectible } from 'src/types/product-types';
-import { newNFTProducts } from 'src/constants/dummyData';
+import { TypeProduct, enumSingleNFTType, TypeNewProduct } from 'src/types/product-types';
+// import { newNFTProducts } from 'src/constants/dummyData';
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -13,32 +13,51 @@ import { getThumbnail } from 'src/services/sleep';
 const HomePage: React.FC = (): JSX.Element => {
     // const productList: Array<TypeProduct> = newNFTProducts;
     const [productList, setProductList] = useState([]);
-    var productsList: any = [];
+    const [collectionList, setCollectionList] = useState([]);
+    var _newProductList: any = [];
+    var _popularCollectionList: any = [];
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`).then(response => {
-            response.json().then(jsonCollectibles => {
-                // console.log(jsonCollectibles)
-                jsonCollectibles.data.result.forEach(function (itemObject: TypeCollectible, id: number) {
-                    var product: TypeProduct = {id: "", name: "", image: "", price: 0, likes: 0, type: enumSingleNFTType.BuyNow, saleTime: ""};
-                    product.id = id.toString();
+            response.json().then(jsonNewProducts => {
+                console.log(jsonNewProducts)
+                jsonNewProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
+                    var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, type: enumSingleNFTType.BuyNow, saleTime: ""};
+                    product.id = itemObject.tokenIndex;
                     product.name = itemObject.name;
                     product.image = getThumbnail(itemObject.thumbnail);
-                    product.price = itemObject.blockNumber % 1000;
-                    product.likes = itemObject.tokenIndex;
-                    product.type = enumSingleNFTType.BuyNow;
-                    productsList.push(product);
+                    product.price_ela = itemObject.blockNumber % 1000;
+                    product.price_usd = product.price_ela * 3.44;
+                    product.likes = parseInt(itemObject.createTime) % 10000;
+                    product.type = parseInt(itemObject.createTime) % 2 == 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                    product.saleTime = itemObject.createTime;
+                    _newProductList.push(product);
                 });
-                // console.log(productsList);
-                setProductList(productsList);
-            })
-        }).catch(e => {
-            console.log(e)
-            // if(e.code !== e.ABORT_ERR)
-            //     setLoadingTransactions(false);
+                // console.log(_productList);
+                setProductList(_newProductList);
+            });
+        }).catch(err => {
+            console.log(err)
         });
-        // const resCollectibles = await fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`);
-        // const jsonCollectibles = await resCollectibles.json();
-        // const newCollectibles = jsonCollectibles.data.result;
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=2&pageSize=10`).then(response => {
+            response.json().then(jsonPopularCollections => {
+                jsonPopularCollections.data.result.forEach(function (itemObject: TypeNewProduct, id: number) {
+                    var collection: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, type: enumSingleNFTType.BuyNow, saleTime: ""};
+                    collection.id = itemObject.tokenIndex;
+                    collection.name = itemObject.name;
+                    collection.image = getThumbnail(itemObject.thumbnail);
+                    collection.price_ela = itemObject.blockNumber % 1000;
+                    collection.price_usd = collection.price_ela * 3.44;
+                    collection.likes = parseInt(itemObject.createTime) % 10000;
+                    collection.type = parseInt(itemObject.createTime) % 2 == 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                    collection.saleTime = itemObject.createTime;
+                    _popularCollectionList.push(collection);
+                });
+                setCollectionList(_popularCollectionList);
+            });
+        }).catch(err => {
+            console.log(err)
+        });
     }, []);
 
     const theme = useTheme();
@@ -72,9 +91,9 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Box mt={4}>
                     <H2Typography mb={1}>Popular Collections</H2Typography>
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
-                        {productList.map((product, index) => (
+                        {collectionList.map((collection, index) => (
                             <SwiperSlide key={`popular-collection-${index}`}>
-                                <ExploreGalleryItem product={product} />
+                                <ExploreGalleryItem product={collection} />
                             </SwiperSlide>
                         ))}
                     </Swiper>

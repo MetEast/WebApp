@@ -38,9 +38,9 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                     <Typography fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
                         {product.name}
                     </Typography>
-                    <ProductSnippets nickname="Nickname" likes={88} />
+                    <ProductSnippets nickname="Nickname" likes={product.likes} />
                     <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
-                    <ELAPrice ela_price={199} usd_price={480} />
+                    <ELAPrice ela_price={product.price_ela} usd_price={product.price_usd} />
                 </Stack>
             )}
         </Box>
