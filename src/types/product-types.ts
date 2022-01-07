@@ -77,7 +77,7 @@ export type TypeNewProduct = {
     holder: string;
     kind: string;
     name: string;
-    thumbnail: string;
+    asset: string;
     tokenIndex: string;
     tokenId: string;
     size: number;

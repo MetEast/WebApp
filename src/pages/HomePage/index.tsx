@@ -19,12 +19,12 @@ const HomePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`).then(response => {
             response.json().then(jsonNewProducts => {
-                // console.log(jsonNewProducts);
+                console.log(jsonNewProducts);
                 jsonNewProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
                     var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
                     product.id = itemObject.tokenId;
                     product.name = itemObject.name;
-                    product.image = getThumbnail(itemObject.thumbnail);
+                    product.image = getThumbnail(itemObject.asset);
                     product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
                     product.price_usd = product.price_ela * 3.44; // -- no proper value
                     product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
@@ -46,7 +46,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     var collection: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
                     collection.id = itemObject.tokenId;
                     collection.name = itemObject.name;
-                    collection.image = getThumbnail(itemObject.thumbnail);
+                    collection.image = getThumbnail(itemObject.asset);
                     collection.price_ela = itemObject.blockNumber % 1000; // -- no proper value
                     collection.price_usd = collection.price_ela * 3.44; // -- no proper value
                     collection.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value

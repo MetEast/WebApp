@@ -30,14 +30,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
                 product.name = item.name;
-                product.image = getThumbnail(item.thumbnail);
+                product.image = getThumbnail(item.asset);
                 product.price_ela = item.blockNumber % 1000;
                 product.price_usd = product.price_ela * 3.44;
                 product.likes = parseInt(item.createTime) % 10000;
                 product.views = parseInt(item.createTime) * 7 % 10000;
                 product.author.name = item.name + "'s nickname";
                 product.author.description = item.name + "one sentence description here";
-                product.author.img = getThumbnail(item.thumbnail);
+                product.author.img = getThumbnail(item.asset);
                 product.description = item.description;
                 product.type = parseInt(item.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                 let saleTime = getTime(item.createTime);
