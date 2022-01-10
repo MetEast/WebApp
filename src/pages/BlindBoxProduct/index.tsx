@@ -25,6 +25,7 @@ import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConf
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
+import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -54,7 +55,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <CheckBlindBoxDetails />
+                <BlindBoxCreateSuccess />
             </ModalDialog>
         </>
     );
