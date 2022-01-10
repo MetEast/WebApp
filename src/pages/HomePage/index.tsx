@@ -19,7 +19,7 @@ const HomePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`).then(response => {
             response.json().then(jsonNewProducts => {
-                console.log(jsonNewProducts);
+                // console.log(jsonNewProducts);
                 jsonNewProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
                     var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
                     product.id = itemObject.tokenId;
@@ -28,6 +28,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
                     product.price_usd = product.price_ela * 3.44; // -- no proper value
                     product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
+                    product.author = "Author";
                     product.type = parseInt(itemObject.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                     let saleTime = getTime(itemObject.createTime);
                     product.saleTime = saleTime.date + " " + saleTime.time;  
@@ -75,7 +76,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`banner-carousel-${index}`}>
-                                <ExploreGalleryItem product={product} onlyShowImage />
+                                <ExploreGalleryItem product={product} onlyShowImage={true} />
                             </SwiperSlide>
                         ))}
                     </Swiper>

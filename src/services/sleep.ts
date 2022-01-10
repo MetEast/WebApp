@@ -18,7 +18,6 @@ export const getTime = (timestamp: string) => {
   const date = new Date(parseInt(timestamp) * 1000);
   const dateStr = date.toISOString().slice(0, 10);
 
-
   let hours = date.getUTCHours();
   hours = parseInt(hours.toString().padStart(2,'0'));
   const min = date.getUTCMinutes().toString().padStart(2,'0');

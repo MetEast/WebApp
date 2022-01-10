@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
 import { ProductImageContainer, LikeBtn } from './styles';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, Grid } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType } from 'src/types/product-types';
@@ -14,7 +14,7 @@ export interface ExploreGalleryItemProps {
     onlyShowImage?: boolean;
 }
 
-const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage = false }): JSX.Element => {
+const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage = false}): JSX.Element => {
     const getUrl = () => {
         if (product.type === enumSingleNFTType.BuyNow) return `/explore/single-nft/fixed-price/${product.id}`;
         else if (product.type === enumSingleNFTType.OnAuction) return `/explore/single-nft/auction/${product.id}`;
@@ -34,12 +34,24 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                 </ProductImageContainer>
             </Link>
             {!onlyShowImage && (
-                <Stack spacing={1}>
-                    <Typography fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>{product.name}</Typography>
-                    <ProductSnippets nickname={product.author} likes={product.likes} />
-                    <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
-                    <ELAPrice ela_price={product.price_ela} usd_price={product.price_usd} />
+                <Stack>
+
+                <Grid container spacing={1}>
+                    <Grid item order={1} width={'100%'} >
+                        <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>{product.name}</Typography>
+                    </Grid>
+                    <Grid item order={{xs: 4, sm: 4, md: 2 }} width={'100%'} display={{xs: 'none', sm: 'none', md: 'block' }}>
+                        <ProductSnippets nickname={product.author} likes={product.likes} />
+                    </Grid>
+                    <Grid item order={3} width={'100%'} >
+                        <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
+                    </Grid>
+                    <Grid item order={{xs: 2, sm: 2, md: 4 }} width={'100%'} >
+                        <ELAPrice ela_price={product.price_ela} usd_price={product.price_usd} />
+                    </Grid>
+                </Grid>
                 </Stack>
+
             )}
         </Box>
     );

@@ -25,7 +25,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonProductDetails => {
-                console.log(jsonProductDetails);
+                // console.log(jsonProductDetails);
                 var item: TypeNewProduct = jsonProductDetails.data;
                 var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
@@ -60,7 +60,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     else if(itemObject.event === "Mint") _transaction.type = enumTransactionType.CreatedBy;
                     else _transaction.type = enumTransactionType.Bid;
                     _transaction.user = reduceHexAddress(itemObject.from);  // no proper data
-                    _transaction.price = parseInt(itemObject.price) / 1e15;  // no proper data
+                    _transaction.price = parseInt(itemObject.price) / 1e18;  // no proper data
                     let saleTime = getTime(itemObject.timestamp);
                     _transaction.time = saleTime.date + " " + saleTime.time;
                     _latestTransList.push(_transaction);

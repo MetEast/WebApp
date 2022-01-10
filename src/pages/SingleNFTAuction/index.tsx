@@ -62,7 +62,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     else if(itemObject.event === "Mint") _transaction.type = enumTransactionType.CreatedBy;
                     else _transaction.type = enumTransactionType.Bid;
                     _transaction.user = reduceHexAddress(itemObject.from); // no proper data
-                    _transaction.price = parseInt(itemObject.price) / 1e15; // no proper data
+                    _transaction.price = parseInt(itemObject.price) / 1e18; // no proper data
                     let saleTime = getTime(itemObject.timestamp);
                     _transaction.time = saleTime.date + " " + saleTime.time;
                     _latestTransList.push(_transaction);
