@@ -23,6 +23,7 @@ import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
+import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -52,7 +53,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <ErrorMessage />
+                <CreateBlindBox />
             </ModalDialog>
         </>
     );

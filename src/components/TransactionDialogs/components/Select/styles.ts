@@ -11,7 +11,7 @@ export const SelectBtn = styled(Button)<{ isOpen: boolean }>`
     font-size: 14px;
     font-weight: 500;
     color: #0a0b0c;
-    z-index: 20;
+    /* z-index: 20; */
     .arrow-icon {
         margin-left: 4px;
         transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
