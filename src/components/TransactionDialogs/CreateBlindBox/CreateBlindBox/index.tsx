@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
+import { useStyles } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import Select from '../../components/Select';
+import SortSelect from '../../components/SortSelect';
 import WarningTypo from '../../components/WarningTypo';
 import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
@@ -12,6 +14,8 @@ import ELAPriceInput from '../../components/ELAPriceInput';
 export interface ComponentProps {}
 
 const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
+    const classes = useStyles();
+
     const blindboxItemsOptions: Array<TypeSelectItem> = [
         {
             label: 'Item1',
@@ -57,10 +61,26 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
+    const sortOptions: Array<TypeSelectItem> = [
+        {
+            label: 'Sort Option 1',
+            value: 'Sort Option 1',
+        },
+        {
+            label: 'Sort Option 2',
+            value: 'Sort Option 2',
+        },
+        {
+            label: 'Sort Option 3',
+            value: 'Sort Option 3',
+        },
+    ];
+
     const [blindboxItem, setBlindboxItem] = useState<TypeSelectItem>();
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [saleBegins, setSaleBegins] = useState<TypeSelectItem>();
     const [saleEnds, setSaleEnds] = useState<TypeSelectItem>();
+    const [sort, setSort] = useState<TypeSelectItem>();
 
     const handleBlindboxItemChange = (value: string) => {
         const item = blindboxItemsOptions.find((option) => option.value === value);
@@ -77,8 +97,19 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         setSaleEnds(item);
     };
 
+    const handleSortChange = (value: string) => {
+        const item = sortOptions.find((option) => option.value === value);
+        setSort(item);
+    };
+
     return (
-        <Stack spacing={5} width={700} maxHeight={'60vh'} sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
+        <Stack
+            spacing={5}
+            width={720}
+            maxHeight={'60vh'}
+            sx={{ overflowY: 'auto', overflowX: 'hidden' }}
+            className={classes.container}
+        >
             <Stack alignItems="center">
                 <PageNumberTypo>1 of 2</PageNumberTypo>
                 <DialogTitleTypo>Create Blind Box</DialogTitleTypo>
@@ -196,6 +227,17 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                         <CustomTextField title="Number of favourites" placeholder="es. 1000" />
                         <CustomTextField title="Number of Views" placeholder="es. 1000" />
                         <CustomTextField title="Max Num of Purchases" placeholder="es. 1000" />
+                        <Stack spacing={0.5}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                Sort
+                            </Typography>
+                            <SortSelect
+                                options={sortOptions}
+                                selected={sort}
+                                placeholder="Select"
+                                handleClick={handleSortChange}
+                            />
+                        </Stack>
                     </Grid>
                 </Grid>
             </Box>
