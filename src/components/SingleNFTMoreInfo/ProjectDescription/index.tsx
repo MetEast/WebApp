@@ -8,10 +8,10 @@ interface ComponentProps {
 const ProjectDescription: React.FC<ComponentProps> = ({description}): JSX.Element => {
     return (
         <Stack spacing={1}>
-            <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
-                Project description
+            <Typography fontSize={{sm:22, xs:18}} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+                Description
             </Typography>
-            <Typography fontSize={14} fontWeight={400}>
+            <Typography fontSize={16} fontWeight={400}>
                 {description}
             </Typography>
         </Stack>

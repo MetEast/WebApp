@@ -13,13 +13,13 @@ import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 // import { nftTransactions } from 'src/constants/dummyData';
 import { TypeNFTTransaction } from 'src/types/product-types';
-import { getThumbnail, getTime, reduceHexAddress } from 'src/services/sleep'; // ---
+import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; // ---
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     // const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
     // get product details from server
     const params = useParams(); // params.id
-    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""});
+    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
     const [transactionsList, setTransactionsList] = useState([]);
     var _latestTransList: any = [];
     useEffect(() => {
@@ -27,7 +27,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
                 var item: TypeNewProduct = jsonProductDetails.data;
-                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
+                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
                 product.name = item.name;
                 product.image = getThumbnail(item.asset);
@@ -41,7 +41,12 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 product.description = item.description;
                 product.type = parseInt(item.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                 let saleTime = getTime(item.createTime);
-                product.saleTime = saleTime.date + " " + saleTime.time;                
+                product.saleTime = saleTime.date + " " + saleTime.time;
+                product.details.tokenId = reduceHexAddress(item.tokenIdHex, 5);
+                product.details.owner = reduceHexAddress(item.holder, 4);
+                product.details.royalties = parseInt(item.royalties) / 1e4;
+                let createTime = getUTCTime(item.createTime);
+                product.details.createTime = createTime.date + "" + createTime.time;
                 setProductDetail(product);
             });
         }).catch(err => {
@@ -59,13 +64,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     else if(itemObject.event === "CreateOrderForSale") _transaction.type = enumTransactionType.ForSale;
                     else if(itemObject.event === "Mint") _transaction.type = enumTransactionType.CreatedBy;
                     else _transaction.type = enumTransactionType.Bid;
-                    _transaction.user = reduceHexAddress(itemObject.from);  // no proper data
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);  // no proper data
                     _transaction.price = parseInt(itemObject.price) / 1e18;  // no proper data
                     let saleTime = getTime(itemObject.timestamp);
                     _transaction.time = saleTime.date + " " + saleTime.time;
                     _latestTransList.push(_transaction);
                 });
                 setTransactionsList(_latestTransList);
+                console.log(_latestTransList);
             });
         }).catch(err => {
             console.log(err)
@@ -76,31 +82,30 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     return (
         <>
             <ProductPageHeader />
-            <Grid container marginTop={5} columnSpacing={5}>
-                <Grid item xs={6}>
+            <Grid container marginTop={6} columnSpacing={5}>
+                <Grid item lg={6} md={6} sm={12} xs={12} >
                     <ProductImageContainer imgurl={productDetail.image} />
-                    {/* <ProductImageContainer imgurl={'/assets/images/explore/singlenft-template1.png'} /> */}
                 </Grid>
-                <Grid item xs={6}>
-                    <Typography fontSize={56} fontWeight={700}>{productDetail.name}</Typography>
+                <Grid item lg={6} md={6} sm={12} xs={12} >
+                    <Typography fontSize={{md:56, sm:42, xs:32}} fontWeight={700}>{productDetail.name}</Typography>
                     <ProductSnippets nickname={productDetail.author.name} likes={productDetail.likes} views={productDetail.views} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.BuyNow} />
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
-                    <ELAPrice ela_price={productDetail.price_ela} usd_price={productDetail.price_usd} marginTop={3} />
+                    <ELAPrice ela_price={productDetail.price_ela} usd_price={productDetail.price_usd} detail_page={true} marginTop={3} />
                     <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
-                <Grid item xs={6}>
+                <Grid item md={6} xs={12}>
+                    <SingleNFTMoreInfo author={productDetail.author} description={productDetail.description} details={productDetail.details} marginTop={5} vertically={true} />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                    <PriceHistoryView />
                     <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>
-                <Grid item xs={6}>
-                    <PriceHistoryView />
-                </Grid>
             </Grid>
-            <SingleNFTMoreInfo author={productDetail.author} description={productDetail.description} marginTop={5} />
         </>
     );
 };

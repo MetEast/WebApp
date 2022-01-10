@@ -12,18 +12,18 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import { getThumbnail, getTime } from 'src/services/sleep'; // ---
+import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; // ---
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     // get product details from server
     const params = useParams(); // params.id
-    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""});
+    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
                 var item: TypeNewProduct = jsonProductDetails.data;
-                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
+                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
                 product.name = item.name;
                 product.image = getThumbnail(item.asset);
@@ -38,6 +38,11 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                 product.type = parseInt(item.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                 let saleTime = getTime(item.createTime);
                 product.saleTime = saleTime.date + " " + saleTime.time;
+                product.details.tokenId = reduceHexAddress(item.tokenIdHex, 5);
+                product.details.owner = reduceHexAddress(item.holder, 4);
+                product.details.royalties = parseInt(item.royalties) / 1e4;
+                let createTime = getUTCTime(item.createTime);
+                product.details.createTime = createTime.date + "" + createTime.time;
                 setProductDetail(product);
             });
         }).catch(err => {
@@ -75,7 +80,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                 <Grid item xs={6}>
                     <Stack spacing={3}>
                         <ProjectDescription description={productDetail.description} />
-                        <ChainDetails />
+                        <ChainDetails tokenId={productDetail.details.tokenId} owner={productDetail.details.owner} royalties={productDetail.details.royalties} createTime={productDetail.details.createTime} />
                     </Stack>
                 </Grid>
             </Grid>
