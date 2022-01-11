@@ -134,7 +134,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                         </FilterButton>
                     ))}
                 </Stack>
-                <OptionsBar
+                {/* <OptionsBar
                     sortOptions={sortOptions}
                     sortSelected={sortBy}
                     handleSortChange={handleChangeSortBy}
@@ -142,7 +142,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                     productViewMode={productViewMode}
                     setProductViewMode={setProductViewMode}
                     filterBtnHidden
-                />
+                /> */}
             </Stack>
             <Box display="flex" mt={3}>
                 {filters.map((item, index) => (
