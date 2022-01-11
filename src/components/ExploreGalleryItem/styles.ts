@@ -3,11 +3,9 @@ import { styled, Box, Button } from '@mui/material';
 export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
     position: relative;
     img {
-        border-radius: 18px;
+        border-radius: 10px;
         width: 100%;
-        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : '100%')};
-        height: 320px;
-        max-height: 40vw;
+        height: ${({ onlyShowImage }) => (onlyShowImage ? 'calc(100vw / 5)' : 'calc(100vw / 6)')};
     }
 `;
 

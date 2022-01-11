@@ -28,6 +28,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
                     product.price_usd = product.price_ela * 3.44; // -- no proper value
                     product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
+                    product.author = "Author";
                     product.type = parseInt(itemObject.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                     let saleTime = getTime(itemObject.createTime);
                     product.saleTime = saleTime.date + " " + saleTime.time;  
@@ -75,7 +76,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`banner-carousel-${index}`}>
-                                <ExploreGalleryItem product={product} onlyShowImage />
+                                <ExploreGalleryItem product={product} onlyShowImage={true} />
                             </SwiperSlide>
                         ))}
                     </Swiper>

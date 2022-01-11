@@ -36,8 +36,8 @@ const Navbar: React.FC = (): JSX.Element => {
             sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                paddingLeft: '2.25rem',
-                paddingRight: '2.25rem',
+                // paddingLeft: '2.25rem',
+                // paddingRight: '2.25rem',
                 paddingTop: '0.5rem',
                 paddingBottom: '1.5rem',
             }}

@@ -57,7 +57,7 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
         },
     };
     return (
-        <Container direction="row" alignItems="center" spacing={1} {...otherProps}>
+        <Container direction={{md:"row", xs:"column"}} alignItems="left" spacing={1} {...otherProps}>
             {child[nfttype].element}
         </Container>
     );

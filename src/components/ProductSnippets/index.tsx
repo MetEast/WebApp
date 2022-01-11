@@ -16,7 +16,7 @@ const ProductSnippets: React.FC<ComponentProps> = ({ nickname, sold, instock, li
             {nickname && (
                 <Stack direction="row" alignItems="center" spacing={1}>
                     <Icon icon="ph:palette" />
-                    <Typography fontWeight={500} fontSize={12}>
+                    <Typography fontWeight={500} fontSize={12} >
                         {`by ${nickname}`}
                     </Typography>
                 </Stack>
