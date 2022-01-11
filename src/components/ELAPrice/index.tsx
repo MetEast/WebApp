@@ -7,11 +7,12 @@ export interface ComponentProps extends SpacingProps {
     ela_price: number;
     usd_price?: number;
     detail_page?: boolean;
+    alignRight?: boolean; 
 }
 
-const ELAPrice: React.FC<ComponentProps> = ({ ela_price, usd_price, detail_page, ...otherProps }): JSX.Element => {
+const ELAPrice: React.FC<ComponentProps> = ({ ela_price, usd_price, detail_page, alignRight = false, ...otherProps }): JSX.Element => {
     return (
-        <Stack direction="row" alignItems="center" spacing={1} {...otherProps}>
+        <Stack direction="row" alignItems="center" justifyContent={(alignRight) ? "end" : "start"} spacing={1} {...otherProps}>
             <img src="/assets/icons/elatos-ela.svg" alt="" />
             <Typography fontSize={{md:20, sm:14}} fontWeight={500}>
                 {`${ela_price.toFixed(2)} ELA`}
