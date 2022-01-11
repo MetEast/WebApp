@@ -32,16 +32,30 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
             </Stack>
             <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
                 {transactionsTblColumns.map((item) => (
-                    <Grid item xs={item.width} fontSize={14} fontWeight={700} display={{xs: 'none', sm: 'block'}} sx={{ textTransform: 'uppercase' }}>
+                    <Grid
+                        item
+                        xs={item.width}
+                        fontSize={14}
+                        fontWeight={700}
+                        display={{ xs: 'none', sm: 'block' }}
+                        sx={{ textTransform: 'uppercase' }}
+                    >
                         {item.value}
                     </Grid>
                 ))}
                 {transactionsList.map((item) => (
                     <Grid container item>
-                        <Grid item xs={6} sm={transactionsTblColumns[0].width} order={{xs: 3, sm: 1}}>
+                        <Grid item xs={6} sm={transactionsTblColumns[0].width} order={{ xs: 3, sm: 1 }}>
                             <SingleNFTTransactionType transactionType={item.type} />
                         </Grid>
-                        <Grid item xs={6} sm={transactionsTblColumns[1].width} order={{xs: 4, sm: 2}} textAlign={{xs: "right", sm: "left"}}>
+                        <Grid
+                            item
+                            xs={6}
+                            sm={transactionsTblColumns[1].width}
+                            order={{ xs: 4, sm: 2 }}
+                            textAlign={{ xs: 'right', sm: 'left' }}
+                        >
+
                             <Typography fontSize={16} fontWeight={400}>
                                 {item.user}
                             </Typography>
@@ -49,9 +63,17 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                         <Grid item xs={6} sm={transactionsTblColumns[2].width} order={{xs: 2, sm: 3}} textAlign={{xs: "right", sm: "left"}}>
                             <ELAPrice ela_price={item.price} alignRight={priceAlign} />
                         </Grid>
-                        <Grid item xs={6} sm={transactionsTblColumns[3].width} order={{xs: 1, sm: 4}}>
+                        <Grid item xs={6} sm={transactionsTblColumns[3].width} order={{ xs: 1, sm: 4 }}>
                             <Typography fontSize={12} fontWeight={500}>
-                                {item.time.slice(0, 4) + "/" + item.time.slice(5, 7) + "/" + item.time.slice(8, 10)  + " " + item.time.slice(11, 13) + ":" + item.time.slice(14, 16)}
+                                {item.time.slice(0, 4) +
+                                    '/' +
+                                    item.time.slice(5, 7) +
+                                    '/' +
+                                    item.time.slice(8, 10) +
+                                    ' ' +
+                                    item.time.slice(11, 13) +
+                                    ':' +
+                                    item.time.slice(14, 16)}
                             </Typography>
                         </Grid>
                     </Grid>

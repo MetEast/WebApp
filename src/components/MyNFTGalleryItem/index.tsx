@@ -19,7 +19,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage = f
         if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.id}`;
         else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.id}`;
         else if (product.type === enumMyNFTType.Created) return `/mynft/created/${product.id}`;
-        // else if (product.type === enumMyNFTType.Sold) return `/mynft/sold/${product.id}`;
+        else if (product.type === enumMyNFTType.Sold) return `/mynft/sold/${product.id}`;
         else return `#`;
     };
 

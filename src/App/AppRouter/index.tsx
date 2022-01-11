@@ -11,6 +11,7 @@ import ProfilePage from 'src/pages/ProfilePage';
 import MyNFTBuyNow from 'src/pages/MyNFT/BuyNow';
 import MyNFTAuction from 'src/pages/MyNFT/Auction';
 import MyNFTCreated from 'src/pages/MyNFT/Created';
+import MyNFTSold from 'src/pages/MyNFT/Sold';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -93,6 +94,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <MyNFTCreated />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/mynft/sold/:id"
+                    element={
+                        <Layout>
+                            <MyNFTSold />
                         </Layout>
                     }
                 />
