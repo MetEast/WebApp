@@ -15,7 +15,7 @@ interface ComponentProps extends SpacingProps {
     bidsList?: Array<TypeSingleNFTBid>;
 }
 
-const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ author, description, details, bidsList = [], vertically = false, ...otherProps }): JSX.Element => {
+const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ author, description, details, bidsList, vertically = false, ...otherProps }): JSX.Element => {
     return (
         // <Grid container columnSpacing={5} rowGap={5} {...otherProps}>
         //     <Grid item xs={vertically ? 12 : 4} order={vertically ? 1 : 2}>
@@ -32,9 +32,9 @@ const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ author, description, deta
             <Grid item xs={12}>
                 <ProjectDescription description={description} />
             </Grid>
-            <Grid item xs={12} display={{xs:'block', sm:'none', md:'none', lg:'none'}}>
-                <SingleNFTBidsTable bidsList={bidsList} />
-            </Grid>
+            {bidsList && <Grid item xs={12} display={{xs:'block', sm:'block', md:'none', lg:'none'}}>
+                <SingleNFTBidsTable bidsList={bidsList} onlyShowDownSm={true} />
+            </Grid>}
             <Grid item xs={12} sm={6} md={12}>
                 <AboutAuthor name={author.name} description={author.description} img={author.img} />
             </Grid>

@@ -7,9 +7,10 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 
 interface ComponentProps {
     bidsList: Array<TypeSingleNFTBid>;
+    onlyShowDownSm?: boolean;
 }
 
-const SingleNFTBidsTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
+const SingleNFTBidsTable: React.FC<ComponentProps> = ({ bidsList, onlyShowDownSm = false }): JSX.Element => {
     const bidsTblColumns = [
         { value: 'User', width: 4 },
         { value: 'Date', width: 4 },
@@ -17,7 +18,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element
     ];
 
     return (
-        <Box>
+        <Box display={(onlyShowDownSm) ? {xs: 'block', sm: 'block', md: 'none'} : {xs: 'none', sm: 'none', md: 'block'}} >
             <Stack direction="column" alignItems="left" justifyContent="space-between" marginTop={1}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5}>
                     <Typography fontSize={22} fontWeight={700}>
@@ -48,26 +49,26 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element
             </Grid>
             <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
                 {bidsTblColumns.map((item) => (
-                    <Grid item xs={item.width} fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }} textAlign={(item.value === "Price") ? "right":"left"}>
+                    <Grid item xs={item.width} fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }} textAlign={(item.value === "Price") ? "right":"left"} display={{xs: 'none', sm: 'block'}}>
                         {item.value}
                     </Grid>
                 ))}
                 {bidsList.map((item) => (
-                    <>
-                        <Grid item xs={bidsTblColumns[0].width}>
+                    <Grid container item>
+                        <Grid item xs={12} sm={bidsTblColumns[0].width} order={{xs:3, sm: 1, md: 1, lg: 1}}>
                             <Typography fontSize={16} fontWeight={700}>
                                 {item.user}
                             </Typography>
                         </Grid>
-                        <Grid item xs={bidsTblColumns[1].width}>
+                        <Grid item xs={6} sm={bidsTblColumns[1].width} order={{xs:1, sm: 2, md: 2, lg: 2}}>
                             <Typography fontSize={12} fontWeight={500}>
                                 {item.time}
                             </Typography>
                         </Grid>
-                        <Grid item xs={bidsTblColumns[2].width}>
+                        <Grid item xs={6} sm={bidsTblColumns[2].width} order={{xs:2, sm: 3, md: 3, lg: 3}}>
                             <ELAPrice ela_price={item.price} alignRight/>
                         </Grid>
-                    </>
+                    </Grid>
                 ))}
             </Grid>
         </Box>
