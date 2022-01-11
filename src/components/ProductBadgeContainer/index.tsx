@@ -3,6 +3,7 @@ import { Container } from './styles';
 import { enumBlindBoxNFTType, enumSingleNFTType, enumMyNFTType, enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
 import { SpacingProps } from '@mui/system';
+import { Grid } from '@mui/material';
 
 interface ProductBadgeContainerProps extends SpacingProps {
     nfttype: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
@@ -19,10 +20,14 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     const badgeSaleEnded = <ProductBadge badgeType={enumBadgeType.SaleEnded} content={content} />;
     const badgeBuyNow = <ProductBadge badgeType={enumBadgeType.BuyNow} />;
     const badgeOnAuction = (
-        <>
-            <ProductBadge badgeType={enumBadgeType.OnAuction} />
-            <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-        </>
+        <Grid container spacing={1}>
+            <Grid item >
+                <ProductBadge badgeType={enumBadgeType.OnAuction} />
+            </Grid>
+            <Grid item>
+                <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
+            </Grid>
+        </Grid>
     );
     const badgeCreated = <ProductBadge badgeType={enumBadgeType.Created} />;
     const badgeSold = <ProductBadge badgeType={enumBadgeType.Sold} />;
@@ -57,7 +62,7 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
         },
     };
     return (
-        <Container direction={{md:"row", xs:"column"}} alignItems="left" spacing={1} {...otherProps}>
+        <Container direction={"row"} alignItems="left" spacing={1} {...otherProps}>
             {child[nfttype].element}
         </Container>
     );
