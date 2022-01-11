@@ -116,7 +116,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 </Grid> */}
 
                 <Grid item md={4} xs={12}>
-                    <SingleNFTMoreInfo author={productDetail.author} description={productDetail.description} details={productDetail.details} marginTop={5} vertically={true} />
+                    <SingleNFTMoreInfo author={productDetail.author} description={productDetail.description} details={productDetail.details} bidsList={bidsList} marginTop={5} vertically={true} />
                 </Grid>
                 <Grid item md={8} xs={12}>
                     <SingleNFTBidsTable bidsList={bidsList} />

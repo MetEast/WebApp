@@ -4,6 +4,8 @@ import { ViewAllBtn } from './styles';
 import { TypeNFTTransaction } from 'src/types/product-types';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import ELAPrice from 'src/components/ELAPrice';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ComponentProps {
     transactionsList: Array<TypeNFTTransaction>;
@@ -16,6 +18,9 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
         { value: 'Price', width: 4 },
         { value: 'Date', width: 2 },
     ];
+    const theme = useTheme();
+    const matchDownsm = useMediaQuery(theme.breakpoints.down('sm'));
+    const priceAlign = matchDownsm ? true : false;
 
     return (
         <Box>
@@ -50,19 +55,13 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                             order={{ xs: 4, sm: 2 }}
                             textAlign={{ xs: 'right', sm: 'left' }}
                         >
+
                             <Typography fontSize={16} fontWeight={400}>
                                 {item.user}
                             </Typography>
                         </Grid>
-                        <Grid
-                            item
-                            xs={6}
-                            sm={transactionsTblColumns[2].width}
-                            order={{ xs: 2, sm: 3 }}
-                            textAlign={{ xs: 'right', sm: 'center' }}
-                            alignContent={{ xs: 'right', sm: 'center' }}
-                        >
-                            <ELAPrice ela_price={item.price} />
+                        <Grid item xs={6} sm={transactionsTblColumns[2].width} order={{xs: 2, sm: 3}} textAlign={{xs: "right", sm: "left"}}>
+                            <ELAPrice ela_price={item.price} alignRight={priceAlign} />
                         </Grid>
                         <Grid item xs={6} sm={transactionsTblColumns[3].width} order={{ xs: 1, sm: 4 }}>
                             <Typography fontSize={12} fontWeight={500}>
