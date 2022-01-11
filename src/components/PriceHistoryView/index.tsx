@@ -111,7 +111,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
 
     return (
         <Box>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5}>
                 <Typography fontSize={22} fontWeight={700}>
                     Price History
                 </Typography>

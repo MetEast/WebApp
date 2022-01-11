@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, Grid } from '@mui/material';
 
 interface ComponentProps {
     name: string;
@@ -10,17 +10,26 @@ interface ComponentProps {
 const AboutAuthor: React.FC<ComponentProps> = ({name, description, img}): JSX.Element => {
     return (
         <Stack spacing={1}>
-            <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
-                About the author
+            <Typography fontSize={{sm:22, xs:18}} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+                Created By
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1}>
-                <img src={img} width={24} height={24} alt="" />
-                {/* <img src="/assets/images/avatar-template.png" width={24} alt="" /> */}
-                <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }} >
-                    {name}
-                </Typography>
+                <Grid container columnSpacing={1} rowGap={5}>
+                    <Grid item>
+                        <img src={img} width={39} height={39} style={{borderRadius: "9999px"}} alt="" />
+                    </Grid>
+                    <Grid item>
+                        <Typography fontSize={16} fontWeight={700} sx={{ textTransform: 'uppercase' }} >
+                            {name}
+                        </Typography>
+                        <Typography fontSize={12} fontWeight={700} color={"#1890FF"}>                    
+                            {name}
+                            <img src={"/assets/icons/copy-icon.png"} width={12} height={12} alt="" />
+                        </Typography>
+                    </Grid>
+                </Grid>                
             </Stack>
-            <Typography fontSize={14} fontWeight={400}>
+            <Typography fontSize={16} fontWeight={400}>
                 {description}
             </Typography>
         </Stack>

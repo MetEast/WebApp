@@ -6,9 +6,10 @@ import { Block } from '@mui/icons-material';
 export interface ComponentProps extends SpacingProps {
     ela_price: number;
     usd_price?: number;
+    detail_page?: boolean;
 }
 
-const ELAPrice: React.FC<ComponentProps> = ({ ela_price, usd_price, ...otherProps }): JSX.Element => {
+const ELAPrice: React.FC<ComponentProps> = ({ ela_price, usd_price, detail_page, ...otherProps }): JSX.Element => {
     return (
         <Stack direction="row" alignItems="center" spacing={1} {...otherProps}>
             <img src="/assets/icons/elatos-ela.svg" alt="" />
@@ -16,7 +17,7 @@ const ELAPrice: React.FC<ComponentProps> = ({ ela_price, usd_price, ...otherProp
                 {`${ela_price.toFixed(2)} ELA`}
             </Typography>
             {usd_price && (
-                <Typography fontSize={12} fontWeight={400} display={{xs: 'none', sm: 'none', md: 'block'}}>
+                <Typography fontSize={12} fontWeight={400} display={(detail_page) ? 'block' : {xs: 'none', sm: 'none', md: 'block'}}>
                     {`~$${usd_price.toFixed(2)}`}
                 </Typography>
             )}

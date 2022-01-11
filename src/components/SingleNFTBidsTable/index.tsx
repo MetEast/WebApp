@@ -10,14 +10,14 @@ interface ComponentProps {
 
 const SingleNFTBidsTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
     const bidsTblColumns = [
-        { value: 'User', width: 3 },
-        { value: 'Date', width: 7 },
-        { value: 'Price', width: 2 },
+        { value: 'User', width: 4 },
+        { value: 'Date', width: 4 },
+        { value: 'Price', width: 4 },
     ];
 
     return (
         <Box>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5}>
                 <Typography fontSize={18} fontWeight={700}>
                     Latest Bids
                 </Typography>

@@ -69,17 +69,13 @@ export type TypeNewProduct = {
     blockNumber: number;
     createTime: string;
     description: string;
-    did: {
-        version: string;
-        did: string;
-    }
-    didUri: string;
     holder: string;
+    royalties: string;
     kind: string;
     name: string;
     asset: string;
-    tokenIndex: string;
     tokenId: string;
+    tokenIdHex: string;
     size: number;
 };
 
