@@ -5,7 +5,7 @@ import PrivateProfilePage from './profile';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
 import ConnectWallet from 'src/components/profile/ConnectWallet';
-import WalletConnection from 'src/components/profile/WalletConnection';
+import ChooseWallet from 'src/components/profile/ChooseWallet';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [step, setStep] = useState<number>(0);
@@ -24,7 +24,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <ConnectWallet onClickConnect={() => {}} onClickNotifications={() => {}}/>
             </ModalDialog> */}
             {/* <ModalDialog open={true} onClose={() => {}}>
-                <WalletConnection onClickClose={() => {}}/>
+                <ChooseWallet onClickClose={() => {}}/>
             </ModalDialog> */}
 
             {/* {step === 0 && <WalletConnection onClickClose={handleClick(1)} />}
