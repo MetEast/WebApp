@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'; // ---
+import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
-import { enumBadgeType, enumSingleNFTType, TypeNewProduct } from 'src/types/product-types'; // ---
+import { enumBadgeType, enumSingleNFTType, TypeNewProduct } from 'src/types/product-types'; 
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -15,7 +15,7 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { nftTransactions } from 'src/constants/dummyData';
-import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; // ---
+import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const transactionsList = nftTransactions;

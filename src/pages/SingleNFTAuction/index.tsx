@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'; // ---
+import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
-import { enumBadgeType, enumSingleNFTType, enumTransactionType, TypeNewProduct, TypeNewTransaction, TypeNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types'; // ---
+import { enumBadgeType, enumSingleNFTType, enumTransactionType, TypeNewProduct, TypeNewTransaction, TypeNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types'; 
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -13,7 +13,7 @@ import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { nftTransactions, singleNFTBids } from 'src/constants/dummyData';
-import { getThumbnail, getTime, reduceHexAddress, getUTCTime } from 'src/services/sleep'; // ---
+import { getThumbnail, getTime, reduceHexAddress, getUTCTime } from 'src/services/sleep'; 
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const bidsList: Array<TypeSingleNFTBid> = singleNFTBids;
@@ -107,14 +107,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
-                {/* <Grid item md={6} xs={12}>
-                    <SingleNFTMoreInfo author={productDetail.author} description={productDetail.description} details={productDetail.details} marginTop={5} vertically={true} />
-                </Grid>
-                <Grid item md={6} xs={12}>
-                    <PriceHistoryView />
-                    <NFTTransactionTable transactionsList={transactionsList} />
-                </Grid> */}
-
                 <Grid item md={4} xs={12}>
                     <SingleNFTMoreInfo author={productDetail.author} description={productDetail.description} details={productDetail.details} bidsList={bidsList} marginTop={5} vertically={true} />
                 </Grid>

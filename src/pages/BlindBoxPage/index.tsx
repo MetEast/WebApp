@@ -27,12 +27,13 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 _singleProductList = [];
                 if (typeof jsonSingleProducts.data != 'undefined') {
                     jsonSingleProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
-                        var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumBlindBoxNFTType.ComingSoon, saleTime: ""};
+                        var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, sold: 0, likes: 0, views: 0, author: "", type: enumBlindBoxNFTType.ComingSoon, saleTime: ""};
                         product.id = itemObject.tokenId;
                         product.name = itemObject.name;
                         product.image = getThumbnail(itemObject.asset);
                         product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
                         product.price_usd = product.price_ela * 3.44; // -- no proper value
+                        product.sold = itemObject.blockNumber % 4321;
                         product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
                         product.author = "Author";
                         product.type = parseInt(itemObject.createTime) % 3 === 0 ? enumBlindBoxNFTType.ComingSoon : (parseInt(itemObject.createTime) % 3 === 1 ? enumBlindBoxNFTType.SaleEnds : enumBlindBoxNFTType.SaleEnded);

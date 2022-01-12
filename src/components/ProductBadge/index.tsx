@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from './styles';
 import { enumBadgeType } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
-import { Typography } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 
 interface ProductBadgeProps {
     badgeType: enumBadgeType;
@@ -71,9 +71,18 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
             sx={{ background: styles[badgeType].background, color: styles[badgeType].color }}
         >
             {styles[badgeType].icon !== '' && styles[badgeType].icon}
-            <Typography fontSize={14} fontWeight={500} color={styles[badgeType].color}>
+            {/* <Typography fontSize={14} fontWeight={500} color={styles[badgeType].color}>
+                
                 {`${badgeType}${content ? `: ${content}` : ''}`}
-            </Typography>
+            </Typography> */}
+            <Grid container justifyContent={"space-between"} fontSize={14} fontWeight={500} color={styles[badgeType].color}>
+                <Grid item>
+                    {`${badgeType}${content ? ': ' : ''}`}
+                </Grid>
+                <Grid item>
+                    {content ? content : ''}
+                </Grid>
+            </Grid>
         </Container>
     );
 };

@@ -5,7 +5,8 @@ export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
     img {
         border-radius: 10px;
         width: 100%;
-        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : 'calc(width * 320 / 230)')};
+        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : '230px')};
+        // height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : 'calc(100vw / 6)')};
         // height: ${({ onlyShowImage }) => (onlyShowImage ? 'calc(100vw / 5)' : 'calc(100vw / 6)')};
     }
 `;
