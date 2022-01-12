@@ -25,7 +25,7 @@ const menuItemsList = [
 const Header: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
-    const dialogContext = useDialogContext();
+    const [dialogState, setDialogState] = useDialogContext();
 
     return (
         <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -50,7 +50,7 @@ const Header: React.FC = (): JSX.Element => {
                 </Button>
                 <CreateNFTButton
                     onClick={() => {
-                        dialogContext.actions.setCreateNFTDlgOpen(true);
+                        setDialogState({ ...dialogState, createNFTDlgOpened: true });
                     }}
                 >
                     Create NFT

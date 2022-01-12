@@ -10,7 +10,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
     // const [appState, setAppState] = useAppState();
-    const dialogContext = useDialogContext();
+    const [dialogState, setDialogState] = useDialogContext();
 
     return (
         <>
@@ -47,9 +47,9 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 </Container>
             </Box>
             <ModalDialog
-                open={dialogContext.createNFTDlgOpened}
+                open={dialogState.createNFTDlgOpened}
                 onClose={() => {
-                    dialogContext.actions.setCreateNFTDlgOpen(false);
+                    setDialogState({ ...dialogState, createNFTDlgOpened: false });
                 }}
             >
                 <MintNFT />
