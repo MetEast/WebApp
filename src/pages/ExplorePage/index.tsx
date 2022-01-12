@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
-import { singleNFTProducts } from 'src/constants/dummyData';
+// import { singleNFTProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants'; // sort options
@@ -22,37 +22,37 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>("");
 
-    const productList: Array<TypeProduct> = singleNFTProducts;
-    // const [productList, setProductList] = useState([]);
-    // var _singleProductList: any = [];
-    // useEffect(() => {
-    //     fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/search?key=${keyWord}`, {}).then(response => {
-    //         response.json().then(jsonSingleProducts => {
-    //             // console.log(jsonSingleProducts);
-    //             _singleProductList = [];
-    //             if (typeof jsonSingleProducts.data != 'undefined') {
-    //                 jsonSingleProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
-    //                     var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
-    //                     product.id = itemObject.tokenId;
-    //                     product.name = itemObject.name;
-    //                     product.image = getThumbnail(itemObject.asset);
-    //                     product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
-    //                     product.price_usd = product.price_ela * 3.44; // -- no proper value
-    //                     product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
-    //                     product.author = "Author";
-    //                     product.type = parseInt(itemObject.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-    //                     let saleTime = getTime(itemObject.createTime);
-    //                     product.saleTime = saleTime.date + " " + saleTime.time;  
-    //                     _singleProductList.push(product);
-    //                 });
-    //                 // console.log(_productList);
-    //                 setProductList(_singleProductList);
-    //             }
-    //         });
-    //     }).catch(err => {
-    //         console.log(err)
-    //     });
-    // }, [keyWord]);
+    // const productList: Array<TypeProduct> = singleNFTProducts;
+    const [productList, setProductList] = useState([]);
+    var _singleProductList: any = [];
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/search?key=${keyWord}`, {}).then(response => {
+            response.json().then(jsonSingleProducts => {
+                // console.log(jsonSingleProducts);
+                _singleProductList = [];
+                if (typeof jsonSingleProducts.data != 'undefined') {
+                    jsonSingleProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
+                        var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
+                        product.id = itemObject.tokenId;
+                        product.name = itemObject.name;
+                        product.image = getThumbnail(itemObject.asset);
+                        product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
+                        product.price_usd = product.price_ela * 3.44; // -- no proper value
+                        product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
+                        product.author = "Author";
+                        product.type = parseInt(itemObject.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                        let saleTime = getTime(itemObject.createTime);
+                        product.saleTime = saleTime.date + " " + saleTime.time;  
+                        _singleProductList.push(product);
+                    });
+                    // console.log(_productList);
+                    setProductList(_singleProductList);
+                }
+            });
+        }).catch(err => {
+            console.log(err)
+        });
+    }, [keyWord]);
 
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
