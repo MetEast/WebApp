@@ -20,6 +20,10 @@ export const SortByBtn = styled(Button)<{ isOpen: boolean }>`
         transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
     }
+    ${(props) => props.theme.breakpoints.down('sm')} {
+        min-width: 15px;
+        padding: 13px 10px;
+    }
 `;
 
 export const ListItemsWrapper = styled(Box)<{ isOpen: boolean }>`

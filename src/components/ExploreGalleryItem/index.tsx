@@ -28,7 +28,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
                         <LikeBtn>
-                            <Icon icon="ph:heart" fontSize={20} color="black" />
+                            <Icon icon="ph:heart" fontSize={"2vw"} color="black" />
                         </LikeBtn>
                     )}
                 </ProductImageContainer>
