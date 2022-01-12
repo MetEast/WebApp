@@ -7,6 +7,9 @@ export const SearchFieldWrapper = styled(Box)`
     background: #f0f1f2;
     border-radius: 12px;
     padding: 0 16px;
+    // @media (max-width: 375px) {
+    //     padding: 0 5px;
+    // }
     &:active {
     }
 `;

@@ -33,6 +33,7 @@ const SearchField: React.FC<SearchFieldProps> = ({
                 onChange={handleChangeKeyWord}
                 onKeyPress={handleEnterKey}
                 placeholder="Search..." 
+                sx={{minWidth: 0,}}
             />
         </SearchFieldWrapper>
     );

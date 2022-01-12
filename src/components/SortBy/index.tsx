@@ -17,7 +17,6 @@ const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '',
 
     return (
         <Box
-            // width={'100%'}
             onClick={() => {
                 setIsOpen(!isOpen);
             }}
@@ -28,7 +27,6 @@ const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '',
                     {title ? title : placeholder}
                     <KeyboardArrowDownIcon className="arrow-icon" />
                 </>}
-                
             </SortByBtn>
             <ListItemsWrapper width={200} isOpen={isOpen}>
                 <Stack>

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'; // ---
+import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { enumBadgeType, enumSingleNFTType, TypeNewProduct, TypeNewTransaction, enumTransactionType } from 'src/types/product-types'; // ---
+import { enumBadgeType, enumSingleNFTType, TypeNewProduct, TypeNewTransaction, enumTransactionType } from 'src/types/product-types'; 
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -13,7 +13,7 @@ import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 // import { nftTransactions } from 'src/constants/dummyData';
 import { TypeNFTTransaction } from 'src/types/product-types';
-import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; // ---
+import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     // const transactionsList: Array<TypeNFTTransaction> = nftTransactions;

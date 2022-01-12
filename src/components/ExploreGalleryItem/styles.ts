@@ -5,16 +5,18 @@ export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
     img {
         border-radius: 10px;
         width: 100%;
-        height: ${({ onlyShowImage }) => (onlyShowImage ? 'calc(100vw / 5)' : 'calc(100vw / 6)')};
+        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : '230px')};
+        // height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : 'calc(100vw / 6)')};
+        // height: ${({ onlyShowImage }) => (onlyShowImage ? 'calc(100vw / 5)' : 'calc(100vw / 6)')};
     }
 `;
 
 export const LikeBtn = styled(Box)`
     position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
+    top: 1vw;
+    right: 1vw;
+    width: 2.5vw;
+    height: 2.5vw;
     border-radius: 100%;
     background: #ffffffcc;
     display: none;

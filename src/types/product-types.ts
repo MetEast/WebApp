@@ -46,6 +46,8 @@ export type TypeProduct = {
     price_usd: number;
     likes: number;
     views: number;
+    sold?: number;
+    instock?: number;
     author: string;
     type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     saleTime?: string;

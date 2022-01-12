@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'; // ---
+import React, { useState, useEffect, useRef } from 'react'; 
 import { useParams } from 'react-router-dom';
 import { Box, Stack, Typography } from '@mui/material';
 import Chart from 'react-apexcharts';
 import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
-import { TypeProductPrice, TypeChartAxis } from 'src/types/product-types'; // ---
+import { TypeProductPrice, TypeChartAxis } from 'src/types/product-types'; 
 
 interface ComponentProps {}
 

@@ -5,9 +5,11 @@ export const Container = styled(Box)`
     img {
         border-radius: 18px;
         width: 100%;
-        height: calc(100vw / 3);
+        // height: calc(100vw / 3);
+        height: 100%;
         ${(props) => props.theme.breakpoints.between('xs', 'sm')} {
-            height: calc(100vh / 3);
+            // height: calc(100vh / 3);
+            height: 100%;
         }
     }
 `;

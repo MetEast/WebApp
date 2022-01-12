@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'; // ---
+import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
-import { enumBadgeType, enumSingleNFTType, TypeNewProduct } from 'src/types/product-types'; // ---
+import { enumBadgeType, enumSingleNFTType, TypeNewProduct } from 'src/types/product-types'; 
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -12,7 +12,7 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; // ---
+import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     // get product details from server
