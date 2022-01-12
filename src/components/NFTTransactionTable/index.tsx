@@ -19,8 +19,8 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
         { value: 'Date', width: 2 },
     ];
     const theme = useTheme();
-    const matchDownsm = useMediaQuery(theme.breakpoints.down('sm'));
-    const priceAlign = matchDownsm ? true : false;
+    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const priceAlign = matchDownSm ? true : false;
 
     return (
         <Box>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, Stack, Grid } from '@mui/material';
 import SearchField from '../SearchField';
 import SortByButton from '../SortBy';
 import { SortOption } from 'src/types/select-types';
@@ -7,8 +7,11 @@ import { FilterButton } from './styles';
 import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
 import { SpacingProps } from '@mui/system';
 import { Icon } from '@iconify/react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface OptionsBarProps extends SpacingProps {
+    handleKeyWordChange: (value: string) => void;
     sortOptions: SortOption[];
     sortSelected?: SortOption;
     handleSortChange: (value: string) => void;
@@ -19,6 +22,7 @@ interface OptionsBarProps extends SpacingProps {
 }
 
 const OptionsBar: React.FC<OptionsBarProps> = ({
+    handleKeyWordChange,
     sortOptions,
     sortSelected,
     handleSortChange,
@@ -28,22 +32,30 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     filterBtnHidden = false,
     ...otherProps
 }): JSX.Element => {
+
+    const theme = useTheme();
+    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+    const matchDownXs = useMediaQuery(theme.breakpoints.down('md'));
+    const displayFilterLable = matchDownMd ? false : true;
+    const onlyShowIcon = matchDownXs ? true : false;
+
     return (
-        <Stack direction="row" spacing={2} {...otherProps}>
-            <SearchField />
+        <Stack direction="row" spacing={{xs: 1, sm: 2}} {...otherProps}>
+            <SearchField handleChange={handleKeyWordChange}  />
             <SortByButton
                 options={sortOptions}
                 title={sortSelected?.label}
-                placeholder="SORT BY"
+                placeholder={"SORT BY"} 
                 handleClick={handleSortChange}
+                onlyShowIcon={onlyShowIcon}
             />
             {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>
                     <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: 4 }} />
-                    {`Filter`}
+                    {displayFilterLable && `Filter`}
                 </FilterButton>
             )}
-            <Box display="flex" borderRadius={3} overflow="hidden" sx={{ background: '#E8F4FF' }}>
+            <Box display="flex" borderRadius={3} overflow="hidden" sx={{ background: '#E8F4FF'}}>
                 <Button
                     onClick={() => setProductViewMode('grid1')}
                     sx={{

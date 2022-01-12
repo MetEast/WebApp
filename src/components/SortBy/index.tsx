@@ -9,22 +9,26 @@ interface SelectProps {
     title?: string;
     placeholder?: string;
     handleClick: (value: string) => void;
+    onlyShowIcon: boolean;
 }
 
-const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '', handleClick }) => {
+const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '', handleClick, onlyShowIcon }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
         <Box
-            width={200}
+            // width={'100%'}
             onClick={() => {
                 setIsOpen(!isOpen);
             }}
         >
             <SortByBtn fullWidth isOpen={isOpen}>
                 <Icon icon="ph:sort-ascending" fontSize={24} />
-                {title ? title : placeholder}
-                <KeyboardArrowDownIcon className="arrow-icon" />
+                {!onlyShowIcon && <>
+                    {title ? title : placeholder}
+                    <KeyboardArrowDownIcon className="arrow-icon" />
+                </>}
+                
             </SortByBtn>
             <ListItemsWrapper width={200} isOpen={isOpen}>
                 <Stack>
@@ -43,7 +47,7 @@ const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '',
 };
 
 interface SelectItemProps {
-    handleClick: (value: string) => void;
+    handleClick: (value: string) => void; // 
     title: string;
     value: string;
 }

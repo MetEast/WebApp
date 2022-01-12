@@ -51,6 +51,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     collection.price_ela = itemObject.blockNumber % 1000; // -- no proper value
                     collection.price_usd = collection.price_ela * 3.44; // -- no proper value
                     collection.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
+                    collection.author = "Author";
                     collection.type = parseInt(itemObject.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                     let saleTime = getTime(itemObject.createTime);
                     collection.saleTime = saleTime.date + " " + saleTime.time;                    

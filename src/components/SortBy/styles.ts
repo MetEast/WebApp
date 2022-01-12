@@ -6,7 +6,7 @@ export const SortByBtn = styled(Button)<{ isOpen: boolean }>`
     flex-direction: row;
     justify-content: space-between;
     background: #e8f4ff;
-    padding: 8px 20px;
+    padding: 13px 20px;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 700;
