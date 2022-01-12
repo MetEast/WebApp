@@ -26,7 +26,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [productList, setProductList] = useState([]);
     var _singleProductList: any = [];
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/search?key=${keyWord}`, {}).then(response => {
+        const nDisplayCount = (productViewMode === 'grid1') ? 8 : 16;
+        const apiUrl = (keyWord === "") ? `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=${nDisplayCount}` : `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/search?key=${keyWord}`;
+        fetch(apiUrl).then(response => {
             response.json().then(jsonSingleProducts => {
                 // console.log(jsonSingleProducts);
                 _singleProductList = [];
@@ -52,7 +54,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         }).catch(err => {
             console.log(err)
         });
-    }, [keyWord]);
+    }, [keyWord, productViewMode]);
 
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
