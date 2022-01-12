@@ -28,7 +28,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [productList, setProductList] = useState([]);
     var _singleProductList: any = [];
     useEffect(() => {
-        const nDisplayCount = (productViewMode === 'grid1') ? 8 : 16;
+        const nDisplayCount = (productViewMode === 'grid1') ? 16 : 24;
         const apiUrl = (keyWord === "") ? `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=${nDisplayCount}` : `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/search?key=${keyWord}`;
         fetch(apiUrl).then(response => {
             response.json().then(jsonSingleProducts => {
@@ -108,7 +108,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             />
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
-                    <Grid item xs={productViewMode === 'grid1' ? 12 : 6} md={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
+                    <Grid item xs={productViewMode === 'grid1' ? 6 : 4} md={productViewMode === 'grid1' ? 3 : 2} key={`explore-product-${index}`}>
                         <ExploreGalleryItem product={item} />
                     </Grid>
                 ))}

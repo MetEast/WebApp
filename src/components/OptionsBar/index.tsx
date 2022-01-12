@@ -72,16 +72,6 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
             )}
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF'}}>
                 <Button
-                    onClick={() => setProductViewMode('grid1')}
-                    sx={{
-                        borderRadius: 3,
-                        color: productViewMode === 'grid1' ? 'white' : '#1890FF',
-                        backgroundColor: productViewMode === 'grid1' ? '#1890FF !important' : '#E8F4FF',
-                    }}
-                >
-                    <Grid24Filled />
-                </Button>
-                <Button
                     onClick={() => setProductViewMode('grid2')}
                     sx={{
                         // minWidth: 0,
@@ -91,6 +81,16 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                     }}
                 >
                     <GridDots24Filled />
+                </Button>
+                <Button
+                    onClick={() => setProductViewMode('grid1')}
+                    sx={{
+                        borderRadius: 3,
+                        color: productViewMode === 'grid1' ? 'white' : '#1890FF',
+                        backgroundColor: productViewMode === 'grid1' ? '#1890FF !important' : '#E8F4FF',
+                    }}
+                >
+                    <Grid24Filled />
                 </Button>
             </Box>
         </Stack>
