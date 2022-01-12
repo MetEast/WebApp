@@ -1,12 +1,12 @@
-import { Typography, Box, Button, Stack } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
 import React from 'react';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
-    onClickConnect: () => void;
+    onConnect: () => void;
 }
 
-const ConnectDID: React.FC<ComponentProps> = ({ onClickConnect }): JSX.Element => {
+const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
     return (
         <Stack alignItems="center" width={300} spacing={3.5}>
             <Typography fontSize={32} fontWeight={700}>
@@ -28,7 +28,9 @@ const ConnectDID: React.FC<ComponentProps> = ({ onClickConnect }): JSX.Element =
                     Elastos Essential DID
                 </Typography>
             </Stack>
-            <PrimaryButton fullWidth>Connect DID</PrimaryButton>
+            <PrimaryButton fullWidth onClick={onConnect}>
+                Connect DID
+            </PrimaryButton>
         </Stack>
     );
 };

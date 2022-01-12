@@ -4,10 +4,10 @@ import { ConnectButton } from './styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
-    onClickClose: () => void;
+    onConnect: () => void;
 }
 
-const ChooseWallet: React.FC<ComponentProps> = ({ onClickClose }): JSX.Element => {
+const ChooseWallet: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
     const [wallet, setWallet] = useState<'walletconnect' | 'elastos'>('walletconnect');
 
     return (
@@ -37,7 +37,9 @@ const ChooseWallet: React.FC<ComponentProps> = ({ onClickClose }): JSX.Element =
                     Elastos Essential
                 </Typography>
             </ConnectButton>
-            <PrimaryButton fullWidth>Connect</PrimaryButton>
+            <PrimaryButton fullWidth onClick={onConnect}>
+                Connect
+            </PrimaryButton>
         </Stack>
     );
 };
