@@ -5,6 +5,7 @@ import MenuItem from '../MenuItem';
 import { CreateNFTButton } from './styles';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import ConnectWallet from '../Wallet';
 
 const menuItemsList = [
     {
@@ -41,11 +42,12 @@ const Header: React.FC = (): JSX.Element => {
                 </Button>
                 <Button
                     onClick={() => {
-                        navigate('/profile');
+                        navigate('/profile'); // 
                     }}
                 >
                     <Icon icon="ph:user" fontSize={24} color="black" />
                 </Button>
+                {/* <ConnectWallet /> */}
                 <CreateNFTButton>Create NFT</CreateNFTButton>
             </Stack>
         </Stack>

@@ -6,6 +6,7 @@ import AppRouter from './AppRouter';
 import SwiperCore, { Autoplay } from 'swiper';
 
 const App: React.FC = (): JSX.Element => {
+
     SwiperCore.use([Autoplay]);
     if (process.env.REACT_APP_PUBLIC_ENV !== 'development') {
         if (document.addEventListener) {

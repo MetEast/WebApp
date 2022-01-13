@@ -12,11 +12,20 @@ import MyNFTBuyNow from 'src/pages/MyNFT/BuyNow';
 import MyNFTAuction from 'src/pages/MyNFT/Auction';
 import MyNFTCreated from 'src/pages/MyNFT/Created';
 import MyNFTSold from 'src/pages/MyNFT/Sold';
+import LoginPage from 'src/pages/LoginPage';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
         <BrowserRouter>
             <Routes>
+                <Route
+                    path="/auth1"
+                    element={
+                        <Layout>
+                            <LoginPage />
+                        </Layout>
+                    }
+                />
                 <Route
                     index
                     element={
