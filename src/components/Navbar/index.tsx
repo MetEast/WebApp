@@ -13,8 +13,8 @@ const navbarItemList: Array<TypeMenuItem> = [
     },
     {
         icon: AppFolder24Filled,
-        title: 'Explore',
-        url: '/explore',
+        title: 'Products',
+        url: '/products',
     },
     {
         icon: Box24Filled,

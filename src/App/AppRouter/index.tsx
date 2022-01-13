@@ -13,6 +13,7 @@ import MyNFTAuction from 'src/pages/MyNFT/Auction';
 import MyNFTCreated from 'src/pages/MyNFT/Created';
 import MyNFTSold from 'src/pages/MyNFT/Sold';
 import LoginPage from 'src/pages/LoginPage';
+import AdminPage from 'src/pages/AdminPage';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -34,8 +35,9 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </Layout>
                     }
                 />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route
-                    path="/explore"
+                    path="/products"
                     element={
                         <Layout>
                             <ExplorePage />
@@ -59,7 +61,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                     }
                 />
                 <Route
-                    path="/explore/single-nft/fixed-price/:id"
+                    path="/products/fixed-price/:id"
                     element={
                         <Layout>
                             <SingleNFTFixedPrice />
@@ -67,7 +69,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                     }
                 />
                 <Route
-                    path="/explore/single-nft/auction/:id"
+                    path="/products/auction/:id"
                     element={
                         <Layout>
                             <SingleNFTAuction />
