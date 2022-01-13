@@ -8,6 +8,7 @@ import { AppContextProvider } from 'src/context/AppContext';
 import { DialogContextProvider } from 'src/context/DialogContext';
 
 const App: React.FC = (): JSX.Element => {
+
     SwiperCore.use([Autoplay]);
     if (process.env.REACT_APP_PUBLIC_ENV !== 'development') {
         if (document.addEventListener) {

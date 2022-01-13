@@ -14,6 +14,7 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 // import { nftTransactions } from 'src/constants/dummyData';
 import { TypeNFTTransaction } from 'src/types/product-types';
 import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
+import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     // const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
@@ -94,7 +95,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
                     <ELAPrice ela_price={productDetail.price_ela} usd_price={productDetail.price_usd} detail_page={true} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton>
+                    {/* <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton> */}
+                    <ConnectWalletButton toAddress={productDetail.author.name} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>

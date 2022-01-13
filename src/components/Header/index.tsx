@@ -1,11 +1,10 @@
 import React from 'react';
-import { Button, Typography, Stack } from '@mui/material';
+import { Button, Box, Typography, Stack } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import MenuItem from '../MenuItem';
 import { CreateNFTButton } from './styles';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { useDialogContext } from 'src/context/DialogContext';
 
 const menuItemsList = [
     {
@@ -25,7 +24,6 @@ const menuItemsList = [
 const Header: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [dialogState, setDialogState] = useDialogContext();
 
     return (
         <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -43,18 +41,13 @@ const Header: React.FC = (): JSX.Element => {
                 </Button>
                 <Button
                     onClick={() => {
-                        navigate('/profile');
+                        navigate('/profile'); // 
                     }}
                 >
                     <Icon icon="ph:user" fontSize={24} color="black" />
                 </Button>
-                <CreateNFTButton
-                    onClick={() => {
-                        setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
-                    }}
-                >
-                    Create NFT
-                </CreateNFTButton>
+                {/* <ConnectWallet /> */}
+                <CreateNFTButton>Create NFT</CreateNFTButton>
             </Stack>
         </Stack>
     );

@@ -1,3 +1,5 @@
+import Web3 from 'web3';
+
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -41,3 +43,9 @@ export const getUTCTime = (timestamp: string) => {
 
 // Get Abbrevation of hex addres //
 export const reduceHexAddress = (strAddress: string, nDigits: number) => strAddress?`${strAddress.substring(0, 2 + nDigits)}...${strAddress.substring(strAddress.length - nDigits, strAddress.length)}`:'';
+
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}
