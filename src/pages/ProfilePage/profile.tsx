@@ -14,6 +14,7 @@ import { TypeProduct } from 'src/types/product-types';
 import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { useDialogContext } from 'src/context/DialogContext';
 
 const PrivateProfilePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
@@ -24,6 +25,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
         nftGalleryFilterBtnTypes.All,
     );
+    const [dialogState, setDialogState] = useDialogContext();
 
     const productList: Array<TypeProduct> = myNFTProducts;
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
@@ -92,7 +94,14 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                         <SecondaryButton size="small" sx={{ paddingX: 2.5 }}>
                             Earnings
                         </SecondaryButton>
-                        <PrimaryButton sx={{ paddingX: 4 }}>Create NFT</PrimaryButton>
+                        <PrimaryButton
+                            sx={{ paddingX: 4 }}
+                            onClick={() => {
+                                setDialogState({ ...dialogState, createNFTDlgOpened: true });
+                            }}
+                        >
+                            Create NFT
+                        </PrimaryButton>
                         <SecondaryButton size="small" sx={{ paddingX: 2.5 }}>
                             Edit Profile
                         </SecondaryButton>
