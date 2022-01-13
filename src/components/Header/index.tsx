@@ -13,8 +13,8 @@ const menuItemsList = [
         url: '/',
     },
     {
-        title: 'Explore',
-        url: '/explore',
+        title: 'Products',
+        url: '/products',
     },
     {
         title: 'Blind Boxes',

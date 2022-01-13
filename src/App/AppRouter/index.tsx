@@ -26,7 +26,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                     }
                 />
                 <Route
-                    path="/explore"
+                    path="/products"
                     element={
                         <Layout>
                             <ExplorePage />
@@ -50,7 +50,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                     }
                 />
                 <Route
-                    path="/explore/single-nft/fixed-price/:id"
+                    path="/products/fixed-price/:id"
                     element={
                         <Layout>
                             <SingleNFTFixedPrice />
@@ -58,7 +58,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                     }
                 />
                 <Route
-                    path="/explore/single-nft/auction/:id"
+                    path="/products/auction/:id"
                     element={
                         <Layout>
                             <SingleNFTAuction />
