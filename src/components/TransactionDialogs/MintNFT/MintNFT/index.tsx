@@ -7,6 +7,7 @@ import Select from '../../components/Select';
 import WarningTypo from '../../components/WarningTypo';
 import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
@@ -39,6 +40,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
         const item = categoryOptions.find((option) => option.value === value);
         setCategory(item);
     };
+    const [dialogState, setDialogState] = useDialogContext();
 
     return (
         <Stack spacing={5} width={700}>
@@ -102,8 +104,22 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                     Available: 0.22 ELA
                 </Typography>
                 <Stack width="100%" direction="row" spacing={2}>
-                    <SecondaryButton fullWidth>close</SecondaryButton>
-                    <PrimaryButton fullWidth>Next</PrimaryButton>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                        }}
+                    >
+                        close
+                    </SecondaryButton>
+                    <PrimaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, createNFTDlgStep: 1 });
+                        }}
+                    >
+                        Next
+                    </PrimaryButton>
                 </Stack>
                 <WarningTypo width={260}>
                     In case of payment problems, please contact the official customer service

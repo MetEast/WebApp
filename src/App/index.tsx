@@ -4,6 +4,8 @@ import { RecoilRoot } from 'recoil';
 import theme from 'src/styles/theme';
 import AppRouter from './AppRouter';
 import SwiperCore, { Autoplay } from 'swiper';
+import { AppContextProvider } from 'src/context/AppContext';
+import { DialogContextProvider } from 'src/context/DialogContext';
 
 const App: React.FC = (): JSX.Element => {
 
@@ -45,7 +47,11 @@ const App: React.FC = (): JSX.Element => {
     return (
         <RecoilRoot>
             <ThemeProvider theme={theme}>
-                <AppRouter />
+                <AppContextProvider>
+                    <DialogContextProvider>
+                        <AppRouter />
+                    </DialogContextProvider>
+                </AppContextProvider>
             </ThemeProvider>
         </RecoilRoot>
     );

@@ -11,11 +11,12 @@ import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
-import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, ProfilesMainButton } from './styles';
+import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { useDialogContext } from 'src/context/DialogContext';
 
 const PrivateProfilePage: React.FC = (): JSX.Element => {
-    const [mainButtonSelected, setMainButtonSelected] = useState<'earnings' | 'createnft' | 'editprofile'>('createnft');
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
@@ -24,6 +25,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
         nftGalleryFilterBtnTypes.All,
     );
+    const [dialogState, setDialogState] = useDialogContext();
 
     const productList: Array<TypeProduct> = myNFTProducts;
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
@@ -49,18 +51,6 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
 
     const handleClickFilterItem = (filter: enmFilterOption) => () => {
         if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
-    };
-
-    const handleEarningsBtnClicked = () => {
-        setMainButtonSelected('earnings');
-    };
-
-    const handleCreateNFTBtnClicked = () => {
-        setMainButtonSelected('createnft');
-    };
-
-    const handleEditProfileBtnClicked = () => {
-        setMainButtonSelected('editprofile');
     };
 
     return (
@@ -101,21 +91,20 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                         Mary S. Megmore
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={2}>
-                        <ProfilesMainButton active={mainButtonSelected === 'earnings'} onClick={handleEarningsBtnClicked}>
+                        <SecondaryButton size="small" sx={{ paddingX: 2.5 }}>
                             Earnings
-                        </ProfilesMainButton>
-                        <ProfilesMainButton
-                            active={mainButtonSelected === 'createnft'}
-                            onClick={handleCreateNFTBtnClicked}
+                        </SecondaryButton>
+                        <PrimaryButton
+                            sx={{ paddingX: 4 }}
+                            onClick={() => {
+                                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
+                            }}
                         >
                             Create NFT
-                        </ProfilesMainButton>
-                        <ProfilesMainButton
-                            active={mainButtonSelected === 'editprofile'}
-                            onClick={handleEditProfileBtnClicked}
-                        >
+                        </PrimaryButton>
+                        <SecondaryButton size="small" sx={{ paddingX: 2.5 }}>
                             Edit Profile
-                        </ProfilesMainButton>
+                        </SecondaryButton>
                     </Stack>
                 </Stack>
             </Box>

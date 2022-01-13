@@ -3,6 +3,7 @@ import React from 'react';
 import Header from '../Header';
 import Navbar from '../Navbar';
 import Container from '../Container';
+import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
     return (
@@ -39,6 +40,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     <Navbar />
                 </Container>
             </Box>
+            <MintNFTDlgContainer />
         </>
     );
 };
