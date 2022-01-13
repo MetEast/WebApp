@@ -7,8 +7,11 @@ import { useEagerConnect, useInactiveListener } from "./hook";
 import coinbaseLogo from "./coinbase.webp";
 import metamaskLogo from "./metamask.webp";
 import walletConnectLogo from "./walletconnect.svg";
-import { Modal, Box, Button, TextField, Grid, Stack } from '@mui/material';
-import { H2Typography, H5Typography } from 'src/core/typographies';
+import ModalDialog from 'src/components/ModalDialog';
+import ConnectDID from 'src/components/profile/ConnectDID';
+import ChooseWallet from 'src/components/profile/ChooseWallet';
+import { SxProps } from '@mui/system';
+import { PrimaryButton } from 'src/components/Buttons/styles'
 
 import {
   InjectedConnector,
@@ -18,7 +21,8 @@ import {
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect, WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError } from "@web3-react/core";
 
-// Modal.setAppElement("#root");
+import { ethers } from "ethers";
+
 
 function getErrorMessage(error: Error) {
   if (error instanceof NoEthereumProviderError) {
@@ -36,8 +40,8 @@ function getErrorMessage(error: Error) {
 }
 
 enum ConnectorNames {
-  WalletConnect = "Pay with Essentials",
-  Injected = "Pay with MetaMask",
+  WalletConnect = "Essentials",
+  Injected = "MetaMask",
   // WalletLink = "Coinbase"
 }
 
@@ -55,20 +59,28 @@ const logosByName: { [connectorsByName in ConnectorNames]: any } = {
   // [ConnectorNames.WalletLink]: coinbaseLogo
 };
 
-const ConnectWallet: FC = () => {
+export interface ComponentProps {
+    sx?: SxProps;
+    children?: JSX.Element | string;
+    toAddress: string;
+    value?: string;
+}
+
+const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress, value = "0", ...otherProps}): JSX.Element => {
   const context = useWeb3React<Web3Provider>();
   const [errors, setErrors] = useState<string[] | undefined>(undefined);
-  const [showModal, setShowModal] = useState<boolean>(false);
   const { activate, active, error, library, chainId } = context;
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [activatingConnector, setActivatingConnector] = useState<any>();
+  const [isActivating, setIsActivating] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     console.log(active, library, chainId);
     setActivatingConnector(undefined);
     if (active) {
       setShowModal(false);
+      handleTransaction(toAddress, value);
     }
     if (error) {
       setErrors([getErrorMessage(error)]);
@@ -78,64 +90,56 @@ const ConnectWallet: FC = () => {
   const triedEager = useEagerConnect();
 
   useInactiveListener(!triedEager || !!activatingConnector);
+
+  const handleConnectWallet = () => {
+    if(active) setShowModal(false);
+    else setShowModal(true);
+  };
+
+  const handleClick = async (wallet: 'walletconnect' | 'elastos' | 'metamask') => {
+    // alert(wallet);
+    let currentConnector: any = null;
+    if(wallet === 'metamask') currentConnector = injected;
+    else if(wallet === 'elastos') currentConnector = walletlink;
+    else if(wallet === 'walletconnect') currentConnector = walletconnect;
+    setIsActivating(true);
+    await setActivatingConnector(currentConnector);
+    await activate(currentConnector);
+    setIsActivating(false);
+  };
+
+  // transaction
+  const handleTransaction = async (to: string, value: string) => {
+    if (library) {
+      const accounts = await library.listAccounts();
+      const params = [
+        {
+          from: accounts[0],
+          to: to, // "0x686c626E48bfC5DC98a30a9992897766fed4Abd3",
+          value: ethers.utils.parseUnits(value).toHexString(),
+          chainId: chainId,
+        },
+      ];
+      await library
+        .send("eth_sendTransaction", params)
+        .then()
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+
   return (
     <>
-      <Button onClick={() => setShowModal(true)}>
-        Connect Wallet
-      </Button>
-        {/* {errors && <Errors errors={errors} />} */}
-        <Modal open={showModal}>
-            <Box
-                sx={{
-                    position: 'absolute' as 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '80%',
-                    maxWidth: 500,
-                    bgcolor: 'white',
-                    boxShadow: 24,
-                    pl: 8,
-                    pr: 8,
-                    pt: 4,
-                    pb: 4,
-                }}
-            >
-                <Button variant="outlined" onClick={() => setShowModal(false)}>
-                    Back
-                </Button>
-                <H2Typography mt={3} mb={5.5} textAlign={"center"}>
-                    Connect Wallet
-                </H2Typography>
-                <Stack direction="column" spacing={1}>
-                  {Object.entries(connectorsByName).map(([name, value]) => {
-                    const currentConnector = value;
-                    const activating = currentConnector === activatingConnector;
-                    return (
-                      <Button
-                        key={name}
-                        onClick={() => {
-                          console.log(name);
-                          setActivatingConnector(currentConnector);
-                          activate(value);
-                        }}
-                        sx={{
-                          bgcolor: '#FFEAD8',
-                          color: 'text',
-                        }}
-                      >
-                        {activating && <>Loading</>}
-                        {name}
-                      </Button>
-                    );
-                  })}
-                </Stack>
-                
-            </Box>
-        </Modal>
-          
+      <PrimaryButton sx={sx} onClick={handleConnectWallet} {...otherProps}>
+        {children}
+      </PrimaryButton>
+      <ModalDialog open={showModal} onClose={() => {}}>
+          <ChooseWallet onConnect={handleClick} isWorking={isActivating} />
+      </ModalDialog>          
     </>
   );
 };
 
-export default ConnectWallet;
+export default ConnectWalletButton;

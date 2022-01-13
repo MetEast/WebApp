@@ -5,7 +5,6 @@ import App from './App';
 import Web3 from 'web3'
 import { Web3ReactProvider } from '@web3-react/core'
 import {Web3Provider} from "@ethersproject/providers";
-// import { MetaMaskProvider } from './hooks/metamask'
 import reportWebVitals from './reportWebVitals';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

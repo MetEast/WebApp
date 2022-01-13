@@ -4,11 +4,12 @@ import { ConnectButton } from './styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
-    onConnect: () => void;
+    onConnect: (wallet: 'walletconnect' | 'elastos' | 'metamask') => void;
+    isWorking?: boolean; 
 }
 
-const ChooseWallet: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
-    const [wallet, setWallet] = useState<'walletconnect' | 'elastos'>('walletconnect');
+const ChooseWallet: React.FC<ComponentProps> = ({ onConnect, isWorking = false }): JSX.Element => {
+    const [wallet, setWallet] = useState<'walletconnect' | 'elastos' | 'metamask'>('metamask');
 
     return (
         <Stack alignItems="center" width={280} spacing={3}>
@@ -17,7 +18,18 @@ const ChooseWallet: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
             </Typography>
             <ConnectButton
                 onClick={() => {
-                    setWallet('walletconnect');
+                    if(!isWorking) setWallet('metamask');
+                }}
+                selected={wallet === 'metamask'}
+            >
+                <img src="/assets/icons/metamask-alt.svg" alt="" />
+                <Typography fontSize={14} fontWeight={600}>
+                    MetaMask Wallet
+                </Typography>
+            </ConnectButton>
+            <ConnectButton
+                onClick={() => {
+                    if(!isWorking) setWallet('walletconnect');
                 }}
                 selected={wallet === 'walletconnect'}
             >
@@ -28,7 +40,7 @@ const ChooseWallet: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
             </ConnectButton>
             <ConnectButton
                 onClick={() => {
-                    setWallet('elastos');
+                    if(!isWorking) setWallet('elastos');
                 }}
                 selected={wallet === 'elastos'}
             >
@@ -37,8 +49,8 @@ const ChooseWallet: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
                     Elastos Essential
                 </Typography>
             </ConnectButton>
-            <PrimaryButton fullWidth onClick={onConnect}>
-                Connect
+            <PrimaryButton fullWidth onClick={() => onConnect(wallet)}>
+                {isWorking ? "Loading ..." : "Connect"}
             </PrimaryButton>
         </Stack>
     );

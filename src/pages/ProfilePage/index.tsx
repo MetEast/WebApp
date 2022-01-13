@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
 import ChooseWallet from 'src/components/profile/ChooseWallet';
 import PrivateProfilePage from './profile';
 
 const ProfilePage: React.FC = (): JSX.Element => {
+    
     const [step, setStep] = useState<number>(0);
-
     const handleClick = (newStep: number) => () => {
         setStep(newStep);
     };
-
     return (
         <>
             {(step === 0 || step === 1) && (
