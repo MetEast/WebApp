@@ -1,4 +1,4 @@
-import { styled, IconButton } from '@mui/material';
+import { styled, Box, IconButton } from '@mui/material';
 
 export const ShowMenuBtn = styled(IconButton)`
     width: 40px;
@@ -8,4 +8,11 @@ export const ShowMenuBtn = styled(IconButton)`
     &:hover {
         background: #28a0ff;
     }
+`;
+
+export const MenuBox = styled(Box)`
+    height: calc(100vh - 48px);
+    background: #1890ff;
+    border-radius: 16px;
+    padding: 24px;
 `;
