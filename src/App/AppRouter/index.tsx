@@ -12,6 +12,7 @@ import MyNFTBuyNow from 'src/pages/MyNFT/BuyNow';
 import MyNFTAuction from 'src/pages/MyNFT/Auction';
 import MyNFTCreated from 'src/pages/MyNFT/Created';
 import MyNFTSold from 'src/pages/MyNFT/Sold';
+import AdminPage from 'src/pages/AdminPage';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -25,6 +26,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </Layout>
                     }
                 />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route
                     path="/products"
                     element={
