@@ -1,11 +1,15 @@
-import { styled, Box, Button } from '@mui/material';
+import { styled, Box } from '@mui/material';
 
 export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
     position: relative;
+    width: 100%;
+    padding-top: ${({ onlyShowImage }) => (onlyShowImage ? 'auto' : '100%')};
     img {
+        position: ${({ onlyShowImage }) => (onlyShowImage ? 'auto' : 'absolute')};
+        top: 0;
         border-radius: 10px;
         width: 100%;
-        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : '230px')};
+        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : 'auto')};
         // height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : 'calc(100vw / 6)')};
         // height: ${({ onlyShowImage }) => (onlyShowImage ? 'calc(100vw / 5)' : 'calc(100vw / 6)')};
     }
