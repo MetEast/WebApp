@@ -50,7 +50,7 @@ const Header: React.FC = (): JSX.Element => {
                 </Button>
                 <CreateNFTButton
                     onClick={() => {
-                        setDialogState({ ...dialogState, createNFTDlgOpened: true });
+                        setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
                     }}
                 >
                     Create NFT

@@ -2,10 +2,12 @@ import React, { createContext, useState, useContext } from 'react';
 
 interface State {
     createNFTDlgOpened: boolean;
+    createNFTDlgStep: number;
 }
 
 const defaultState: State = {
     createNFTDlgOpened: false,
+    createNFTDlgStep: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

@@ -3,15 +3,9 @@ import React from 'react';
 import Header from '../Header';
 import Navbar from '../Navbar';
 import Container from '../Container';
-import ModalDialog from 'src/components/ModalDialog';
-import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
-// import { useAppState } from 'src/context/AppContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
-    // const [appState, setAppState] = useAppState();
-    const [dialogState, setDialogState] = useDialogContext();
-
     return (
         <>
             <Box
@@ -46,14 +40,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     <Navbar />
                 </Container>
             </Box>
-            <ModalDialog
-                open={dialogState.createNFTDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, createNFTDlgOpened: false });
-                }}
-            >
-                <MintNFT />
-            </ModalDialog>
+            <MintNFTDlgContainer />
         </>
     );
 };

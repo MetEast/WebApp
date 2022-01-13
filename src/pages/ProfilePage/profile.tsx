@@ -97,7 +97,7 @@ const PrivateProfilePage: React.FC = (): JSX.Element => {
                         <PrimaryButton
                             sx={{ paddingX: 4 }}
                             onClick={() => {
-                                setDialogState({ ...dialogState, createNFTDlgOpened: true });
+                                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
                             }}
                         >
                             Create NFT
