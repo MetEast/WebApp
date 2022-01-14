@@ -144,7 +144,7 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     console.log(active, library, chainId);
     if (library) {
       // const accounts = await library.listAccounts();
-      await mint(tokenId, uri, royaltyFee)
+      await mintEther(tokenId, uri, royaltyFee)
         .catch((err) => {
           console.log(err);
         });
