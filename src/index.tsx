@@ -4,7 +4,7 @@ import './styles/globals.css';
 import App from './App';
 import Web3 from 'web3'
 import { Web3ReactProvider } from '@web3-react/core'
-import {Web3Provider} from "@ethersproject/providers";
+import { Web3Provider } from "@ethersproject/providers";
 import reportWebVitals from './reportWebVitals';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,9 +17,7 @@ const getLibrary = (provider: any): Web3Provider => {
 ReactDOM.render(
   <React.StrictMode>
     <Web3ReactProvider getLibrary={getLibrary}>
-      {/* <MetaMaskProvider> */}
-        <App />
-      {/* </MetaMaskProvider> */}
+      <App />
     </Web3ReactProvider>
   </React.StrictMode>,
   document.getElementById('root')
