@@ -1,4 +1,4 @@
-import { styled, Box, Button } from '@mui/material';
+import { styled, Button } from '@mui/material';
 
 export const ViewAllBtn = styled(Button)`
     width: 90px;

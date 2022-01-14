@@ -7,20 +7,20 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+// import { PrimaryButton } from 'src/components/Buttons/styles';
+import ConnectWalletButton from 'src/components/ConnectWalletButton';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { nftTransactions, singleNFTBids } from 'src/constants/dummyData';
+import { singleNFTBids } from 'src/constants/dummyData';
 import { getThumbnail, getTime, reduceHexAddress, getUTCTime } from 'src/services/sleep'; 
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const bidsList: Array<TypeSingleNFTBid> = singleNFTBids;
-    // const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
     // get product details from server
     const params = useParams(); // params.id
-    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
+    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, owner: "", author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
     const [transactionsList, setTransactionsList] = useState([]);
     var _latestTransList: any = [];
 
@@ -29,7 +29,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
                 var item: TypeNewProduct = jsonProductDetails.data;
-                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
+                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, owner: "", author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
                 product.name = item.name;
                 product.image = getThumbnail(item.asset);
@@ -47,6 +47,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 product.details.tokenId = reduceHexAddress(item.tokenIdHex, 5);
                 product.details.owner = reduceHexAddress(item.holder, 4);
                 product.details.royalties = parseInt(item.royalties) / 1e4;
+                product.owner = item.holder;
                 let createTime = getUTCTime(item.createTime);
                 product.details.createTime = createTime.date + "" + createTime.time;
                 setProductDetail(product);
@@ -77,7 +78,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         }).catch(err => {
             console.log(err)
         });
-    }, []);
+    }, [params.id]);
 
     return (
         <>
@@ -103,7 +104,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         </Grid>
                     </Stack>
                     <ELAPrice ela_price={productDetail.price_ela} usd_price={productDetail.price_usd} detail_page={true} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>Place Bid</PrimaryButton>
+                    {/* <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>Place Bid</PrimaryButton> */}
+                    <ConnectWalletButton toAddress={productDetail.owner} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>Place Bid</ConnectWalletButton>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>

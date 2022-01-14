@@ -1,12 +1,10 @@
 import './style.css';
 
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { Login } from './Login';
 import { Profile } from './Profile/Profile';
 import { Auth } from './types';
-import  ProfilePage from '../ProfilePage';
 import logo from 'src/logo.svg';
 
 const LS_KEY = 'login-with-metamask:auth';
@@ -16,7 +14,6 @@ interface State {
 }
 
 const LoginPage: React.FC = (): JSX.Element => {
-    const navigate = useNavigate();
 	const [state, setState] = useState<State>({});
 
 	useEffect(() => {

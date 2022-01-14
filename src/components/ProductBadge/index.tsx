@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from './styles';
 import { enumBadgeType } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
-import { Typography, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 
 interface ProductBadgeProps {
     badgeType: enumBadgeType;
