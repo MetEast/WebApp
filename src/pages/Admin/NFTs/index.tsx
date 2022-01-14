@@ -1,9 +1,7 @@
-import React, { FC, PropsWithChildren, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Stack } from '@mui/material';
 
-export interface ComponentProps {}
-
-const AdminNFTs: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Element => {
+const AdminNFTs: React.FC = (): JSX.Element => {
     return <>AdminNFTs</>;
 };
 

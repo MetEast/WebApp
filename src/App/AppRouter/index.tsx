@@ -15,6 +15,14 @@ import MyNFTSold from 'src/pages/MyNFT/Sold';
 import LoginPage from 'src/pages/LoginPage';
 import AdminPage from 'src/pages/Admin';
 import AdminNFTs from 'src/pages/Admin/NFTs';
+import AdminBlindBoxes from 'src/pages/Admin/BlindBoxes';
+import AdminHomePopular from 'src/pages/Admin/HomePopular';
+import AdminHomeUpcoming from 'src/pages/Admin/HomeUpcoming';
+import AdminOrderNFTs from 'src/pages/Admin/OrderNFTs';
+import AdminOrderBlindBoxes from 'src/pages/Admin/OrderBlindBoxes';
+import AdminBids from 'src/pages/Admin/Bids';
+import AdminBanners from 'src/pages/Admin/Banners';
+import AdminNotifications from 'src/pages/Admin/Notifications';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -42,6 +50,70 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <AdminPage>
                             <AdminNFTs />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/blindboxes"
+                    element={
+                        <AdminPage>
+                            <AdminBlindBoxes />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/home-popular"
+                    element={
+                        <AdminPage>
+                            <AdminHomePopular />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/home-upcoming"
+                    element={
+                        <AdminPage>
+                            <AdminHomeUpcoming />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/orders-nfts"
+                    element={
+                        <AdminPage>
+                            <AdminOrderNFTs />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/orders-blindboxes"
+                    element={
+                        <AdminPage>
+                            <AdminOrderBlindBoxes />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/bids"
+                    element={
+                        <AdminPage>
+                            <AdminBids />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/banners"
+                    element={
+                        <AdminPage>
+                            <AdminBanners />
+                        </AdminPage>
+                    }
+                />
+                <Route
+                    path="/admin/notifications"
+                    element={
+                        <AdminPage>
+                            <AdminNotifications />
                         </AdminPage>
                     }
                 />
