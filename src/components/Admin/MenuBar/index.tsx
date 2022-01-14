@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { BackToPublicBtn } from './styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface MenuItem {
     title: string;
@@ -13,22 +13,29 @@ interface MenuItem {
 
 const MenuItem = (item: MenuItem, depth: number): JSX.Element => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     return (
-        <Stack spacing={2}>
+        <Stack spacing={0.5}>
             <Stack
                 direction="row"
                 alignItems="center"
-                marginLeft={depth * 4}
+                paddingLeft={depth * 4 + 1}
+                paddingY={1}
                 spacing={1.5}
-                color="white"
-                sx={{ cursor: 'pointer' }}
+                color={location.pathname === item.url ? '#1890FF' : 'white'}
+                sx={{ cursor: 'pointer', background: location.pathname === item.url ? 'white' : 'auto' }}
+                borderRadius={3}
                 onClick={() => {
                     navigate(item.url);
                 }}
             >
                 {item.icon}
-                <Typography color="white" fontSize={16} fontWeight={depth === 0 ? 700 : 400}>
+                <Typography
+                    color={location.pathname === item.url ? '#1890FF' : 'white'}
+                    fontSize={16}
+                    fontWeight={depth === 0 ? 700 : 400}
+                >
                     {item.title}
                 </Typography>
             </Stack>
@@ -83,7 +90,7 @@ const MenuBar: React.FC = (): JSX.Element => {
                 <Icon icon="ph:caret-left-bold" color="#1ea557" style={{ marginBottom: 2, marginRight: 4 }} />
                 {`Back to public`}
             </BackToPublicBtn>
-            <Stack spacing={3}>{menu.map((item) => MenuItem(item, 0))}</Stack>
+            <Stack spacing={1}>{menu.map((item) => MenuItem(item, 0))}</Stack>
         </Stack>
     );
 };
