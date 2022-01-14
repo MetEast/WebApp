@@ -52,7 +52,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         }).catch(err => {
             console.log(err)
         });
-    }, []);
+    }, [params.id]);
 
     return (
         <>

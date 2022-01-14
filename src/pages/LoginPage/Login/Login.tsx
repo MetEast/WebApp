@@ -32,7 +32,7 @@ export const Login = ({ onLoggedIn }: Props): JSX.Element => {
 			method: 'POST',
 		}).then((response) => {
 			let json = response.json();
-			if (response.ok && response.status == 200) {
+			if (response.ok && response.status === 200) {
 			  console.log(json)
 			  return json;
 			} else {

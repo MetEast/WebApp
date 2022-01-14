@@ -1,30 +1,23 @@
-import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import FilterModal from 'src/components/modals/FilterModal';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
-// import { singleNFTProducts } from 'src/constants/dummyData';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
-import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants'; // sort options
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct, TypeNewProduct, enumSingleNFTType } from 'src/types/product-types';
-import { FilterItemTypography } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { getThumbnail, getTime } from 'src/services/sleep';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
-    const [isOpen, setIsOpen] = useState(false);
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>("");
 
-    // useEffect(() => {}, []);
-    // const productList: Array<TypeProduct> = singleNFTProducts;
     const [productList, setProductList] = useState([]);
     var _singleProductList: any = [];
     useEffect(() => {
@@ -81,9 +74,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
         setFilterModalOpen(false);
     };
 
-    const handleClickFilterItem = (filter: enmFilterOption) => () => {
-        if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
-    };
+    // const handleClickFilterItem = (filter: enmFilterOption) => () => {
+    //     if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
+    // };
 
     return (
         <>

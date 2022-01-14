@@ -6,7 +6,6 @@ import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
-import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
@@ -48,7 +47,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         }).catch(err => {
             console.log(err)
         });
-    }, []);
+    }, [params.id]);
 
     return (
         <>

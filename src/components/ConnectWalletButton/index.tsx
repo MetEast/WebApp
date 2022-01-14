@@ -1,24 +1,23 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { injected, walletconnect, walletlink } from "./connectors";
 import { useEagerConnect, useInactiveListener } from "./hook";
 
-import coinbaseLogo from "./coinbase.webp";
+// import coinbaseLogo from "./coinbase.webp";
 import metamaskLogo from "./metamask.webp";
 import walletConnectLogo from "./walletconnect.svg";
 import ModalDialog from 'src/components/ModalDialog';
-import ConnectDID from 'src/components/profile/ConnectDID';
 import ChooseWallet from 'src/components/profile/ChooseWallet';
 import { SxProps } from '@mui/system';
 import { PrimaryButton } from 'src/components/Buttons/styles'
 
 import {
-  InjectedConnector,
+  // InjectedConnector,
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect, WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect /* , WalletConnectConnector */ } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError } from "@web3-react/core";
 
 import { ethers } from "ethers";
@@ -80,6 +79,7 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     setActivatingConnector(undefined);
     if (active) {
       setShowModal(false);
+      // settle transaction
       handleTransaction(toAddress, value);
     }
     if (error) {
@@ -103,7 +103,7 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     else if(wallet === 'elastos') currentConnector = walletlink;
     else if(wallet === 'walletconnect') currentConnector = walletconnect;
     setIsActivating(true);
-    await setActivatingConnector(currentConnector);
+    setActivatingConnector(currentConnector);
     await activate(currentConnector);
     setIsActivating(false);
   };
@@ -112,6 +112,7 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
   const handleTransaction = async (to: string, value: string) => {
     if (library) {
       const accounts = await library.listAccounts();
+      if(to.length !== 42) alert("Invalid recipient address.");
       const params = [
         {
           from: accounts[0],

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
-import { Stack, Grid, Typography, Box } from '@mui/material';
+import { Stack, Grid, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import { enumBadgeType, enumSingleNFTType, TypeNewProduct, TypeNewTransaction, enumTransactionType } from 'src/types/product-types'; 
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -10,7 +10,6 @@ import ELAPrice from 'src/components/ELAPrice';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
-import { PrimaryButton } from 'src/components/Buttons/styles';
 // import { nftTransactions } from 'src/constants/dummyData';
 import { TypeNFTTransaction } from 'src/types/product-types';
 import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
@@ -20,7 +19,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     // const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
     // get product details from server
     const params = useParams(); // params.id
-    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
+    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, owner: "", author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
     const [transactionsList, setTransactionsList] = useState([]);
     var _latestTransList: any = [];
     useEffect(() => {
@@ -28,7 +27,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
                 var item: TypeNewProduct = jsonProductDetails.data;
-                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
+                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, owner: "", author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
                 product.name = item.name;
                 product.image = getThumbnail(item.asset);
@@ -46,6 +45,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 product.details.tokenId = reduceHexAddress(item.tokenIdHex, 5);
                 product.details.owner = reduceHexAddress(item.holder, 4);
                 product.details.royalties = parseInt(item.royalties) / 1e4;
+                product.owner = item.holder;
                 let createTime = getUTCTime(item.createTime);
                 product.details.createTime = createTime.date + "" + createTime.time;
                 setProductDetail(product);
@@ -72,12 +72,12 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     _latestTransList.push(_transaction);
                 });
                 setTransactionsList(_latestTransList);
-                console.log(_latestTransList);
+                // console.log(_latestTransList);
             });
         }).catch(err => {
             console.log(err)
         });
-    }, []);
+    }, [params.id]);
 
 
     return (
@@ -96,7 +96,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     </Stack>
                     <ELAPrice ela_price={productDetail.price_ela} usd_price={productDetail.price_usd} detail_page={true} marginTop={3} />
                     {/* <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton> */}
-                    <ConnectWalletButton toAddress={productDetail.author.name} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton>
+                    <ConnectWalletButton toAddress={productDetail.owner} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>

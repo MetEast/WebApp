@@ -16,7 +16,7 @@ export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 56, 97],
 });
 
-console.log(RPC_URLS[1]);
+// console.log(RPC_URLS[1]);
 
 export const walletconnect = new WalletConnectConnector({
   rpc: { 1: RPC_URLS[1] },

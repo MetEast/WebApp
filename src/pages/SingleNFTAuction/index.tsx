@@ -12,12 +12,11 @@ import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { nftTransactions, singleNFTBids } from 'src/constants/dummyData';
+import { singleNFTBids } from 'src/constants/dummyData';
 import { getThumbnail, getTime, reduceHexAddress, getUTCTime } from 'src/services/sleep'; 
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const bidsList: Array<TypeSingleNFTBid> = singleNFTBids;
-    // const transactionsList: Array<TypeNFTTransaction> = nftTransactions;
     // get product details from server
     const params = useParams(); // params.id
     const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
@@ -77,7 +76,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         }).catch(err => {
             console.log(err)
         });
-    }, []);
+    }, [params.id]);
 
     return (
         <>

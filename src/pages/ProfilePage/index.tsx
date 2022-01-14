@@ -7,11 +7,10 @@ import PrivateProfilePage from './profile';
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import {
-    InjectedConnector,
     NoEthereumProviderError,
     UserRejectedRequestError as UserRejectedRequestErrorInjected,
   } from "@web3-react/injected-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect, WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError } from "@web3-react/core";
 import { injected, walletconnect, walletlink } from "src/components/ConnectWalletButton/connectors";
 import { useEagerConnect, useInactiveListener } from "src/components/ConnectWalletButton/hook";
@@ -37,7 +36,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const { activate, active, error, library, chainId } = context;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [activatingConnector, setActivatingConnector] = useState<any>();
-    const [isActivating, setIsActivating] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(true);
     //
     const [step, setStep] = useState<number>(0);
@@ -66,10 +64,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
         if(wallet === 'metamask') currentConnector = injected;
         else if(wallet === 'elastos') currentConnector = walletlink;
         else if(wallet === 'walletconnect') currentConnector = walletconnect;
-        setIsActivating(true);
         setActivatingConnector(currentConnector);
         await activate(currentConnector);
-        setIsActivating(false);
       };
 
     return (
