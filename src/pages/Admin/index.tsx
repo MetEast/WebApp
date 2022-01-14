@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { FC, PropsWithChildren, useState } from 'react';
 import { Box, Stack } from '@mui/material';
-import { ShowMenuBtn, MenuBox } from './styles';
+import { ShowMenuBtn, MenuBox, ContentBox } from './styles';
 import { Icon } from '@iconify/react';
 import MenuBar from 'src/components/Admin/MenuBar';
 
-const AdminPage: React.FC = (): JSX.Element => {
+export interface ComponentProps {}
+
+const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Element => {
     const [showMenuBar, setShowMenuBar] = useState(false);
 
     return (
@@ -19,6 +21,7 @@ const AdminPage: React.FC = (): JSX.Element => {
                     <MenuBar />
                 </MenuBox>
             </Stack>
+            <ContentBox marginLeft={35}>{children}</ContentBox>
         </Box>
     );
 };

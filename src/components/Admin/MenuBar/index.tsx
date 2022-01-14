@@ -2,6 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { BackToPublicBtn } from './styles';
+import { useNavigate } from 'react-router-dom';
 
 interface MenuItem {
     title: string;
@@ -10,16 +11,28 @@ interface MenuItem {
     submenu?: MenuItem[];
 }
 
-const menuItem = (item: MenuItem, depth: number): JSX.Element => {
+const MenuItem = (item: MenuItem, depth: number): JSX.Element => {
+    const navigate = useNavigate();
+
     return (
         <Stack spacing={2}>
-            <Stack direction="row" alignItems="center" spacing={1.5} color="white" sx={{ cursor: 'pointer' }}>
+            <Stack
+                direction="row"
+                alignItems="center"
+                marginLeft={depth * 4}
+                spacing={1.5}
+                color="white"
+                sx={{ cursor: 'pointer' }}
+                onClick={() => {
+                    navigate(item.url);
+                }}
+            >
                 {item.icon}
-                <Typography marginLeft={depth * 4} color="white" fontSize={16} fontWeight={depth === 0 ? 700 : 400}>
+                <Typography color="white" fontSize={16} fontWeight={depth === 0 ? 700 : 400}>
                     {item.title}
                 </Typography>
             </Stack>
-            {item.submenu?.map((item) => menuItem(item, depth + 1))}
+            {item.submenu?.map((item) => MenuItem(item, depth + 1))}
         </Stack>
     );
 };
@@ -29,7 +42,7 @@ const MenuBar: React.FC = (): JSX.Element => {
         {
             title: 'NFTS',
             icon: <Icon icon="ph:image-square" fontSize={20} />,
-            url: '',
+            url: '/admin/nfts',
         },
         { title: 'BLIND BOXES', icon: <Icon icon="ph:cube" fontSize={20} />, url: '' },
         {
@@ -70,7 +83,7 @@ const MenuBar: React.FC = (): JSX.Element => {
                 <Icon icon="ph:caret-left-bold" color="#1ea557" style={{ marginBottom: 2, marginRight: 4 }} />
                 {`Back to public`}
             </BackToPublicBtn>
-            <Stack spacing={3}>{menu.map((item) => menuItem(item, 0))}</Stack>
+            <Stack spacing={3}>{menu.map((item) => MenuItem(item, 0))}</Stack>
         </Stack>
     );
 };

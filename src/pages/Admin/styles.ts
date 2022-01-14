@@ -16,3 +16,10 @@ export const MenuBox = styled(Box)`
     border-radius: 16px;
     padding: 24px;
 `;
+
+export const ContentBox = styled(Box)`
+    height: calc(100vh - 48px);
+    padding: 24px 24px 24px 0;
+    /* background: #eeeeee; */
+    /* background-clip: content-box; */
+`;
