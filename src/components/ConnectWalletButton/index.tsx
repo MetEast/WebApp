@@ -118,13 +118,12 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     if (library) {
       const accounts = await library.listAccounts();
       if(to.length !== 42) alert("Invalid recipient address.");
-      value = "1";
       const params = [
         {
           from: accounts[0],
-          to: "0x24e16f04e84d435F0Bb0380801a6f8C1a543618A",
+          to: to, //"0x24e16f04e84d435F0Bb0380801a6f8C1a543618A",
           value: ethers.utils.parseUnits(value).toHexString(),
-          chainId: 21,
+          chainId: 21, // 20
         },
       ];
       await library
