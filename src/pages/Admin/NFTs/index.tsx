@@ -313,8 +313,11 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
                                 return (
                                     <TableRow
-                                        key={row.nftid}
+                                        hover
                                         onClick={(event) => handleClick(event, row.nftid)}
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        key={row.nftid}
                                         selected={isItemSelected}
                                     >
                                         <TableCell padding="checkbox">

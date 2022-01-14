@@ -8,6 +8,6 @@ export const DataTable = styled(Table)({
         },
     },
     '& .MuiTableCell-root': {
-        borderWidth: 0,
+        // borderWidth: 0,
     },
 });
