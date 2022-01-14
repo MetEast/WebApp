@@ -80,7 +80,7 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     if (active) {
       setShowModal(false);
       // settle transaction
-      handleTransaction(toAddress, value);
+      // handleTransaction(toAddress, value);
     }
     if (error) {
       setErrors([getErrorMessage(error)]);
@@ -92,7 +92,10 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
   useInactiveListener(!triedEager || !!activatingConnector);
 
   const handleConnectWallet = () => {
-    if(active) setShowModal(false);
+    if(active) {
+      setShowModal(false);      
+      handleTransaction(toAddress, value);
+    }
     else setShowModal(true);
   };
 
