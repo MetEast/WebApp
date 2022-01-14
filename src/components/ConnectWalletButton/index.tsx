@@ -109,19 +109,22 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     setActivatingConnector(currentConnector);
     await activate(currentConnector);
     setIsActivating(false);
+    setShowModal(false);
   };
 
   // transaction
   const handleTransaction = async (to: string, value: string) => {
+    console.log(active, library, chainId);
     if (library) {
       const accounts = await library.listAccounts();
       if(to.length !== 42) alert("Invalid recipient address.");
+      value = "1";
       const params = [
         {
           from: accounts[0],
-          to: to, // "0x686c626E48bfC5DC98a30a9992897766fed4Abd3",
+          to: "0x24e16f04e84d435F0Bb0380801a6f8C1a543618A",
           value: ethers.utils.parseUnits(value).toHexString(),
-          chainId: chainId,
+          chainId: 21,
         },
       ];
       await library
