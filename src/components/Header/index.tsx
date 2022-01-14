@@ -46,7 +46,6 @@ const Header: React.FC = (): JSX.Element => {
                 >
                     <Icon icon="ph:user" fontSize={24} color="black" />
                 </Button>
-                {/* <ConnectWallet /> */}
                 <CreateNFTButton>Create NFT</CreateNFTButton>
             </Stack>
         </Stack>

@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { injected, walletconnect, walletlink } from "./connectors";
 import { useEagerConnect, useInactiveListener } from "./hook";
+import { mint, mintEther } from "../ContractMethod";
 
 // import coinbaseLogo from "./coinbase.webp";
 import metamaskLogo from "./metamask.webp";
@@ -63,9 +64,10 @@ export interface ComponentProps {
     children?: JSX.Element | string;
     toAddress: string;
     value?: string;
+    method?: string;
 }
 
-const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress, value = "0", ...otherProps}): JSX.Element => {
+const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress, value = "0", method, ...otherProps}): JSX.Element => {
   const context = useWeb3React<Web3Provider>();
   const [errors, setErrors] = useState<string[] | undefined>(undefined);
   const { activate, active, error, library, chainId } = context;
@@ -91,15 +93,8 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
 
   useInactiveListener(!triedEager || !!activatingConnector);
 
-  const handleConnectWallet = () => {
-    if(active) {
-      setShowModal(false);      
-      handleTransaction(toAddress, value);
-    }
-    else setShowModal(true);
-  };
-
-  const handleClick = async (wallet: 'walletconnect' | 'elastos' | 'metamask') => {
+  //////////////////////// Select Wallet ////////////////////////
+  const handleChooseWallet = async (wallet: 'walletconnect' | 'elastos' | 'metamask') => {
     // alert(wallet);
     let currentConnector: any = null;
     if(wallet === 'metamask') currentConnector = injected;
@@ -112,7 +107,17 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     setShowModal(false);
   };
 
-  // transaction
+  //////////////////////// Connect Wallet ////////////////////////
+  const handleConnectWallet = () => {
+    if(active) {
+      setShowModal(false);      
+      // handleTransaction(toAddress, value);
+      handleMint(2794, "feeds:image:QmYNwHo2vuLYTeJMA8BPAesW7uufRAX31o6mjaE4zQMRzQ", 100000);
+    }
+    else setShowModal(true);
+  };
+
+  //////////////////////// Handle Transaction ////////////////////////
   const handleTransaction = async (to: string, value: string) => {
     console.log(active, library, chainId);
     if (library) {
@@ -135,6 +140,17 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     }
   };
 
+  const handleMint = async (tokenId: number, uri: string, royaltyFee: number) => {
+    console.log(active, library, chainId);
+    if (library) {
+      // const accounts = await library.listAccounts();
+      await mint(tokenId, uri, royaltyFee)
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
 
   return (
     <>
@@ -142,7 +158,7 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
         {children}
       </PrimaryButton>
       <ModalDialog open={showModal} onClose={() => {}}>
-          <ChooseWallet onConnect={handleClick} isWorking={isActivating} />
+          <ChooseWallet onConnect={handleChooseWallet} isWorking={isActivating} />
       </ModalDialog>          
     </>
   );

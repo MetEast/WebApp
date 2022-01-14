@@ -19,7 +19,7 @@ const HomePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`).then(response => {
             response.json().then(jsonNewProducts => {
-                // console.log(jsonNewProducts);
+                console.log(jsonNewProducts);
                 jsonNewProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
                     var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
                     product.id = itemObject.tokenId;
