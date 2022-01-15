@@ -14,6 +14,7 @@ import {
     Checkbox,
     TableSortLabel,
     Typography,
+    Button,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
@@ -22,9 +23,10 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import ELAPrice from 'src/components/ELAPrice';
-import { DataTable } from './styles';
+import { DataTable, PageButton } from './styles';
 import Select from 'src/components/Admin/Select';
 import { TypeSelectItem } from 'src/types/select-types';
+import { Icon } from '@iconify/react';
 
 interface Data {
     rulenumber: string;
@@ -381,6 +383,17 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         />
                     </Box>
                     <Typography fontSize={14} fontWeight={400}>{`Tot.${tabledata.length}`}</Typography>
+                </Stack>
+                <Stack direction="row" alignItems="center" spacing={1}>
+                    <IconButton>
+                        <Icon icon="ph:caret-left-bold" color="#1890FF" />
+                    </IconButton>
+                    {[...Array(10).keys()].map((item) => (
+                        <PageButton>1</PageButton>
+                    ))}
+                    <IconButton>
+                        <Icon icon="ph:caret-right-bold" color="#1890FF" />
+                    </IconButton>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <Typography fontSize={14} fontWeight={400}>
