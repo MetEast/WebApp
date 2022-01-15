@@ -12,14 +12,14 @@ export const DataTable = styled(Table)({
     },
 });
 
-export const PageButton = styled(Button)`
+export const PageButton = styled(Button)<{ active: boolean }>`
     width: 40px;
     min-width: 0;
     height: 40px;
-    background: #1890ff;
-    color: white;
+    background: ${({ active }) => (active ? '#1890ff' : 'transparent')};
+    color: ${({ active }) => (active ? 'white' : '#1890ff')};
     border-radius: 12px;
     &:hover {
-        background: #28a0ff;
+        background: ${({ active }) => (active ? '#28a0ff' : '#E8F4FF')};
     }
 `;

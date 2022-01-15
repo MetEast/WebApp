@@ -243,9 +243,10 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             ),
         );
 
-    const tabledata: Data[] = useMemo(() => makeData(97), []);
+    const tabledata: Data[] = useMemo(() => makeData(278), []);
 
     const [page, setPage] = React.useState(0);
+    const [curPaginationFirstPage, setCurPaginationFirstPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof Data>('rulenumber');
@@ -265,6 +266,14 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             value: '25',
         },
     ];
+
+    const totalPages = Math.ceil(tabledata.length / rowsPerPage);
+
+    const setCurPage = (page: number) => {
+        if (page < 0 || page >= totalPages) return;
+        setPage(page);
+    };
+
     const handleRowsPerPageChange = (value: string) => {
         setRowsPerPage(parseInt(value, 10));
         setPage(0);
@@ -315,6 +324,10 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     };
 
     const isSelected = (nftid: string) => selected.indexOf(nftid) !== -1;
+
+    React.useEffect(() => {
+        setCurPaginationFirstPage(Math.floor(page / 10) * 10);
+    }, [page]);
 
     return (
         <Box>
@@ -385,13 +398,34 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     <Typography fontSize={14} fontWeight={400}>{`Tot.${tabledata.length}`}</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                    <IconButton>
+                    <IconButton
+                        onClick={() => {
+                            setCurPage(curPaginationFirstPage - 1);
+                        }}
+                    >
                         <Icon icon="ph:caret-left-bold" color="#1890FF" />
                     </IconButton>
-                    {[...Array(10).keys()].map((item) => (
-                        <PageButton>1</PageButton>
-                    ))}
-                    <IconButton>
+                    {[...Array(10).keys()].map((item) => {
+                        let pagenum = curPaginationFirstPage + item;
+                        let enable = pagenum < totalPages;
+                        let active = pagenum === page;
+                        return (
+                            <PageButton
+                                active={active}
+                                onClick={() => {
+                                    setCurPage(pagenum);
+                                }}
+                                sx={{ display: enable ? 'auto' : 'none' }}
+                            >
+                                {pagenum + 1}
+                            </PageButton>
+                        );
+                    })}
+                    <IconButton
+                        onClick={() => {
+                            setCurPage(curPaginationFirstPage + 10);
+                        }}
+                    >
                         <Icon icon="ph:caret-right-bold" color="#1890FF" />
                     </IconButton>
                 </Stack>
@@ -410,7 +444,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         {page + 1}
                     </Typography>
                     <Typography fontSize={14} fontWeight={400}>
-                        {`/ ${Math.ceil(tabledata.length / rowsPerPage)}`}
+                        {`/ ${totalPages}`}
                     </Typography>
                 </Stack>
             </Stack>
