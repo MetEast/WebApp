@@ -15,7 +15,7 @@ const HomePage: React.FC = (): JSX.Element => {
     // const productList: Array<TypeProduct> = newNFTProducts;
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
-    const [ela_usd_rate, setElaUsdRate] = useState(1);
+    const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
     const defaultValue : TypeProduct = { tokenId: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, author: "", type: enumSingleNFTType.BuyNow };
     
     useEffect(() => {
@@ -25,7 +25,8 @@ const HomePage: React.FC = (): JSX.Element => {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
-             }}).then(response => {
+             }})
+        .then(response => {
             response.json().then(jsonPrcieRate => {
                 setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
             });
@@ -38,10 +39,10 @@ const HomePage: React.FC = (): JSX.Element => {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
              }})
-            .then(response => {
-                let _newProductList: any = [];
-                response.json().then(jsonNewProducts => {
-                    jsonNewProducts.data.result.forEach(function (itemObject: TypeProductFetch) {
+        .then(response => {
+            let _newProductList: any = [];
+            response.json().then(jsonNewProducts => {
+                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
                     var product: TypeProduct = {...defaultValue};
                     product.tokenId = itemObject.tokenId;
                     product.name = itemObject.name;
@@ -64,10 +65,10 @@ const HomePage: React.FC = (): JSX.Element => {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
              }})
-            .then(response => {
-                let _popularCollectionList: any = [];
-                response.json().then(jsonNewProducts => {
-                jsonNewProducts.data.result.forEach(function (itemObject: TypeProductFetch) {
+        .then(response => {
+            let _popularCollectionList: any = [];
+            response.json().then(jsonNewProducts => {
+                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
                     var product: TypeProduct = {...defaultValue};
                     product.tokenId = itemObject.tokenId;
                     product.name = itemObject.name;

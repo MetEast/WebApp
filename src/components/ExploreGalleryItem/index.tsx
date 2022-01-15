@@ -44,7 +44,6 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                         </Grid>
                         <Grid item order={3} width={'100%'} >
                             <ProductBadgeContainer nfttype={product.type} />
-                            {/* content={product.saleTime} */}
                         </Grid>
                         <Grid item order={{xs: 2, sm: 2, md: 4 }} width={'100%'} >
                             <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
