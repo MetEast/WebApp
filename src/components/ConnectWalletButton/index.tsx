@@ -62,7 +62,7 @@ const logosByName: { [connectorsByName in ConnectorNames]: any } = {
 export interface ComponentProps {
     sx?: SxProps;
     children?: JSX.Element | string;
-    toAddress: string;
+    toAddress?: string;
     value?: string;
     method?: string;
 }

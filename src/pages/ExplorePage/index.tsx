@@ -6,9 +6,9 @@ import OptionsBar from 'src/components/OptionsBar';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants'; // sort options
 import { SortOption } from 'src/types/select-types';
-import { TypeProduct, TypeNewProduct, enumSingleNFTType } from 'src/types/product-types';
+import { TypeProduct, TypeProductFetch, enumSingleNFTType } from 'src/types/product-types';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { getThumbnail, getTime } from 'src/services/sleep';
+import { getImageFromAsset, getTime } from 'src/services/sleep';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
@@ -28,11 +28,11 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 // console.log(jsonSingleProducts);
                 _singleProductList = [];
                 if (typeof jsonSingleProducts.data != 'undefined') {
-                    jsonSingleProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
-                        var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
-                        product.id = itemObject.tokenId;
+                    jsonSingleProducts.data.result.forEach(function (itemObject: TypeProductFetch) {
+                        var product: TypeProduct = {tokenId: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
+                        product.tokenId = itemObject.tokenId;
                         product.name = itemObject.name;
-                        product.image = getThumbnail(itemObject.asset);
+                        product.image = getImageFromAsset(itemObject.asset);
                         product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
                         product.price_usd = product.price_ela * 3.44; // -- no proper value
                         product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value

@@ -16,7 +16,7 @@ export interface BlindBoxGalleryItemProps {
 const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     return (
         <Box>
-            <Link to={`/blind-box/product/${product.id}`}>
+            <Link to={`/blind-box/product/${product.tokenId}`}>
                 <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
@@ -38,7 +38,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
                         <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
                     </Grid>
                     <Grid item order={{xs: 2, sm: 2, md: 4 }} width={'100%'} >
-                        <ELAPrice ela_price={product.price_ela} usd_price={product.price_usd} />
+                        <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
                     </Grid>
                 </Grid>
             )}

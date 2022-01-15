@@ -3,14 +3,14 @@ export const sleep = (ms: number) => {
 };
 
 // custome
-export const getThumbnail = (id: string) => {
+export const getImageFromAsset = (id: string) => {
     if(id===undefined)
       return ""
     const prefixLen = id.split(':', 2).join(':').length
     if(prefixLen>=id.length)
       return ""
     const uri = id.substring(prefixLen+1)
-    return `https://ipfs0.trinity-feeds.app/ipfs/${uri}`
+    return `https://ipfs-test.trinity-feeds.app/ipfs/${uri}`
 }
 
 // Get time from timestamp //

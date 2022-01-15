@@ -2,67 +2,89 @@ import React, { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { TypeProduct, enumSingleNFTType, TypeNewProduct } from 'src/types/product-types';
+import { TypeProduct, enumSingleNFTType, TypeProductFetch } from 'src/types/product-types';
 // import { newNFTProducts } from 'src/constants/dummyData';
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
-import { getThumbnail, getTime } from 'src/services/sleep';
+import { getImageFromAsset, getTime } from 'src/services/sleep';
+import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
     // const productList: Array<TypeProduct> = newNFTProducts;
-    const [productList, setProductList] = useState([]);
-    const [collectionList, setCollectionList] = useState([]);
-    var _newProductList: any = [];
-    var _popularCollectionList: any = [];
+    const [productList, setProductList] = useState<Array<TypeProduct>>([]);
+    const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
+    const [ela_usd_rate, setElaUsdRate] = useState(1);
+    const defaultValue : TypeProduct = { tokenId: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, author: "", type: enumSingleNFTType.BuyNow };
+    
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=1&pageSize=10`).then(response => {
-            response.json().then(jsonNewProducts => {
-                console.log(jsonNewProducts);
-                jsonNewProducts.data.result.forEach(function (itemObject: TypeNewProduct) {
-                    var product: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
-                    product.id = itemObject.tokenId;
+        // "https://esc.elastos.io/api?module=stats&action=coinprice"
+        // `${process.env.ELASTOS_LATEST_PRICE_API_URL}`
+        fetch("https://esc.elastos.io/api?module=stats&action=coinprice", {
+            headers : { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+             }}).then(response => {
+            response.json().then(jsonPrcieRate => {
+                setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
+            });
+        }).catch(err => {
+            console.log(err)
+        });
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
+            headers : { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+             }})
+            .then(response => {
+                let _newProductList: any = [];
+                response.json().then(jsonNewProducts => {
+                    jsonNewProducts.data.result.forEach(function (itemObject: TypeProductFetch) {
+                    var product: TypeProduct = {...defaultValue};
+                    product.tokenId = itemObject.tokenId;
                     product.name = itemObject.name;
-                    product.image = getThumbnail(itemObject.asset);
-                    product.price_ela = itemObject.blockNumber % 1000; // -- no proper value
-                    product.price_usd = product.price_ela * 3.44; // -- no proper value
-                    product.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
-                    product.author = "Author";
-                    product.type = parseInt(itemObject.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                    let saleTime = getTime(itemObject.createTime);
-                    product.saleTime = saleTime.date + " " + saleTime.time;  
+                    product.image = getImageFromAsset(itemObject.asset);
+                    product.price_ela = itemObject.price;
+                    product.price_usd = product.price_ela * ela_usd_rate;
+                    product.likes = itemObject.likes;
+                    product.author = "Author"; // -- no proper value
+                    product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                     _newProductList.push(product);
                 });
-                // console.log(_productList);
                 setProductList(_newProductList);
             });
         }).catch(err => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=2&pageSize=10`).then(response => {
-            response.json().then(jsonPopularCollections => {
-                jsonPopularCollections.data.result.forEach(function (itemObject: TypeNewProduct) {
-                    var collection: TypeProduct = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: "", type: enumSingleNFTType.BuyNow, saleTime: ""};
-                    collection.id = itemObject.tokenId;
-                    collection.name = itemObject.name;
-                    collection.image = getThumbnail(itemObject.asset);
-                    collection.price_ela = itemObject.blockNumber % 1000; // -- no proper value
-                    collection.price_usd = collection.price_ela * 3.44; // -- no proper value
-                    collection.likes = parseInt(itemObject.createTime) % 10000; // -- no proper value
-                    collection.author = "Author";
-                    collection.type = parseInt(itemObject.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                    let saleTime = getTime(itemObject.createTime);
-                    collection.saleTime = saleTime.date + " " + saleTime.time;                    
-                    _popularCollectionList.push(collection);
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType='mostliked'`, {
+            headers : { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+             }})
+            .then(response => {
+                let _popularCollectionList: any = [];
+                response.json().then(jsonNewProducts => {
+                jsonNewProducts.data.result.forEach(function (itemObject: TypeProductFetch) {
+                    var product: TypeProduct = {...defaultValue};
+                    product.tokenId = itemObject.tokenId;
+                    product.name = itemObject.name;
+                    product.image = getImageFromAsset(itemObject.asset);
+                    product.price_ela = itemObject.price + 1;
+                    product.price_usd = product.price_ela * ela_usd_rate;
+                    product.likes = itemObject.likes;
+                    product.author = "Author"; // -- no proper value
+                    product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                    _popularCollectionList.push(product);
                 });
                 setCollectionList(_popularCollectionList);
             });
         }).catch(err => {
             console.log(err)
         });
-    }, []);
+    }, [ela_usd_rate]);
 
     const theme = useTheme();
     const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));

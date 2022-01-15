@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography, Box, Dialog } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { TypeNewProduct, enumBadgeType, enumBlindBoxNFTType } from 'src/types/product-types';
+import { TypeProductFetch, enumBadgeType, enumBlindBoxNFTType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -28,7 +28,7 @@ import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/Cre
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
-import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
+import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -39,11 +39,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
-                var item: TypeNewProduct = jsonProductDetails.data;
+                var item: TypeProductFetch = jsonProductDetails.data;
                 var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, sold: 0, instock: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumBlindBoxNFTType.ComingSoon, saleTime: ""};
                 product.id = item.tokenId;
                 product.name = item.name;
-                product.image = getThumbnail(item.asset);
+                product.image = getImageFromAsset(item.asset);
                 product.price_ela = item.blockNumber % 1000;
                 product.price_usd = product.price_ela * 3.44;
                 product.likes = parseInt(item.createTime) % 10000;
@@ -52,7 +52,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 product.instock = item.blockNumber % 1234;
                 product.author.name = item.name + "'s nickname";
                 product.author.description = item.name + "one sentence description here";
-                product.author.img = getThumbnail(item.asset);
+                product.author.img = getImageFromAsset(item.asset);
                 product.description = item.description;
                 product.type = parseInt(item.createTime) % 3 === 0 ? enumBlindBoxNFTType.ComingSoon : (parseInt(item.createTime) % 3 === 1 ? enumBlindBoxNFTType.SaleEnds : enumBlindBoxNFTType.SaleEnded);
                 let saleTime = getTime(item.createTime);
@@ -82,7 +82,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         {/* <ProductBadge badgeType={enumBadgeType.ComingSoon} content="2022/02/28 10:00" /> */}
                         <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.saleTime} />
                     </Stack>
-                    <ELAPrice ela_price={productDetail.price_ela} usd_price={productDetail.price_usd} marginTop={3} />
+                    <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setOpenDlg(true)}>
                         Buy Now
                     </PrimaryButton>

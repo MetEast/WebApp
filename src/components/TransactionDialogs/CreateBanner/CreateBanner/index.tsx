@@ -56,7 +56,7 @@ const CreateBanner: React.FC<ComponentProps> = (): JSX.Element => {
                                 </SecondaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="URL" placeholder="Enter URL" />
+                        <CustomTextField title="URL" placeholder="Enter URL" changeHandler={(value) => {}}/>
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
                         <Stack spacing={1}>
@@ -128,7 +128,7 @@ const CreateBanner: React.FC<ComponentProps> = (): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="Sort" placeholder="" />
+                        <CustomTextField title="Sort" placeholder="" changeHandler={(value) => {}} />
                     </Grid>
                 </Grid>
             </Box>

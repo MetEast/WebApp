@@ -32,7 +32,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Sold} />
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
-                    <ELAPrice ela_price={199} usd_price={480} marginTop={3} />
+                    <ELAPrice price_ela={199} price_usd={480} marginTop={3} />
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>

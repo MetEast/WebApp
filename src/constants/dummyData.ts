@@ -37,7 +37,7 @@ export const dummyNotificationList: Array<TypeNotification> = [
 
 export const dummyProducts: Array<TypeProduct> = [
     {
-        id: '0',
+        tokenId: '0',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price_ela: 199,
@@ -50,7 +50,7 @@ export const dummyProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '1',
+        tokenId: '1',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price_ela: 199,
@@ -63,7 +63,7 @@ export const dummyProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '2',
+        tokenId: '2',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price_ela: 199,
@@ -75,7 +75,7 @@ export const dummyProducts: Array<TypeProduct> = [
         type: enumBlindBoxNFTType.SaleEnded,
     },
     {
-        id: '3',
+        tokenId: '3',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price_ela: 199,
@@ -88,7 +88,7 @@ export const dummyProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '4',
+        tokenId: '4',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price_ela: 199,
@@ -101,7 +101,7 @@ export const dummyProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '5',
+        tokenId: '5',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price_ela: 199,
@@ -113,7 +113,7 @@ export const dummyProducts: Array<TypeProduct> = [
         type: enumBlindBoxNFTType.SaleEnded,
     },
     {
-        id: '6',
+        tokenId: '6',
         image: 'https://scalablesolutions.io/wp-content/uploads/2021/03/NFTs.png',
         name: 'Project Title',
         price_ela: 199,
@@ -129,7 +129,7 @@ export const dummyProducts: Array<TypeProduct> = [
 
 export const newNFTProducts: Array<TypeProduct> = [
     {
-        id: '0',
+        tokenId: '0',
         image: '/assets/images/explore/singlenft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -139,10 +139,30 @@ export const newNFTProducts: Array<TypeProduct> = [
         sold: 24,
         author: 'nickName',
         type: enumSingleNFTType.BuyNow,
+        blockNumber: 0,
+        tokenIndex: "--",
+        quantity: 0,
+        royalties: "--",
+        royaltyOwner: "--",
+        holder: "--",
+        createTime: "--",
+        updateTime: "--",
+        tokenIdHex: "--",
+        // type: "--",
+        description: "--",
+        thumbnail: "--",
+        asset: "--",
+        kind: "--",
+        size: "--",
+        adult: true,
+        status: "--",
+
+        instock: 0,
+        saleTime: "--",
     },
     {
-        id: '1',
-        image: '/assets/images/blindbox/blindbox-nft-template2.png',
+        tokenId: '0',
+        image: '/assets/images/explore/singlenft-template1.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -151,72 +171,32 @@ export const newNFTProducts: Array<TypeProduct> = [
         sold: 24,
         author: 'nickName',
         type: enumSingleNFTType.BuyNow,
-    },
-    {
-        id: '2',
-        image: '/assets/images/explore/singlenft-template2.png',
-        name: 'Project Title',
-        price_ela: 199,
-        price_usd: 88,
-        likes: 10,
-        views: 100,
-        sold: 24,
-        author: 'nickName',
-        type: enumSingleNFTType.BuyNow,
-    },
-    {
-        id: '3',
-        image: '/assets/images/blindbox/blindbox-nft-template3.png',
-        name: 'Project Title',
-        price_ela: 199,
-        price_usd: 88,
-        likes: 10,
-        views: 100,
-        sold: 24,
-        author: 'nickName',
-        type: enumSingleNFTType.BuyNow,
-    },
-    {
-        id: '4',
-        image: '/assets/images/explore/singlenft-template3.png',
-        name: 'Project Title',
-        price_ela: 199,
-        price_usd: 88,
-        likes: 10,
-        views: 100,
-        sold: 24,
-        author: 'nickName',
-        type: enumSingleNFTType.BuyNow,
-    },
-    {
-        id: '5',
-        image: '/assets/images/blindbox/blindbox-nft-template4.png',
-        name: 'Project Title',
-        price_ela: 199,
-        price_usd: 88,
-        likes: 10,
-        views: 100,
-        sold: 24,
-        author: 'nickName',
-        type: enumSingleNFTType.BuyNow,
-    },
-    {
-        id: '6',
-        image: '/assets/images/explore/singlenft-template4.png',
-        name: 'Project Title',
-        price_ela: 199,
-        price_usd: 88,
-        likes: 10,
-        views: 100,
-        sold: 24,
-        author: 'nickName',
-        type: enumSingleNFTType.BuyNow,
+        blockNumber: 0,
+        tokenIndex: "--",
+        quantity: 0,
+        royalties: "--",
+        royaltyOwner: "--",
+        holder: "--",
+        createTime: "--",
+        updateTime: "--",
+        tokenIdHex: "--",
+        // type: "--",
+        description: "--",
+        thumbnail: "--",
+        asset: "--",
+        kind: "--",
+        size: "--",
+        adult: true,
+        status: "--",
+
+        instock: 0,
+        saleTime: "--",
     },
 ];
 
 export const singleNFTProducts: Array<TypeProduct> = [
     {
-        id: '0',
+        tokenId: '0',
         image: '/assets/images/explore/singlenft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -228,7 +208,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
         type: enumSingleNFTType.BuyNow,
     },
     {
-        id: '1',
+        tokenId: '1',
         image: '/assets/images/explore/singlenft-template2.png',
         name: 'Project Title',
         price_ela: 199,
@@ -240,7 +220,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
         type: enumSingleNFTType.BuyNow,
     },
     {
-        id: '2',
+        tokenId: '2',
         image: '/assets/images/explore/singlenft-template3.png',
         name: 'Project Title',
         price_ela: 199,
@@ -252,7 +232,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
         type: enumSingleNFTType.OnAuction,
     },
     {
-        id: '3',
+        tokenId: '3',
         image: '/assets/images/explore/singlenft-template4.png',
         name: 'Project Title',
         price_ela: 199,
@@ -264,7 +244,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
         type: enumSingleNFTType.BuyNow,
     },
     {
-        id: '4',
+        tokenId: '4',
         image: '/assets/images/explore/singlenft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -276,7 +256,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
         type: enumSingleNFTType.BuyNow,
     },
     {
-        id: '5',
+        tokenId: '5',
         image: '/assets/images/explore/singlenft-template2.png',
         name: 'Project Title',
         price_ela: 199,
@@ -288,7 +268,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
         type: enumSingleNFTType.OnAuction,
     },
     {
-        id: '6',
+        tokenId: '6',
         image: '/assets/images/explore/singlenft-template3.png',
         name: 'Project Title',
         price_ela: 199,
@@ -303,7 +283,7 @@ export const singleNFTProducts: Array<TypeProduct> = [
 
 export const blindboxNFTProducts: Array<TypeProduct> = [
     {
-        id: '0',
+        tokenId: '0',
         image: '/assets/images/blindbox/blindbox-nft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -316,7 +296,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '1',
+        tokenId: '1',
         image: '/assets/images/blindbox/blindbox-nft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -329,7 +309,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '2',
+        tokenId: '2',
         image: '/assets/images/blindbox/blindbox-nft-template2.png',
         name: 'Project Title',
         price_ela: 199,
@@ -341,7 +321,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         type: enumBlindBoxNFTType.SaleEnded,
     },
     {
-        id: '3',
+        tokenId: '3',
         image: '/assets/images/blindbox/blindbox-nft-template3.png',
         name: 'Project Title',
         price_ela: 199,
@@ -354,7 +334,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '4',
+        tokenId: '4',
         image: '/assets/images/blindbox/blindbox-nft-template4.png',
         name: 'Project Title',
         price_ela: 199,
@@ -367,7 +347,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '5',
+        tokenId: '5',
         image: '/assets/images/blindbox/blindbox-nft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -379,7 +359,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         type: enumBlindBoxNFTType.SaleEnded,
     },
     {
-        id: '6',
+        tokenId: '6',
         image: '/assets/images/blindbox/blindbox-nft-template2.png',
         name: 'Project Title',
         price_ela: 199,
@@ -395,7 +375,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
 
 export const myNFTProducts: Array<TypeProduct> = [
     {
-        id: '0',
+        tokenId: '0',
         image: '/assets/images/mynft/mynft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -408,7 +388,7 @@ export const myNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '1',
+        tokenId: '1',
         image: '/assets/images/mynft/mynft-template2.png',
         name: 'Project Title',
         price_ela: 199,
@@ -421,7 +401,7 @@ export const myNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '2',
+        tokenId: '2',
         image: '/assets/images/mynft/mynft-template3.png',
         name: 'Project Title',
         price_ela: 199,
@@ -433,7 +413,7 @@ export const myNFTProducts: Array<TypeProduct> = [
         type: enumMyNFTType.Created,
     },
     {
-        id: '3',
+        tokenId: '3',
         image: '/assets/images/mynft/mynft-template4.png',
         name: 'Project Title',
         price_ela: 199,
@@ -446,7 +426,7 @@ export const myNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '4',
+        tokenId: '4',
         image: '/assets/images/mynft/mynft-template1.png',
         name: 'Project Title',
         price_ela: 199,
@@ -459,7 +439,7 @@ export const myNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '5',
+        tokenId: '5',
         image: '/assets/images/mynft/mynft-template2.png',
         name: 'Project Title',
         price_ela: 199,
@@ -471,7 +451,7 @@ export const myNFTProducts: Array<TypeProduct> = [
         type: enumMyNFTType.OnAuction,
     },
     {
-        id: '6',
+        tokenId: '6',
         image: '/assets/images/mynft/mynft-template3.png',
         name: 'Project Title',
         price_ela: 199,
@@ -484,7 +464,7 @@ export const myNFTProducts: Array<TypeProduct> = [
         saleTime: '2022/02/28 10:00',
     },
     {
-        id: '7',
+        tokenId: '7',
         image: '/assets/images/mynft/mynft-template4.png',
         name: 'Project Title',
         price_ela: 199,

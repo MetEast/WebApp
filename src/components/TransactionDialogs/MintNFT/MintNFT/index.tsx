@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -8,6 +8,11 @@ import WarningTypo from '../../components/WarningTypo';
 import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useDialogContext } from 'src/context/DialogContext';
+import { DropzoneArea } from 'material-ui-dropzone';
+// import MyDropzone from 'src/components/UploadFileButton';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { CustomeDropzoneArea } from './styles';
+import UploadSingleFile from 'src/components/UploadImage/UploadSingleFile';
 
 export interface ComponentProps {}
 
@@ -35,12 +40,41 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
     const [category, setCategory] = useState<TypeSelectItem>();
+    const [title, setTitle] = useState("");
+    const [introduction, setIntroduction] = useState("");
+    const [author, setAuthor] = useState("");
 
     const handleCategoryChange = (value: string) => {
         const item = categoryOptions.find((option) => option.value === value);
         setCategory(item);
     };
     const [dialogState, setDialogState] = useDialogContext();
+    
+    // const [projectTitle, setProjectTitle] = useState("");
+
+
+    // const useStyles = makeStyles(theme => createStyles({
+    //     container: {
+    //       width: "100%",
+    //       height: 112, 
+    //       borderRadius: 2,
+    //       background: '#E8F4FF', 
+    //       cursor: 'pointer'
+    //     },
+    //   }));
+      
+    // const classes = useStyles();
+
+    const [file, setFile] = useState(null);
+    const handleDropSingleFile = useCallback((acceptedFiles) => {
+        const file = acceptedFiles[0];
+        if (file) {
+          setFile({
+            ...file,
+            preview: URL.createObjectURL(file)
+          });
+        }
+      }, []);
 
     return (
         <Stack spacing={5} width={700}>
@@ -51,18 +85,19 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
-                        <CustomTextField title="Project Title" placeholder="Placeholder Text" />
+                        <CustomTextField title="Project Title" placeholder="Placeholder Text" changeHandler={(value: string) => setTitle(value)} />
                         <CustomTextField
                             title="Project Introduction"
                             placeholder="Enter Introduction"
                             multiline
                             rows={3}
+                            changeHandler={(value: string) => setIntroduction(value)}                       
                         />
                         <Box>
                             <Typography fontSize={12} fontWeight={700}>
                                 Source File
                             </Typography>
-                            <Stack
+                            {/* <Stack
                                 width="100%"
                                 height={112}
                                 justifyContent="center"
@@ -75,7 +110,24 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 <Typography fontSize={14} fontWeight={500} color="#1890FF">
                                     Upload Image
                                 </Typography>
-                            </Stack>
+                            </Stack> */}
+                            {/* <Stack
+                                width="100%"
+                                maxHeight={112}
+                                justifyContent="center"
+                                alignItems="center"
+                                marginTop={1}
+                                borderRadius={2}
+                                sx={{ background: '#E8F4FF', cursor: 'pointer' }}
+                            >
+                                <DropzoneArea onChange={(files) => console.log('Files:', files)}
+                                    filesLimit={1}
+                                    dropzoneText="Upload Image"
+                                    previewGridClasses={{ container: classes.container }}
+                                    // previewGridProps={{ container: {justifyContent: "center", alignItems: "center"} }}
+                                />
+                            </Stack> */}
+                            <UploadSingleFile error={true} file={file} sx={{}} onDrop={handleDropSingleFile} />
                         </Box>
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
@@ -95,6 +147,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             placeholder="Enter author introduction"
                             multiline
                             rows={3}
+                            changeHandler={(value: string) => setAuthor(value)}                       
                         />
                     </Grid>
                 </Grid>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { enumBadgeType, enumSingleNFTType, TypeNewProduct, TypeNewTransaction, enumTransactionType } from 'src/types/product-types'; 
+import { enumBadgeType, enumSingleNFTType, TypeProductFetch, TypeNewTransaction, enumTransactionType } from 'src/types/product-types'; 
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -12,7 +12,7 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 // import { nftTransactions } from 'src/constants/dummyData';
 import { TypeNFTTransaction } from 'src/types/product-types';
-import { getThumbnail, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
+import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
 import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
@@ -26,18 +26,18 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
-                var item: TypeNewProduct = jsonProductDetails.data;
+                var item: TypeProductFetch = jsonProductDetails.data;
                 var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, owner: "", author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
                 product.id = item.tokenId;
                 product.name = item.name;
-                product.image = getThumbnail(item.asset);
+                product.image = getImageFromAsset(item.asset);
                 product.price_ela = item.blockNumber % 1000;
                 product.price_usd = product.price_ela * 3.44;
                 product.likes = parseInt(item.createTime) % 10000;
                 product.views = parseInt(item.createTime) * 7 % 10000;
                 product.author.name = item.name + "'s nickname";
                 product.author.description = item.name + "one sentence description here";
-                product.author.img = getThumbnail(item.asset);
+                product.author.img = getImageFromAsset(item.asset);
                 product.description = item.description;
                 product.type = parseInt(item.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                 let saleTime = getTime(item.createTime);
@@ -94,7 +94,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.BuyNow} />
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
-                    <ELAPrice ela_price={productDetail.price_ela} usd_price={productDetail.price_usd} detail_page={true} marginTop={3} />
+                    <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} detail_page={true} marginTop={3} />
                     {/* <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton> */}
                     <ConnectWalletButton toAddress={productDetail.owner} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton>
                 </Grid>

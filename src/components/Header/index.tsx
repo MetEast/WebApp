@@ -43,7 +43,7 @@ const Header: React.FC = (): JSX.Element => {
                 </Button>
                 <Button
                     onClick={() => {
-                        navigate('/profile'); //
+                        navigate('/profile');
                     }}
                 >
                     <Icon icon="ph:user" fontSize={24} color="black" />

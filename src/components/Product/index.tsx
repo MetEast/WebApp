@@ -14,7 +14,7 @@ export interface IProductProps {
 const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     return (
         <Box>
-            <Link to={`/buy-now/${product.id}`}>
+            <Link to={`/buy-now/${product.tokenId}`}>
                 <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
@@ -40,7 +40,7 @@ const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): J
                         </Stack>
                     </Stack>
                     <BuyNowBtn startIcon={<Icon icon="ph:lightning" />}>Buy Now</BuyNowBtn>
-                    <ELAPrice ela_price={199} usd_price={480} />
+                    <ELAPrice price_ela={199} price_usd={480} />
                 </Stack>
             )}
         </Box>

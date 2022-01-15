@@ -33,7 +33,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({ bidsList, onlyShowDownSm
                     <Typography fontSize={14} fontWeight={400}>
                         2022/02/28  10:00
                     </Typography>
-                    <ELAPrice ela_price={199} alignRight={true} />
+                    <ELAPrice price_ela={199} alignRight={true} />
                 </Stack>
                 <Grid container spacing={1}>
                     <Grid item xs={6}>
@@ -66,7 +66,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({ bidsList, onlyShowDownSm
                             </Typography>
                         </Grid>
                         <Grid item xs={6} sm={bidsTblColumns[2].width} order={{xs:2, sm: 3, md: 3, lg: 3}}>
-                            <ELAPrice ela_price={item.price} alignRight/>
+                            <ELAPrice price_ela={item.price} alignRight/>
                         </Grid>
                     </Grid>
                 ))}
