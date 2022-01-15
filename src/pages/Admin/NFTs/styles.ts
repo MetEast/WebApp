@@ -1,4 +1,4 @@
-import { styled, Table } from '@mui/material';
+import { styled, Table, Button } from '@mui/material';
 
 export const DataTable = styled(Table)({
     '& .MuiTableHead-root': {
@@ -8,6 +8,18 @@ export const DataTable = styled(Table)({
         },
     },
     '& .MuiTableCell-root': {
-        borderWidth: 0,
+        // borderWidth: 0,
     },
 });
+
+export const PageButton = styled(Button)<{ active: boolean }>`
+    width: 40px;
+    min-width: 0;
+    height: 40px;
+    background: ${({ active }) => (active ? '#1890ff' : 'transparent')};
+    color: ${({ active }) => (active ? 'white' : '#1890ff')};
+    border-radius: 12px;
+    &:hover {
+        background: ${({ active }) => (active ? '#28a0ff' : '#E8F4FF')};
+    }
+`;
