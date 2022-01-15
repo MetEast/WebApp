@@ -13,6 +13,7 @@ import {
     TablePagination,
     Checkbox,
     TableSortLabel,
+    Typography,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
@@ -22,6 +23,8 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import ELAPrice from 'src/components/ELAPrice';
 import { DataTable } from './styles';
+import Select from 'src/components/Admin/Select';
+import { TypeSelectItem } from 'src/types/select-types';
 
 interface Data {
     rulenumber: string;
@@ -238,13 +241,32 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             ),
         );
 
-    const tabledata: Data[] = useMemo(() => makeData(300), []);
+    const tabledata: Data[] = useMemo(() => makeData(97), []);
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof Data>('rulenumber');
     const [selected, setSelected] = React.useState<readonly string[]>([]);
+
+    const rowsPerPageOptions: Array<TypeSelectItem> = [
+        {
+            label: '5 art./page',
+            value: '5',
+        },
+        {
+            label: '10 art./page',
+            value: '10',
+        },
+        {
+            label: '25 art./page',
+            value: '25',
+        },
+    ];
+    const handleRowsPerPageChange = (value: string) => {
+        setRowsPerPage(parseInt(value, 10));
+        setPage(0);
+    };
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tabledata.length) : 0;
@@ -294,7 +316,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     return (
         <Box>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
                 <DataTable aria-label="custom pagination table">
                     <EnhancedTableHead
                         numSelected={selected.length}
@@ -347,28 +369,38 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                             </TableRow>
                         )}
                     </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 25]}
-                                colSpan={3}
-                                count={tabledata.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                SelectProps={{
-                                    inputProps: {
-                                        'aria-label': 'rows per page',
-                                    },
-                                    native: true,
-                                }}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
                 </DataTable>
             </TableContainer>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={2}>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                    <Box width={200}>
+                        <Select
+                            options={rowsPerPageOptions}
+                            selected={rowsPerPage}
+                            handleClick={handleRowsPerPageChange}
+                        />
+                    </Box>
+                    <Typography fontSize={14} fontWeight={400}>{`Tot.${tabledata.length}`}</Typography>
+                </Stack>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                    <Typography fontSize={14} fontWeight={400}>
+                        page
+                    </Typography>
+                    <Typography
+                        fontSize={14}
+                        fontWeight={400}
+                        paddingX={2}
+                        paddingY={1}
+                        borderRadius={3}
+                        sx={{ background: '#F0F1F2' }}
+                    >
+                        {page + 1}
+                    </Typography>
+                    <Typography fontSize={14} fontWeight={400}>
+                        {`/ ${Math.ceil(tabledata.length / rowsPerPage)}`}
+                    </Typography>
+                </Stack>
+            </Stack>
         </Box>
     );
 };
