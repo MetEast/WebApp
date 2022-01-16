@@ -3,20 +3,20 @@ export const sleep = (ms: number) => {
 };
 
 // custome
-export const getThumbnail = (id: string) => {
+export const getImageFromAsset = (id: string) => {
     if(id===undefined)
       return ""
     const prefixLen = id.split(':', 2).join(':').length
     if(prefixLen>=id.length)
       return ""
     const uri = id.substring(prefixLen+1)
-    return `https://ipfs0.trinity-feeds.app/ipfs/${uri}`
+    return `https://ipfs-test.trinity-feeds.app/ipfs/${uri}`
 }
 
-// Get time from timestamp //
+// Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp: string) => {
   const date = new Date(parseInt(timestamp) * 1000);
-  const dateStr = date.toISOString().slice(0, 10);
+  const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
 
   let hours = date.getUTCHours().toString();
   hours = hours.toString().padStart(2,'0');

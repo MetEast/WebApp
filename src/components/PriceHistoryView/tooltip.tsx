@@ -22,7 +22,7 @@ const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp }): JS
 
     return (
         <Stack padding={2} sx={{ background: 'white' }}>
-            <ELAPrice ela_price={price} />
+            <ELAPrice price_ela={price} />
             <Typography fontSize={12} fontWeight={400}>
                 {getDateString(timestamp)}
             </Typography>

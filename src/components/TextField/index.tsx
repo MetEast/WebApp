@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, TextField } from '@mui/material';
 
 export interface ComponentProps {
@@ -6,9 +6,18 @@ export interface ComponentProps {
     placeholder?: string;
     multiline?: boolean;
     rows?: number;
+    changeHandler: (value: string) => void
 }
 
-const CustomTextField: React.FC<ComponentProps> = ({ title, placeholder, multiline, rows }): JSX.Element => {
+const CustomTextField: React.FC<ComponentProps> = ({ title, placeholder, multiline, rows, changeHandler }): JSX.Element => {
+    const [text, setText] = useState("");
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setText(value);
+        changeHandler(value);
+    };
+
     return (
         <Stack spacing={0.5}>
             {title && (
@@ -18,6 +27,7 @@ const CustomTextField: React.FC<ComponentProps> = ({ title, placeholder, multili
             )}
             <TextField
                 placeholder={placeholder}
+                value={text}
                 multiline={multiline}
                 rows={rows}
                 sx={{
@@ -33,6 +43,7 @@ const CustomTextField: React.FC<ComponentProps> = ({ title, placeholder, multili
                         },
                     },
                 }}
+                onChange={handleInputChange}
             />
         </Stack>
     );

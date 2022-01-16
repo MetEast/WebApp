@@ -52,7 +52,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 </InfoItemWrapper>
                 <InfoItemWrapper>
                     <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
-                    <ELAPrice ela_price={199} />
+                    <ELAPrice price_ela={199} />
                 </InfoItemWrapper>
                 <InfoItemWrapper>
                     <DetailedInfoTitleTypo>Sale Begins</DetailedInfoTitleTypo>

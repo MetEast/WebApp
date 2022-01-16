@@ -16,8 +16,8 @@ export interface ExploreGalleryItemProps {
 
 const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage = false}): JSX.Element => {
     const getUrl = () => {
-        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.id}`;
-        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.id}`;
+        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
         else return `/`;
     };
 
@@ -27,7 +27,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                 <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
-                        <LikeBtn>
+                        <LikeBtn onClick={() => {}}>
                             <Icon icon="ph:heart" fontSize={"2vw"} color="black" />
                         </LikeBtn>
                     )}
@@ -43,10 +43,10 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                             <ProductSnippets nickname={product.author} likes={product.likes} />
                         </Grid>
                         <Grid item order={3} width={'100%'} >
-                            <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
+                            <ProductBadgeContainer nfttype={product.type} />
                         </Grid>
                         <Grid item order={{xs: 2, sm: 2, md: 4 }} width={'100%'} >
-                            <ELAPrice ela_price={product.price_ela} usd_price={product.price_usd} />
+                            <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
                         </Grid>
                     </Grid>
                 // </Stack>

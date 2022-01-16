@@ -16,10 +16,10 @@ export interface ComponentProps {
 
 const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     const getUrl = () => {
-        if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.id}`;
-        else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.id}`;
-        else if (product.type === enumMyNFTType.Created) return `/mynft/created/${product.id}`;
-        else if (product.type === enumMyNFTType.Sold) return `/mynft/sold/${product.id}`;
+        if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.tokenId}`;
+        else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.tokenId}`;
+        else if (product.type === enumMyNFTType.Created) return `/mynft/created/${product.tokenId}`;
+        else if (product.type === enumMyNFTType.Sold) return `/mynft/sold/${product.tokenId}`;
         else return `#`;
     };
 
@@ -42,7 +42,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage = f
                     </Typography>
                     <ProductSnippets nickname="Nickname" likes={88} />
                     <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
-                    <ELAPrice ela_price={199} usd_price={480} />
+                    <ELAPrice price_ela={199} price_usd={480} />
                 </Stack>
             )}
         </Box>

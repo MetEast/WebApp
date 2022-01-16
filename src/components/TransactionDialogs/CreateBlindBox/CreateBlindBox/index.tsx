@@ -117,18 +117,20 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
-                        <CustomTextField title="Blind Box Title" placeholder="Enter Blind Box Title" />
+                        <CustomTextField title="Blind Box Title" placeholder="Enter Blind Box Title" changeHandler={(value) => {}} />
                         <CustomTextField
                             title="Blind Box Description"
                             placeholder="Is WYSIWYG is needed here?"
                             multiline
                             rows={3}
+                            changeHandler={(value) => {}}
                         />
                         <CustomTextField
                             title="Author Description"
                             placeholder="Is WYSIWYG is needed here?"
                             multiline
                             rows={3}
+                            changeHandler={(value) => {}}
                         />
                         <Stack spacing={1}>
                             <Typography fontSize={12} fontWeight={700}>
@@ -200,7 +202,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="Number of copies" placeholder="es. 1000" />
+                        <CustomTextField title="Number of copies" placeholder="es. 1000" changeHandler={(value) => {}} />
                         <ELAPriceInput title="Price" />
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
@@ -224,9 +226,9 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 handleClick={handleSaleEndsChange}
                             />
                         </Stack>
-                        <CustomTextField title="Number of favourites" placeholder="es. 1000" />
-                        <CustomTextField title="Number of Views" placeholder="es. 1000" />
-                        <CustomTextField title="Max Num of Purchases" placeholder="es. 1000" />
+                        <CustomTextField title="Number of favourites" placeholder="es. 1000" changeHandler={(value) => {}} />
+                        <CustomTextField title="Number of Views" placeholder="es. 1000" changeHandler={(value) => {}} />
+                        <CustomTextField title="Max Num of Purchases" placeholder="es. 1000" changeHandler={(value) => {}} />
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Sort

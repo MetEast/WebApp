@@ -32,7 +32,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Sold} />
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
-                    <ELAPrice ela_price={199} usd_price={480} marginTop={3} />
+                    <ELAPrice price_ela={199} price_usd={480} marginTop={3} />
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>
@@ -46,11 +46,13 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                             name={`Luke Mac Quayle`}
                             description={`One Sentence Introduction. Fantasy is an easy way to give meaning to the world.`}
                             img={'/assets/images/avatar-template.png'}
+                            address={'0xdssssssssssssddddddd'}
                         />
                         <ChainDetails
                             tokenId={`0x0548d...13667d`}
-                            owner={`0x3e9b...FA4b7`}
-                            royalties={`5`}
+                            ownerName={'owner'}
+                            ownerAddress={`0x3e9b...FA4b7`}
+                            royalties={5}
                             createTime={`07 Jan 2022 at 02:20 UTC`}
                         />
                     </Stack>

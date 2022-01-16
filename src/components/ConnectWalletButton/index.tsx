@@ -62,15 +62,15 @@ const logosByName: { [connectorsByName in ConnectorNames]: any } = {
 export interface ComponentProps {
     sx?: SxProps;
     children?: JSX.Element | string;
-    toAddress: string;
+    toAddress?: string;
     value?: string;
     method?: string;
 }
 
 const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress, value = "0", method, ...otherProps}): JSX.Element => {
   const context = useWeb3React<Web3Provider>();
-  const [errors, setErrors] = useState<string[] | undefined>(undefined);
   const { activate, active, error, library, chainId } = context;
+  const [errors, setErrors] = useState<string[] | undefined>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [activatingConnector, setActivatingConnector] = useState<any>();
   const [isActivating, setIsActivating] = useState<boolean>(false);

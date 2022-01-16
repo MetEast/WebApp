@@ -4,6 +4,7 @@ import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
+import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 export interface ComponentProps {}
 
@@ -32,14 +33,20 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                     >
                         Close
                     </SecondaryButton>
-                    <PrimaryButton
+                    {/* <PrimaryButton
                         fullWidth
                         onClick={() => {
                             setDialogState({ ...dialogState, createNFTDlgOpened: false });
                         }}
                     >
                         Sell
-                    </PrimaryButton>
+                    </PrimaryButton> */}
+                    <ConnectWalletButton sx={{ width: "100%" }}
+                        // fullWidth
+                        // onClick={() => {
+                        //     setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                        // }}
+                        >Sell</ConnectWalletButton>
                 </Stack>
             </Stack>
         </Stack>

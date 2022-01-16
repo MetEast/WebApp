@@ -8,14 +8,39 @@ import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 
 interface ComponentProps extends SpacingProps {
-    author: {name: string, description: string, img: string};
+    author: string, 
+    authorDescription: string,
+    authorImg: string,
+    authorAddress: string,
     description: string;
-    details: {tokenId: string, owner: string, royalties: string, createTime: string};
-    vertically?: boolean;
-    bidsList?: Array<TypeSingleNFTBid>;
-}
+    detailTokenIdHex: string, 
+    detailOwnerName: string, 
+    detailOwnerAddress: string, 
+    detailRoyalties: number, 
+    detailCreateTime: string,
+    vertically?: boolean,
+    bidsList?: Array<TypeSingleNFTBid>,
+    myBidsList?: Array<TypeSingleNFTBid>,
+    isLoggedIn?: boolean
+}   
 
-const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ author, description, details, bidsList, vertically = false, ...otherProps }): JSX.Element => {
+const SingleNFTMoreInfo: React.FC<ComponentProps> = ({
+    author, 
+    authorDescription, 
+    authorImg, 
+    authorAddress,
+    description, 
+    detailTokenIdHex, 
+    detailOwnerName,
+    detailOwnerAddress, 
+    detailRoyalties, 
+    detailCreateTime, 
+    bidsList,
+    myBidsList = [],
+    isLoggedIn = false, 
+    vertically = false, 
+    ...otherProps }): JSX.Element => {
+    
     return (
         // <Grid container columnSpacing={5} rowGap={5} {...otherProps}>
         //     <Grid item xs={vertically ? 12 : 4} order={vertically ? 1 : 2}>
@@ -33,13 +58,13 @@ const SingleNFTMoreInfo: React.FC<ComponentProps> = ({ author, description, deta
                 <ProjectDescription description={description} />
             </Grid>
             {bidsList && <Grid item xs={12} display={{xs:'block', sm:'block', md:'none', lg:'none'}}>
-                <SingleNFTBidsTable bidsList={bidsList} onlyShowDownSm={true} />
+                <SingleNFTBidsTable isLoggedIn={isLoggedIn} myBidsList={myBidsList} bidsList={bidsList} onlyShowDownSm={true} />
             </Grid>}
             <Grid item xs={12} sm={6} md={12}>
-                <AboutAuthor name={author.name} description={author.description} img={author.img} />
+                <AboutAuthor name={author} address={authorAddress} description={authorDescription} img={authorImg} />
             </Grid>
             <Grid item xs={12} sm={6} md={12}>
-                <ChainDetails tokenId={details.tokenId} owner={details.owner} royalties={details.royalties} createTime={details.createTime} />
+                <ChainDetails tokenId={detailTokenIdHex} ownerName={detailOwnerName} ownerAddress={detailOwnerAddress} royalties={detailRoyalties} createTime={detailCreateTime} />
             </Grid>
         </Grid>
     );

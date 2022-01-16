@@ -39,17 +39,41 @@ export enum enumTransactionType {
 }
 
 export type TypeProduct = {
-    id: string;
-    image: string;
+    tokenId: string;
     name: string;
+    author: string; // creator
+    authorDescription: string;
+    authorImg: string;
+    authorAddress: string;
+    description: string;
+    image: string;
     price_ela: number;
     price_usd: number;
     likes: number;
     views: number;
+    tokenIdHex: string;
+    royalties: number;
+    createTime: string;
+    holder: string; // owner
+    holderName: string;
+    type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
+
+    
+    blockNumber?: number;
+    tokenIndex?: string;
+    quantity?: number;
+    royaltyOwner?: string;
+    updateTime?: string;
+    thumbnail?: string;
+    asset?: string;
+    kind?: string;
+    size?: string;
+    adult?: boolean;
+    status?: string;
+
+    
     sold?: number;
     instock?: number;
-    author: string;
-    type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     saleTime?: string;
 };
 
@@ -67,27 +91,69 @@ export type TypeSingleNFTBid = {
 };
 
 // ---
-export type TypeNewProduct = {
+export type TypeProductFetch = {
     blockNumber: number;
-    createTime: string;
-    description: string;
-    holder: string;
-    royalties: string;
-    kind: string;
-    name: string;
-    asset: string;
+    tokenIndex: string;
     tokenId: string;
+    quantity: number;
+    royalties: string;
+    royaltyOwner: string;
+    holder: string;
+    createTime: string;
+    updateTime: string;
     tokenIdHex: string;
-    size: number;
+    type: string;
+    name: string;
+    description: string;
+    thumbnail: string;
+    asset: string;
+    kind: string;
+    size: string;
+    adult: boolean;
+    price: number;
+    views: number;
+    likes: number;
+    status: string;
 };
 
-export type TypeNewTransaction = {
+export type TypeNFTTransactionFetch = {
     blockNumber: number;
-    timestamp: string;
     from: string;
-    price: string;
+    to: string;
+    gasFee: number;
+    name: string;
+    asset: string;
+    timestamp: number;
+    tokenId: string;
+    txHash: string;
+    txIndex: number;
+    value: number;
     event: string;
+    royalties: string;
+    royaltyFee: string;
+    royaltyOwner: string;
+    tHash: string;
+    // price: string;
 };
+
+export type TypeSingleNFTBidFetch = {
+    orderId: string;
+    event: string;
+    blockNumber: string;
+    tHash: string;
+    tIndex: number;
+    blockHash: string;
+    logIndex: number;
+    removed: boolean;
+    id: string;
+    sellerAddr: string;
+    buyerAddr: string;
+    royaltyFee: string;
+    tokenId: string;
+    price: string;
+    timestamp: string;
+    gasFee: number;
+}
 
 export type TypeProductPrice = {
     onlyDate: string;
