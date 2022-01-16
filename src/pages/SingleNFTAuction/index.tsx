@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
-import { enumBadgeType, enumSingleNFTType, enumTransactionType, TypeProductFetch, TypeNFTTransactionFetch, TypeNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types'; 
+import { enumBadgeType, enumSingleNFTType, enumTransactionType, TypeProduct, TypeProductFetch, TypeNFTTransactionFetch, TypeNFTTransaction, TypeSingleNFTBid, TypeSingleNFTBidFetch } from 'src/types/product-types'; 
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -13,12 +13,11 @@ import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { singleNFTBids } from 'src/constants/dummyData';
-import { TypeProduct } from 'src/types/product-types';
 import { getImageFromAsset, getTime, reduceHexAddress, getUTCTime } from 'src/services/sleep'; 
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
-    const bidsList: Array<TypeSingleNFTBid> = singleNFTBids;
     // get product details from server
     const params = useParams(); // params.tokenId
     const defaultValue: TypeProduct = { 
@@ -41,11 +40,14 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         holder: "",
         type: enumSingleNFTType.BuyNow };
     const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: ""};
+    const defaultBidValue: TypeSingleNFTBid = {user: "", price: 0, time: ""};
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+    const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
-    const burnAddress = "0x686c626E48bfC5DC98a30a9992897766fed4Abd3";
+    const burnAddress = "0x0000000000000000000000000000000000000000";
 
     useEffect(() => {
         fetch("https://esc.elastos.io/api?module=stats&action=coinprice", {
@@ -80,7 +82,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 product.author = "Author"; // -- no proper value
                 product.authorDescription = "Author description here"; // -- no proper value
                 product.authorImg = product.image; // -- no proper value
-                product.authorAddress = itemObject.holder; // -- no proper value
+                product.authorAddress = itemObject.royaltyOwner; 
                 product.description = itemObject.description;
                 product.holderName = "Full Name"; // -- no proper value 
                 product.holder = itemObject.holder;
@@ -97,16 +99,21 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/tokenTrans?tokenId=${params.id}`).then(response => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1$pageSize=5`).then(response => {
             let _latestTransList: any = [];
             response.json().then(jsonTransList => {
-                jsonTransList.forEach(function (itemObject: TypeNFTTransactionFetch) {
+                jsonTransList.data.forEach((itemObject: TypeNFTTransactionFetch) => {
                     var _transaction: TypeNFTTransaction = {...defaultTransactionValue};
-                    _transaction.type = enumTransactionType.Bid;  // no proper data
+                    // no proper data
+                    switch (itemObject.event) {
+                        case "Mint":
+                            _transaction.type = enumTransactionType.CreatedBy;
+                            break;
+                    }
                     _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
-                    _transaction.price = itemObject.value / 1e18;  // no proper data
-                    let saleTime = getTime(itemObject.timestamp);
-                    _transaction.time = saleTime.date + " " + saleTime.time;
+                    _transaction.price = itemObject.gasFee;  // no proper data
+                    let timestamp = getTime(itemObject.timestamp.toString());
+                    _transaction.time = timestamp.date + " " + timestamp.time;
                     _latestTransList.push(_transaction);
                 });
                 setTransactionsList(_latestTransList);
@@ -114,7 +121,56 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         }).catch(err => {
             console.log(err)
         });
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5`).then(response => {
+            let _latestBidsList: any = [];
+            response.json().then(jsonBidsList => {
+                jsonBidsList.data.forEach((itemObject: TypeSingleNFTBidFetch) => {
+                    var _bid: TypeSingleNFTBid = {...defaultBidValue};
+                    _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data
+                    _bid.price = parseFloat(itemObject.price) / 1e18;
+                    let timestamp = getTime(itemObject.timestamp);
+                    _bid.time = timestamp.date + " " + timestamp.time;
+                    _latestBidsList.push(_bid);
+                });
+                setBidsList(_latestBidsList);
+            });
+        }).catch(err => {
+            console.log(err)
+        });
+        
     }, [ela_usd_rate, params.id]);
+
+    // get your bids
+    const context = useWeb3React<Web3Provider>();
+    const { activate, active, error, library, chainId } = context;
+
+    const getMyBids = async () => {    
+        alert(active);
+        if(library && active) {
+            const accounts = await library.listAccounts();
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`).then(response => {
+                let _latestBidsList: any = [];
+                response.json().then(jsonBidsList => {
+                    jsonBidsList.forEach((itemObject: TypeSingleNFTBidFetch) => {
+                        var _bid: TypeSingleNFTBid = {...defaultBidValue};
+                        _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data
+                        _bid.price = parseFloat(itemObject.price) / 1e18;
+                        let timestamp = getTime(itemObject.timestamp);
+                        _bid.time = timestamp.date + " " + timestamp.time;
+                        _latestBidsList.push(_bid);
+                    });
+                    setMyBidsList(_latestBidsList);
+                });
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+        else setMyBidsList([]);
+    };
+    useEffect(() => {
+        getMyBids();
+    }, [active, chainId]);
 
     return (
         <>
@@ -140,8 +196,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         </Grid>
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} detail_page={true} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>Place Bid</PrimaryButton>
-                    {/* <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>Place Bid</ConnectWalletButton> */}
+                    {/* <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>Place Bid</PrimaryButton> */}
+                    <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>Place Bid</ConnectWalletButton>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
@@ -157,11 +213,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detailOwnerAddress={productDetail.holder}
                         detailRoyalties={productDetail.royalties}
                         detailCreateTime={productDetail.createTime}
+                        isLoggedIn={active} 
+                        myBidsList={myBidsList}
                         marginTop={5} 
                         vertically={true} />
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <SingleNFTBidsTable bidsList={bidsList} />
+                    <SingleNFTBidsTable isLoggedIn={active} myBidsList={myBidsList} bidsList={bidsList} />
                     <PriceHistoryView />
                     <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>

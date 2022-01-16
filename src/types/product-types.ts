@@ -121,15 +121,39 @@ export type TypeNFTTransactionFetch = {
     from: string;
     to: string;
     gasFee: number;
-    timestamp: string;
+    name: string;
+    asset: string;
+    timestamp: number;
     tokenId: string;
     txHash: string;
     txIndex: number;
     value: number;
-
-    price: string;
     event: string;
+    royalties: string;
+    royaltyFee: string;
+    royaltyOwner: string;
+    tHash: string;
+    // price: string;
 };
+
+export type TypeSingleNFTBidFetch = {
+    orderId: string;
+    event: string;
+    blockNumber: string;
+    tHash: string;
+    tIndex: number;
+    blockHash: string;
+    logIndex: number;
+    removed: boolean;
+    id: string;
+    sellerAddr: string;
+    buyerAddr: string;
+    royaltyFee: string;
+    tokenId: string;
+    price: string;
+    timestamp: string;
+    gasFee: number;
+}
 
 export type TypeProductPrice = {
     onlyDate: string;

@@ -18,8 +18,10 @@ interface ComponentProps extends SpacingProps {
     detailOwnerAddress: string, 
     detailRoyalties: number, 
     detailCreateTime: string,
-    vertically?: boolean;
-    bidsList?: Array<TypeSingleNFTBid>;
+    vertically?: boolean,
+    bidsList?: Array<TypeSingleNFTBid>,
+    myBidsList?: Array<TypeSingleNFTBid>,
+    isLoggedIn?: boolean
 }   
 
 const SingleNFTMoreInfo: React.FC<ComponentProps> = ({
@@ -33,7 +35,9 @@ const SingleNFTMoreInfo: React.FC<ComponentProps> = ({
     detailOwnerAddress, 
     detailRoyalties, 
     detailCreateTime, 
-    bidsList, 
+    bidsList,
+    myBidsList = [],
+    isLoggedIn = false, 
     vertically = false, 
     ...otherProps }): JSX.Element => {
     
@@ -54,7 +58,7 @@ const SingleNFTMoreInfo: React.FC<ComponentProps> = ({
                 <ProjectDescription description={description} />
             </Grid>
             {bidsList && <Grid item xs={12} display={{xs:'block', sm:'block', md:'none', lg:'none'}}>
-                <SingleNFTBidsTable bidsList={bidsList} onlyShowDownSm={true} />
+                <SingleNFTBidsTable isLoggedIn={isLoggedIn} myBidsList={myBidsList} bidsList={bidsList} onlyShowDownSm={true} />
             </Grid>}
             <Grid item xs={12} sm={6} md={12}>
                 <AboutAuthor name={author} address={authorAddress} description={authorDescription} img={authorImg} />

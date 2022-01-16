@@ -6,6 +6,7 @@ import { enumBadgeType, enumSingleNFTType, TypeProductFetch, TypeNFTTransactionF
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
@@ -76,7 +77,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 product.author = "Author"; // -- no proper value
                 product.authorDescription = "Author description here"; // -- no proper value
                 product.authorImg = product.image; // -- no proper value
-                product.authorAddress = itemObject.holder; // -- no proper value
+                product.authorAddress = itemObject.royaltyOwner; // -- no proper value
                 product.description = itemObject.description;
                 product.holderName = "Full Name"; // -- no proper value 
                 product.holder = itemObject.holder;
@@ -94,15 +95,20 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/tokenTrans?tokenId=${params.id}`).then(response => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1$pageSize=5`).then(response => {
             let _latestTransList: any = [];
             response.json().then(jsonTransList => {
-                jsonTransList.forEach(function (itemObject: TypeNFTTransactionFetch) {
+                jsonTransList.data.forEach((itemObject: TypeNFTTransactionFetch) => {
                     var _transaction: TypeNFTTransaction = {...defaultTransactionValue};
-                    _transaction.type = enumTransactionType.Bid;  // no proper data
+                    // no proper data
+                    switch (itemObject.event) {
+                        case "Mint":
+                            _transaction.type = enumTransactionType.CreatedBy;
+                            break;
+                    }
                     _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
-                    _transaction.price = itemObject.value / 1e18;  // no proper data
-                    let saleTime = getTime(itemObject.timestamp);
+                    _transaction.price = itemObject.gasFee;  // no proper data
+                    let saleTime = getTime(itemObject.timestamp.toString());
                     _transaction.time = saleTime.date + " " + saleTime.time;
                     _latestTransList.push(_transaction);
                 });
@@ -159,8 +165,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} detail_page={true} marginTop={3} />
-                    {/* <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton> */}
-                    <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton>
+                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton>
+                    {/* <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton> */}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>

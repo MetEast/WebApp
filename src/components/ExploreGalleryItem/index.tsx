@@ -16,8 +16,8 @@ export interface ExploreGalleryItemProps {
 
 const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage = false}): JSX.Element => {
     const getUrl = () => {
-        if (product.type === enumSingleNFTType.OnAuction) return `/products/fixed-price/${product.tokenId}`;
-        else if (product.type === enumSingleNFTType.BuyNow) return `/products/auction/${product.tokenId}`;
+        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
         else return `/`;
     };
 
