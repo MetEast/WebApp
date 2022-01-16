@@ -20,7 +20,25 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
-    const defaultValue : TypeProduct = { tokenId: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, author: "", type: enumSingleNFTType.BuyNow };
+    const defaultValue : TypeProduct = { 
+        tokenId: "", 
+        name: "", 
+        image: "",
+        price_ela: 0, 
+        price_usd: 0, 
+        likes: 0,
+        views: 0,
+        author: "",
+        authorDescription: "",
+        authorImg: "",
+        authorAddress: "",
+        description: "",
+        tokenIdHex: "",
+        royalties: 0,
+        createTime: "",
+        holderName: "",
+        holder: "",
+        type: enumSingleNFTType.BuyNow };
 
     useEffect(() => {
         fetch("https://esc.elastos.io/api?module=stats&action=coinprice", {

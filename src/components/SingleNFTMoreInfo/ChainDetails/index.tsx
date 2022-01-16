@@ -1,14 +1,17 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
+import { reduceHexAddress } from 'src/services/sleep';
+import { Icon } from '@iconify/react';
 
 interface ComponentProps {
     tokenId: string;
-    owner: string;
+    ownerName: string;
+    ownerAddress: string;
     createTime: string;
-    royalties: string;
+    royalties: number;
 }
 
-const ChainDetails: React.FC<ComponentProps> = ({tokenId, owner, royalties, createTime}): JSX.Element => {
+const ChainDetails: React.FC<ComponentProps> = ({tokenId, ownerName, ownerAddress, royalties, createTime}): JSX.Element => {
     return (
         <Box>
             <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
@@ -29,9 +32,15 @@ const ChainDetails: React.FC<ComponentProps> = ({tokenId, owner, royalties, crea
                 <Grid item xs={5} fontWeight={400}>Token Standard</Grid>
                 <Grid item xs={7} textAlign={"right"}>ERC1155</Grid>
                 <Grid item xs={5} fontWeight={400}>Token ID</Grid>
-                <Grid item xs={7} fontSize={12} color={'#1890FF'} textAlign={"right"}>{tokenId}</Grid>
+                <Grid item xs={7} fontSize={12} color={'#1890FF'} textAlign={"right"}>
+                    {reduceHexAddress(tokenId, 5)}
+                    <Icon icon="ph:caret-down" className="arrow-icon" />
+                </Grid>
                 <Grid item xs={5} fontWeight={400}>Owner</Grid>
-                <Grid item xs={7} fontSize={12} color={'#1890FF'} textAlign={"right"}>{owner}</Grid>
+                <Grid container item xs={7}>
+                    <Grid item xs={12} textAlign={"right"}>{ownerName}</Grid>
+                    <Grid item xs={12} fontSize={12} color={'#1890FF'} textAlign={"right"}>{reduceHexAddress(ownerAddress, 4)}</Grid>
+                </Grid>
                 <Grid item xs={5} fontWeight={400}>Created date</Grid>
                 <Grid item xs={7} textAlign={"right"}>{createTime}</Grid>
                 <Grid item xs={5} fontWeight={400}>Royalties</Grid>

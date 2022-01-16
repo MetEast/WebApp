@@ -77,7 +77,7 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
             </Typography> */}
             <Grid container justifyContent={"space-between"} fontSize={14} fontWeight={500} color={styles[badgeType].color}>
                 <Grid item>
-                    {`${badgeType}${content ? ': ' : ''}`}
+                    {`${badgeType}${content ? ':' : ''}`}&nbsp;
                 </Grid>
                 <Grid item>
                     {content ? content : ''}

@@ -16,7 +16,25 @@ const HomePage: React.FC = (): JSX.Element => {
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
     const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
-    const defaultValue : TypeProduct = { tokenId: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, author: "", type: enumSingleNFTType.BuyNow };
+    const defaultValue : TypeProduct = { 
+        tokenId: "", 
+        name: "", 
+        image: "",
+        price_ela: 0, 
+        price_usd: 0, 
+        likes: 0,
+        views: 0,
+        author: "",
+        authorDescription: "",
+        authorImg: "",
+        authorAddress: "",
+        description: "",
+        tokenIdHex: "",
+        royalties: 0,
+        createTime: "",
+        holderName: "",
+        holder: "",
+        type: enumSingleNFTType.BuyNow };
     
     useEffect(() => {
         // "https://esc.elastos.io/api?module=stats&action=coinprice"
@@ -60,7 +78,7 @@ const HomePage: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType='mostliked'`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
@@ -77,7 +95,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     product.price_usd = product.price_ela * ela_usd_rate;
                     product.likes = itemObject.likes;
                     product.author = "Author"; // -- no proper value
-                    product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                    product.type = (itemObject.status === "BuyNow") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
                     _popularCollectionList.push(product);
                 });
                 setCollectionList(_popularCollectionList);

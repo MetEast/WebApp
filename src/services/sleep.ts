@@ -13,10 +13,10 @@ export const getImageFromAsset = (id: string) => {
     return `https://ipfs-test.trinity-feeds.app/ipfs/${uri}`
 }
 
-// Get time from timestamp //
+// Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp: string) => {
   const date = new Date(parseInt(timestamp) * 1000);
-  const dateStr = date.toISOString().slice(0, 10);
+  const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
 
   let hours = date.getUTCHours().toString();
   hours = hours.toString().padStart(2,'0');

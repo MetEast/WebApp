@@ -65,15 +65,7 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                         </Grid>
                         <Grid item xs={6} sm={transactionsTblColumns[3].width} order={{ xs: 1, sm: 4 }}>
                             <Typography fontSize={12} fontWeight={500}>
-                                {item.time.slice(0, 4) +
-                                    '/' +
-                                    item.time.slice(5, 7) +
-                                    '/' +
-                                    item.time.slice(8, 10) +
-                                    ' ' +
-                                    item.time.slice(11, 13) +
-                                    ':' +
-                                    item.time.slice(14, 16)}
+                                {item.time}
                             </Typography>
                         </Grid>
                     </Grid>

@@ -41,26 +41,29 @@ export enum enumTransactionType {
 export type TypeProduct = {
     tokenId: string;
     name: string;
-    description?: string;
-    author: string;
+    author: string; // creator
+    authorDescription: string;
+    authorImg: string;
+    authorAddress: string;
+    description: string;
     image: string;
     price_ela: number;
     price_usd: number;
     likes: number;
-    views?: number;
+    views: number;
+    tokenIdHex: string;
+    royalties: number;
+    createTime: string;
+    holder: string; // owner
+    holderName: string;
+    type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
+
     
-
-
     blockNumber?: number;
     tokenIndex?: string;
     quantity?: number;
-    royalties?: string;
     royaltyOwner?: string;
-    holder?: string;
-    createTime?: string;
     updateTime?: string;
-    tokenIdHex?: string;
-    // type?: string;
     thumbnail?: string;
     asset?: string;
     kind?: string;
@@ -71,7 +74,6 @@ export type TypeProduct = {
     
     sold?: number;
     instock?: number;
-    type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     saleTime?: string;
 };
 
@@ -114,10 +116,17 @@ export type TypeProductFetch = {
     status: string;
 };
 
-export type TypeNewTransaction = {
+export type TypeNFTTransactionFetch = {
     blockNumber: number;
-    timestamp: string;
     from: string;
+    to: string;
+    gasFee: number;
+    timestamp: string;
+    tokenId: string;
+    txHash: string;
+    txIndex: number;
+    value: number;
+
     price: string;
     event: string;
 };

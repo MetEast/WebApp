@@ -80,7 +80,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>
                     <Stack spacing={3}>
-                        <AboutAuthor name={productDetail.author.name} description={productDetail.author.description} img={productDetail.author.img} />
+                        <AboutAuthor name={productDetail.author.name} description={productDetail.author.description} img={productDetail.author.img}  address={productDetail.author.img}/>
                         <PriceHistoryView />
                         <ProductTransHistory />
                     </Stack>
@@ -89,7 +89,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     <Stack spacing={3}>
                         <ProjectDescription description={productDetail.description} />
                         <NFTTransactionTable transactionsList={transactionsList} />
-                        <ChainDetails tokenId={productDetail.details.tokenId} owner={productDetail.details.owner} royalties={productDetail.details.royalties} createTime={productDetail.details.createTime} />
+                        <ChainDetails tokenId={productDetail.details.tokenId} ownerName={productDetail.details.owner} ownerAddress={productDetail.details.owner} royalties={parseInt(productDetail.details.royalties)} createTime={productDetail.details.createTime} />
                     </Stack>
                 </Grid>
             </Grid>

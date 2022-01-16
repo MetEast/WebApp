@@ -18,6 +18,25 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     // const productList: Array<TypeProduct> = blindboxNFTProducts;
     const [productList, setProductList] = useState([]);
     var _singleProductList: any = [];
+    const defaultValue : TypeProduct = { 
+        tokenId: "", 
+        name: "", 
+        image: "",
+        price_ela: 0, 
+        price_usd: 0, 
+        likes: 0,
+        views: 0,
+        author: "",
+        authorDescription: "",
+        authorImg: "",
+        authorAddress: "",
+        description: "",
+        tokenIdHex: "",
+        royalties: 0,
+        createTime: "",
+        holderName: "",
+        holder: "",
+        type: enumBlindBoxNFTType.ComingSoon };
     useEffect(() => {
         const nDisplayCount = (productViewMode === 'grid1') ? 16 : 24;
         const apiUrl = (keyWord === "") ? `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listStickers?pageNum=5&pageSize=${nDisplayCount}` : `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/search?key=${keyWord}`;
@@ -27,7 +46,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 _singleProductList = [];
                 if (typeof jsonSingleProducts.data != 'undefined') {
                     jsonSingleProducts.data.result.forEach(function (itemObject: TypeProductFetch) {
-                        var product: TypeProduct = {tokenId: "", name: "", image: "", price_ela: 0, price_usd: 0, sold: 0, likes: 0, views: 0, author: "", type: enumBlindBoxNFTType.ComingSoon, saleTime: ""};
+                        var product: TypeProduct = {...defaultValue};
                         product.tokenId = itemObject.tokenId;
                         product.name = itemObject.name;
                         product.image = getImageFromAsset(itemObject.asset);
