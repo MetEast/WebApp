@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
+// import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import jwtDecode from 'jwt-decode';
@@ -35,14 +35,17 @@ const LoginForm: React.FC<ComponentProps> = ({action, title}) => {
         let presentation;
         console.log("Trying to sign in using the connectivity SDK");
         try {
-          alert(1);
-
+          // presentation = await didAccess.requestCredentials({
+          //   claims: [
+          //     DID.simpleIdClaim("Your name", "name", false)
+          //   ]
+          // });
           presentation = await didAccess.requestCredentials({
             claims: [
               DID.simpleIdClaim("Your name", "name", false)
             ]
           });
-          console.log(presentation);
+          console.log("------------------presentation", presentation);
         } catch (e) {
           // Possible exception while using wallet connect (i.e. not an identity wallet)
           // Kill the wallet connect session

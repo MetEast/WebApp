@@ -100,7 +100,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
             reqUrl += `&filter_status=${filterStatus}`;
         }
         
-        console.log("filter", filters);
         fetch(reqUrl, {
             headers : { 
               'Content-Type': 'application/json',
