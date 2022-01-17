@@ -10,7 +10,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import { DropzoneArea } from 'material-ui-dropzone';
 // import MyDropzone from 'src/components/UploadFileButton';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+// import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { CustomeDropzoneArea } from './styles';
 import UploadSingleFile from 'src/components/UploadImage/UploadSingleFile';
 
