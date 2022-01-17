@@ -24,7 +24,7 @@ type Order = 'asc' | 'desc';
 
 interface EnhancedTableProps {
     numSelected: number;
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof AdminTableItemType) => void;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void;
     onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
     order: Order;
     orderBy: string;
@@ -34,7 +34,7 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props;
-    const createSortHandler = (property: keyof AdminTableItemType) => (event: React.MouseEvent<unknown>) => {
+    const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property);
     };
 
@@ -116,8 +116,8 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [order, setOrder] = useState<Order>('asc');
-    const [orderBy, setOrderBy] = useState<keyof AdminTableItemType>('rulenumber');
-    const [selected, setSelected] = useState<readonly string[]>([]);
+    const [orderBy, setOrderBy] = useState<string>('');
+    const [selected, setSelected] = useState<readonly number[]>([]);
 
     const rowsPerPageOptions: Array<TypeSelectItem> = [
         {
@@ -149,7 +149,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tabledata.length) : 0;
 
-    const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof AdminTableItemType) => {
+    const handleRequestSort = (event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
@@ -157,19 +157,19 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelecteds = tabledata.map((item) => item.nftid);
+            const newSelecteds = tabledata.map((item) => item.id);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event: React.MouseEvent<unknown>, nftid: string) => {
-        const selectedIndex = selected.indexOf(nftid);
-        let newSelected: readonly string[] = [];
+    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+        const selectedIndex = selected.indexOf(id);
+        let newSelected: readonly number[] = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, nftid);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -181,7 +181,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
         setSelected(newSelected);
     };
 
-    const isSelected = (nftid: string) => selected.indexOf(nftid) !== -1;
+    const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
     React.useEffect(() => {
         setCurPaginationFirstPage(Math.floor(page / 10) * 10);
@@ -204,16 +204,16 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
                         {stableSort(tabledata, getComparator(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
-                                const isItemSelected = isSelected(row.nftid);
+                                const isItemSelected = isSelected(row.id);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
                                     <TableRow
                                         hover
-                                        onClick={(event) => handleClick(event, row.nftid)}
+                                        onClick={(event) => handleClick(event, row.id)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
-                                        key={row.nftid}
+                                        key={row.id}
                                         selected={isItemSelected}
                                     >
                                         <TableCell padding="checkbox">
@@ -225,15 +225,9 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
                                                 }}
                                             />
                                         </TableCell>
-                                        <TableCell component="th" scope="row">
-                                            {row.rulenumber}
-                                        </TableCell>
-                                        <TableCell>{row.nftid}</TableCell>
-                                        <TableCell>{row.nfttitle}</TableCell>
-                                        <TableCell>{row.state}</TableCell>
-                                        <TableCell>{row.classification}</TableCell>
-                                        <TableCell>{row.original_price}</TableCell>
-                                        <TableCell>{row.original_owner}</TableCell>
+                                        {Object.keys(row).map((key) => {
+                                            return key !== 'id' && <TableCell>{(row as any)[key]}</TableCell>;
+                                        })}
                                     </TableRow>
                                 );
                             })}

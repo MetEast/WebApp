@@ -39,6 +39,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             [...Array(278).keys()].map(
                 (item) =>
                     ({
+                        id: item,
                         rulenumber: String(item + 1).padStart(5, '0'),
                         nftid: String(item + 1).padStart(5, '0'),
                         nfttitle: 'NFT Title',
