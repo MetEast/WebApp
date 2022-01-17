@@ -10,9 +10,9 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import { DropzoneArea } from 'material-ui-dropzone';
 // import MyDropzone from 'src/components/UploadFileButton';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { CustomeDropzoneArea } from './styles';
-import UploadSingleFile from 'src/components/UploadImage/UploadSingleFile';
+// import { createStyles, makeStyles } from '@material-ui/core/styles';
+// import { CustomeDropzoneArea } from './styles';
+// import UploadSingleFile from 'src/components/UploadImage/UploadSingleFile';
 
 export interface ComponentProps {}
 
@@ -111,7 +111,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                     Upload Image
                                 </Typography>
                             </Stack> */}
-                            {/* <Stack
+                            <Stack
                                 width="100%"
                                 maxHeight={112}
                                 justifyContent="center"
@@ -123,11 +123,11 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 <DropzoneArea onChange={(files) => console.log('Files:', files)}
                                     filesLimit={1}
                                     dropzoneText="Upload Image"
-                                    previewGridClasses={{ container: classes.container }}
-                                    // previewGridProps={{ container: {justifyContent: "center", alignItems: "center"} }}
+                                    // previewGridClasses={{ container: classes.container }}
+                                    previewGridProps={{ container: {justifyContent: "center", alignItems: "center"} }}
                                 />
-                            </Stack> */}
-                            <UploadSingleFile error={true} file={file} sx={{}} onDrop={handleDropSingleFile} />
+                            </Stack>
+                            {/* <UploadSingleFile error={true} file={file} sx={{}} onDrop={handleDropSingleFile} /> */}
                         </Box>
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
