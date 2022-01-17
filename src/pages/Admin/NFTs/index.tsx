@@ -4,17 +4,13 @@ import {
     Stack,
     TableContainer,
     Paper,
-    Table,
     TableHead,
     TableBody,
     TableRow,
     TableCell,
-    TableFooter,
-    TablePagination,
     Checkbox,
     TableSortLabel,
     Typography,
-    Button,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
@@ -93,58 +89,6 @@ const headCells: readonly HeadCell[] = [
         label: 'original owner',
     },
 ];
-
-interface TablePaginationActionsProps {
-    count: number;
-    page: number;
-    rowsPerPage: number;
-    onPageChange: (event: React.MouseEvent<HTMLButtonElement>, newPage: number) => void;
-}
-
-function TablePaginationActions(props: TablePaginationActionsProps) {
-    const { count, page, rowsPerPage, onPageChange } = props;
-
-    const handleFirstPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        onPageChange(event, 0);
-    };
-
-    const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        onPageChange(event, page - 1);
-    };
-
-    const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        onPageChange(event, page + 1);
-    };
-
-    const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
-
-    return (
-        <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-            <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page">
-                <FirstPageIcon />
-            </IconButton>
-            <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-                <KeyboardArrowLeft />
-            </IconButton>
-            <IconButton
-                onClick={handleNextButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="next page"
-            >
-                <KeyboardArrowRight />
-            </IconButton>
-            <IconButton
-                onClick={handleLastPageButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="last page"
-            >
-                <LastPageIcon />
-            </IconButton>
-        </Box>
-    );
-}
 
 interface EnhancedTableProps {
     numSelected: number;
@@ -245,12 +189,12 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const tabledata: Data[] = useMemo(() => makeData(278), []);
 
-    const [page, setPage] = React.useState(0);
-    const [curPaginationFirstPage, setCurPaginationFirstPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof Data>('rulenumber');
-    const [selected, setSelected] = React.useState<readonly string[]>([]);
+    const [page, setPage] = useState(0);
+    const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [order, setOrder] = useState<Order>('asc');
+    const [orderBy, setOrderBy] = useState<keyof Data>('rulenumber');
+    const [selected, setSelected] = useState<readonly string[]>([]);
 
     const rowsPerPageOptions: Array<TypeSelectItem> = [
         {
@@ -281,15 +225,6 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tabledata.length) : 0;
-
-    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
         const isAsc = orderBy === property && order === 'asc';
