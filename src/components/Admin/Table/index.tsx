@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Stack,
@@ -18,85 +18,23 @@ import { DataTable, PageButton } from './styles';
 import Select from 'src/components/Admin/Select';
 import { TypeSelectItem } from 'src/types/select-types';
 import { Icon } from '@iconify/react';
-
-interface Data {
-    rulenumber: string;
-    nftid: string;
-    nfttitle: string;
-    state: string;
-    classification: string;
-    original_price: number;
-    original_owner: string;
-}
-
-interface HeadCell {
-    id: keyof Data;
-    label: string;
-}
+import { AdminTableItemType, AdminTableHeadCell } from 'src/types/admin-table-data-types';
 
 type Order = 'asc' | 'desc';
 
-const createData = (
-    rulenumber: string,
-    nftid: string,
-    nfttitle: string,
-    state: string,
-    classification: string,
-    original_price: number,
-    original_owner: string,
-): Data => ({
-    rulenumber,
-    nftid,
-    nfttitle,
-    state,
-    classification,
-    original_price,
-    original_owner,
-});
-
-const headCells: readonly HeadCell[] = [
-    {
-        id: 'rulenumber',
-        label: 'Rule Number',
-    },
-    {
-        id: 'nftid',
-        label: 'NFT ID',
-    },
-    {
-        id: 'nfttitle',
-        label: 'NFT Title',
-    },
-    {
-        id: 'state',
-        label: 'State',
-    },
-    {
-        id: 'classification',
-        label: 'Classification',
-    },
-    {
-        id: 'original_price',
-        label: 'Original Price',
-    },
-    {
-        id: 'original_owner',
-        label: 'original owner',
-    },
-];
-
 interface EnhancedTableProps {
     numSelected: number;
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof AdminTableItemType) => void;
     onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
     order: Order;
     orderBy: string;
     rowCount: number;
+    headCells: AdminTableHeadCell[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-    const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props;
+    const createSortHandler = (property: keyof AdminTableItemType) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property);
     };
 
@@ -168,29 +106,17 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     return stabilizedThis.map((el) => el[0]);
 }
 
-interface ComponentProps {}
+interface ComponentProps {
+    tabledata: AdminTableItemType[];
+    headCells: AdminTableHeadCell[];
+}
 
-const Table: React.FC<ComponentProps> = (): JSX.Element => {
-    const makeData = (lens: number) =>
-        [...Array(lens).keys()].map((item) =>
-            createData(
-                String(item + 1).padStart(5, '0'),
-                String(item + 1).padStart(5, '0'),
-                'NFT Title',
-                'online',
-                'Blind Box',
-                199,
-                'Nickname',
-            ),
-        );
-
-    const tabledata: Data[] = useMemo(() => makeData(278), []);
-
+const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [order, setOrder] = useState<Order>('asc');
-    const [orderBy, setOrderBy] = useState<keyof Data>('rulenumber');
+    const [orderBy, setOrderBy] = useState<keyof AdminTableItemType>('rulenumber');
     const [selected, setSelected] = useState<readonly string[]>([]);
 
     const rowsPerPageOptions: Array<TypeSelectItem> = [
@@ -223,7 +149,7 @@ const Table: React.FC<ComponentProps> = (): JSX.Element => {
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tabledata.length) : 0;
 
-    const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
+    const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof AdminTableItemType) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
@@ -272,6 +198,7 @@ const Table: React.FC<ComponentProps> = (): JSX.Element => {
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
                         rowCount={tabledata.length}
+                        headCells={headCells}
                     />
                     <TableBody>
                         {stableSort(tabledata, getComparator(order, orderBy))
