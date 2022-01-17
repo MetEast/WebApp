@@ -81,8 +81,6 @@ const ConnectWalletButton: React.FC<ComponentProps> = ({sx, children, toAddress,
     setActivatingConnector(undefined);
     if (active) {
       setShowModal(false);
-      // settle transaction
-      // handleTransaction(toAddress, value);
     }
     if (error) {
       setErrors([getErrorMessage(error)]);

@@ -6,6 +6,8 @@ import { CreateNFTButton } from './styles';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
+// import ConnectWalletButton from '../ConnectWalletButton';
+// import { LoginForm } from '../authentication/login';
 
 const menuItemsList = [
     {
@@ -48,6 +50,8 @@ const Header: React.FC = (): JSX.Element => {
                 >
                     <Icon icon="ph:user" fontSize={24} color="black" />
                 </Button>
+                {/* <ConnectWalletButton>Mint</ConnectWalletButton> */}
+                {/* <LoginForm title="Sign in with your DID" action="signin" /> */}
                 <CreateNFTButton
                     onClick={() => {
                         setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
