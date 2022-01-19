@@ -8,7 +8,7 @@ import { sortOptions } from 'src/constants/select-constants'; // sort options
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType } from 'src/types/product-types';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { getImageFromAsset, getTime } from 'src/services/sleep';
+import { getImageFromAsset, getTime } from 'src/services/common';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
@@ -53,7 +53,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        var reqUrl = `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 
@@ -91,16 +91,15 @@ const ExplorePage: React.FC = (): JSX.Element => {
         if (filters) {
             let filterStatus: string = "";
             filters.forEach((item) => {
-                if (item == 0) filterStatus += "ONAUCTION,";
-                else if (item == 1) filterStatus += "BUYNOW,";
-                else if (item == 2) filterStatus += "HASBID,";
-                else if (item == 3) filterStatus += "NEW,";                
+                if (item === 0) filterStatus += "ONAUCTION,";
+                else if (item === 1) filterStatus += "BUYNOW,";
+                else if (item === 2) filterStatus += "HASBID,";
+                else if (item === 3) filterStatus += "NEW,";                
             });
             filterStatus.slice(0, filterStatus.length - 1);
             reqUrl += `&filter_status=${filterStatus}`;
         }
         
-        console.log("filter", filters);
         fetch(reqUrl, {
             headers : { 
               'Content-Type': 'application/json',

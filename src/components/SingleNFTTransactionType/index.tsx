@@ -32,6 +32,12 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType })
             <Typography fontSize={16} fontWeight={700}>
                 {transactionType}
             </Typography>
+            <Icon
+                icon="ph:arrow-square-out-bold"
+                fontSize={16}
+                color="#1890FF"
+                style={{ marginLeft: 4, marginBottom: 4 }}
+            />
         </Stack>
     );
 };

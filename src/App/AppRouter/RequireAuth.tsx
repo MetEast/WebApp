@@ -10,7 +10,7 @@ export interface IRequireAuthProps {
 const RequireAuth: React.FC<IRequireAuthProps> = ({ children }): JSX.Element => {
   const auth = useRecoilValue(authAtom);
 
-  return auth.isLoggedIn ? children : <Navigate to="/" />;
+  return auth.isLoggedIn ? children : <Navigate to="/login" />;
 }
 
 export default RequireAuth;

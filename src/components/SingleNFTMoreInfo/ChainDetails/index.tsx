@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { reduceHexAddress } from 'src/services/sleep';
+import { reduceHexAddress } from 'src/services/common';
 import { Icon } from '@iconify/react';
 
 interface ComponentProps {
@@ -33,13 +33,16 @@ const ChainDetails: React.FC<ComponentProps> = ({tokenId, ownerName, ownerAddres
                 <Grid item xs={7} textAlign={"right"}>ERC1155</Grid>
                 <Grid item xs={5} fontWeight={400}>Token ID</Grid>
                 <Grid item xs={7} fontSize={12} color={'#1890FF'} textAlign={"right"}>
-                    {reduceHexAddress(tokenId, 5)}
-                    <Icon icon="ph:caret-down" className="arrow-icon" />
+                    {reduceHexAddress(tokenId, 5) + " "}
+                    <Icon icon="ph:copy" className="arrow-icon" />
                 </Grid>
                 <Grid item xs={5} fontWeight={400}>Owner</Grid>
-                <Grid container item xs={7}>
+                <Grid container item xs={7} spacing={0.3}>
                     <Grid item xs={12} textAlign={"right"}>{ownerName}</Grid>
-                    <Grid item xs={12} fontSize={12} color={'#1890FF'} textAlign={"right"}>{reduceHexAddress(ownerAddress, 4)}</Grid>
+                    <Grid item xs={12} fontSize={12} color={'#1890FF'} textAlign={"right"}>
+                        {reduceHexAddress(ownerAddress, 4) + " "}
+                        <Icon icon="ph:copy" className="arrow-icon" />
+                    </Grid>
                 </Grid>
                 <Grid item xs={5} fontWeight={400}>Created date</Grid>
                 <Grid item xs={7} textAlign={"right"}>{createTime}</Grid>

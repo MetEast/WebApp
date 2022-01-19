@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.12",
+    "@elastosfoundation/essentials-connector-client-browser": "^1.0.26",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
     "@ethersproject/providers": "^5.5.2",
@@ -10,6 +12,7 @@
     "@iconify/react": "^3.1.1",
     "@material-ui/system": "^4.12.1",
     "@mui/icons-material": "^5.2.5",
+    "@mui/lab": "^5.0.0-alpha.64",
     "@mui/material": "^5.2.2",
     "@mui/styles": "^5.2.3",
     "@mui/system": "^5.2.8",

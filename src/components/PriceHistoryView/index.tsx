@@ -91,7 +91,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const params = useParams(); // params.id
     var _latestPriceList: any = [];
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`).then(response => {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonPriceList => {
                 // console.log(jsonPriceList);
                 if (jsonPriceList.data.length > 0) {

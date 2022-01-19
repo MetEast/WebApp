@@ -28,7 +28,7 @@ import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/Cre
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
-import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
+import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/common'; 
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -36,7 +36,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, sold: 0, instock: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumBlindBoxNFTType.ComingSoon, saleTime: ""});
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
                 var item: TypeProductFetch = jsonProductDetails.data;

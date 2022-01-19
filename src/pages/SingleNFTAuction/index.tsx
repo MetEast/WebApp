@@ -8,12 +8,12 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import ConnectWalletButton from 'src/components/ConnectWalletButton';
+// import ConnectWalletButton from 'src/components/ConnectWalletButton';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { getImageFromAsset, getTime, reduceHexAddress, getUTCTime } from 'src/services/sleep'; 
+import { getImageFromAsset, getTime, reduceHexAddress, getUTCTime } from 'src/services/common'; 
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
@@ -63,7 +63,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&keyword=${params.id}`, {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&keyword=${params.id}`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
@@ -99,7 +99,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1$pageSize=5`).then(response => {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1$pageSize=5`).then(response => {
             let _latestTransList: any = [];
             response.json().then(jsonTransList => {
                 jsonTransList.data.forEach((itemObject: TypeNFTTransactionFetch) => {
@@ -122,7 +122,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5`).then(response => {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5`).then(response => {
             let _latestBidsList: any = [];
             response.json().then(jsonBidsList => {
                 jsonBidsList.data.forEach((itemObject: TypeSingleNFTBidFetch) => {
@@ -149,7 +149,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         alert(active);
         if(library && active) {
             const accounts = await library.listAccounts();
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`).then(response => {
+            fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`).then(response => {
                 let _latestBidsList: any = [];
                 response.json().then(jsonBidsList => {
                     jsonBidsList.forEach((itemObject: TypeSingleNFTBidFetch) => {
@@ -196,8 +196,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         </Grid>
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} detail_page={true} marginTop={3} />
-                    {/* <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>Place Bid</PrimaryButton> */}
-                    <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>Place Bid</ConnectWalletButton>
+                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>Place Bid</PrimaryButton>
+                    {/* <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>Place Bid</ConnectWalletButton> */}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
