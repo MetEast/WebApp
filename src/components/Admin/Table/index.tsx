@@ -58,6 +58,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
+                            sx={{
+                                width: headCell.width === undefined ? 120 : headCell.width,
+                                fontSize: 14,
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                            }}
                         >
                             {headCell.label}
                             {orderBy === headCell.id ? (
@@ -226,7 +232,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
                                             />
                                         </TableCell>
                                         {headCells.map((item) => (
-                                            <TableCell>
+                                            <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
                                                 {item.cell
                                                     ? item.cell({ value: (row as any)[item.id] })
                                                     : (row as any)[item.id]}

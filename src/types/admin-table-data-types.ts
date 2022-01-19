@@ -4,6 +4,7 @@ export type AdminTableHeadCell = {
     id: string;
     label: string;
     cell?: (props: any) => React.ReactNode;
+    width?: number;
 };
 
 export type AdminNFTItemType = {

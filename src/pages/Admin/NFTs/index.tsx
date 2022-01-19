@@ -2,13 +2,18 @@ import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableHeadCell } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { Typography } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
+import { enumBadgeType } from 'src/types/product-types';
+import ProductBadge from 'src/components/ProductBadge';
+import { Icon } from '@iconify/react';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const headCells: AdminTableHeadCell[] = [
         {
             id: 'rulenumber',
             label: 'Rule Number',
+            width: 160,
         },
         {
             id: 'nftid',
@@ -43,10 +48,87 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             id: 'original_price',
             label: 'Original Price',
             cell: (props) => <ELAPrice price_ela={props.value} />,
+            width: 160,
         },
         {
             id: 'original_owner',
             label: 'original owner',
+            width: 160,
+        },
+        {
+            id: 'sale_started',
+            label: 'sale started',
+            width: 160,
+        },
+        {
+            id: 'latest_deal_price',
+            label: 'Latest deal price',
+            cell: (props) => <ELAPrice price_ela={props.value} />,
+            width: 160,
+        },
+        {
+            id: 'latest_original_owner',
+            label: 'Latest original owner',
+            width: 200,
+        },
+        {
+            id: 'latest_deal',
+            label: 'latest deal',
+            width: 160,
+        },
+        {
+            id: 'latest_update',
+            label: 'Latest Update',
+            width: 160,
+        },
+        {
+            id: 'number_of_deals',
+            label: 'number of deals',
+            width: 160,
+        },
+        {
+            id: 'number_of_bids',
+            label: 'number of Bids',
+            width: 160,
+        },
+        {
+            id: 'sort',
+            label: 'Sort',
+        },
+        {
+            id: 'sales_mode',
+            label: 'sales mode',
+            cell: (props) => <ProductBadge badgeType={props.value} />,
+        },
+        {
+            id: 'likes',
+            label: '# Likes',
+        },
+        {
+            id: 'views',
+            label: '# Views',
+        },
+        {
+            id: 'edits',
+            label: '',
+            cell: (props) => (
+                <Stack direction="row" spacing={1}>
+                    <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                        <Icon
+                            icon="ph:pencil-simple"
+                            fontSize={20}
+                            color="#1890FF"
+                            style={{ marginBottom: 2, marginRight: 4 }}
+                        />
+                        {`Edit`}
+                    </SecondaryButton>
+                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                        <Icon icon="ph:eye" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
+                        {`Details`}
+                    </PrimaryButton>
+                </Stack>
+            ),
+            width: 280,
         },
     ];
 
@@ -63,6 +145,17 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         classification: 'Blind Box',
                         original_price: 199,
                         original_owner: 'Nickname',
+                        sale_started: '2022-06-18  08:50:00',
+                        latest_deal_price: 199,
+                        latest_original_owner: 'Nickname',
+                        latest_deal: '2022-06-18  08:50:00',
+                        latest_update: '2022-06-18  08:50:00',
+                        number_of_deals: 377,
+                        number_of_bids: 377,
+                        sort: 32,
+                        sales_mode: enumBadgeType.BuyNow,
+                        likes: 377,
+                        views: 377,
                     } as AdminNFTItemType),
             ),
         [],
