@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableHeadCell } from 'src/types/admin-table-data-types';
+import ELAPrice from 'src/components/ELAPrice';
+import { Typography } from '@mui/material';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const headCells: AdminTableHeadCell[] = [
@@ -19,6 +21,19 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         {
             id: 'state',
             label: 'State',
+            cell: (props) => (
+                <Typography
+                    display="inline-block"
+                    fontSize={14}
+                    fontWeight={500}
+                    paddingX={1}
+                    borderRadius={2}
+                    color="#1EA557"
+                    sx={{ background: '#C9F5DC' }}
+                >
+                    {props.value}
+                </Typography>
+            ),
         },
         {
             id: 'classification',
@@ -27,6 +42,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         {
             id: 'original_price',
             label: 'Original Price',
+            cell: (props) => <ELAPrice price_ela={props.value} />,
         },
         {
             id: 'original_owner',

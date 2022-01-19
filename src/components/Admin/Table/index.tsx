@@ -225,9 +225,13 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
                                                 }}
                                             />
                                         </TableCell>
-                                        {Object.keys(row).map((key) => {
-                                            return key !== 'id' && <TableCell>{(row as any)[key]}</TableCell>;
-                                        })}
+                                        {headCells.map((item) => (
+                                            <TableCell>
+                                                {item.cell
+                                                    ? item.cell({ value: (row as any)[item.id] })
+                                                    : (row as any)[item.id]}
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
                                 );
                             })}

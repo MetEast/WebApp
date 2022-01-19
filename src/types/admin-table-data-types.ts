@@ -1,6 +1,9 @@
+import React from 'react';
+
 export type AdminTableHeadCell = {
     id: string;
     label: string;
+    cell?: (props: any) => React.ReactNode;
 };
 
 export type AdminNFTItemType = {
