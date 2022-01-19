@@ -19,7 +19,7 @@ import Select from 'src/components/Admin/Select';
 import { TypeSelectItem } from 'src/types/select-types';
 import { Order } from 'src/types/order';
 import { Icon } from '@iconify/react';
-import { AdminTableItemType, AdminTableHeadCell } from 'src/types/admin-table-data-types';
+import { AdminTableItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import { stableSort, getComparator } from './comparefunc';
 
 interface EnhancedTableProps {
@@ -29,11 +29,11 @@ interface EnhancedTableProps {
     order: Order;
     orderBy: string;
     rowCount: number;
-    headCells: AdminTableHeadCell[];
+    columns: AdminTableColumn[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props;
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, columns } = props;
     const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property);
     };
@@ -52,21 +52,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                         }}
                     />
                 </TableCell>
-                {headCells.map((headCell) => (
-                    <TableCell key={headCell.id} sortDirection={orderBy === headCell.id ? order : false}>
+                {columns.map((column) => (
+                    <TableCell key={column.id} sortDirection={orderBy === column.id ? order : false}>
                         <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : 'asc'}
+                            onClick={createSortHandler(column.id)}
                             sx={{
-                                width: headCell.width === undefined ? 120 : headCell.width,
+                                width: column.width === undefined ? 120 : column.width,
                                 fontSize: 14,
                                 fontWeight: 700,
                                 textTransform: 'uppercase',
                             }}
                         >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
+                            {column.label}
+                            {orderBy === column.id ? (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </Box>
@@ -81,10 +81,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface ComponentProps {
     tabledata: AdminTableItemType[];
-    headCells: AdminTableHeadCell[];
+    columns: AdminTableColumn[];
 }
 
-const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element => {
+const Table: React.FC<ComponentProps> = ({ tabledata, columns }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -171,7 +171,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
                         rowCount={tabledata.length}
-                        headCells={headCells}
+                        columns={columns}
                     />
                     <TableBody>
                         {stableSort(tabledata, getComparator(order, orderBy))
@@ -198,11 +198,11 @@ const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element 
                                                 }}
                                             />
                                         </TableCell>
-                                        {headCells.map((item) => (
+                                        {columns.map((column) => (
                                             <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
-                                                {item.cell
-                                                    ? item.cell({ value: (row as any)[item.id] })
-                                                    : (row as any)[item.id]}
+                                                {column.cell
+                                                    ? column.cell({ value: (row as any)[column.id] })
+                                                    : (row as any)[column.id]}
                                             </TableCell>
                                         ))}
                                     </TableRow>

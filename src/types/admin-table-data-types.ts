@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type AdminTableHeadCell = {
+export type AdminTableColumn = {
     id: string;
     label: string;
     cell?: (props: any) => React.ReactNode;
