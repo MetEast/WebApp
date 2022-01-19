@@ -16,93 +16,105 @@ const HomePage: React.FC = (): JSX.Element => {
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
     const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
-    const defaultValue : TypeProduct = { 
-        tokenId: "", 
-        name: "", 
-        image: "",
-        price_ela: 0, 
-        price_usd: 0, 
+    const defaultValue: TypeProduct = {
+        tokenId: '',
+        name: '',
+        image: '',
+        price_ela: 0,
+        price_usd: 0,
         likes: 0,
         views: 0,
-        author: "",
-        authorDescription: "",
-        authorImg: "",
-        authorAddress: "",
-        description: "",
-        tokenIdHex: "",
+        author: '',
+        authorDescription: '',
+        authorImg: '',
+        authorAddress: '',
+        description: '',
+        tokenIdHex: '',
         royalties: 0,
-        createTime: "",
-        holderName: "",
-        holder: "",
-        type: enumSingleNFTType.BuyNow };
-    
+        createTime: '',
+        holderName: '',
+        holder: '',
+        type: enumSingleNFTType.BuyNow,
+    };
+
     useEffect(() => {
         // "https://esc.elastos.io/api?module=stats&action=coinprice"
         // `${process.env.ELASTOS_LATEST_PRICE_API_URL}`
-        fetch("https://esc.elastos.io/api?module=stats&action=coinprice", {
-            headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }})
-        .then(response => {
-            response.json().then(jsonPrcieRate => {
-                setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
+        fetch('https://esc.elastos.io/api?module=stats&action=coinprice', {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
+                response.json().then((jsonPrcieRate) => {
+                    setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
+                });
+            })
+            .catch((err) => {
+                console.log(err);
             });
-        }).catch(err => {
-            console.log(err)
-        });
 
         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
-            headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }})
-        .then(response => {
-            let _newProductList: any = [];
-            response.json().then(jsonNewProducts => {
-                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                    var product: TypeProduct = {...defaultValue};
-                    product.tokenId = itemObject.tokenId;
-                    product.name = itemObject.name;
-                    product.image = getImageFromAsset(itemObject.asset);
-                    product.price_ela = itemObject.price;
-                    product.price_usd = product.price_ela * ela_usd_rate;
-                    product.likes = itemObject.likes;
-                    product.author = "Author"; // -- no proper value
-                    product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                    _newProductList.push(product);
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
+                let _newProductList: any = [];
+                response.json().then((jsonNewProducts) => {
+                    jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
+                        var product: TypeProduct = { ...defaultValue };
+                        product.tokenId = itemObject.tokenId;
+                        product.name = itemObject.name;
+                        product.image = getImageFromAsset(itemObject.asset);
+                        product.price_ela = itemObject.price;
+                        product.price_usd = product.price_ela * ela_usd_rate;
+                        product.likes = itemObject.likes;
+                        product.author = 'Author'; // -- no proper value
+                        product.type =
+                            itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                        _newProductList.push(product);
+                    });
+                    setProductList(_newProductList);
                 });
-                setProductList(_newProductList);
+            })
+            .catch((err) => {
+                console.log(err);
             });
-        }).catch(err => {
-            console.log(err)
-        });
 
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
-            headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }})
-        .then(response => {
-            let _popularCollectionList: any = [];
-            response.json().then(jsonNewProducts => {
-                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                    var product: TypeProduct = {...defaultValue};
-                    product.tokenId = itemObject.tokenId;
-                    product.name = itemObject.name;
-                    product.image = getImageFromAsset(itemObject.asset);
-                    product.price_ela = itemObject.price;
-                    product.price_usd = product.price_ela * ela_usd_rate;
-                    product.likes = itemObject.likes;
-                    product.author = "Author"; // -- no proper value
-                    product.type = (itemObject.status === "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                    _popularCollectionList.push(product);
+        fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        )
+            .then((response) => {
+                let _popularCollectionList: any = [];
+                response.json().then((jsonNewProducts) => {
+                    jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
+                        var product: TypeProduct = { ...defaultValue };
+                        product.tokenId = itemObject.tokenId;
+                        product.name = itemObject.name;
+                        product.image = getImageFromAsset(itemObject.asset);
+                        product.price_ela = itemObject.price;
+                        product.price_usd = product.price_ela * ela_usd_rate;
+                        product.likes = itemObject.likes;
+                        product.author = 'Author'; // -- no proper value
+                        product.type =
+                            itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                        _popularCollectionList.push(product);
+                    });
+                    setCollectionList(_popularCollectionList);
                 });
-                setCollectionList(_popularCollectionList);
+            })
+            .catch((err) => {
+                console.log(err);
             });
-        }).catch(err => {
-            console.log(err)
-        });
     }, [ela_usd_rate]);
 
     const theme = useTheme();
@@ -127,17 +139,17 @@ const HomePage: React.FC = (): JSX.Element => {
                     <H2Typography mb={1}>New Products</H2Typography>
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
-                            <SwiperSlide key={`new-product-${index}`}>
+                            <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
                                 <ExploreGalleryItem product={product} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
                 </Box>
-                <Box mt={4}>
+                <Box mt={8}>
                     <H2Typography mb={1}>Popular Collections</H2Typography>
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
                         {collectionList.map((collection, index) => (
-                            <SwiperSlide key={`popular-collection-${index}`}>
+                            <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
                                 <ExploreGalleryItem product={collection} />
                             </SwiperSlide>
                         ))}
