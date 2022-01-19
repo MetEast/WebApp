@@ -20,13 +20,15 @@ const LoginPage: React.FC = (): JSX.Element => {
         const didAccess = new DID.DIDAccess();
         let presentation;
         console.log("Trying to sign in using the connectivity SDK");
+
+        console.log('----------------------didAccess--------------------', didAccess);
         try {
           presentation = await didAccess.requestCredentials({
             claims: [
               DID.simpleIdClaim("Your name", "name", false)
             ]
           });
-          console.log("presentation: ", presentation);
+          console.log('----------------------presentation--------------------', presentation);
         } catch (e) {
           // Possible exception while using wallet connect (i.e. not an identity wallet)
           // Kill the wallet connect session
@@ -44,6 +46,7 @@ const LoginPage: React.FC = (): JSX.Element => {
         }
 
         if (presentation) {
+            alert(1);
             const did = presentation.getHolder().getMethodSpecificId() || "";
             fetch(`${process.env.REACT_APP_BACKEND_URL || "http://localhost:3006"}/api/v1/login`,
               {
