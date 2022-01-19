@@ -1,6 +1,7 @@
 import React from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { reduceHexAddress } from 'src/services/common';
+import { Icon } from '@iconify/react';
 
 interface ComponentProps {
     name: string;
@@ -25,8 +26,8 @@ const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}
                             {name}
                         </Typography>
                         <Typography fontSize={12} fontWeight={700} color={"#1890FF"}>                    
-                            {reduceHexAddress(address, 4)}
-                            <img src={"/assets/icons/copy-icon.png"} width={12} height={12} alt="" />
+                            {reduceHexAddress(address, 4) + " "}
+                            <Icon icon="ph:copy" className="arrow-icon" />
                         </Typography>
                     </Grid>
                 </Grid>                
