@@ -8,7 +8,7 @@ import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
-import { getImageFromAsset, getTime } from 'src/services/sleep';
+import { getImageFromAsset, getTime } from 'src/services/common';
 import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
@@ -52,7 +52,7 @@ const HomePage: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
@@ -78,7 +78,7 @@ const HomePage: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'

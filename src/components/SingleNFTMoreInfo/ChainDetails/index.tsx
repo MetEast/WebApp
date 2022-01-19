@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { reduceHexAddress } from 'src/services/sleep';
+import { reduceHexAddress } from 'src/services/common';
 import { Icon } from '@iconify/react';
 
 interface ComponentProps {

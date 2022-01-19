@@ -4,12 +4,12 @@ import { ConnectButton } from './styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
-    onConnect: (wallet: 'walletconnect' | 'elastos' | 'metamask') => void;
+    onConnect: (wallet: 'walletconnect' | 'essential' | 'metamask' | 'walletlink') => void;
     isWorking?: boolean; 
 }
 
 const ChooseWallet: React.FC<ComponentProps> = ({ onConnect, isWorking = false }): JSX.Element => {
-    const [wallet, setWallet] = useState<'walletconnect' | 'elastos' | 'metamask'>('metamask');
+    const [wallet, setWallet] = useState<'walletconnect' | 'essential' | 'metamask' | 'walletlink'>('metamask');
 
     return (
         <Stack alignItems="center" width={280} spacing={3}>
@@ -40,13 +40,24 @@ const ChooseWallet: React.FC<ComponentProps> = ({ onConnect, isWorking = false }
             </ConnectButton>
             <ConnectButton
                 onClick={() => {
-                    if(!isWorking) setWallet('elastos');
+                    if(!isWorking) setWallet('walletlink');
                 }}
-                selected={wallet === 'elastos'}
+                selected={wallet === 'walletlink'}
+            >
+                <img src="/assets/icons/coinbase.webp" width={"20px"} alt="" />
+                <Typography fontSize={14} fontWeight={600}>
+                    Coinbase Wallet
+                </Typography>
+            </ConnectButton>
+            <ConnectButton
+                onClick={() => {
+                    if(!isWorking) setWallet('essential');
+                }}
+                selected={wallet === 'essential'}
             >
                 <img src="/assets/icons/elastos-essential.svg" alt="" />
                 <Typography fontSize={14} fontWeight={600}>
-                    Elastos Essential
+                    Essential Wallet
                 </Typography>
             </ConnectButton>
             <PrimaryButton fullWidth onClick={() => onConnect(wallet)}>

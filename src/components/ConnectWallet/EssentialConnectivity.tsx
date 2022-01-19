@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import { connectivity } from "@elastosfoundation/elastos-connectivity-sdk-js";
+// import { useContext } from "react";
 import { EssentialsConnector } from "@elastosfoundation/essentials-connector-client-browser";
+import { connectivity } from "@elastosfoundation/elastos-connectivity-sdk-js";
 // import ConnectivityContext from "../contexts/ConnectivityContext";
 
 export const essentialsConnector = new EssentialsConnector();

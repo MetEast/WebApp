@@ -10,7 +10,7 @@ import OptionsBar from 'src/components/OptionsBar';
 import FilterModal from 'src/components/modals/FilterModal';
 import { sortOptions } from 'src/constants/select-constants';
 import { SortOption } from 'src/types/select-types';
-import { getImageFromAsset, getTime } from 'src/services/sleep';
+import { getImageFromAsset, getTime } from 'src/services/common';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [sortBy, setSortBy] = useState<SortOption>();
@@ -56,7 +56,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        var reqUrl = `${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 

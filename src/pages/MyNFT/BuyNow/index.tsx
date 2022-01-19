@@ -15,7 +15,7 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { nftTransactions } from 'src/constants/dummyData';
-import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; // ---
+import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/common'; // ---
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const transactionsList = nftTransactions;
@@ -23,7 +23,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""});
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonProductDetails => {
                 // console.log(jsonProductDetails);
                 var item: TypeProductFetch = jsonProductDetails.data;

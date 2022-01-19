@@ -12,8 +12,8 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
-import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/sleep'; 
-import ConnectWalletButton from 'src/components/ConnectWalletButton';
+import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/common'; 
+// import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     // get product details from server
@@ -58,7 +58,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&keyword=${params.id}`, {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&keyword=${params.id}`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
@@ -95,7 +95,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1$pageSize=5`).then(response => {
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1$pageSize=5`).then(response => {
             let _latestTransList: any = [];
             response.json().then(jsonTransList => {
                 jsonTransList.data.forEach((itemObject: TypeNFTTransactionFetch) => {
@@ -119,7 +119,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         });
     }, [ela_usd_rate, params.id]);
 
-    //     fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
+    //     fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
     //         response.json().then(jsonProductDetails => {
     //             // console.log(jsonProductDetails);
     //             var item: TypeProductFetch = jsonProductDetails.data;

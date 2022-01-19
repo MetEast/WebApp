@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
-import { reduceHexAddress } from 'src/services/sleep';
+import { reduceHexAddress } from 'src/services/common';
 
 interface ComponentProps {
     name: string;

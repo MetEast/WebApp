@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
 import { ProductImageContainer, LikeBtn } from './styles';
-import { Box, Stack, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
