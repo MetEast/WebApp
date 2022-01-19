@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Stack,
@@ -17,86 +17,24 @@ import IconButton from '@mui/material/IconButton';
 import { DataTable, PageButton } from './styles';
 import Select from 'src/components/Admin/Select';
 import { TypeSelectItem } from 'src/types/select-types';
+import { Order } from 'src/types/order';
 import { Icon } from '@iconify/react';
-
-interface Data {
-    rulenumber: string;
-    nftid: string;
-    nfttitle: string;
-    state: string;
-    classification: string;
-    original_price: number;
-    original_owner: string;
-}
-
-interface HeadCell {
-    id: keyof Data;
-    label: string;
-}
-
-type Order = 'asc' | 'desc';
-
-const createData = (
-    rulenumber: string,
-    nftid: string,
-    nfttitle: string,
-    state: string,
-    classification: string,
-    original_price: number,
-    original_owner: string,
-): Data => ({
-    rulenumber,
-    nftid,
-    nfttitle,
-    state,
-    classification,
-    original_price,
-    original_owner,
-});
-
-const headCells: readonly HeadCell[] = [
-    {
-        id: 'rulenumber',
-        label: 'Rule Number',
-    },
-    {
-        id: 'nftid',
-        label: 'NFT ID',
-    },
-    {
-        id: 'nfttitle',
-        label: 'NFT Title',
-    },
-    {
-        id: 'state',
-        label: 'State',
-    },
-    {
-        id: 'classification',
-        label: 'Classification',
-    },
-    {
-        id: 'original_price',
-        label: 'Original Price',
-    },
-    {
-        id: 'original_owner',
-        label: 'original owner',
-    },
-];
+import { AdminTableItemType, AdminTableHeadCell } from 'src/types/admin-table-data-types';
+import { stableSort, getComparator } from './comparefunc';
 
 interface EnhancedTableProps {
     numSelected: number;
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void;
     onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
     order: Order;
     orderBy: string;
     rowCount: number;
+    headCells: AdminTableHeadCell[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-    const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props;
+    const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property);
     };
 
@@ -120,6 +58,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
+                            sx={{
+                                width: headCell.width === undefined ? 120 : headCell.width,
+                                fontSize: 14,
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                            }}
                         >
                             {headCell.label}
                             {orderBy === headCell.id ? (
@@ -135,63 +79,18 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     );
 }
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
+interface ComponentProps {
+    tabledata: AdminTableItemType[];
+    headCells: AdminTableHeadCell[];
 }
 
-function getComparator<Key extends keyof any>(
-    order: Order,
-    orderBy: Key,
-): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) {
-            return order;
-        }
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-}
-
-interface ComponentProps {}
-
-const Table: React.FC<ComponentProps> = (): JSX.Element => {
-    const makeData = (lens: number) =>
-        [...Array(lens).keys()].map((item) =>
-            createData(
-                String(item + 1).padStart(5, '0'),
-                String(item + 1).padStart(5, '0'),
-                'NFT Title',
-                'online',
-                'Blind Box',
-                199,
-                'Nickname',
-            ),
-        );
-
-    const tabledata: Data[] = useMemo(() => makeData(278), []);
-
+const Table: React.FC<ComponentProps> = ({ tabledata, headCells }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [order, setOrder] = useState<Order>('asc');
-    const [orderBy, setOrderBy] = useState<keyof Data>('rulenumber');
-    const [selected, setSelected] = useState<readonly string[]>([]);
+    const [orderBy, setOrderBy] = useState<string>('');
+    const [selected, setSelected] = useState<readonly number[]>([]);
 
     const rowsPerPageOptions: Array<TypeSelectItem> = [
         {
@@ -223,7 +122,7 @@ const Table: React.FC<ComponentProps> = (): JSX.Element => {
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tabledata.length) : 0;
 
-    const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
+    const handleRequestSort = (event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
@@ -231,19 +130,19 @@ const Table: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelecteds = tabledata.map((item) => item.nftid);
+            const newSelecteds = tabledata.map((item) => item.id);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event: React.MouseEvent<unknown>, nftid: string) => {
-        const selectedIndex = selected.indexOf(nftid);
-        let newSelected: readonly string[] = [];
+    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+        const selectedIndex = selected.indexOf(id);
+        let newSelected: readonly number[] = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, nftid);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -255,7 +154,7 @@ const Table: React.FC<ComponentProps> = (): JSX.Element => {
         setSelected(newSelected);
     };
 
-    const isSelected = (nftid: string) => selected.indexOf(nftid) !== -1;
+    const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
     React.useEffect(() => {
         setCurPaginationFirstPage(Math.floor(page / 10) * 10);
@@ -272,21 +171,22 @@ const Table: React.FC<ComponentProps> = (): JSX.Element => {
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
                         rowCount={tabledata.length}
+                        headCells={headCells}
                     />
                     <TableBody>
                         {stableSort(tabledata, getComparator(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
-                                const isItemSelected = isSelected(row.nftid);
+                                const isItemSelected = isSelected(row.id);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
                                     <TableRow
                                         hover
-                                        onClick={(event) => handleClick(event, row.nftid)}
+                                        onClick={(event) => handleClick(event, row.id)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
-                                        key={row.nftid}
+                                        key={row.id}
                                         selected={isItemSelected}
                                     >
                                         <TableCell padding="checkbox">
@@ -298,15 +198,13 @@ const Table: React.FC<ComponentProps> = (): JSX.Element => {
                                                 }}
                                             />
                                         </TableCell>
-                                        <TableCell component="th" scope="row">
-                                            {row.rulenumber}
-                                        </TableCell>
-                                        <TableCell>{row.nftid}</TableCell>
-                                        <TableCell>{row.nfttitle}</TableCell>
-                                        <TableCell>{row.state}</TableCell>
-                                        <TableCell>{row.classification}</TableCell>
-                                        <TableCell>{row.original_price}</TableCell>
-                                        <TableCell>{row.original_owner}</TableCell>
+                                        {headCells.map((item) => (
+                                            <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
+                                                {item.cell
+                                                    ? item.cell({ value: (row as any)[item.id] })
+                                                    : (row as any)[item.id]}
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
                                 );
                             })}
