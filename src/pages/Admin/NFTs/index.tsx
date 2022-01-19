@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
-import { AdminNFTItemType, AdminTableHeadCell } from 'src/types/admin-table-data-types';
+import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
 import { Typography, Stack } from '@mui/material';
 import { enumBadgeType } from 'src/types/product-types';
@@ -9,7 +9,7 @@ import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
-    const headCells: AdminTableHeadCell[] = [
+    const columns: AdminTableColumn[] = [
         {
             id: 'rulenumber',
             label: 'Rule Number',
@@ -163,7 +163,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const [tabledata, setTabledata] = useState(data);
 
-    return <Table tabledata={tabledata} headCells={headCells} />;
+    return <Table tabledata={tabledata} columns={columns} />;
 };
 
 export default AdminNFTs;

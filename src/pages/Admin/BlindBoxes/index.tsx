@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
-import { AdminBlindBoxItemType, AdminTableHeadCell } from 'src/types/admin-table-data-types';
+import { AdminBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 
 const AdminBlindBoxes: React.FC = (): JSX.Element => {
-    const headCells: AdminTableHeadCell[] = [
+    const columns: AdminTableColumn[] = [
         {
             id: 'blindbox_id',
             label: 'Blind Box ID',
@@ -49,7 +49,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
 
     const [tabledata, setTabledata] = useState(data);
 
-    return <Table tabledata={tabledata} headCells={headCells} />;
+    return <Table tabledata={tabledata} columns={columns} />;
 };
 
 export default AdminBlindBoxes;
