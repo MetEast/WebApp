@@ -166,9 +166,18 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     return (
         <Stack height="100%" spacing={4}>
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" alignItems="flex-end" spacing={1}>
                 <CustomTextField title="NFT ID" placeholder="Enter ID" />
                 <CustomTextField title="NFT Title" placeholder="Enter Title" />
+                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                    <Icon
+                        icon="ph:magnifying-glass"
+                        fontSize={20}
+                        color="white"
+                        style={{ marginBottom: 2, marginRight: 4 }}
+                    />
+                    {`Search`}
+                </PrimaryButton>
             </Stack>
             <Table tabledata={tabledata} columns={columns} />
         </Stack>
