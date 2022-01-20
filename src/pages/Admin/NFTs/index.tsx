@@ -2,12 +2,14 @@ import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { Typography, Stack, Box } from '@mui/material';
+import { Typography, Stack, IconButton } from '@mui/material';
 import { enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
+import { TypeSelectItem } from 'src/types/select-types';
+import Select from 'src/components/TransactionDialogs/components/Select';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -162,7 +164,41 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         [],
     );
 
+    const nftStateOptions: Array<TypeSelectItem> = [
+        {
+            label: 'online',
+            value: 'online',
+        },
+        {
+            label: 'offline',
+            value: 'offline',
+        },
+    ];
+
+    const saleTypeOptions: Array<TypeSelectItem> = [
+        {
+            label: 'Sale Type 1',
+            value: 'Sale Type 1',
+        },
+        {
+            label: 'Sale Type 2',
+            value: 'Sale Type 2',
+        },
+    ];
+
     const [tabledata, setTabledata] = useState(data);
+    const [nftState, setNftState] = useState<TypeSelectItem>();
+    const [saleType, setSaleType] = useState<TypeSelectItem>();
+
+    const handleNFTStateChange = (value: string) => {
+        const item = nftStateOptions.find((option) => option.value === value);
+        setNftState(item);
+    };
+
+    const handleSaleTypeChange = (value: string) => {
+        const item = saleTypeOptions.find((option) => option.value === value);
+        setSaleType(item);
+    };
 
     return (
         <Stack height="100%" spacing={4}>
@@ -178,6 +214,37 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     />
                     {`Search`}
                 </PrimaryButton>
+                <Stack spacing={0.5}>
+                    <Typography fontSize={12} fontWeight={700}>
+                        NFT State
+                    </Typography>
+                    <Select
+                        options={nftStateOptions}
+                        selected={nftState}
+                        placeholder="Select"
+                        width={140}
+                        handleClick={handleNFTStateChange}
+                    />
+                </Stack>
+                <Stack spacing={0.5}>
+                    <Typography fontSize={12} fontWeight={700}>
+                        Sale Type
+                    </Typography>
+                    <Select
+                        options={saleTypeOptions}
+                        selected={saleType}
+                        placeholder="Select"
+                        width={140}
+                        handleClick={handleSaleTypeChange}
+                    />
+                </Stack>
+                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                    <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
+                    {`New NFT`}
+                </PrimaryButton>
+                <IconButton sx={{ height: 40, borderRadius: 3, background: '#e8f4ff' }}>
+                    <Icon icon="ph:dots-three-vertical-bold" color="#1890FF" />
+                </IconButton>
             </Stack>
             <Table tabledata={tabledata} columns={columns} />
         </Stack>
