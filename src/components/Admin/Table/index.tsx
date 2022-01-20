@@ -162,7 +162,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns }): JSX.Element =>
 
     return (
         <Stack height="100%">
-            <TableContainer component={Paper} sx={{ height: '80%' }}>
+            <TableContainer component={Paper} sx={{ height: '70%' }}>
                 <DataTable aria-label="custom pagination table">
                     <EnhancedTableHead
                         numSelected={selected.length}

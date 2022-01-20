@@ -2,11 +2,12 @@ import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { Typography, Stack } from '@mui/material';
+import { Typography, Stack, Box } from '@mui/material';
 import { enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import CustomTextField from 'src/components/TextField';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -163,7 +164,15 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const [tabledata, setTabledata] = useState(data);
 
-    return <Table tabledata={tabledata} columns={columns} />;
+    return (
+        <Stack height="100%" spacing={4}>
+            <Stack direction="row" spacing={1}>
+                <CustomTextField title="NFT ID" placeholder="Enter ID" />
+                <CustomTextField title="NFT Title" placeholder="Enter Title" />
+            </Stack>
+            <Table tabledata={tabledata} columns={columns} />
+        </Stack>
+    );
 };
 
 export default AdminNFTs;

@@ -6,11 +6,17 @@ export interface ComponentProps {
     placeholder?: string;
     multiline?: boolean;
     rows?: number;
-    changeHandler: (value: string) => void
+    changeHandler?: (value: string) => void;
 }
 
-const CustomTextField: React.FC<ComponentProps> = ({ title, placeholder, multiline, rows, changeHandler }): JSX.Element => {
-    const [text, setText] = useState("");
+const CustomTextField: React.FC<ComponentProps> = ({
+    title,
+    placeholder,
+    multiline,
+    rows,
+    changeHandler = () => {},
+}): JSX.Element => {
+    const [text, setText] = useState('');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
