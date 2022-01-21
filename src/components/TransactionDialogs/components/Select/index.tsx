@@ -8,10 +8,11 @@ interface ComponentProps {
     options: Array<TypeSelectItem>;
     selected?: TypeSelectItem;
     placeholder?: string;
+    width?: number;
     handleClick: (value: string) => void;
 }
 
-const Select: React.FC<ComponentProps> = ({ options, selected, placeholder = '', handleClick }) => {
+const Select: React.FC<ComponentProps> = ({ options, selected, placeholder = '', width, handleClick }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -20,6 +21,7 @@ const Select: React.FC<ComponentProps> = ({ options, selected, placeholder = '',
                 setIsOpen(!isOpen);
             }}
             position="relative"
+            sx={{ width: width ? width : 'auto' }}
         >
             <SelectBtn fullWidth isOpen={isOpen}>
                 {selected ? selected.label : placeholder}

@@ -1,12 +1,15 @@
-import { styled, Box } from '@mui/material';
+import { styled, Box, Stack } from '@mui/material';
 
-export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
-    position: relative;
-    width: 100%;
-    padding-top: ${({ onlyShowImage }) => (onlyShowImage ? 'auto' : '100%')};
+export const GalleryItemContainer = styled(Stack)`
+    height: 100%;
+    justify-content: space-between;
+`;
+
+export const ProductImageContainer = styled(Stack)<{ onlyShowImage?: boolean }>`
+    height: 100%;
+    cursor: pointer;
+    justify-content: center;
     img {
-        position: ${({ onlyShowImage }) => (onlyShowImage ? 'auto' : 'absolute')};
-        top: 0;
         border-radius: 10px;
         width: 100%;
         height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : 'auto')};
@@ -26,10 +29,5 @@ export const LikeBtn = styled(Box)`
 
     ${(props) => props.theme.breakpoints.up('sm')} {
         display: grid;
-    }
-
-    img {
-        width: 20px;
-        height: 20px;
     }
 `;
