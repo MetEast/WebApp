@@ -47,7 +47,7 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                 {transactionsList.map((item, index) => (
                     <Grid container item key={index}>
                         <Grid item xs={6} sm={transactionsTblColumns[0].width} order={{ xs: 3, sm: 1 }}>
-                            <SingleNFTTransactionType transactionType={item.type} />
+                            <SingleNFTTransactionType transactionType={item.type} transactionHash={item.txHash} />
                         </Grid>
                         <Grid
                             item

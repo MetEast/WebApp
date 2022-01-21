@@ -1,13 +1,14 @@
 import React from 'react';
 import { enumTransactionType } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
-import { Typography, Stack } from '@mui/material';
+import { Typography, Stack, Link } from '@mui/material';
 
 interface ComponentProps {
     transactionType: enumTransactionType;
+    transactionHash: string;
 }
 
-const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType }): JSX.Element => {
+const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, transactionHash }): JSX.Element => {
     const styles = {
         [enumTransactionType.Bid]: {
             icon: <Icon icon="ph:ticket" fontSize={20} />,
@@ -26,18 +27,21 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType })
         },
     };
 
+    // alert(transactionHash);
     return (
         <Stack direction="row" alignItems="center" spacing={1}>
             {styles[transactionType].icon}
             <Typography fontSize={16} fontWeight={700}>
                 {transactionType}
             </Typography>
-            <Icon
-                icon="ph:arrow-square-out-bold"
-                fontSize={16}
-                color="#1890FF"
-                style={{ marginLeft: 4, marginBottom: 4 }}
-            />
+            <Link href={`https://esc.elastos.io/tx/${transactionHash}`} underline="none" target="_blank">
+                <Icon
+                    icon="ph:arrow-square-out-bold"
+                    fontSize={16}
+                    color="#1890FF"
+                    style={{ marginLeft: 4, marginBottom: 4 }}
+                />
+            </Link>
         </Stack>
     );
 };
