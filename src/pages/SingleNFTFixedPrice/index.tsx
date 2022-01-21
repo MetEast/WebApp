@@ -37,7 +37,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         holderName: "",
         holder: "",
         type: enumSingleNFTType.BuyNow };
-    const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: ""};
+    const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: "", txHash: ""};
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
@@ -108,6 +108,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     }
                     _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
                     _transaction.price = itemObject.gasFee;  // no proper data
+                    _transaction.txHash = itemObject.tHash;
                     let saleTime = getTime(itemObject.timestamp.toString());
                     _transaction.time = saleTime.date + " " + saleTime.time;
                     _latestTransList.push(_transaction);
@@ -118,38 +119,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             console.log(err)
         });
     }, [ela_usd_rate, params.id]);
-
-    //     fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
-    //         response.json().then(jsonProductDetails => {
-    //             // console.log(jsonProductDetails);
-    //             var item: TypeProductFetch = jsonProductDetails.data;
-    //             var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, owner: "", author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumSingleNFTType.BuyNow, saleTime: ""};
-    //             product.id = item.tokenId;
-    //             product.name = item.name;
-    //             product.image = getImageFromAsset(item.asset);
-    //             product.price_ela = item.blockNumber % 1000;
-    //             product.price_usd = product.price_ela * 3.44;
-    //             product.likes = parseInt(item.createTime) % 10000;
-    //             product.views = parseInt(item.createTime) * 7 % 10000;
-    //             product.author.name = item.name + "'s nickname";
-    //             product.author.description = item.name + "one sentence description here";
-    //             product.author.img = getImageFromAsset(item.asset);
-    //             product.description = item.description;
-    //             product.type = parseInt(item.createTime) % 2 === 0 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-    //             let saleTime = getTime(item.createTime);
-    //             product.saleTime = saleTime.date + " " + saleTime.time;
-    //             product.details.tokenId = reduceHexAddress(item.tokenIdHex, 5);
-    //             product.details.owner = reduceHexAddress(item.holder, 4);
-    //             product.details.royalties = parseInt(item.royalties) / 1e4;
-    //             product.owner = item.holder;
-    //             let createTime = getUTCTime(item.createTime);
-    //             product.details.createTime = createTime.date + "" + createTime.time;
-    //             setProductDetail(product);
-    //         });
-    //     }).catch(err => {
-    //         console.log(err)
-    //     });
-
+    
     return (
         <>
             <ProductPageHeader />

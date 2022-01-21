@@ -39,7 +39,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         holderName: "",
         holder: "",
         type: enumSingleNFTType.BuyNow };
-    const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: ""};
+    const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: "", txHash: ""};
     const defaultBidValue: TypeSingleNFTBid = {user: "", price: 0, time: ""};
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -112,6 +112,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     }
                     _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
                     _transaction.price = itemObject.gasFee;  // no proper data
+                    _transaction.txHash = itemObject.tHash;
                     let timestamp = getTime(itemObject.timestamp.toString());
                     _transaction.time = timestamp.date + " " + timestamp.time;
                     _latestTransList.push(_transaction);
