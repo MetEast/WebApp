@@ -1,7 +1,9 @@
-import React from 'react';
-import { Stack, Typography, Grid } from '@mui/material';
+import React, { useState } from 'react';
+import { Stack, Typography, Grid, Snackbar, Alert } from '@mui/material';
 import { reduceHexAddress } from 'src/services/common';
 import { Icon } from '@iconify/react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyToClipboardButton } from './styles';
 
 interface ComponentProps {
     name: string;
@@ -10,7 +12,7 @@ interface ComponentProps {
     address: string
 }
 
-const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}): JSX.Element => {
+const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}): JSX.Element => {    
     return (
         <Stack spacing={1}>
             <Typography fontSize={{sm:22, xs:18}} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
@@ -26,9 +28,12 @@ const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}
                             {name}
                         </Typography>
                         <Typography fontSize={12} fontWeight={700} color={"#1890FF"}>                    
-                            {reduceHexAddress(address, 4) + " "}
-                            <Icon icon="ph:copy" className="arrow-icon" />
+                            {reduceHexAddress(address, 4)}
+                            <CopyToClipboard text={address} onCopy={() => alert(1)}>
+                                <CopyToClipboardButton><Icon icon="ph:copy" className="arrow-icon" /></CopyToClipboardButton>
+                            </CopyToClipboard>
                         </Typography>
+                        {/* <IntegrationNotistack /> */}
                     </Grid>
                 </Grid>                
             </Stack>
@@ -36,6 +41,7 @@ const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}
                 {description}
             </Typography>
         </Stack>
+
     );
 };
 
