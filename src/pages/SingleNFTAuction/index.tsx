@@ -14,10 +14,16 @@ import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { getImageFromAsset, getTime, reduceHexAddress, getUTCTime } from 'src/services/common'; 
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
+import { useRecoilValue } from 'recoil';
+import authAtom from 'src/recoil/auth';
+import { useConnectivityContext } from 'src/context/ConnectivityContext';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
+    const auth = useRecoilValue(authAtom);
+    const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
     // get product details from server
     const params = useParams(); // params.tokenId
     const defaultValue: TypeProduct = { 
@@ -143,13 +149,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     }, [ela_usd_rate, params.id]);
 
     // get your bids
-    const context = useWeb3React<Web3Provider>();
-    const { activate, active, error, library, chainId } = context;
-
     const getMyBids = async () => {    
-        alert(active);
-        if(library && active) {
-            const accounts = await library.listAccounts();
+        if(auth.isLoggedIn) {
+            const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+            // console.log("----------walletConnectProvider", walletConnectProvider);
+            const accounts = await walletConnectProvider.accounts;
+            // console.log("----------accounts", accounts);
+
             fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`).then(response => {
                 let _latestBidsList: any = [];
                 response.json().then(jsonBidsList => {
@@ -171,7 +177,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     };
     useEffect(() => {
         getMyBids();
-    }, [active, chainId]);
+    }, [isLinkedToEssentials]);
 
     return (
         <>
@@ -214,13 +220,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detailOwnerAddress={productDetail.holder}
                         detailRoyalties={productDetail.royalties}
                         detailCreateTime={productDetail.createTime}
-                        isLoggedIn={active} 
+                        isLoggedIn={auth.isLoggedIn} 
                         myBidsList={myBidsList}
                         marginTop={5} 
                         vertically={true} />
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <SingleNFTBidsTable isLoggedIn={active} myBidsList={myBidsList} bidsList={bidsList} />
+                    <SingleNFTBidsTable isLoggedIn={auth.isLoggedIn} myBidsList={myBidsList} bidsList={bidsList} />
                     <PriceHistoryView />
                     <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>
