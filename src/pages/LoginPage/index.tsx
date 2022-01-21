@@ -20,15 +20,12 @@ const LoginPage: React.FC = (): JSX.Element => {
         const didAccess = new DID.DIDAccess();
         let presentation;
         console.log("Trying to sign in using the connectivity SDK");
-
-        console.log('----------------------didAccess--------------------', didAccess);
         try {
           presentation = await didAccess.requestCredentials({
             claims: [
               DID.simpleIdClaim("Your name", "name", false)
             ]
           });
-          console.log('----------------------presentation--------------------', presentation);
         } catch (e) {
           // Possible exception while using wallet connect (i.e. not an identity wallet)
           // Kill the wallet connect session
@@ -46,13 +43,12 @@ const LoginPage: React.FC = (): JSX.Element => {
         }
 
         if (presentation) {
-            alert(1);
             const did = presentation.getHolder().getMethodSpecificId() || "";
-            fetch(`${process.env.REACT_APP_BACKEND_URL || "http://localhost:3006"}/api/v1/login`,
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/login`,
               {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json",
+                  "Content-Type": "application/json"
                 },
                 body: JSON.stringify(presentation.toJSON())
               }).then(response => response.json()).then(data => {
@@ -63,8 +59,6 @@ const LoginPage: React.FC = (): JSX.Element => {
                   localStorage.setItem("token", token);
   
                   const user = jwtDecode(token);
-                  //
-                  
                   console.log("Sign in: setting user to:", user);
                   // setUser(user);
                   setShowModal(false)
@@ -75,7 +69,7 @@ const LoginPage: React.FC = (): JSX.Element => {
                 }
               }).catch((error) => {
                 console.log(error);
-                // showToast(`Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"} is reachable`, "error");
+                alert(`Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable`);
               })
           }
     };
