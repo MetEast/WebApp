@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Stack, Typography, Grid, Snackbar, Alert } from '@mui/material';
 import { reduceHexAddress } from 'src/services/common';
 import { Icon } from '@iconify/react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
+import { useSnackbar } from 'notistack';
+
 
 interface ComponentProps {
     name: string;
@@ -12,7 +14,12 @@ interface ComponentProps {
     address: string
 }
 
-const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}): JSX.Element => {    
+const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}): JSX.Element => {
+    const { enqueueSnackbar } = useSnackbar();
+    const showSnackBar = () => {
+        enqueueSnackbar('Copied to Clipboard!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
+    };
+
     return (
         <Stack spacing={1}>
             <Typography fontSize={{sm:22, xs:18}} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
@@ -29,11 +36,10 @@ const AboutAuthor: React.FC<ComponentProps> = ({name, description, img, address}
                         </Typography>
                         <Typography fontSize={12} fontWeight={700} color={"#1890FF"}>                    
                             {reduceHexAddress(address, 4)}
-                            <CopyToClipboard text={address} onCopy={() => alert(1)}>
-                                <CopyToClipboardButton><Icon icon="ph:copy" className="arrow-icon" /></CopyToClipboardButton>
+                            <CopyToClipboard text={address} onCopy={showSnackBar}>
+                                <CopyToClipboardButton><Icon icon="ph:copy" /></CopyToClipboardButton>
                             </CopyToClipboard>
                         </Typography>
-                        {/* <IntegrationNotistack /> */}
                     </Grid>
                 </Grid>                
             </Stack>
