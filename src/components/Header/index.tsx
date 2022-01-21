@@ -32,13 +32,13 @@ const Header: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [auth, setAuth] = useRecoilState(authAtom);
 
-    const logOut = () => {
-        essentialsConnector.disconnectWalletConnect();
+    const logOut = async() => {
         console.log("Signing out user. Deleting session info, auth token");
         localStorage.removeItem("token");
         localStorage.removeItem("did");
-        setAuth({isLoggedIn: false});
+        await setAuth({isLoggedIn: false});
         navigate('/');
+        await essentialsConnector.disconnectWalletConnect();
     };
 
     return (

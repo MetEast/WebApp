@@ -6,6 +6,16 @@ import AppRouter from './AppRouter';
 import SwiperCore, { Autoplay } from 'swiper';
 import { AppContextProvider } from 'src/context/AppContext';
 import { DialogContextProvider } from 'src/context/DialogContext';
+// import Web3 from 'web3'
+import { Web3ReactProvider } from '@web3-react/core'
+import { Web3Provider } from "@ethersproject/providers";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getLibrary = (provider: any): Web3Provider => {
+    const library = new Web3Provider(provider);
+    library.pollingInterval = 12000;
+    return library;
+};
 
 const App: React.FC = (): JSX.Element => {
 
@@ -46,13 +56,15 @@ const App: React.FC = (): JSX.Element => {
     }
     return (
         <RecoilRoot>
-            <ThemeProvider theme={theme}>
-                <AppContextProvider>
-                    <DialogContextProvider>
-                        <AppRouter />
-                    </DialogContextProvider>
-                </AppContextProvider>
-            </ThemeProvider>
+            <Web3ReactProvider getLibrary={getLibrary}>
+                <ThemeProvider theme={theme}>
+                    <AppContextProvider>
+                        <DialogContextProvider>
+                            <AppRouter />
+                        </DialogContextProvider>
+                    </AppContextProvider>
+                </ThemeProvider>
+            </Web3ReactProvider>
         </RecoilRoot>
     );
 };

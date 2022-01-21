@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import authAtom from 'src/recoil/auth';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
@@ -10,10 +10,16 @@ import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialConnectivity';
 
 const LoginPage: React.FC = (): JSX.Element => {
-    const [showModal, setShowModal] = useState<boolean>(true);
     const [auth, setAuth] = useRecoilState(authAtom);
+    const [showModal, setShowModal] = useState<boolean>(true);
     const navigate = useNavigate();
-    
+
+    // prevent sign-in again after page refresh
+    if (localStorage.getItem("token") !== null && localStorage.getItem("did")  !== null) {
+      setAuth({isLoggedIn: true});
+      navigate('/profile');
+    }
+
     useConnectivitySDK();
     
     const handleWalletConnection = async () => {
@@ -73,13 +79,15 @@ const LoginPage: React.FC = (): JSX.Element => {
               })
           }
     };
-
-    // const logIn = async() => {
-    //   setShowModal(false)
-    //   await setAuth({isLoggedIn: true});
-    //   navigate('/profile');
-    // };
     
+    // const logIn = async () => {
+    //     localStorage.setItem("did", "did");
+    //     localStorage.setItem("token", "token");
+    //     setShowModal(false)
+    //     await setAuth({isLoggedIn: true});
+    //     navigate('/profile');
+    // };
+
     return (
         <ModalDialog
             open={showModal}
