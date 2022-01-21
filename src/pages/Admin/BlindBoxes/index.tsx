@@ -3,7 +3,7 @@ import { Typography, Stack, IconButton } from '@mui/material';
 import Table from 'src/components/Admin/Table';
 import { AdminBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import CustomTextField from 'src/components/TextField';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 
 const AdminBlindBoxes: React.FC = (): JSX.Element => {
@@ -55,7 +55,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
 
     return (
         <Stack height="100%" spacing={4}>
-            <Stack direction="row" alignItems="flex-end" spacing={1}>
+            <Stack direction="row" alignItems="flex-end" columnGap={1}>
                 <CustomTextField title="Blind Box ID" placeholder="Enter ID" />
                 <CustomTextField title="Blind Box Name" placeholder="Enter Name" />
                 <PrimaryButton size="small" sx={{ paddingX: 3 }}>
@@ -66,6 +66,23 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                         style={{ marginBottom: 2, marginRight: 4 }}
                     />
                     {`Search`}
+                </PrimaryButton>
+                <Stack spacing={0.5} marginLeft={2}>
+                    <Typography fontSize={12} fontWeight={700}>
+                        Blind Box Status
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                        <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                            Offline
+                        </SecondaryButton>
+                        <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                            Online
+                        </SecondaryButton>
+                    </Stack>
+                </Stack>
+                <PrimaryButton size="small" sx={{ paddingX: 3, marginLeft: 2 }}>
+                    <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
+                    {`New Blind Box`}
                 </PrimaryButton>
             </Stack>
             <Table tabledata={tabledata} columns={columns} />
