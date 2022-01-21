@@ -28,4 +28,12 @@ export type AdminBlindBoxItemType = {
     sale_ends: string;
 };
 
-export type AdminTableItemType = AdminNFTItemType | AdminBlindBoxItemType;
+export type AdminHomeItemType = {
+    id: number;
+    project_title: string;
+    project_type: string;
+    sort: number;
+    created: string;
+};
+
+export type AdminTableItemType = AdminNFTItemType | AdminBlindBoxItemType | AdminHomeItemType;
