@@ -11,6 +11,7 @@ import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from "@ethersproject/providers";
 import { ConnectivityContextProvider } from 'src/context/ConnectivityContext';
 import { SnackbarProvider } from 'notistack';
+import { CookiesProvider } from "react-cookie";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any): Web3Provider => {
@@ -64,7 +65,9 @@ const App: React.FC = (): JSX.Element => {
                         <DialogContextProvider>
                             <SnackbarProvider maxSnack={3} >
                                 <ConnectivityContextProvider>
-                                    <AppRouter />
+                                    <CookiesProvider>   
+                                        <AppRouter />
+                                    </CookiesProvider>
                                 </ConnectivityContextProvider>
                             </SnackbarProvider>
                         </DialogContextProvider>

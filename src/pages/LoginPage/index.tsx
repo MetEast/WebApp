@@ -8,8 +8,12 @@ import ConnectDID from 'src/components/profile/ConnectDID';
 import jwtDecode from 'jwt-decode';
 import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialConnectivity';
+// import { storeWithExpireTime } from 'src/services/common';
+import { useCookies } from "react-cookie";
 
 const LoginPage: React.FC = (): JSX.Element => {
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
     const [auth, setAuth] = useRecoilState(authAtom);
     const [showModal, setShowModal] = useState<boolean>(true);
     const navigate = useNavigate();
@@ -59,10 +63,14 @@ const LoginPage: React.FC = (): JSX.Element => {
                 body: JSON.stringify(presentation.toJSON())
               }).then(response => response.json()).then(data => {
                 if (data.code === 200) {
-                  const token = data.data;
-  
-                  localStorage.setItem("did", did);
-                  localStorage.setItem("token", token);
+                  const token = data.token;
+
+                  // storeWithExpireTime("did", did, 24 * 3600 * 1000);
+                  // storeWithExpireTime("token", token, 24 * 3600 * 1000);
+                  // localStorage.setItem("did", did);
+                  // localStorage.setItem("token", token);
+                  setTokenCookie("token", token, {path: '/'});
+                  setDidCookie("did", did, {path: '/'});
   
                   const user = jwtDecode(token);
                   console.log("Sign in: setting user to:", user);
@@ -76,8 +84,8 @@ const LoginPage: React.FC = (): JSX.Element => {
               }).catch((error) => {
                 console.log(error);
                 alert(`Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable`);
-              })
-          }
+            });
+        }
     };
     
     // const logIn = async () => {

@@ -154,7 +154,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
             // console.log("----------walletConnectProvider", walletConnectProvider);
             const accounts = await walletConnectProvider.accounts;
-            // console.log("----------accounts", accounts);
+            console.log("----------accounts", accounts);
 
             fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`).then(response => {
                 let _latestBidsList: any = [];

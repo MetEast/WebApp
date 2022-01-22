@@ -71,10 +71,24 @@ const HomePage: React.FC = (): JSX.Element => {
                         product.image = getImageFromAsset(itemObject.asset);
                         product.price_ela = itemObject.price;
                         product.price_usd = product.price_ela * ela_usd_rate;
-                        product.likes = itemObject.likes;
                         product.author = 'Author'; // -- no proper value
-                        product.type =
-                            itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                        product.likes = itemObject.likes;
+                        product.type = itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                        // fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
+                        //     headers: {
+                        //         'Content-Type': 'application/json',
+                        //         Accept: 'application/json',
+                        //     },
+                        // })
+                        //     .then((res) => {
+                        //         res.json().then((jsonViewsAndLikes) => {
+                        //             product.likes = jsonViewsAndLikes.data.likes;
+                        //         });
+                        //     })
+                        //     .catch((err) => {
+                        //         console.log(err);
+                        //     });
+                        
                         _newProductList.push(product);
                     });
                     setProductList(_newProductList);

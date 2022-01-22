@@ -8,6 +8,9 @@ import { enumSingleNFTType } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import authAtom from 'src/recoil/auth';
+import { useCookies } from "react-cookie";
 
 export interface ExploreGalleryItemProps {
     product: TypeProduct;
@@ -16,11 +19,40 @@ export interface ExploreGalleryItemProps {
 
 const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage = false }): JSX.Element => {
     const navigate = useNavigate();
+    const auth = useRecoilValue(authAtom);
+    const [cookies, setCookie, removeCookie] = useCookies(["did"]);
 
     const getUrl = () => {
-        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
-        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
+        if (product.type === enumSingleNFTType.OnAuction) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.BuyNow) return `/products/auction/${product.tokenId}`;
         else return `/`;
+    };
+
+    const addToFavouriteList = () => {
+        if(auth.isLoggedIn) {
+            const did = cookies.did;
+            const bodyData = {"tokenId": product.tokenId, "did": did};
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenLikes`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bodyData)
+              }).then(response => response.json()).then(data => {
+                if (data.code === 200) {
+                    alert(1);
+                } else {
+                  console.log(data);
+                }
+              }).catch((error) => {
+                console.log(error);
+                alert(`Failed`);
+            });
+        }
+        else {
+
+        }
     };
 
     return (
@@ -34,7 +66,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                 <Box position="relative">
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
-                        <LikeBtn onClick={() => {}}>
+                        <LikeBtn onClick={addToFavouriteList}>
                             <Icon icon="ph:heart" fontSize={'2vw'} color="black" />
                         </LikeBtn>
                     )}
