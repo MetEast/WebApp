@@ -10,7 +10,8 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-import { Cookies, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
+import { useSnackbar } from 'notistack';
 
 export interface ExploreGalleryItemProps {
     product: TypeProduct;
@@ -25,6 +26,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
     const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
     const [likeState, setLikeState] = useState(product.isLike);
+    const { enqueueSnackbar } = useSnackbar();
 
     const getUrl = () => {
         if (product.type === enumSingleNFTType.OnAuction) return `/products/fixed-price/${product.tokenId}`;
@@ -51,7 +53,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                 body: JSON.stringify(reqBody)
               }).then(response => response.json()).then(data => {
                 if (data.code === 200) {
-                    alert('fetch ok');
+                    enqueueSnackbar('Succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
                 } else {
                   console.log(data);
                 }

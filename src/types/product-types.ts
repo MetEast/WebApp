@@ -118,6 +118,25 @@ export type TypeProductFetch = {
     status: string;
 };
 
+export type TypeFavouritesFetch = {
+    tokenId: string;
+};
+
+export type TypeLikesFetchItem = {
+    tokenId: string;
+    likes: number;
+}
+
+export type TypeViewsFetchItem = {
+    tokenId: string;
+    views: number;
+}
+
+export type TypeVeiwsLikesFetch = {
+    likes: Array<TypeLikesFetchItem>;
+    views: Array<TypeViewsFetchItem>;
+};
+
 export type TypeNFTTransactionFetch = {
     blockNumber: number;
     from: string;

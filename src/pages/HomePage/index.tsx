@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { TypeProduct, enumSingleNFTType, TypeProductFetch } from 'src/types/product-types';
+import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch, TypeVeiwsLikesFetch, TypeLikesFetchItem } from 'src/types/product-types';
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,12 +10,17 @@ import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import { getImageFromAsset, getTime } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
+import { useCookies } from "react-cookie";
+import { selectFromLikes, selectFromFavourites } from 'src/services/common';
+
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
+
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -38,125 +43,122 @@ const HomePage: React.FC = (): JSX.Element => {
         isLike: false
     };
 
-    useEffect(() => {
-        fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
+    const getMyFavouritesList = async () => {
+        const did = auth.isLoggedIn ? didCookies.did : '------------------';
+        const resFavouriteList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getFavoritesCollectible?did=${did}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataFavouriteList = await resFavouriteList.json();
+        return dataFavouriteList.data;
+    };
+    
+    const getElaUsdRate = async () => {
+        const resElaUsdRate = await fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataElaUsdRate = await resElaUsdRate.json();
+        return parseFloat(dataElaUsdRate.result.coin_usd);
+    };
+
+    const getViewsAndLikes = async (tokenIds: Array<string>) => {
+        const resViewsAndLikes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfTokens?tokenIds=${tokenIds.join(",")}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataViewsAndLikes = await resViewsAndLikes.json();
+        return dataViewsAndLikes.data;
+    };
+
+    const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+        const resNewProduct = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataNewProduct = await resNewProduct.json();
+        const arrNewProduct = dataNewProduct.data.result;
+        
+        // get token list for likes
+        let arrTokenIds: Array<string> = [];
+        for(let i = 0; i < arrNewProduct.length; i ++) {
+            arrTokenIds.push(arrNewProduct[i].tokenId);
+        }
+        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
+
+        let _newProductList: any = [];
+        for(let i = 0; i < arrNewProduct.length; i ++) {
+            let itemObject: TypeProductFetch = arrNewProduct[i];
+            var product: TypeProduct = { ...defaultValue };
+            product.tokenId = itemObject.tokenId;
+            product.name = itemObject.name;
+            product.image = getImageFromAsset(itemObject.asset);
+            product.price_ela = itemObject.price;
+            product.price_usd = product.price_ela * tokenPriceRate;
+            product.author = 'Author'; // -- no proper value
+            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
+            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            _newProductList.push(product);
+        }
+        setProductList(_newProductList);
+    };
+
+    const getPopularCollection = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+        const resPopularCollection = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             },
-        })
-            .then((response) => {
-                response.json().then((jsonPrcieRate) => {
-                    const ela_usd_rate = parseFloat(jsonPrcieRate.result.coin_usd);
+        });
+        
+        const dataPopularCollection = await resPopularCollection.json();
+        const arrPopularCollection = dataPopularCollection.data.result;
+        
+        // get token list for likes
+        let arrTokenIds: Array<string> = [];
+        for(let i = 0; i < arrPopularCollection.length; i ++) {
+            arrTokenIds.push(arrPopularCollection[i].tokenId);
+        }
+        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
 
-                    fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json',
-                        },
-                    })
-                        .then((response) => {
-                            let _newProductList: any = [];
-                            response.json().then((jsonNewProducts) => {
-                                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                                    var product: TypeProduct = { ...defaultValue };
-                                    product.tokenId = itemObject.tokenId;
-                                    product.name = itemObject.name;
-                                    product.image = getImageFromAsset(itemObject.asset);
-                                    product.price_ela = itemObject.price;
-                                    product.price_usd = product.price_ela * ela_usd_rate;
-                                    product.author = 'Author'; // -- no proper value
-                                    product.type = itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                                    // get likes and views
-                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            Accept: 'application/json',
-                                        },
-                                    })
-                                        .then((res) => {
-                                            res.json().then((jsonViewsAndLikes) => {
-                                                product.likes = jsonViewsAndLikes.data.likes;
-                                            });
-                                        })
-                                        .catch((err) => {
-                                            console.log(err);
-                                        });
-                                    // get favourite state
-                                    if (auth.isLoggedIn) {
-                                        // fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
-                                        //     headers: {
-                                        //         'Content-Type': 'application/json',
-                                        //         Accept: 'application/json',
-                                        //     },
-                                        // })
-                                        //     .then((res) => {
-                                        //         res.json().then((jsonViewsAndLikes) => {
-                                        //             product.isLike = jsonViewsAndLikes.data;
-                                        //         });
-                                        //     })
-                                        //     .catch((err) => {
-                                        //         console.log(err);
-                                        //     });
-                                    }
-                                    
-                                    _newProductList.push(product);
-                                });
-                                setProductList(_newProductList);
-                            });
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        });
-            
-                    fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`,
-                        {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                Accept: 'application/json',
-                            },
-                        },
-                    )
-                        .then((response) => {
-                            let _popularCollectionList: any = [];
-                            response.json().then((jsonNewProducts) => {
-                                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                                    var product: TypeProduct = { ...defaultValue };
-                                    product.tokenId = itemObject.tokenId;
-                                    product.name = itemObject.name;
-                                    product.image = getImageFromAsset(itemObject.asset);
-                                    product.price_ela = itemObject.price;
-                                    product.price_usd = product.price_ela * ela_usd_rate;
-                                    product.likes = itemObject.likes;
-                                    product.author = 'Author'; // -- no proper value
-                                    product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            Accept: 'application/json',
-                                        },
-                                    })
-                                        .then((res) => {
-                                            res.json().then((jsonViewsAndLikes) => {
-                                                product.likes = jsonViewsAndLikes.data.likes;
-                                            });
-                                        })
-                                        .catch((err) => {
-                                            console.log(err);
-                                        });
-                                    _popularCollectionList.push(product);
-                                });
-                                setCollectionList(_popularCollectionList);
-                            });
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        let _popularCollectionList: any = [];
+        for(let i = 0; i < arrPopularCollection.length; i++){
+            const itemObject = arrPopularCollection[i]
+            var product: TypeProduct = { ...defaultValue };
+            product.tokenId = itemObject.tokenId;
+            product.name = itemObject.name;
+            product.image = getImageFromAsset(itemObject.asset);
+            product.price_ela = itemObject.price;
+            product.price_usd = product.price_ela * tokenPriceRate;
+            product.author = 'Author'; // -- no proper value
+            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
+            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            _popularCollectionList.push(product);
+        }
+        setCollectionList(_popularCollectionList);
+    };
+
+    const getFetchData = async () => {
+        let ela_usd_rate = await getElaUsdRate();
+        let favouritesList = await getMyFavouritesList();
+        getNewProducts(ela_usd_rate, favouritesList);
+        getPopularCollection(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
     }, []);
 
     const updateProductLikes = (id:number, type: string) => {
