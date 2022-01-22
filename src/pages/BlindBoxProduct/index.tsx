@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography, Box, Dialog } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { TypeProductFetch, enumBadgeType, enumBlindBoxNFTType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -28,52 +27,117 @@ import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/Cre
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
-import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress } from 'src/services/common'; 
+import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
+import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeNFTTransactionFetch, enumTransactionType, TypeVeiwsLikesFetch, TypeFavouritesFetch, TypeNFTTransaction } from 'src/types/product-types'; 
+import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { useRecoilValue } from 'recoil';
+import authAtom from 'src/recoil/auth';
+import { useCookies } from "react-cookie";
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
     // get product details from server
     const params = useParams(); // params.id
-    const [productDetail, setProductDetail] = useState({id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, sold: 0, instock: 0, views: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumBlindBoxNFTType.ComingSoon, saleTime: ""});
-    useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`).then(response => {
-            response.json().then(jsonProductDetails => {
-                // console.log(jsonProductDetails);
-                var item: TypeProductFetch = jsonProductDetails.data;
-                var product: any = {id: "", name: "", image: "", price_ela: 0, price_usd: 0, likes: 0, views: 0, sold: 0, instock: 0, author: {name: "", description: "", img: ""}, description: "", details: {tokenId: "", owner: "", createTime: "", royalties: ""}, type: enumBlindBoxNFTType.ComingSoon, saleTime: ""};
-                product.id = item.tokenId;
-                product.name = item.name;
-                product.image = getImageFromAsset(item.asset);
-                product.price_ela = item.blockNumber % 1000;
-                product.price_usd = product.price_ela * 3.44;
-                product.likes = parseInt(item.createTime) % 10000;
-                product.views = parseInt(item.createTime) * 7 % 10000;
-                product.sold = item.blockNumber % 4321;
-                product.instock = item.blockNumber % 1234;
-                product.author.name = item.name + "'s nickname";
-                product.author.description = item.name + "one sentence description here";
-                product.author.img = getImageFromAsset(item.asset);
-                product.description = item.description;
-                product.type = parseInt(item.createTime) % 3 === 0 ? enumBlindBoxNFTType.ComingSoon : (parseInt(item.createTime) % 3 === 1 ? enumBlindBoxNFTType.SaleEnds : enumBlindBoxNFTType.SaleEnded);
-                let saleTime = getTime(item.createTime);
-                product.saleTime = saleTime.date + " " + saleTime.time;
-                product.details.tokenId = reduceHexAddress(item.tokenIdHex, 5);
-                product.details.owner = reduceHexAddress(item.holder, 4);
-                product.details.royalties = parseInt(item.royalties) / 1e4;
-                let createTime = getUTCTime(item.createTime);
-                product.details.createTime = createTime.date + "" + createTime.time;
-                setProductDetail(product);
-            });
-        }).catch(err => {
-            console.log(err)
+    const auth = useRecoilValue(authAtom);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const defaultValue: TypeProduct = { 
+        tokenId: "", 
+        name: "", 
+        image: "",
+        price_ela: 0, 
+        price_usd: 0, 
+        likes: 0,
+        views: 0,
+        author: "",
+        authorDescription: "",
+        authorImg: "",
+        authorAddress: "",
+        description: "",
+        tokenIdHex: "",
+        royalties: 0,
+        createTime: "",
+        holderName: "",
+        holder: "",
+        type: enumSingleNFTType.BuyNow,
+        isLike: false
+    };
+    const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: "", txHash: ""};
+
+    const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+    const burnAddress = "0x686c626E48bfC5DC98a30a9992897766fed4Abd3";
+
+    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+        const resProductDetail = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
         });
+        const dataProductDetail = await resProductDetail.json();
+        const prodDetail = dataProductDetail.data;
+        var product: TypeProduct = {...defaultValue};        
+
+        if (prodDetail !== undefined) {
+            // get token list for likes
+            let arrTokenIds: Array<string> = [];
+            arrTokenIds.push(prodDetail.tokenId);
+            const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
+            
+            // get individual data
+            const itemObject: TypeProductFetch = prodDetail;
+            product.tokenId = itemObject.tokenId;
+            product.name = itemObject.name;
+            product.image = getImageFromAsset(itemObject.asset);
+            product.price_ela = itemObject.price;
+            product.price_usd = product.price_ela * tokenPriceRate;
+            product.author = 'Author'; // -- no proper value
+            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
+            product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
+            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            product.description = itemObject.description;
+            product.author = itemObject.authorName || "Author";
+            product.authorDescription = itemObject.authorDescription || "Author description here";
+            product.authorImg = product.image; // -- no proper value
+            product.authorAddress = itemObject.royaltyOwner;
+            product.holderName = "Full Name"; // -- no proper value 
+            product.holder = itemObject.holder;
+            product.tokenIdHex = itemObject.tokenIdHex;
+            product.royalties = parseInt(itemObject.royalties) / 1e4;
+            let createTime = getUTCTime(itemObject.createTime);
+            product.createTime = createTime.date + "" + createTime.time;
+        }
+        setProductDetail(product);    
+    }
+
+    const getFetchData = async () => {
+        let ela_usd_rate = await getElaUsdRate();
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
+        getProductDetail(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
     }, []);
+    
+    const updateProductLikes = (type: string) => {
+        let prodDetail : TypeProduct = {...productDetail};
+        if(type === 'inc') {
+            prodDetail.likes += 1;
+        }
+        else if(type === 'dec') {
+            prodDetail.likes -= 1;
+        }
+        setProductDetail(prodDetail);
+    };
+
     return (
         <>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <ProductImageContainer imgurl={productDetail.image} />
+                    <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography fontSize={{md:56, sm:42, xs:32}} fontWeight={700}>{productDetail.name}</Typography>
