@@ -1,3 +1,5 @@
+import { TypeFavouritesFetch, TypeLikesFetchItem } from 'src/types/product-types';
+
 // custome
 export const getImageFromAsset = (id: string) => {
     if(id===undefined)
@@ -12,7 +14,9 @@ export const getImageFromAsset = (id: string) => {
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp: string) => {
   const date = new Date(parseInt(timestamp) * 1000);
+  console.log(date.toISOString(), "--------", date.toISOString().length)
   const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
+  console.log(dateStr)
 
   let hours = date.getUTCHours().toString();
   hours = hours.toString().padStart(2,'0');
@@ -37,3 +41,23 @@ export const getUTCTime = (timestamp: string) => {
 
 // Get Abbrevation of hex addres //
 export const reduceHexAddress = (strAddress: string, nDigits: number) => strAddress?`${strAddress.substring(0, 2 + nDigits)}...${strAddress.substring(strAddress.length - nDigits, strAddress.length)}`:'';
+
+export const storeWithExpireTime = (key: string, value: string, ttl: number) => {
+	const now = new Date();
+	// `item` is an object which contains the original value
+	// as well as the time when it's supposed to expire
+	const item = {
+		value: value,
+		expiry: now.getTime() + ttl,
+	}
+
+	localStorage.setItem(key, JSON.stringify(item));
+}
+
+export const selectFromLikes = (value: TypeLikesFetchItem, tokenId: string) => {
+  return value.tokenId === tokenId;
+};
+
+export const selectFromFavourites = (value: TypeFavouritesFetch, tokenId: string) => {
+  return value.tokenId === tokenId;
+};

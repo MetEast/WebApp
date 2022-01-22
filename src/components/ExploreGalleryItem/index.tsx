@@ -1,26 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, LikeBtn } from './styles';
-import { Box, Stack, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import authAtom from 'src/recoil/auth';
+import { useCookies } from "react-cookie";
+import { useSnackbar } from 'notistack';
 
 export interface ExploreGalleryItemProps {
     product: TypeProduct;
     onlyShowImage?: boolean;
+    index: number;
+    updateLikes: (index: number, type: string) => void;
 }
 
-const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage = false }): JSX.Element => {
+const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlyShowImage, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
+    const auth = useRecoilValue(authAtom);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [likeState, setLikeState] = useState(product.isLike);
+    const { enqueueSnackbar } = useSnackbar();
 
     const getUrl = () => {
-        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
-        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
+        if (product.type === enumSingleNFTType.OnAuction) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.BuyNow) return `/products/auction/${product.tokenId}`;
         else return `/`;
+    };
+
+    const changeLikeState = (event: React.MouseEvent) => {
+        event.stopPropagation(); // 
+        if(auth.isLoggedIn) {
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/`;
+            reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes'; 
+            const reqBody = {"token": tokenCookies.token, "tokenId": product.tokenId, "did": didCookies.did};
+            // change state first
+            updateLikes(index, likeState ? 'dec' : 'inc');
+            setLikeState(!likeState);
+            //
+            fetch(reqUrl,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(reqBody)
+              }).then(response => response.json()).then(data => {
+                if (data.code === 200) {
+                    enqueueSnackbar('Succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
+                } else {
+                  console.log(data);
+                }
+              }).catch((error) => {
+                console.log(error);
+            });
+        }
+        else {
+            navigate('/login');
+        }
     };
 
     return (
@@ -34,8 +77,8 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                 <Box position="relative">
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
-                        <LikeBtn onClick={() => {}}>
-                            <Icon icon="ph:heart" fontSize={'2vw'} color="black" />
+                        <LikeBtn onClick={changeLikeState}>
+                            {likeState ? <Icon icon="ph:heart-fill" fontSize={'2vw'} color="red" /> : <Icon icon="ph:heart" fontSize={'2vw'} color="black" />}
                         </LikeBtn>
                     )}
                 </Box>

@@ -2,20 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { TypeProduct, enumSingleNFTType, TypeProductFetch } from 'src/types/product-types';
-// import { newNFTProducts } from 'src/constants/dummyData';
+import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch, TypeVeiwsLikesFetch, TypeLikesFetchItem } from 'src/types/product-types';
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
-import { getImageFromAsset, getTime } from 'src/services/common';
-import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
+import { useRecoilValue } from 'recoil';
+import authAtom from 'src/recoil/auth';
+import { useCookies } from "react-cookie";
+import { selectFromLikes, selectFromFavourites, getImageFromAsset } from 'src/services/common';
+import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+
+
+// import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
-    // const productList: Array<TypeProduct> = newNFTProducts;
+    const auth = useRecoilValue(authAtom);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
-    const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -35,87 +40,103 @@ const HomePage: React.FC = (): JSX.Element => {
         holderName: '',
         holder: '',
         type: enumSingleNFTType.BuyNow,
+        isLike: false
+    };
+
+    const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+        const resNewProduct = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataNewProduct = await resNewProduct.json();
+        const arrNewProduct = dataNewProduct.data.result;
+        
+        // get token list for likes
+        let arrTokenIds: Array<string> = [];
+        for(let i = 0; i < arrNewProduct.length; i ++) {
+            arrTokenIds.push(arrNewProduct[i].tokenId);
+        }
+        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
+
+        let _newProductList: any = [];
+        for(let i = 0; i < arrNewProduct.length; i ++) {
+            let itemObject: TypeProductFetch = arrNewProduct[i];
+            var product: TypeProduct = { ...defaultValue };
+            product.tokenId = itemObject.tokenId;
+            product.name = itemObject.name;
+            product.image = getImageFromAsset(itemObject.asset);
+            product.price_ela = itemObject.price;
+            product.price_usd = product.price_ela * tokenPriceRate;
+            product.author = 'Author'; // -- no proper value
+            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
+            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            _newProductList.push(product);
+        }
+        setProductList(_newProductList);
+    };
+
+    const getPopularCollection = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+        const resPopularCollection = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        });
+        
+        const dataPopularCollection = await resPopularCollection.json();
+        const arrPopularCollection = dataPopularCollection.data.result;
+        
+        // get token list for likes
+        let arrTokenIds: Array<string> = [];
+        for(let i = 0; i < arrPopularCollection.length; i ++) {
+            arrTokenIds.push(arrPopularCollection[i].tokenId);
+        }
+        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
+
+        let _popularCollectionList: any = [];
+        for(let i = 0; i < arrPopularCollection.length; i++){
+            const itemObject = arrPopularCollection[i]
+            var product: TypeProduct = { ...defaultValue };
+            product.tokenId = itemObject.tokenId;
+            product.name = itemObject.name;
+            product.image = getImageFromAsset(itemObject.asset);
+            product.price_ela = itemObject.price;
+            product.price_usd = product.price_ela * tokenPriceRate;
+            product.author = 'Author'; // -- no proper value
+            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
+            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            _popularCollectionList.push(product);
+        }
+        setCollectionList(_popularCollectionList);
+    };
+
+    const getFetchData = async () => {
+        let ela_usd_rate = await getElaUsdRate();
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
+        getNewProducts(ela_usd_rate, favouritesList);
+        getPopularCollection(ela_usd_rate, favouritesList);
     };
 
     useEffect(() => {
-        // "https://esc.elastos.io/api?module=stats&action=coinprice"
-        // `${process.env.ELASTOS_LATEST_PRICE_API_URL}`
-        fetch('https://esc.elastos.io/api?module=stats&action=coinprice', {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-            .then((response) => {
-                response.json().then((jsonPrcieRate) => {
-                    setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        getFetchData();
+    }, []);
 
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-            .then((response) => {
-                let _newProductList: any = [];
-                response.json().then((jsonNewProducts) => {
-                    jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                        var product: TypeProduct = { ...defaultValue };
-                        product.tokenId = itemObject.tokenId;
-                        product.name = itemObject.name;
-                        product.image = getImageFromAsset(itemObject.asset);
-                        product.price_ela = itemObject.price;
-                        product.price_usd = product.price_ela * ela_usd_rate;
-                        product.likes = itemObject.likes;
-                        product.author = 'Author'; // -- no proper value
-                        product.type =
-                            itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                        _newProductList.push(product);
-                    });
-                    setProductList(_newProductList);
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-
-        fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        )
-            .then((response) => {
-                let _popularCollectionList: any = [];
-                response.json().then((jsonNewProducts) => {
-                    jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                        var product: TypeProduct = { ...defaultValue };
-                        product.tokenId = itemObject.tokenId;
-                        product.name = itemObject.name;
-                        product.image = getImageFromAsset(itemObject.asset);
-                        product.price_ela = itemObject.price;
-                        product.price_usd = product.price_ela * ela_usd_rate;
-                        product.likes = itemObject.likes;
-                        product.author = 'Author'; // -- no proper value
-                        product.type =
-                            itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                        _popularCollectionList.push(product);
-                    });
-                    setCollectionList(_popularCollectionList);
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, [ela_usd_rate]);
+    const updateProductLikes = (id:number, type: string) => {
+        let prodList : Array<TypeProduct> = [...productList];
+        if(type === 'inc') {
+            prodList[id].likes += 1;
+        }
+        else if(type === 'dec') {
+            prodList[id].likes -= 1;
+        }
+        setProductList(prodList);
+    };
 
     const theme = useTheme();
     const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
@@ -130,7 +151,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`banner-carousel-${index}`}>
-                                <ExploreGalleryItem product={product} onlyShowImage={true} />
+                                <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
@@ -140,7 +161,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
-                                <ExploreGalleryItem product={product} />
+                                <ExploreGalleryItem product={product} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
@@ -150,7 +171,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
                         {collectionList.map((collection, index) => (
                             <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                                <ExploreGalleryItem product={collection} />
+                                <ExploreGalleryItem product={collection} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
                     </Swiper>

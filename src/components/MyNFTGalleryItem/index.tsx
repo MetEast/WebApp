@@ -14,7 +14,7 @@ export interface ComponentProps {
     onlyShowImage?: boolean;
 }
 
-const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage = false }): JSX.Element => {
+const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage }): JSX.Element => {
     const getUrl = () => {
         if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.tokenId}`;
         else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.tokenId}`;

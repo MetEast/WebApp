@@ -57,6 +57,7 @@ export type TypeProduct = {
     holder: string; // owner
     holderName: string;
     type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
+    isLike: boolean;
 
     
     blockNumber?: number;
@@ -115,6 +116,27 @@ export type TypeProductFetch = {
     views: number;
     likes: number;
     status: string;
+    authorName: string;
+    authorDescription: string;
+};
+
+export type TypeFavouritesFetch = {
+    tokenId: string;
+};
+
+export type TypeLikesFetchItem = {
+    tokenId: string;
+    likes: number;
+}
+
+export type TypeViewsFetchItem = {
+    tokenId: string;
+    views: number;
+}
+
+export type TypeVeiwsLikesFetch = {
+    likes: Array<TypeLikesFetchItem>;
+    views: Array<TypeViewsFetchItem>;
 };
 
 export type TypeNFTTransactionFetch = {
