@@ -23,6 +23,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
     const auth = useRecoilValue(authAtom);
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
     const defaultValue: TypeProduct = { 
         tokenId: "", 
         name: "", 
@@ -124,6 +125,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
+        await updateProductViews();
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getProductDetail(ela_usd_rate, favouritesList);
@@ -143,6 +145,31 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             prodDetail.likes -= 1;
         }
         setProductDetail(prodDetail);
+    };
+
+    const updateProductViews = () => {
+        if(auth.isLoggedIn) {
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/incTokenViews`; 
+            const reqBody = {"token": tokenCookies.token, "tokenId": productDetail.tokenId, "did": didCookies.did};
+            fetch(reqUrl,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(reqBody)
+              }).then(response => response.json()).then(data => {
+                if (data.code === 200) {
+                    let prodDetail : TypeProduct = {...productDetail};
+                    prodDetail.views += 1;
+                    setProductDetail(prodDetail);
+                } else {
+                  console.log(data);
+                }
+              }).catch((error) => {
+                console.log(error);
+            });
+        }
     };
 
     return (

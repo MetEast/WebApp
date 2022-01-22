@@ -14,7 +14,9 @@ export const getImageFromAsset = (id: string) => {
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp: string) => {
   const date = new Date(parseInt(timestamp) * 1000);
+  console.log(date.toISOString(), "--------", date.toISOString().length)
   const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
+  console.log(dateStr)
 
   let hours = date.getUTCHours().toString();
   hours = hours.toString().padStart(2,'0');

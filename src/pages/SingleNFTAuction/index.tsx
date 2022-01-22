@@ -18,7 +18,6 @@ import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/servic
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { useConnectivityContext } from 'src/context/ConnectivityContext';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
@@ -26,8 +25,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-
-    const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
     // get product details from server
     const params = useParams(); // params.tokenId
     const defaultValue: TypeProduct = { 
@@ -187,6 +185,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
+        await updateProductViews();
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getProductDetail(ela_usd_rate, favouritesList);
@@ -194,6 +193,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         getLatestBid();
         if(auth.isLoggedIn) getMyBids();
     };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
 
     const updateProductLikes = (type: string) => {
         let prodDetail : TypeProduct = {...productDetail};
@@ -204,6 +207,31 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             prodDetail.likes -= 1;
         }
         setProductDetail(prodDetail);
+    };
+
+    const updateProductViews = () => {
+        if(auth.isLoggedIn) {
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/incTokenViews`; 
+            const reqBody = {"token": tokenCookies.token, "tokenId": productDetail.tokenId, "did": didCookies.did};
+            fetch(reqUrl,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(reqBody)
+              }).then(response => response.json()).then(data => {
+                if (data.code === 200) {
+                    let prodDetail : TypeProduct = {...productDetail};
+                    prodDetail.views += 1;
+                    setProductDetail(prodDetail);
+                } else {
+                  console.log(data);
+                }
+              }).catch((error) => {
+                console.log(error);
+            });
+        }
     };
 
     return (
