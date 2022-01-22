@@ -8,7 +8,7 @@ import { sortOptions } from 'src/constants/select-constants'; // sort options
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType } from 'src/types/product-types';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { getImageFromAsset, getTime } from 'src/services/common';
+import { getImageFromAsset } from 'src/services/common';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
@@ -41,7 +41,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         type: enumSingleNFTType.BuyNow };
 
     useEffect(() => {
-        fetch("https://esc.elastos.io/api?module=stats&action=coinprice", {
+        fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
@@ -115,9 +115,22 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     product.image = getImageFromAsset(itemObject.asset);
                     product.price_ela = itemObject.price;
                     product.price_usd = product.price_ela * ela_usd_rate;
-                    product.likes = itemObject.likes;
                     product.author = "Author"; // -- no proper value
                     product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                    fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        },
+                    })
+                        .then((res) => {
+                            res.json().then((jsonViewsAndLikes) => {
+                                product.likes = jsonViewsAndLikes.data.likes;
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                     _newProductList.push(product);
                 });
                 setProductList(_newProductList);

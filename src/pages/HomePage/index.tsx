@@ -3,19 +3,16 @@ import { Box, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { TypeProduct, enumSingleNFTType, TypeProductFetch } from 'src/types/product-types';
-// import { newNFTProducts } from 'src/constants/dummyData';
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import { getImageFromAsset, getTime } from 'src/services/common';
-import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
+// import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
-    // const productList: Array<TypeProduct> = newNFTProducts;
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
-    const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -38,9 +35,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     useEffect(() => {
-        // "https://esc.elastos.io/api?module=stats&action=coinprice"
-        // `${process.env.ELASTOS_LATEST_PRICE_API_URL}`
-        fetch('https://esc.elastos.io/api?module=stats&action=coinprice', {
+        fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -48,88 +43,99 @@ const HomePage: React.FC = (): JSX.Element => {
         })
             .then((response) => {
                 response.json().then((jsonPrcieRate) => {
-                    setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+                    const ela_usd_rate = parseFloat(jsonPrcieRate.result.coin_usd);
 
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-            .then((response) => {
-                let _newProductList: any = [];
-                response.json().then((jsonNewProducts) => {
-                    jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                        var product: TypeProduct = { ...defaultValue };
-                        product.tokenId = itemObject.tokenId;
-                        product.name = itemObject.name;
-                        product.image = getImageFromAsset(itemObject.asset);
-                        product.price_ela = itemObject.price;
-                        product.price_usd = product.price_ela * ela_usd_rate;
-                        product.author = 'Author'; // -- no proper value
-                        product.likes = itemObject.likes;
-                        product.type = itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                        // fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
-                        //     headers: {
-                        //         'Content-Type': 'application/json',
-                        //         Accept: 'application/json',
-                        //     },
-                        // })
-                        //     .then((res) => {
-                        //         res.json().then((jsonViewsAndLikes) => {
-                        //             product.likes = jsonViewsAndLikes.data.likes;
-                        //         });
-                        //     })
-                        //     .catch((err) => {
-                        //         console.log(err);
-                        //     });
-                        
-                        _newProductList.push(product);
-                    });
-                    setProductList(_newProductList);
+                    fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        },
+                    })
+                        .then((response) => {
+                            let _newProductList: any = [];
+                            response.json().then((jsonNewProducts) => {
+                                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
+                                    var product: TypeProduct = { ...defaultValue };
+                                    product.tokenId = itemObject.tokenId;
+                                    product.name = itemObject.name;
+                                    product.image = getImageFromAsset(itemObject.asset);
+                                    product.price_ela = itemObject.price;
+                                    product.price_usd = product.price_ela * ela_usd_rate;
+                                    product.author = 'Author'; // -- no proper value
+                                    product.type = itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            Accept: 'application/json',
+                                        },
+                                    })
+                                        .then((res) => {
+                                            res.json().then((jsonViewsAndLikes) => {
+                                                product.likes = jsonViewsAndLikes.data.likes;
+                                            });
+                                        })
+                                        .catch((err) => {
+                                            console.log(err);
+                                        });
+                                    
+                                    _newProductList.push(product);
+                                });
+                                setProductList(_newProductList);
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+            
+                    fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Accept: 'application/json',
+                            },
+                        },
+                    )
+                        .then((response) => {
+                            let _popularCollectionList: any = [];
+                            response.json().then((jsonNewProducts) => {
+                                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
+                                    var product: TypeProduct = { ...defaultValue };
+                                    product.tokenId = itemObject.tokenId;
+                                    product.name = itemObject.name;
+                                    product.image = getImageFromAsset(itemObject.asset);
+                                    product.price_ela = itemObject.price;
+                                    product.price_usd = product.price_ela * ela_usd_rate;
+                                    product.likes = itemObject.likes;
+                                    product.author = 'Author'; // -- no proper value
+                                    product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            Accept: 'application/json',
+                                        },
+                                    })
+                                        .then((res) => {
+                                            res.json().then((jsonViewsAndLikes) => {
+                                                product.likes = jsonViewsAndLikes.data.likes;
+                                            });
+                                        })
+                                        .catch((err) => {
+                                            console.log(err);
+                                        });
+                                    _popularCollectionList.push(product);
+                                });
+                                setCollectionList(_popularCollectionList);
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 });
             })
             .catch((err) => {
                 console.log(err);
             });
-
-        fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        )
-            .then((response) => {
-                let _popularCollectionList: any = [];
-                response.json().then((jsonNewProducts) => {
-                    jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                        var product: TypeProduct = { ...defaultValue };
-                        product.tokenId = itemObject.tokenId;
-                        product.name = itemObject.name;
-                        product.image = getImageFromAsset(itemObject.asset);
-                        product.price_ela = itemObject.price;
-                        product.price_usd = product.price_ela * ela_usd_rate;
-                        product.likes = itemObject.likes;
-                        product.author = 'Author'; // -- no proper value
-                        product.type =
-                            itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                        _popularCollectionList.push(product);
-                    });
-                    setCollectionList(_popularCollectionList);
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, [ela_usd_rate]);
+    }, []);
 
     const theme = useTheme();
     const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
