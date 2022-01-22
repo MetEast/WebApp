@@ -19,7 +19,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [keyWord, setKeyWord] = useState<string>("");
 
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
-    const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
     const defaultValue : TypeProduct = { 
         tokenId: "", 
         name: "", 
@@ -38,21 +37,11 @@ const ExplorePage: React.FC = (): JSX.Element => {
         createTime: "",
         holderName: "",
         holder: "",
-        type: enumSingleNFTType.BuyNow };
+        type: enumSingleNFTType.BuyNow,
+        isLike: false 
+    };
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
-            headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }}).then(response => {
-            response.json().then(jsonPrcieRate => {
-                setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
-            });
-        }).catch(err => {
-            console.log(err)
-        });
-
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch(sortBy.label) {
@@ -100,45 +89,58 @@ const ExplorePage: React.FC = (): JSX.Element => {
             reqUrl += `&filter_status=${filterStatus}`;
         }
         
-        fetch(reqUrl, {
+        fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
-             }})
-        .then(response => {
-            let _newProductList: any = [];
-            response.json().then(jsonNewProducts => {
-                jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-                var product: TypeProduct = {...defaultValue};
-                    product.tokenId = itemObject.tokenId;
-                    product.name = itemObject.name;
-                    product.image = getImageFromAsset(itemObject.asset);
-                    product.price_ela = itemObject.price;
-                    product.price_usd = product.price_ela * ela_usd_rate;
-                    product.author = "Author"; // -- no proper value
-                    product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                    fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json',
-                        },
-                    })
-                        .then((res) => {
-                            res.json().then((jsonViewsAndLikes) => {
-                                product.likes = jsonViewsAndLikes.data.likes;
-                            });
-                        })
-                        .catch((err) => {
-                            console.log(err);
+             }}).then(response => {
+            response.json().then(jsonPrcieRate => {
+                const ela_usd_rate = parseFloat(jsonPrcieRate.result.coin_usd);
+
+                fetch(reqUrl, {
+                    headers : { 
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                     }})
+                .then(response => {
+                    let _newProductList: any = [];
+                    response.json().then(jsonNewProducts => {
+                        jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
+                        var product: TypeProduct = {...defaultValue};
+                            product.tokenId = itemObject.tokenId;
+                            product.name = itemObject.name;
+                            product.image = getImageFromAsset(itemObject.asset);
+                            product.price_ela = itemObject.price;
+                            product.price_usd = product.price_ela * ela_usd_rate;
+                            product.author = "Author"; // -- no proper value
+                            product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                            fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    Accept: 'application/json',
+                                },
+                            })
+                                .then((res) => {
+                                    res.json().then((jsonViewsAndLikes) => {
+                                        product.likes = jsonViewsAndLikes.data.likes;
+                                    });
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                });
+                            _newProductList.push(product);
                         });
-                    _newProductList.push(product);
+                        setProductList(_newProductList);
+                    });
+                }).catch(err => {
+                    console.log(err)
                 });
-                setProductList(_newProductList);
             });
         }).catch(err => {
             console.log(err)
         });
-    }, [ela_usd_rate, sortBy, filters, filterRange, keyWord, productViewMode]);
+        
+    }, [sortBy, filters, filterRange, keyWord, productViewMode]);
 
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
@@ -167,13 +169,26 @@ const ExplorePage: React.FC = (): JSX.Element => {
     //     if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
     // };
 
+    const updateProductLikes = (id:number, type: string) => {
+        if(type === 'inc') {
+            let prodList : Array<TypeProduct> = productList;
+            prodList[id].likes += 1;
+            setProductList(prodList);
+        }
+        else if(type === 'dec') {
+            let prodList : Array<TypeProduct> = productList;
+            prodList[id].likes -= 1;
+            setProductList(prodList);
+        }
+    };
+
     return (
         <>
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <ExploreGalleryItem product={product} onlyShowImage />
+                            <ExploreGalleryItem product={product} onlyShowImage={true}  index={index} updateLikes={updateProductLikes} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -191,7 +206,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 4} md={productViewMode === 'grid1' ? 3 : 2} key={`explore-product-${index}`}>
-                        <ExploreGalleryItem product={item} />
+                        <ExploreGalleryItem product={item} index={index} updateLikes={updateProductLikes} />
                     </Grid>
                 ))}
             </Grid>

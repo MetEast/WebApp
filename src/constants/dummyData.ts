@@ -56,7 +56,8 @@ export const dummyProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '1',
@@ -78,7 +79,8 @@ export const dummyProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '2',
@@ -99,7 +101,8 @@ export const dummyProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '3',
@@ -121,7 +124,8 @@ export const dummyProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '4',
@@ -143,7 +147,8 @@ export const dummyProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '5',
@@ -164,7 +169,8 @@ export const dummyProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '6',
@@ -186,7 +192,8 @@ export const dummyProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
 ];
 
@@ -209,6 +216,7 @@ export const newNFTProducts: Array<TypeProduct> = [
         royaltyOwner: "--",
         holderName: "--",
         holder: "--",
+        isLike: false,
         createTime: "--",
         updateTime: "--",
         tokenIdHex: "--",
@@ -245,6 +253,7 @@ export const newNFTProducts: Array<TypeProduct> = [
         royaltyOwner: "--",
         holderName: "--",
         holder: "--",
+        isLike: false,
         createTime: "--",
         updateTime: "--",
         tokenIdHex: "--",
@@ -285,7 +294,8 @@ export const singleNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '1',
@@ -306,7 +316,8 @@ export const singleNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '2',
@@ -327,7 +338,8 @@ export const singleNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '3',
@@ -348,7 +360,8 @@ export const singleNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '4',
@@ -369,7 +382,8 @@ export const singleNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '5',
@@ -390,7 +404,8 @@ export const singleNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '6',
@@ -411,7 +426,8 @@ export const singleNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
 ];
 
@@ -436,7 +452,8 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '1',
@@ -458,7 +475,8 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '2',
@@ -479,7 +497,8 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '3',
@@ -501,7 +520,8 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '4',
@@ -523,7 +543,8 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '5',
@@ -544,7 +565,8 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '6',
@@ -566,7 +588,8 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
 ];
 
@@ -591,7 +614,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '1',
@@ -613,7 +637,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '2',
@@ -634,7 +659,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '3',
@@ -656,7 +682,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '4',
@@ -678,7 +705,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '5',
@@ -699,7 +727,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '6',
@@ -721,7 +750,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
     {
         tokenId: '7',
@@ -743,7 +773,8 @@ export const myNFTProducts: Array<TypeProduct> = [
         royalties: 0,
         createTime: "--",
         holderName: "--",
-        holder: "--"
+        holder: "--",
+        isLike: false
     },
 ];
 

@@ -41,7 +41,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         createTime: "",
         holderName: "",
         holder: "",
-        type: enumBlindBoxNFTType.ComingSoon };
+        type: enumBlindBoxNFTType.ComingSoon, 
+        isLike: false 
+    };
 
     useEffect(() => {
         fetch("https://esc.elastos.io/api?module=stats&action=coinprice", {

@@ -44,7 +44,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         createTime: "",
         holderName: "",
         holder: "",
-        type: enumSingleNFTType.BuyNow };
+        type: enumSingleNFTType.BuyNow,
+        isLike: false 
+    };
     const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: "", txHash: ""};
     const defaultBidValue: TypeSingleNFTBid = {user: "", price: 0, time: ""};
 
@@ -52,59 +54,75 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [ela_usd_rate, setElaUsdRate] = useState<number>(1);
     const burnAddress = "0x0000000000000000000000000000000000000000";
 
     useEffect(() => {
-        fetch("https://esc.elastos.io/api?module=stats&action=coinprice", {
+        fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
             headers : { 
               'Content-Type': 'application/json',
               'Accept': 'application/json'
              }})
         .then(response => {
             response.json().then(jsonPrcieRate => {
-                setElaUsdRate(parseFloat(jsonPrcieRate.result.coin_usd));
+                const ela_usd_rate = parseFloat(jsonPrcieRate.result.coin_usd);
+
+                // ?? correct
+                fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&keyword=${params.id}`, {
+                    headers : { 
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                     }})
+                .then(response => {
+                    response.json().then(jsonProductDetails => {
+                        var itemObject: TypeProductFetch = jsonProductDetails.data.result[0];
+                        var product: TypeProduct = defaultValue;
+                        product.tokenId = itemObject.tokenId;
+                        product.name = itemObject.name;
+                        product.image = getImageFromAsset(itemObject.asset);
+                        product.price_ela = itemObject.price;
+                        product.price_usd = product.price_ela * ela_usd_rate;
+                        product.author = "Author"; // -- no proper value
+                        product.authorDescription = "Author description here"; // -- no proper value
+                        product.authorImg = product.image; // -- no proper value
+                        product.authorAddress = itemObject.royaltyOwner; 
+                        product.description = itemObject.description;
+                        product.holderName = "Full Name"; // -- no proper value 
+                        product.holder = itemObject.holder;
+                        product.tokenIdHex = itemObject.tokenIdHex;
+                        product.royalties = parseInt(itemObject.royalties) / 1e4;
+                        let createTime = getUTCTime(itemObject.createTime);
+                        product.createTime = createTime.date + "" + createTime.time;
+                        product.type = (itemObject.status === "BuyNow") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                        let saleTime = getTime(itemObject.updateTime); // no proper value
+                        product.saleTime = saleTime.date + " " + saleTime.time;
+                        
+                        fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Accept: 'application/json',
+                            },
+                        })
+                            .then((res) => {
+                                res.json().then((jsonViewsAndLikes) => {
+                                    product.likes = jsonViewsAndLikes.data.likes;
+                                    product.views = jsonViewsAndLikes.data.views;
+                                });
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                        setProductDetail(product);
+                    });
+                }).catch(err => {
+                    console.log(err)
+                });
             });
         }).catch(err => {
             console.log(err)
         });
 
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&keyword=${params.id}`, {
-            headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }})
-        .then(response => {
-            response.json().then(jsonProductDetails => {
-                var itemObject: TypeProductFetch = jsonProductDetails.data.result[0];
-                var product: TypeProduct = defaultValue;
-                product.tokenId = itemObject.tokenId;
-                product.name = itemObject.name;
-                product.image = getImageFromAsset(itemObject.asset);
-                product.price_ela = itemObject.price;
-                product.price_usd = product.price_ela * ela_usd_rate;
-                product.likes = itemObject.likes;
-                product.views = itemObject.views;
-                product.author = "Author"; // -- no proper value
-                product.authorDescription = "Author description here"; // -- no proper value
-                product.authorImg = product.image; // -- no proper value
-                product.authorAddress = itemObject.royaltyOwner; 
-                product.description = itemObject.description;
-                product.holderName = "Full Name"; // -- no proper value 
-                product.holder = itemObject.holder;
-                product.tokenIdHex = itemObject.tokenIdHex;
-                product.royalties = parseInt(itemObject.royalties) / 1e4;
-                let createTime = getUTCTime(itemObject.createTime);
-                product.createTime = createTime.date + "" + createTime.time;
-                product.type = (itemObject.status === "BuyNow") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-                let saleTime = getTime(itemObject.updateTime); // no proper value
-                product.saleTime = saleTime.date + " " + saleTime.time;
-                setProductDetail(product);
-            });
-        }).catch(err => {
-            console.log(err)
-        });
-
+        
+        // latest transactions
         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1$pageSize=5`).then(response => {
             let _latestTransList: any = [];
             response.json().then(jsonTransList => {
@@ -129,6 +147,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             console.log(err)
         });
 
+        // latest bids
         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5`).then(response => {
             let _latestBidsList: any = [];
             response.json().then(jsonBidsList => {
@@ -146,7 +165,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             console.log(err)
         });
         
-    }, [ela_usd_rate, params.id]);
+    }, [params.id]);
 
     // get your bids
     const getMyBids = async () => {    

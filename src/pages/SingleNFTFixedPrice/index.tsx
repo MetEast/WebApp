@@ -36,7 +36,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         createTime: "",
         holderName: "",
         holder: "",
-        type: enumSingleNFTType.BuyNow };
+        type: enumSingleNFTType.BuyNow,
+        isLike: false
+    };
     const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: "", txHash: ""};
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);

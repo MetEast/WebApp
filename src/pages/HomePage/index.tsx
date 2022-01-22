@@ -8,9 +8,12 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import { getImageFromAsset, getTime } from 'src/services/common';
+import { useRecoilValue } from 'recoil';
+import authAtom from 'src/recoil/auth';
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
+    const auth = useRecoilValue(authAtom);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
     const defaultValue: TypeProduct = {
@@ -32,6 +35,7 @@ const HomePage: React.FC = (): JSX.Element => {
         holderName: '',
         holder: '',
         type: enumSingleNFTType.BuyNow,
+        isLike: false
     };
 
     useEffect(() => {
@@ -63,6 +67,7 @@ const HomePage: React.FC = (): JSX.Element => {
                                     product.price_usd = product.price_ela * ela_usd_rate;
                                     product.author = 'Author'; // -- no proper value
                                     product.type = itemObject.status == 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+                                    // get likes and views
                                     fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -77,6 +82,23 @@ const HomePage: React.FC = (): JSX.Element => {
                                         .catch((err) => {
                                             console.log(err);
                                         });
+                                    // get favourite state
+                                    if (auth.isLoggedIn) {
+                                        // fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${product.tokenId}`, {
+                                        //     headers: {
+                                        //         'Content-Type': 'application/json',
+                                        //         Accept: 'application/json',
+                                        //     },
+                                        // })
+                                        //     .then((res) => {
+                                        //         res.json().then((jsonViewsAndLikes) => {
+                                        //             product.isLike = jsonViewsAndLikes.data;
+                                        //         });
+                                        //     })
+                                        //     .catch((err) => {
+                                        //         console.log(err);
+                                        //     });
+                                    }
                                     
                                     _newProductList.push(product);
                                 });
@@ -137,6 +159,19 @@ const HomePage: React.FC = (): JSX.Element => {
             });
     }, []);
 
+    const updateProductLikes = (id:number, type: string) => {
+        if(type === 'inc') {
+            let prodList : Array<TypeProduct> = productList;
+            prodList[id].likes += 1;
+            setProductList(prodList);
+        }
+        else if(type === 'dec') {
+            let prodList : Array<TypeProduct> = productList;
+            prodList[id].likes -= 1;
+            setProductList(prodList);
+        }
+    };
+
     const theme = useTheme();
     const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
     const matchUplg = useMediaQuery(theme.breakpoints.up('lg'));
@@ -150,7 +185,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`banner-carousel-${index}`}>
-                                <ExploreGalleryItem product={product} onlyShowImage={true} />
+                                <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
@@ -160,7 +195,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
-                                <ExploreGalleryItem product={product} />
+                                <ExploreGalleryItem product={product} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
@@ -170,7 +205,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
                         {collectionList.map((collection, index) => (
                             <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                                <ExploreGalleryItem product={collection} />
+                                <ExploreGalleryItem product={collection} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
                     </Swiper>

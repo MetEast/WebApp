@@ -11,7 +11,7 @@ export interface IProductProps {
     onlyShowImage?: boolean;
 }
 
-const Product: React.FC<IProductProps> = ({ product, onlyShowImage = false }): JSX.Element => {
+const Product: React.FC<IProductProps> = ({ product, onlyShowImage }): JSX.Element => {
     return (
         <Box>
             <Link to={`/buy-now/${product.tokenId}`}>

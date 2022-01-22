@@ -57,6 +57,7 @@ export type TypeProduct = {
     holder: string; // owner
     holderName: string;
     type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
+    isLike: boolean;
 
     
     blockNumber?: number;
