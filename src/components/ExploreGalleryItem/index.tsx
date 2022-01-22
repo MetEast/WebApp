@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, LikeBtn } from './styles';
-import { Box, Stack, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType } from 'src/types/product-types';
@@ -29,8 +29,8 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
     const { enqueueSnackbar } = useSnackbar();
 
     const getUrl = () => {
-        if (product.type === enumSingleNFTType.OnAuction) return `/products/fixed-price/${product.tokenId}`;
-        else if (product.type === enumSingleNFTType.BuyNow) return `/products/auction/${product.tokenId}`;
+        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
         else return `/`;
     };
 

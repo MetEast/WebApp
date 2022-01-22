@@ -13,7 +13,7 @@ import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
 import { selectFromLikes, selectFromFavourites } from 'src/services/common';
-
+import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
@@ -24,7 +24,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>("");
-
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const defaultValue : TypeProduct = { 
         tokenId: "", 
@@ -46,40 +45,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
         holder: "",
         type: enumSingleNFTType.BuyNow,
         isLike: false 
-    };
-
-    const getMyFavouritesList = async () => {
-        const did = auth.isLoggedIn ? didCookies.did : '------------------';
-        const resFavouriteList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getFavoritesCollectible?did=${did}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
-        const dataFavouriteList = await resFavouriteList.json();
-        return dataFavouriteList.data;
-    };
-    
-    const getElaUsdRate = async () => {
-        const resElaUsdRate = await fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
-        const dataElaUsdRate = await resElaUsdRate.json();
-        return parseFloat(dataElaUsdRate.result.coin_usd);
-    };
-
-    const getViewsAndLikes = async (tokenIds: Array<string>) => {
-        const resViewsAndLikes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfTokens?tokenIds=${tokenIds.join(",")}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
-        const dataViewsAndLikes = await resViewsAndLikes.json();
-        return dataViewsAndLikes.data;
     };
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -167,7 +132,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList();
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getSearchResult(ela_usd_rate, favouritesList);
     };
 
@@ -307,18 +272,15 @@ const ExplorePage: React.FC = (): JSX.Element => {
     // };
 
     const updateProductLikes = (id:number, type: string) => {
+        let prodList : Array<TypeProduct> = [...productList];
         if(type === 'inc') {
-            let prodList : Array<TypeProduct> = productList;
             prodList[id].likes += 1;
-            setProductList(prodList);
         }
         else if(type === 'dec') {
-            let prodList : Array<TypeProduct> = productList;
             prodList[id].likes -= 1;
-            setProductList(prodList);
         }
+        setProductList(prodList);
     };
-    console.log(productList.length)
 
     return (
         <>

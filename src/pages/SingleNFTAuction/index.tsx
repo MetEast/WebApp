@@ -198,12 +198,26 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         getMyBids();
     }, [isLinkedToEssentials]);
 
+    const updateProductLikes = (type: string) => {
+        alert(1);
+        if(type === 'inc') {
+            let prodDetail : TypeProduct = productDetail;
+            prodDetail.likes += 1;
+            setProductDetail(prodDetail);
+        }
+        else if(type === 'dec') {
+            let prodDetail : TypeProduct = productDetail;
+            prodDetail.likes -= 1;
+            setProductDetail(prodDetail);
+        }
+    };
+
     return (
         <>
             <ProductPageHeader />
             <Grid container marginTop={6} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12} >
-                    <ProductImageContainer imgurl={productDetail.image} />
+                    <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12} >
                     <Typography fontSize={{md:56, sm:42, xs:32}} fontWeight={700}>{productDetail.name}</Typography>

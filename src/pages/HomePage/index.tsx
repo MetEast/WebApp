@@ -7,11 +7,12 @@ import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
-import { getImageFromAsset, getTime } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { selectFromLikes, selectFromFavourites } from 'src/services/common';
+import { selectFromLikes, selectFromFavourites, getImageFromAsset } from 'src/services/common';
+import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+
 
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
@@ -20,7 +21,6 @@ const HomePage: React.FC = (): JSX.Element => {
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
-
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -41,40 +41,6 @@ const HomePage: React.FC = (): JSX.Element => {
         holder: '',
         type: enumSingleNFTType.BuyNow,
         isLike: false
-    };
-
-    const getMyFavouritesList = async () => {
-        const did = auth.isLoggedIn ? didCookies.did : '------------------';
-        const resFavouriteList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getFavoritesCollectible?did=${did}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
-        const dataFavouriteList = await resFavouriteList.json();
-        return dataFavouriteList.data;
-    };
-    
-    const getElaUsdRate = async () => {
-        const resElaUsdRate = await fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
-        const dataElaUsdRate = await resElaUsdRate.json();
-        return parseFloat(dataElaUsdRate.result.coin_usd);
-    };
-
-    const getViewsAndLikes = async (tokenIds: Array<string>) => {
-        const resViewsAndLikes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfTokens?tokenIds=${tokenIds.join(",")}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
-        const dataViewsAndLikes = await resViewsAndLikes.json();
-        return dataViewsAndLikes.data;
     };
 
     const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -152,7 +118,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList();
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getNewProducts(ela_usd_rate, favouritesList);
         getPopularCollection(ela_usd_rate, favouritesList);
     };
@@ -162,16 +128,14 @@ const HomePage: React.FC = (): JSX.Element => {
     }, []);
 
     const updateProductLikes = (id:number, type: string) => {
+        let prodList : Array<TypeProduct> = [...productList];
         if(type === 'inc') {
-            let prodList : Array<TypeProduct> = productList;
             prodList[id].likes += 1;
-            setProductList(prodList);
         }
         else if(type === 'dec') {
-            let prodList : Array<TypeProduct> = productList;
             prodList[id].likes -= 1;
-            setProductList(prodList);
         }
+        setProductList(prodList);
     };
 
     const theme = useTheme();

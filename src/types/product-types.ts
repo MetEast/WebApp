@@ -116,6 +116,8 @@ export type TypeProductFetch = {
     views: number;
     likes: number;
     status: string;
+    authorName: string;
+    authorDescription: string;
 };
 
 export type TypeFavouritesFetch = {
