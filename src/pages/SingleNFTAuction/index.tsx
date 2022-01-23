@@ -88,18 +88,24 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "Author";
-            product.authorDescription = itemObject.authorDescription || "Author description here";
+            product.author = itemObject.authorName || "No value";
+            product.authorDescription = itemObject.authorDescription || "No value";
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "Full Name"; // -- no proper value 
+            product.holderName = "No value"; // -- no proper value 
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + "" + createTime.time;
-            let saleTime = getTime(itemObject.createTime); // no proper value
-            product.saleTime = saleTime.date + " " + saleTime.time;
+            if(itemObject.endTime) {
+                let endTime = getTime(itemObject.endTime); // no proper value
+                product.endTime = endTime.date + " " + endTime.time;
+            }
+            else {
+                product.endTime = "No value";
+            }
+            
         }
         setProductDetail(product);    
     }
@@ -121,6 +127,18 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case "Mint":
                     _transaction.type = enumTransactionType.CreatedBy;
+                    break;
+                case "OrderForAuction":
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case "Bid":
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case "OrderFilled":
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case "OrderForSale":
+                    _transaction.type = enumTransactionType.ForSale;
                     break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
@@ -253,7 +271,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
                             </Grid>
                             <Grid item xs={12} sm={'auto'}>
-                                <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.saleTime}  />
+                                <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime}  />
                             </Grid>    
                         </Grid>
                     </Stack>

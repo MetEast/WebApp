@@ -113,6 +113,18 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 case "Mint":
                     _transaction.type = enumTransactionType.CreatedBy;
                     break;
+                case "OrderForAuction":
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case "Bid":
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case "OrderFilled":
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case "OrderForSale":
+                    _transaction.type = enumTransactionType.ForSale;
+                    break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
             _transaction.price = itemObject.gasFee;  // no proper data

@@ -41,7 +41,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage }):
                         {product.name}
                     </Typography>
                     <ProductSnippets nickname="Nickname" likes={88} />
-                    <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
+                    <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
                     <ELAPrice price_ela={199} price_usd={480} />
                 </Stack>
             )}

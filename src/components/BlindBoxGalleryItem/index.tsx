@@ -35,7 +35,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
                         <ProductSnippets nickname={product.author} likes={product.likes} />
                     </Grid>
                     <Grid item order={3} width={'100%'} >
-                        <ProductBadgeContainer nfttype={product.type} content={product.saleTime} />
+                        <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
                     </Grid>
                     <Grid item order={{xs: 2, sm: 2, md: 4 }} width={'100%'} >
                         <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />

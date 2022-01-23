@@ -5,6 +5,7 @@ import Chart from 'react-apexcharts';
 import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
 import { TypeProductPrice, TypeChartAxis } from 'src/types/product-types'; 
+import { getTime } from 'src/services/common';
 
 interface ComponentProps {}
 
@@ -93,12 +94,12 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`).then(response => {
             response.json().then(jsonPriceList => {
-                // console.log(jsonPriceList);
-                if (jsonPriceList.data.length > 0) {
+                if (jsonPriceList.data?.length > 0) {
                     jsonPriceList.data.forEach(function (itemObject: TypeProductPrice) {
                         var _price: TypeChartAxis = {x: "01/01/2022", y: 0};
                         _price.y = itemObject.price / 1e18;  // no proper data
-                        _price.x = itemObject.onlyDate.slice(5, 7) + "/" + itemObject.onlyDate.slice(8, 10) + "/" + itemObject.onlyDate.slice(0, 4);
+                        let dateTime = getTime(itemObject.onlyDate);
+                        _price.x = dateTime.date;
                         _latestPriceList.push(_price);
                     });
                     setChartSeries([{data: _latestPriceList}]);

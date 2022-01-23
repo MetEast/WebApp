@@ -131,7 +131,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.OnAuction} />
                         <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-                        <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.saleTime} />
+                        <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>View Bids</PrimaryButton>

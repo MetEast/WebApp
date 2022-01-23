@@ -144,7 +144,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     <ProductSnippets sold={productDetail.sold} instock={200} likes={productDetail.likes} views={productDetail.views} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         {/* <ProductBadge badgeType={enumBadgeType.ComingSoon} content="2022/02/28 10:00" /> */}
-                        <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.saleTime} />
+                        <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.endTime} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setOpenDlg(true)}>
