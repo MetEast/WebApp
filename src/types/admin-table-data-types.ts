@@ -8,7 +8,7 @@ export type AdminTableColumn = {
 };
 
 export type AdminNFTItemType = {
-    id: number;
+    id: number; // required
     rulenumber: string;
     nftid: string;
     nfttitle: string;
@@ -19,21 +19,44 @@ export type AdminNFTItemType = {
 };
 
 export type AdminBlindBoxItemType = {
-    id: number;
+    id: number; // required
     blindbox_id: string;
     blindbox_name: string;
     status: string;
     price: number;
     sale_begins: string;
     sale_ends: string;
+    transactions: number;
+    purchases: number;
+    available: number;
+    latest_trans_time: string;
+    liked: number;
+    page_views: number;
 };
 
 export type AdminHomeItemType = {
-    id: number;
+    id: number; // required
     project_title: string;
     project_type: string;
     sort: number;
     created: string;
 };
 
-export type AdminTableItemType = AdminNFTItemType | AdminBlindBoxItemType | AdminHomeItemType;
+export type AdminOrdersBlindBoxItemType = {
+    id: number; // required
+    blindbox_id: string;
+    blindbox_title: string;
+    status: string;
+    order_amount: number;
+    created: string;
+    buyer_id: string;
+    purchases: number;
+    buyer_nickname: string;
+    seller_nickname: string;
+};
+
+export type AdminTableItemType =
+    | AdminNFTItemType
+    | AdminBlindBoxItemType
+    | AdminHomeItemType
+    | AdminOrdersBlindBoxItemType;

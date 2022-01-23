@@ -11,7 +11,7 @@ export const PrimaryButton = styled(BaseButton)`
     background: #1890ff;
     color: white;
     &:hover {
-        background: #0870df;
+        background: #28a0ff;
     }
 `;
 
