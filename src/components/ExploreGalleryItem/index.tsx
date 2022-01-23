@@ -90,12 +90,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
                             {product.name}
                         </Typography>
                     </Grid>
-                    <Grid
-                        item
-                        order={{ xs: 4, sm: 4, md: 2 }}
-                        width={'100%'}
-                        display={{ xs: 'none', sm: 'none', md: 'block' }}
-                    >
+                    <Grid item order={{ xs: 4, sm: 4, md: 2 }} width={'100%'} display={{ xs: 'none', sm: 'none', md: 'block' }}>
                         <ProductSnippets nickname={product.author} likes={product.likes} />
                     </Grid>
                     <Grid item order={3} width={'100%'}>

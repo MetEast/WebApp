@@ -55,7 +55,6 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
               }).catch((error) => {
                 console.log(error);
             });
-            alert(3);
         }
         else {
             navigate('/login');
@@ -80,7 +79,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
                         <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>{product.name}</Typography>
                     </Grid>
                     <Grid item order={{xs: 4, sm: 4, md: 2 }} width={'100%'} display={{xs: 'none', sm: 'none', md: 'block' }}>
-                        <ProductSnippets nickname={product.author} likes={product.likes} />
+                        <ProductSnippets sold={product.sold} likes={product.likes} />
                     </Grid>
                     <Grid item order={3} width={'100%'} >
                         <ProductBadgeContainer nfttype={product.type} content={product.endTime} />

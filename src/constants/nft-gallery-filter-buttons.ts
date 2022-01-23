@@ -4,6 +4,7 @@ export enum nftGalleryFilterBtnTypes {
     Created = 'Created',
     ForSale = 'For Sale',
     Sold = 'Sold',
+    Liked = 'Liked',
 }
 
 export const nftGalleryFilterButtons = [
@@ -12,4 +13,5 @@ export const nftGalleryFilterButtons = [
     { label: nftGalleryFilterBtnTypes.Created, value: 28 },
     { label: nftGalleryFilterBtnTypes.ForSale, value: 14 },
     { label: nftGalleryFilterBtnTypes.Sold, value: 14 },
+    { label: nftGalleryFilterBtnTypes.Liked, value: 14 },
 ];

@@ -13,7 +13,7 @@ import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { selectFromLikes, selectFromFavourites } from 'src/services/common';
+import { selectFromLikes, selectFromFavourites, getTime } from 'src/services/common';
 import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
@@ -45,7 +45,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         holderName: "",
         holder: "",
         type: enumSingleNFTType.BuyNow,
-        isLike: false 
+        isLike: false,
+        sold: 0,
+        instock: 0 
     };
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -126,6 +128,15 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
             product.likes = curItem === undefined ? 0 : curItem.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            product.sold = itemObject.sold || 0;
+            product.instock = itemObject.instock || 0;
+            if(itemObject.endTime) {
+                let endTime = getTime(itemObject.endTime); // no proper value
+                product.endTime = endTime.date + " " + endTime.time;
+            }
+            else {
+                product.endTime = "No value";
+            }
             _newProductList.push(product);
         }
         setProductList(_newProductList);

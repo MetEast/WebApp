@@ -1,5 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import FilterModal from 'src/components/modals/FilterModal';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
@@ -7,7 +8,6 @@ import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants'; // sort options
 import { SortOption } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch, TypeVeiwsLikesFetch, TypeLikesFetchItem } from 'src/types/product-types';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
@@ -288,7 +288,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <ExploreGalleryItem product={product} onlyShowImage={true}  index={index} updateLikes={updateProductLikes} />
+                            <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
