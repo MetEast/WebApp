@@ -21,7 +21,7 @@ export interface ComponentProps {
     updateLikes: (index: number, type: string) => void;
 }
 
-const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, index, updateLikes  }): JSX.Element => {
+const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
@@ -63,6 +63,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, in
     };
 
     const getUrl = () => {
+        // alert(1);
         if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.tokenId}`;
         else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.tokenId}`;
         else if (product.type === enumMyNFTType.Created) return `/mynft/created/${product.tokenId}`;

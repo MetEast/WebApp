@@ -67,31 +67,35 @@ const ProfilePage: React.FC = (): JSX.Element => {
         isLike: false 
     };
 
+    const userInfo:any = jwtDecode(tokenCookies.token);
     const accounts: string[] = getEssentialWalletAddress();
 
+    const getResultCount = async () => {
+        let newCountList: number[] = [1, 2, 3, 4, 5, 6];
+        setCountList(newCountList);
+    } 
+
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
-        switch (nftGalleryFilterBtnSelected) {
-            case nftGalleryFilterBtnTypes.All:
-                reqUrl += `getOwnCollectible?address=${accounts[0]}`;
-                break;
-            case nftGalleryFilterBtnTypes.Acquired:
-                reqUrl += `getBoughtNotSoldCollectible?selfAddr=${accounts[0]}`;
-                break;
-            case nftGalleryFilterBtnTypes.Created:
-                reqUrl += `getSelfCreateNotSoldCollectible?address=${accounts[0]}`;
-                break;
-            case nftGalleryFilterBtnTypes.ForSale:
-                reqUrl += `getForSaleFixedPriceCollectible?selfAddr=${accounts[0]}` ;
-                break;
-            case nftGalleryFilterBtnTypes.Sold:
-                reqUrl += `getSoldCollectible?selfAddr=${accounts[0]}`;
-                break;
-            // case nftGalleryFilterBtnTypes.Liked:
-            //     reqUrl += `getMyFavouritesList?did=${didCookies.did}`;
-            //     break;
-        }
-        reqUrl += `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        // var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
+        // switch (nftGalleryFilterBtnSelected) {
+        //     case nftGalleryFilterBtnTypes.All:
+        //         reqUrl += `getOwnCollectible?address=${accounts[0]}`;
+        //         break;
+        //     case nftGalleryFilterBtnTypes.Acquired:
+        //         reqUrl += `getBoughtNotSoldCollectible?selfAddr=${accounts[0]}`;
+        //         break;
+        //     case nftGalleryFilterBtnTypes.Created:
+        //         reqUrl += `getSelfCreateNotSoldCollectible?address=${accounts[0]}`;
+        //         break;
+        //     case nftGalleryFilterBtnTypes.ForSale:
+        //         reqUrl += `getForSaleFixedPriceCollectible?selfAddr=${accounts[0]}` ;
+        //         break;
+        //     case nftGalleryFilterBtnTypes.Sold:
+        //         reqUrl += `getSoldCollectible?selfAddr=${accounts[0]}`;
+        //         break;
+        // }
+        // reqUrl += `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 
@@ -217,13 +221,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(true, didCookies.did);
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) getFavouritesCollectible(ela_usd_rate, favouritesList);
         else getSearchResult(ela_usd_rate, favouritesList);
     };
 
     useEffect(() => {
         getFetchData();
+        getResultCount();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected]);
 
     const handleKeyWordChange = (value: string) => {
@@ -282,7 +287,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Stack direction="row" justifyContent="space-between" marginTop={-6}>
                     <Box>
                         <Typography fontSize={20} fontWeight={900}>
-                            {getTotalEarned(accounts[0])} ELA
+                            420 ELA
+                            {/* {getTotalEarned(accounts[0])} ELA */}
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Total Earned
@@ -290,7 +296,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </Box>
                     <Box>
                         <Typography fontSize={20} fontWeight={900}>
-                            {getTodayEarned(accounts[0])} ELA
+                            60 ELA
+                            {/* {getTodayEarned(accounts[0])} ELA */}
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Earned Today
@@ -299,8 +306,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 </Stack>
                 <Stack alignItems="center">
                     <Typography fontSize={56} fontWeight={700}>
-                        {/* {jwtDecode(tokenCookies.token)} */}
-                        Mary S. Megmore
+                        {userInfo.name}
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={2}>
                         <SecondaryButton size="small" sx={{ paddingX: 2.5 }}>
@@ -332,7 +338,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 onClick={() => setNftGalleryFilterBtnSelected(items.label)}
                             >
                                 {items.label}
-                                <p>{items.value}</p>
+                                <p>{countList[index]}</p>
                             </FilterButton>
                         </Grid>
                     ))}
