@@ -59,8 +59,9 @@ export type TypeProduct = {
     type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     isLike: boolean;
     endTime?: string;
+    sold?: number;
+    instock?: number;
 
-    
     blockNumber?: number;
     tokenIndex?: string;
     quantity?: number;
@@ -72,10 +73,6 @@ export type TypeProduct = {
     size?: string;
     adult?: boolean;
     status?: string;
-
-    
-    sold?: number;
-    instock?: number;
 };
 
 export type TypeNFTTransaction = {
@@ -119,6 +116,8 @@ export type TypeProductFetch = {
     status: string;
     authorName: string;
     authorDescription: string;
+    instock: number;
+    sold: number;
 };
 
 export type TypeFavouritesFetch = {

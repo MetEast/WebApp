@@ -29,8 +29,8 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, onlySh
     const { enqueueSnackbar } = useSnackbar();
 
     const getUrl = () => {
-        if (product.type === enumSingleNFTType.OnAuction) return `/products/fixed-price/${product.tokenId}`;
-        else if (product.type === enumSingleNFTType.BuyNow) return `/products/auction/${product.tokenId}`;
+        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
         else return `/`;
     };
 

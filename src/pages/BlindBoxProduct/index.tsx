@@ -27,8 +27,8 @@ import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/Cre
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
-import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
-import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeNFTTransactionFetch, enumTransactionType, TypeVeiwsLikesFetch, TypeFavouritesFetch, TypeNFTTransaction } from 'src/types/product-types'; 
+import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
+import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeVeiwsLikesFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
 import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
@@ -59,13 +59,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         holderName: "",
         holder: "",
         type: enumSingleNFTType.BuyNow,
-        isLike: false
+        isLike: false, 
+        sold: 0,
+        instock: 0
     };
-    const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: "", txHash: ""};
-
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
-    const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const burnAddress = "0x686c626E48bfC5DC98a30a9992897766fed4Abd3";
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`, {
@@ -91,22 +89,23 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'Author'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
             product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "Author";
-            product.authorDescription = itemObject.authorDescription || "Author description here";
+            product.author = itemObject.authorName || "No value";
+            product.authorDescription = itemObject.authorDescription || "No value";
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "Full Name"; // -- no proper value 
+            product.holderName = "No value"; // -- no proper value 
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + "" + createTime.time;
+            product.instock = itemObject.instock || 0;
+            product.sold = itemObject.sold || 0;
         }
         setProductDetail(product);    
     }
@@ -141,7 +140,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography fontSize={{md:56, sm:42, xs:32}} fontWeight={700}>{productDetail.name}</Typography>
-                    <ProductSnippets sold={productDetail.sold} instock={200} likes={productDetail.likes} views={productDetail.views} />
+                    <ProductSnippets sold={productDetail.sold} instock={productDetail.instock} likes={productDetail.likes} views={productDetail.views} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         {/* <ProductBadge badgeType={enumBadgeType.ComingSoon} content="2022/02/28 10:00" /> */}
                         <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.endTime} />
