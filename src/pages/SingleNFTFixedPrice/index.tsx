@@ -17,6 +17,7 @@ import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/servic
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
+import { getEssentialWalletAddress } from 'src/services/essential';
 // import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
@@ -183,6 +184,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             });
         }
     };
+
+    const accounts = getEssentialWalletAddress();
+    alert(accounts[0]);
 
     return (
         <>

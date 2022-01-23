@@ -77,7 +77,7 @@ const LoginPage: React.FC = (): JSX.Element => {
                   // setUser(user);
                   setShowModal(false)
                   setAuth({isLoggedIn: true});
-                  navigate('/profile');
+                  // navigate('/profile');
                 } else {
                   console.log(data);
                 }

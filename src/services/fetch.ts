@@ -40,7 +40,7 @@ export const getTotalEarned = async (address: string) => {
         }
     });
     const dataTotalEarnedResult = await resTotalEarnedResult.json();
-    return dataTotalEarnedResult.data.result;
+    return dataTotalEarnedResult.data;
 };
 
 export const getTodayEarned = async (address: string) => {
@@ -51,5 +51,5 @@ export const getTodayEarned = async (address: string) => {
         }
     });
     const dataTodayEarnedResult = await resTodayEarnedResult.json();
-    return dataTodayEarnedResult.data.result;
+    return dataTodayEarnedResult.data;
 };

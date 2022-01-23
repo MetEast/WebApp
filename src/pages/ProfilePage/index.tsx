@@ -68,7 +68,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const userInfo:any = jwtDecode(tokenCookies.token);
-    const accounts: string[] = getEssentialWalletAddress();
+    // const accounts: string[] = getEssentialWalletAddress();
+    const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
+    const toatlEarned = 0; //getTotalEarned(accounts[0]);
+    const todayEarned = 0; //getTodayEarned(accounts[0]);
 
     const getResultCount = async () => {
         let newCountList: number[] = [1, 2, 3, 4, 5, 6];
@@ -76,26 +79,31 @@ const ProfilePage: React.FC = (): JSX.Element => {
     } 
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        // var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
-        // switch (nftGalleryFilterBtnSelected) {
-        //     case nftGalleryFilterBtnTypes.All:
-        //         reqUrl += `getOwnCollectible?address=${accounts[0]}`;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.Acquired:
-        //         reqUrl += `getBoughtNotSoldCollectible?selfAddr=${accounts[0]}`;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.Created:
-        //         reqUrl += `getSelfCreateNotSoldCollectible?address=${accounts[0]}`;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.ForSale:
-        //         reqUrl += `getForSaleFixedPriceCollectible?selfAddr=${accounts[0]}` ;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.Sold:
-        //         reqUrl += `getSoldCollectible?selfAddr=${accounts[0]}`;
-        //         break;
-        // }
-        // reqUrl += `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
-        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
+        let nSelected = 0;
+        switch (nftGalleryFilterBtnSelected) {
+            case nftGalleryFilterBtnTypes.All:
+                reqUrl += `getOwnCollectible?address=${accounts[0]}`;
+                nSelected = 0;
+                break;
+            case nftGalleryFilterBtnTypes.Acquired:
+                reqUrl += `getBoughtNotSoldCollectible?selfAddr=${accounts[0]}`;
+                nSelected = 1;
+                break;
+            case nftGalleryFilterBtnTypes.Created:
+                reqUrl += `getSelfCreateNotSoldCollectible?address=${accounts[0]}`;
+                nSelected = 2;
+                break;
+            case nftGalleryFilterBtnTypes.ForSale:
+                reqUrl += `getForSaleFixedPriceCollectible?selfAddr=${accounts[0]}`;
+                nSelected = 3;
+                break;
+            case nftGalleryFilterBtnTypes.Sold:
+                reqUrl += `getSoldCollectible?selfAddr=${accounts[0]}`;
+                nSelected = 4;
+                break;
+        }
+        reqUrl += `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 
@@ -150,7 +158,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
         });
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data.result;
-        
+        const nSearchResult = dataSearchResult.data.total;
+
         // get token list for likes
         let arrTokenIds: Array<string> = [];
         for(let i = 0; i < arrSearchResult.length; i ++) {
@@ -175,6 +184,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
             _myNftList.push(product);
         }
         setProductList(_myNftList);
+        let _cntList = [...countList];
+        _cntList[nSelected] = nSearchResult;
+        setCountList(_cntList);
     };
 
     const getFavouritesCollectible = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -183,7 +195,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             arrFavList.push(favouritesList[i].tokenId);
         }
 
-        const resFavouritesResult = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLiked?tokenIds=${arrFavList.join(",")}`, {
+        const resFavouritesResult = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectiblesByTokenIds?tokenIds=${arrFavList.join(",")}`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -191,6 +203,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         });
         const dataFavouritesResult = await resFavouritesResult.json();
         const arrFavouritesResult = dataFavouritesResult.data.result;
+        const nFavouritesResult = dataFavouritesResult.data.total;
 
         // get token list for likes
         let arrTokenIds: Array<string> = [];
@@ -216,7 +229,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
             _myNftList.push(product);
         }
         setProductList(_myNftList);
-
+        let _cntList = [...countList];
+        _cntList[5] = nFavouritesResult;
+        setCountList(_cntList);
     };
 
     const getFetchData = async () => {
@@ -228,7 +243,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         getFetchData();
-        getResultCount();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected]);
 
     const handleKeyWordChange = (value: string) => {
@@ -287,8 +301,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Stack direction="row" justifyContent="space-between" marginTop={-6}>
                     <Box>
                         <Typography fontSize={20} fontWeight={900}>
-                            420 ELA
-                            {/* {getTotalEarned(accounts[0])} ELA */}
+                            {toatlEarned}&nbsp;ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Total Earned
@@ -296,8 +309,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </Box>
                     <Box>
                         <Typography fontSize={20} fontWeight={900}>
-                            60 ELA
-                            {/* {getTodayEarned(accounts[0])} ELA */}
+                            {todayEarned}&nbsp;ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Earned Today

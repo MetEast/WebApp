@@ -73,7 +73,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, in
 
     return (
         <Box>
-            <Link to={getUrl()}>
+            <Link to={`/mynft/buynow/${product.tokenId}`}>
                 <ProductImageContainer onlyShowImage={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
