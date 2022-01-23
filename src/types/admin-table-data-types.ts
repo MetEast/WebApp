@@ -65,9 +65,21 @@ export type AdminBidsItemType = {
     created: string;
 };
 
+export type AdminBannersItemType = {
+    id: number; // required
+    banner_id: string;
+    image: string;
+    url: string;
+    sort: number;
+    location: string;
+    status: string;
+    created: string;
+};
+
 export type AdminTableItemType =
     | AdminNFTItemType
     | AdminBlindBoxItemType
     | AdminHomeItemType
     | AdminOrdersBlindBoxItemType
-    | AdminBidsItemType;
+    | AdminBidsItemType
+    | AdminBannersItemType;
