@@ -98,7 +98,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + "" + createTime.time;
-            let saleTime = getTime(itemObject.updateTime); // no proper value
+            let saleTime = getTime(itemObject.createTime); // no proper value
             product.saleTime = saleTime.date + " " + saleTime.time;
         }
         setProductDetail(product);    

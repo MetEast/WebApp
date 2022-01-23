@@ -102,7 +102,7 @@ export type TypeProductFetch = {
     royaltyOwner: string;
     holder: string;
     createTime: string;
-    updateTime: string;
+    timestamp: number;
     tokenIdHex: string;
     type: string;
     name: string;
