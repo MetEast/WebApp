@@ -75,6 +75,8 @@ const MenuBar: React.FC = (): JSX.Element => {
         { title: 'NOTIFICATIONS', icon: <Icon icon="ph:chat-circle" fontSize={20} />, url: '/admin/notifications' },
     ];
 
+    const navigate = useNavigate();
+
     return (
         <Stack spacing={3}>
             <Typography
@@ -86,7 +88,11 @@ const MenuBar: React.FC = (): JSX.Element => {
             >
                 Meteast
             </Typography>
-            <BackToPublicBtn>
+            <BackToPublicBtn
+                onClick={() => {
+                    navigate('/');
+                }}
+            >
                 <Icon icon="ph:caret-left-bold" color="#1ea557" style={{ marginBottom: 2, marginRight: 4 }} />
                 {`Back to public`}
             </BackToPublicBtn>
