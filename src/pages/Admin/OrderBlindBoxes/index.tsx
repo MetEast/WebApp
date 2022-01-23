@@ -1,8 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
+import { AdminOrdersBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
+import Table from 'src/components/Admin/Table';
 
 const AdminOrderBlindBoxes: React.FC = (): JSX.Element => {
-    return <>AdminOrderBlindBoxes</>;
+    const columns: AdminTableColumn[] = [
+        {
+            id: 'blindbox_id',
+            label: 'Blind Box ID',
+        },
+        {
+            id: 'blindbox_title',
+            label: 'Blind Box Title',
+            width: 160,
+        },
+        {
+            id: 'status',
+            label: 'Status',
+        },
+        {
+            id: 'order_amount',
+            label: 'Order Amount',
+            width: 160,
+        },
+        {
+            id: 'created',
+            label: 'Created',
+            width: 160,
+        },
+        {
+            id: 'buyer_id',
+            label: 'Buyer ID',
+        },
+        {
+            id: 'purchases',
+            label: '# purchases',
+            width: 160,
+        },
+        {
+            id: 'buyer_nickname',
+            label: 'Buyer Nickname',
+            width: 160,
+        },
+        {
+            id: 'seller_nickname',
+            label: 'Seller Nickname',
+            width: 160,
+        },
+    ];
+
+    const data: AdminOrdersBlindBoxItemType[] = useMemo(
+        () =>
+            [...Array(88).keys()].map(
+                (item) =>
+                    ({
+                        id: item,
+                        blindbox_id: String(84560673 + item),
+                        blindbox_title: 'Blind Box Title',
+                        status: 'Unpaid',
+                        order_amount: 199,
+                        created: '2022-06-18  08:50:00',
+                        buyer_id: '84560673943',
+                        purchases: 373,
+                        buyer_nickname: 'Nickname',
+                        seller_nickname: 'Nickname',
+                    } as AdminOrdersBlindBoxItemType),
+            ),
+        [],
+    );
+
+    const [tabledata, setTabledata] = useState(data);
+
+    return (
+        <Stack height="100%" spacing={4}>
+            <Stack direction="row" alignItems="flex-end" columnGap={1}></Stack>
+            <Table tabledata={tabledata} columns={columns} />
+        </Stack>
+    );
 };
 
 export default AdminOrderBlindBoxes;
