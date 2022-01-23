@@ -5,6 +5,7 @@ import { AdminBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-d
 import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
+import ELAPrice from 'src/components/ELAPrice';
 
 const AdminBlindBoxes: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -20,10 +21,25 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
         {
             id: 'status',
             label: 'Status',
+            cell: (props) => (
+                <Typography
+                    display="inline-block"
+                    fontSize={14}
+                    fontWeight={500}
+                    paddingX={1}
+                    borderRadius={2}
+                    color="#EB5757"
+                    sx={{ background: '#FDEEEE' }}
+                >
+                    {props.value}
+                </Typography>
+            ),
         },
         {
             id: 'price',
             label: 'Price',
+            cell: (props) => <ELAPrice price_ela={props.value} />,
+            width: 160,
         },
         {
             id: 'sale_begins',
@@ -44,7 +60,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
             id: 'purchases',
             label: '# purchases',
             width: 160,
-       },
+        },
         {
             id: 'available',
             label: '# Available',
@@ -62,6 +78,23 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
             id: 'page_views',
             label: 'Pageviews',
         },
+        {
+            id: 'edits',
+            label: '',
+            cell: (props) => (
+                <Stack direction="row" spacing={1}>
+                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#FDEEEE' }}>
+                        <Icon icon="ph:trash" color="#EB5757" />
+                    </IconButton>
+                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#E8F4FF' }}>
+                        <Icon icon="ph:pencil-simple" color="#1890FF" />
+                    </IconButton>
+                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#1890FF' }}>
+                        <Icon icon="ph:eye" color="white" />
+                    </IconButton>
+                </Stack>
+            ),
+        },
     ];
 
     const data: AdminBlindBoxItemType[] = useMemo(
@@ -72,7 +105,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                         id: item,
                         blindbox_id: String(item + 1).padStart(4, '0'),
                         blindbox_name: 'Blind Box Title',
-                        status: 'online',
+                        status: 'offline',
                         price: 199,
                         sale_begins: '2022-06-18  08:50:00',
                         sale_ends: '2022-06-18  08:50:00',
