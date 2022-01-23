@@ -15,6 +15,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
         {
             id: 'blindbox_name',
             label: 'Blind Box name',
+            width: 160,
         },
         {
             id: 'status',
@@ -27,10 +28,39 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
         {
             id: 'sale_begins',
             label: 'Sale begins',
+            width: 160,
         },
         {
             id: 'sale_ends',
             label: 'Sale Ends',
+            width: 160,
+        },
+        {
+            id: 'transactions',
+            label: '# Transactions',
+            width: 160,
+        },
+        {
+            id: 'purchases',
+            label: '# purchases',
+            width: 160,
+       },
+        {
+            id: 'available',
+            label: '# Available',
+        },
+        {
+            id: 'latest_trans_time',
+            label: 'Latest transaction time',
+            width: 220,
+        },
+        {
+            id: 'liked',
+            label: '# Liked',
+        },
+        {
+            id: 'page_views',
+            label: 'Pageviews',
         },
     ];
 
@@ -46,6 +76,12 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                         price: 199,
                         sale_begins: '2022-06-18  08:50:00',
                         sale_ends: '2022-06-18  08:50:00',
+                        transactions: 88,
+                        purchases: 88,
+                        available: 88,
+                        latest_trans_time: '2022-06-18  08:50:00',
+                        liked: 88,
+                        page_views: 2384,
                     } as AdminBlindBoxItemType),
             ),
         [],

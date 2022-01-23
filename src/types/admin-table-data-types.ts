@@ -26,6 +26,12 @@ export type AdminBlindBoxItemType = {
     price: number;
     sale_begins: string;
     sale_ends: string;
+    transactions: number;
+    purchases: number;
+    available: number;
+    latest_trans_time: string;
+    liked: number;
+    page_views: number;
 };
 
 export type AdminHomeItemType = {
