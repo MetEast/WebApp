@@ -1,7 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { AdminOrdersBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
+import ELAPrice from 'src/components/ELAPrice';
+import { PrimaryButton } from 'src/components/Buttons/styles';
+import { Icon } from '@iconify/react';
 
 const AdminOrderBlindBoxes: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -17,10 +20,24 @@ const AdminOrderBlindBoxes: React.FC = (): JSX.Element => {
         {
             id: 'status',
             label: 'Status',
+            cell: (props) => (
+                <Typography
+                    display="inline-block"
+                    fontSize={14}
+                    fontWeight={500}
+                    paddingX={1}
+                    borderRadius={2}
+                    color="#EB5757"
+                    sx={{ background: '#FDEEEE' }}
+                >
+                    {props.value}
+                </Typography>
+            ),
         },
         {
             id: 'order_amount',
             label: 'Order Amount',
+            cell: (props) => <ELAPrice price_ela={props.value} />,
             width: 160,
         },
         {
@@ -46,6 +63,16 @@ const AdminOrderBlindBoxes: React.FC = (): JSX.Element => {
             id: 'seller_nickname',
             label: 'Seller Nickname',
             width: 160,
+        },
+        {
+            id: 'details',
+            label: '',
+            cell: (props) => (
+                <PrimaryButton size="small" sx={{ paddingX: 3, marginLeft: 2 }}>
+                    <Icon icon="ph:eye" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
+                    {`Details`}
+                </PrimaryButton>
+            ),
         },
     ];
 
