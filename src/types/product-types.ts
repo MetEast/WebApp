@@ -28,6 +28,8 @@ export enum enumBadgeType {
     Museum = 'Museum',
     Created = 'Created',
     Sold = 'Sold',
+    Badge = 'Badge',
+    Royalties = 'Royalties',
 }
 
 export enum enumTransactionType {
@@ -127,12 +129,12 @@ export type TypeFavouritesFetch = {
 export type TypeLikesFetchItem = {
     tokenId: string;
     likes: number;
-}
+};
 
 export type TypeViewsFetchItem = {
     tokenId: string;
     views: number;
-}
+};
 
 export type TypeVeiwsLikesFetch = {
     likes: Array<TypeLikesFetchItem>;
@@ -176,7 +178,7 @@ export type TypeSingleNFTBidFetch = {
     price: string;
     timestamp: string;
     gasFee: number;
-}
+};
 
 export type TypeProductPrice = {
     onlyDate: string;
@@ -187,4 +189,4 @@ export type TypeProductPrice = {
 export type TypeChartAxis = {
     x: string;
     y: number;
-}
+};
