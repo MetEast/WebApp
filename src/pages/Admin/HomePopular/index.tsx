@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
 import AddPopularItem from 'src/components/Admin/Dialogs/AddPopularItem';
+import EditPopularItem from 'src/components/Admin/Dialogs/EditPopularItem';
 
 const AdminHomePopular: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -39,7 +40,10 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
                     <IconButton sx={{ height: 40, borderRadius: 3, background: '#FDEEEE' }}>
                         <Icon icon="ph:trash" color="#EB5757" />
                     </IconButton>
-                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#E8F4FF' }}>
+                    <IconButton
+                        sx={{ height: 40, borderRadius: 3, background: '#E8F4FF' }}
+                        onClick={() => setShowEditPoularItemDlg(true)}
+                    >
                         <Icon icon="ph:pencil-simple" color="#1890FF" />
                     </IconButton>
                 </Stack>
@@ -65,6 +69,7 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
     const [tabledata, setTabledata] = useState(data);
 
     const [showAddPoularItemDlg, setShowAddPoularItemDlg] = useState<boolean>(false);
+    const [showEditPoularItemDlg, setShowEditPoularItemDlg] = useState<boolean>(false);
 
     return (
         <>
@@ -90,6 +95,14 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
                 }}
             >
                 <AddPopularItem />
+            </ModalDialog>
+            <ModalDialog
+                open={showEditPoularItemDlg}
+                onClose={() => {
+                    setShowEditPoularItemDlg(false);
+                }}
+            >
+                <EditPopularItem />
             </ModalDialog>
         </>
     );
