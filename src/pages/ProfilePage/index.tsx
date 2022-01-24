@@ -11,7 +11,7 @@ import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
 import { SortOption } from 'src/types/select-types';
-import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage } from './styles';
+import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, EmptyBodyGalleryItem, EmptyTitleGalleryItem } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -68,8 +68,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const userInfo:any = jwtDecode(tokenCookies.token);
-    // const accounts: string[] = getEssentialWalletAddress();
-    const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
+    const accounts: string[] = getEssentialWalletAddress();
+    // const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
     const toatlEarned = 0; //getTotalEarned(accounts[0]);
     const todayEarned = 0; //getTodayEarned(accounts[0]);
 
@@ -293,6 +293,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
+                {productList.length == 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
             </Box>
             <Box>
                 <ProfileImageWrapper>
@@ -375,6 +376,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </FilterItemTypography>
                 ))}
             </Box>
+            {productList.length == 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
