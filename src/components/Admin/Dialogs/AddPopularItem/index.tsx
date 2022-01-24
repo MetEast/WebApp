@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack } from '@mui/material';
-import { DialogTitleTypo } from '../styles';
+import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import SearchTextField from '../components/SearchTextField';
 import CustomTextField from 'src/components/TextField';
