@@ -55,8 +55,31 @@ export type AdminOrdersBlindBoxItemType = {
     seller_nickname: string;
 };
 
+export type AdminBidsItemType = {
+    id: number; // required
+    nft_identity: string;
+    project_title: string;
+    buyer: string;
+    buyer_id: string;
+    state: string;
+    created: string;
+};
+
+export type AdminBannersItemType = {
+    id: number; // required
+    banner_id: string;
+    image: string;
+    url: string;
+    sort: number;
+    location: string;
+    status: string;
+    created: string;
+};
+
 export type AdminTableItemType =
     | AdminNFTItemType
     | AdminBlindBoxItemType
     | AdminHomeItemType
-    | AdminOrdersBlindBoxItemType;
+    | AdminOrdersBlindBoxItemType
+    | AdminBidsItemType
+    | AdminBannersItemType;
