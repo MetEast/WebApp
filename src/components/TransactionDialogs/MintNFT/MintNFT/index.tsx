@@ -14,9 +14,13 @@ import { DropzoneArea } from 'material-ui-dropzone';
 // import { CustomeDropzoneArea } from './styles';
 // import UploadSingleFile from 'src/components/UploadImage/UploadSingleFile';
 
-export interface ComponentProps {}
 
-const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
+export interface ComponentProps {
+    formData: object;
+    setFormData: any;
+}
+
+const MintNFT: React.FC<ComponentProps> = ({formData, setFormData}): JSX.Element => {
     const categoryOptions: Array<TypeSelectItem> = [
         {
             label: 'Category1',
@@ -47,6 +51,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const handleCategoryChange = (value: string) => {
         const item = categoryOptions.find((option) => option.value === value);
         setCategory(item);
+
     };
     const [dialogState, setDialogState] = useDialogContext();
     
@@ -65,17 +70,31 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
       
     // const classes = useStyles();
 
-    const [file, setFile] = useState(null);
-    const handleDropSingleFile = useCallback((acceptedFiles) => {
-        const file = acceptedFiles[0];
-        if (file) {
-          setFile({
-            ...file,
-            preview: URL.createObjectURL(file)
-          });
-        }
-      }, []);
-
+    // const handleDropSingleFile = useCallback((acceptedFiles) => {
+    //     const file = acceptedFiles[0];
+    //     if (file) {
+    //       setFile({
+    //         ...file,
+    //         preview: URL.createObjectURL(file)
+    //       });
+    //     }
+    //   }, []);
+    const handleFile = (files: any) => {
+        if(files.length)
+            fillData('file', files[0])
+    }
+    const fillData = (key: string, data: any) => {
+        let tempFormData:any = {...formData}
+        tempFormData[key] = data
+        setFormData(tempFormData)
+    }
+    const fullFillData = () => {
+        console.log(title)
+        fillData('name', title)
+        fillData('description', introduction)
+        fillData('author', author)
+        fillData('category', category)
+    }
     return (
         <Stack spacing={5} width={700}>
             <Stack alignItems="center">
@@ -85,7 +104,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
-                        <CustomTextField title="Project Title" placeholder="Placeholder Text" changeHandler={(value: string) => setTitle(value)} />
+                        <CustomTextField title="Project Title" placeholder="Placeholder Text" changeHandler={(value: string) => {setTitle(value)}} />
                         <CustomTextField
                             title="Project Introduction"
                             placeholder="Enter Introduction"
@@ -120,7 +139,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 borderRadius={2}
                                 sx={{ background: '#E8F4FF', cursor: 'pointer' }}
                             >
-                                <DropzoneArea onChange={(files) => console.log('Files:', files)}
+                                <DropzoneArea onChange={handleFile}
                                     filesLimit={1}
                                     dropzoneText="Upload Image"
                                     // previewGridClasses={{ container: classes.container }}
@@ -168,6 +187,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                     <PrimaryButton
                         fullWidth
                         onClick={() => {
+                            fullFillData();
                             setDialogState({ ...dialogState, createNFTDlgStep: 1 });
                         }}
                     >
