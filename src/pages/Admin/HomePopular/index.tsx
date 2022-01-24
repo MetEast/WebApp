@@ -40,10 +40,7 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
                     <IconButton sx={{ height: 40, borderRadius: 3, background: '#FDEEEE' }}>
                         <Icon icon="ph:trash" color="#EB5757" />
                     </IconButton>
-                    <IconButton
-                        sx={{ height: 40, borderRadius: 3, background: '#E8F4FF' }}
-                        onClick={() => setShowEditPoularItemDlg(true)}
-                    >
+                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#E8F4FF' }} onClick={onItemEdit}>
                         <Icon icon="ph:pencil-simple" color="#1890FF" />
                     </IconButton>
                 </Stack>
@@ -70,6 +67,11 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
 
     const [showAddPoularItemDlg, setShowAddPoularItemDlg] = useState<boolean>(false);
     const [showEditPoularItemDlg, setShowEditPoularItemDlg] = useState<boolean>(false);
+
+    const onItemEdit = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowEditPoularItemDlg(true);
+    };
 
     return (
         <>
