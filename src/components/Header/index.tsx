@@ -10,6 +10,7 @@ import { useRecoilState } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { essentialsConnector } from '../ConnectWallet/EssentialConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
+import { useCookies } from "react-cookie";
 
 const menuItemsList = [
     {
@@ -31,12 +32,16 @@ const Header: React.FC = (): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [auth, setAuth] = useRecoilState(authAtom);
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
 
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
-        localStorage.removeItem('token');
-        localStorage.removeItem('did');
-        await setAuth({ isLoggedIn: false });
+        // localStorage.removeItem('token');
+        // localStorage.removeItem('did');
+        removeTokenCookie("token");
+        removeDidCookie("did");
+        setAuth({ isLoggedIn: false });
         navigate('/');
         await essentialsConnector.disconnectWalletConnect();
     };
