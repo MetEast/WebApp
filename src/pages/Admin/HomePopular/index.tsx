@@ -4,6 +4,8 @@ import { AdminHomeItemType, AdminTableColumn } from 'src/types/admin-table-data-
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
 import { PrimaryButton } from 'src/components/Buttons/styles';
+import ModalDialog from 'src/components/ModalDialog';
+import AddPopularItem from 'src/components/Admin/Dialogs/AddPopularItem';
 
 const AdminHomePopular: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -62,16 +64,34 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
 
     const [tabledata, setTabledata] = useState(data);
 
+    const [showAddPoularItemDlg, setShowAddPoularItemDlg] = useState<boolean>(false);
+
     return (
-        <Stack height="100%" spacing={4}>
-            <Stack direction="row">
-                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
-                    {`Add popular item`}
-                </PrimaryButton>
+        <>
+            <Stack height="100%" spacing={4}>
+                <Stack direction="row">
+                    <PrimaryButton
+                        size="small"
+                        sx={{ paddingX: 3 }}
+                        onClick={() => {
+                            setShowAddPoularItemDlg(true);
+                        }}
+                    >
+                        <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
+                        {`Add popular item`}
+                    </PrimaryButton>
+                </Stack>
+                <Table tabledata={tabledata} columns={columns} />
             </Stack>
-            <Table tabledata={tabledata} columns={columns} />
-        </Stack>
+            <ModalDialog
+                open={showAddPoularItemDlg}
+                onClose={() => {
+                    setShowAddPoularItemDlg(false);
+                }}
+            >
+                <AddPopularItem />
+            </ModalDialog>
+        </>
     );
 };
 
