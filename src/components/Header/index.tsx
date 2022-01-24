@@ -70,7 +70,8 @@ const Header: React.FC = (): JSX.Element => {
                 <PrimaryButton
                     size="small"
                     onClick={() => {
-                        setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
+                        if(auth.isLoggedIn) setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
+                        else navigate('/login');
                     }}
                     sx={{ paddingX: 2 }}
                 >

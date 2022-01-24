@@ -58,8 +58,10 @@ export type TypeProduct = {
     holderName: string;
     type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     isLike: boolean;
+    endTime?: string;
+    sold?: number;
+    instock?: number;
 
-    
     blockNumber?: number;
     tokenIndex?: string;
     quantity?: number;
@@ -71,11 +73,6 @@ export type TypeProduct = {
     size?: string;
     adult?: boolean;
     status?: string;
-
-    
-    sold?: number;
-    instock?: number;
-    saleTime?: string;
 };
 
 export type TypeNFTTransaction = {
@@ -102,7 +99,8 @@ export type TypeProductFetch = {
     royaltyOwner: string;
     holder: string;
     createTime: string;
-    updateTime: string;
+    timestamp: number;
+    endTime: string;
     tokenIdHex: string;
     type: string;
     name: string;
@@ -118,6 +116,8 @@ export type TypeProductFetch = {
     status: string;
     authorName: string;
     authorDescription: string;
+    instock: number;
+    sold: number;
 };
 
 export type TypeFavouritesFetch = {

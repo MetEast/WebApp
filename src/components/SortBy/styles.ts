@@ -1,6 +1,6 @@
 import { styled, Box, Button } from '@mui/material';
 
-export const SortByBtn = styled(Button)<{ isOpen: boolean }>`
+export const SortByBtn = styled(Button)<{ isOpenned: boolean }>`
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -17,7 +17,7 @@ export const SortByBtn = styled(Button)<{ isOpen: boolean }>`
         margin-right: 6px;
     }
     .arrow-icon {
-        transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
+        transform: ${({ isOpenned }) => (isOpenned ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
     }
     ${(props) => props.theme.breakpoints.down('sm')} {
@@ -26,8 +26,8 @@ export const SortByBtn = styled(Button)<{ isOpen: boolean }>`
     }
 `;
 
-export const ListItemsWrapper = styled(Box)<{ isOpen: boolean }>`
-    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+export const ListItemsWrapper = styled(Box)<{ isOpenned: boolean }>`
+    display: ${({ isOpenned }) => (isOpenned ? 'block' : 'none')};
     position: absolute;
     background: white;
     border-radius: 4px;

@@ -13,22 +13,22 @@ interface SelectProps {
 }
 
 const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '', handleClick, onlyShowIcon }) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpened, setIsOpened] = useState(false);
 
     return (
         <Box
             onClick={() => {
-                setIsOpen(!isOpen);
+                setIsOpened(!isOpened);
             }}
         >
-            <SortByBtn fullWidth isOpen={isOpen}>
+            <SortByBtn fullWidth isOpenned={isOpened}>
                 <Icon icon="ph:sort-ascending" fontSize={24} />
                 {!onlyShowIcon && <>
                     {title ? title : placeholder}
                     <KeyboardArrowDownIcon className="arrow-icon" />
                 </>}
             </SortByBtn>
-            <ListItemsWrapper width={200} isOpen={isOpen}>
+            <ListItemsWrapper width={200} isOpenned={isOpened}>
                 <Stack>
                     {options.map((item, index) => (
                         <SelectItem

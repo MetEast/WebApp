@@ -51,13 +51,13 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({ isLoggedIn = false, myBi
                     </Grid>}
                 </>}
                 <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
-                    {bidsTblColumns.map((item) => (
-                        <Grid item xs={item.width} fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }} textAlign={(item.value === "Price") ? "right":"left"} display={{xs: 'none', sm: 'block'}}>
+                    {bidsTblColumns.map((item, index) => (
+                        <Grid item key={index} xs={item.width} fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }} textAlign={(item.value === "Price") ? "right":"left"} display={{xs: 'none', sm: 'block'}}>
                             {item.value}
                         </Grid>
                     ))}
-                    {bidsList.map((item) => (
-                        <Grid container item>
+                    {bidsList.map((item, index) => (
+                        <Grid container item key={index}>
                             <Grid item xs={12} sm={bidsTblColumns[0].width} order={{xs:3, sm: 1, md: 1, lg: 1}}>
                                 <Typography fontSize={16} fontWeight={700}>
                                     {item.user}

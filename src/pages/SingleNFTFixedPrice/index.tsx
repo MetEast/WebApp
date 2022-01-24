@@ -17,6 +17,7 @@ import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/servic
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
+import { getEssentialWalletAddress } from 'src/services/essential';
 // import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
@@ -75,17 +76,17 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'Author'; // -- no proper value
+            product.author = 'No value'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
             product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "Author";
-            product.authorDescription = itemObject.authorDescription || "Author description here";
+            product.author = itemObject.authorName || "No value";
+            product.authorDescription = itemObject.authorDescription || "No value";
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "Full Name"; // -- no proper value 
+            product.holderName = "No value"; // -- no proper value 
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -112,6 +113,18 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case "Mint":
                     _transaction.type = enumTransactionType.CreatedBy;
+                    break;
+                case "OrderForAuction":
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case "Bid":
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case "OrderFilled":
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case "OrderForSale":
+                    _transaction.type = enumTransactionType.ForSale;
                     break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
@@ -171,6 +184,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             });
         }
     };
+
+    const accounts = getEssentialWalletAddress();
+    alert(accounts[0]);
 
     return (
         <>

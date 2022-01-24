@@ -18,7 +18,7 @@ interface OptionsBarProps extends SpacingProps {
     handleClickFilterButton: () => void;
     productViewMode: string;
     setProductViewMode: (value: 'grid1' | 'grid2') => void;
-    filterBtnHidden?: boolean;
+    // filterBtnHidden?: boolean;
 }
 
 const OptionsBar: React.FC<OptionsBarProps> = ({
@@ -29,15 +29,17 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     handleClickFilterButton,
     productViewMode,
     setProductViewMode,
-    filterBtnHidden = false,
+    // filterBtnHidden = false,
     ...otherProps
 }): JSX.Element => {
 
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
     const matchDownXs = useMediaQuery(theme.breakpoints.down('md'));
+    const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
     const displayFilterLable = matchDownMd ? false : true;
     const onlyShowIcon = matchDownXs ? true : false;
+    const filterBtnHidden = matchDownLg ? false : true;
 
     return (
         <Stack direction="row" spacing={{xs: 1, sm: 2}} {...otherProps}>

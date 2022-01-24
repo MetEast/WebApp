@@ -1,5 +1,6 @@
 import { Typography, Stack } from '@mui/material';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
@@ -7,6 +8,15 @@ export interface ComponentProps {
 }
 
 const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
+    const navigate = useNavigate();
+    document.addEventListener('keydown', (event) => {
+        // Press ESC to go back
+        if (event.keyCode === 27) {
+            event.preventDefault();
+            navigate('/');
+        }
+    });
+
     return (
         <Stack alignItems="center" width={300} spacing={3.5}>
             <Typography fontSize={32} fontWeight={700}>
