@@ -17,14 +17,13 @@ import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/servic
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { getEssentialWalletAddress } from 'src/services/essential';
 // import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies] = useCookies(["did"]);
+    const [tokenCookies] = useCookies(["token"]);
     const defaultValue: TypeProduct = { 
         tokenId: "", 
         name: "", 
@@ -184,9 +183,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             });
         }
     };
-
-    const accounts = getEssentialWalletAddress();
-    alert(accounts[0]);
 
     return (
         <>

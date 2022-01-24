@@ -18,7 +18,7 @@ import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
 
 const HomePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [didCookies] = useCookies(["did"]);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
     const defaultValue: TypeProduct = {
@@ -154,7 +154,7 @@ const HomePage: React.FC = (): JSX.Element => {
                                 <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
-                        {productList.length == 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
+                        {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
                     </Swiper>
                 </Box>
                 <Box mt={4}>
@@ -166,7 +166,7 @@ const HomePage: React.FC = (): JSX.Element => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    {productList.length == 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
+                    {productList.length === 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
                 </Box>
                 <Box mt={8}>
                     <H2Typography mb={1}>Popular Collections</H2Typography>
@@ -177,7 +177,7 @@ const HomePage: React.FC = (): JSX.Element => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    {productList.length == 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
+                    {productList.length === 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
                 </Box>
             </Stack>
         </>

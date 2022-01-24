@@ -18,7 +18,7 @@ import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/servic
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [didCookies] = useCookies(["did"]);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
@@ -124,7 +124,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || 'No vaule'; 
-            product.type = (itemObject.status == "ComingSoon") ? enumBlindBoxNFTType.ComingSoon : ((itemObject.status == "SaleEnded") ? enumBlindBoxNFTType.SaleEnded : enumBlindBoxNFTType.SaleEnds );
+            product.type = (itemObject.status === "ComingSoon") ? enumBlindBoxNFTType.ComingSoon : ((itemObject.status == "SaleEnded") ? enumBlindBoxNFTType.SaleEnded : enumBlindBoxNFTType.SaleEnds );
             let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
             product.likes = curItem === undefined ? 0 : curItem.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;

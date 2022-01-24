@@ -12,8 +12,8 @@ import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectW
 import { useCookies } from "react-cookie";
 
 const LoginPage: React.FC = (): JSX.Element => {
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [tokenCookies, setTokenCookie] = useCookies(["token"]);
+    const [didCookies, setDidCookie] = useCookies(["did"]);
     const [auth, setAuth] = useRecoilState(authAtom);
     const [showModal, setShowModal] = useState<boolean>(true);
     const navigate = useNavigate();
@@ -87,13 +87,13 @@ const LoginPage: React.FC = (): JSX.Element => {
         }
     };
     
-    // const logIn = async () => {
-    //     localStorage.setItem("did", "did");
-    //     localStorage.setItem("token", "token");
-    //     setShowModal(false)
-    //     await setAuth({isLoggedIn: true});
-    //     navigate('/profile');
-    // };
+    const logIn = async () => {
+        localStorage.setItem("did", "did");
+        localStorage.setItem("token", "token");
+        setShowModal(false)
+        await setAuth({isLoggedIn: true});
+        navigate('/profile');
+    };
 
     return (
         <ModalDialog
