@@ -9,23 +9,16 @@ export interface ComponentProps {
 
 const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
     const navigate = useNavigate();
-    const handleEscKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        console.log('----------------------------------------')
-        if(event.which === 27) { // press enter
-            navigate('/');
-        }
-    }
-
     document.addEventListener('keydown', (event) => {
-        // Prevent F12 -
+        // Press ESC to go back
         if (event.keyCode === 27) {
             event.preventDefault();
-            navigate('/product');
+            navigate('/');
         }
     });
 
     return (
-        <Stack alignItems="center" width={300} spacing={3.5} onKeyPress={handleEscKey}>
+        <Stack alignItems="center" width={300} spacing={3.5}>
             <Typography fontSize={32} fontWeight={700}>
                 Let's Get Started
             </Typography>

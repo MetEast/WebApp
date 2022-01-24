@@ -44,7 +44,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resNewProduct = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=10`, {
+        const resNewProduct = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -80,7 +80,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const getPopularCollection = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resPopularCollection = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
+        const resPopularCollection = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
