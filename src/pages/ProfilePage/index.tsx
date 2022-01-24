@@ -99,7 +99,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 nSelected = 3;
                 break;
             case nftGalleryFilterBtnTypes.Sold:
-                reqUrl += `getSoldCollectible?selfAddr=${accounts[0]}`;
+                reqUrl += `getSoldCollectibles?selfAddr=${accounts[0]}`;
                 nSelected = 4;
                 break;
         }

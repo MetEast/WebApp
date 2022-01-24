@@ -1,5 +1,6 @@
 import { Typography, Stack } from '@mui/material';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
@@ -7,8 +8,24 @@ export interface ComponentProps {
 }
 
 const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
+    const navigate = useNavigate();
+    const handleEscKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log('----------------------------------------')
+        if(event.which === 27) { // press enter
+            navigate('/');
+        }
+    }
+
+    document.addEventListener('keydown', (event) => {
+        // Prevent F12 -
+        if (event.keyCode === 27) {
+            event.preventDefault();
+            navigate('/product');
+        }
+    });
+
     return (
-        <Stack alignItems="center" width={300} spacing={3.5}>
+        <Stack alignItems="center" width={300} spacing={3.5} onKeyPress={handleEscKey}>
             <Typography fontSize={32} fontWeight={700}>
                 Let's Get Started
             </Typography>

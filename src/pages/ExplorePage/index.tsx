@@ -14,6 +14,7 @@ import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
 import { selectFromLikes, selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
@@ -48,7 +49,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     };
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 
@@ -140,110 +141,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
         getFetchData();
     }, [sortBy, filters, filterRange, keyWord, productViewMode]);
 
-    // useEffect(() => {
-    //     var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
-    //     if (sortBy !== undefined) {
-    //         switch(sortBy.label) {
-    //             case 'Price: LOW TO HIGH': 
-    //                 reqUrl += `&orderType=price_l_to_h`;
-    //                 break;
-    //             case 'Price: HIGH TO LOW': 
-    //                 reqUrl += `&orderType=price_h_to_l`;
-    //                 break;
-    //             case 'MOST VIEWED': 
-    //                 reqUrl += `&orderType=mostviewed`;
-    //                 break;
-    //             case 'MOST LIKED': 
-    //                 reqUrl += `&orderType=mostliked`;
-    //                 break;
-    //             case 'MOST RECENT': 
-    //                 reqUrl += `&orderType=mostrecent`;
-    //                 break;
-    //             case 'OLDEST': 
-    //                 reqUrl += `&orderType=oldest`;
-    //                 break;
-    //             case 'ENDING SOON': 
-    //                 reqUrl += `&orderType=endingsoon`;
-    //                 break;
-    //             default: 
-    //                 reqUrl += `&orderType=mostrecent`;
-    //                 break;
-    //         }
-    //     }
-    //     if (filterRange.min !== undefined) {
-    //         reqUrl += `&filter_min_price=${filterRange.min}`;
-    //     }
-    //     if (filterRange.max !== undefined) {
-    //         reqUrl += `&filter_min_price=${filterRange.max}`;
-    //     } 
-    //     if (filters) {
-    //         let filterStatus: string = "";
-    //         filters.forEach((item) => {
-    //             if (item === 0) filterStatus += "ONAUCTION,";
-    //             else if (item === 1) filterStatus += "BUYNOW,";
-    //             else if (item === 2) filterStatus += "HASBID,";
-    //             else if (item === 3) filterStatus += "NEW,";                
-    //         });
-    //         filterStatus.slice(0, filterStatus.length - 1);
-    //         reqUrl += `&filter_status=${filterStatus}`;
-    //     }
-        
-    //     fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
-    //         headers : { 
-    //           'Content-Type': 'application/json',
-    //           'Accept': 'application/json'
-    //          }}
-    //     ).then(response => {
-    //         response.json().then(jsonPrcieRate => {
-    //             const ela_usd_rate = parseFloat(jsonPrcieRate.result.coin_usd);
-    //             fetch(reqUrl, {
-    //                 headers : { 
-    //                   'Content-Type': 'application/json',
-    //                   'Accept': 'application/json'
-    //                 }
-    //             }).then(response => {
-    //                 response.json().then(jsonNewProducts => {
-    //                     jsonNewProducts.data.result.forEach((itemObject: TypeProductFetch) => {
-    //                         fetch(`${process.env.REACT_APP_BACKEND_URL}/getViewsLikesCountOfToken?tokenId=${itemObject.tokenId}`, {
-    //                             headers: {
-    //                                 'Content-Type': 'application/json',
-    //                                 Accept: 'application/json',
-    //                             },
-    //                         }).then((res) => {
-    //                             res.json()
-    //                             .then((jsonViewsAndLikes) => {
-    //                                 var product: TypeProduct = {...defaultValue};
-    //                                 product.tokenId = itemObject.tokenId;
-    //                                 product.name = itemObject.name;
-    //                                 product.image = getImageFromAsset(itemObject.asset);
-    //                                 product.price_ela = itemObject.price;
-    //                                 product.price_usd = product.price_ela * ela_usd_rate;
-    //                                 product.author = "Author"; // -- no proper value
-    //                                 product.type = (itemObject.status == "NEW") ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-    //                                 product.likes = jsonViewsAndLikes.data.likes;
-    //                                 let _newProductList = [...productList];
-    //                                 _newProductList.push(product);
-    //                                 console.log(_newProductList)
-    //                                 setProductList(_newProductList);
-    //                             }).catch((err) => {
-    //                                 console.log(err);
-    //                             });
-    //                         }).catch((err) => {
-    //                             console.log(err);
-    //                         });
-    //                     });
-    //                 });
-    //             }).catch(err => {
-    //                 console.log(err)
-    //             });
-                
-    //         });
-    //     }).catch(err => {
-    //         console.log(err)
-    //     });
-        
-    // }, [sortBy, filters, filterRange, keyWord, productViewMode]);
-
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     }
@@ -291,6 +188,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                             <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
                         </SwiperSlide>
                     ))}
+                    {productList.length == 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
                 </Swiper>
             </Box>
             <OptionsBar
@@ -303,6 +201,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
+            {productList.length == 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 4} md={productViewMode === 'grid1' ? 3 : 2} key={`explore-product-${index}`}>

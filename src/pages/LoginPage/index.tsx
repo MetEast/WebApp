@@ -25,7 +25,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     }
 
     useConnectivitySDK();
-    
+
     const handleWalletConnection = async () => {
         const didAccess = new DID.DIDAccess();
         let presentation;
@@ -42,7 +42,6 @@ const LoginPage: React.FC = (): JSX.Element => {
           console.warn("Error while getting credentials", e);
 
           try {
-            alert("dberror");
             await essentialsConnector.getWalletConnectProvider().disconnect();
           }
           catch (e) {
@@ -77,7 +76,7 @@ const LoginPage: React.FC = (): JSX.Element => {
                   // setUser(user);
                   setShowModal(false)
                   setAuth({isLoggedIn: true});
-                  // navigate('/profile');
+                  navigate('/profile');
                 } else {
                   console.log(data);
                 }

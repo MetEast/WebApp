@@ -12,7 +12,7 @@ import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
 import { selectFromLikes, selectFromFavourites, getImageFromAsset } from 'src/services/common';
 import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
-
+import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
 
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
@@ -44,7 +44,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resNewProduct = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
+        const resNewProduct = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=10`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -80,7 +80,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const getPopularCollection = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resPopularCollection = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
+        const resPopularCollection = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -106,7 +106,7 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'Author'; // -- no proper value
+            product.author = 'No value'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
             product.likes = curItem === undefined ? 0 : curItem.likes;
@@ -154,6 +154,7 @@ const HomePage: React.FC = (): JSX.Element => {
                                 <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
                             </SwiperSlide>
                         ))}
+                        {productList.length == 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
                     </Swiper>
                 </Box>
                 <Box mt={4}>
@@ -165,6 +166,7 @@ const HomePage: React.FC = (): JSX.Element => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+                    {productList.length == 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
                 </Box>
                 <Box mt={8}>
                     <H2Typography mb={1}>Popular Collections</H2Typography>
@@ -175,6 +177,7 @@ const HomePage: React.FC = (): JSX.Element => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+                    {productList.length == 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
                 </Box>
             </Stack>
         </>
