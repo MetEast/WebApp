@@ -26,6 +26,7 @@ import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage'
 import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
+import YourEarnings from 'src/components/profile/YourEarnings';
 import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
 import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeVeiwsLikesFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
@@ -155,7 +156,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <CreateBanner />
+                <YourEarnings />
             </ModalDialog>
         </>
     );
