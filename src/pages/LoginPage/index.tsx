@@ -10,6 +10,7 @@ import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialConnectivity';
 // import { storeWithExpireTime } from 'src/services/common';
 import { useCookies } from "react-cookie";
+import { useConnectivityContext } from 'src/context/ConnectivityContext';
 
 const LoginPage: React.FC = (): JSX.Element => {
     const [tokenCookies, setTokenCookie] = useCookies(["token"]);
@@ -23,6 +24,14 @@ const LoginPage: React.FC = (): JSX.Element => {
     if (tokenCookies.token !== undefined && didCookies.did  !== undefined) {
       setAuth({isLoggedIn: true});
       navigate('/profile');
+    }
+
+    // disconnect if it is already connected
+    const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
+    if(isLinkedToEssentials) {
+      async () => {
+        await essentialsConnector.disconnectWalletConnect();
+      }
     }
 
     useConnectivitySDK();

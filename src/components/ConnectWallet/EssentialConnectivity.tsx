@@ -1,7 +1,7 @@
 import { EssentialsConnector } from "@elastosfoundation/essentials-connector-client-browser";
 import { connectivity } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { useConnectivityContext } from "src/context/ConnectivityContext";
-import WalletConnectProvider from "@walletconnect/web3-provider";
+// import WalletConnectProvider from "@walletconnect/web3-provider";
 
 
 export const essentialsConnector = new EssentialsConnector();
@@ -22,7 +22,7 @@ export function useConnectivitySDK() {
 
     console.log("essentialsConnector", essentialsConnector)
     console.log("Wallet connect provider", essentialsConnector.getWalletConnectProvider());
-    // essentialsConnector.getWalletConnectProvider().updateRpcUrl(21, 'https://api-testnet.elastos.io/eth')
+    essentialsConnector.getWalletConnectProvider().updateRpcUrl(21, 'https://api-testnet.elastos.io/eth')
     // const walletConnectProvider: WalletConnectProvider = new WalletConnectProvider({
     //     rpc: {
     //       20: "https://api.elastos.io/eth",
