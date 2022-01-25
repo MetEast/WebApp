@@ -27,6 +27,8 @@ import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/Cre
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
+import YourEarnings from 'src/components/profile/YourEarnings';
+import AllTransactions from 'src/components/profile/AllTransactions';
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
 import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeVeiwsLikesFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
 import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
@@ -155,7 +157,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <CreateBanner />
+                <AllTransactions />
             </ModalDialog>
         </>
     );

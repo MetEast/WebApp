@@ -2,20 +2,18 @@ import React from 'react';
 import { Stack } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
-import SearchTextField from '../components/SearchTextField';
 import CustomTextField from 'src/components/TextField';
 
 export interface ComponentProps {}
 
-const AddPopularItem: React.FC<ComponentProps> = (): JSX.Element => {
+const EditPopularItem: React.FC<ComponentProps> = (): JSX.Element => {
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
-                <DialogTitleTypo>Add Popular Item</DialogTitleTypo>
+                <DialogTitleTypo>Edit Popular Item</DialogTitleTypo>
             </Stack>
             <Stack spacing={3}>
-                <SearchTextField title="Normal NFTs" placeholder="Search NFT" />
-                <SearchTextField title="Blind Boxes" placeholder="Search Blind Box" />
+                <CustomTextField title="Project ID" placeholder="Enter Project ID" />
                 <CustomTextField title="Sort" />
             </Stack>
             <Stack direction="row" spacing={2}>
@@ -26,4 +24,4 @@ const AddPopularItem: React.FC<ComponentProps> = (): JSX.Element => {
     );
 };
 
-export default AddPopularItem;
+export default EditPopularItem;

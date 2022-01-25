@@ -87,13 +87,13 @@ const LoginPage: React.FC = (): JSX.Element => {
         }
     };
     
-    // const logIn = async () => {
-    //     localStorage.setItem("did", "did");
-    //     localStorage.setItem("token", "token");
-    //     setShowModal(false)
-    //     await setAuth({isLoggedIn: true});
-    //     navigate('/profile');
-    // };
+    const logIn = async () => {
+        localStorage.setItem("did", "did");
+        localStorage.setItem("token", "token");
+        setShowModal(false)
+        await setAuth({isLoggedIn: true});
+        navigate('/profile');
+    };
 
     return (
         <ModalDialog

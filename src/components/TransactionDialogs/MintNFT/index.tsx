@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ModalDialog from 'src/components/ModalDialog';
 import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
@@ -18,9 +18,9 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         file: new File(["foo"], "foo.txt", { type: "text/plain" }),
     });
 
-    useEffect(()=>{
-        console.log(dialogState.createNFTDlgStep, "-stage:      ", inputFormData)
-    }, [dialogState.createNFTDlgStep]);
+    // useEffect(()=>{
+    //     console.log(dialogState.createNFTDlgStep, "-stage:      ", inputFormData)
+    // }, [dialogState.createNFTDlgStep]);
     
     return (
         <ModalDialog

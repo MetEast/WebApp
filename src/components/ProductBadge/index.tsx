@@ -61,6 +61,16 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
             color: '#BF21F1',
             icon: <Icon icon="ph:handshake" />,
         },
+        [enumBadgeType.Badge]: {
+            background: '#E8F4FF',
+            color: '#1890FF',
+            icon: '',
+        },
+        [enumBadgeType.Royalties]: {
+            background: '#FFEAD8',
+            color: '#E0822C',
+            icon: <Icon icon="ph:palette" />,
+        },
     };
 
     return (
@@ -75,13 +85,15 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
                 
                 {`${badgeType}${content ? `: ${content}` : ''}`}
             </Typography> */}
-            <Grid container justifyContent={"space-between"} fontSize={14} fontWeight={500} color={styles[badgeType].color}>
-                <Grid item>
-                    {`${badgeType}${content ? ':' : ''}`}&nbsp;
-                </Grid>
-                <Grid item>
-                    {content ? content : ''}
-                </Grid>
+            <Grid
+                container
+                justifyContent={'space-between'}
+                fontSize={14}
+                fontWeight={500}
+                color={styles[badgeType].color}
+            >
+                <Grid item>{`${badgeType}${content ? ':' : ''}`}&nbsp;</Grid>
+                <Grid item>{content ? content : ''}</Grid>
             </Grid>
         </Container>
     );
