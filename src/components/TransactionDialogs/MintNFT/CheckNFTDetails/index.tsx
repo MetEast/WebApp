@@ -7,14 +7,14 @@ import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLab
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeIpfsUpload, TypeMintInputForm } from 'src/types/mint-types';
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from '../../../ContractMethod/config';
+import { TypeMintInputForm } from 'src/types/mint-types';
+// import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from '../../../ContractMethod/config';
 import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
 import { mintEther, testETHCall } from 'src/components/ContractMethod';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+// import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 
 const client = create({url: 'https://ipfs-test.meteast.io/'});
 

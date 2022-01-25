@@ -19,7 +19,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
 
     // prevent sign-in again after page refresh
-    if (localStorage.getItem("token") !== null && localStorage.getItem("did")  !== null) {
+    if (tokenCookies.token !== undefined && didCookies.did  !== undefined) {
       setAuth({isLoggedIn: true});
       navigate('/profile');
     }

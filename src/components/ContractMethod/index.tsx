@@ -97,5 +97,5 @@ export const testETHCall = async (tokenId: string, tokenUri: string, royaltyFee:
       .on('error', (error: any, receipt: any) => {
         console.error("error", error);
       });
-  }
+}
 
