@@ -40,8 +40,8 @@ const Header: React.FC = (): JSX.Element => {
         removeTokenCookie("token");
         removeDidCookie("did");
         setAuth({ isLoggedIn: false });
-        navigate('/');
         await essentialsConnector.disconnectWalletConnect();
+        navigate('/');
     };
 
     return (

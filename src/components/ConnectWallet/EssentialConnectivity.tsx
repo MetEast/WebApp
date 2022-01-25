@@ -15,7 +15,8 @@ export function useConnectivitySDK() {
     return;
 
   console.log("Preparing the Elastos connectivity SDK");
-  
+  // essentialsConnector.disconnectWalletConnect();
+
   connectivity.registerConnector(essentialsConnector).then(() => {
     connectivityInitialized = true;
 
