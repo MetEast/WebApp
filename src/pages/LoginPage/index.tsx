@@ -20,7 +20,6 @@ const LoginPage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
 
     // prevent sign-in again after page refresh
-    console.log(tokenCookies.token, "-----", didCookies.did)
     if (tokenCookies.token !== undefined && didCookies.did  !== undefined) {
       setAuth({isLoggedIn: true});
       navigate('/profile');
@@ -29,9 +28,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     // disconnect if it is already connected
     const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
     if(isLinkedToEssentials) {
-      async () => {
-        await essentialsConnector.disconnectWalletConnect();
-      }
+        essentialsConnector.disconnectWalletConnect();
     }
 
     useConnectivitySDK();
