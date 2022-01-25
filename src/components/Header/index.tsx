@@ -37,8 +37,6 @@ const Header: React.FC = (): JSX.Element => {
 
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
-        // localStorage.removeItem('token');
-        // localStorage.removeItem('did');
         removeTokenCookie("token");
         removeDidCookie("did");
         setAuth({ isLoggedIn: false });
