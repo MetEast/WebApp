@@ -1,7 +1,7 @@
 import React from 'react';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Grid, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
-import { SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import Select from '../Select';
 import { TypeSelectItem } from 'src/types/select-types';
@@ -23,6 +23,16 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
             value: 'Option2',
         },
     ];
+
+    const transactions = [
+        { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
+        { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
+        { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
+        { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
+        { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
+        { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
+    ];
+
     const [sortby, setSortby] = React.useState<TypeSelectItem>();
     const handleSortbyChange = (value: string) => {
         const item = sortbyOptions.find((option) => option.value === value);
@@ -41,7 +51,69 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     width={160}
                 />
             </Stack>
-            <Stack spacing={3}></Stack>
+            <Stack spacing={3}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Stack>
+                        <Typography fontSize={16} fontWeight={700}>
+                            Your Bid
+                        </Typography>
+                        <Typography fontSize={14} fontWeight={400}>
+                            2022/02/28 10:00
+                        </Typography>
+                    </Stack>
+                    <ELAPrice price_ela={199} />
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                    <PrimaryButton
+                        fullWidth
+                        size="small"
+                        sx={{ background: '#FDEEEE', color: '#EB5757', '&:hover': { background: '#FFDEDE' } }}
+                    >
+                        Cancel Bid
+                    </PrimaryButton>
+                    <PrimaryButton fullWidth size="small">
+                        Update bid
+                    </PrimaryButton>
+                </Stack>
+                <Box>
+                    <Grid container>
+                        <Grid item xs={4}>
+                            <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
+                                User
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
+                                Date
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
+                                Price
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container marginTop={2.5} rowGap={3}>
+                        {transactions.map((item, index) => (
+                            <>
+                                <Grid item xs={4}>
+                                    <Typography fontSize={16} fontWeight={700}>
+                                        {item.user}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Typography fontSize={12} fontWeight={500}>
+                                        {item.date}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <ELAPrice price_ela={item.price} />
+                                </Grid>
+                            </>
+                        ))}
+                    </Grid>
+                </Box>
+            </Stack>
             <SecondaryButton fullWidth>Close</SecondaryButton>
         </Stack>
     );
