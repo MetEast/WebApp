@@ -119,10 +119,6 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
         }
     }, []);
 
-    useEffect(() => {
-        console.log(stateFile);
-    }, [stateFile]);
-
     return (
         <Stack spacing={5} width={700}>
             <Stack alignItems="center">

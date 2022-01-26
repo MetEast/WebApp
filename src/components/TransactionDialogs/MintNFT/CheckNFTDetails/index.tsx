@@ -35,11 +35,10 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData }):
         file: new File([""], "")
     };
 
-    const mint2net = (paramObj: any) => {
+    const mint2net = async (paramObj: any) => {
         enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
         const _royaltyFee = 10000;
-        // mintEther(parseInt(paramObj._id), paramObj._uri, _royaltyFee);
-        testETHCall(paramObj._id, paramObj._uri, _royaltyFee);
+        await testETHCall(paramObj._id, paramObj._uri, _royaltyFee);
         return true;
     };
 
@@ -153,7 +152,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData }):
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {0.22} ELA
+                    Available: {0.0055} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
