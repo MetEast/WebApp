@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
@@ -29,12 +29,14 @@ import ModalDialog from 'src/components/ModalDialog';
 // import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 // import YourEarnings from 'src/components/profile/YourEarnings';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import AllBids from 'src/components/profile/AllBids';
+
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
 import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
@@ -50,33 +52,36 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         price_usd: 0, 
         likes: 0,
         views: 0,
-        author: "",
-        authorDescription: "",
-        authorImg: "",
-        authorAddress: "",
-        description: "",
-        tokenIdHex: "",
+        author: '',
+        authorDescription: '',
+        authorImg: '',
+        authorAddress: '',
+        description: '',
+        tokenIdHex: '',
         royalties: 0,
-        createTime: "",
-        holderName: "",
-        holder: "",
+        createTime: '',
+        holderName: '',
+        holder: '',
         type: enumSingleNFTType.BuyNow,
-        isLike: false, 
+        isLike: false,
         sold: 0,
-        instock: 0
+        instock: 0,
     };
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
+        const resProductDetail = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
         const dataProductDetail = await resProductDetail.json();
         const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = {...defaultValue};        
+        var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {           
             // get individual data
@@ -100,12 +105,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + "" + createTime.time;
+            product.createTime = createTime.date + '' + createTime.time;
             product.instock = itemObject.instock || 0;
             product.sold = itemObject.sold || 0;
         }
-        setProductDetail(product);    
-    }
+        setProductDetail(product);
+    };
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
@@ -116,13 +121,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
     }, []);
-    
+
     const updateProductLikes = (type: string) => {
-        let prodDetail : TypeProduct = {...productDetail};
-        if(type === 'inc') {
+        let prodDetail: TypeProduct = { ...productDetail };
+        if (type === 'inc') {
             prodDetail.likes += 1;
-        }
-        else if(type === 'dec') {
+        } else if (type === 'dec') {
             prodDetail.likes -= 1;
         }
         setProductDetail(prodDetail);
@@ -136,8 +140,15 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <Typography fontSize={{md:56, sm:42, xs:32}} fontWeight={700}>{productDetail.name}</Typography>
-                    <ProductSnippets sold={productDetail.sold} instock={productDetail.instock} likes={productDetail.likes} views={productDetail.views} />
+                    <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
+                        {productDetail.name}
+                    </Typography>
+                    <ProductSnippets
+                        sold={productDetail.sold}
+                        instock={productDetail.instock}
+                        likes={productDetail.likes}
+                        views={productDetail.views}
+                    />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.endTime} />
                     </Stack>
@@ -151,7 +162,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <AllTransactions />
+                <AllBids />
             </ModalDialog>
         </>
     );

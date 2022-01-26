@@ -6,13 +6,27 @@ export const GalleryItemContainer = styled(Stack)`
 `;
 
 export const ProductImageContainer = styled(Stack)<{ param: number }>`
-    height: 100%;
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
     cursor: pointer;
+`;
+
+export const ImageBox = styled(Box)<{ param: number }>`
+    background: #eeeeee;
+    position: absolute;
+    inset: 0;
+    display: flex;
     justify-content: center;
+    /* align-items: center; */
     img {
+        /* width: auto; */
+        /* height: auto; */
+        max-width: 100%;
+        max-height: 100%;
+        /* object-fit: contain; */
         border-radius: 10px;
-        width: 100%;
-        height: ${({ param }) => (param ? '320px' : 'auto')};
+        margin: auto;
     }
 `;
 
