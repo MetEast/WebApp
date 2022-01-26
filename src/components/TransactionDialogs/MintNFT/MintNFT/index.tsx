@@ -25,25 +25,41 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
     const [dialogState, setDialogState] = useDialogContext();
     const categoryOptions: Array<TypeSelectItem> = [
         {
-            label: 'Category1',
-            value: 'Category1',
+            label: 'Original',
+            value: 'Original',
         },
         {
-            label: 'Category2',
-            value: 'Category2',
+            label: 'Museum',
+            value: 'Museum',
         },
         {
-            label: 'Category3',
-            value: 'Category3',
+            label: 'Arts',
+            value: 'Arts',
         },
         {
-            label: 'Category4',
-            value: 'Category4',
+            label: 'Sports',
+            value: 'Sports',
         },
         {
-            label: 'Category5',
-            value: 'Category5',
+            label: 'Dimension',
+            value: 'Dimension',
         },
+        {
+            label: 'Pets',
+            value: 'Pets',
+        },
+        {
+            label: 'Recreation',
+            value: 'Recreation',
+        },
+        {
+            label: 'Star',
+            value: 'Star',
+        },
+        {
+            label: 'Other',
+            value: 'Other',
+        }
     ];
 
     const [category, setCategory] = useState<TypeSelectItem>();

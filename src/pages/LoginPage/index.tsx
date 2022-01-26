@@ -92,11 +92,11 @@ const LoginPage: React.FC = (): JSX.Element => {
     };
     
     // const logIn = async () => {
-    //     localStorage.setItem("did", "did");
-    //     localStorage.setItem("token", "token");
+    //     setDidCookie("did", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/'});
+    //     setTokenCookie("token", 'token', {path: '/'});
     //     setShowModal(false)
     //     setAuth({isLoggedIn: true});
-    //     navigate('/profile');
+    //     navigate('/');
     // };
 
     return (
