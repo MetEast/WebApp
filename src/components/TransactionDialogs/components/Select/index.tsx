@@ -23,11 +23,11 @@ const Select: React.FC<ComponentProps> = ({ options, selected, placeholder = '',
             position="relative"
             sx={{ width: width ? width : 'auto' }}
         >
-            <SelectBtn fullWidth isOpen={isOpen}>
+            <SelectBtn fullWidth isopen={isOpen ? 1 : 0}>
                 {selected ? selected.label : placeholder}
                 <Icon icon="ph:caret-down" className="arrow-icon" />
             </SelectBtn>
-            <ListItemsWrapper width={'100%'} isOpen={isOpen}>
+            <ListItemsWrapper width={'100%'} isopen={isOpen ? 1 : 0}>
                 <Stack borderRadius={3} overflow="hidden" sx={{ background: '#F8F8F8' }}>
                     {options.map((item, index) => (
                         <SelectItem
