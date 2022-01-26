@@ -63,7 +63,7 @@ const App: React.FC = (): JSX.Element => {
                 <ThemeProvider theme={theme}>
                     <AppContextProvider>
                         <DialogContextProvider>
-                            <SnackbarProvider maxSnack={3} >
+                            <SnackbarProvider maxSnack={1} >
                                 <ConnectivityContextProvider>
                                     <CookiesProvider>   
                                         <AppRouter />

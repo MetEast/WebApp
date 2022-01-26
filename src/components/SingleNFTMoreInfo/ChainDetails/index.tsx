@@ -37,7 +37,7 @@ const ChainDetails: React.FC<ComponentProps> = ({tokenId, ownerName, ownerAddres
                 <Grid item xs={5} fontWeight={400}>Chain Name</Grid>
                 <Grid item xs={7} textAlign={"right"}>Elastos Smart Chain</Grid>
                 <Grid item xs={5} fontWeight={400}>Token Standard</Grid>
-                <Grid item xs={7} textAlign={"right"}>ERC1155</Grid>
+                <Grid item xs={7} textAlign={"right"}>ERC721</Grid>
                 <Grid item xs={5} fontWeight={400}>Token ID</Grid>
                 <Grid item xs={7} fontSize={12} color={'#1890FF'} textAlign={"right"}>
                     {reduceHexAddress(tokenId, 5)}

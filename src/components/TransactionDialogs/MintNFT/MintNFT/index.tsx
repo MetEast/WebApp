@@ -111,7 +111,7 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
         const file = acceptedFiles[0];
         if (file) {
             setStateFile({...file, preview: URL.createObjectURL(file)});
-            handleFileChange(file); // set file
+            handleFileChange(acceptedFiles); // set file
         }
       }, []);
 
