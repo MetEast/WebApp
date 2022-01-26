@@ -24,7 +24,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
-    const transactions = [
+    const allBidsList = [
         { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
         { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
         { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
@@ -94,7 +94,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
                         </Grid>
                     </Grid>
                     <Grid container marginTop={2.5} rowGap={3} alignItems="center">
-                        {transactions.map((item, index) => (
+                        {allBidsList.map((item, index) => (
                             <>
                                 <Grid item xs={4}>
                                     <Typography fontSize={16} fontWeight={700}>
