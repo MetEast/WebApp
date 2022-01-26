@@ -15,13 +15,13 @@ import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch, TypeVeiwsLikesFetch, TypeLikesFetchItem } from 'src/types/product-types';
+import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { selectFromLikes, selectFromFavourites } from 'src/services/common';
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
+import { selectFromFavourites } from 'src/services/common';
+import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
 import { getEssentialWalletAddress } from 'src/services/essential';
 
@@ -73,17 +73,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
 
-    const getResultCount = async () => {
-        let newCountList: number[] = [1, 2, 3, 4, 5, 6];
-        setCountList(newCountList);
-    } 
-
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
         let nSelected = 0;
         switch (nftGalleryFilterBtnSelected) {
             case nftGalleryFilterBtnTypes.All:
-                reqUrl += `getOwnCollectible?address=${accounts[0]}`;
+                reqUrl += `getOwnCollectible?selfAddr=${accounts[0]}`;
                 nSelected = 0;
                 break;
             case nftGalleryFilterBtnTypes.Acquired:
@@ -91,7 +86,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 nSelected = 1;
                 break;
             case nftGalleryFilterBtnTypes.Created:
-                reqUrl += `getSelfCreateNotSoldCollectible?address=${accounts[0]}`;
+                reqUrl += `getSelfCreateNotSoldCollectible?selfAddr=${accounts[0]}`;
                 nSelected = 2;
                 break;
             case nftGalleryFilterBtnTypes.ForSale:
@@ -101,6 +96,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
             case nftGalleryFilterBtnTypes.Sold:
                 reqUrl += `getSoldCollectibles?selfAddr=${accounts[0]}`;
                 nSelected = 4;
+                break;
+            case nftGalleryFilterBtnTypes.Liked:
+                reqUrl += `getFavoritesCollectible?did=${didCookies.did}`;
+                nSelected = 5;
                 break;
         }
         reqUrl += `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
@@ -169,7 +168,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || 'No vaule'; 
+            product.author = itemObject.authorName || '---'; 
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
@@ -181,62 +180,22 @@ const ProfilePage: React.FC = (): JSX.Element => {
         setCountList(_cntList);
     };
 
-    const getFavouritesCollectible = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        let arrFavList : string[] = [];
-        for (let i = 0; i < favouritesList.length; i ++) {
-            arrFavList.push(favouritesList[i].tokenId);
-        }
-
-        const resFavouritesResult = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectiblesByTokenIds?tokenIds=${arrFavList.join(",")}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
-        const dataFavouritesResult = await resFavouritesResult.json();
-        const arrFavouritesResult = dataFavouritesResult.data.result;
-        const nFavouritesResult = dataFavouritesResult.data.total;
-
-        // get token list for likes
-        let arrTokenIds: Array<string> = [];
-        for(let i = 0; i < arrFavouritesResult.length; i ++) {
-            arrTokenIds.push(arrFavouritesResult[i].tokenId);
-        }
-        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-
-        let _myNftList: any = [];
-        for(let i = 0; i < arrFavouritesResult.length; i ++) {
-            let itemObject: TypeProductFetch = arrFavouritesResult[i];
-            var product: TypeProduct = { ...defaultValue };
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || 'No vaule'; 
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
-            product.likes = curItem === undefined ? 0 : curItem.likes;
-            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
-            _myNftList.push(product);
-        }
-        setProductList(_myNftList);
-        let _cntList = [...countList];
-        _cntList[5] = nFavouritesResult;
-        setCountList(_cntList);
-    };
-
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
-        if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) getFavouritesCollectible(ela_usd_rate, favouritesList);
-        else getSearchResult(ela_usd_rate, favouritesList);
+        getSearchResult(ela_usd_rate, favouritesList);
+    };
+
+    const getPersonalData = async () => {
+        let _totalEarned = await getTotalEarned(accounts[0]);
+        let _todayEarned = await getTodayEarned(accounts[0]);
+        setTotalEarned(_totalEarned);
+        setTodayEarned(_todayEarned);
     };
 
     useEffect(() => {
         getFetchData();
-        // setTotalEarned(getTotalEarned(accounts[0]));
-        // setTodayEarned(getTodayEarned(accounts[0]));
+        getPersonalData();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected]);
 
     const handleKeyWordChange = (value: string) => {
@@ -359,7 +318,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         handleClickFilterButton={handleClickFilterButton}
                         productViewMode={productViewMode}
                         setProductViewMode={setProductViewMode}
-                        // filterBtnHidden
                     />
                 </Grid>
             </Grid>

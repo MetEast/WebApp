@@ -13,17 +13,20 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
-import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
-import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, enumTransactionType, TypeVeiwsLikesFetch, TypeFavouritesFetch, TypeNFTTransaction } from 'src/types/product-types'; 
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { getImageFromAsset, getUTCTime, getTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
+import { enumBadgeType, enumSingleNFTType, enumTransactionType, TypeProduct, TypeProductFetch, TypeNFTTransactionFetch, TypeNFTTransaction, TypeFavouritesFetch, TypeSingleNFTBid, TypeSingleNFTBidFetch } from 'src/types/product-types'; 
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [didCookies] = useCookies(["did"]);
+
     const defaultValue: TypeProduct = { 
         tokenId: "", 
         name: "", 
@@ -46,10 +49,13 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         isLike: false
     };
     const defaultTransactionValue: TypeNFTTransaction = {type: enumTransactionType.Bid, user: "", price: 0, time: "", txHash: ""};
+    const defaultBidValue: TypeSingleNFTBid = {user: "", price: 0, time: ""};
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const burnAddress = "0x686c626E48bfC5DC98a30a9992897766fed4Abd3";
+    const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    const burnAddress = "0x0000000000000000000000000000000000000000";
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`, {
@@ -63,11 +69,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         var product: TypeProduct = {...defaultValue};        
 
         if (prodDetail !== undefined) {
-            // get token list for likes
-            let arrTokenIds: Array<string> = [];
-            arrTokenIds.push(prodDetail.tokenId);
-            const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-            
             // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
@@ -75,17 +76,16 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'Author'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
-            product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
+            product.likes = itemObject.likes;
+            product.views = itemObject.views;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "Author";
-            product.authorDescription = itemObject.authorDescription || "Author description here";
+            product.author = itemObject.authorName || "---";
+            product.authorDescription = itemObject.authorDescription || "---";
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "Full Name"; // -- no proper value 
+            product.holderName = "---"; // -- no proper value 
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -95,10 +95,103 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         setProductDetail(product);    
     }
 
+    const getLatestTransaction = async () => {
+        const resLatestTransaction = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataLatestTransaction = await resLatestTransaction.json();
+        const arrLatestTransaction = dataLatestTransaction.data;
+    
+        let _latestTransList: any = [];
+        for(let i = 0; i < arrLatestTransaction.length; i ++) {
+            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            var _transaction: TypeNFTTransaction = {...defaultTransactionValue};
+            switch (itemObject.event) {
+                case "Mint":
+                    _transaction.type = enumTransactionType.CreatedBy;
+                    break;
+                case "OrderForAuction":
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case "Bid":
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case "OrderFilled":
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case "OrderForSale":
+                    _transaction.type = enumTransactionType.ForSale;
+                    break;
+            }
+            _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
+            _transaction.price = itemObject.gasFee;  // no proper data
+            _transaction.txHash = itemObject.tHash;
+            let timestamp = getTime(itemObject.timestamp.toString());
+            _transaction.time = timestamp.date + " " + timestamp.time;
+            _latestTransList.push(_transaction);
+        }
+        setTransactionsList(_latestTransList);
+    };
+
+    const getLatestBid = async () => {
+        const resLatestBid = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataLatestBid = await resLatestBid.json();
+        const arrLatestBid = dataLatestBid.data;
+    
+        let _latestBidsList: any = [];
+        for(let i = 0; i < arrLatestBid.length; i ++) {
+            let itemObject: TypeSingleNFTBidFetch = arrLatestBid[i];
+            var _bid: TypeSingleNFTBid = {...defaultBidValue};
+            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
+            _bid.price = parseFloat(itemObject.price) / 1e18;
+            let timestamp = getTime(itemObject.timestamp);
+            _bid.time = timestamp.date + " " + timestamp.time;
+            _latestBidsList.push(_bid);
+        }
+        setBidsList(_latestBidsList);
+    }; 
+
+    // get your bids
+    const getMyBids = async () => {    
+        if(auth.isLoggedIn) {
+            const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+            const accounts = await walletConnectProvider.accounts;
+
+            fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`).then(response => {
+                let _latestBidsList: any = [];
+                response.json().then(jsonBidsList => {
+                    jsonBidsList.forEach((itemObject: TypeSingleNFTBidFetch) => {
+                        var _bid: TypeSingleNFTBid = {...defaultBidValue};
+                        _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data
+                        _bid.price = parseFloat(itemObject.price) / 1e18;
+                        let timestamp = getTime(itemObject.timestamp);
+                        _bid.time = timestamp.date + " " + timestamp.time;
+                        _latestBidsList.push(_bid);
+                    });
+                    setMyBidsList(_latestBidsList);
+                });
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+        else setMyBidsList([]);
+    };
+
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getProductDetail(ela_usd_rate, favouritesList);
+        getLatestTransaction();
+        getLatestBid();
+        getMyBids();
     };
 
     useEffect(() => {

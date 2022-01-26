@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // ---
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
@@ -14,8 +14,8 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
-import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, enumTransactionType, TypeVeiwsLikesFetch, TypeFavouritesFetch, TypeNFTTransaction } from 'src/types/product-types'; 
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, enumTransactionType, TypeNFTTransactionFetch, TypeFavouritesFetch, TypeNFTTransaction } from 'src/types/product-types'; 
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
@@ -23,7 +23,7 @@ import { useCookies } from "react-cookie";
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [didCookies] = useCookies(["did"]);
     const defaultValue: TypeProduct = { 
         tokenId: "", 
         name: "", 
@@ -49,7 +49,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const burnAddress = "0x686c626E48bfC5DC98a30a9992897766fed4Abd3";
+    const burnAddress = "0x0000000000000000000000000000000000000000";
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`, {
@@ -63,11 +63,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         var product: TypeProduct = {...defaultValue};        
 
         if (prodDetail !== undefined) {
-            // get token list for likes
-            let arrTokenIds: Array<string> = [];
-            arrTokenIds.push(prodDetail.tokenId);
-            const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-            
             // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
@@ -75,17 +70,16 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'Author'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
-            product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
+            product.likes = itemObject.likes;
+            product.views = itemObject.views;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "Author";
-            product.authorDescription = itemObject.authorDescription || "Author description here";
+            product.author = itemObject.authorName || "---";
+            product.authorDescription = itemObject.authorDescription || "---";
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "Full Name"; // -- no proper value 
+            product.holderName = "---"; // -- no proper value 
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -95,10 +89,52 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         setProductDetail(product);    
     }
 
+    const getLatestTransaction = async () => {
+        const resLatestTransaction = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
+        const dataLatestTransaction = await resLatestTransaction.json();
+        const arrLatestTransaction = dataLatestTransaction.data;
+    
+        let _latestTransList: any = [];
+        for(let i = 0; i < arrLatestTransaction.length; i ++) {
+            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            var _transaction: TypeNFTTransaction = {...defaultTransactionValue};
+            switch (itemObject.event) {
+                case "Mint":
+                    _transaction.type = enumTransactionType.CreatedBy;
+                    break;
+                case "OrderForAuction":
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case "Bid":
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case "OrderFilled":
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case "OrderForSale":
+                    _transaction.type = enumTransactionType.ForSale;
+                    break;
+            }
+            _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4);  // no proper data
+            _transaction.price = itemObject.gasFee;  // no proper data
+            _transaction.txHash = itemObject.tHash;
+            let timestamp = getTime(itemObject.timestamp.toString());
+            _transaction.time = timestamp.date + " " + timestamp.time;
+            _latestTransList.push(_transaction);
+        }
+        setTransactionsList(_latestTransList);
+    };
+
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getProductDetail(ela_usd_rate, favouritesList);
+        getLatestTransaction();
     };
 
     useEffect(() => {
