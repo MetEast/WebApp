@@ -9,14 +9,15 @@ import { TypeMintInputForm } from 'src/types/mint-types';
 export interface ComponentProps {}
 
 const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
-    const [dialogState, setDialogState] = useDialogContext();
-    const [inputFormData, setInputFormData] = useState<TypeMintInputForm>({
+    const defaultValue: TypeMintInputForm = {
         name: '',
         description: '',
         author: '',
         category: { label: '', value: '' },
-        file: new File(["foo"], "foo.txt", { type: "text/plain" }),
-    });
+        file: new File([""], "")
+    };
+    const [dialogState, setDialogState] = useDialogContext();
+    const [inputFormData, setInputFormData] = useState<TypeMintInputForm>(defaultValue);
 
     useEffect(()=>{
         console.log(dialogState.createNFTDlgStep, "-stage:      ", inputFormData)
@@ -30,7 +31,7 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             }}
         >
             {dialogState.createNFTDlgStep === 0 && <MintNFT inputData={inputFormData} setInputData={setInputFormData}/>}
-            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails inputData={inputFormData}/>}
+            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails inputData={inputFormData} setInputData={setInputFormData}/>}
             {dialogState.createNFTDlgStep === 2 && <NFTMinted />}
         </ModalDialog>
     );

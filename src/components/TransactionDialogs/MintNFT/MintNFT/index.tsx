@@ -1,19 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import Select from '../../components/Select';
 import WarningTypo from '../../components/WarningTypo';
-import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useDialogContext } from 'src/context/DialogContext';
-import { DropzoneArea } from 'material-ui-dropzone';
-import { TypeMintInputForm, TypeMintInput } from 'src/types/mint-types';
-// import MyDropzone from 'src/components/UploadFileButton';
-// import { createStyles, makeStyles } from '@material-ui/core/styles';
-// import { CustomeDropzoneArea } from './styles';
+import { TypeMintInputForm } from 'src/types/mint-types';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
+import { useSnackbar } from 'notistack';
 
 
 export interface ComponentProps {
@@ -67,6 +63,14 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
     const [introduction, setIntroduction] = useState<string>("");
     const [author, setAuthor] = useState<string>("");
     const [stateFile, setStateFile] = useState(null);
+    const { enqueueSnackbar } = useSnackbar();
+    const defaultValue: TypeMintInputForm = {
+        name: '',
+        description: '',
+        author: '',
+        category: { label: '', value: '' },
+        file: new File([""], "")
+    };
 
     const handleCategoryChange = (value: string) => {
         const item = categoryOptions.find((option) => option.value === value);
@@ -100,7 +104,8 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
     };
     
     const handleFileChange = (files: Array<File>) => {
-        if (files.length) {
+        handleDropSingleFile(files);
+        if (files !== null && files.length > 0) {
             let tempFormData: TypeMintInputForm = {...inputData}; 
             tempFormData.file = files[0];
             setInputData(tempFormData);
@@ -111,9 +116,12 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
         const file = acceptedFiles[0];
         if (file) {
             setStateFile({...file, preview: URL.createObjectURL(file)});
-            handleFileChange(acceptedFiles); // set file
         }
-      }, []);
+    }, []);
+
+    useEffect(() => {
+        console.log(stateFile);
+    }, [stateFile]);
 
     return (
         <Stack spacing={5} width={700}>
@@ -136,39 +144,9 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
                             <Typography fontSize={12} fontWeight={700}>
                                 Source File
                             </Typography>
-                            {/* <Stack
-                                width="100%"
-                                height={112}
-                                justifyContent="center"
-                                alignItems="center"
-                                marginTop={1}
-                                borderRadius={2}
-                                sx={{ background: '#E8F4FF', cursor: 'pointer' }}
-                            >
-                                <Icon icon="ph:cloud-arrow-up" fontSize={24} color="#1890FF" />
-                                <Typography fontSize={14} fontWeight={500} color="#1890FF">
-                                    Upload Image
-                                </Typography>
-                            </Stack> */}
-                            {/* <Stack
-                                width="100%"
-                                maxHeight={112}
-                                justifyContent="center"
-                                alignItems="center"
-                                marginTop={1}
-                                borderRadius={2}
-                                sx={{ background: '#E8F4FF', cursor: 'pointer' }}
-                            >
-                                <DropzoneArea onChange={handleFileChange}
-                                    filesLimit={1}
-                                    dropzoneText="Upload Image"
-                                    // previewGridClasses={{ container: classes.container }}
-                                    previewGridProps={{ container: {justifyContent: "center", alignItems: "center"} }}
-                                />
-                            </Stack> */}
                             <UploadSingleFile 
                                 file={stateFile} 
-                                onDrop={handleDropSingleFile}
+                                onDrop={handleFileChange}
                                 sx={{ 
                                     width: "100%",
                                     height: "112px",
@@ -212,6 +190,7 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
+                            setInputData(defaultValue);
                             setDialogState({ ...dialogState, createNFTDlgOpened: false });
                         }}
                     >
@@ -220,9 +199,10 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
                     <PrimaryButton
                         fullWidth
                         onClick={() => {
-                            if (title !== "" && introduction !== "" && author !== "" && category?.label !== "" && category?.value !== "") {
+                            if (title !== "" && introduction !== "" && author !== "" && category !== undefined && category.label !== "" && category.value !== "" && stateFile !== null) {
                                 setDialogState({ ...dialogState, createNFTDlgStep: 1 });
                             }
+                            else enqueueSnackbar('Form validation failed!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
                         }}
                     >
                         Next

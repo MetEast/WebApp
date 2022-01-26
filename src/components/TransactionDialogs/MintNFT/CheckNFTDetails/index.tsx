@@ -1,34 +1,39 @@
 import React from 'react';
-import { create, urlSource } from 'ipfs-http-client';
+import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
-import { ethers } from 'ethers';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeMintInputForm } from 'src/types/mint-types';
-// import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from '../../../ContractMethod/config';
 import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
-import { mintEther, testETHCall } from 'src/components/ContractMethod';
-// import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { testETHCall } from 'src/components/ContractMethod';
 
 const client = create({url: 'https://ipfs-test.meteast.io/'});
 
 export interface ComponentProps {
     inputData: TypeMintInputForm;
+    setInputData: (value: TypeMintInputForm) => void;
 }
 
-const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData }): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { file } = inputData;
     const [tokenCookies] = useCookies(["token"]);
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
     const {did, name} = userInfo;
+    const defaultValue: TypeMintInputForm = {
+        name: '',
+        description: '',
+        author: '',
+        category: { label: '', value: '' },
+        file: new File([""], "")
+    };
 
     const mint2net = (paramObj: any) => {
         enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
@@ -154,6 +159,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData }): JSX.Element =
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
+                            setInputData(defaultValue);
                             setDialogState({ ...dialogState, createNFTDlgOpened: false });
                         }}
                     >
