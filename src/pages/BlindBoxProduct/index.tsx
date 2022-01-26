@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography, Box, Dialog } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
@@ -8,6 +8,8 @@ import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
+
+// For test
 import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
 import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
@@ -29,61 +31,73 @@ import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlind
 import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 import YourEarnings from 'src/components/profile/YourEarnings';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import AllBids from 'src/components/profile/AllBids';
+
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
-import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeVeiwsLikesFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
+import {
+    enumBadgeType,
+    enumSingleNFTType,
+    TypeProduct,
+    TypeProductFetch,
+    TypeVeiwsLikesFetch,
+    TypeFavouritesFetch,
+} from 'src/types/product-types';
 import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [openDlg, setOpenDlg] = React.useState(false);
     // get product details from server
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-    const defaultValue: TypeProduct = { 
-        tokenId: "", 
-        name: "", 
-        image: "",
-        price_ela: 0, 
-        price_usd: 0, 
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(['did']);
+    const defaultValue: TypeProduct = {
+        tokenId: '',
+        name: '',
+        image: '',
+        price_ela: 0,
+        price_usd: 0,
         likes: 0,
         views: 0,
-        author: "",
-        authorDescription: "",
-        authorImg: "",
-        authorAddress: "",
-        description: "",
-        tokenIdHex: "",
+        author: '',
+        authorDescription: '',
+        authorImg: '',
+        authorAddress: '',
+        description: '',
+        tokenIdHex: '',
         royalties: 0,
-        createTime: "",
-        holderName: "",
-        holder: "",
+        createTime: '',
+        holderName: '',
+        holder: '',
         type: enumSingleNFTType.BuyNow,
-        isLike: false, 
+        isLike: false,
         sold: 0,
-        instock: 0
+        instock: 0,
     };
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
+        const resProductDetail = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
         const dataProductDetail = await resProductDetail.json();
         const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = {...defaultValue};        
+        var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {
             // get token list for likes
             let arrTokenIds: Array<string> = [];
             arrTokenIds.push(prodDetail.tokenId);
             const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-            
+
             // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
@@ -92,25 +106,36 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
-            product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
-            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            product.likes =
+                arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0
+                    ? 0
+                    : arrLikesList.likes[0].likes;
+            product.views =
+                arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0
+                    ? 0
+                    : arrLikesList.views[0].views;
+            product.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "No value";
-            product.authorDescription = itemObject.authorDescription || "No value";
+            product.author = itemObject.authorName || 'No value';
+            product.authorDescription = itemObject.authorDescription || 'No value';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "No value"; // -- no proper value 
+            product.holderName = 'No value'; // -- no proper value
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + "" + createTime.time;
+            product.createTime = createTime.date + '' + createTime.time;
             product.instock = itemObject.instock || 0;
             product.sold = itemObject.sold || 0;
         }
-        setProductDetail(product);    
-    }
+        setProductDetail(product);
+    };
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
@@ -121,13 +146,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
     }, []);
-    
+
     const updateProductLikes = (type: string) => {
-        let prodDetail : TypeProduct = {...productDetail};
-        if(type === 'inc') {
+        let prodDetail: TypeProduct = { ...productDetail };
+        if (type === 'inc') {
             prodDetail.likes += 1;
-        }
-        else if(type === 'dec') {
+        } else if (type === 'dec') {
             prodDetail.likes -= 1;
         }
         setProductDetail(prodDetail);
@@ -141,8 +165,15 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <Typography fontSize={{md:56, sm:42, xs:32}} fontWeight={700}>{productDetail.name}</Typography>
-                    <ProductSnippets sold={productDetail.sold} instock={productDetail.instock} likes={productDetail.likes} views={productDetail.views} />
+                    <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
+                        {productDetail.name}
+                    </Typography>
+                    <ProductSnippets
+                        sold={productDetail.sold}
+                        instock={productDetail.instock}
+                        likes={productDetail.likes}
+                        views={productDetail.views}
+                    />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         {/* <ProductBadge badgeType={enumBadgeType.ComingSoon} content="2022/02/28 10:00" /> */}
                         <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.endTime} />
@@ -157,7 +188,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <AllTransactions />
+                <AllBids />
             </ModalDialog>
         </>
     );
