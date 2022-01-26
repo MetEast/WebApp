@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -15,9 +15,10 @@ import { useSnackbar } from 'notistack';
 export interface ComponentProps {
     inputData: TypeMintInputForm;
     setInputData: (value: TypeMintInputForm) => void;
+    txFee: number;
 }
 
-const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Element => {
+const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const categoryOptions: Array<TypeSelectItem> = [
         {
@@ -180,7 +181,7 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
             </Box>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: 0.22 ELA
+                    Available: {txFee} ELA
                 </Typography>
                 <Stack width="100%" direction="row" spacing={2}>
                     <SecondaryButton

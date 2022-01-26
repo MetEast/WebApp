@@ -62,7 +62,7 @@ export const safeMint = async (tokenId: number, uri: string, royaltyFee: number,
 }
 
 
-export const testETHCall = async (tokenId: string, tokenUri: string, royaltyFee: number) => {
+export const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyFee: number, _gasLimit: number) => {
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any); // HACK
 
@@ -71,7 +71,7 @@ export const testETHCall = async (tokenId: string, tokenUri: string, royaltyFee:
 
     let contractAbi = METEAST_CONTRACT_ABI;
     let contractAddress = METEAST_CONTRACT_ADDRESS; // Elastos Testnet
-    let contract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+    let meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
     let gasPrice = await walletConnectWeb3.eth.getGasPrice();
     console.log("Gas price:", gasPrice);
@@ -80,11 +80,11 @@ export const testETHCall = async (tokenId: string, tokenUri: string, royaltyFee:
     let transactionParams = {
       from: accounts[0],
       gasPrice: gasPrice,
-      gas: 5000000,
+      gas: _gasLimit,
       value: 0
     };
 
-    contract.methods.mint(tokenId, tokenUri, royaltyFee).send(transactionParams)
+    meteastContract.methods.mint(_tokenId, _tokenUri, _royaltyFee).send(transactionParams)
       .on('transactionHash', (hash: any) => {
         console.log("transactionHash", hash);
       })
@@ -97,5 +97,42 @@ export const testETHCall = async (tokenId: string, tokenUri: string, royaltyFee:
       .on('error', (error: any, receipt: any) => {
         console.error("error", error);
       });
+}
+
+export const callCreateOrderForSale = async (tokenId: string, tokenUri: string, royaltyFee: number) => {
+  const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+  const walletConnectWeb3 = new Web3(walletConnectProvider as any); // HACK
+
+
+  const accounts = await walletConnectWeb3.eth.getAccounts();
+
+  let contractAbi = STICKER_CONTRACT_ABI;
+  let contractAddress = STICKER_CONTRACT_ADDRESS; // Elastos Testnet
+  let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+
+  let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+  console.log("Gas price:", gasPrice);
+
+  console.log("Sending transaction with account address:", accounts[0]);
+  let transactionParams = {
+    from: accounts[0],
+    gasPrice: gasPrice,
+    gas: 5000000,
+    value: 0
+  };
+
+  stickerContract.methods.mint(tokenId, tokenUri, royaltyFee).send(transactionParams)
+    .on('transactionHash', (hash: any) => {
+      console.log("transactionHash", hash);
+    })
+    .on('receipt', (receipt: any) => {
+      console.log("receipt", receipt);
+    })
+    .on('confirmation', (confirmationNumber: any, receipt: any) => {
+      console.log("confirmation", confirmationNumber, receipt);
+    })
+    .on('error', (error: any, receipt: any) => {
+      console.error("error", error);
+    });
 }
 

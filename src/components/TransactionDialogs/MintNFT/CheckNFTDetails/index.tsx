@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
 import { Stack, Typography, Grid } from '@mui/material';
@@ -11,16 +11,17 @@ import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
-import { testETHCall } from 'src/components/ContractMethod';
+import { callMintNFT } from 'src/components/ContractMethod';
 
 const client = create({url: 'https://ipfs-test.meteast.io/'});
 
 export interface ComponentProps {
     inputData: TypeMintInputForm;
     setInputData: (value: TypeMintInputForm) => void;
+    txFee: number;
 }
 
-const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData }): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { file } = inputData;
     const [tokenCookies] = useCookies(["token"]);
@@ -38,7 +39,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData }):
     const mint2net = async (paramObj: any) => {
         enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
         const _royaltyFee = 10000;
-        await testETHCall(paramObj._id, paramObj._uri, _royaltyFee);
+        await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, 5000000);
         return true;
     };
 
@@ -146,13 +147,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData }):
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>0.0055 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{txFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {0.0055} ELA
+                    Available: {txFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
