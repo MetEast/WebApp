@@ -13,7 +13,7 @@ import { TypeMintInputForm, TypeMintInput } from 'src/types/mint-types';
 // import MyDropzone from 'src/components/UploadFileButton';
 // import { createStyles, makeStyles } from '@material-ui/core/styles';
 // import { CustomeDropzoneArea } from './styles';
-// import UploadSingleFile from 'src/components/UploadImage/UploadSingleFile';
+import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 
 
 export interface ComponentProps {
@@ -66,6 +66,7 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
     const [title, setTitle] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
     const [author, setAuthor] = useState<string>("");
+    const [stateFile, setStateFile] = useState(null);
 
     const handleCategoryChange = (value: string) => {
         const item = categoryOptions.find((option) => option.value === value);
@@ -106,6 +107,14 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
         }
     }
 
+    const handleDropSingleFile = useCallback((acceptedFiles) => {
+        const file = acceptedFiles[0];
+        if (file) {
+            setStateFile({...file, preview: URL.createObjectURL(file)});
+            handleFileChange(file); // set file
+        }
+      }, []);
+
     return (
         <Stack spacing={5} width={700}>
             <Stack alignItems="center">
@@ -141,7 +150,7 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
                                     Upload Image
                                 </Typography>
                             </Stack> */}
-                            <Stack
+                            {/* <Stack
                                 width="100%"
                                 maxHeight={112}
                                 justifyContent="center"
@@ -156,8 +165,21 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Eleme
                                     // previewGridClasses={{ container: classes.container }}
                                     previewGridProps={{ container: {justifyContent: "center", alignItems: "center"} }}
                                 />
-                            </Stack>
-                            {/* <UploadSingleFile error={true} file={file} sx={{}} onDrop={handleDropSingleFile} /> */}
+                            </Stack> */}
+                            <UploadSingleFile 
+                                file={stateFile} 
+                                onDrop={handleDropSingleFile}
+                                sx={{ 
+                                    width: "100%",
+                                    height: "112px",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    marginTop: "1rem",
+                                    borderRadius: "2vw",
+                                    background: '#E8F4FF', 
+                                    cursor: 'pointer' 
+                                }}
+                            />
                         </Box>
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
