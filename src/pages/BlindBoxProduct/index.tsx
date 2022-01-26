@@ -32,6 +32,7 @@ import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateB
 import YourEarnings from 'src/components/profile/YourEarnings';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/profile/AllBids';
+import ReceivedBids from 'src/components/profile/ReceivedBids';
 
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
 import {
@@ -188,7 +189,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <AllBids />
+                <ReceivedBids />
             </ModalDialog>
         </>
     );
