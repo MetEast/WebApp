@@ -73,8 +73,8 @@ const LoginPage: React.FC = (): JSX.Element => {
                 if (data.code === 200) {
                   const token = data.token;
 
-                  setTokenCookie("token", token, {path: '/'});
-                  setDidCookie("did", did, {path: '/'});  
+                  setTokenCookie("token", token, {path: '/', sameSite: 'none', secure: true});
+                  setDidCookie("did", did, {path: '/', sameSite: 'none', secure: true});
                   const user = jwtDecode(token);
                   console.log("Sign in: setting user to:", user);
                   setShowModal(false)
@@ -92,8 +92,8 @@ const LoginPage: React.FC = (): JSX.Element => {
     };
     
     // const logIn = async () => {
-    //     setDidCookie("did", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/'});
-    //     setTokenCookie("token", 'token', {path: '/'});
+    //     setDidCookie("did", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/', sameSite: 'none', secure: true});
+    //     setTokenCookie("token", 'token', {path: '/', sameSite: 'none', secure: true});
     //     setShowModal(false)
     //     setAuth({isLoggedIn: true});
     //     navigate('/');
