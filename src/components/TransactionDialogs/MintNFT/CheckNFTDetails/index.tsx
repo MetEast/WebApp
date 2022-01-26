@@ -30,47 +30,15 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData }): JSX.Element =
     const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
     const {did, name} = userInfo;
 
-    const mint2net = (paramObj: any)=>(
-        new Promise((resolve, reject) => {
-            enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
-            const _royaltyFee = 10000;
-            // mintEther(parseInt(paramObj._id), paramObj._uri, _royaltyFee);
-            testETHCall(paramObj._id, paramObj._uri, _royaltyFee);
-            // try {
-            //     const eeProvider = essentialsConnector.getWeb3Provider();
-            //     const { ethereum } = window;
-            //     if (ethereum) {
-            //         const provider = new ethers.providers.Web3Provider(ethereum);
-            //         const signer = provider.getSigner();
-            //         const meteastContract = new ethers.Contract(METEAST_CONTRACT_ADDRESS, METEAST_CONTRACT_ABI, signer);
+    const mint2net = (paramObj: any) => {
+        enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
+        const _royaltyFee = 10000;
+        // mintEther(parseInt(paramObj._id), paramObj._uri, _royaltyFee);
+        testETHCall(paramObj._id, paramObj._uri, _royaltyFee);
+        return true;
+    };
 
-            //         console.log("Initialize payment")
-            //         alert(1);
-            //         // console.log(parseInt(paramObj._id), "---", paramObj._uri, "---", _royaltyFee);
-            //         meteastContract.mint(paramObj._id, paramObj._uri, _royaltyFee).then((nftTxn: any)=>{
-            //             alert(2);
-            //             console.log("Mining... please wait")
-            //             nftTxn.wait().then(()=>{
-            //                 console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`)
-            //                 resolve(true)
-            //             }).catch((error: Error) => {
-            //                 reject(error)
-            //             })
-            //         }).catch((error: Error) => {
-            //             reject(error)
-            //         })
-            //     } 
-            //     else {
-            //         resolve(false)
-            //         console.log("Ethereum object does not exist")
-            //     }
-            // } catch (err) {
-            //     reject(err)
-            // }
-        })
-    )
-
-    const sendIpfsImage = (f: File)=>(
+    const sendIpfsImage = (f: File) => (
         new Promise((resolve, reject) => {
         const reader = new window.FileReader();
         reader.readAsArrayBuffer(f);
@@ -149,6 +117,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData }): JSX.Element =
             enqueueSnackbar('Mint token error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
         });
     }
+
     return (
         <Stack spacing={5} width={340}>
             <Stack alignItems="center">
@@ -173,7 +142,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData }): JSX.Element =
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>0.22 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>0.0055 ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>

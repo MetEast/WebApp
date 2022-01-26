@@ -21,7 +21,7 @@ const SortByButton: React.FC<SelectProps> = ({ options, title, placeholder = '',
                 setIsOpened(!isOpened);
             }}
         >
-            <SortByBtn fullWidth isOpenned={isOpened}>
+            <SortByBtn fullWidth isopenned={isOpened ? 1 : 0}>
                 <Icon icon="ph:sort-ascending" fontSize={24} />
                 {!onlyShowIcon && <>
                     {title ? title : placeholder}

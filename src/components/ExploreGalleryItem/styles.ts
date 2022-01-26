@@ -5,14 +5,14 @@ export const GalleryItemContainer = styled(Stack)`
     justify-content: space-between;
 `;
 
-export const ProductImageContainer = styled(Stack)<{ onlyShowImage?: boolean }>`
+export const ProductImageContainer = styled(Stack)<{ param: number }>`
     height: 100%;
     cursor: pointer;
     justify-content: center;
     img {
         border-radius: 10px;
         width: 100%;
-        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : 'auto')};
+        height: ${({ param }) => (param ? '320px' : 'auto')};
     }
 `;
 

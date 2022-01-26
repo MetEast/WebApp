@@ -74,7 +74,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, in
     return (
         <Box>
             <Link to={`/mynft/buynow/${product.tokenId}`}>
-                <ProductImageContainer onlyShowImage={onlyShowImage}>
+                <ProductImageContainer param={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
                         <LikeBtn onClick={changeLikeState}>
