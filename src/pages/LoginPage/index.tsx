@@ -4,7 +4,6 @@ import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
-// import ChooseWallet from 'src/components/profile/ChooseWallet';
 import jwtDecode from 'jwt-decode';
 import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialConnectivity';
