@@ -137,7 +137,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        await updateProductViews();
+        updateProductViews();
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getProductDetail(ela_usd_rate, favouritesList);

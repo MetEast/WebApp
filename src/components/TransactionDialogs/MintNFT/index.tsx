@@ -4,19 +4,24 @@ import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
 import NFTMinted from 'src/components/TransactionDialogs/MintNFT/NFTMinted';
 import { useDialogContext } from 'src/context/DialogContext';
+import { TypeMintInputForm } from 'src/types/mint-types';
 
 export interface ComponentProps {}
 
 const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-    const [formData, setFormData] = useState({
-        'name': 11,
-        'description': '',
-        'category': Object,
-        'auther': '',
-        'file': File,
+    const [inputFormData, setInputFormData] = useState<TypeMintInputForm>({
+        name: '',
+        description: '',
+        author: '',
+        category: { label: '', value: '' },
+        file: new File(["foo"], "foo.txt", { type: "text/plain" }),
     });
-    console.log(formData)
+
+    // useEffect(()=>{
+    //     console.log(dialogState.createNFTDlgStep, "-stage:      ", inputFormData)
+    // }, [dialogState.createNFTDlgStep]);
+    
     return (
         <ModalDialog
             open={dialogState.createNFTDlgOpened}
@@ -24,8 +29,8 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setDialogState({ ...dialogState, createNFTDlgOpened: false });
             }}
         >
-            {dialogState.createNFTDlgStep === 0 && <MintNFT formData={formData} setFormData={setFormData}/>}
-            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails />}
+            {dialogState.createNFTDlgStep === 0 && <MintNFT inputData={inputFormData} setInputData={setInputFormData}/>}
+            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails inputData={inputFormData}/>}
             {dialogState.createNFTDlgStep === 2 && <NFTMinted />}
         </ModalDialog>
     );

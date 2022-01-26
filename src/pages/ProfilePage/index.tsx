@@ -28,8 +28,8 @@ import { getEssentialWalletAddress } from 'src/services/essential';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies] = useCookies(["did"]);
+    const [tokenCookies] = useCookies(["token"]);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
@@ -293,7 +293,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {productList.length == 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
+                {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
             </Box>
             <Box>
                 <ProfileImageWrapper>
@@ -376,7 +376,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </FilterItemTypography>
                 ))}
             </Box>
-            {productList.length == 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
+            {productList.length === 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>

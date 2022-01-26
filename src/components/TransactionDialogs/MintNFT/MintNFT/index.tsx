@@ -9,6 +9,7 @@ import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import { DropzoneArea } from 'material-ui-dropzone';
+import { TypeMintInputForm, TypeMintInput } from 'src/types/mint-types';
 // import MyDropzone from 'src/components/UploadFileButton';
 // import { createStyles, makeStyles } from '@material-ui/core/styles';
 // import { CustomeDropzoneArea } from './styles';
@@ -16,85 +17,95 @@ import { DropzoneArea } from 'material-ui-dropzone';
 
 
 export interface ComponentProps {
-    formData: object;
-    setFormData: any;
+    inputData: TypeMintInputForm;
+    setInputData: (value: TypeMintInputForm) => void;
 }
 
-const MintNFT: React.FC<ComponentProps> = ({formData, setFormData}): JSX.Element => {
+const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     const categoryOptions: Array<TypeSelectItem> = [
         {
-            label: 'Category1',
-            value: 'Category1',
+            label: 'Original',
+            value: 'Original',
         },
         {
-            label: 'Category2',
-            value: 'Category2',
+            label: 'Museum',
+            value: 'Museum',
         },
         {
-            label: 'Category3',
-            value: 'Category3',
+            label: 'Arts',
+            value: 'Arts',
         },
         {
-            label: 'Category4',
-            value: 'Category4',
+            label: 'Sports',
+            value: 'Sports',
         },
         {
-            label: 'Category5',
-            value: 'Category5',
+            label: 'Dimension',
+            value: 'Dimension',
         },
+        {
+            label: 'Pets',
+            value: 'Pets',
+        },
+        {
+            label: 'Recreation',
+            value: 'Recreation',
+        },
+        {
+            label: 'Star',
+            value: 'Star',
+        },
+        {
+            label: 'Other',
+            value: 'Other',
+        }
     ];
+
     const [category, setCategory] = useState<TypeSelectItem>();
-    const [title, setTitle] = useState("");
-    const [introduction, setIntroduction] = useState("");
-    const [author, setAuthor] = useState("");
+    const [title, setTitle] = useState<string>("");
+    const [introduction, setIntroduction] = useState<string>("");
+    const [author, setAuthor] = useState<string>("");
 
     const handleCategoryChange = (value: string) => {
         const item = categoryOptions.find((option) => option.value === value);
         setCategory(item);
-
+        if (item !== undefined) {
+            let tempFormData: TypeMintInputForm = {...inputData}; 
+            tempFormData.category = item;
+            setInputData(tempFormData);
+        }
     };
-    const [dialogState, setDialogState] = useDialogContext();
+
+    const handleNameChange = (value: string) => {
+        setTitle(value);
+        let tempFormData: TypeMintInputForm = {...inputData}; 
+        tempFormData.name = value;
+        setInputData(tempFormData);
+    };
+
+    const handleDescriptionChange = (value: string) => {
+        setIntroduction(value);
+        let tempFormData: TypeMintInputForm = {...inputData}; 
+        tempFormData.description = value;
+        setInputData(tempFormData);
+    };
+
+    const handleAuthorChange = (value: string) => {
+        setAuthor(value);
+        let tempFormData: TypeMintInputForm = {...inputData}; 
+        tempFormData.author = value;
+        setInputData(tempFormData);
+    };
     
-    // const [projectTitle, setProjectTitle] = useState("");
-
-
-    // const useStyles = makeStyles(theme => createStyles({
-    //     container: {
-    //       width: "100%",
-    //       height: 112, 
-    //       borderRadius: 2,
-    //       background: '#E8F4FF', 
-    //       cursor: 'pointer'
-    //     },
-    //   }));
-      
-    // const classes = useStyles();
-
-    // const handleDropSingleFile = useCallback((acceptedFiles) => {
-    //     const file = acceptedFiles[0];
-    //     if (file) {
-    //       setFile({
-    //         ...file,
-    //         preview: URL.createObjectURL(file)
-    //       });
-    //     }
-    //   }, []);
-    const handleFile = (files: any) => {
-        if(files.length)
-            fillData('file', files[0])
+    const handleFileChange = (files: Array<File>) => {
+        if (files.length) {
+            let tempFormData: TypeMintInputForm = {...inputData}; 
+            tempFormData.file = files[0];
+            setInputData(tempFormData);
+        }
     }
-    const fillData = (key: string, data: any) => {
-        let tempFormData:any = {...formData}
-        tempFormData[key] = data
-        setFormData(tempFormData)
-    }
-    const fullFillData = () => {
-        console.log(title)
-        fillData('name', title)
-        fillData('description', introduction)
-        fillData('author', author)
-        fillData('category', category)
-    }
+
     return (
         <Stack spacing={5} width={700}>
             <Stack alignItems="center">
@@ -104,13 +115,13 @@ const MintNFT: React.FC<ComponentProps> = ({formData, setFormData}): JSX.Element
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
-                        <CustomTextField title="Project Title" placeholder="Placeholder Text" changeHandler={(value: string) => {setTitle(value)}} />
+                        <CustomTextField title="Project Title" placeholder="Placeholder Text" changeHandler={(value: string) => {handleNameChange(value)}} />
                         <CustomTextField
                             title="Project Introduction"
                             placeholder="Enter Introduction"
                             multiline
                             rows={3}
-                            changeHandler={(value: string) => setIntroduction(value)}                       
+                            changeHandler={(value: string) => handleDescriptionChange(value)}                       
                         />
                         <Box>
                             <Typography fontSize={12} fontWeight={700}>
@@ -139,7 +150,7 @@ const MintNFT: React.FC<ComponentProps> = ({formData, setFormData}): JSX.Element
                                 borderRadius={2}
                                 sx={{ background: '#E8F4FF', cursor: 'pointer' }}
                             >
-                                <DropzoneArea onChange={handleFile}
+                                <DropzoneArea onChange={handleFileChange}
                                     filesLimit={1}
                                     dropzoneText="Upload Image"
                                     // previewGridClasses={{ container: classes.container }}
@@ -166,7 +177,7 @@ const MintNFT: React.FC<ComponentProps> = ({formData, setFormData}): JSX.Element
                             placeholder="Enter author introduction"
                             multiline
                             rows={3}
-                            changeHandler={(value: string) => setAuthor(value)}                       
+                            changeHandler={(value: string) => handleAuthorChange(value)}                       
                         />
                     </Grid>
                 </Grid>
@@ -187,8 +198,9 @@ const MintNFT: React.FC<ComponentProps> = ({formData, setFormData}): JSX.Element
                     <PrimaryButton
                         fullWidth
                         onClick={() => {
-                            fullFillData();
-                            setDialogState({ ...dialogState, createNFTDlgStep: 1 });
+                            if (title !== "" && introduction !== "" && author !== "" && category?.label !== "" && category?.value !== "") {
+                                setDialogState({ ...dialogState, createNFTDlgStep: 1 });
+                            }
                         }}
                     >
                         Next

@@ -20,11 +20,11 @@ const Select: React.FC<ComponentProps> = ({ options, selected, handleClick }) =>
             }}
             position="relative"
         >
-            <SelectBtn fullWidth isOpen={isOpen}>
+            <SelectBtn fullWidth isopen={isOpen ? 1: 0}>
                 {`${selected} art. / page`}
                 <Icon icon="ph:caret-down" className="arrow-icon" />
             </SelectBtn>
-            <ListItemsWrapper width={'100%'} isOpen={isOpen}>
+            <ListItemsWrapper width={'100%'} isopen={isOpen ? 1: 0}>
                 <Stack borderRadius={3} overflow="hidden" sx={{ background: '#F8F8F8' }}>
                     {options.map((item, index) => (
                         <SelectItem

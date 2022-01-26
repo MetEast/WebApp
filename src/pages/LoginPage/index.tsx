@@ -8,8 +8,9 @@ import ConnectDID from 'src/components/profile/ConnectDID';
 import jwtDecode from 'jwt-decode';
 import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialConnectivity';
-// import { storeWithExpireTime } from 'src/services/common';
+import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useCookies } from "react-cookie";
+import { useConnectivityContext } from 'src/context/ConnectivityContext';
 
 const LoginPage: React.FC = (): JSX.Element => {
     const [tokenCookies, setTokenCookie] = useCookies(["token"]);
@@ -17,11 +18,19 @@ const LoginPage: React.FC = (): JSX.Element => {
     const [auth, setAuth] = useRecoilState(authAtom);
     const [showModal, setShowModal] = useState<boolean>(true);
     const navigate = useNavigate();
+    const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
 
     // prevent sign-in again after page refresh
-    if (localStorage.getItem("token") !== null && localStorage.getItem("did")  !== null) {
+    if (tokenCookies.token !== undefined && didCookies.did  !== undefined) {
       setAuth({isLoggedIn: true});
       navigate('/profile');
+    }
+
+    // disconnect if it is already connected
+    const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
+    if(isLinkedToEssentials) {
+        alert('disconnect');
+        essentialsConnector.disconnectWalletConnect();
     }
 
     useConnectivitySDK();
@@ -42,7 +51,7 @@ const LoginPage: React.FC = (): JSX.Element => {
           console.warn("Error while getting credentials", e);
 
           try {
-            await essentialsConnector.getWalletConnectProvider().disconnect();
+            await walletConnectProvider.disconnect();
           }
           catch (e) {
             console.error("Error while trying to disconnect wallet connect session", e);
@@ -64,18 +73,13 @@ const LoginPage: React.FC = (): JSX.Element => {
                 if (data.code === 200) {
                   const token = data.token;
 
-                  // storeWithExpireTime("did", did, 24 * 3600 * 1000);
-                  // storeWithExpireTime("token", token, 24 * 3600 * 1000);
-                  // localStorage.setItem("did", did);
-                  // localStorage.setItem("token", token);
-                  setTokenCookie("token", token, {path: '/'});
-                  setDidCookie("did", did, {path: '/'});
-  
+                  setTokenCookie("token", token, {path: '/', sameSite: 'none', secure: true});
+                  setDidCookie("did", did, {path: '/', sameSite: 'none', secure: true});
                   const user = jwtDecode(token);
                   console.log("Sign in: setting user to:", user);
-                  // setUser(user);
                   setShowModal(false)
                   setAuth({isLoggedIn: true});
+                  setIsLinkedToEssentials(true);
                   navigate('/profile');
                 } else {
                   console.log(data);
@@ -87,13 +91,13 @@ const LoginPage: React.FC = (): JSX.Element => {
         }
     };
     
-    const logIn = async () => {
-        localStorage.setItem("did", "did");
-        localStorage.setItem("token", "token");
-        setShowModal(false)
-        await setAuth({isLoggedIn: true});
-        navigate('/profile');
-    };
+    // const logIn = async () => {
+    //     setDidCookie("did", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/', sameSite: 'none', secure: true});
+    //     setTokenCookie("token", 'token', {path: '/', sameSite: 'none', secure: true});
+    //     setShowModal(false)
+    //     setAuth({isLoggedIn: true});
+    //     navigate('/');
+    // };
 
     return (
         <ModalDialog

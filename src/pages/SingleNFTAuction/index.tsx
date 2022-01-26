@@ -24,8 +24,8 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies] = useCookies(["did"]);
+    const [tokenCookies] = useCookies(["token"]);
     // get product details from server
     const params = useParams(); // params.tokenId
     const defaultValue: TypeProduct = { 
@@ -178,9 +178,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const getMyBids = async () => {    
         if(auth.isLoggedIn) {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-            // console.log("----------walletConnectProvider", walletConnectProvider);
             const accounts = await walletConnectProvider.accounts;
-            console.log("----------accounts", accounts);
 
             fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`).then(response => {
                 let _latestBidsList: any = [];
