@@ -64,7 +64,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, only
     return (
         <Box>
             <Link to={`/blind-box/product/${product.tokenId}`}>
-                <ProductImageContainer onlyShowImage={onlyShowImage}>
+                <ProductImageContainer param={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (
                         <LikeBtn onClick={changeLikeState}>

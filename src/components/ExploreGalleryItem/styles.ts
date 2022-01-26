@@ -5,14 +5,14 @@ export const GalleryItemContainer = styled(Stack)`
     justify-content: space-between;
 `;
 
-export const ProductImageContainer = styled(Stack)<{ onlyShowImage?: boolean }>`
+export const ProductImageContainer = styled(Stack)<{ param: number }>`
     position: relative;
     width: 100%;
     padding-top: 100%;
     cursor: pointer;
 `;
 
-export const ImageBox = styled(Box)`
+export const ImageBox = styled(Box)<{ param: number }>`
     background: #eeeeee;
     position: absolute;
     inset: 0;

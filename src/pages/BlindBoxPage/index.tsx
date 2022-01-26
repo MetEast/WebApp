@@ -124,7 +124,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || 'No vaule'; 
-            product.type = (itemObject.status === "ComingSoon") ? enumBlindBoxNFTType.ComingSoon : ((itemObject.status == "SaleEnded") ? enumBlindBoxNFTType.SaleEnded : enumBlindBoxNFTType.SaleEnds );
+            product.type = (itemObject.status === "ComingSoon") ? enumBlindBoxNFTType.ComingSoon : ((itemObject.status === "SaleEnded") ? enumBlindBoxNFTType.SaleEnded : enumBlindBoxNFTType.SaleEnds );
             let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
             product.likes = curItem === undefined ? 0 : curItem.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;

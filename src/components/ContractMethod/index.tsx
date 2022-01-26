@@ -1,9 +1,11 @@
 import { Bytes } from 'ethers';
-import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { AbiItem } from 'web3-utils'
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from './config';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
 
 export const getABI = (contractAddress: string) => {
     fetch(`${process.env.ETHERSCAN_API_URL}?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHERSACN_API_KEY_TOKEN}`).then(response => {
@@ -36,10 +38,9 @@ export const mintEther = async (tokenId: number, uri: string, royaltyFee: number
         } else {
           console.log("Ethereum object does not exist");
         }
-  
-      } catch (err) {
+    } catch (err) {
         console.log(err);
-      }
+    }
 }
 
 export const mint = async (tokenId: number, uri: string, royaltyFee: number) => {
@@ -60,4 +61,41 @@ export const safeMint = async (tokenId: number, uri: string, royaltyFee: number,
     return await meteast_contract.methods.safeMint(tokenId, uri, royaltyFee, data).call();
 }
 
+
+export const testETHCall = async (tokenId: string, tokenUri: string, royaltyFee: number) => {
+    const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any); // HACK
+
+
+    const accounts = await walletConnectWeb3.eth.getAccounts();
+
+    let contractAbi = METEAST_CONTRACT_ABI;
+    let contractAddress = METEAST_CONTRACT_ADDRESS; // Elastos Testnet
+    let contract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+
+    let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+    console.log("Gas price:", gasPrice);
+
+    console.log("Sending transaction with account address:", accounts[0]);
+    let transactionParams = {
+      from: accounts[0],
+      gasPrice: gasPrice,
+      gas: 5000000,
+      value: 0
+    };
+
+    contract.methods.mint(tokenId, tokenUri, royaltyFee).send(transactionParams)
+      .on('transactionHash', (hash: any) => {
+        console.log("transactionHash", hash);
+      })
+      .on('receipt', (receipt: any) => {
+        console.log("receipt", receipt);
+      })
+      .on('confirmation', (confirmationNumber: any, receipt: any) => {
+        console.log("confirmation", confirmationNumber, receipt);
+      })
+      .on('error', (error: any, receipt: any) => {
+        console.error("error", error);
+      });
+}
 

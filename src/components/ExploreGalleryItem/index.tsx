@@ -78,12 +78,12 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({
     return (
         <GalleryItemContainer>
             <ProductImageContainer
-                onlyShowImage={onlyShowImage}
+                param={onlyShowImage ? 1 : 0}
                 onClick={() => {
                     navigate(getUrl());
                 }}
             >
-                <ImageBox>
+                <ImageBox param={onlyShowImage ? 1 : 0}>
                     <Box position="relative">
                         <img src={product.image} alt="" />
                         {!onlyShowImage && (

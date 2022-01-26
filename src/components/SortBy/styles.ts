@@ -1,6 +1,6 @@
 import { styled, Box, Button } from '@mui/material';
 
-export const SortByBtn = styled(Button)<{ isOpenned: boolean }>`
+export const SortByBtn = styled(Button)<{ isopenned: number }>`
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -17,7 +17,7 @@ export const SortByBtn = styled(Button)<{ isOpenned: boolean }>`
         margin-right: 6px;
     }
     .arrow-icon {
-        transform: ${({ isOpenned }) => (isOpenned ? 'rotate(-180deg)' : 'rotate(0deg)')};
+        transform: ${({ isopenned }) => (isopenned ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
     }
     ${(props) => props.theme.breakpoints.down('sm')} {

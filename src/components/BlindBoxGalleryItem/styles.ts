@@ -1,11 +1,11 @@
 import { styled, Box, Button } from '@mui/material';
 
-export const ProductImageContainer = styled(Box)<{ onlyShowImage?: boolean }>`
+export const ProductImageContainer = styled(Box)<{ param?: boolean }>`
     position: relative;
     img {
         border-radius: 10px;
         width: 100%;
-        height: ${({ onlyShowImage }) => (onlyShowImage ? '320px' : '230px')};
+        height: ${({ param }) => (param ? '320px' : '230px')};
     }
 `;
 
