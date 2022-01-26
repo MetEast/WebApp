@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch, TypeVeiwsLikesFetch, TypeLikesFetchItem } from 'src/types/product-types';
+import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,8 +10,8 @@ import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { selectFromLikes, selectFromFavourites, getImageFromAsset } from 'src/services/common';
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
 
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
@@ -52,13 +52,6 @@ const HomePage: React.FC = (): JSX.Element => {
         });
         const dataNewProduct = await resNewProduct.json();
         const arrNewProduct = dataNewProduct.data.result;
-        
-        // get token list for likes
-        let arrTokenIds: Array<string> = [];
-        for(let i = 0; i < arrNewProduct.length; i ++) {
-            arrTokenIds.push(arrNewProduct[i].tokenId);
-        }
-        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
 
         let _newProductList: any = [];
         for(let i = 0; i < arrNewProduct.length; i ++) {
@@ -69,10 +62,9 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || 'No vaule'; 
+            product.author = itemObject.authorName || "---"; 
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
-            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             _newProductList.push(product);
         }
@@ -89,13 +81,6 @@ const HomePage: React.FC = (): JSX.Element => {
         
         const dataPopularCollection = await resPopularCollection.json();
         const arrPopularCollection = dataPopularCollection.data.result;
-        
-        // get token list for likes
-        let arrTokenIds: Array<string> = [];
-        for(let i = 0; i < arrPopularCollection.length; i ++) {
-            arrTokenIds.push(arrPopularCollection[i].tokenId);
-        }
-        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
 
         let _popularCollectionList: any = [];
         for(let i = 0; i < arrPopularCollection.length; i++){
@@ -106,10 +91,9 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'No value'; // -- no proper value
+            product.author = itemObject.authorName || "---"; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
-            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             _popularCollectionList.push(product);
         }

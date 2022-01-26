@@ -8,13 +8,13 @@ import OptionsBar from 'src/components/OptionsBar';
 import FilterModal from 'src/components/modals/FilterModal';
 import { sortOptions } from 'src/constants/select-constants';
 import { SortOption } from 'src/types/select-types';
-import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch, TypeVeiwsLikesFetch, TypeLikesFetchItem, enumBlindBoxNFTType } from 'src/types/product-types';
+import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch, enumBlindBoxNFTType } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { selectFromLikes, selectFromFavourites, getTime } from 'src/services/common';
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { selectFromFavourites, getTime } from 'src/services/common';
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
@@ -25,7 +25,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>("");
-    const [productList, setProductList] = useState<Array<TypeProduct>>([]);
+    const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([]);
     const defaultValue : TypeProduct = { 
         tokenId: "", 
         name: "", 
@@ -107,13 +107,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data.result;
         
-        // get token list for likes
-        let arrTokenIds: Array<string> = [];
-        for(let i = 0; i < arrSearchResult.length; i ++) {
-            arrTokenIds.push(arrSearchResult[i].tokenId);
-        }
-        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-
         let _newProductList: any = [];
         for(let i = 0; i < arrSearchResult.length; i ++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
@@ -125,8 +118,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || 'No vaule'; 
             product.type = (itemObject.status === "ComingSoon") ? enumBlindBoxNFTType.ComingSoon : ((itemObject.status === "SaleEnded") ? enumBlindBoxNFTType.SaleEnded : enumBlindBoxNFTType.SaleEnds );
-            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
-            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.sold = itemObject.sold || 0;
             product.instock = itemObject.instock || 0;
@@ -139,7 +131,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             }
             _newProductList.push(product);
         }
-        setProductList(_newProductList);
+        setBlindBoxList(_newProductList);
     };
 
     const getFetchData = async () => {
@@ -175,24 +167,24 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setFilterModalOpen(false);
     };
 
-    const updateProductLikes = (id:number, type: string) => {
-        let prodList : Array<TypeProduct> = [...productList];
+    const updateBlindBoxLikes = (id:number, type: string) => {
+        let prodList : Array<TypeProduct> = [...blindBoxList];
         if(type === 'inc') {
             prodList[id].likes += 1;
         }
         else if(type === 'dec') {
             prodList[id].likes -= 1;
         }
-        setProductList(prodList);
+        setBlindBoxList(prodList);
     };
 
     return (
         <>
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                    {productList.map((product, index) => (
+                    {blindBoxList.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <BlindBoxGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
+                            <BlindBoxGalleryItem product={item} onlyShowImage={true} index={index} updateLikes={updateBlindBoxLikes} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -208,9 +200,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 marginTop={5}
             />
             <Grid container mt={2} spacing={4}>
-                {productList.map((item, index) => (
+                {blindBoxList.map((item, index) => (
                     <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
-                        <BlindBoxGalleryItem product={item} index={index} updateLikes={updateProductLikes}/>
+                        <BlindBoxGalleryItem product={item} index={index} updateLikes={updateBlindBoxLikes}/>
                     </Grid>
                 ))}
             </Grid>

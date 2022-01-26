@@ -17,7 +17,6 @@ import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/servic
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-// import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
@@ -63,11 +62,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         var product: TypeProduct = {...defaultValue};        
 
         if (prodDetail !== undefined) {
-            // get token list for likes
-            let arrTokenIds: Array<string> = [];
-            arrTokenIds.push(prodDetail.tokenId);
-            const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-            
             // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
@@ -75,17 +69,16 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'No value'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
-            product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
+            product.likes = itemObject.likes;
+            product.views = itemObject.views;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "No value";
-            product.authorDescription = itemObject.authorDescription || "No value";
+            product.author = itemObject.authorName || "---";
+            product.authorDescription = itemObject.authorDescription || "---";
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "No value"; // -- no proper value 
+            product.holderName = "---"; // -- no proper value 
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -161,7 +154,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
 
     const updateProductViews = () => {
         if(auth.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/incTokenViews`; 
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`; 
             const reqBody = {"token": tokenCookies.token, "tokenId": productDetail.tokenId, "did": didCookies.did};
             fetch(reqUrl,
               {

@@ -68,10 +68,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const userInfo:any = jwtDecode(tokenCookies.token);
-    const accounts: string[] = getEssentialWalletAddress();
-    // const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
-    const toatlEarned = 0; //getTotalEarned(accounts[0]);
-    const todayEarned = 0; //getTodayEarned(accounts[0]);
+    // const accounts: string[] = getEssentialWalletAddress();
+    const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
+    const [toatlEarned, setTotalEarned] = useState<number>(0);
+    const [todayEarned, setTodayEarned] = useState<number>(0);
 
     const getResultCount = async () => {
         let newCountList: number[] = [1, 2, 3, 4, 5, 6];
@@ -160,13 +160,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         const arrSearchResult = dataSearchResult.data.result;
         const nSearchResult = dataSearchResult.data.total;
 
-        // get token list for likes
-        let arrTokenIds: Array<string> = [];
-        for(let i = 0; i < arrSearchResult.length; i ++) {
-            arrTokenIds.push(arrSearchResult[i].tokenId);
-        }
-        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-
         let _myNftList: any = [];
         for(let i = 0; i < arrSearchResult.length; i ++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
@@ -178,8 +171,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || 'No vaule'; 
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
-            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             _myNftList.push(product);
         }
@@ -243,6 +235,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         getFetchData();
+        // setTotalEarned(getTotalEarned(accounts[0]));
+        // setTodayEarned(getTodayEarned(accounts[0]));
     }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected]);
 
     const handleKeyWordChange = (value: string) => {

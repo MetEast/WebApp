@@ -99,7 +99,7 @@ export const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyF
       });
 }
 
-export const callCreateOrderForSale = async (tokenId: string, tokenUri: string, royaltyFee: number) => {
+export const callCreateOrderForSale = async (_tokenId: number, _quoteToken: string, _price: number, _didUri: string) => {
   const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
   const walletConnectWeb3 = new Web3(walletConnectProvider as any); // HACK
 
@@ -121,7 +121,7 @@ export const callCreateOrderForSale = async (tokenId: string, tokenUri: string, 
     value: 0
   };
 
-  stickerContract.methods.mint(tokenId, tokenUri, royaltyFee).send(transactionParams)
+  stickerContract.methods.createOrderForSale(_tokenId, _quoteToken, _price, _didUri).send(transactionParams)
     .on('transactionHash', (hash: any) => {
       console.log("transactionHash", hash);
     })
