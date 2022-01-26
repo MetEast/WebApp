@@ -95,7 +95,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     //     localStorage.setItem("did", "did");
     //     localStorage.setItem("token", "token");
     //     setShowModal(false)
-    //     await setAuth({isLoggedIn: true});
+    //     setAuth({isLoggedIn: true});
     //     navigate('/profile');
     // };
 

@@ -2,16 +2,16 @@ import { EssentialsConnector } from "@elastosfoundation/essentials-connector-cli
 import { connectivity } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { useConnectivityContext } from "src/context/ConnectivityContext";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { IConnector } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/interfaces/connectors";
 
 
 export const essentialsConnector = new EssentialsConnector();
 
 let connectivityInitialized = false;
 
-export function useConnectivitySDK() {
+export const useConnectivitySDK = async() => {
   const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
 
-  console.log("------------------------------------", connectivityInitialized)
   if (connectivityInitialized) {
     console.log("EssentialsConnector has already initialized.");
     return;
@@ -20,6 +20,16 @@ export function useConnectivitySDK() {
   console.log("Preparing the Elastos connectivity SDK");
   // essentialsConnector.disconnectWalletConnect();
 
+  // unregistear if already registerd
+  // console.log(connectivity.getAvailableConnectors());
+  // console.log(essentialsConnector.name);
+  // console.log(connectivityInitialized)
+  const arrIConnectors: IConnector[] = connectivity.getAvailableConnectors();
+  if (arrIConnectors.find((option) => option.name === essentialsConnector.name) !== undefined) {
+    // console.log(arrIConnectors.find((option) => option.name === essentialsConnector.name));
+    await connectivity.unregisterConnector(essentialsConnector.name);
+  }
+    
   connectivity.registerConnector(essentialsConnector).then(() => {
     connectivityInitialized = true;
 
