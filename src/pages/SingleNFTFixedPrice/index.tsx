@@ -13,7 +13,7 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";

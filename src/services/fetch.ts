@@ -9,17 +9,6 @@ export const getElaUsdRate = async () => {
     return parseFloat(dataElaUsdRate.result.coin_usd);
 };
 
-export const getViewsAndLikes = async (tokenIds: Array<string>) => {
-    const resViewsAndLikes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getViewsLikesCountOfTokens?tokenIds=${tokenIds.join(",")}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        }
-    });
-    const dataViewsAndLikes = await resViewsAndLikes.json();
-    return dataViewsAndLikes.data;
-};
-
 export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     const strDid = loginState ? did : '------------------';
     const resFavouriteList = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible?did=${strDid}`, {

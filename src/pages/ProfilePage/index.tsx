@@ -68,8 +68,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const userInfo:any = jwtDecode(tokenCookies.token);
-    // const accounts: string[] = getEssentialWalletAddress();
-    const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
+    const accounts: string[] = getEssentialWalletAddress();
+    // const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
 
