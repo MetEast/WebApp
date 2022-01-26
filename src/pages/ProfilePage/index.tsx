@@ -292,8 +292,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             <MyNFTGalleryItem product={product} onlyShowImage index={index} updateLikes={updateProductLikes} />
                         </SwiperSlide>
                     ))}
+                    {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
                 </Swiper>
-                {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
             </Box>
             <Box>
                 <ProfileImageWrapper>
