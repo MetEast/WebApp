@@ -37,9 +37,10 @@ const Header: React.FC = (): JSX.Element => {
 
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
+        setAuth({ isLoggedIn: false });
         removeTokenCookie("token");
         removeDidCookie("did");
-        setAuth({ isLoggedIn: false });
+        await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
     };

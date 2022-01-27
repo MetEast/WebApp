@@ -19,7 +19,7 @@ const SaleSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/acceptbid-sale-success.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton />
+                <ViewOnExplorerButton txHash={'0'}/>
                 <PrimaryButton fullWidth>Close</PrimaryButton>
             </Stack>
         </Stack>

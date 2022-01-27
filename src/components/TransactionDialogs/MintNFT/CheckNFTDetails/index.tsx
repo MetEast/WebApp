@@ -11,7 +11,12 @@ import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
-import { callMintNFT } from 'src/components/ContractMethod';
+// import { callMintNFT } from 'src/components/ContractMethod';
+import Web3 from 'web3';
+import { AbiItem } from 'web3-utils'
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const client = create({url: 'https://ipfs-test.meteast.io/'});
 
@@ -19,9 +24,10 @@ export interface ComponentProps {
     inputData: TypeMintInputForm;
     setInputData: (value: TypeMintInputForm) => void;
     txFee: number;
+    handleTxHash: (value: string) => void;
 }
 
-const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee, handleTxHash }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { file } = inputData;
     const [tokenCookies] = useCookies(["token"]);
@@ -36,10 +42,56 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         file: new File([""], "")
     };
 
+    const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyFee: number, _gasLimit: number) => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        let nConfirmCount = 0;
+        let txHash = '';
+    
+        const accounts = await walletConnectWeb3.eth.getAccounts();
+    
+        let contractAbi = METEAST_CONTRACT_ABI;
+        let contractAddress = METEAST_CONTRACT_ADDRESS; // Elastos Testnet
+        let meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+    
+        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        console.log("Gas price:", gasPrice);
+    
+        console.log("Sending transaction with account address:", accounts[0]);
+        let transactionParams = {
+          from: accounts[0],
+          gasPrice: gasPrice,
+          gas: _gasLimit,
+          value: 0
+        };
+    
+        meteastContract.methods.mint(_tokenId, _tokenUri, _royaltyFee).send(transactionParams)
+          .on('transactionHash', (hash: any) => {
+            console.log("transactionHash", hash);
+            txHash = hash;
+          })
+          .on('receipt', (receipt: any) => {
+            console.log("receipt", receipt);
+          })
+          .on('confirmation', (confirmationNumber: any, receipt: any) => {
+            console.log("confirmation", confirmationNumber, receipt);
+            nConfirmCount ++;
+            if(nConfirmCount === 10) {
+                handleTxHash(txHash);
+                enqueueSnackbar('Mint token succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
+            }
+          })
+          .on('error', (error: any, receipt: any) => {
+            console.error("error", error);
+            enqueueSnackbar('Mint token error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
+          });
+    }
+
     const mint2net = async (paramObj: any) => {
         enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
         const _royaltyFee = 10000;
-        await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, 5000000);
+        const _gasLimit = 5000000;
+        await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, _gasLimit);
         return true;
     };
 
@@ -114,9 +166,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
     const handleMint = () => {
         if(!file) return;
         uploadData().then((paramObj) => mint2net(paramObj)).then((success) => {
-            if(success)
-                enqueueSnackbar('Mint token succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
-            else
+            if(!success)
                 enqueueSnackbar('Mint token error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
           }).catch((error) => {
             enqueueSnackbar('Mint token error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
@@ -135,13 +185,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
                         <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>Nickname</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{inputData.name}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Collection</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>Collection Name</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{inputData.category.label}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>

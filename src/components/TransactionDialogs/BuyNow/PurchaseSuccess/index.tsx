@@ -19,7 +19,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/buynow-purchase-success.svg" height={240} alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton />
+                <ViewOnExplorerButton txHash={'0'}/>
                 <PrimaryButton fullWidth>Go to profile</PrimaryButton>
             </Stack>
         </Stack>

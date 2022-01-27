@@ -8,14 +8,17 @@ export type TypeMintInputForm = {
     file: File;
 }
 
-export type TypeMintInput = {
-    key: string;
-    value: string | File | TypeSelectItem | undefined;
-}
-
 export type TypeIpfsUpload = {
     path: string;
     cid: string;
     size: number;
     type: string;
+}
+
+export type TypeSellInputForm = {
+    saleType: 'buynow' | 'auction';
+    price: string;
+    royalty: string;
+    minPirce: string;
+    saleEnds: TypeSelectItem;
 }

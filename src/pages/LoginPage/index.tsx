@@ -28,7 +28,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     // disconnect if it is already connected
     const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
     if(isLinkedToEssentials) {
-        alert('disconnect');
+        console.log('----------------------------disconnect');
         essentialsConnector.disconnectWalletConnect();
     }
 

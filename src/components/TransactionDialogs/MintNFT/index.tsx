@@ -22,7 +22,13 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [inputFormData, setInputFormData] = useState<TypeMintInputForm>(defaultValue);
     const [txFee, setTxFee] = useState<number>(0);
+    const [txHash, setTxHash] = useState<string>('');
 
+    const handleTxHash = (value: string) => {
+        setTxHash(value);
+    };
+
+    // update later
     const getTxFee = async () => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any); // HACK
@@ -46,8 +52,8 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             }}
         >
             {dialogState.createNFTDlgStep === 0 && <MintNFT inputData={inputFormData} setInputData={setInputFormData} txFee={txFee}/>}
-            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails inputData={inputFormData} setInputData={setInputFormData} txFee={txFee}/>}
-            {dialogState.createNFTDlgStep === 2 && <NFTMinted />}
+            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails inputData={inputFormData} setInputData={setInputFormData} txFee={txFee} handleTxHash={handleTxHash} />}
+            {dialogState.createNFTDlgStep === 2 && <NFTMinted txHash={txHash} />}
         </ModalDialog>
     );
 };

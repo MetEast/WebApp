@@ -1,5 +1,5 @@
 export type AuthContextType = {
-    isLoggedIn: boolean
+    isLoggedIn: boolean;
 };
 
 export type UserTokenType = {

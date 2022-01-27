@@ -64,8 +64,9 @@ export const safeMint = async (tokenId: number, uri: string, royaltyFee: number,
 
 export const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyFee: number, _gasLimit: number) => {
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any); // HACK
-
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    let nConfirmCount = 0;
+    let txHash = '';
 
     const accounts = await walletConnectWeb3.eth.getAccounts();
 
@@ -87,12 +88,15 @@ export const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyF
     meteastContract.methods.mint(_tokenId, _tokenUri, _royaltyFee).send(transactionParams)
       .on('transactionHash', (hash: any) => {
         console.log("transactionHash", hash);
+        txHash = hash;
+        return txHash;
       })
       .on('receipt', (receipt: any) => {
         console.log("receipt", receipt);
       })
       .on('confirmation', (confirmationNumber: any, receipt: any) => {
         console.log("confirmation", confirmationNumber, receipt);
+        nConfirmCount ++;
       })
       .on('error', (error: any, receipt: any) => {
         console.error("error", error);
@@ -136,3 +140,40 @@ export const callCreateOrderForSale = async (_tokenId: number, _quoteToken: stri
     });
 }
 
+export const callCreateOrderForAuction = async (_tokenId: number, _quoteToken: string, _minPrice: number, _endTime: number, _didUri: string) => {
+  const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+  const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+
+
+  const accounts = await walletConnectWeb3.eth.getAccounts();
+
+  let contractAbi = STICKER_CONTRACT_ABI;
+  let contractAddress = STICKER_CONTRACT_ADDRESS; // Elastos Testnet
+  let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+
+  let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+  console.log("Gas price:", gasPrice);
+
+  console.log("Sending transaction with account address:", accounts[0]);
+  let transactionParams = {
+    from: accounts[0],
+    gasPrice: gasPrice,
+    gas: 5000000,
+    value: 0
+  };
+
+  stickerContract.methods.createOrderForAuction(_tokenId, _quoteToken, _minPrice, _endTime, _didUri).send(transactionParams)
+    .on('transactionHash', (hash: any) => {
+      console.log("transactionHash", hash);
+    })
+    .on('receipt', (receipt: any) => {
+      console.log("receipt", receipt);
+    })
+    .on('confirmation', (confirmationNumber: any, receipt: any) => {
+      console.log("confirmation", confirmationNumber, receipt);
+      //
+    })
+    .on('error', (error: any, receipt: any) => {
+      console.error("error", error);
+    });
+}

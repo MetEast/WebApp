@@ -1,12 +1,15 @@
 import React from 'react';
-import { Button } from './styles';
+import { LinkButton } from './styles';
 import { Icon } from '@iconify/react';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    txHash: string;
+}
 
-const ViewOnExplorerButton: React.FC<ComponentProps> = (): JSX.Element => {
+const ViewOnExplorerButton: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
     return (
-        <Button>
+        
+        <LinkButton href={`https://esc.elastos.io/tx/${txHash}`} underline="none" target="_blank">
             {`View on explorer`}
             <Icon
                 icon="ph:arrow-square-out-bold"
@@ -14,7 +17,7 @@ const ViewOnExplorerButton: React.FC<ComponentProps> = (): JSX.Element => {
                 color="#1890FF"
                 style={{ marginLeft: 4, marginBottom: 4 }}
             />
-        </Button>
+        </LinkButton>
     );
 };
 

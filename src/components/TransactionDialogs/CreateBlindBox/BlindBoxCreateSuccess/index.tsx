@@ -16,7 +16,7 @@ const BlindBoxCreateSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/blindbox-create-success.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton />
+                <ViewOnExplorerButton txHash={'0'} />
                 <PrimaryButton fullWidth>Close</PrimaryButton>
             </Stack>
         </Stack>
