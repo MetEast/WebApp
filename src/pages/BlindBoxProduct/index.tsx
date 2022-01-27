@@ -23,14 +23,14 @@ import ModalDialog from 'src/components/ModalDialog';
 // import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 // import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 // import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
-// import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
+import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 // import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 // import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 // import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 // import YourEarnings from 'src/components/profile/YourEarnings';
-import AllTransactions from 'src/components/profile/AllTransactions';
-import AllBids from 'src/components/profile/AllBids';
-import ReceivedBids from 'src/components/profile/ReceivedBids';
+// import AllTransactions from 'src/components/profile/AllTransactions';
+// import AllBids from 'src/components/profile/AllBids';
+// import ReceivedBids from 'src/components/profile/ReceivedBids';
 
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
 import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
@@ -163,7 +163,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <AllTransactions />
+                <CreateBlindBox />
             </ModalDialog>
         </>
     );
