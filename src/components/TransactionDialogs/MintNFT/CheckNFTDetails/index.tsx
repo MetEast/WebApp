@@ -11,12 +11,16 @@ import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
+<<<<<<< HEAD
 // import { callMintNFT } from 'src/components/ContractMethod';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils'
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from "@walletconnect/web3-provider";
+=======
+import { callMintNFT } from 'src/components/ContractMethod';
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
 
 const client = create({url: 'https://ipfs-test.meteast.io/'});
 
@@ -24,10 +28,16 @@ export interface ComponentProps {
     inputData: TypeMintInputForm;
     setInputData: (value: TypeMintInputForm) => void;
     txFee: number;
+<<<<<<< HEAD
     handleTxHash: (value: string) => void;
 }
 
 const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee, handleTxHash }): JSX.Element => {
+=======
+}
+
+const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): JSX.Element => {
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
     const [dialogState, setDialogState] = useDialogContext();
     const { file } = inputData;
     const [tokenCookies] = useCookies(["token"]);
@@ -42,6 +52,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         file: new File([""], "")
     };
 
+<<<<<<< HEAD
     const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyFee: number, _gasLimit: number) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
@@ -92,6 +103,12 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         const _royaltyFee = 10000;
         const _gasLimit = 5000000;
         await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, _gasLimit);
+=======
+    const mint2net = async (paramObj: any) => {
+        enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
+        const _royaltyFee = 10000;
+        await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, 5000000);
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
         return true;
     };
 

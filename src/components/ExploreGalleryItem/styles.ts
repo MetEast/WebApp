@@ -5,19 +5,19 @@ export const GalleryItemContainer = styled(Stack)`
     justify-content: space-between;
 `;
 
-export const ProductImageContainer = styled(Stack)<{ param: number }>`
+export const ProductImageContainer = styled(Stack)`
     position: relative;
     width: 100%;
     padding-top: 100%;
     cursor: pointer;
 `;
 
-export const ImageBox = styled(Box)<{ param: number }>`
-    background: #eeeeee;
+export const ImageBox = styled(Box)`
+    /* background: #eeeeee; */
     position: absolute;
     inset: 0;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     /* align-items: center; */
     img {
         /* width: auto; */

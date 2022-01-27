@@ -11,70 +11,83 @@ import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch }
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
+<<<<<<< HEAD
 import { useCookies } from "react-cookie";
+=======
+import { useCookies } from 'react-cookie';
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
+import { useNavigate } from 'react-router-dom';
 
 const ExplorePage: React.FC = (): JSX.Element => {
+    const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(["did"]);
+    const [didCookies] = useCookies(['did']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<SortOption>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
-    const [keyWord, setKeyWord] = useState<string>("");
+    const [keyWord, setKeyWord] = useState<string>('');
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
-    const defaultValue : TypeProduct = { 
-        tokenId: "", 
-        name: "", 
-        image: "",
-        price_ela: 0, 
-        price_usd: 0, 
+    const defaultValue: TypeProduct = {
+        tokenId: '',
+        name: '',
+        image: '',
+        price_ela: 0,
+        price_usd: 0,
         likes: 0,
         views: 0,
-        author: "",
-        authorDescription: "",
-        authorImg: "",
-        authorAddress: "",
-        description: "",
-        tokenIdHex: "",
+        author: '',
+        authorDescription: '',
+        authorImg: '',
+        authorAddress: '',
+        description: '',
+        tokenIdHex: '',
         royalties: 0,
-        createTime: "",
-        holderName: "",
-        holder: "",
+        createTime: '',
+        holderName: '',
+        holder: '',
         type: enumSingleNFTType.BuyNow,
-        isLike: false 
+        isLike: false,
     };
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        var reqUrl = `${
+            process.env.REACT_APP_SERVICE_URL
+        }/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             alert(sortBy.label);
+<<<<<<< HEAD
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 
+=======
+            switch (sortBy.label) {
+                case 'Price: LOW TO HIGH':
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
                     reqUrl += `&orderType=price_l_to_h`;
                     break;
-                case 'Price: HIGH TO LOW': 
+                case 'Price: HIGH TO LOW':
                     reqUrl += `&orderType=price_h_to_l`;
                     break;
-                case 'MOST VIEWED': 
+                case 'MOST VIEWED':
                     reqUrl += `&orderType=mostviewed`;
                     break;
-                case 'MOST LIKED': 
+                case 'MOST LIKED':
                     reqUrl += `&orderType=mostliked`;
                     break;
-                case 'MOST RECENT': 
+                case 'MOST RECENT':
                     reqUrl += `&orderType=mostrecent`;
                     break;
-                case 'OLDEST': 
+                case 'OLDEST':
                     reqUrl += `&orderType=oldest`;
                     break;
-                case 'ENDING SOON': 
+                case 'ENDING SOON':
                     reqUrl += `&orderType=endingsoon`;
                     break;
-                default: 
+                default:
                     reqUrl += `&orderType=mostrecent`;
                     break;
             }
@@ -84,14 +97,14 @@ const ExplorePage: React.FC = (): JSX.Element => {
         }
         if (filterRange.max !== undefined) {
             reqUrl += `&filter_min_price=${filterRange.max}`;
-        } 
+        }
         if (filters) {
-            let filterStatus: string = "";
+            let filterStatus: string = '';
             filters.forEach((item) => {
-                if (item === 0) filterStatus += "ONAUCTION,";
-                else if (item === 1) filterStatus += "BUYNOW,";
-                else if (item === 2) filterStatus += "HASBID,";
-                else if (item === 3) filterStatus += "NEW,";                
+                if (item === 0) filterStatus += 'ONAUCTION,';
+                else if (item === 1) filterStatus += 'BUYNOW,';
+                else if (item === 2) filterStatus += 'HASBID,';
+                else if (item === 3) filterStatus += 'NEW,';
             });
             filterStatus.slice(0, filterStatus.length - 1);
             reqUrl += `&filter_status=${filterStatus}`;
@@ -101,13 +114,17 @@ const ExplorePage: React.FC = (): JSX.Element => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
-            }
+            },
         });
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data.result;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
         let _newProductList: any = [];
-        for(let i = 0; i < arrSearchResult.length; i ++) {
+        for (let i = 0; i < arrSearchResult.length; i++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
             var product: TypeProduct = { ...defaultValue };
             product.tokenId = itemObject.tokenId;
@@ -115,10 +132,19 @@ const ExplorePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || 'No vaule'; 
+            product.author = itemObject.authorName || 'No vaule';
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
+<<<<<<< HEAD
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+=======
+            product.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
             _newProductList.push(product);
         }
         setProductList(_newProductList);
@@ -136,7 +162,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
-    }
+    };
 
     const handleChangeSortBy = (value: string) => {
         const item = sortOptions.find((option) => option.value === value);
@@ -161,15 +187,20 @@ const ExplorePage: React.FC = (): JSX.Element => {
     //     if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
     // };
 
-    const updateProductLikes = (id:number, type: string) => {
-        let prodList : Array<TypeProduct> = [...productList];
-        if(type === 'inc') {
+    const updateProductLikes = (id: number, type: string) => {
+        let prodList: Array<TypeProduct> = [...productList];
+        if (type === 'inc') {
             prodList[id].likes += 1;
-        }
-        else if(type === 'dec') {
+        } else if (type === 'dec') {
             prodList[id].likes -= 1;
         }
         setProductList(prodList);
+    };
+
+    const getUrl = (product: TypeProduct) => {
+        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
+        else return `/`;
     };
 
     return (
@@ -178,7 +209,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
+                            <Box onClick={() => navigate(getUrl(product))} sx={{ cursor: 'pointer' }}>
+                                <img src={product.image} alt="" width="100%" height={320} />
+                            </Box>
                         </SwiperSlide>
                     ))}
                     {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
@@ -186,7 +219,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             </Box>
             <OptionsBar
                 handleKeyWordChange={handleKeyWordChange}
-                sortOptions={sortOptions} 
+                sortOptions={sortOptions}
                 sortSelected={sortBy}
                 handleSortChange={handleChangeSortBy}
                 handleClickFilterButton={handleClickFilterButton}
@@ -194,10 +227,15 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
-            {productList.length === 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
+            {productList.length === 0 && <EmptyBodyGalleryItem>No listed products on marketplace</EmptyBodyGalleryItem>}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
-                    <Grid item xs={productViewMode === 'grid1' ? 6 : 4} md={productViewMode === 'grid1' ? 3 : 2} key={`explore-product-${index}`}>
+                    <Grid
+                        item
+                        xs={productViewMode === 'grid1' ? 6 : 4}
+                        md={productViewMode === 'grid1' ? 3 : 2}
+                        key={`explore-product-${index}`}
+                    >
                         <ExploreGalleryItem product={item} index={index} updateLikes={updateProductLikes} />
                     </Grid>
                 ))}

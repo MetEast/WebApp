@@ -9,16 +9,22 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
+<<<<<<< HEAD
 import { useCookies } from "react-cookie";
+=======
+import { useCookies } from 'react-cookie';
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
+import { useNavigate } from 'react-router-dom';
 
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
+    const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(["did"]);
+    const [didCookies] = useCookies(['did']);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
     const defaultValue: TypeProduct = {
@@ -40,21 +46,24 @@ const HomePage: React.FC = (): JSX.Element => {
         holderName: '',
         holder: '',
         type: enumSingleNFTType.BuyNow,
-        isLike: false
+        isLike: false,
     };
 
     const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resNewProduct = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
+        const resNewProduct = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
         const dataNewProduct = await resNewProduct.json();
         const arrNewProduct = dataNewProduct.data.result;
 
         let _newProductList: any = [];
-        for(let i = 0; i < arrNewProduct.length; i ++) {
+        for (let i = 0; i < arrNewProduct.length; i++) {
             let itemObject: TypeProductFetch = arrNewProduct[i];
             var product: TypeProduct = { ...defaultValue };
             product.tokenId = itemObject.tokenId;
@@ -62,39 +71,66 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
+<<<<<<< HEAD
             product.author = itemObject.authorName || "---"; 
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+=======
+            product.author = itemObject.authorName || '---';
+            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.likes = itemObject.likes;
+            product.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
             _newProductList.push(product);
         }
         setProductList(_newProductList);
     };
 
     const getPopularCollection = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resPopularCollection = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
+        const resPopularCollection = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10&orderType=mostliked`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
             },
-        });
-        
+        );
+
         const dataPopularCollection = await resPopularCollection.json();
         const arrPopularCollection = dataPopularCollection.data.result;
 
         let _popularCollectionList: any = [];
-        for(let i = 0; i < arrPopularCollection.length; i++){
-            const itemObject = arrPopularCollection[i]
+        for (let i = 0; i < arrPopularCollection.length; i++) {
+            const itemObject = arrPopularCollection[i];
             var product: TypeProduct = { ...defaultValue };
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
+<<<<<<< HEAD
             product.author = itemObject.authorName || "---"; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+=======
+            product.author = itemObject.authorName || '---'; // -- no proper value
+            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.likes = itemObject.likes;
+            product.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
+>>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
             _popularCollectionList.push(product);
         }
         setCollectionList(_popularCollectionList);
@@ -111,12 +147,11 @@ const HomePage: React.FC = (): JSX.Element => {
         getFetchData();
     }, []);
 
-    const updateProductLikes = (id:number, type: string) => {
-        let prodList : Array<TypeProduct> = [...productList];
-        if(type === 'inc') {
+    const updateProductLikes = (id: number, type: string) => {
+        let prodList: Array<TypeProduct> = [...productList];
+        if (type === 'inc') {
             prodList[id].likes += 1;
-        }
-        else if(type === 'dec') {
+        } else if (type === 'dec') {
             prodList[id].likes -= 1;
         }
         setProductList(prodList);
@@ -128,6 +163,12 @@ const HomePage: React.FC = (): JSX.Element => {
 
     const slidesPerView = matchUplg ? 4.5 : matchUpsm ? 3.5 : 2.5;
 
+    const getUrl = (product: TypeProduct) => {
+        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
+        else return `/`;
+    };
+
     return (
         <>
             <Stack direction="column">
@@ -135,7 +176,9 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`banner-carousel-${index}`}>
-                                <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} />
+                                <Box onClick={() => navigate(getUrl(product))} sx={{ cursor: 'pointer' }}>
+                                    <img src={product.image} alt="" width="100%" height={320} />
+                                </Box>
                             </SwiperSlide>
                         ))}
                         {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
@@ -150,18 +193,26 @@ const HomePage: React.FC = (): JSX.Element => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    {productList.length === 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
+                    {productList.length === 0 && (
+                        <EmptyBodyGalleryItem>No listed products on marketplace</EmptyBodyGalleryItem>
+                    )}
                 </Box>
                 <Box mt={8}>
                     <H2Typography mb={1}>Popular Collections</H2Typography>
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
                         {collectionList.map((collection, index) => (
                             <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                                <ExploreGalleryItem product={collection} index={index} updateLikes={updateProductLikes} />
+                                <ExploreGalleryItem
+                                    product={collection}
+                                    index={index}
+                                    updateLikes={updateProductLikes}
+                                />
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    {productList.length === 0 && <EmptyBodyGalleryItem >No listed products on marketplace</EmptyBodyGalleryItem>}
+                    {productList.length === 0 && (
+                        <EmptyBodyGalleryItem>No listed products on marketplace</EmptyBodyGalleryItem>
+                    )}
                 </Box>
             </Stack>
         </>
