@@ -7,7 +7,7 @@ import BlindBoxGalleryItem from 'src/components/BlindBoxGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
 import FilterModal from 'src/components/modals/FilterModal';
 import { sortOptions } from 'src/constants/select-constants';
-import { SortOption } from 'src/types/select-types';
+import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch, enumBlindBoxNFTType } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
@@ -20,7 +20,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(["did"]);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
-    const [sortBy, setSortBy] = useState<SortOption>();
+    const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });

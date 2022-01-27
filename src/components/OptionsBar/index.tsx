@@ -2,18 +2,19 @@ import React from 'react';
 import { Box, Button, Stack, Grid } from '@mui/material';
 import SearchField from '../SearchField';
 import SortByButton from '../SortBy';
-import { SortOption } from 'src/types/select-types';
+import { TypeSelectItem } from 'src/types/select-types';
 import { FilterButton } from './styles';
 import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
 import { SpacingProps } from '@mui/system';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Select from 'src/components/Select';
 
 interface OptionsBarProps extends SpacingProps {
     handleKeyWordChange: (value: string) => void;
-    sortOptions: SortOption[];
-    sortSelected?: SortOption;
+    sortOptions: TypeSelectItem[];
+    sortSelected?: TypeSelectItem;
     handleSortChange: (value: string) => void;
     handleClickFilterButton: () => void;
     productViewMode: string;

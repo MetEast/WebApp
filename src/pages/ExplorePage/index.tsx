@@ -6,7 +6,7 @@ import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants'; // sort options
-import { SortOption } from 'src/types/select-types';
+import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
@@ -22,7 +22,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(['did']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
-    const [sortBy, setSortBy] = useState<SortOption>();
+    const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
