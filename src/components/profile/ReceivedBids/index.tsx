@@ -8,7 +8,7 @@ import Select from '../Select';
 
 export interface ComponentProps {}
 
-const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
+const ReceivedBids: React.FC<ComponentProps> = (): JSX.Element => {
     const sortbyOptions: Array<TypeSelectItem> = [
         {
             label: 'Option1',
@@ -24,7 +24,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
-    const allBidsList = [
+    const receivedBidsList = [
         { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
         { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
         { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
@@ -42,7 +42,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
     return (
         <Stack spacing={5} width={520}>
             <Stack direction="row" justifyContent="space-between">
-                <DialogTitleTypo>All Bids</DialogTitleTypo>
+                <DialogTitleTypo>Received bids</DialogTitleTypo>
                 <Select
                     options={sortbyOptions}
                     selected={sortby}
@@ -52,62 +52,44 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
                 />
             </Stack>
             <Stack spacing={3}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Stack>
-                        <Typography fontSize={16} fontWeight={700}>
-                            Your Bid
-                        </Typography>
-                        <Typography fontSize={14} fontWeight={400}>
-                            2022/02/28 10:00
-                        </Typography>
-                    </Stack>
-                    <ELAPrice price_ela={199} />
-                </Stack>
-                <Stack direction="row" spacing={1}>
-                    <PrimaryButton
-                        fullWidth
-                        size="small"
-                        sx={{ background: '#FDEEEE', color: '#EB5757', '&:hover': { background: '#FFDEDE' } }}
-                    >
-                        Cancel Bid
-                    </PrimaryButton>
-                    <PrimaryButton fullWidth size="small">
-                        Update bid
-                    </PrimaryButton>
-                </Stack>
                 <Box>
                     <Grid container>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                                 User
                             </Typography>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                                 Date
                             </Typography>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                                 Price
                             </Typography>
                         </Grid>
                     </Grid>
                     <Grid container marginTop={2.5} rowGap={3} alignItems="center">
-                        {allBidsList.map((item, index) => (
+                        {receivedBidsList.map((item, index) => (
                             <>
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
                                     <Typography fontSize={16} fontWeight={700}>
                                         {item.user}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
                                     <Typography fontSize={12} fontWeight={500}>
                                         {item.date}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
                                     <ELAPrice price_ela={item.price} />
+                                </Grid>
+                                <Grid item xs={3} display="flex" flexDirection="row" justifyContent="flex-end">
+                                    <SecondaryButton size="small" sx={{ paddingX: 2 }}>
+                                        Accept
+                                    </SecondaryButton>
                                 </Grid>
                             </>
                         ))}
@@ -119,4 +101,4 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
     );
 };
 
-export default AllBids;
+export default ReceivedBids;

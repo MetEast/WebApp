@@ -11,16 +11,16 @@ export interface ComponentProps {}
 const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     const sortbyOptions: Array<TypeSelectItem> = [
         {
-            label: 'Option2',
-            value: 'Option2',
+            label: 'Option1',
+            value: 'Option1',
         },
         {
             label: 'Option2',
             value: 'Option2',
         },
         {
-            label: 'Option2',
-            value: 'Option2',
+            label: 'Option3',
+            value: 'Option3',
         },
     ];
 
@@ -93,7 +93,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container marginTop={2.5} rowGap={3}>
+                    <Grid container marginTop={2.5} rowGap={3} alignItems="center">
                         {transactions.map((item, index) => (
                             <>
                                 <Grid item xs={4}>
