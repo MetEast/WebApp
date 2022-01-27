@@ -36,7 +36,7 @@ const ReceivedBids: React.FC<ComponentProps> = (): JSX.Element => {
     ];
 
     const [sortby, setSortby] = useState<TypeSelectItem>();
-    const [isOpen, setIsOpen] = useState(false);
+    const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
     const handleSortbyChange = (value: string) => {
         const item = sortbyOptions.find((option) => option.value === value);
         setSortby(item);
@@ -48,15 +48,15 @@ const ReceivedBids: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Received bids</DialogTitleTypo>
                 <Select
                     titlebox={
-                        <SelectTitleBtn fullWidth isOpen={isOpen}>
+                        <SelectTitleBtn fullWidth isOpen={sortBySelectOpen}>
                             <Icon icon="ph:sort-ascending" fontSize={20} />
                             {sortby ? sortby.label : 'Sort by'}
                             <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
                         </SelectTitleBtn>
                     }
                     options={sortbyOptions}
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
+                    isOpen={sortBySelectOpen}
+                    setIsOpen={isSortBySelectOpen}
                     handleClick={handleSortbyChange}
                     width={160}
                 />

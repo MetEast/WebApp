@@ -163,7 +163,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <ReceivedBids />
+                <AllBids />
             </ModalDialog>
         </>
     );
