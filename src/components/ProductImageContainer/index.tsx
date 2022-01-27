@@ -24,7 +24,7 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); // 
         if(auth.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1`;
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes'; 
             const reqBody = {"token": tokenCookies.token, "tokenId": product.tokenId, "did": didCookies.did};
             // change state first

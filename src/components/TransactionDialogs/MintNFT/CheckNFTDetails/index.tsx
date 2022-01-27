@@ -45,8 +45,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
     const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyFee: number, _gasLimit: number) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-        let nConfirmCount = 0;
-        let txHash = '';
     
         const accounts = await walletConnectWeb3.eth.getAccounts();
     
@@ -66,30 +64,26 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         };
     
         meteastContract.methods.mint(_tokenId, _tokenUri, _royaltyFee).send(transactionParams)
-          .on('transactionHash', (hash: any) => {
-            console.log("transactionHash", hash);
-            txHash = hash;
-          })
-          .on('receipt', (receipt: any) => {
-            console.log("receipt", receipt);
-          })
-          .on('confirmation', (confirmationNumber: any, receipt: any) => {
-            console.log("confirmation", confirmationNumber, receipt);
-            nConfirmCount ++;
-            if(nConfirmCount === 10) {
-                handleTxHash(txHash);
+            .on('transactionHash', (hash: any) => {
+                console.log("transactionHash", hash);
+                handleTxHash(hash);
+            })
+            .on('receipt', (receipt: any) => {
+                console.log("receipt", receipt);
                 enqueueSnackbar('Mint token succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
-            }
-          })
-          .on('error', (error: any, receipt: any) => {
-            console.error("error", error);
-            enqueueSnackbar('Mint token error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
-          });
+            })
+            .on('confirmation', (confirmationNumber: any, receipt: any) => {
+                console.log("confirmation", confirmationNumber, receipt);
+            })
+            .on('error', (error: any, receipt: any) => {
+                console.error("error", error);
+                enqueueSnackbar('Mint token error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
+            });
     }
 
     const mint2net = async (paramObj: any) => {
         enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
-        const _royaltyFee = 10000;
+        const _royaltyFee = 10000; // how to set?
         const _gasLimit = 5000000;
         await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, _gasLimit);
         return true;
