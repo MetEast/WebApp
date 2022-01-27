@@ -3,23 +3,24 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
-import { TypeSellInputForm } from 'src/types/mint-types';
+import { TypeSaleInputForm } from 'src/types/mint-types';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils'
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { useDialogContext } from 'src/context/DialogContext';
+
 
 export interface ComponentProps {
-    previousStep: () => void;
-    nextStep: () => void;
-    inputData: TypeSellInputForm;
-    setInputData: (value: TypeSellInputForm) => void;
+    inputData: TypeSaleInputForm;
+    setInputData: (value: TypeSaleInputForm) => void;
     handleTxHash: (value:string) => void;
 }
 
-const CheckSaleDetails: React.FC<ComponentProps> = ({previousStep, nextStep, inputData, setInputData, handleTxHash}): JSX.Element => {
-    const defaultValue: TypeSellInputForm = {
+const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, handleTxHash}): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
+    const defaultValue: TypeSaleInputForm = {
         saleType: 'buynow',
         price: '',
         royalty: '',
@@ -106,7 +107,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({previousStep, nextStep, inp
         //     callCreateOrderForAuction();
         // }
         alert(1);
-        nextStep();
+        setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 5 });
     };
 
     return (
@@ -158,7 +159,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({previousStep, nextStep, inp
                         fullWidth 
                         onClick={() => {
                             setInputData(defaultValue);
-                            previousStep();
+                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 3 });
                         }}
                     >
                         Back

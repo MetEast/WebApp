@@ -140,7 +140,6 @@ export const callCreateOrderForSale = async (_tokenId: number, _quoteToken: stri
     });
 }
 
-<<<<<<< HEAD
 export const callCreateOrderForAuction = async (_tokenId: number, _quoteToken: string, _minPrice: number, _endTime: number, _didUri: string) => {
   const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
   const walletConnectWeb3 = new Web3(walletConnectProvider as any);
@@ -178,5 +177,3 @@ export const callCreateOrderForAuction = async (_tokenId: number, _quoteToken: s
       console.error("error", error);
     });
 }
-=======
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9

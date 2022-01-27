@@ -9,11 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-<<<<<<< HEAD
 import { useCookies } from "react-cookie";
-=======
-import { useCookies } from 'react-cookie';
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
@@ -71,22 +67,10 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-<<<<<<< HEAD
             product.author = itemObject.authorName || "---"; 
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
-=======
-            product.author = itemObject.authorName || '---';
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
             _newProductList.push(product);
         }
         setProductList(_newProductList);
@@ -115,22 +99,10 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-<<<<<<< HEAD
             product.author = itemObject.authorName || "---"; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
-=======
-            product.author = itemObject.authorName || '---'; // -- no proper value
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
             _popularCollectionList.push(product);
         }
         setCollectionList(_popularCollectionList);

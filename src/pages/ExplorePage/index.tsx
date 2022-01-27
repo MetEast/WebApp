@@ -11,11 +11,7 @@ import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch }
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-<<<<<<< HEAD
 import { useCookies } from "react-cookie";
-=======
-import { useCookies } from 'react-cookie';
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
@@ -60,13 +56,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
         }/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             alert(sortBy.label);
-<<<<<<< HEAD
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 
-=======
-            switch (sortBy.label) {
-                case 'Price: LOW TO HIGH':
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
                     reqUrl += `&orderType=price_l_to_h`;
                     break;
                 case 'Price: HIGH TO LOW':
@@ -118,11 +109,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         });
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data.result;
-<<<<<<< HEAD
         
-=======
-
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
         let _newProductList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
@@ -135,16 +122,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             product.author = itemObject.authorName || 'No vaule';
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
-<<<<<<< HEAD
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
-=======
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
->>>>>>> dc8cab66a15cf268bf3d2dd4e5f09530344498a9
             _newProductList.push(product);
         }
         setProductList(_newProductList);

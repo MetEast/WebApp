@@ -7,16 +7,17 @@ import ELAPriceInput from '../../components/ELAPriceInput';
 import Select from '../../components/Select';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useSnackbar } from 'notistack';
-import { TypeSellInputForm } from 'src/types/mint-types';
+import { TypeSaleInputForm } from 'src/types/mint-types';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {
-    closeDlg: () => void;
-    nextStep: () => void;
-    inputData: TypeSellInputForm;
-    setInputData: (value: TypeSellInputForm) => void;
+    inputData: TypeSaleInputForm;
+    setInputData: (value: TypeSaleInputForm) => void;
 }
 
-const EnterSaleDetails: React.FC<ComponentProps> = ({closeDlg, nextStep, inputData, setInputData}): JSX.Element => {
+const EnterSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData}): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
+
     const saleEndsOptions: Array<TypeSelectItem> = [
         {
             label: '1 month',
@@ -39,7 +40,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({closeDlg, nextStep, inputDa
     const [minPrice, setMinPrice] = useState<string>('');
     const { enqueueSnackbar } = useSnackbar();
     
-    const defaultValue: TypeSellInputForm = {
+    const defaultValue: TypeSaleInputForm = {
         saleType: 'buynow',
         price: '',
         royalty: '',
@@ -58,39 +59,18 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({closeDlg, nextStep, inputDa
             if (parseFloat(price) === NaN || parseFloat(royalty) === NaN || parseFloat(minPrice) === NaN) 
                 enqueueSnackbar('Not a valid number!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
             else {
-                let tempFormData: TypeSellInputForm = {...inputData}; 
+                let tempFormData: TypeSaleInputForm = {...inputData}; 
                 tempFormData.price = price;
                 tempFormData.royalty = royalty;
                 tempFormData.minPirce = minPrice;
                 tempFormData.saleEnds = saleEnds || {label: '', value: ''};
                 tempFormData.saleType = saleType;
                 setInputData(tempFormData);
-                nextStep();   
+                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4 });
             }
         }
         else enqueueSnackbar('Form validation failed!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
     };
-
-    // const handleSaleTypeChange = (value: string) => {
-    //     setTitle(value);
-    //     let tempFormData: TypeMintInputForm = {...inputData}; 
-    //     tempFormData.name = value;
-    //     setInputData(tempFormData);
-    // };
-
-    // const handlePriceChange = (value: string) => {
-    //     setTitle(value);
-    //     let tempFormData: TypeMintInputForm = {...inputData}; 
-    //     tempFormData.name = value;
-    //     setInputData(tempFormData);
-    // };
-
-    // const handleRoyaltyChange = (value: string) => {
-    //     setTitle(value);
-    //     let tempFormData: TypeMintInputForm = {...inputData}; 
-    //     tempFormData.name = value;
-    //     setInputData(tempFormData);
-    // };
 
     return (
         <Stack spacing={5} width={320}>
@@ -138,7 +118,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({closeDlg, nextStep, inputDa
                     fullWidth 
                     onClick={ () => {
                         setInputData(defaultValue);
-                        closeDlg();
+                        setDialogState({ ...dialogState, createNFTDlgOpened: false });
                     }}
                 >
                     close

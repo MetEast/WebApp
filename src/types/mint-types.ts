@@ -15,7 +15,7 @@ export type TypeIpfsUpload = {
     type: string;
 }
 
-export type TypeSellInputForm = {
+export type TypeSaleInputForm = {
     saleType: 'buynow' | 'auction';
     price: string;
     royalty: string;
