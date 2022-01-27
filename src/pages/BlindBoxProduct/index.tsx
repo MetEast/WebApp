@@ -28,7 +28,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 // import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 // import YourEarnings from 'src/components/profile/YourEarnings';
-import AllTransactions from 'src/components/profile/AllTransactions';
+// import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/profile/AllBids';
 
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
