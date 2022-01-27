@@ -24,8 +24,8 @@ export interface ComponentProps {
 const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies] = useCookies(["did"]);
+    const [tokenCookies] = useCookies(["token"]);
     const [likeState, setLikeState] = useState(product.isLike);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -33,7 +33,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, in
         event.preventDefault(); // 
         event.stopPropagation(); // 
         if(auth.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/`;
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes'; 
             const reqBody = {"token": tokenCookies.token, "tokenId": product.tokenId, "did": didCookies.did};
             // change state first
@@ -63,17 +63,16 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, in
     };
 
     const getUrl = () => {
-        // alert(1);
         if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.tokenId}`;
         else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.tokenId}`;
         else if (product.type === enumMyNFTType.Created) return `/mynft/created/${product.tokenId}`;
         else if (product.type === enumMyNFTType.Sold) return `/mynft/sold/${product.tokenId}`;
-        else return `#`;
+        else return `/mynft/buynow/${product.tokenId}`;
     };
 
     return (
         <Box>
-            <Link to={`/mynft/buynow/${product.tokenId}`}>
+            <Link to={getUrl()}>
                 <ProductImageContainer param={onlyShowImage}>
                     <img src={product.image} alt="" />
                     {!onlyShowImage && (

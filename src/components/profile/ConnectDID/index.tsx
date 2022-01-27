@@ -35,7 +35,7 @@ const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
             >
                 <img src="/assets/icons/elastos-essential.svg" alt="" />
                 <Typography fontSize={14} fontWeight={600}>
-                    Elastos Essential DID
+                    Elastos Essentials DID
                 </Typography>
             </Stack>
             <PrimaryButton fullWidth onClick={onConnect}>

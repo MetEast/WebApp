@@ -40,11 +40,11 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({
     };
 
     const changeLikeState = (event: React.MouseEvent) => {
-        event.stopPropagation(); //
-        if (auth.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/`;
-            reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
-            const reqBody = { token: tokenCookies.token, tokenId: product.tokenId, did: didCookies.did };
+        event.stopPropagation(); // 
+        if(auth.isLoggedIn) {
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
+            reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes'; 
+            const reqBody = {"token": tokenCookies.token, "tokenId": product.tokenId, "did": didCookies.did};
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
             setLikeState(!likeState);

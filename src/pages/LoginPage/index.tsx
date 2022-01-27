@@ -4,7 +4,6 @@ import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
-// import ChooseWallet from 'src/components/profile/ChooseWallet';
 import jwtDecode from 'jwt-decode';
 import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialConnectivity';
@@ -62,7 +61,7 @@ const LoginPage: React.FC = (): JSX.Element => {
 
         if (presentation) {
             const did = presentation.getHolder().getMethodSpecificId() || "";
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/login`,
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/login`,
               {
                 method: "POST",
                 headers: {
@@ -93,7 +92,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     
     // const logIn = async () => {
     //     setDidCookie("did", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/', sameSite: 'none', secure: true});
-    //     setTokenCookie("token", 'token', {path: '/', sameSite: 'none', secure: true});
+    //     setTokenCookie("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOiJkaWQ6ZWxhc3RvczppWm1oaHZIR0Zob2lmRXFqaWhHSkpBUWtXa2ZiOEpEb3E0IiwidHlwZSI6InVzZXIiLCJuYW1lIjoiVGVydSIsImVtYWlsIjoiIiwiY2FuTWFuYWdlQWRtaW5zIjpmYWxzZSwiaWF0IjoxNjQzMTk5Njg4LCJleHAiOjE2NDM4MDQ0ODh9.h8TpAlHyMlH8fS1aF6haslkOv2uUjyP18qeu0LzcLQ0', {path: '/', sameSite: 'none', secure: true});
     //     setShowModal(false)
     //     setAuth({isLoggedIn: true});
     //     navigate('/');

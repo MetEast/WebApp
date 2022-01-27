@@ -52,10 +52,6 @@ export const storeWithExpireTime = (key: string, value: string, ttl: number) => 
 	localStorage.setItem(key, JSON.stringify(item));
 }
 
-export const selectFromLikes = (value: TypeLikesFetchItem, tokenId: string) => {
-  return value.tokenId === tokenId;
-};
-
 export const selectFromFavourites = (value: TypeFavouritesFetch, tokenId: string) => {
   return value.tokenId === tokenId;
 };

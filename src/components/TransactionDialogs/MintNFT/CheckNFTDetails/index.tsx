@@ -1,40 +1,45 @@
-import React from 'react';
-import { create, urlSource } from 'ipfs-http-client';
+import React, { useEffect, useState } from 'react';
+import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
-import { ethers } from 'ethers';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeMintInputForm } from 'src/types/mint-types';
-// import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from '../../../ContractMethod/config';
 import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
-import { mintEther, testETHCall } from 'src/components/ContractMethod';
-// import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { callMintNFT } from 'src/components/ContractMethod';
 
 const client = create({url: 'https://ipfs-test.meteast.io/'});
 
 export interface ComponentProps {
     inputData: TypeMintInputForm;
+    setInputData: (value: TypeMintInputForm) => void;
+    txFee: number;
 }
 
-const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData }): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { file } = inputData;
     const [tokenCookies] = useCookies(["token"]);
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
     const {did, name} = userInfo;
+    const defaultValue: TypeMintInputForm = {
+        name: '',
+        description: '',
+        author: '',
+        category: { label: '', value: '' },
+        file: new File([""], "")
+    };
 
-    const mint2net = (paramObj: any) => {
+    const mint2net = async (paramObj: any) => {
         enqueueSnackbar('Ipfs upload succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
         const _royaltyFee = 10000;
-        // mintEther(parseInt(paramObj._id), paramObj._uri, _royaltyFee);
-        testETHCall(paramObj._id, paramObj._uri, _royaltyFee);
+        await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, 5000000);
         return true;
     };
 
@@ -142,18 +147,19 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData }): JSX.Element =
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>0.0055 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{txFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {0.22} ELA
+                    Available: {txFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
+                            setInputData(defaultValue);
                             setDialogState({ ...dialogState, createNFTDlgOpened: false });
                         }}
                     >

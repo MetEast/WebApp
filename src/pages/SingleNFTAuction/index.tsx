@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react'; 
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
-import { enumBadgeType, enumSingleNFTType, enumTransactionType, TypeProduct, TypeProductFetch, TypeNFTTransactionFetch, TypeNFTTransaction, TypeVeiwsLikesFetch, TypeFavouritesFetch, TypeSingleNFTBid, TypeSingleNFTBidFetch } from 'src/types/product-types'; 
+import { enumBadgeType, enumSingleNFTType, enumTransactionType, TypeProduct, TypeProductFetch, TypeNFTTransactionFetch, TypeNFTTransaction, TypeFavouritesFetch, TypeSingleNFTBid, TypeSingleNFTBidFetch } from 'src/types/product-types'; 
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-// import ConnectWalletButton from 'src/components/ConnectWalletButton';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { getImageFromAsset, getTime, reduceHexAddress, getUTCTime, selectFromFavourites } from 'src/services/common';
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
@@ -70,11 +69,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         var product: TypeProduct = {...defaultValue};        
 
         if (prodDetail !== undefined) {
-            // get token list for likes
-            let arrTokenIds: Array<string> = [];
-            arrTokenIds.push(prodDetail.tokenId);
-            const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-            
             // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
@@ -82,17 +76,17 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = 'No value'; // -- no proper value
+            product.author = '---'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = (arrLikesList === undefined || arrLikesList.likes === undefined || arrLikesList.likes.length === 0) ? 0 : arrLikesList.likes[0].likes;
-            product.views = (arrLikesList === undefined || arrLikesList.views === undefined || arrLikesList.views.length === 0) ? 0 : arrLikesList.views[0].views;
+            product.likes = itemObject.likes;
+            product.views = itemObject.views;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "No value";
-            product.authorDescription = itemObject.authorDescription || "No value";
+            product.author = itemObject.authorName || "---";
+            product.authorDescription = itemObject.authorDescription || "---";
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "No value"; // -- no proper value 
+            product.holderName = "---"; // -- no proper value 
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -201,7 +195,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        await updateProductViews();
+        updateProductViews();
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
         getProductDetail(ela_usd_rate, favouritesList);
@@ -227,7 +221,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
 
     const updateProductViews = () => {
         if(auth.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/incTokenViews`; 
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`; 
             const reqBody = {"token": tokenCookies.token, "tokenId": productDetail.tokenId, "did": didCookies.did};
             fetch(reqUrl,
               {

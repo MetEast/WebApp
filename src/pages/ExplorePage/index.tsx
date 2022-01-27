@@ -7,13 +7,13 @@ import OptionsBar from 'src/components/OptionsBar';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants'; // sort options
 import { SortOption } from 'src/types/select-types';
-import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch, TypeVeiwsLikesFetch, TypeLikesFetchItem } from 'src/types/product-types';
+import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { selectFromLikes, selectFromFavourites } from 'src/services/common';
-import { getElaUsdRate, getViewsAndLikes, getMyFavouritesList } from 'src/services/fetch';
+import { selectFromFavourites } from 'src/services/common';
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
 
 const ExplorePage: React.FC = (): JSX.Element => {
@@ -51,6 +51,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
+            alert(sortBy.label);
             switch(sortBy.label) {
                 case 'Price: LOW TO HIGH': 
                     reqUrl += `&orderType=price_l_to_h`;
@@ -105,13 +106,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data.result;
         
-        // get token list for likes
-        let arrTokenIds: Array<string> = [];
-        for(let i = 0; i < arrSearchResult.length; i ++) {
-            arrTokenIds.push(arrSearchResult[i].tokenId);
-        }
-        const arrLikesList: TypeVeiwsLikesFetch = await getViewsAndLikes(arrTokenIds);
-
         let _newProductList: any = [];
         for(let i = 0; i < arrSearchResult.length; i ++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
@@ -123,8 +117,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || 'No vaule'; 
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            let curItem: TypeLikesFetchItem | undefined = arrLikesList.likes.find((value: TypeLikesFetchItem) => selectFromLikes(value, itemObject.tokenId));
-            product.likes = curItem === undefined ? 0 : curItem.likes;
+            product.likes = itemObject.likes;
             product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             _newProductList.push(product);
         }
