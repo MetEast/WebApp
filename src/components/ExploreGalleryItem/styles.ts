@@ -13,7 +13,7 @@ export const ProductImageContainer = styled(Stack)`
 `;
 
 export const ImageBox = styled(Box)`
-    background: #eeeeee;
+    /* background: #eeeeee; */
     position: absolute;
     inset: 0;
     display: flex;

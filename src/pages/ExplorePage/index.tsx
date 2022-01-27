@@ -180,23 +180,19 @@ const ExplorePage: React.FC = (): JSX.Element => {
         setProductList(prodList);
     };
 
+    const getUrl = (product: TypeProduct) => {
+        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
+        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
+        else return `/`;
+    };
+
     return (
         <>
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            {/* <ExploreGalleryItem product={product} onlyShowImage={true} index={index} updateLikes={updateProductLikes} /> */}
-                            <Box
-                                onClick={() => {
-                                    let url = `/`;
-                                    if (product.type === enumSingleNFTType.BuyNow)
-                                        url = `/products/fixed-price/${product.tokenId}`;
-                                    else if (product.type === enumSingleNFTType.OnAuction)
-                                        url = `/products/auction/${product.tokenId}`;
-                                    navigate(url);
-                                }}
-                            >
+                            <Box onClick={() => navigate(getUrl(product))} sx={{ cursor: 'pointer' }}>
                                 <img src={product.image} alt="" width="100%" height={320} />
                             </Box>
                         </SwiperSlide>
