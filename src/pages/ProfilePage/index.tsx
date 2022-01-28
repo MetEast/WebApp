@@ -10,7 +10,7 @@ import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
-import { SortOption } from 'src/types/select-types';
+import { TypeSelectItem } from 'src/types/select-types';
 import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, EmptyBodyGalleryItem, EmptyTitleGalleryItem } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -31,7 +31,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [didCookies] = useCookies(["did"]);
     const [tokenCookies] = useCookies(["token"]);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
-    const [sortBy, setSortBy] = useState<SortOption>();
+    const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });

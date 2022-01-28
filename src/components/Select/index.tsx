@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
-import { SelectBtn, ListItemsWrapper } from './styles';
+import React from 'react';
+import { ListItemsWrapper } from './styles';
 import { Box, Button, Stack } from '@mui/material';
-import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 
 interface ComponentProps {
+    titlebox: React.ReactNode;
     options: Array<TypeSelectItem>;
-    selected?: TypeSelectItem;
-    placeholder?: string;
+    isOpen: boolean;
     width?: number;
+    setIsOpen: (value: boolean) => void;
     handleClick: (value: string) => void;
 }
 
-const Select: React.FC<ComponentProps> = ({ options, selected, placeholder = '', width, handleClick }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
+const Select: React.FC<ComponentProps> = ({ titlebox, options, isOpen, width, setIsOpen, handleClick }) => {
     return (
         <Box
             onClick={() => {
@@ -23,11 +21,7 @@ const Select: React.FC<ComponentProps> = ({ options, selected, placeholder = '',
             position="relative"
             sx={{ width: width ? width : 'auto' }}
         >
-            <SelectBtn fullWidth isOpen={isOpen}>
-                <Icon icon="ph:sort-ascending" fontSize={20} />
-                {selected ? selected.label : placeholder}
-                <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
-            </SelectBtn>
+            {titlebox}
             <ListItemsWrapper width={'100%'} isOpen={isOpen}>
                 <Stack borderRadius={3} overflow="hidden" sx={{ background: '#F8F8F8' }}>
                     {options.map((item, index) => (

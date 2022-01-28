@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { TypeSelectItem } from 'src/types/select-types';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
-import Select from '../Select';
+import Select from 'src/components/Select';
+import { SelectTitleBtn } from './styles';
+import { Icon } from '@iconify/react';
 
 export interface ComponentProps {}
 
@@ -33,7 +35,8 @@ const ReceivedBids: React.FC<ComponentProps> = (): JSX.Element => {
         { user: 'Nickname', date: '2022/02/28  10:00', price: 199 },
     ];
 
-    const [sortby, setSortby] = React.useState<TypeSelectItem>();
+    const [sortby, setSortby] = useState<TypeSelectItem>();
+    const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
     const handleSortbyChange = (value: string) => {
         const item = sortbyOptions.find((option) => option.value === value);
         setSortby(item);
@@ -44,9 +47,16 @@ const ReceivedBids: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack direction="row" justifyContent="space-between">
                 <DialogTitleTypo>Received bids</DialogTitleTypo>
                 <Select
+                    titlebox={
+                        <SelectTitleBtn fullWidth isOpen={sortBySelectOpen}>
+                            <Icon icon="ph:sort-ascending" fontSize={20} />
+                            {sortby ? sortby.label : 'Sort by'}
+                            <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
+                        </SelectTitleBtn>
+                    }
                     options={sortbyOptions}
-                    selected={sortby}
-                    placeholder="Sort by"
+                    isOpen={sortBySelectOpen}
+                    setIsOpen={isSortBySelectOpen}
                     handleClick={handleSortbyChange}
                     width={160}
                 />

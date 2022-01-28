@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Stack, Grid } from '@mui/material';
 import SearchField from '../SearchField';
-import SortByButton from '../SortBy';
-import { SortOption } from 'src/types/select-types';
-import { FilterButton } from './styles';
+import { TypeSelectItem } from 'src/types/select-types';
+import { FilterButton, SortByBtn } from './styles';
 import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
 import { SpacingProps } from '@mui/system';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Select from 'src/components/Select';
 
 interface OptionsBarProps extends SpacingProps {
     handleKeyWordChange: (value: string) => void;
-    sortOptions: SortOption[];
-    sortSelected?: SortOption;
+    sortOptions: TypeSelectItem[];
+    sortSelected?: TypeSelectItem;
     handleSortChange: (value: string) => void;
     handleClickFilterButton: () => void;
     productViewMode: string;
@@ -32,7 +32,6 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     // filterBtnHidden = false,
     ...otherProps
 }): JSX.Element => {
-
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
     const matchDownXs = useMediaQuery(theme.breakpoints.down('md'));
@@ -41,38 +40,36 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     const onlyShowIcon = matchDownXs ? true : false;
     const filterBtnHidden = matchDownLg ? false : true;
 
+    const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
+
     return (
-        <Stack direction="row" spacing={{xs: 1, sm: 2}} {...otherProps}>
-            <SearchField handleChange={handleKeyWordChange}  />
-            <SortByButton
+        <Stack direction="row" spacing={{ xs: 1, sm: 2 }} {...otherProps}>
+            <SearchField handleChange={handleKeyWordChange} />
+            <Select
+                titlebox={
+                    <SortByBtn fullWidth isOpen={sortBySelectOpen}>
+                        <Icon icon="ph:sort-ascending" fontSize={24} />
+                        {!onlyShowIcon && (
+                            <>
+                                {sortSelected ? sortSelected.label : 'SORT BY'}
+                                <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
+                            </>
+                        )}
+                    </SortByBtn>
+                }
                 options={sortOptions}
-                title={sortSelected?.label}
-                placeholder={"SORT BY"} 
+                isOpen={sortBySelectOpen}
+                setIsOpen={isSortBySelectOpen}
                 handleClick={handleSortChange}
-                onlyShowIcon={onlyShowIcon}
+                width={280}
             />
-            {/* <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={"age"}
-                onChange={handleChange}
-            >
-                <Icon icon="ph:sort-ascending" fontSize={24} />
-                {!onlyShowIcon && <>
-                    {title ? title : placeholder}
-                    <KeyboardArrowDownIcon className="arrow-icon" />
-                </>}
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-            </Select> */}
             {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>
                     <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: 4 }} />
                     {displayFilterLable && `Filter`}
                 </FilterButton>
             )}
-            <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF'}}>
+            <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
                 <Button
                     onClick={() => setProductViewMode('grid2')}
                     sx={{

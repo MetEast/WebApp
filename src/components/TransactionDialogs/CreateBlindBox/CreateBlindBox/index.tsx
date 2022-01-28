@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-import { useStyles } from './styles';
+import { useStyles, SelectBtn } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import Select from '../../components/Select';
-import SortSelect from '../../components/SortSelect';
 import WarningTypo from '../../components/WarningTypo';
 import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 import ELAPriceInput from '../../components/ELAPriceInput';
+import SortSelect from 'src/components/Select';
 
 export interface ComponentProps {}
 
@@ -80,7 +80,9 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [saleBegins, setSaleBegins] = useState<TypeSelectItem>();
     const [saleEnds, setSaleEnds] = useState<TypeSelectItem>();
+
     const [sort, setSort] = useState<TypeSelectItem>();
+    const [sortSelectOpen, setSortSelectOpen] = useState(false);
 
     const handleBlindboxItemChange = (value: string) => {
         const item = blindboxItemsOptions.find((option) => option.value === value);
@@ -117,7 +119,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
-                        <CustomTextField title="Blind Box Title" placeholder="Enter Blind Box Title" changeHandler={(value) => {}} />
+                        <CustomTextField
+                            title="Blind Box Title"
+                            placeholder="Enter Blind Box Title"
+                            changeHandler={(value) => {}}
+                        />
                         <CustomTextField
                             title="Blind Box Description"
                             placeholder="Is WYSIWYG is needed here?"
@@ -202,7 +208,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="Number of copies" placeholder="es. 1000" changeHandler={(value) => {}} />
+                        <CustomTextField
+                            title="Number of copies"
+                            placeholder="es. 1000"
+                            changeHandler={(value) => {}}
+                        />
                         <ELAPriceInput title="Price" />
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
@@ -226,17 +236,32 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 handleClick={handleSaleEndsChange}
                             />
                         </Stack>
-                        <CustomTextField title="Number of favourites" placeholder="es. 1000" changeHandler={(value) => {}} />
+                        <CustomTextField
+                            title="Number of favourites"
+                            placeholder="es. 1000"
+                            changeHandler={(value) => {}}
+                        />
                         <CustomTextField title="Number of Views" placeholder="es. 1000" changeHandler={(value) => {}} />
-                        <CustomTextField title="Max Num of Purchases" placeholder="es. 1000" changeHandler={(value) => {}} />
+                        <CustomTextField
+                            title="Max Num of Purchases"
+                            placeholder="es. 1000"
+                            changeHandler={(value) => {}}
+                        />
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Sort
                             </Typography>
                             <SortSelect
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={sortSelectOpen}>
+                                        <Icon icon="ph:sort-ascending" fontSize={20} />
+                                        {sort ? sort.label : 'Select'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
                                 options={sortOptions}
-                                selected={sort}
-                                placeholder="Select"
+                                isOpen={sortSelectOpen}
+                                setIsOpen={setSortSelectOpen}
                                 handleClick={handleSortChange}
                             />
                         </Stack>

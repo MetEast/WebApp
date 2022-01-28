@@ -1,4 +1,4 @@
-import { SortOption } from 'src/types/select-types';
+import { TypeSelectItem } from 'src/types/select-types';
 
 export enum enmSortOptionValues {
     low_to_high = 'low_to_high',
@@ -10,7 +10,7 @@ export enum enmSortOptionValues {
     ending_soon = 'ending_soon',
 }
 
-export const sortOptions: Array<SortOption> = [
+export const sortOptions: Array<TypeSelectItem> = [
     {
         label: 'Price: Low to high',
         value: enmSortOptionValues.low_to_high,

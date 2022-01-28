@@ -1,6 +1,6 @@
-import { styled, Box, Button } from '@mui/material';
+import { styled, Button } from '@mui/material';
 
-export const SelectBtn = styled(Button)<{ isOpen: boolean }>`
+export const SelectTitleBtn = styled(Button)<{ isOpen: boolean }>`
     height: 40px;
     display: flex;
     flex-direction: row;
@@ -17,12 +17,4 @@ export const SelectBtn = styled(Button)<{ isOpen: boolean }>`
         transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
     }
-`;
-
-export const ListItemsWrapper = styled(Box)<{ isOpen: boolean }>`
-    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
-    position: absolute;
-    background: white;
-    border-radius: 4px;
-    z-index: 10;
 `;
