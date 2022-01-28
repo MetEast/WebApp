@@ -53,29 +53,29 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
-            switch(sortBy.label) {
-                case 'Price: LOW TO HIGH': 
+            switch(sortBy.value) {
+                case 'low_to_high': 
                     reqUrl += `&orderType=price_l_to_h`;
                     break;
-                case 'Price: HIGH TO LOW': 
+                case 'high_to_low':
                     reqUrl += `&orderType=price_h_to_l`;
                     break;
-                case 'MOST VIEWED': 
+                case 'most_viewed':
                     reqUrl += `&orderType=mostviewed`;
                     break;
-                case 'MOST LIKED': 
+                case 'most_liked':
                     reqUrl += `&orderType=mostliked`;
                     break;
-                case 'MOST RECENT': 
+                case 'most_recent':
                     reqUrl += `&orderType=mostrecent`;
                     break;
-                case 'OLDEST': 
+                case 'oldest':
                     reqUrl += `&orderType=oldest`;
                     break;
-                case 'ENDING SOON': 
+                case 'ending_soon':
                     reqUrl += `&orderType=endingsoon`;
                     break;
-                default: 
+                default:
                     reqUrl += `&orderType=mostrecent`;
                     break;
             }

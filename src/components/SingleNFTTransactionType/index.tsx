@@ -27,7 +27,6 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         },
     };
 
-    // alert(transactionHash);
     return (
         <Stack direction="row" alignItems="center" spacing={1}>
             {styles[transactionType].icon}

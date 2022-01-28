@@ -63,6 +63,7 @@ export type TypeProduct = {
     endTime?: string;
     sold?: number;
     instock?: number;
+    orderId?: number;
 
     blockNumber?: number;
     tokenIndex?: string;
@@ -120,6 +121,7 @@ export type TypeProductFetch = {
     authorDescription: string;
     instock: number;
     sold: number;
+    orderId: number;
 };
 
 export type TypeFavouritesFetch = {

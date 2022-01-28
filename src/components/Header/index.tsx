@@ -37,9 +37,15 @@ const Header: React.FC = (): JSX.Element => {
 
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
+        setAuth({ isLoggedIn: false });
         removeTokenCookie("token");
         removeDidCookie("did");
-        setAuth({ isLoggedIn: false });
+        console.log("--------------Connector:" , essentialsConnector.hasWalletConnectSession());
+        console.log("--------------walletConnector isconnecting:", essentialsConnector.getWalletConnectProvider().isConnecting);
+        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().connected);
+        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().chainId);
+        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().rpcUrl);
+        await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
     };

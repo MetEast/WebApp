@@ -16,15 +16,15 @@ export interface ComponentProps {
 const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies] = useCookies(["did"]);
+    const [tokenCookies] = useCookies(["token"]);
     const [likeState, setLikeState] = useState(product.isLike);
     const { enqueueSnackbar } = useSnackbar();
     
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); // 
         if(auth.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1`;
+            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes'; 
             const reqBody = {"token": tokenCookies.token, "tokenId": product.tokenId, "did": didCookies.did};
             // change state first

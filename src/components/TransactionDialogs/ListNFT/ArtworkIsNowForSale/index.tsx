@@ -3,10 +3,15 @@ import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
+import { useDialogContext } from 'src/context/DialogContext';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    txHash: string;
+}
 
-const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
+const ArtworkIsNowForSale: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
+
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
@@ -19,8 +24,15 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/artwork-now-forsale.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton />
-                <PrimaryButton fullWidth>Close</PrimaryButton>
+                <ViewOnExplorerButton txHash={txHash} />
+                <PrimaryButton 
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, createNFTDlgOpened: false})
+                    }}
+                >
+                    Close
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

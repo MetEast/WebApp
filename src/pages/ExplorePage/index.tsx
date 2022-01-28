@@ -11,7 +11,7 @@ import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch }
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
@@ -55,27 +55,26 @@ const ExplorePage: React.FC = (): JSX.Element => {
             process.env.REACT_APP_SERVICE_URL
         }/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
-            alert(sortBy.label);
-            switch (sortBy.label) {
-                case 'Price: LOW TO HIGH':
+            switch(sortBy.value) {
+                case 'low_to_high': 
                     reqUrl += `&orderType=price_l_to_h`;
                     break;
-                case 'Price: HIGH TO LOW':
+                case 'high_to_low':
                     reqUrl += `&orderType=price_h_to_l`;
                     break;
-                case 'MOST VIEWED':
+                case 'most_viewed':
                     reqUrl += `&orderType=mostviewed`;
                     break;
-                case 'MOST LIKED':
+                case 'most_liked':
                     reqUrl += `&orderType=mostliked`;
                     break;
-                case 'MOST RECENT':
+                case 'most_recent':
                     reqUrl += `&orderType=mostrecent`;
                     break;
-                case 'OLDEST':
+                case 'oldest':
                     reqUrl += `&orderType=oldest`;
                     break;
-                case 'ENDING SOON':
+                case 'ending_soon':
                     reqUrl += `&orderType=endingsoon`;
                     break;
                 default:
@@ -100,7 +99,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             filterStatus.slice(0, filterStatus.length - 1);
             reqUrl += `&filter_status=${filterStatus}`;
         }
-
+        console.log("-d-d-d-d--d-d-d", reqUrl, "----------", sortBy, filters, filterRange, keyWord, productViewMode)
         const resSearchResult = await fetch(reqUrl, {
             headers: {
                 'Content-Type': 'application/json',
@@ -109,7 +108,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         });
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data.result;
-
+        
         let _newProductList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
@@ -122,12 +121,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             product.author = itemObject.authorName || 'No vaule';
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
+            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
             _newProductList.push(product);
         }
         setProductList(_newProductList);

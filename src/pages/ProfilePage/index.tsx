@@ -67,7 +67,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
         isLike: false 
     };
 
-    const userInfo:any = jwtDecode(tokenCookies.token);
+    
+    const userInfo:any = (tokenCookies.token === undefined) ? '' : jwtDecode(tokenCookies.token);
     const accounts: string[] = getEssentialWalletAddress();
     // const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
     const [toatlEarned, setTotalEarned] = useState<number>(0);
@@ -104,29 +105,29 @@ const ProfilePage: React.FC = (): JSX.Element => {
         }
         reqUrl += `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
-            switch(sortBy.label) {
-                case 'Price: LOW TO HIGH': 
+            switch(sortBy.value) {
+                case 'low_to_high': 
                     reqUrl += `&orderType=price_l_to_h`;
                     break;
-                case 'Price: HIGH TO LOW': 
+                case 'high_to_low':
                     reqUrl += `&orderType=price_h_to_l`;
                     break;
-                case 'MOST VIEWED': 
+                case 'most_viewed':
                     reqUrl += `&orderType=mostviewed`;
                     break;
-                case 'MOST LIKED': 
+                case 'most_liked':
                     reqUrl += `&orderType=mostliked`;
                     break;
-                case 'MOST RECENT': 
+                case 'most_recent':
                     reqUrl += `&orderType=mostrecent`;
                     break;
-                case 'OLDEST': 
+                case 'oldest':
                     reqUrl += `&orderType=oldest`;
                     break;
-                case 'ENDING SOON': 
+                case 'ending_soon':
                     reqUrl += `&orderType=endingsoon`;
                     break;
-                default: 
+                default:
                     reqUrl += `&orderType=mostrecent`;
                     break;
             }
@@ -298,7 +299,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             <Grid container direction="row" alignItems="center" justifyContent={"space-between"} spacing={2} marginTop={1}>
                 <Grid item container lg={8} md={12} sm={12} xs={12} order={{lg: 1, md: 2, sm:2, xs: 2}} direction="row" spacing={1} justifyContent={"space-between"}>
                     {nftGalleryFilterButtonsList.map((items, index) => (
-                        <Grid item xs={4} sm={2}>
+                        <Grid item key={`profile-gallery-${index}`} xs={4} sm={2}>
                             <FilterButton
                                 selected={items.label === nftGalleryFilterBtnSelected}
                                 onClick={() => setNftGalleryFilterBtnSelected(items.label)}

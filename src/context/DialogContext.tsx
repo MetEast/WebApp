@@ -3,6 +3,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 
 
 interface State {
+    // mint nft
     createNFTDlgOpened: boolean;
     createNFTDlgStep: number;
     category: TypeSelectItem;
@@ -10,15 +11,39 @@ interface State {
     author: string;
     introduction: string;
     file?: File;
+    // create order for sale/auction
+
+    // buy now
+    buyNowDlgOpened: boolean;
+    buyNowDlgStep: number;
+    buyNowName: string;
+    buyNowPrice: number;
+    buyNowOrderId: number;
+    buyNowSeller: string;
+    buyNowRoyaltyOwner: string;
+    buyNowRoyalty: number;
+    buyNowTxHash: string;
 }
 
 const defaultState: State = {
+    // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
     category: {label: "", value: ""},
     title: "",
     author: "",
-    introduction: ""
+    introduction: "",
+    //
+    // buy now
+    buyNowDlgOpened: false,
+    buyNowDlgStep: 0,
+    buyNowName: '',
+    buyNowPrice: 0,
+    buyNowSeller: '',
+    buyNowRoyaltyOwner: '',
+    buyNowRoyalty: 0,
+    buyNowTxHash: '',
+    buyNowOrderId: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

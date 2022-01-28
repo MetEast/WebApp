@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, TextField } from '@mui/material';
 
 export interface ComponentProps {
     title?: string;
     placeholder?: string;
+    handleChange?: (value: number) => void;
 }
 
-const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder }): JSX.Element => {
+const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {}}): JSX.Element => {
+    const [input, setInput] = useState(0);
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setInput(parseFloat(value));
+        handleChange(parseFloat(value));
+    };
     return (
         <Stack spacing={0.5}>
             {title && (
@@ -24,6 +32,8 @@ const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder }): JSX.El
             >
                 <TextField
                     placeholder={placeholder}
+                    value={input}
+                    onChange={handleInputChange}
                     sx={{
                         width: '100%',
                         '& .MuiOutlinedInput-root': {

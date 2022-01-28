@@ -4,13 +4,16 @@ import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
-// import ConnectWalletButton from 'src/components/ConnectWalletButton';
 
-export interface ComponentProps {}
 
-const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
+
+export interface ComponentProps {
+    txHash: string;
+}
+
+const NFTMinted: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-
+    
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
@@ -23,7 +26,7 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/mintnft-nft-minted.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton />
+                <ViewOnExplorerButton txHash={txHash} />
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
                         fullWidth
@@ -36,17 +39,11 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                     <PrimaryButton
                         fullWidth
                         onClick={() => {
-                            setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 3 });
                         }}
                     >
                         Sell
                     </PrimaryButton>
-                    {/* <ConnectWalletButton sx={{ width: "100%" }}
-                        // fullWidth
-                        // onClick={() => {
-                        //     setDialogState({ ...dialogState, createNFTDlgOpened: false });
-                        // }}
-                        >Sell</ConnectWalletButton> */}
                 </Stack>
             </Stack>
         </Stack>

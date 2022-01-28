@@ -47,7 +47,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
             <SearchField handleChange={handleKeyWordChange} />
             <Select
                 titlebox={
-                    <SortByBtn fullWidth isOpen={sortBySelectOpen}>
+                    <SortByBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
                         <Icon icon="ph:sort-ascending" fontSize={24} />
                         {!onlyShowIcon && (
                             <>
