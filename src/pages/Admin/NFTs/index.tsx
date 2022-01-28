@@ -5,11 +5,12 @@ import ELAPrice from 'src/components/ELAPrice';
 import { Typography, Stack, IconButton } from '@mui/material';
 import { enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
-import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { TypeSelectItem } from 'src/types/select-types';
-import Select from 'src/components/TransactionDialogs/components/Select';
+import Select from 'src/components/Select';
+import { SelectBtn } from './styles';
+import { Icon } from '@iconify/react';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -188,8 +189,12 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     ];
 
     const [tabledata, setTabledata] = useState(data);
+
     const [nftState, setNftState] = useState<TypeSelectItem>();
+    const [nftStateSelectOpen, setNftStateSelectOpen] = useState(false);
+
     const [saleType, setSaleType] = useState<TypeSelectItem>();
+    const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState(false);
 
     const handleNFTStateChange = (value: string) => {
         const item = nftStateOptions.find((option) => option.value === value);
@@ -220,11 +225,17 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         NFT State
                     </Typography>
                     <Select
+                        titlebox={
+                            <SelectBtn fullWidth isOpen={nftStateSelectOpen}>
+                                {nftState ? nftState.label : 'Select'}
+                                <Icon icon="ph:caret-down" className="arrow-icon" />
+                            </SelectBtn>
+                        }
                         options={nftStateOptions}
-                        selected={nftState}
-                        placeholder="Select"
-                        width={140}
+                        isOpen={nftStateSelectOpen}
                         handleClick={handleNFTStateChange}
+                        setIsOpen={setNftStateSelectOpen}
+                        width={140}
                     />
                 </Stack>
                 <Stack spacing={0.5}>
@@ -232,11 +243,17 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         Sale Type
                     </Typography>
                     <Select
+                        titlebox={
+                            <SelectBtn fullWidth isOpen={saleTypeSelectOpen}>
+                                {saleType ? saleType.label : 'Select'}
+                                <Icon icon="ph:caret-down" className="arrow-icon" />
+                            </SelectBtn>
+                        }
                         options={saleTypeOptions}
-                        selected={saleType}
-                        placeholder="Select"
-                        width={140}
+                        isOpen={saleTypeSelectOpen}
                         handleClick={handleSaleTypeChange}
+                        setIsOpen={setSaleTypeSelectOpen}
+                        width={140}
                     />
                 </Stack>
                 <PrimaryButton size="small" sx={{ paddingX: 3 }}>
