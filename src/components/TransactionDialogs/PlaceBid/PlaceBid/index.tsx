@@ -3,8 +3,10 @@ import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
-import Select from '../../components/Select';
 import { TypeSelectItem } from 'src/types/select-types';
+import Select from 'src/components/Select';
+import { SelectBtn } from './styles';
+import { Icon } from '@iconify/react';
 
 export interface ComponentProps {}
 
@@ -24,6 +26,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
     const [expiration, setExpiration] = useState<TypeSelectItem>();
+    const [expirationSelectOpen, setExpirationSelectOpen] = useState(false);
 
     const handleCategoryChange = (value: string) => {
         const item = expirationOptions.find((option) => option.value === value);
@@ -43,10 +46,16 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         Category
                     </Typography>
                     <Select
+                        titlebox={
+                            <SelectBtn fullWidth isOpen={expirationSelectOpen}>
+                                {expiration ? expiration.label : 'Select'}
+                                <Icon icon="ph:caret-down" className="arrow-icon" />
+                            </SelectBtn>
+                        }
                         options={expirationOptions}
-                        selected={expiration}
-                        placeholder="Select"
+                        isOpen={expirationSelectOpen}
                         handleClick={handleCategoryChange}
+                        setIsOpen={setExpirationSelectOpen}
                     />
                 </Stack>
             </Stack>
