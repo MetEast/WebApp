@@ -11,8 +11,6 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { create } from 'ipfs-http-client';
-import { useCookies } from 'react-cookie';
 
 export interface ComponentProps {
     inputData: TypeSaleInputForm;
@@ -23,7 +21,6 @@ export interface ComponentProps {
 
 const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, handleTxHash, tokenInfo}): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-    const [didCookies] = useCookies(["did"]);
     const { enqueueSnackbar } = useSnackbar();
     const defaultValue: TypeSaleInputForm = {
         saleType: 'buynow',

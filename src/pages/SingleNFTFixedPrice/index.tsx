@@ -17,12 +17,17 @@ import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
+import { useDialogContext } from 'src/context/DialogContext';
+import ModalDialog from 'src/components/ModalDialog';
+import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
+import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
     const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(["did"]);
     const [tokenCookies] = useCookies(["token"]);
+    const [dialogState, setDialogState] = useDialogContext();
     const defaultValue: TypeProduct = { 
         tokenId: "", 
         name: "", 
@@ -79,6 +84,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
             product.holderName = "---"; // -- no proper value 
+            product.orderId = itemObject.orderId;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -192,7 +198,23 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} detail_page={true} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>buy now</PrimaryButton>
+                    <PrimaryButton 
+                        sx={{ marginTop: 3, width: '100%' }}
+                        onClick={() => {
+                            setDialogState({ ...dialogState, 
+                                buyNowDlgOpened: true, 
+                                buyNowDlgStep: 0, 
+                                buyNowPrice: productDetail.price_ela, 
+                                buyNowName: productDetail.name,
+                                buyNowOrderId: productDetail.orderId || 0,
+                                buyNowSeller: productDetail.holder,
+                                buyNowRoyaltyOwner: productDetail.royaltyOwner || '',
+                                buyNowRoyalty: productDetail.royalties
+                            });
+                        }}
+                    >
+                        buy now
+                    </PrimaryButton>
                     {/* <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton> */}
                 </Grid>
             </Grid>
@@ -217,6 +239,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>
             </Grid>
+            <ModalDialog
+                open={dialogState.buyNowDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, buyNowDlgOpened: false });
+                }}
+            >
+                {dialogState.buyNowDlgStep === 0 && <BuyNow />}
+                {dialogState.buyNowDlgStep === 1 && <PurchaseSuccess />}
+            </ModalDialog>
         </>
     );
 };
