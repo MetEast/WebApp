@@ -4,7 +4,7 @@ import { Stack, Typography, TextField } from '@mui/material';
 export interface ComponentProps {
     title?: string;
     placeholder?: string;
-    handleChange?: (value: string) => void;
+    handleChange?: (value: number) => void;
 }
 
 const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {}}): JSX.Element => {
@@ -13,7 +13,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleCha
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setInput(value);
-        handleChange(value);
+        handleChange(parseFloat(value));
     };
     return (
         <Stack spacing={0.5}>

@@ -16,8 +16,8 @@ export interface ComponentProps {
 const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
+    const [didCookies] = useCookies(["did"]);
+    const [tokenCookies] = useCookies(["token"]);
     const [likeState, setLikeState] = useState(product.isLike);
     const { enqueueSnackbar } = useSnackbar();
     

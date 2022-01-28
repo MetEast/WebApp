@@ -9,7 +9,7 @@ export interface ComponentProps {
 
 const ViewOnExplorerButton: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
     return (
-        <Link href={`https://esc.elastos.io/tx/${txHash}`} underline="none" target="_blank">
+        <Link href={`${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`} underline="none" target="_blank">
             <Button>
                 {`View on explorer`}
                 <Icon

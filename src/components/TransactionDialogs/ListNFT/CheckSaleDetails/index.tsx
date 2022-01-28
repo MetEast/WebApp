@@ -3,28 +3,33 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
-import { TypeSaleInputForm } from 'src/types/mint-types';
+import { TypeSaleInputForm, TypeIpfsUploadInfo } from 'src/types/mint-types';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils'
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useDialogContext } from 'src/context/DialogContext';
-
+import { useSnackbar } from 'notistack';
+import { create } from 'ipfs-http-client';
+import { useCookies } from 'react-cookie';
 
 export interface ComponentProps {
     inputData: TypeSaleInputForm;
     setInputData: (value: TypeSaleInputForm) => void;
-    handleTxHash: (value:string) => void;
+    handleTxHash: (value: string) => void;
+    tokenInfo: TypeIpfsUploadInfo;
 }
 
-const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, handleTxHash}): JSX.Element => {
+const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, handleTxHash, tokenInfo}): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const [didCookies] = useCookies(["did"]);
+    const { enqueueSnackbar } = useSnackbar();
     const defaultValue: TypeSaleInputForm = {
         saleType: 'buynow',
-        price: '',
+        price: 0,
         royalty: '',
-        minPirce: '',
+        minPirce: 0,
         saleEnds: {label: '', value: ''}
     };
 
@@ -51,15 +56,18 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
         stickerContract.methods.createOrderForSale(_tokenId, _quoteToken, _price, _didUri).send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log("transactionHash", hash);
+                handleTxHash(hash);
             })
             .on('receipt', (receipt: any) => {
                 console.log("receipt", receipt);
+                enqueueSnackbar('Order for sale succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
             })
             .on('confirmation', (confirmationNumber: any, receipt: any) => {
                 console.log("confirmation", confirmationNumber, receipt);
             })
             .on('error', (error: any, receipt: any) => {
                 console.error("error", error);
+                enqueueSnackbar('Order for sale error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
             });
     }
       
@@ -86,27 +94,33 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
         stickerContract.methods.createOrderForAuction(_tokenId, _quoteToken, _minPrice, _endTime, _didUri).send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log("transactionHash", hash);
+                handleTxHash(hash);
             })
             .on('receipt', (receipt: any) => {
                 console.log("receipt", receipt);
+                enqueueSnackbar('Order for auction succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
             })
             .on('confirmation', (confirmationNumber: any, receipt: any) => {
                 console.log("confirmation", confirmationNumber, receipt);
-                //
             })
             .on('error', (error: any, receipt: any) => {
                 console.error("error", error);
+                enqueueSnackbar('Order for auction error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
             });
     }
 
     const handleCreateOrder = async () => {
-        // if(inputData.saleType === 'buynow') {
-        //     callCreateOrderForSale();
-        // }
-        // else {
-        //     callCreateOrderForAuction();
-        // }
-        alert(1);
+        const _quoteToken = '0xe6fd75ff38Adca4B97FBCD938c86b98772431867';
+        if(inputData.saleType === 'buynow') {
+            callCreateOrderForSale(parseInt(tokenInfo.tokenId), _quoteToken, inputData.price, tokenInfo.didUri);
+        }
+        else {
+            let endTime = new Date().getSeconds();
+            if(inputData.saleEnds.value === '1 month') endTime += 30 * 24 * 3600;
+            else if(inputData.saleEnds.value === '1 week') endTime += 7 * 24 * 3600;
+            else if(inputData.saleEnds.value === '1 day') endTime += 24 * 3600;
+            callCreateOrderForAuction(parseInt(tokenInfo.tokenId), _quoteToken, inputData.minPirce, endTime, tokenInfo.didUri);
+        }
         setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 5 });
     };
 
@@ -136,7 +150,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>in {inputData.saleEnds.value}</DetailedInfoLabelTypo>
                     </Grid>
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Royalties</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
@@ -147,7 +161,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>0.22 ELA</DetailedInfoLabelTypo>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>

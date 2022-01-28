@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
 import { Stack, Typography, Grid } from '@mui/material';
@@ -25,9 +25,10 @@ export interface ComponentProps {
     setInputData: (value: TypeMintInputForm) => void;
     txFee: number;
     handleTxHash: (value: string) => void;
+    handleTokenInfo: (value: any) => void;
 }
 
-const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee, handleTxHash }): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee, handleTxHash, handleTokenInfo }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { file } = inputData;
     const [tokenCookies] = useCookies(["token"]);
@@ -86,6 +87,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         const _royaltyFee = 10000; // how to set?
         const _gasLimit = 5000000;
         await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, _gasLimit);
+        handleTokenInfo(paramObj);
         return true;
     };
 
@@ -138,19 +140,42 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         })
     )
 
+    const sendIpfsDidJson = ()=>(
+        new Promise((resolve, reject) => {
+            // create the metadata object we'll be storing
+            const didObj = {
+                "did": did, 
+                "description": inputData.author,
+                "name": name,
+            }
+            try {
+                const jsonDidObj = JSON.stringify(didObj);
+                // add the metadata itself as well
+                const didRecv = Promise.resolve(client.add(jsonDidObj))
+                resolve(didRecv)
+            } catch (error) {
+                reject(error);
+            }
+        })
+    )
+
     const uploadData = ()=>(
         new Promise((resolve, reject) => {
             let _id = '';
             let _uri = '';
+            let _didUri = ''
             if (!file) return;
-            sendIpfsImage(file).then((added: any) => { // Hash of image path
+            sendIpfsImage(file).then((added: any) => { // Hash of image path - tokenId
                 _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
                 console.log('ipfs hash:-------------', _id);
                 return sendIpfsMetaData(added);
-            }).then((metaRecv: any) => {
+            }).then((metaRecv: any) => { // tokenUri
                 _uri = `meteast:json:${metaRecv.path}`;
                 console.log('ipfs uri:-------------', _uri);
-                resolve({ _id, _uri })
+                return sendIpfsDidJson()
+            }).then((didRecv: any) => { // didUri
+                _didUri = `meteast:json:${didRecv.path}`
+                resolve({ _id, _uri, _didUri })
             }).catch((error) => {
                 reject(error);
             })

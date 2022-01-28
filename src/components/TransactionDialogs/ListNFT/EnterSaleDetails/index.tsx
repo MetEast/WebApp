@@ -21,7 +21,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData}): 
     const saleEndsOptions: Array<TypeSelectItem> = [
         {
             label: '1 month',
-            value: '7 month',
+            value: '1 month',
         },
         {
             label: '1 week',
@@ -35,16 +35,16 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData}): 
 
     const [saleType, setSaleType] = useState<'buynow' | 'auction'>('buynow');
     const [saleEnds, setSaleEnds] = useState<TypeSelectItem>();
-    const [price, setPrice] = useState<string>('');
-    const [royalty, setRoyalty] = useState<string>('');
-    const [minPrice, setMinPrice] = useState<string>('');
+    const [price, setPrice] = useState<number>(0);
+    // const [royalty, setRoyalty] = useState<string>('');
+    const [minPrice, setMinPrice] = useState<number>(0);
     const { enqueueSnackbar } = useSnackbar();
     
     const defaultValue: TypeSaleInputForm = {
         saleType: 'buynow',
-        price: '',
+        price: 0,
         royalty: '',
-        minPirce: '',
+        minPirce: 0,
         saleEnds: {label: '', value: ''}
     };
 
@@ -55,19 +55,15 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData}): 
 
     const handleNextStep = () => {
         console.log(saleEnds);
-        if ((saleType === 'buynow' && price !== '' && royalty !== '') || (saleType === 'auction' && minPrice !== '' && saleEnds?.value !== undefined && saleEnds.value !== '')) {
-            if (parseFloat(price) === NaN || parseFloat(royalty) === NaN || parseFloat(minPrice) === NaN) 
-                enqueueSnackbar('Not a valid number!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
-            else {
-                let tempFormData: TypeSaleInputForm = {...inputData}; 
-                tempFormData.price = price;
-                tempFormData.royalty = royalty;
-                tempFormData.minPirce = minPrice;
-                tempFormData.saleEnds = saleEnds || {label: '', value: ''};
-                tempFormData.saleType = saleType;
-                setInputData(tempFormData);
-                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4 });
-            }
+        if ((saleType === 'buynow') || (saleType === 'auction' && saleEnds?.value !== undefined && saleEnds.value !== '')) {
+            let tempFormData: TypeSaleInputForm = {...inputData}; 
+            tempFormData.price = price;
+            // tempFormData.royalty = royalty;
+            tempFormData.minPirce = minPrice;
+            tempFormData.saleEnds = saleEnds || {label: '', value: ''};
+            tempFormData.saleType = saleType;
+            setInputData(tempFormData);
+            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4 });
         }
         else enqueueSnackbar('Form validation failed!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
     };
@@ -93,7 +89,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData}): 
                 {saleType === 'buynow' && (
                     <>
                         <ELAPriceInput title="Price" handleChange={(value) => setPrice(value)} />
-                        <ELAPriceInput title="Royalties" handleChange={(value) => setRoyalty(value)} />
+                        {/* <ELAPriceInput title="Royalties" handleChange={(value) => setRoyalty(value)} /> */}
                     </>
                 )}
                 {saleType === 'auction' && (
