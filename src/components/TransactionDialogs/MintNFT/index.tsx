@@ -31,18 +31,13 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         minPirce: 0,
         saleEnds: {label: '', value: ''}
     };
-    const defaultTokenInfo: TypeIpfsUploadInfo = {
-        tokenId: '',
-        tokenUri: '',
-        didUri: ''
-    };
+
     const [dialogState, setDialogState] = useDialogContext();
     const [inputMintFormData, setInputMintFormData] = useState<TypeMintInputForm>(defaultMintValue);
     const [mintTxHash, setMintTxHash] = useState<string>("");
     const [mintTxFee, setMintTxFee] = useState<number>(0);
     const [inputSaleFormData, setInputSaleFormData] = useState<TypeSaleInputForm>(defaultSaleValue);
     const [saleTxHash, setSaleTxHash] = useState<string>("");
-    const [tokenInfo, setTokenInfo] = useState<TypeIpfsUploadInfo>(defaultTokenInfo);
 
     const handleMintTxHash = (value: string) => {
         setMintTxHash(value);
@@ -50,10 +45,6 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleSaleTxHash = (value: string) => {
         setSaleTxHash(value);
-    };
-
-    const handleTokenInfo = (value: TypeIpfsUploadInfo) => {
-        setTokenInfo(value);
     };
 
     // update later
@@ -81,10 +72,10 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             }}
         >
             {dialogState.createNFTDlgStep === 0 && <MintNFT inputData={inputMintFormData} setInputData={setInputMintFormData} txFee={mintTxFee}/>}
-            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails inputData={inputMintFormData} setInputData={setInputMintFormData} txFee={mintTxFee} handleTxHash={handleMintTxHash} handleTokenInfo={handleTokenInfo} />}
+            {dialogState.createNFTDlgStep === 1 && <CheckNFTDetails inputData={inputMintFormData} setInputData={setInputMintFormData} txFee={mintTxFee} handleTxHash={handleMintTxHash} />}
             {dialogState.createNFTDlgStep === 2 && <NFTMinted txHash={mintTxHash} />}
             {dialogState.createNFTDlgStep === 3 && <EnterSaleDetails inputData={inputSaleFormData} setInputData={setInputSaleFormData}/>}
-            {dialogState.createNFTDlgStep === 4 && <CheckSaleDetails inputData={inputSaleFormData} setInputData={setInputSaleFormData}  handleTxHash={handleSaleTxHash} tokenInfo={tokenInfo}/>}
+            {dialogState.createNFTDlgStep === 4 && <CheckSaleDetails inputData={inputSaleFormData} setInputData={setInputSaleFormData}  handleTxHash={handleSaleTxHash}/>}
             {dialogState.createNFTDlgStep === 5 && <ArtworkIsNowForSale txHash={saleTxHash}/>}
         </ModalDialog>
     );

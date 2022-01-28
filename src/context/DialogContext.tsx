@@ -6,11 +6,16 @@ interface State {
     // mint nft
     createNFTDlgOpened: boolean;
     createNFTDlgStep: number;
-    category: TypeSelectItem;
-    title: string;
-    author: string;
-    introduction: string;
-    file?: File;
+    mintNFTCategory: TypeSelectItem;
+    mintNFTTitle: string;
+    mintNFTAuthor: string;
+    mintNFTIntroduction: string;
+    mintNFTFile?: File;
+    mintNFTTokenId: string;
+    mintNFTTokenUri: string;
+    mintNFTDidUri: string;
+    mintNFTTxHash: string;
+    mintNFTTXFee: number;
     // create order for sale/auction
 
     // buy now
@@ -29,20 +34,25 @@ const defaultState: State = {
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
-    category: {label: "", value: ""},
-    title: "",
-    author: "",
-    introduction: "",
+    mintNFTCategory: {label: "", value: ""},
+    mintNFTTitle: "",
+    mintNFTAuthor: "",
+    mintNFTIntroduction: "",
+    mintNFTTokenId: "",
+    mintNFTTokenUri: "",
+    mintNFTDidUri: "",
+    mintNFTTxHash: "",
+    mintNFTTXFee: 0,
     //
     // buy now
     buyNowDlgOpened: false,
     buyNowDlgStep: 0,
-    buyNowName: '',
+    buyNowName: "",
     buyNowPrice: 0,
-    buyNowSeller: '',
-    buyNowRoyaltyOwner: '',
+    buyNowSeller: "",
+    buyNowRoyaltyOwner: "",
     buyNowRoyalty: 0,
-    buyNowTxHash: '',
+    buyNowTxHash: "",
     buyNowOrderId: 0,
 };
 

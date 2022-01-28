@@ -23,7 +23,7 @@ import { useCookies } from "react-cookie";
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
-import { getEssentialWalletAddress } from 'src/services/essential';
+import { getEssentialWalletAddress, getEssentialWalletBalance } from 'src/services/essential';
 
 
 const ProfilePage: React.FC = (): JSX.Element => {

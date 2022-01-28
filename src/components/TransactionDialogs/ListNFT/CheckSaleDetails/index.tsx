@@ -16,10 +16,9 @@ export interface ComponentProps {
     inputData: TypeSaleInputForm;
     setInputData: (value: TypeSaleInputForm) => void;
     handleTxHash: (value: string) => void;
-    tokenInfo: TypeIpfsUploadInfo;
 }
 
-const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, handleTxHash, tokenInfo}): JSX.Element => {
+const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, handleTxHash}): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const defaultValue: TypeSaleInputForm = {
@@ -30,7 +29,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
         saleEnds: {label: '', value: ''}
     };
 
-    const callCreateOrderForSale = async (_tokenId: number, _quoteToken: string, _price: number, _didUri: string) => {
+    const callCreateOrderForSale = async (_tokenId: string, _quoteToken: string, _price: number, _didUri: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -38,7 +37,12 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
         let contractAbi = STICKER_CONTRACT_ABI;
         let contractAddress = STICKER_CONTRACT_ADDRESS; // Elastos Testnet
         let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-      
+        
+        console.log("tokenId", _tokenId)
+        console.log("_quoteToken", _quoteToken)
+        console.log("_price", _price)
+        console.log("_didUri", _didUri)
+
         let gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log("Gas price:", gasPrice);
       
@@ -46,7 +50,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
         let transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
-            gas: 5000000,
+            gas: 8000000,
             value: 0
         };
       
@@ -68,7 +72,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
             });
     }
       
-    const callCreateOrderForAuction = async (_tokenId: number, _quoteToken: string, _minPrice: number, _endTime: number, _didUri: string) => {
+    const callCreateOrderForAuction = async (_tokenId: string, _quoteToken: string, _minPrice: number, _endTime: number, _didUri: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -107,16 +111,20 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
     }
 
     const handleCreateOrder = async () => {
-        const _quoteToken = '0xe6fd75ff38Adca4B97FBCD938c86b98772431867'; // ELA
+        const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
         if(inputData.saleType === 'buynow') {
-            callCreateOrderForSale(parseInt(tokenInfo.tokenId), _quoteToken, inputData.price, tokenInfo.didUri);
+            console.log(dialogState.mintNFTTokenId);
+            console.log(_quoteToken);
+            console.log(inputData.price);
+            console.log(dialogState.mintNFTDidUri);
+            callCreateOrderForSale(dialogState.mintNFTTokenId, _quoteToken, inputData.price, dialogState.mintNFTDidUri.replace("meteast:json:", ""));
         }
         else {
             let endTime = new Date().getSeconds();
             if(inputData.saleEnds.value === '1 month') endTime += 30 * 24 * 3600;
             else if(inputData.saleEnds.value === '1 week') endTime += 7 * 24 * 3600;
             else if(inputData.saleEnds.value === '1 day') endTime += 24 * 3600;
-            callCreateOrderForAuction(parseInt(tokenInfo.tokenId), _quoteToken, inputData.minPirce, endTime, tokenInfo.didUri);
+            callCreateOrderForAuction(dialogState.mintNFTTokenId, _quoteToken, inputData.minPirce, endTime, dialogState.mintNFTDidUri);
         }
         setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 5 });
     };

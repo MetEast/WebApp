@@ -11,7 +11,6 @@ let connectivityInitialized = false;
 
 export const useConnectivitySDK = async() => {
   const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
-  // essentialsConnector.getWalletConnectProvider().isConnecting = false;
   console.log("--------------Connector:" , essentialsConnector.hasWalletConnectSession());
   console.log("--------------walletConnector isconnecting:", essentialsConnector.getWalletConnectProvider().isConnecting);
   console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().connected);
@@ -26,6 +25,7 @@ export const useConnectivitySDK = async() => {
   console.log("Preparing the Elastos connectivity SDK");
   // unregistear if already registerd
   const arrIConnectors: IConnector[] = connectivity.getAvailableConnectors();
+  console.log(arrIConnectors.findIndex((option) => option.name === essentialsConnector.name));
   if (arrIConnectors.findIndex((option) => option.name === essentialsConnector.name) !== -1) {
     connectivity.unregisterConnector(essentialsConnector.name);
     console.log("unregister connector succeed.");

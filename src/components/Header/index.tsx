@@ -24,7 +24,7 @@ const menuItemsList = [
     {
         title: 'Blind Boxes',
         url: '/blind-box',
-    },
+    }
 ];
 
 const Header: React.FC = (): JSX.Element => {
@@ -40,12 +40,12 @@ const Header: React.FC = (): JSX.Element => {
         setAuth({ isLoggedIn: false });
         removeTokenCookie("token");
         removeDidCookie("did");
-        console.log("--------------Connector:" , essentialsConnector.hasWalletConnectSession());
-        console.log("--------------walletConnector isconnecting:", essentialsConnector.getWalletConnectProvider().isConnecting);
-        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().connected);
-        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().chainId);
-        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().rpcUrl);
-        await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
+        console.log("Connector--------------:" , essentialsConnector.hasWalletConnectSession());
+        console.log("walletConnector isconnecting--------------:", essentialsConnector.getWalletConnectProvider().isConnecting);
+        console.log("walletConnector connected--------------:", essentialsConnector.getWalletConnectProvider().connected);
+        console.log("walletConnector connected--------------:", essentialsConnector.getWalletConnectProvider().chainId);
+        console.log("walletConnector connected--------------:", essentialsConnector.getWalletConnectProvider().rpcUrl);
+        // await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
     };

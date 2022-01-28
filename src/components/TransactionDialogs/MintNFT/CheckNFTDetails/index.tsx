@@ -25,10 +25,9 @@ export interface ComponentProps {
     setInputData: (value: TypeMintInputForm) => void;
     txFee: number;
     handleTxHash: (value: string) => void;
-    handleTokenInfo: (value: any) => void;
 }
 
-const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee, handleTxHash, handleTokenInfo }): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee, handleTxHash }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { file } = inputData;
     const [tokenCookies] = useCookies(["token"]);
@@ -87,7 +86,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         const _royaltyFee = 10000; // how to set?
         const _gasLimit = 5000000;
         await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, _gasLimit);
-        handleTokenInfo(paramObj);
         return true;
     };
 
@@ -174,7 +172,8 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
                 console.log('ipfs uri:-------------', _uri);
                 return sendIpfsDidJson()
             }).then((didRecv: any) => { // didUri
-                _didUri = `meteast:json:${didRecv.path}`
+                _didUri = `meteast:json:${didRecv.path}`;
+                setDialogState({ ...dialogState, mintNFTTokenId: _id, mintNFTTokenUri: _uri, mintNFTDidUri: _didUri, createNFTDlgStep: 2 });
                 resolve({ _id, _uri, _didUri })
             }).catch((error) => {
                 reject(error);
