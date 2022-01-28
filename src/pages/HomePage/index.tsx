@@ -45,6 +45,12 @@ const HomePage: React.FC = (): JSX.Element => {
         isLike: false,
     };
 
+    const adBanners = [
+        '/assets/images/adbanners/banner1.png',
+        '/assets/images/adbanners/banner2.png',
+        '/assets/images/adbanners/banner3.png',
+    ];
+
     const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resNewProduct = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listTokens?pageNum=1&pageSize=10`,
@@ -156,19 +162,19 @@ const HomePage: React.FC = (): JSX.Element => {
             <Stack direction="column">
                 <Box>
                     <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                        {productList.map((product, index) => (
+                        {adBanners.map((item, index) => (
                             <SwiperSlide key={`banner-carousel-${index}`}>
-                                <Box onClick={() => navigate(getUrl(product))} sx={{ cursor: 'pointer' }}>
-                                    <img src={product.image} alt="" width="100%" height={320} />
+                                <Box onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                                    <img src={item} alt="" width="100%" />
                                 </Box>
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    {productList.length === 0 && (
+                    {/* {productList.length === 0 && (
                         <Stack justifyContent="center" alignItems="center" minHeight={320}>
                             <img src="/assets/images/loading.gif" alt="" />
                         </Stack>
-                    )}
+                    )} */}
                 </Box>
                 <Box mt={4}>
                     <H2Typography mb={1}>New Products</H2Typography>
@@ -198,7 +204,7 @@ const HomePage: React.FC = (): JSX.Element => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    {productList.length === 0 && (
+                    {collectionList.length === 0 && (
                         <Stack justifyContent="center" alignItems="center" minHeight={200}>
                             <img src="/assets/images/loading.gif" alt="" />
                         </Stack>

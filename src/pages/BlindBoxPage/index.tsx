@@ -194,26 +194,29 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setBlindBoxList(prodList);
     };
 
+    const adBanners = [
+        '/assets/images/adbanners/banner1.png',
+        '/assets/images/adbanners/banner2.png',
+        '/assets/images/adbanners/banner3.png',
+    ];
+
     return (
         <>
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                    {blindBoxList.map((item, index) => (
+                    {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <BlindBoxGalleryItem
-                                product={item}
-                                onlyShowImage={true}
-                                index={index}
-                                updateLikes={updateBlindBoxLikes}
-                            />
+                            <Box onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                                <img src={item} alt="" width="100%" />
+                            </Box>
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {blindBoxList.length === 0 && (
+                {/* {blindBoxList.length === 0 && (
                     <Stack justifyContent="center" alignItems="center" minHeight={320}>
                         <img src="/assets/images/loading.gif" alt="" />
                     </Stack>
-                )}
+                )} */}
             </Box>
             <OptionsBar
                 handleKeyWordChange={handleKeyWordChange}
