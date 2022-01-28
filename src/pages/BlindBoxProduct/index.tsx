@@ -10,6 +10,7 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
 // import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
 // import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
+import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 // import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
 // import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 // import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
@@ -23,7 +24,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 // import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 // import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
-import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
+// import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 // import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 // import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 // import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
@@ -163,7 +164,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <CreateBlindBox />
+                <MintNFT />
             </ModalDialog>
         </>
     );

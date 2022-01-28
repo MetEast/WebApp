@@ -20,7 +20,6 @@ export const SelectBtn = styled(Button)<{ isOpen: boolean }>`
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding: 0 16px;
     align-items: center;
     background: #f0f1f2;
     border-radius: 12px;
