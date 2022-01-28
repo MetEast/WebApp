@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Stack, Box, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import FilterModal from 'src/components/modals/FilterModal';
@@ -11,7 +11,7 @@ import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch }
 import { getImageFromAsset } from 'src/services/common';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
@@ -55,8 +55,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
             process.env.REACT_APP_SERVICE_URL
         }/sticker/api/v1/listTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
-            switch(sortBy.value) {
-                case 'low_to_high': 
+            switch (sortBy.value) {
+                case 'low_to_high':
                     reqUrl += `&orderType=price_l_to_h`;
                     break;
                 case 'high_to_low':
@@ -107,7 +107,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         });
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data.result;
-        
+
         let _newProductList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
@@ -120,7 +120,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
             product.author = itemObject.authorName || 'No vaule';
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
-            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            product.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
             _newProductList.push(product);
         }
         setProductList(_newProductList);
@@ -179,19 +184,29 @@ const ExplorePage: React.FC = (): JSX.Element => {
         else return `/`;
     };
 
+    const adBanners = [
+        '/assets/images/adbanners/banner1.png',
+        '/assets/images/adbanners/banner2.png',
+        '/assets/images/adbanners/banner3.png',
+    ];
+
     return (
         <>
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                    {productList.map((product, index) => (
+                    {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box onClick={() => navigate(getUrl(product))} sx={{ cursor: 'pointer' }}>
-                                <img src={product.image} alt="" width="100%" height={320} />
+                            <Box onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                                <img src={item} alt="" width="100%" />
                             </Box>
                         </SwiperSlide>
                     ))}
-                    {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
                 </Swiper>
+                {/* {productList.length === 0 && (
+                    <Stack justifyContent="center" alignItems="center" minHeight={320}>
+                        <img src="/assets/images/loading.gif" alt="" />
+                    </Stack>
+                )} */}
             </Box>
             <OptionsBar
                 handleKeyWordChange={handleKeyWordChange}
@@ -203,7 +218,11 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
-            {productList.length === 0 && <EmptyBodyGalleryItem>No listed products on marketplace</EmptyBodyGalleryItem>}
+            {productList.length === 0 && (
+                <Stack justifyContent="center" alignItems="center" minHeight={200}>
+                    <img src="/assets/images/loading.gif" alt="" />
+                </Stack>
+            )}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid

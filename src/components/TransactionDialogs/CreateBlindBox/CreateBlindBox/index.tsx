@@ -4,12 +4,11 @@ import { useStyles, SelectBtn } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
-import Select from '../../components/Select';
 import WarningTypo from '../../components/WarningTypo';
 import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 import ELAPriceInput from '../../components/ELAPriceInput';
-import SortSelect from 'src/components/Select';
+import Select from 'src/components/Select';
 
 export interface ComponentProps {}
 
@@ -76,10 +75,16 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
-    const [blindboxItem, setBlindboxItem] = useState<TypeSelectItem>();
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
+
+    const [blindboxItem, setBlindboxItem] = useState<TypeSelectItem>();
+    const [blindboxItemSelectOpen, setBlindboxItemSelectOpen] = useState(false);
+
     const [saleBegins, setSaleBegins] = useState<TypeSelectItem>();
+    const [saleBeginsSelectOpen, setSaleBeginsSelectOpen] = useState(false);
+
     const [saleEnds, setSaleEnds] = useState<TypeSelectItem>();
+    const [saleEndsSelectOpen, setSaleEndsSelectOpen] = useState(false);
 
     const [sort, setSort] = useState<TypeSelectItem>();
     const [sortSelectOpen, setSortSelectOpen] = useState(false);
@@ -171,9 +176,15 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 Blind box items
                             </Typography>
                             <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={blindboxItemSelectOpen}>
+                                        {blindboxItem ? blindboxItem.label : 'Add  NFT to blind box'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
                                 options={blindboxItemsOptions}
-                                selected={blindboxItem}
-                                placeholder="Add  NFT to blind box"
+                                isOpen={blindboxItemSelectOpen}
+                                setIsOpen={setBlindboxItemSelectOpen}
                                 handleClick={handleBlindboxItemChange}
                             />
                         </Stack>
@@ -219,9 +230,15 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 Sale Begins
                             </Typography>
                             <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={saleBeginsSelectOpen}>
+                                        {saleBegins ? saleBegins.label : 'Pick Date'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
                                 options={saleBeginsOptions}
-                                selected={saleBegins}
-                                placeholder="Pick Date"
+                                isOpen={saleBeginsSelectOpen}
+                                setIsOpen={setSaleBeginsSelectOpen}
                                 handleClick={handleSaleBeginsChange}
                             />
                         </Stack>
@@ -230,9 +247,15 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 Sale Ends
                             </Typography>
                             <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={saleEndsSelectOpen}>
+                                        {saleEnds ? saleEnds.label : 'Pick Date'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
                                 options={saleEndsOptions}
-                                selected={saleEnds}
-                                placeholder="Pick Date"
+                                isOpen={saleEndsSelectOpen}
+                                setIsOpen={setSaleEndsSelectOpen}
                                 handleClick={handleSaleEndsChange}
                             />
                         </Stack>
@@ -251,9 +274,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             <Typography fontSize={12} fontWeight={700}>
                                 Sort
                             </Typography>
-                            <SortSelect
+                            <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={sortSelectOpen}>
+                                    <SelectBtn
+                                        fullWidth
+                                        isOpen={sortSelectOpen}
+                                        sx={{ justifyContent: 'space-between' }}
+                                    >
                                         <Icon icon="ph:sort-ascending" fontSize={20} />
                                         {sort ? sort.label : 'Select'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />

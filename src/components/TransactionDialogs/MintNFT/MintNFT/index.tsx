@@ -3,14 +3,15 @@ import { Stack, Typography, Grid, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
-import Select from '../../components/Select';
 import WarningTypo from '../../components/WarningTypo';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeMintInputForm } from 'src/types/mint-types';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import { useSnackbar } from 'notistack';
-
+import Select from 'src/components/Select';
+import { SelectBtn } from './styles';
+import { Icon } from '@iconify/react';
 
 export interface ComponentProps {
     inputData: TypeMintInputForm;
@@ -18,7 +19,7 @@ export interface ComponentProps {
     txFee: number;
 }
 
-const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JSX.Element => {
+const MintNFT: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const categoryOptions: Array<TypeSelectItem> = [
         {
@@ -56,13 +57,14 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JS
         {
             label: 'Other',
             value: 'Other',
-        }
+        },
     ];
 
     const [category, setCategory] = useState<TypeSelectItem>();
-    const [title, setTitle] = useState<string>("");
-    const [introduction, setIntroduction] = useState<string>("");
-    const [author, setAuthor] = useState<string>("");
+    const [categorySelectOpen, setCategorySelectOpen] = useState(false);
+    const [title, setTitle] = useState<string>('');
+    const [introduction, setIntroduction] = useState<string>('');
+    const [author, setAuthor] = useState<string>('');
     const [stateFile, setStateFile] = useState(null);
     const { enqueueSnackbar } = useSnackbar();
     const defaultValue: TypeMintInputForm = {
@@ -70,14 +72,14 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JS
         description: '',
         author: '',
         category: { label: '', value: '' },
-        file: new File([""], "")
+        file: new File([''], ''),
     };
 
     const handleCategoryChange = (value: string) => {
         const item = categoryOptions.find((option) => option.value === value);
         setCategory(item);
         if (item !== undefined) {
-            let tempFormData: TypeMintInputForm = {...inputData}; 
+            let tempFormData: TypeMintInputForm = { ...inputData };
             tempFormData.category = item;
             setInputData(tempFormData);
         }
@@ -85,38 +87,38 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JS
 
     const handleNameChange = (value: string) => {
         setTitle(value);
-        let tempFormData: TypeMintInputForm = {...inputData}; 
+        let tempFormData: TypeMintInputForm = { ...inputData };
         tempFormData.name = value;
         setInputData(tempFormData);
     };
 
     const handleDescriptionChange = (value: string) => {
         setIntroduction(value);
-        let tempFormData: TypeMintInputForm = {...inputData}; 
+        let tempFormData: TypeMintInputForm = { ...inputData };
         tempFormData.description = value;
         setInputData(tempFormData);
     };
 
     const handleAuthorChange = (value: string) => {
         setAuthor(value);
-        let tempFormData: TypeMintInputForm = {...inputData}; 
+        let tempFormData: TypeMintInputForm = { ...inputData };
         tempFormData.author = value;
         setInputData(tempFormData);
     };
-    
+
     const handleFileChange = (files: Array<File>) => {
         handleDropSingleFile(files);
         if (files !== null && files.length > 0) {
-            let tempFormData: TypeMintInputForm = {...inputData}; 
+            let tempFormData: TypeMintInputForm = { ...inputData };
             tempFormData.file = files[0];
             setInputData(tempFormData);
         }
-    }
+    };
 
     const handleDropSingleFile = useCallback((acceptedFiles) => {
         const file = acceptedFiles[0];
         if (file) {
-            setStateFile({...file, preview: URL.createObjectURL(file)});
+            setStateFile({ ...file, preview: URL.createObjectURL(file) });
         }
     }, []);
 
@@ -129,30 +131,36 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JS
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
-                        <CustomTextField title="Project Title" placeholder="Placeholder Text" changeHandler={(value: string) => {handleNameChange(value)}} />
+                        <CustomTextField
+                            title="Project Title"
+                            placeholder="Placeholder Text"
+                            changeHandler={(value: string) => {
+                                handleNameChange(value);
+                            }}
+                        />
                         <CustomTextField
                             title="Project Introduction"
                             placeholder="Enter Introduction"
                             multiline
                             rows={3}
-                            changeHandler={(value: string) => handleDescriptionChange(value)}                       
+                            changeHandler={(value: string) => handleDescriptionChange(value)}
                         />
                         <Box>
                             <Typography fontSize={12} fontWeight={700}>
                                 Source File
                             </Typography>
-                            <UploadSingleFile 
-                                file={stateFile} 
+                            <UploadSingleFile
+                                file={stateFile}
                                 onDrop={handleFileChange}
-                                sx={{ 
-                                    width: "100%",
-                                    height: "112px",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    marginTop: "1rem",
-                                    borderRadius: "2vw",
-                                    background: '#E8F4FF', 
-                                    cursor: 'pointer' 
+                                sx={{
+                                    width: '100%',
+                                    height: '112px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: '1rem',
+                                    borderRadius: '2vw',
+                                    background: '#E8F4FF',
+                                    cursor: 'pointer',
                                 }}
                             />
                         </Box>
@@ -163,10 +171,16 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JS
                                 Category
                             </Typography>
                             <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={categorySelectOpen}>
+                                        {category ? category.label : 'Select'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
                                 options={categoryOptions}
-                                selected={category}
-                                placeholder="Select"
+                                isOpen={categorySelectOpen}
                                 handleClick={handleCategoryChange}
+                                setIsOpen={setCategorySelectOpen}
                             />
                         </Stack>
                         <CustomTextField
@@ -174,7 +188,7 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JS
                             placeholder="Enter author introduction"
                             multiline
                             rows={3}
-                            changeHandler={(value: string) => handleAuthorChange(value)}                       
+                            changeHandler={(value: string) => handleAuthorChange(value)}
                         />
                     </Grid>
                 </Grid>
@@ -196,10 +210,21 @@ const MintNFT: React.FC<ComponentProps> = ({inputData, setInputData, txFee}): JS
                     <PrimaryButton
                         fullWidth
                         onClick={() => {
-                            if (title !== "" && introduction !== "" && author !== "" && category !== undefined && category.label !== "" && category.value !== "" && stateFile !== null) {
+                            if (
+                                title !== '' &&
+                                introduction !== '' &&
+                                author !== '' &&
+                                category !== undefined &&
+                                category.label !== '' &&
+                                category.value !== '' &&
+                                stateFile !== null
+                            ) {
                                 setDialogState({ ...dialogState, createNFTDlgStep: 1 });
-                            }
-                            else enqueueSnackbar('Form validation failed!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
+                            } else
+                                enqueueSnackbar('Form validation failed!', {
+                                    variant: 'warning',
+                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                });
                         }}
                     >
                         Next
