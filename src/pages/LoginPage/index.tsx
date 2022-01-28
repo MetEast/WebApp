@@ -10,6 +10,7 @@ import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectW
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useCookies } from "react-cookie";
 import { useConnectivityContext } from 'src/context/ConnectivityContext';
+import { useSnackbar } from 'notistack';
 
 const LoginPage: React.FC = (): JSX.Element => {
     const [tokenCookies, setTokenCookie] = useCookies(["token"]);
@@ -17,6 +18,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     const [auth, setAuth] = useRecoilState(authAtom);
     const [showModal, setShowModal] = useState<boolean>(true);
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
 
     // prevent sign-in again after page refresh
@@ -80,12 +82,13 @@ const LoginPage: React.FC = (): JSX.Element => {
                   setAuth({isLoggedIn: true});
                   setIsLinkedToEssentials(true);
                   navigate('/profile');
+                  enqueueSnackbar('Login succeed.', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
                 } else {
                   console.log(data);
                 }
               }).catch((error) => {
                 console.log(error);
-                alert(`Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable`);
+                enqueueSnackbar(`Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`, { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
             });
         }
     };
@@ -95,7 +98,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     //     setTokenCookie("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOiJkaWQ6ZWxhc3RvczppWm1oaHZIR0Zob2lmRXFqaWhHSkpBUWtXa2ZiOEpEb3E0IiwidHlwZSI6InVzZXIiLCJuYW1lIjoiVGVydSIsImVtYWlsIjoiIiwiY2FuTWFuYWdlQWRtaW5zIjpmYWxzZSwiaWF0IjoxNjQzMTk5Njg4LCJleHAiOjE2NDM4MDQ0ODh9.h8TpAlHyMlH8fS1aF6haslkOv2uUjyP18qeu0LzcLQ0', {path: '/', sameSite: 'none', secure: true});
     //     setShowModal(false)
     //     setAuth({isLoggedIn: true});
-    //     navigate('/');
+    //     navigate('/profile');
     // };
 
     return (

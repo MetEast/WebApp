@@ -40,6 +40,11 @@ const Header: React.FC = (): JSX.Element => {
         setAuth({ isLoggedIn: false });
         removeTokenCookie("token");
         removeDidCookie("did");
+        console.log("--------------Connector:" , essentialsConnector.hasWalletConnectSession());
+        console.log("--------------walletConnector isconnecting:", essentialsConnector.getWalletConnectProvider().isConnecting);
+        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().connected);
+        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().chainId);
+        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().rpcUrl);
         await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');

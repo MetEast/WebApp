@@ -11,6 +11,12 @@ let connectivityInitialized = false;
 
 export const useConnectivitySDK = async() => {
   const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
+  // essentialsConnector.getWalletConnectProvider().isConnecting = false;
+  console.log("--------------Connector:" , essentialsConnector.hasWalletConnectSession());
+  console.log("--------------walletConnector isconnecting:", essentialsConnector.getWalletConnectProvider().isConnecting);
+  console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().connected);
+  console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().chainId);
+  console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().rpcUrl);
 
   if (connectivityInitialized) {
     console.log("EssentialsConnector has already initialized.");
@@ -18,25 +24,19 @@ export const useConnectivitySDK = async() => {
   }  
 
   console.log("Preparing the Elastos connectivity SDK");
-  // essentialsConnector.disconnectWalletConnect();
-
   // unregistear if already registerd
-  // console.log(connectivity.getAvailableConnectors());
-  // console.log(essentialsConnector.name);
-  // console.log(connectivityInitialized)
   const arrIConnectors: IConnector[] = connectivity.getAvailableConnectors();
-  if (arrIConnectors.find((option) => option.name === essentialsConnector.name) !== undefined) {
-    // console.log(arrIConnectors.find((option) => option.name === essentialsConnector.name));
-    await connectivity.unregisterConnector(essentialsConnector.name);
+  if (arrIConnectors.findIndex((option) => option.name === essentialsConnector.name) !== -1) {
+    connectivity.unregisterConnector(essentialsConnector.name);
+    console.log("unregister connector succeed.");
   }
     
   connectivity.registerConnector(essentialsConnector).then(() => {
     connectivityInitialized = true;
-
-    console.log("essentialsConnector", essentialsConnector)
-    console.log("Wallet connect provider", essentialsConnector.getWalletConnectProvider());
-    
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+    console.log("essentialsConnector", essentialsConnector)
+    console.log("Wallet connect provider", walletConnectProvider);
+    
     // walletConnectProvider.updateRpcUrl(21, 'https://api-testnet.elastos.io/eth')
     // const walletConnectProvider: WalletConnectProvider = new WalletConnectProvider({
     //     rpc: {
@@ -77,6 +77,7 @@ export const useConnectivitySDK = async() => {
     walletConnectProvider.on("error", (code: number, reason: string) => {
       console.error(code, reason);
     });
+
 
     // Restore the wallet connect session - TODO: should be done by the connector itself?
     if (hasLink && !essentialsConnector.getWalletConnectProvider().connected)

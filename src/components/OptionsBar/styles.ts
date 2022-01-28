@@ -14,7 +14,7 @@ export const FilterButton = styled(Button)`
     }
 `;
 
-export const SortByBtn = styled(Button)<{ isOpen: boolean }>`
+export const SortByBtn = styled(Button)<{ isopen: number }>`
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -31,7 +31,7 @@ export const SortByBtn = styled(Button)<{ isOpen: boolean }>`
         margin-right: 6px;
     }
     .arrow-icon {
-        transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
+        transform: ${({ isopen }) => (isopen ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
     }
     ${(props) => props.theme.breakpoints.down('sm')} {
