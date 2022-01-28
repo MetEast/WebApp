@@ -54,16 +54,21 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData}): 
     };
 
     const handleNextStep = () => {
-        console.log(saleEnds);
-        if ((saleType === 'buynow') || (saleType === 'auction' && saleEnds?.value !== undefined && saleEnds.value !== '')) {
-            let tempFormData: TypeSaleInputForm = {...inputData}; 
-            tempFormData.price = price;
-            // tempFormData.royalty = royalty;
-            tempFormData.minPirce = minPrice;
-            tempFormData.saleEnds = saleEnds || {label: '', value: ''};
-            tempFormData.saleType = saleType;
-            setInputData(tempFormData);
-            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4 });
+        console.log(price)
+        if ((saleType === 'buynow' && price !== null) || (saleType === 'auction' && minPrice !== null && saleEnds?.value !== undefined && saleEnds.value !== '')) {
+            if ((saleType === 'buynow' && price === NaN) || (saleType === 'auction' && minPrice === NaN)) {
+                enqueueSnackbar('Invalid number!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
+            }
+            else {
+                let tempFormData: TypeSaleInputForm = {...inputData}; 
+                tempFormData.price = price;
+                // tempFormData.royalty = royalty;
+                tempFormData.minPirce = minPrice;
+                tempFormData.saleEnds = saleEnds || {label: '', value: ''};
+                tempFormData.saleType = saleType;
+                setInputData(tempFormData);
+                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4 });
+            }
         }
         else enqueueSnackbar('Form validation failed!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
     };

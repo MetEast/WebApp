@@ -110,7 +110,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
     }
 
     const handleCreateOrder = async () => {
-        const _quoteToken = '0xe6fd75ff38Adca4B97FBCD938c86b98772431867';
+        const _quoteToken = '0xe6fd75ff38Adca4B97FBCD938c86b98772431867'; // ELA
         if(inputData.saleType === 'buynow') {
             callCreateOrderForSale(parseInt(tokenInfo.tokenId), _quoteToken, inputData.price, tokenInfo.didUri);
         }
@@ -138,18 +138,30 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{inputData.saleType}</DetailedInfoLabelTypo>
                     </Grid>
-                    <Grid item xs={6}>
+                    {inputData.saleType === 'auction' && 
+                    <>
+                        <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Min Bid</DetailedInfoTitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{inputData.minPirce} ELA</DetailedInfoLabelTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>in {inputData.saleEnds.value}</DetailedInfoLabelTypo>
-                    </Grid>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoLabelTypo>{inputData.minPirce} ELA</DetailedInfoLabelTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoLabelTypo>in {inputData.saleEnds.value}</DetailedInfoLabelTypo>
+                        </Grid>
+                    </>}
+                    {inputData.saleType === 'buynow' && 
+                    <>
+                        <Grid item xs={6}>
+                            <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoLabelTypo>{inputData.price}</DetailedInfoLabelTypo>
+                        </Grid>
+                    </>}
                     {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Royalties</DetailedInfoTitleTypo>
                     </Grid>

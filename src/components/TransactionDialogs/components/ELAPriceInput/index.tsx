@@ -8,11 +8,11 @@ export interface ComponentProps {
 }
 
 const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {}}): JSX.Element => {
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState(0);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        setInput(value);
+        setInput(parseFloat(value));
         handleChange(parseFloat(value));
     };
     return (

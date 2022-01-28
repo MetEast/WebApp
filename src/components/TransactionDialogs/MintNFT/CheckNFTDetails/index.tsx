@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
 import { Stack, Typography, Grid } from '@mui/material';
@@ -48,7 +48,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     
         const accounts = await walletConnectWeb3.eth.getAccounts();
-    
+        
         let contractAbi = METEAST_CONTRACT_ABI;
         let contractAddress = METEAST_CONTRACT_ADDRESS; // Elastos Testnet
         let meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
