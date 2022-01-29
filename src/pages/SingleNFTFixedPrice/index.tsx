@@ -28,6 +28,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
+import AllTransactions from 'src/components/profile/AllTransactions';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
@@ -290,6 +291,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             >
                 {dialogState.buyNowDlgStep === 0 && <BuyNow />}
                 {dialogState.buyNowDlgStep === 1 && <PurchaseSuccess />}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.allTxDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allTxDlgOpened: false });
+                }}
+            >
+                <AllTransactions />
             </ModalDialog>
         </>
     );

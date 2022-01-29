@@ -73,7 +73,13 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <SecondaryButton
                     fullWidth
                     onClick={() => {
-                        setDialogState({ ...dialogState, placeBidDlgOpened: false });
+                        setDialogState({
+                            ...dialogState,
+                            placeBidAmount: 0,
+                            placeBidExpire: { label: '', value: '' },
+                            placeBidTxFee: 0,
+                            placeBidDlgOpened: false,
+                        });
                     }}
                 >
                     close
