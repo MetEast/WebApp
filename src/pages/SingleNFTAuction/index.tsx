@@ -126,7 +126,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 let endTime = getTime(itemObject.endTime); // no proper value
                 product.endTime = endTime.date + ' ' + endTime.time;
             } else {
-                product.endTime = 'No value';
+                product.endTime = '---';
             }
         }
         setProductDetail(product);
