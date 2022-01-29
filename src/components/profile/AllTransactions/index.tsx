@@ -144,9 +144,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
 
     useEffect(() => {
         getLatestTransaction();
-        if (auth.isLoggedIn) {
-            getLatestBid();
-        }
+        getLatestBid();
     }, [sortby]);
 
     const bidsTblColumns = [
@@ -182,7 +180,6 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                     Your Bids
                                 </Typography>
                             </Grid>
-                            {/* <Grid item container> */}
                             {myBidsList.length === 0 ? (
                                 <Grid item alignItems="center">
                                     <Typography fontSize={14} fontWeight={400}>
@@ -201,7 +198,6 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                     );
                                 })
                             )}
-                            {/* </Grid> */}
                         </Grid>
                         {myBidsList.length !== 0 && (
                             <Grid container spacing={1}>
@@ -229,7 +225,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 ) : (
                     <>
                         <Stack direction="column" alignItems="center">
-                            <Grid xs={12} >
+                            <Grid xs={12}>
                                 <Typography fontSize={16} fontWeight={700} marginTop={3}>
                                     All Bids
                                 </Typography>
@@ -250,7 +246,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                     </Grid>
                                 ))}
                                 {bidsList.length === 0 ? (
-                                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                    <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={3}>
                                         <Typography fontSize={14} fontWeight={400}>
                                             No bids
                                         </Typography>

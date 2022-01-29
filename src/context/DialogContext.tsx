@@ -42,7 +42,8 @@ interface State {
     placeBidTxFee: number;
     // all transactions
     allTxDlgOpened: boolean;
-    
+    // all bids
+    allBidDlgOpened: boolean;
 }
 
 const defaultState: State = {
@@ -83,6 +84,8 @@ const defaultState: State = {
     placeBidOrderId: 0,
     // all transactions
     allTxDlgOpened: false,
+    // all bids
+    allBidDlgOpened: false,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

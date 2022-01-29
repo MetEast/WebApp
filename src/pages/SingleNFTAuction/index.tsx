@@ -34,6 +34,7 @@ import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import AllBids from 'src/components/profile/AllBids';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
@@ -353,6 +354,14 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 {dialogState.placeBidDlgStep === 0 && <PlaceBid />}
                 {dialogState.placeBidDlgStep === 1 && <ReviewBidDetails />}
                 {dialogState.placeBidDlgStep === 2 && <BidPlaceSuccess />}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.allBidDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allBidDlgOpened: false });
+                }}
+            >
+                <AllBids />
             </ModalDialog>
             <ModalDialog
                 open={dialogState.allTxDlgOpened}
