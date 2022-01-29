@@ -4,12 +4,73 @@ import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLab
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
+import { AbiItem } from 'web3-utils';
+import {
+    METEAST_CONTRACT_ABI,
+    METEAST_CONTRACT_ADDRESS,
+    STICKER_CONTRACT_ABI,
+    STICKER_CONTRACT_ADDRESS,
+} from 'src/components/ContractMethod/config';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import Web3 from 'web3';
 
 export interface ComponentProps {}
 
 const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
 
+    const callBidForOrder = async (_orderId: number, _value: number, _didUri: string) => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const accounts = await walletConnectWeb3.eth.getAccounts();
+
+        let contractAbi = STICKER_CONTRACT_ABI;
+        let contractAddress = STICKER_CONTRACT_ADDRESS;
+        let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+
+        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        console.log('Gas price:', gasPrice);
+
+        console.log('Sending transaction with account address:', accounts[0]);
+        let transactionParams = {
+            from: accounts[0],
+            gasPrice: gasPrice,
+            gas: 5000000,
+            value: _value, // correct?
+        };
+
+        stickerContract.methods
+            .BidForOrder(_orderId, _value, _didUri)
+            .send(transactionParams)
+            .on('transactionHash', (hash: any) => {
+                console.log('transactionHash', hash);
+                setDialogState({ ...dialogState, placeBidTxHash: hash });
+            })
+            .on('receipt', (receipt: any) => {
+                console.log('receipt', receipt);
+                enqueueSnackbar('Place bid succeed!', {
+                    variant: 'success',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+            })
+            .on('confirmation', (confirmationNumber: any, receipt: any) => {
+                console.log('confirmation', confirmationNumber, receipt);
+            })
+            .on('error', (error: any, receipt: any) => {
+                console.error('error', error);
+                enqueueSnackbar('Place bid error!', {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+            });
+    };
+
+    const handlePlaceBid = async () => {
+        callBidForOrder(dialogState.placeBidOrderId, dialogState.placeBidAmount, dialogState.mintNFTDidUri);
+    };
     return (
         <Stack spacing={5} width={340}>
             <Stack alignItems="center">
@@ -22,45 +83,58 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>Product Title</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.placeBidName}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Bid Amount</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>25.00 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.placeBidAmount} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Expires in</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>7 days</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.placeBidExpire.value}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>0.22 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.placeBidTxFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Total</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo sx={{ fontWeight: 700 }}>50.00 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo sx={{ fontWeight: 700 }}>
+                            {dialogState.placeBidAmount + dialogState.placeBidTxFee} ELA
+                        </DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: 0.22 ELA
+                    Available: {dialogState.placeBidTxFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton fullWidth onClick={() => {
-                        setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 0 });
-                    }}>Back</SecondaryButton>
-                    <PrimaryButton fullWidth onClick={() => {
-                        setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 2 });
-                    }}>Confirm</PrimaryButton>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 0 });
+                        }}
+                    >
+                        Back
+                    </SecondaryButton>
+                    <PrimaryButton
+                        fullWidth
+                        onClick={() => {
+                            handlePlaceBid();
+                            setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 2 });
+                        }}
+                    >
+                        Confirm
+                    </PrimaryButton>
                 </Stack>
                 <WarningTypo width={240}>
                     In case of payment problems, please contact the official customer service

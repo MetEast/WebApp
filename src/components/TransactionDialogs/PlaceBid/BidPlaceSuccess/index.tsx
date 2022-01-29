@@ -22,7 +22,7 @@ const BidPlaceSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/placebid-success.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={'0'} />
+                <ViewOnExplorerButton txHash={dialogState.placeBidTxHash} />
                 <PrimaryButton
                     fullWidth
                     onClick={() => {

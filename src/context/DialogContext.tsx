@@ -34,6 +34,12 @@ interface State {
     // place bid
     placeBidDlgOpened: boolean;
     placeBidDlgStep: number;
+    placeBidName: string;
+    placeBidOrderId: number;
+    placeBidAmount: number;
+    placeBidExpire: TypeSelectItem;
+    placeBidTxHash: string;
+    placeBidTxFee: number;
 }
 
 const defaultState: State = {
@@ -66,6 +72,12 @@ const defaultState: State = {
     // place bid
     placeBidDlgOpened: false,
     placeBidDlgStep: 0,
+    placeBidName: "",
+    placeBidAmount: 0,
+    placeBidExpire: {label: "", value: ""},
+    placeBidTxHash: "",
+    placeBidTxFee: 0,
+    placeBidOrderId: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

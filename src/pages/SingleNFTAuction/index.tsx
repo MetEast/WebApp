@@ -121,6 +121,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
+            product.orderId = itemObject.orderId;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
             if (itemObject.endTime) {
@@ -321,10 +322,16 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if(auth.isLoggedIn)
-                                setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 0 });
-                            else
-                                navigate('/login'); 
+                            // if(auth.isLoggedIn)
+                            setDialogState({
+                                ...dialogState,
+                                placeBidDlgOpened: true,
+                                placeBidDlgStep: 0,
+                                placeBidName: productDetail.name,
+                                placeBidOrderId: productDetail.orderId || 0,
+                            });
+                            // else
+                            // navigate('/login');
                         }}
                     >
                         Place Bid

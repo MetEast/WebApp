@@ -238,7 +238,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if(auth.isLoggedIn) {
+                            if (auth.isLoggedIn) {
                                 setDialogState({
                                     ...dialogState,
                                     buyNowDlgOpened: true,
@@ -250,9 +250,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                     buyNowRoyaltyOwner: productDetail.royaltyOwner || '',
                                     buyNowRoyalty: productDetail.royalties,
                                 });
-                            }
-                            else {
-                                navigate('/login')
+                            } else {
+                                navigate('/login');
                             }
                         }}
                     >

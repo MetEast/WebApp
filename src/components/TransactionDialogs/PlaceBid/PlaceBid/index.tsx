@@ -8,6 +8,7 @@ import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {}
 
@@ -27,8 +28,10 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const [expiration, setExpiration] = useState<TypeSelectItem>();
     const [expirationSelectOpen, setExpirationSelectOpen] = useState(false);
+    const [bidAmount, setBidAmount] = useState(0);
 
     const handleCategoryChange = (value: string) => {
         const item = expirationOptions.find((option) => option.value === value);
@@ -42,7 +45,12 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Place Bid</DialogTitleTypo>
             </Stack>
             <Stack spacing={2}>
-                <ELAPriceInput title="Bid Amount" />
+                <ELAPriceInput
+                    title="Bid Amount"
+                    handleChange={(value) => {
+                        setBidAmount(value);
+                    }}
+                />
                 <Stack spacing={0.5}>
                     <Typography fontSize={12} fontWeight={700}>
                         Category
@@ -73,7 +81,20 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 1 });
+                        if (bidAmount !== 0 && expiration?.value !== undefined && expiration?.value !== '')
+                            setDialogState({
+                                ...dialogState,
+                                placeBidDlgOpened: true,
+                                placeBidDlgStep: 1,
+                                placeBidAmount: bidAmount,
+                                placeBidExpire: expiration,
+                                placeBidTxFee: 0.01,
+                            });
+                        else
+                            enqueueSnackbar('Form validation failed!', {
+                                variant: 'warning',
+                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            });
                     }}
                 >
                     Next

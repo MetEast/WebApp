@@ -4,13 +4,17 @@ import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '.
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
-import { AbiItem } from 'web3-utils'
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
+import { AbiItem } from 'web3-utils';
+import {
+    METEAST_CONTRACT_ABI,
+    METEAST_CONTRACT_ADDRESS,
+    STICKER_CONTRACT_ABI,
+    STICKER_CONTRACT_ADDRESS,
+} from 'src/components/ContractMethod/config';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
-import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-
 
 export interface ComponentProps {}
 
@@ -18,47 +22,69 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
 
-    const callOrderFilled = async (_seller: string, _orderId: number, _royaltyOwner: string, _quoteToken: string, _price: number, _royalty: number) => {
+    const callOrderFilled = async (
+        _seller: string,
+        _orderId: number,
+        _royaltyOwner: string,
+        _quoteToken: string,
+        _price: number,
+        _royalty: number,
+    ) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
-      
+
         let contractAbi = STICKER_CONTRACT_ABI;
         let contractAddress = STICKER_CONTRACT_ADDRESS;
         let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-      
+
         let gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log("Gas price:", gasPrice);
-      
-        console.log("Sending transaction with account address:", accounts[0]);
+        console.log('Gas price:', gasPrice);
+
+        console.log('Sending transaction with account address:', accounts[0]);
         let transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
-            value: 0
+            value: 0,
         };
 
-        stickerContract.methods.OrderFilled(_seller, accounts[0], _orderId, _royaltyOwner, _quoteToken, _price, _royalty).send(transactionParams)
+        stickerContract.methods
+            .OrderFilled(_seller, accounts[0], _orderId, _royaltyOwner, _quoteToken, _price, _royalty)
+            .send(transactionParams)
             .on('transactionHash', (hash: any) => {
-                console.log("transactionHash", hash);
+                console.log('transactionHash', hash);
                 setDialogState({ ...dialogState, buyNowTxHash: hash });
             })
             .on('receipt', (receipt: any) => {
-                console.log("receipt", receipt);
-                enqueueSnackbar('Buy now succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
+                console.log('receipt', receipt);
+                enqueueSnackbar('Buy now succeed!', {
+                    variant: 'success',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
             })
             .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log("confirmation", confirmationNumber, receipt);
+                console.log('confirmation', confirmationNumber, receipt);
             })
             .on('error', (error: any, receipt: any) => {
-                console.error("error", error);
-                enqueueSnackbar('Buy now error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
+                console.error('error', error);
+                enqueueSnackbar('Buy now error!', {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
             });
-    }
+    };
 
     const handleBuyNow = async () => {
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
-        callOrderFilled(dialogState.buyNowSeller, dialogState.buyNowOrderId, dialogState.buyNowRoyaltyOwner, _quoteToken, dialogState.buyNowPrice, dialogState.buyNowRoyalty);
+        callOrderFilled(
+            dialogState.buyNowSeller,
+            dialogState.buyNowOrderId,
+            dialogState.buyNowRoyaltyOwner,
+            _quoteToken,
+            dialogState.buyNowPrice,
+            dialogState.buyNowRoyalty,
+        );
     };
 
     return (
@@ -93,7 +119,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     Available: 0.1 ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton 
+                    <SecondaryButton
                         fullWidth
                         onClick={() => {
                             setDialogState({ ...dialogState, buyNowDlgOpened: false });
@@ -101,7 +127,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     >
                         close
                     </SecondaryButton>
-                    <PrimaryButton 
+                    <PrimaryButton
                         fullWidth
                         onClick={() => {
                             handleBuyNow();
