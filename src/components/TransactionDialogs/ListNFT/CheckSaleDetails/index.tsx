@@ -11,6 +11,7 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
+// import { getRevertReason } from 'eth-revert-reason';
 
 export interface ComponentProps {
     inputData: TypeSaleInputForm;
@@ -155,6 +156,8 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
                 enqueueSnackbar('Order for sale error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
                 setDialogState({ ...dialogState, createNFTDlgStep: 4 });
             });
+        // console.log("RevReason------------------", await getRevertReason("0x09c394e4120cb1dab9f8c786d935c229ef640bf8f2b3746059059f68b88c6127"));
+
     }
     
     const callCreateOrderForAuction = async (_tokenId: string, _quoteToken: string, _minPrice: number, _endTime: number, _didUri: string) => {
@@ -195,6 +198,29 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
             });
     }
 
+    const getRevertReason = async (txHash: any) => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const tx: any = await walletConnectWeb3.eth.getTransaction(txHash)
+      
+        var result = await walletConnectWeb3.eth.call(tx, tx.blockNumber)
+      
+        result = result.startsWith('0x') ? result : `0x${result}`
+      
+        if (result && result.substr(138)) {
+      
+          const reason = walletConnectWeb3.utils.toAscii(result.substr(138))
+          console.log('Revert reason:', reason)
+          return reason
+      
+        } else {
+      
+          console.log('Cannot get reason - No return value')
+      
+        }
+      
+    }
+    
     const handleCreateOrder = async () => {
         // callGetData();
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA

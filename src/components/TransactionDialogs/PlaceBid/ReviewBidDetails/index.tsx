@@ -3,10 +3,13 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
+
     return (
         <Stack spacing={5} width={340}>
             <Stack alignItems="center">
@@ -52,8 +55,12 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     Available: 0.22 ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton fullWidth>Back</SecondaryButton>
-                    <PrimaryButton fullWidth>Confirm</PrimaryButton>
+                    <SecondaryButton fullWidth onClick={() => {
+                        setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 0 });
+                    }}>Back</SecondaryButton>
+                    <PrimaryButton fullWidth onClick={() => {
+                        setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 2 });
+                    }}>Confirm</PrimaryButton>
                 </Stack>
                 <WarningTypo width={240}>
                     In case of payment problems, please contact the official customer service

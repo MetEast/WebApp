@@ -7,6 +7,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
@@ -25,6 +26,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
             value: '1 day',
         },
     ];
+    const [dialogState, setDialogState] = useDialogContext();
     const [expiration, setExpiration] = useState<TypeSelectItem>();
     const [expirationSelectOpen, setExpirationSelectOpen] = useState(false);
 
@@ -60,8 +62,22 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
-                <SecondaryButton fullWidth>close</SecondaryButton>
-                <PrimaryButton fullWidth>Next</PrimaryButton>
+                <SecondaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, placeBidDlgOpened: false });
+                    }}
+                >
+                    close
+                </SecondaryButton>
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 1 });
+                    }}
+                >
+                    Next
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

@@ -28,6 +28,12 @@ interface State {
     buyNowRoyaltyOwner: string;
     buyNowRoyalty: number;
     buyNowTxHash: string;
+    // accept bid
+    acceptBidDlgOpened: boolean;
+    acceptBidDlgStep: number;
+    // place bid
+    placeBidDlgOpened: boolean;
+    placeBidDlgStep: number;
 }
 
 const defaultState: State = {
@@ -54,6 +60,12 @@ const defaultState: State = {
     buyNowRoyalty: 0,
     buyNowTxHash: "",
     buyNowOrderId: 0,
+    // accept bid
+    acceptBidDlgOpened: false,
+    acceptBidDlgStep: 0,
+    // place bid
+    placeBidDlgOpened: false,
+    placeBidDlgStep: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
