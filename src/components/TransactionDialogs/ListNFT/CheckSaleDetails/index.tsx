@@ -29,19 +29,39 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
         saleEnds: {label: '', value: ''}
     };
 
-    const callCreateOrderForSale = async (_tokenId: string, _quoteToken: string, _price: number, _didUri: string) => {
+    // const callGetData = async () => {
+    //     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+    //     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    //     const accounts = await walletConnectWeb3.eth.getAccounts();
+      
+    //     let contractAbi = STICKER_CONTRACT_ABI;
+    //     let contractAddress = STICKER_CONTRACT_ADDRESS; // Elastos Testnet
+    //     let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+
+    //     let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+    //     console.log("Gas price:", gasPrice);
+      
+    //     console.log("Sending transaction with account address:", accounts[0]);
+    //     let transactionParams = {
+    //         from: accounts[0],
+    //         gasPrice: gasPrice,
+    //         gas: 5000000,
+    //         value: 0
+    //     };
+    //     const version = await stickerContract.methods.getVersion().call();
+    //     console.log("getVersion=", version);
+    //     const magic = await stickerContract.methods.getMagic().call();
+    //     console.log("getMagic=", magic);
+    // };
+
+    const callSetApprovalForAll = async (_operator: string, _approved: boolean, _tokenId: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
       
-        let contractAbi = STICKER_CONTRACT_ABI;
-        let contractAddress = STICKER_CONTRACT_ADDRESS; // Elastos Testnet
-        let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-        
-        console.log("tokenId", _tokenId)
-        console.log("_quoteToken", _quoteToken)
-        console.log("_price", _price)
-        console.log("_didUri", _didUri)
+        let contractAbi = METEAST_CONTRACT_ABI;
+        let contractAddress = METEAST_CONTRACT_ADDRESS; // Elastos Testnet
+        let meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
         let gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log("Gas price:", gasPrice);
@@ -50,11 +70,75 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
         let transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
-            gas: 8000000,
+            gas: 5000000,
             value: 0
         };
+
+        // const isApprovalPlatform = await meteastContract.methods.isApprovedForAll(accounts[0], '0xF25F7A31d308ccf52b8EBCf4ee9FabdD8c8C5077').call();
+        // console.log("isApprovalForAllPlatform=", isApprovalPlatform);
+        // meteastContract.methods.setApprovalForAll('0xF25F7A31d308ccf52b8EBCf4ee9FabdD8c8C5077', true).send(transactionParams)
+        //     .on('transactionHash', (hash: any) => {
+        //         console.log("transactionHash", hash);
+        //     })
+        //     .on('receipt', (receipt: any) => {
+        //         console.log("receipt", receipt);
+        //         enqueueSnackbar('Set approval for all succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
+        //     })
+        //     .on('confirmation', (confirmationNumber: any, receipt: any) => {
+        //         console.log("confirmation", confirmationNumber, receipt);
+        //     })
+        //     .on('error', (error: any, receipt: any) => {
+        //         console.error("error", error);
+        //         enqueueSnackbar('Set approval for all error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
+        //     })
+        
+        const isApproval = await meteastContract.methods.isApprovedForAll(accounts[0], _operator).call();
+        console.log("isApprovalForAll=", isApproval);
+        // const royaltyFee = await meteastContract.methods.tokenRoyaltyFee(_tokenId).call();
+        // console.log("tokenId:", _tokenId, "---royaltyFee:", royaltyFee)
+
+        if (isApproval === true) return;
+        meteastContract.methods.setApprovalForAll(_operator, _approved).send(transactionParams)
+            .on('transactionHash', (hash: any) => {
+                console.log("transactionHash", hash);
+            })
+            .on('receipt', (receipt: any) => {
+                console.log("receipt", receipt);
+                enqueueSnackbar('Set approval for all succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
+            })
+            .on('confirmation', (confirmationNumber: any, receipt: any) => {
+                console.log("confirmation", confirmationNumber, receipt);
+            })
+            .on('error', (error: any, receipt: any) => {
+                console.error("error", error);
+                enqueueSnackbar('Set approval for all error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} });
+            })
+    };
+
+    const callCreateOrderForSale = async (_tokenId: string, _quoteToken: string, _price: number, _didUri: string) => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const accounts = await walletConnectWeb3.eth.getAccounts();
       
-        stickerContract.methods.createOrderForSale(_tokenId, _quoteToken, _price, _didUri).send(transactionParams)
+        let contractAbi = STICKER_CONTRACT_ABI;
+        let contractAddress = STICKER_CONTRACT_ADDRESS; 
+        let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+
+        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        console.log("Gas price:", gasPrice);
+      
+        console.log("Sending transaction with account address:", accounts[0]);
+        let transactionParams = {
+            from: accounts[0],
+            gasPrice: gasPrice,
+            gas: 5000000,
+            value: 0
+        };
+        /////////
+        // const ret = await stickerContract.methods.getPlatformFee().call();
+        // console.log("platform fee", ret);
+        /////////
+        stickerContract.methods.createOrderForSale(_tokenId, _quoteToken, _tokenId, _didUri).send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log("transactionHash", hash);
                 handleTxHash(hash);
@@ -69,9 +153,10 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
             .on('error', (error: any, receipt: any) => {
                 console.error("error", error);
                 enqueueSnackbar('Order for sale error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
+                setDialogState({ ...dialogState, createNFTDlgStep: 4 });
             });
     }
-      
+    
     const callCreateOrderForAuction = async (_tokenId: string, _quoteToken: string, _minPrice: number, _endTime: number, _didUri: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
@@ -111,13 +196,17 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
     }
 
     const handleCreateOrder = async () => {
+        // callGetData();
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
+        callSetApprovalForAll(STICKER_CONTRACT_ADDRESS, true, dialogState.mintNFTTokenId);
+        // callSetApprovalForAll(METEAST_CONTRACT_ADDRESS, true);
+
         if(inputData.saleType === 'buynow') {
-            console.log(dialogState.mintNFTTokenId);
-            console.log(_quoteToken);
-            console.log(inputData.price);
-            console.log(dialogState.mintNFTDidUri);
-            callCreateOrderForSale(dialogState.mintNFTTokenId, _quoteToken, inputData.price, dialogState.mintNFTDidUri.replace("meteast:json:", ""));
+            console.log("tokenId", dialogState.mintNFTTokenId)
+            console.log("_quoteToken", _quoteToken)
+            console.log("_price", inputData.price)
+            console.log("_didUri", dialogState.mintNFTDidUri)
+            callCreateOrderForSale(dialogState.mintNFTTokenId, _quoteToken, inputData.price, dialogState.mintNFTDidUri);
         }
         else {
             let endTime = new Date().getSeconds();
@@ -164,7 +253,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = ({inputData, setInputData, ha
                             <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
                         </Grid>
                         <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{inputData.price}</DetailedInfoLabelTypo>
+                            <DetailedInfoLabelTypo>{inputData.price} ELA</DetailedInfoLabelTypo>
                         </Grid>
                     </>}
                     {/* <Grid item xs={6}>

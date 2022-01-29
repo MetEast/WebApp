@@ -56,7 +56,6 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({ inputData, setInputData })
     };
 
     const handleNextStep = () => {
-        console.log(price);
         if (
             (saleType === 'buynow' && price !== null) ||
             (saleType === 'auction' && minPrice !== null && saleEnds?.value !== undefined && saleEnds.value !== '')

@@ -197,6 +197,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
         getPersonalData();
+        getEssentialWalletBalance();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected]);
 
     const handleKeyWordChange = (value: string) => {

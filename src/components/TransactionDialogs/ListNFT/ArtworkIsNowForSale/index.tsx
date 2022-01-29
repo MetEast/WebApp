@@ -28,7 +28,7 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = ({txHash}): JSX.Element =>
                 <PrimaryButton 
                     fullWidth
                     onClick={() => {
-                        setDialogState({ ...dialogState, createNFTDlgOpened: false})
+                        setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4})
                     }}
                 >
                     Close

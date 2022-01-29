@@ -57,7 +57,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     }
 
     const handleBuyNow = async () => {
-        const _quoteToken = '0x686c626E48bfC5DC98a30a9992897766fed4Abd3'; // ELA
+        const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
         callOrderFilled(dialogState.buyNowSeller, dialogState.buyNowOrderId, dialogState.buyNowRoyaltyOwner, _quoteToken, dialogState.buyNowPrice, dialogState.buyNowRoyalty);
     };
 

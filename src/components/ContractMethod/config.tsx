@@ -1004,7 +1004,7 @@ export const METEAST_CONTRACT_ABI = [
     },
 ];
 
-export const STICKER_CONTRACT_ADDRESS = '350D156C0D4b8E8437eaA81226d8c0638C5bCf94';
+export const STICKER_CONTRACT_ADDRESS = '0x350D156C0D4b8E8437eaA81226d8c0638C5bCf94';
 export const STICKER_CONTRACT_ABI = [
     {
         anonymous: false,

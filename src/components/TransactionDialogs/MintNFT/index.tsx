@@ -59,10 +59,10 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         getTxFee();
     }, []);
 
-    useEffect(()=>{
-        console.log(dialogState.createNFTDlgStep, "-stage:      ", inputMintFormData);
-        console.log(dialogState.createNFTDlgStep, "-stage:      ", inputSaleFormData);
-    }, [dialogState.createNFTDlgStep]);
+    // useEffect(()=>{
+    //     console.log(dialogState.createNFTDlgStep, "-stage:      ", inputMintFormData);
+    //     console.log(dialogState.createNFTDlgStep, "-stage:      ", inputSaleFormData);
+    // }, [dialogState.createNFTDlgStep]);
     
     return (
         <ModalDialog
