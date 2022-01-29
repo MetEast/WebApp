@@ -228,34 +228,35 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     </>
                 ) : (
                     <>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Typography fontSize={16} fontWeight={700} marginTop={3}>
-                                All Bids
-                            </Typography>
-                            {bidsList.length === 0 && (
-                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                    <Typography fontSize={14} fontWeight={400}>
-                                        No bids
-                                    </Typography>
-                                </Stack>
-                            )}
-                            {bidsList.length !== 0 && (
-                                <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
-                                    {bidsTblColumns.map((item, index) => (
-                                        <Grid
-                                            item
-                                            key={index}
-                                            xs={item.width}
-                                            fontSize={14}
-                                            fontWeight={700}
-                                            sx={{ textTransform: 'uppercase' }}
-                                            textAlign={item.value === 'Price' ? 'right' : 'left'}
-                                            display={{ xs: 'none', sm: 'block' }}
-                                        >
-                                            {item.value}
-                                        </Grid>
-                                    ))}
-                                    {bidsList.map((item, index) => (
+                        <Stack direction="column" alignItems="center">
+                            <Grid xs={12} >
+                                <Typography fontSize={16} fontWeight={700} marginTop={3}>
+                                    All Bids
+                                </Typography>
+                            </Grid>
+                            <Grid container alignItems="center" xs={12} rowSpacing={2} marginTop={0}>
+                                {bidsTblColumns.map((item, index) => (
+                                    <Grid
+                                        item
+                                        key={index}
+                                        xs={item.width}
+                                        fontSize={14}
+                                        fontWeight={700}
+                                        sx={{ textTransform: 'uppercase' }}
+                                        textAlign={item.value === 'Price' ? 'right' : 'left'}
+                                        display={{ xs: 'none', sm: 'block' }}
+                                    >
+                                        {item.value}
+                                    </Grid>
+                                ))}
+                                {bidsList.length === 0 ? (
+                                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                        <Typography fontSize={14} fontWeight={400}>
+                                            No bids
+                                        </Typography>
+                                    </Stack>
+                                ) : (
+                                    bidsList.map((item, index) => (
                                         <Grid container item key={index}>
                                             <Grid
                                                 item
@@ -286,9 +287,9 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                                 <ELAPrice price_ela={item.price} alignRight />
                                             </Grid>
                                         </Grid>
-                                    ))}
-                                </Grid>
-                            )}
+                                    ))
+                                )}
+                            </Grid>
                         </Stack>
                     </>
                 )}
