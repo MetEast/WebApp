@@ -8,18 +8,19 @@ interface ComponentProps {
     options: Array<TypeSelectItem>;
     isOpen: boolean;
     width?: number;
+    min_width?: number;
     setIsOpen: (value: boolean) => void;
     handleClick: (value: string) => void;
 }
 
-const Select: React.FC<ComponentProps> = ({ titlebox, options, isOpen, width, setIsOpen, handleClick }) => {
+const Select: React.FC<ComponentProps> = ({ titlebox, options, isOpen, width, min_width, setIsOpen, handleClick }) => {
     return (
         <Box
             onClick={() => {
                 setIsOpen(!isOpen);
             }}
             position="relative"
-            sx={{ width: width ? width : 'auto' }}
+            sx={{ width: width ? width : 'auto', minWidth: min_width ? min_width : 'auto' }}
         >
             {titlebox}
             <ListItemsWrapper width={'100%'} isOpen={isOpen}>
