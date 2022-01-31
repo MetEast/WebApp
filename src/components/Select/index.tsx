@@ -8,7 +8,7 @@ interface ComponentProps {
     options: Array<TypeSelectItem>;
     isOpen: boolean;
     width?: number;
-    min_width?: number;
+    min_width?: number | string;
     setIsOpen: (value: boolean) => void;
     handleClick: (value: string) => void;
 }

@@ -34,10 +34,9 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
 }): JSX.Element => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-    const matchDownXs = useMediaQuery(theme.breakpoints.down('md'));
     const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
     const displayFilterLable = matchDownMd ? false : true;
-    const onlyShowIcon = matchDownXs ? true : false;
+    const onlyShowIcon = matchDownMd ? true : false;
     const filterBtnHidden = matchDownLg ? false : true;
 
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
@@ -62,7 +61,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 setIsOpen={isSortBySelectOpen}
                 handleClick={handleSortChange}
                 // width={260}
-                min_width={260}
+                min_width={onlyShowIcon ? 'auto' : 260}
             />
             {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>
