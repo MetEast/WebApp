@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Stack, Typography } from '@mui/material';
 import Chart from 'react-apexcharts';
 import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
-import { TypeProductPrice, TypeChartAxis } from 'src/types/product-types'; 
+import { TypeProductPrice, TypeChartAxis } from 'src/types/product-types';
+import { TypeSelectItem } from 'src/types/select-types';
 import { getTime } from 'src/services/common';
+import Select from 'src/components/Select';
+import { SelectBtn } from './styles';
+import { Icon } from '@iconify/react';
 
 interface ComponentProps {}
 
@@ -79,46 +83,85 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 { x: '01/09/2021', y: 0 },
                 { x: '01/10/2021', y: 0 },
                 { x: '01/11/2021', y: 0 },
-                { x: '01/12/2021', y: 0 }
+                { x: '01/12/2021', y: 0 },
             ],
         },
     ];
 
-
     const [chartOptions, setChartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
+
+    const priceHistoryUnitSelectOptions: Array<TypeSelectItem> = [
+        {
+            label: 'Daily',
+            value: 'Daily',
+        },
+        {
+            label: 'Weekly',
+            value: 'Weekly',
+        },
+        {
+            label: 'Monthly',
+            value: 'Monthly',
+        },
+    ];
+    const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(priceHistoryUnitSelectOptions[1]);
+    const [priceHistoryUnitSelectOpen, setPriceHistoryUnitSelectOpen] = useState(false);
+
+    const handlePriceHistoryUnitChange = (value: string) => {
+        const item = priceHistoryUnitSelectOptions.find((option) => option.value === value);
+        setPriceHistoryUnit(item);
+    };
 
     // get product details from server
     const params = useParams(); // params.id
     var _latestPriceList: any = [];
+
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`).then(response => {
-            response.json().then(jsonPriceList => {
-                if (jsonPriceList.data?.length > 0) {
-                    jsonPriceList.data.forEach(function (itemObject: TypeProductPrice) {
-                        var _price: TypeChartAxis = {x: "01/01/2022", y: 0};
-                        _price.y = itemObject.price / 1e18;  // no proper data
-                        let dateTime = getTime(itemObject.onlyDate);
-                        _price.x = dateTime.date;
-                        _latestPriceList.push(_price);
-                    });
-                    setChartSeries([{data: _latestPriceList}]);
-                }
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`)
+            .then((response) => {
+                response.json().then((jsonPriceList) => {
+                    if (jsonPriceList.data?.length > 0) {
+                        jsonPriceList.data.forEach(function (itemObject: TypeProductPrice) {
+                            var _price: TypeChartAxis = { x: '01/01/2022', y: 0 };
+                            _price.y = itemObject.price / 1e18; // no proper data
+                            let dateTime = getTime(itemObject.onlyDate);
+                            _price.x = dateTime.date;
+                            _latestPriceList.push(_price);
+                        });
+                        setChartSeries([{ data: _latestPriceList }]);
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
             });
-        }).catch(err => {
-            console.log(err)
-        });
     }, []);
 
     return (
-        <Box>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5}>
+        <Stack spacing={2}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5} zIndex={10}>
                 <Typography fontSize={22} fontWeight={700}>
                     Price History
                 </Typography>
+                <Select
+                    titlebox={
+                        <SelectBtn fullWidth isOpen={priceHistoryUnitSelectOpen}>
+                            {priceHistoryUnit ? priceHistoryUnit.label : 'Select'}
+                            <Icon icon="ph:caret-down" className="arrow-icon" />
+                        </SelectBtn>
+                    }
+                    options={priceHistoryUnitSelectOptions}
+                    isOpen={priceHistoryUnitSelectOpen}
+                    handleClick={handlePriceHistoryUnitChange}
+                    setIsOpen={setPriceHistoryUnitSelectOpen}
+                    width={120}
+                />
             </Stack>
-            <Chart options={chartOptions} series={chartSeries} type="area" />
-        </Box>
+            <Box zIndex={0}>
+                <Chart options={chartOptions} series={chartSeries} type="area" />
+            </Box>
+        </Stack>
     );
 };
 
