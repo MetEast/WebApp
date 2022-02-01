@@ -10,7 +10,7 @@ import { useRecoilState } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { essentialsConnector } from '../ConnectWallet/EssentialConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
 
 const menuItemsList = [
     {
@@ -32,19 +32,25 @@ const Header: React.FC = (): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [auth, setAuth] = useRecoilState(authAtom);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['token']);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(['did']);
 
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
         setAuth({ isLoggedIn: false });
-        removeTokenCookie("token");
-        removeDidCookie("did");
-        console.log("--------------Connector:" , essentialsConnector.hasWalletConnectSession());
-        console.log("--------------walletConnector isconnecting:", essentialsConnector.getWalletConnectProvider().isConnecting);
-        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().connected);
-        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().chainId);
-        console.log("--------------walletConnector connected:", essentialsConnector.getWalletConnectProvider().rpcUrl);
+        removeTokenCookie('token');
+        removeDidCookie('did');
+        console.log('--------------Connector:', essentialsConnector.hasWalletConnectSession());
+        console.log(
+            '--------------walletConnector isconnecting:',
+            essentialsConnector.getWalletConnectProvider().isConnecting,
+        );
+        console.log(
+            '--------------walletConnector connected:',
+            essentialsConnector.getWalletConnectProvider().connected,
+        );
+        console.log('--------------walletConnector connected:', essentialsConnector.getWalletConnectProvider().chainId);
+        console.log('--------------walletConnector connected:', essentialsConnector.getWalletConnectProvider().rpcUrl);
         await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
@@ -79,7 +85,8 @@ const Header: React.FC = (): JSX.Element => {
                 <PrimaryButton
                     size="small"
                     onClick={() => {
-                        if(auth.isLoggedIn) setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
+                        if (auth.isLoggedIn)
+                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
                         else navigate('/login');
                     }}
                     sx={{ paddingX: 2 }}

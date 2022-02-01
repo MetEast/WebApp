@@ -18,7 +18,7 @@ const navbarItemList: Array<TypeMenuItem> = [
     },
     {
         icon: Box24Filled,
-        title: 'Blind Box',
+        title: 'Blind Boxes',
         url: '/blind-box',
     },
     {
