@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Box, Typography, Stack } from '@mui/material';
+import { Button, Box, Typography, Stack, IconButton } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import MenuItem from '../MenuItem';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ import authAtom from 'src/recoil/auth';
 import { essentialsConnector } from '../ConnectWallet/EssentialConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { useCookies } from 'react-cookie';
+import { NotificationTypo } from './styles';
 
 const menuItemsList = [
     {
@@ -66,17 +67,20 @@ const Header: React.FC = (): JSX.Element => {
                     <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
                 ))}
             </Stack>
-            <Stack direction="row" alignItems="center" spacing={1}>
-                <Button>
-                    <Icon icon="ph:chat-circle" fontSize={24} color="black" />
-                </Button>
-                <Button
+            <Stack direction="row" alignItems="center" spacing={2}>
+                <Box position="relative">
+                    <IconButton>
+                        <Icon icon="ph:chat-circle" fontSize={28} color="black" />
+                    </IconButton>
+                    <NotificationTypo>2</NotificationTypo>
+                </Box>
+                <IconButton
                     onClick={() => {
                         navigate('/profile');
                     }}
                 >
-                    <Icon icon="ph:user" fontSize={24} color="black" />
-                </Button>
+                    <Icon icon="ph:user" fontSize={28} color="black" />
+                </IconButton>
                 {auth?.isLoggedIn && (
                     <Button onClick={logOut}>
                         <LogoutOutlinedIcon sx={{ color: '#000' }}>Log out</LogoutOutlinedIcon>
