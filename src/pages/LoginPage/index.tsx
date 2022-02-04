@@ -93,13 +93,13 @@ const LoginPage: React.FC = (): JSX.Element => {
         }
     };
     
-    const logIn = async () => {
-        setDidCookie("did", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/', sameSite: 'none', secure: true});
-        setTokenCookie("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOiJkaWQ6ZWxhc3RvczppWm1oaHZIR0Zob2lmRXFqaWhHSkpBUWtXa2ZiOEpEb3E0IiwidHlwZSI6InVzZXIiLCJuYW1lIjoiVGVydSIsImVtYWlsIjoiIiwiY2FuTWFuYWdlQWRtaW5zIjpmYWxzZSwiaWF0IjoxNjQzMTk5Njg4LCJleHAiOjE2NDM4MDQ0ODh9.h8TpAlHyMlH8fS1aF6haslkOv2uUjyP18qeu0LzcLQ0', {path: '/', sameSite: 'none', secure: true});
-        setShowModal(false)
-        setAuth({isLoggedIn: true});
-        navigate('/profile');
-    };
+    // const logIn = async () => {
+    //     setDidCookie("did", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/', sameSite: 'none', secure: true});
+    //     setTokenCookie("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOiJkaWQ6ZWxhc3RvczppWm1oaHZIR0Zob2lmRXFqaWhHSkpBUWtXa2ZiOEpEb3E0IiwidHlwZSI6InVzZXIiLCJuYW1lIjoiVGVydSIsImVtYWlsIjoiIiwiY2FuTWFuYWdlQWRtaW5zIjpmYWxzZSwiaWF0IjoxNjQzMTk5Njg4LCJleHAiOjE2NDM4MDQ0ODh9.h8TpAlHyMlH8fS1aF6haslkOv2uUjyP18qeu0LzcLQ0', {path: '/', sameSite: 'none', secure: true});
+    //     setShowModal(false)
+    //     setAuth({isLoggedIn: true});
+    //     navigate('/profile');
+    // };
 
     return (
         <ModalDialog
@@ -108,7 +108,7 @@ const LoginPage: React.FC = (): JSX.Element => {
                 setShowModal(false);
             }}
         >
-            <ConnectDID onConnect={logIn} />
+            <ConnectDID onConnect={handleWalletConnection} />
         </ModalDialog>
     );
 };
