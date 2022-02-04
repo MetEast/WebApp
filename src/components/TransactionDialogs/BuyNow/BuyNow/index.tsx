@@ -22,7 +22,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
         _orderId: number,
         _royaltyOwner: string,
         _quoteToken: string,
-        _price: number,
+        _price: string,
         _royalty: number,
     ) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -49,7 +49,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
-                setDialogState({ ...dialogState, buyNowTxHash: hash });
+                setDialogState({ ...dialogState, buyNowTxHash: hash, buyNowDlgStep: 1 });
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -57,6 +57,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
+                setDialogState({ ...dialogState, buyNowDlgOpened: true, buyNowDlgStep: 1 });
             })
             .on('confirmation', (confirmationNumber: any, receipt: any) => {
                 console.log('confirmation', confirmationNumber, receipt);
@@ -78,7 +79,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             dialogState.buyNowOrderId,
             dialogState.buyNowRoyaltyOwner,
             _quoteToken,
-            dialogState.buyNowPrice,
+            BigInt(dialogState.buyNowPrice * 1e18).toString(),
             dialogState.buyNowRoyalty,
         );
     };
@@ -106,30 +107,33 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>0.1 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyNowTxFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: 0.1 ELA
+                    Available: {dialogState.buyNowTxFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
-                            setDialogState({ ...dialogState, buyNowDlgOpened: false });
+                            setDialogState({
+                                ...dialogState,
+                                buyNowDlgOpened: false,
+                                buyNowPrice: 0,
+                                buyNowName: '',
+                                buyNowOrderId: 0,
+                                buyNowSeller: '',
+                                buyNowRoyaltyOwner: '',
+                                buyNowRoyalty: 0,
+                            });
                         }}
                     >
                         close
                     </SecondaryButton>
-                    <PrimaryButton
-                        fullWidth
-                        onClick={() => {
-                            handleBuyNow();
-                            setDialogState({ ...dialogState, buyNowDlgOpened: true, buyNowDlgStep: 1 });
-                        }}
-                    >
+                    <PrimaryButton fullWidth onClick={handleBuyNow}>
                         Confirm
                     </PrimaryButton>
                 </Stack>

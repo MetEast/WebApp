@@ -33,6 +33,7 @@ interface State {
     buyNowRoyaltyOwner: string;
     buyNowRoyalty: number;
     buyNowTxHash: string;
+    buyNowTxFee: number;
     // accept bid
     acceptBidDlgOpened: boolean;
     acceptBidDlgStep: number;
@@ -83,6 +84,7 @@ const defaultState: State = {
     buyNowRoyalty: 0,
     buyNowTxHash: "",
     buyNowOrderId: 0,
+    buyNowTxFee: 0,
     // accept bid
     acceptBidDlgOpened: false,
     acceptBidDlgStep: 0,
