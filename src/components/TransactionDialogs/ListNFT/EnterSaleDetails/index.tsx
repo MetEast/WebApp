@@ -51,13 +51,13 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             (saleType === 'buynow' && price !== null) ||
             (saleType === 'auction' && minPrice !== null && saleEnds?.value !== undefined && saleEnds.value !== '')
         ) {
-            if ((saleType === 'buynow' && price === NaN) || (saleType === 'auction' && minPrice === NaN)) {
+            if ((saleType === 'buynow' && (price === NaN || price === 0)) || (saleType === 'auction' && (minPrice === NaN || minPrice === 0))) {
                 enqueueSnackbar('Invalid number!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             } else {
-                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4, sellPrice: price, sellMinPrice: minPrice, sellSaleEnds: saleEnds || { label: '', value: '' }, sellSaleType: saleType });
+                setDialogState({ ...dialogState, sellPrice: price, sellMinPrice: minPrice, sellSaleEnds: saleEnds || { label: '', value: '' }, sellSaleType: saleType, createNFTDlgStep: 4 });
             }
         } else
             enqueueSnackbar('Form validation failed!', {

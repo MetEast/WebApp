@@ -78,8 +78,6 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
         }
     }, []);
 
-    console.log(dialogState.mintTXFee)
-
     return (
         <Stack spacing={5} width={700}>
             <Stack alignItems="center">

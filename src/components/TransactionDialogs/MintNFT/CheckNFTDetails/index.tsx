@@ -32,13 +32,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
     const { did, name } = userInfo;
-    const defaultValue: TypeMintInputForm = {
-        name: "",
-        description: "",
-        author: "",
-        category: { label: "", value: "" },
-        file: new File([""], ""),
-    };
 
     const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyFee: number, _gasLimit: number) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -129,7 +122,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 },
                 data: {
                     image: `meteast:image:${added.path}`,
-                    kind: added.type.replace('image/', ""),
+                    kind: added.type.replace('image/', ''),
                     size: added.size,
                     thumbnail: `meteast:image:${added.path}`,
                 },
@@ -166,9 +159,9 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     const uploadData = () =>
         new Promise((resolve, reject) => {
-            let _id = "";
-            let _uri = "";
-            let _didUri = "";
+            let _id = '';
+            let _uri = '';
+            let _didUri = '';
             if (!dialogState.mintFile) return;
             sendIpfsImage(dialogState.mintFile)
                 .then((added: any) => {
@@ -191,6 +184,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         mintTokenId: _id,
                         mintTokenUri: _uri,
                         mintDidUri: _didUri,
+                        // test
                         createNFTDlgStep: 2,
                     });
                     resolve({ _id, _uri, _didUri });
@@ -257,25 +251,22 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         onClick={() => {
                             setDialogState({
                                 ...dialogState,
-                                mintTitle: "",
-                                mintAuthor: "",
-                                mintIntroduction: "",
-                                mintCategory: { label: "", value: "" },
-                                mintFile: new File([""], ""),
+                                mintTitle: '',
+                                mintAuthor: '',
+                                mintIntroduction: '',
+                                mintCategory: { label: '', value: '' },
+                                mintFile: new File([''], ''),
                                 mintTXFee: 0,
-                                mintTokenId: "",
-                                mintTokenUri: "",
-                                mintDidUri: "",
+                                mintTokenId: '',
+                                mintTokenUri: '',
+                                mintDidUri: '',
                                 createNFTDlgOpened: false,
                             });
                         }}
                     >
                         Close
                     </SecondaryButton>
-                    <PrimaryButton
-                        fullWidth
-                        onClick={handleMint}
-                    >
+                    <PrimaryButton fullWidth onClick={handleMint}>
                         Confirm
                     </PrimaryButton>
                 </Stack>
