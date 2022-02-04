@@ -46,6 +46,7 @@ export const LikeBtn = styled(Box)`
     background: #ffffffcc;
     display: none;
     place-content: center;
+
     ${(props) => props.theme.breakpoints.up('sm')} {
         display: grid;
     }
