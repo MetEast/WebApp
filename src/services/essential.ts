@@ -22,9 +22,8 @@ export const getEssentialWalletBalance = async () => {
 export const getDidUri = async (_did: string, _description: string, _name: string) => {
     // create the metadata object we'll be storing
     const didObj = {
-        did: _did,
-        description: _description,
-        name: _name,
+        version: '1',
+        did: _did
     };
     const jsonDidObj = JSON.stringify(didObj);
     console.log(jsonDidObj);
