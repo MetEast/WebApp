@@ -10,19 +10,6 @@ let connectivityInitialized = false;
 
 export const useConnectivitySDK = async () => {
     const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
-    // const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-    // if (walletConnectProvider.connected === false) {
-    //     essentialsConnector.setWalletConnectProvider(
-    //         new WalletConnectProvider({
-    //             rpc: {
-    //                 20: 'https://api.elastos.io/eth',
-    //                 21: 'https://api-testnet.elastos.io/eth',
-    //                 128: 'https://http-mainnet.hecochain.com',
-    //             },
-    //             bridge: 'https://wallet-connect.trinity-tech.io/v2',
-    //         }),
-    //     );
-    // }
 
     if (connectivityInitialized) {
         console.log('EssentialsConnector has already initialized.');
@@ -49,6 +36,7 @@ export const useConnectivitySDK = async () => {
         console.log('Has link to essentials?', hasLink);
         setIsLinkedToEssentials(hasLink);
 
+        /////////////////////
         console.log('Connected?', walletConnectProvider.connected);
 
         // Subscribe to accounts change
@@ -80,6 +68,7 @@ export const useConnectivitySDK = async () => {
         walletConnectProvider.on('error', (code: number, reason: string) => {
             console.error(code, reason);
         });
+        /////////////////
 
         // Restore the wallet connect session - TODO: should be done by the connector itself?
         if (hasLink && !essentialsConnector.getWalletConnectProvider().connected)

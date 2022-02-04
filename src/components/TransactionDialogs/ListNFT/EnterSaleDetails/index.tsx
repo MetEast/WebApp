@@ -37,15 +37,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     // const [royalty, setRoyalty] = useState<string>('');
     const [minPrice, setMinPrice] = useState<number>(0);
     const { enqueueSnackbar } = useSnackbar();
-
-    const defaultValue: TypeSaleInputForm = {
-        saleType: 'buynow',
-        price: 0,
-        royalty: '',
-        minPirce: 0,
-        saleEnds: { label: '', value: '' },
-    };
-
+    
     const handleNextStep = () => {
         if (
             (saleType === 'buynow' && price !== null) ||

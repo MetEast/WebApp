@@ -3,7 +3,6 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
-import { TypeSaleInputForm } from 'src/types/mint-types';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import {
@@ -16,7 +15,6 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-// import { getRevertReason } from 'eth-revert-reason';
 
 export interface ComponentProps {}
 
@@ -147,12 +145,13 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             value: 0,
         };
 
+        let txHash = '';
         stickerContract.methods
             .createOrderForAuction(_tokenId, _quoteToken, _minPrice, _endTime, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
-                setDialogState({ ...dialogState, sellTxHash: hash, createNFTDlgStep: 5 });
+                txHash = hash;
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -160,7 +159,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 5 });
+                setDialogState({ ...dialogState, sellTxHash: txHash, createNFTDlgStep: 5 });
             })
             .on('confirmation', (confirmationNumber: any, receipt: any) => {
                 console.log('confirmation', confirmationNumber, receipt);
@@ -176,10 +175,10 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleCreateOrder = async () => {
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
-        callSetApprovalForAll(STICKER_CONTRACT_ADDRESS, true);
+        await callSetApprovalForAll(STICKER_CONTRACT_ADDRESS, true);
         console.log('tokenId', dialogState.mintTokenId);
         console.log('_quoteToken', _quoteToken);
-        console.log('_price', dialogState.sellPrice);
+        console.log('_price', BigInt(dialogState.sellPrice * 1e18).toString());
         console.log('_didUri', dialogState.mintDidUri);
         console.log('_price', dialogState.sellMinPrice);
         console.log('_price', dialogState.sellSaleEnds);
@@ -199,7 +198,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             callCreateOrderForAuction(
                 dialogState.mintTokenId,
                 _quoteToken,
-                BigInt(dialogState.sellMinPrice * 1e18).toString(),
+                `0x${BigInt(dialogState.sellMinPrice * 1e18).toString(16)}`,
                 endTime,
                 dialogState.mintDidUri,
             );

@@ -33,7 +33,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
     const { did, name } = userInfo;
 
-    const callMintNFT = async (_tokenId: string, _tokenUri: string, _royaltyFee: number, _gasLimit: number) => {
+    const callMintNFT = async (
+        _tokenId: string,
+        _tokenUri: string,
+        _didUri: string,
+        _royaltyFee: number,
+        _gasLimit: number,
+    ) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
@@ -53,13 +59,14 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             gas: _gasLimit,
             value: 0,
         };
+        let txHash = '';
 
         meteastContract.methods
             .mint(_tokenId, _tokenUri, _royaltyFee)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
-                setDialogState({ ...dialogState, mintTxHash: hash, createNFTDlgStep: 2 });
+                txHash = hash;
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -67,7 +74,15 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, createNFTDlgStep: 2 });
+                setDialogState({
+                    ...dialogState,
+                    mintTxHash: txHash,
+                    mintTokenId: _tokenId,
+                    mintTokenUri: _tokenUri,
+                    mintDidUri: _didUri,
+                    createNFTDlgOpened: true,
+                    createNFTDlgStep: 2,
+                });
             })
             .on('confirmation', (confirmationNumber: any, receipt: any) => {
                 console.log('confirmation', confirmationNumber, receipt);
@@ -88,7 +103,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         });
         const _royaltyFee = 10000; // how to set?
         const _gasLimit = 5000000;
-        await callMintNFT(paramObj._id, paramObj._uri, _royaltyFee, _gasLimit);
+        await callMintNFT(paramObj._id, paramObj._uri, paramObj._didUri, _royaltyFee, _gasLimit);
         return true;
     };
 
@@ -179,14 +194,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((didRecv: any) => {
                     // didUri
                     _didUri = `meteast:json:${didRecv.path}`;
-                    setDialogState({
-                        ...dialogState,
-                        mintTokenId: _id,
-                        mintTokenUri: _uri,
-                        mintDidUri: _didUri,
-                        // test
-                        createNFTDlgStep: 2,
-                    });
                     resolve({ _id, _uri, _didUri });
                 })
                 .catch((error) => {

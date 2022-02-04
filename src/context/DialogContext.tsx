@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import { TypeSelectItem } from 'src/types/select-types';
 
-
 interface State {
     // mint nft
     createNFTDlgOpened: boolean;
@@ -58,31 +57,31 @@ const defaultState: State = {
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
-    mintTitle: "",
-    mintCategory: {label: "", value: ""},
-    mintIntroduction: "",
-    mintAuthor: "",
-    mintTokenId: "",
-    mintTokenUri: "",
-    mintDidUri: "",
-    mintTxHash: "",
+    mintTitle: '',
+    mintCategory: { label: '', value: '' },
+    mintIntroduction: '',
+    mintAuthor: '',
+    mintTokenId: '',
+    mintTokenUri: '',
+    mintDidUri: '',
+    mintTxHash: '',
     mintTXFee: 0,
     // create order for sale/auction
-    sellSaleType: "buynow",
-    sellSaleEnds: {label: "", value: ""},
+    sellSaleType: 'buynow',
+    sellSaleEnds: { label: '', value: '' },
     sellPrice: 0,
     sellMinPrice: 0,
-    sellTxHash: "",
+    sellTxHash: '',
     sellTxFee: 0,
     // buy now
     buyNowDlgOpened: false,
     buyNowDlgStep: 0,
-    buyNowName: "",
+    buyNowName: '',
     buyNowPrice: 0,
-    buyNowSeller: "",
-    buyNowRoyaltyOwner: "",
+    buyNowSeller: '',
+    buyNowRoyaltyOwner: '',
     buyNowRoyalty: 0,
-    buyNowTxHash: "",
+    buyNowTxHash: '',
     buyNowOrderId: 0,
     buyNowTxFee: 0,
     // accept bid
@@ -91,10 +90,10 @@ const defaultState: State = {
     // place bid
     placeBidDlgOpened: false,
     placeBidDlgStep: 0,
-    placeBidName: "",
+    placeBidName: '',
     placeBidAmount: 0,
-    placeBidExpire: {label: "", value: ""},
-    placeBidTxHash: "",
+    placeBidExpire: { label: '', value: '' },
+    placeBidTxHash: '',
     placeBidTxFee: 0,
     placeBidOrderId: 0,
     // update bid

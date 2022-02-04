@@ -9,7 +9,7 @@ export interface ComponentProps {}
 
 const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-
+    
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
