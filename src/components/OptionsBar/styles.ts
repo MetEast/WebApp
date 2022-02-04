@@ -22,7 +22,7 @@ export const SortByBtn = styled(Button)<{ isopen: number }>`
     background: #e8f4ff;
     padding: 13px 20px;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: #1890ff;
     img {
