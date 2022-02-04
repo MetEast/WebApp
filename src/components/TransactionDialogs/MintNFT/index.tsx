@@ -18,16 +18,23 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
 
     // update later
-    const getTxFee = async () => {
+    const setMintTxFee = async () => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, mintTXFee: parseFloat(gasPrice) * 5000000 / 1e18 });
     };
+    const setSaleTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, sellTxFee: parseFloat(gasPrice) * 5000000 / 1e18 });
+    };
 
     useEffect(() => {
-        getTxFee();
-    }, []);
+        setMintTxFee();
+        setSaleTxFee();
+    }, [dialogState.createNFTDlgStep]);
     
     return (
         <ModalDialog

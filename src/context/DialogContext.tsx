@@ -22,6 +22,7 @@ interface State {
     sellPrice: number;
     sellMinPrice: number;
     sellTxHash: string;
+    sellTxFee: number;
     // buy now
     buyNowDlgOpened: boolean;
     buyNowDlgStep: number;
@@ -56,10 +57,10 @@ const defaultState: State = {
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
-    mintCategory: {label: "", value: ""},
     mintTitle: "",
-    mintAuthor: "",
+    mintCategory: {label: "", value: ""},
     mintIntroduction: "",
+    mintAuthor: "",
     mintTokenId: "",
     mintTokenUri: "",
     mintDidUri: "",
@@ -71,6 +72,7 @@ const defaultState: State = {
     sellPrice: 0,
     sellMinPrice: 0,
     sellTxHash: "",
+    sellTxFee: 0,
     // buy now
     buyNowDlgOpened: false,
     buyNowDlgStep: 0,
