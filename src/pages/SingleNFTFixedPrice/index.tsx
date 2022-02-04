@@ -90,7 +90,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price;
+            product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
@@ -247,9 +247,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                     buyNowPrice: productDetail.price_ela,
                                     buyNowName: productDetail.name,
                                     buyNowOrderId: productDetail.orderId || 0,
-                                    buyNowSeller: productDetail.holder,
-                                    buyNowRoyaltyOwner: productDetail.royaltyOwner || '',
-                                    buyNowRoyalty: productDetail.royalties,
+                                    buyNowTxFee: 1
                                 });
                             } else {
                                 navigate('/login');

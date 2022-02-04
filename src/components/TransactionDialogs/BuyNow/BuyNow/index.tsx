@@ -10,21 +10,21 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
+import { useCookies } from 'react-cookie';
+import jwtDecode from 'jwt-decode';
+import { UserTokenType } from 'src/types/auth-types';
+import { getDidUri } from 'src/services/essential';
 
 export interface ComponentProps {}
 
 const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [tokenCookies] = useCookies(['token']);
+    const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
+    const { did, name } = userInfo;
 
-    const callOrderFilled = async (
-        _seller: string,
-        _orderId: number,
-        _royaltyOwner: string,
-        _quoteToken: string,
-        _price: string,
-        _royalty: number,
-    ) => {
+    const callBuyOrder = async (_orderId: number, _didUri: string, _price: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -41,15 +41,16 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
-            value: 0,
+            value: _price,
         };
+        let txHash = '';
 
         stickerContract.methods
-            .OrderFilled(_seller, accounts[0], _orderId, _royaltyOwner, _quoteToken, _price, _royalty)
+            .buyOrder(_orderId, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
-                setDialogState({ ...dialogState, buyNowTxHash: hash, buyNowDlgStep: 1 });
+                txHash = hash;
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -57,10 +58,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, buyNowDlgOpened: true, buyNowDlgStep: 1 });
-            })
-            .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log('confirmation', confirmationNumber, receipt);
+                setDialogState({ ...dialogState, buyNowTxHash: txHash, buyNowDlgOpened: true, buyNowDlgStep: 1 });
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
@@ -72,15 +70,14 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handleBuyNow = async () => {
-        const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
-        // wrong --- buyOrder
-        callOrderFilled(
-            dialogState.buyNowSeller,
+        const _didUri = await getDidUri(did, '', name);
+        console.log("didUri:----------", _didUri)
+        console.log("orderId:---------", dialogState.buyNowOrderId)
+        console.log("price:---------", BigInt(dialogState.buyNowPrice).toString())
+        await callBuyOrder(
             dialogState.buyNowOrderId,
-            dialogState.buyNowRoyaltyOwner,
-            _quoteToken,
-            BigInt(dialogState.buyNowPrice * 1e18).toString(),
-            dialogState.buyNowRoyalty,
+            _didUri,
+            BigInt(dialogState.buyNowPrice).toString()
         );
     };
 
@@ -124,10 +121,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                                 buyNowDlgOpened: false,
                                 buyNowPrice: 0,
                                 buyNowName: '',
-                                buyNowOrderId: 0,
-                                buyNowSeller: '',
-                                buyNowRoyaltyOwner: '',
-                                buyNowRoyalty: 0,
+                                buyNowOrderId: 0
                             });
                         }}
                     >

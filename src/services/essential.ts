@@ -1,6 +1,9 @@
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Web3 from 'web3';
+import { create } from 'ipfs-http-client'
+
+const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
 export const getEssentialWalletAddress = () => {
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -15,4 +18,18 @@ export const getEssentialWalletBalance = async () => {
     const balance = await walletConnectWeb3.eth.getBalance(accounts[0]);
     return balance;
 };
+
+export const getDidUri = async (_did: string, _description: string, _name: string) => {
+    // create the metadata object we'll be storing
+    const didObj = {
+        did: _did,
+        description: _description,
+        name: _name,
+    };
+    const jsonDidObj = JSON.stringify(didObj);
+    console.log(jsonDidObj);
+    // add the metadata itself as well
+    const didUri = await client.add(jsonDidObj);
+    return `did:elastos:${didUri.path}`;
+  };
   
