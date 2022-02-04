@@ -11,14 +11,9 @@ import { useDialogContext } from 'src/context/DialogContext';
 import Select from 'src/components/Select';
 import { Icon } from '@iconify/react';
 
-export interface ComponentProps {
-    inputData: TypeSaleInputForm;
-    setInputData: (value: TypeSaleInputForm) => void;
-}
+export interface ComponentProps {}
 
-const EnterSaleDetails: React.FC<ComponentProps> = ({ inputData, setInputData }): JSX.Element => {
-    const [dialogState, setDialogState] = useDialogContext();
-
+const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const saleEndsOptions: Array<TypeSelectItem> = [
         {
             label: '1 month',
@@ -34,6 +29,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({ inputData, setInputData })
         },
     ];
 
+    const [dialogState, setDialogState] = useDialogContext();
     const [saleType, setSaleType] = useState<'buynow' | 'auction'>('buynow');
     const [saleEnds, setSaleEnds] = useState<TypeSelectItem>();
     const [saleEndsSelectOpen, setSaleEndsSelectOpen] = useState(false);
@@ -50,11 +46,6 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({ inputData, setInputData })
         saleEnds: { label: '', value: '' },
     };
 
-    const handleSaleEndsChange = (value: string) => {
-        const item = saleEndsOptions.find((option) => option.value === value);
-        setSaleEnds(item);
-    };
-
     const handleNextStep = () => {
         if (
             (saleType === 'buynow' && price !== null) ||
@@ -66,14 +57,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({ inputData, setInputData })
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             } else {
-                let tempFormData: TypeSaleInputForm = { ...inputData };
-                tempFormData.price = price;
-                // tempFormData.royalty = royalty;
-                tempFormData.minPirce = minPrice;
-                tempFormData.saleEnds = saleEnds || { label: '', value: '' };
-                tempFormData.saleType = saleType;
-                setInputData(tempFormData);
-                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4 });
+                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 4, sellPrice: price, sellMinPrice: minPrice, sellSaleEnds: saleEnds || { label: '', value: '' }, sellSaleType: saleType });
             }
         } else
             enqueueSnackbar('Form validation failed!', {
@@ -122,7 +106,10 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({ inputData, setInputData })
                                 }
                                 options={saleEndsOptions}
                                 isOpen={saleEndsSelectOpen}
-                                handleClick={handleSaleEndsChange}
+                                handleClick={(value: string) => {
+                                    const item = saleEndsOptions.find((option) => option.value === value);
+                                    setSaleEnds(item);
+                                }}
                                 setIsOpen={setSaleEndsSelectOpen}
                             />
                         </Stack>
@@ -133,8 +120,14 @@ const EnterSaleDetails: React.FC<ComponentProps> = ({ inputData, setInputData })
                 <SecondaryButton
                     fullWidth
                     onClick={() => {
-                        setInputData(defaultValue);
-                        setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                        setDialogState({
+                            ...dialogState,
+                            sellSaleType: 'buynow',
+                            sellPrice: 0,
+                            sellMinPrice: 0,
+                            sellSaleEnds: { label: '', value: '' },
+                            createNFTDlgOpened: false,
+                        });
                     }}
                 >
                     close

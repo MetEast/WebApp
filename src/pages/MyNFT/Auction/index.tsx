@@ -69,7 +69,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         var product: TypeProduct = {...defaultValue};        
 
         if (prodDetail !== undefined) {
-            // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;

@@ -62,7 +62,6 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         var product: TypeProduct = {...defaultValue};        
 
         if (prodDetail !== undefined) {
-            // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
@@ -76,9 +75,9 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             product.description = itemObject.description;
             product.author = itemObject.authorName || "---";
             product.authorDescription = itemObject.authorDescription || "---";
-            product.authorImg = product.image; // -- no proper value
+            product.authorImg = product.image;
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "---"; // -- no proper value 
+            product.holderName = "---";
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;

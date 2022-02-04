@@ -69,7 +69,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handlePlaceBid = async () => {
-        callBidForOrder(dialogState.placeBidOrderId, dialogState.placeBidAmount, dialogState.mintNFTDidUri);
+        callBidForOrder(dialogState.placeBidOrderId, dialogState.placeBidAmount, dialogState.mintDidUri);
     };
     return (
         <Stack spacing={5} width={340}>

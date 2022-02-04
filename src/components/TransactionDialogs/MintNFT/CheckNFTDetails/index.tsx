@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
 import { Stack, Typography, Grid } from '@mui/material';
@@ -11,7 +11,6 @@ import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
-// import { callMintNFT } from 'src/components/ContractMethod';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import {
@@ -25,16 +24,10 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
-export interface ComponentProps {
-    inputData: TypeMintInputForm;
-    setInputData: (value: TypeMintInputForm) => void;
-    txFee: number;
-    handleTxHash: (value: string) => void;
-}
+export interface ComponentProps {}
 
-const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, txFee, handleTxHash }): JSX.Element => {
+const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-    const { file } = inputData;
     const [tokenCookies] = useCookies(['token']);
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
@@ -73,7 +66,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
-                handleTxHash(hash);
+                setDialogState({ ...dialogState, mintTxHash: hash, createNFTDlgStep: 2 });
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -126,11 +119,11 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
             const metaObj = {
                 version: '1',
                 type: 'image',
-                name: inputData.name,
-                description: inputData.description,
+                name: dialogState.mintTitle,
+                description: dialogState.mintIntroduction,
                 creator: {
                     did: did,
-                    description: inputData.author,
+                    description: dialogState.mintAuthor,
                     name: name,
                 },
                 data: {
@@ -157,7 +150,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
             // create the metadata object we'll be storing
             const didObj = {
                 did: did,
-                description: inputData.author,
+                description: dialogState.mintAuthor,
                 name: name,
             };
             try {
@@ -175,8 +168,8 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
             let _id = '';
             let _uri = '';
             let _didUri = '';
-            if (!file) return;
-            sendIpfsImage(file)
+            if (!dialogState.mintFile) return;
+            sendIpfsImage(dialogState.mintFile)
                 .then((added: any) => {
                     // Hash of image path - tokenId
                     _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
@@ -194,9 +187,9 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
                     _didUri = `meteast:json:${didRecv.path}`;
                     setDialogState({
                         ...dialogState,
-                        mintNFTTokenId: _id,
-                        mintNFTTokenUri: _uri,
-                        mintNFTDidUri: _didUri,
+                        mintTokenId: _id,
+                        mintTokenUri: _uri,
+                        mintDidUri: _didUri,
                         createNFTDlgStep: 2,
                     });
                     resolve({ _id, _uri, _didUri });
@@ -207,7 +200,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
         });
 
     const handleMint = () => {
-        if (!file) return;
+        if (!dialogState.mintFile) return;
         uploadData()
             .then((paramObj) => mint2net(paramObj))
             .then((success) => {
@@ -237,32 +230,40 @@ const CheckNFTDetails: React.FC<ComponentProps> = ({ inputData, setInputData, tx
                         <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{inputData.name}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.mintTitle}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Collection</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{inputData.category.label}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.mintCategory.label}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{txFee} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.mintTXFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {txFee} ELA
+                    Available: {dialogState.mintTXFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
-                            setInputData(defaultValue);
-                            setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                            setDialogState({
+                                ...dialogState,
+                                mintTitle: '',
+                                mintAuthor: '',
+                                mintIntroduction: '',
+                                mintCategory: { label: '', value: '' },
+                                mintFile: new File([''], ''),
+                                mintTXFee: 0,
+                                createNFTDlgOpened: false,
+                            });
                         }}
                     >
                         Close

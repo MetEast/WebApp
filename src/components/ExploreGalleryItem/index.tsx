@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
-import { Box, Stack, Typography, Grid } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType } from 'src/types/product-types';

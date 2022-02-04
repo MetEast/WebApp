@@ -6,18 +6,22 @@ interface State {
     // mint nft
     createNFTDlgOpened: boolean;
     createNFTDlgStep: number;
-    mintNFTCategory: TypeSelectItem;
-    mintNFTTitle: string;
-    mintNFTAuthor: string;
-    mintNFTIntroduction: string;
-    mintNFTFile?: File;
-    mintNFTTokenId: string;
-    mintNFTTokenUri: string;
-    mintNFTDidUri: string;
-    mintNFTTxHash: string;
-    mintNFTTXFee: number;
+    mintCategory: TypeSelectItem;
+    mintTitle: string;
+    mintAuthor: string;
+    mintIntroduction: string;
+    mintFile?: File;
+    mintTokenId: string;
+    mintTokenUri: string;
+    mintDidUri: string;
+    mintTxHash: string;
+    mintTXFee: number;
     // create order for sale/auction
-
+    sellSaleType: 'buynow' | 'auction';
+    sellSaleEnds: TypeSelectItem;
+    sellPrice: number;
+    sellMinPrice: number;
+    sellTxHash: string;
     // buy now
     buyNowDlgOpened: boolean;
     buyNowDlgStep: number;
@@ -40,6 +44,8 @@ interface State {
     placeBidExpire: TypeSelectItem;
     placeBidTxHash: string;
     placeBidTxFee: number;
+    // update bid
+    // cancel bid
     // all transactions
     allTxDlgOpened: boolean;
     // all bids
@@ -50,16 +56,21 @@ const defaultState: State = {
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
-    mintNFTCategory: {label: "", value: ""},
-    mintNFTTitle: "",
-    mintNFTAuthor: "",
-    mintNFTIntroduction: "",
-    mintNFTTokenId: "",
-    mintNFTTokenUri: "",
-    mintNFTDidUri: "",
-    mintNFTTxHash: "",
-    mintNFTTXFee: 0,
-    //
+    mintCategory: {label: "", value: ""},
+    mintTitle: "",
+    mintAuthor: "",
+    mintIntroduction: "",
+    mintTokenId: "",
+    mintTokenUri: "",
+    mintDidUri: "",
+    mintTxHash: "",
+    mintTXFee: 0,
+    // create order for sale/auction
+    sellSaleType: "buynow",
+    sellSaleEnds: {label: "", value: ""},
+    sellPrice: 0,
+    sellMinPrice: 0,
+    sellTxHash: "",
     // buy now
     buyNowDlgOpened: false,
     buyNowDlgStep: 0,
@@ -82,6 +93,8 @@ const defaultState: State = {
     placeBidTxHash: "",
     placeBidTxFee: 0,
     placeBidOrderId: 0,
+    // update bid
+    // cancel bid
     // all transactions
     allTxDlgOpened: false,
     // all bids

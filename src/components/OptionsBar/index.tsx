@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Stack, Grid } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import SearchField from '../SearchField';
 import { TypeSelectItem } from 'src/types/select-types';
 import { FilterButton, SortByBtn } from './styles';
@@ -34,10 +34,9 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
 }): JSX.Element => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-    const matchDownXs = useMediaQuery(theme.breakpoints.down('md'));
     const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
     const displayFilterLable = matchDownMd ? false : true;
-    const onlyShowIcon = matchDownXs ? true : false;
+    const onlyShowIcon = matchDownMd ? true : false;
     const filterBtnHidden = matchDownLg ? false : true;
 
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
@@ -61,7 +60,8 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 isOpen={sortBySelectOpen}
                 setIsOpen={isSortBySelectOpen}
                 handleClick={handleSortChange}
-                width={280}
+                // width={260}
+                min_width={onlyShowIcon ? 'auto' : 260}
             />
             {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>

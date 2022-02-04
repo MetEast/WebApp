@@ -20,7 +20,7 @@ import { useCookies } from "react-cookie";
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [didCookies] = useCookies(["did"]);
     const defaultValue: TypeProduct = { 
         tokenId: "", 
         name: "", 

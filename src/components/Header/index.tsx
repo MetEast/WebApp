@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Box, Typography, Stack } from '@mui/material';
+import { Button, Box, Typography, Stack, IconButton } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import MenuItem from '../MenuItem';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,8 @@ import { useRecoilState } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { essentialsConnector } from '../ConnectWallet/EssentialConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
+import { NotificationTypo } from './styles';
 
 const menuItemsList = [
     {
@@ -24,7 +25,7 @@ const menuItemsList = [
     {
         title: 'Blind Boxes',
         url: '/blind-box',
-    }
+    },
 ];
 
 const Header: React.FC = (): JSX.Element => {
@@ -32,20 +33,14 @@ const Header: React.FC = (): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [auth, setAuth] = useRecoilState(authAtom);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(["token"]);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(["did"]);
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['token']);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(['did']);
 
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
         setAuth({ isLoggedIn: false });
-        removeTokenCookie("token");
-        removeDidCookie("did");
-        console.log("Connector--------------:" , essentialsConnector.hasWalletConnectSession());
-        console.log("walletConnector isconnecting--------------:", essentialsConnector.getWalletConnectProvider().isConnecting);
-        console.log("walletConnector connected--------------:", essentialsConnector.getWalletConnectProvider().connected);
-        console.log("walletConnector connected--------------:", essentialsConnector.getWalletConnectProvider().chainId);
-        console.log("walletConnector connected--------------:", essentialsConnector.getWalletConnectProvider().rpcUrl);
-        // await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
+        removeTokenCookie('token');
+        removeDidCookie('did');
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
     };
@@ -60,17 +55,20 @@ const Header: React.FC = (): JSX.Element => {
                     <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
                 ))}
             </Stack>
-            <Stack direction="row" alignItems="center" spacing={1}>
-                <Button>
-                    <Icon icon="ph:chat-circle" fontSize={24} color="black" />
-                </Button>
-                <Button
+            <Stack direction="row" alignItems="center" spacing={2}>
+                <Box position="relative">
+                    <IconButton>
+                        <Icon icon="ph:chat-circle" fontSize={28} color="black" />
+                    </IconButton>
+                    <NotificationTypo>2</NotificationTypo>
+                </Box>
+                <IconButton
                     onClick={() => {
                         navigate('/profile');
                     }}
                 >
-                    <Icon icon="ph:user" fontSize={24} color="black" />
-                </Button>
+                    <Icon icon="ph:user" fontSize={28} color="black" />
+                </IconButton>
                 {auth?.isLoggedIn && (
                     <Button onClick={logOut}>
                         <LogoutOutlinedIcon sx={{ color: '#000' }}>Log out</LogoutOutlinedIcon>
@@ -79,7 +77,8 @@ const Header: React.FC = (): JSX.Element => {
                 <PrimaryButton
                     size="small"
                     onClick={() => {
-                        if(auth.isLoggedIn) setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
+                        if (auth.isLoggedIn)
+                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
                         else navigate('/login');
                     }}
                     sx={{ paddingX: 2 }}

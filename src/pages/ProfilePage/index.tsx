@@ -298,7 +298,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 your NFTs
             </Typography>
             <Grid container direction="row" alignItems="center" justifyContent={"space-between"} spacing={2} marginTop={1}>
-                <Grid item container lg={8} md={12} sm={12} xs={12} order={{lg: 1, md: 2, sm:2, xs: 2}} direction="row" spacing={1} justifyContent={"space-between"}>
+                <Grid item container lg={7} md={12} sm={12} xs={12} order={{lg: 1, md: 2, sm:2, xs: 2}} direction="row" spacing={1} justifyContent={"space-between"}>
                     {nftGalleryFilterButtonsList.map((items, index) => (
                         <Grid item key={`profile-gallery-${index}`} xs={4} sm={2}>
                             <FilterButton
@@ -311,7 +311,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         </Grid>
                     ))}
                 </Grid>
-                <Grid item lg={4} md={12} sm={12} xs={12} order={{lg: 2, md: 1, sm:1, xs: 1}}>
+                <Grid item lg={5} md={12} sm={12} xs={12} order={{lg: 2, md: 1, sm:1, xs: 1}}>
                     <OptionsBar
                         handleKeyWordChange={handleKeyWordChange}
                         sortOptions={sortOptions} 

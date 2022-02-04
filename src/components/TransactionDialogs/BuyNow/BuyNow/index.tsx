@@ -5,12 +5,7 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
 import { AbiItem } from 'web3-utils';
-import {
-    METEAST_CONTRACT_ABI,
-    METEAST_CONTRACT_ADDRESS,
-    STICKER_CONTRACT_ABI,
-    STICKER_CONTRACT_ADDRESS,
-} from 'src/components/ContractMethod/config';
+import { STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
@@ -77,6 +72,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleBuyNow = async () => {
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
+        // wrong --- buyOrder
         callOrderFilled(
             dialogState.buyNowSeller,
             dialogState.buyNowOrderId,

@@ -193,7 +193,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         let _latestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.others.length; i++) {
             let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-            var _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
             let timestamp = getTime(itemObject.timestamp);
@@ -205,7 +205,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         let _myLatestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.yours.length; i++) {
             let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
-            var _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
             let timestamp = getTime(itemObject.timestamp);

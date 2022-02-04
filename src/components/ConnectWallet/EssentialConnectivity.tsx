@@ -10,15 +10,6 @@ let connectivityInitialized = false;
 
 export const useConnectivitySDK = async () => {
     const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
-    // console.log('--------------Connector:', essentialsConnector.hasWalletConnectSession());
-    // console.log(
-    //     '--------------walletConnector isconnecting:',
-    //     essentialsConnector.getWalletConnectProvider().isConnecting,
-    // );
-    // console.log('--------------walletConnector connected:', essentialsConnector.getWalletConnectProvider().connected);
-    // console.log('--------------walletConnector connected:', essentialsConnector.getWalletConnectProvider().chainId);
-    // console.log('--------------walletConnector connected:', essentialsConnector.getWalletConnectProvider().rpcUrl);
-
     // const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     // if (walletConnectProvider.connected === false) {
     //     essentialsConnector.setWalletConnectProvider(

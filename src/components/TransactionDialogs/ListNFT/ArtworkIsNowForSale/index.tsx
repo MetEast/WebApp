@@ -6,10 +6,9 @@ import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {
-    txHash: string;
 }
 
-const ArtworkIsNowForSale: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
+const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
 
     return (
@@ -24,7 +23,7 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = ({txHash}): JSX.Element =>
                 <img src="/assets/images/transactionsdlg/artwork-now-forsale.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={txHash} />
+                <ViewOnExplorerButton txHash={dialogState.sellTxHash} />
                 <PrimaryButton 
                     fullWidth
                     onClick={() => {

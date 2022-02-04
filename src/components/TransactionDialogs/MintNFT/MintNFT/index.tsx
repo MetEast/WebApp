@@ -6,21 +6,15 @@ import CustomTextField from 'src/components/TextField';
 import WarningTypo from '../../components/WarningTypo';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeMintInputForm } from 'src/types/mint-types';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import { useSnackbar } from 'notistack';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 
-export interface ComponentProps {
-    inputData: TypeMintInputForm;
-    setInputData: (value: TypeMintInputForm) => void;
-    txFee: number;
-}
+export interface ComponentProps {}
 
-const MintNFT: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): JSX.Element => {
-    const [dialogState, setDialogState] = useDialogContext();
+const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const categoryOptions: Array<TypeSelectItem> = [
         {
             label: 'Original',
@@ -60,58 +54,20 @@ const MintNFT: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): 
         },
     ];
 
+    const [dialogState, setDialogState] = useDialogContext();
     const [category, setCategory] = useState<TypeSelectItem>();
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
     const [title, setTitle] = useState<string>('');
     const [introduction, setIntroduction] = useState<string>('');
     const [author, setAuthor] = useState<string>('');
+    const [mintFile, setMintFile] = useState<File>();
     const [stateFile, setStateFile] = useState(null);
     const { enqueueSnackbar } = useSnackbar();
-    const defaultValue: TypeMintInputForm = {
-        name: '',
-        description: '',
-        author: '',
-        category: { label: '', value: '' },
-        file: new File([''], ''),
-    };
-
-    const handleCategoryChange = (value: string) => {
-        const item = categoryOptions.find((option) => option.value === value);
-        setCategory(item);
-        if (item !== undefined) {
-            let tempFormData: TypeMintInputForm = { ...inputData };
-            tempFormData.category = item;
-            setInputData(tempFormData);
-        }
-    };
-
-    const handleNameChange = (value: string) => {
-        setTitle(value);
-        let tempFormData: TypeMintInputForm = { ...inputData };
-        tempFormData.name = value;
-        setInputData(tempFormData);
-    };
-
-    const handleDescriptionChange = (value: string) => {
-        setIntroduction(value);
-        let tempFormData: TypeMintInputForm = { ...inputData };
-        tempFormData.description = value;
-        setInputData(tempFormData);
-    };
-
-    const handleAuthorChange = (value: string) => {
-        setAuthor(value);
-        let tempFormData: TypeMintInputForm = { ...inputData };
-        tempFormData.author = value;
-        setInputData(tempFormData);
-    };
 
     const handleFileChange = (files: Array<File>) => {
         handleDropSingleFile(files);
         if (files !== null && files.length > 0) {
-            let tempFormData: TypeMintInputForm = { ...inputData };
-            tempFormData.file = files[0];
-            setInputData(tempFormData);
+            setMintFile(files[0]);
         }
     };
 
@@ -134,16 +90,14 @@ const MintNFT: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): 
                         <CustomTextField
                             title="Project Title"
                             placeholder="Placeholder Text"
-                            changeHandler={(value: string) => {
-                                handleNameChange(value);
-                            }}
+                            changeHandler={(value: string) => setTitle(value)}
                         />
                         <CustomTextField
                             title="Project Introduction"
                             placeholder="Enter Introduction"
                             multiline
                             rows={3}
-                            changeHandler={(value: string) => handleDescriptionChange(value)}
+                            changeHandler={(value: string) => setIntroduction(value)}
                         />
                         <Box>
                             <Typography fontSize={12} fontWeight={700}>
@@ -179,7 +133,10 @@ const MintNFT: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): 
                                 }
                                 options={categoryOptions}
                                 isOpen={categorySelectOpen}
-                                handleClick={handleCategoryChange}
+                                handleClick={(value: string) => {
+                                    const item = categoryOptions.find((option) => option.value === value);
+                                    setCategory(item);
+                                }}
                                 setIsOpen={setCategorySelectOpen}
                             />
                         </Stack>
@@ -188,21 +145,29 @@ const MintNFT: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): 
                             placeholder="Enter author introduction"
                             multiline
                             rows={3}
-                            changeHandler={(value: string) => handleAuthorChange(value)}
+                            changeHandler={(value: string) => setAuthor(value)}
                         />
                     </Grid>
                 </Grid>
             </Box>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {txFee} ELA
+                    Available: {dialogState.mintTXFee} ELA
                 </Typography>
                 <Stack width="100%" direction="row" spacing={2}>
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
-                            setInputData(defaultValue);
-                            setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                            setDialogState({
+                                ...dialogState,
+                                mintTitle: '',
+                                mintAuthor: '',
+                                mintIntroduction: '',
+                                mintCategory: { label: '', value: '' },
+                                mintFile: new File([''], ''),
+                                mintTXFee: 0,
+                                createNFTDlgOpened: false,
+                            });
                         }}
                     >
                         close
@@ -217,9 +182,18 @@ const MintNFT: React.FC<ComponentProps> = ({ inputData, setInputData, txFee }): 
                                 category !== undefined &&
                                 category.label !== '' &&
                                 category.value !== '' &&
+                                mintFile !== null &&
                                 stateFile !== null
                             ) {
-                                setDialogState({ ...dialogState, createNFTDlgStep: 1 });
+                                setDialogState({
+                                    ...dialogState,
+                                    mintTitle: title,
+                                    mintAuthor: author,
+                                    mintIntroduction: introduction,
+                                    mintCategory: category || { label: '', value: '' },
+                                    mintFile: mintFile,
+                                    createNFTDlgStep: 1,
+                                });
                             } else
                                 enqueueSnackbar('Form validation failed!', {
                                     variant: 'warning',

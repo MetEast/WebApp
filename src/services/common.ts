@@ -1,4 +1,4 @@
-import { TypeFavouritesFetch, TypeLikesFetchItem } from 'src/types/product-types';
+import { TypeFavouritesFetch } from 'src/types/product-types';
 
 // custome
 export const getImageFromAsset = (id: string) => {
@@ -55,3 +55,17 @@ export const storeWithExpireTime = (key: string, value: string, ttl: number) => 
 export const selectFromFavourites = (value: TypeFavouritesFetch, tokenId: string) => {
   return value.tokenId === tokenId;
 };
+
+export default function emptyCache(){
+  if('caches' in window){
+  caches.keys().then((names) => {
+          // Delete all the cache files
+          names.forEach(name => {
+              caches.delete(name);
+          })
+      });
+
+      // Makes sure the page reloads. Changes are only visible after you refresh.
+      window.location.reload();
+  }
+}
