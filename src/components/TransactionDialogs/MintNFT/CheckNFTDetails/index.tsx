@@ -84,9 +84,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     createNFTDlgStep: 2,
                 });
             })
-            .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log('confirmation', confirmationNumber, receipt);
-            })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
                 enqueueSnackbar('Mint token error!', {
@@ -182,13 +179,11 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((added: any) => {
                     // Hash of image path - tokenId
                     _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
-                    console.log('ipfs hash:-------------', _id);
                     return sendIpfsMetaData(added);
                 })
                 .then((metaRecv: any) => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
-                    console.log('ipfs uri:-------------', _uri);
                     return sendIpfsDidJson();
                 })
                 .then((didRecv: any) => {

@@ -32,43 +32,43 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         let meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
         const isApproval = await meteastContract.methods.isApprovedForAll(accounts[0], _operator).call();
+        const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
+
         if (isApproval === true) {
             console.log('Operator', _operator, ' is already approved');
-            return;
+            await createOrder(_quoteToken);
+        } else {
+            let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+            console.log('Gas price:', gasPrice);
+            console.log('Sending transaction with account address:', accounts[0]);
+            let transactionParams = {
+                from: accounts[0],
+                gasPrice: gasPrice,
+                gas: 5000000,
+                value: 0,
+            };
+            meteastContract.methods
+                .setApprovalForAll(_operator, _approved)
+                .send(transactionParams)
+                .on('transactionHash', (hash: any) => {
+                    console.log('transactionHash', hash);
+                })
+                .on('receipt', (receipt: any) => {
+                    console.log('receipt', receipt);
+                    enqueueSnackbar('Set approval for all succeed!', {
+                        variant: 'success',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                    createOrder(_quoteToken);
+                })
+                .on('error', (error: any, receipt: any) => {
+                    console.error('error', error);
+                    enqueueSnackbar('Set approval for all error!', {
+                        variant: 'warning',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                });
         }
-
-        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log('Gas price:', gasPrice);
-        console.log('Sending transaction with account address:', accounts[0]);
-        let transactionParams = {
-            from: accounts[0],
-            gasPrice: gasPrice,
-            gas: 5000000,
-            value: 0,
-        };
-        meteastContract.methods
-            .setApprovalForAll(_operator, _approved)
-            .send(transactionParams)
-            .on('transactionHash', (hash: any) => {
-                console.log('transactionHash', hash);
-            })
-            .on('receipt', (receipt: any) => {
-                console.log('receipt', receipt);
-                enqueueSnackbar('Set approval for all succeed!', {
-                    variant: 'success',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-            })
-            .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log('confirmation', confirmationNumber, receipt);
-            })
-            .on('error', (error: any, receipt: any) => {
-                console.error('error', error);
-                enqueueSnackbar('Set approval for all error!', {
-                    variant: 'warning',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-            });
     };
 
     const callCreateOrderForSale = async (_tokenId: string, _quoteToken: string, _price: string, _didUri: string) => {
@@ -90,13 +90,13 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             gas: 5000000,
             value: 0,
         };
-
+        let txHash = '';
         stickerContract.methods
             .createOrderForSale(_tokenId, _quoteToken, _price, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
-                setDialogState({ ...dialogState, sellTxHash: hash, createNFTDlgStep: 5 });
+                txHash = hash;
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -104,10 +104,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 5 });
-            })
-            .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log('confirmation', confirmationNumber, receipt);
+                setDialogState({ ...dialogState, sellTxHash: txHash, createNFTDlgOpened: true, createNFTDlgStep: 5 });
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
@@ -115,7 +112,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, createNFTDlgStep: 4 });
             });
     };
 
@@ -161,9 +157,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 setDialogState({ ...dialogState, sellTxHash: txHash, createNFTDlgStep: 5 });
             })
-            .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log('confirmation', confirmationNumber, receipt);
-            })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
                 enqueueSnackbar('Order for auction error!', {
@@ -173,18 +166,9 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             });
     };
 
-    const handleCreateOrder = async () => {
-        const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
-        await callSetApprovalForAll(STICKER_CONTRACT_ADDRESS, true);
-        console.log('tokenId', dialogState.mintTokenId);
-        console.log('_quoteToken', _quoteToken);
-        console.log('_price', BigInt(dialogState.sellPrice * 1e18).toString());
-        console.log('_didUri', dialogState.mintDidUri);
-        console.log('_price', dialogState.sellMinPrice);
-        console.log('_price', dialogState.sellSaleEnds);
-        console.log('_price', dialogState.sellSaleType);
+    const createOrder = async (_quoteToken: string) => {
         if (dialogState.sellSaleType === 'buynow') {
-            callCreateOrderForSale(
+            await callCreateOrderForSale(
                 dialogState.mintTokenId,
                 _quoteToken,
                 BigInt(dialogState.sellPrice * 1e18).toString(),
@@ -195,7 +179,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             if (dialogState.sellSaleEnds.value === '1 month') endTime += 30 * 24 * 3600;
             else if (dialogState.sellSaleEnds.value === '1 week') endTime += 7 * 24 * 3600;
             else if (dialogState.sellSaleEnds.value === '1 day') endTime += 24 * 3600;
-            callCreateOrderForAuction(
+            await callCreateOrderForAuction(
                 dialogState.mintTokenId,
                 _quoteToken,
                 `0x${BigInt(dialogState.sellMinPrice * 1e18).toString(16)}`,
@@ -203,6 +187,10 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 dialogState.mintDidUri,
             );
         }
+    };
+
+    const handleSell = () => {
+        callSetApprovalForAll(STICKER_CONTRACT_ADDRESS, true);
     };
 
     return (
@@ -272,7 +260,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     >
                         Back
                     </SecondaryButton>
-                    <PrimaryButton fullWidth onClick={handleCreateOrder}>
+                    <PrimaryButton fullWidth onClick={handleSell}>
                         Confirm
                     </PrimaryButton>
                 </Stack>
