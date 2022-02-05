@@ -9,11 +9,21 @@ interface ComponentProps {
     isOpen: boolean;
     width?: number;
     min_width?: number | string;
+    listitemsbox_width?: number | string;
     setIsOpen: (value: boolean) => void;
     handleClick: (value: string) => void;
 }
 
-const Select: React.FC<ComponentProps> = ({ titlebox, options, isOpen, width, min_width, setIsOpen, handleClick }) => {
+const Select: React.FC<ComponentProps> = ({
+    titlebox,
+    options,
+    isOpen,
+    width,
+    min_width,
+    listitemsbox_width,
+    setIsOpen,
+    handleClick,
+}) => {
     return (
         <Box
             onClick={() => {
@@ -23,7 +33,7 @@ const Select: React.FC<ComponentProps> = ({ titlebox, options, isOpen, width, mi
             sx={{ width: width ? width : 'auto', minWidth: min_width ? min_width : 'auto' }}
         >
             {titlebox}
-            <ListItemsWrapper width={'100%'} isOpen={isOpen}>
+            <ListItemsWrapper width={listitemsbox_width ? listitemsbox_width : '100%'} isOpen={isOpen}>
                 <Stack borderRadius={3} overflow="hidden" sx={{ background: '#F8F8F8' }}>
                     {options.map((item, index) => (
                         <SelectItem
