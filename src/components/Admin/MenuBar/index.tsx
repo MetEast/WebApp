@@ -1,17 +1,17 @@
-import React, { ReactNode, useState } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import React, { ReactNode } from 'react';
+import { Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { BackToPublicBtn } from './styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-interface MenuItem {
+interface IMenuItem {
     title: string;
     icon?: ReactNode;
     url: string;
-    submenu?: MenuItem[];
+    submenu?: IMenuItem[];
 }
 
-const MenuItem = (item: MenuItem, depth: number): JSX.Element => {
+const MenuItem = (item: IMenuItem, depth: number): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -45,7 +45,7 @@ const MenuItem = (item: MenuItem, depth: number): JSX.Element => {
 };
 
 const MenuBar: React.FC = (): JSX.Element => {
-    const menu: MenuItem[] = [
+    const menu: IMenuItem[] = [
         {
             title: 'NFTS',
             icon: <Icon icon="ph:image-square" fontSize={20} />,

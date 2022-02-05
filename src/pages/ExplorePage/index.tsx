@@ -99,7 +99,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
             filterStatus.slice(0, filterStatus.length - 1);
             reqUrl += `&filter_status=${filterStatus}`;
         }
-        console.log('-d-d-d-d--d-d-d', reqUrl, '----------', sortBy, filters, filterRange, keyWord, productViewMode);
         const resSearchResult = await fetch(reqUrl, {
             headers: {
                 'Content-Type': 'application/json',

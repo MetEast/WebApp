@@ -1,4 +1,4 @@
-import { styled, Box, Button } from '@mui/material';
+import { styled, Box } from '@mui/material';
 
 export const ProductImageContainer = styled(Box)<{ param?: boolean }>`
     position: relative;

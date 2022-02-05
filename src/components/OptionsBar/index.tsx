@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Stack, Grid } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import SearchField from '../SearchField';
 import { TypeSelectItem } from 'src/types/select-types';
 import { FilterButton, SortByBtn } from './styles';

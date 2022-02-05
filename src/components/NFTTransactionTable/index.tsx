@@ -6,6 +6,7 @@ import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import ELAPrice from 'src/components/ELAPrice';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useDialogContext } from 'src/context/DialogContext';
 
 interface ComponentProps {
     transactionsList: Array<TypeNFTTransaction>;
@@ -21,6 +22,7 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
     const priceAlign = matchDownSm ? true : false;
+    const [dialogState, setDialogState] = useDialogContext();
 
     return (
         <Box>
@@ -28,7 +30,13 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                 <Typography fontSize={22} fontWeight={700}>
                     Latest transactions
                 </Typography>
-                <ViewAllBtn>View ALL</ViewAllBtn>
+                <ViewAllBtn
+                    onClick={() => {
+                        setDialogState({ ...dialogState, allTxDlgOpened: true });
+                    }}
+                >
+                    View ALL
+                </ViewAllBtn>
             </Stack>
             <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
                 {transactionsTblColumns.map((item, index) => (
@@ -56,12 +64,17 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                             order={{ xs: 4, sm: 2 }}
                             textAlign={{ xs: 'right', sm: 'left' }}
                         >
-
                             <Typography fontSize={16} fontWeight={400}>
                                 {item.user}
                             </Typography>
                         </Grid>
-                        <Grid item xs={6} sm={transactionsTblColumns[2].width} order={{xs: 2, sm: 3}} textAlign={{xs: "right", sm: "left"}}>
+                        <Grid
+                            item
+                            xs={6}
+                            sm={transactionsTblColumns[2].width}
+                            order={{ xs: 2, sm: 3 }}
+                            textAlign={{ xs: 'right', sm: 'left' }}
+                        >
                             <ELAPrice price_ela={item.price} alignRight={priceAlign} />
                         </Grid>
                         <Grid item xs={6} sm={transactionsTblColumns[3].width} order={{ xs: 1, sm: 4 }}>

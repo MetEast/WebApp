@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Box, Typography, Stack, IconButton } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import MenuItem from '../MenuItem';
@@ -36,23 +36,21 @@ const Header: React.FC = (): JSX.Element => {
     const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['token']);
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(['did']);
 
+    // check if essentials has disconnected from mobile app
+    useEffect(() => {
+        if (
+            tokenCookies.token !== undefined && didCookies.did  !== undefined &&
+                !essentialsConnector.hasWalletConnectSession()
+        ) {
+            logOut();
+        }
+    }, [essentialsConnector.hasWalletConnectSession()]);
+
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
         setAuth({ isLoggedIn: false });
         removeTokenCookie('token');
         removeDidCookie('did');
-        console.log('--------------Connector:', essentialsConnector.hasWalletConnectSession());
-        console.log(
-            '--------------walletConnector isconnecting:',
-            essentialsConnector.getWalletConnectProvider().isConnecting,
-        );
-        console.log(
-            '--------------walletConnector connected:',
-            essentialsConnector.getWalletConnectProvider().connected,
-        );
-        console.log('--------------walletConnector connected:', essentialsConnector.getWalletConnectProvider().chainId);
-        console.log('--------------walletConnector connected:', essentialsConnector.getWalletConnectProvider().rpcUrl);
-        await (await essentialsConnector.getWalletConnectProvider().getWalletConnector()).killSession();
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
     };

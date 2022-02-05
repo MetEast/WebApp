@@ -5,11 +5,9 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
 
-export interface ComponentProps {
-    txHash: string;
-}
+export interface ComponentProps {}
 
-const ArtworkIsNowForSale: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
+const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
 
     return (
@@ -24,11 +22,23 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = ({txHash}): JSX.Element =>
                 <img src="/assets/images/transactionsdlg/artwork-now-forsale.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={txHash} />
-                <PrimaryButton 
+                <ViewOnExplorerButton txHash={dialogState.sellTxHash} />
+                <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        setDialogState({ ...dialogState, createNFTDlgOpened: false})
+                        setDialogState({
+                            ...dialogState,
+                            createNFTDlgOpened: false,
+                            sellMinPrice: 0,
+                            sellSaleEnds: { label: '', value: '' },
+                            sellSaleType: 'buynow',
+                            sellTxFee: 0,
+                            sellTxHash: '',
+                            sellPrice: 0,
+                            mintTokenId: '',
+                            mintTokenUri: '',
+                            mintDidUri: '',
+                        });
                     }}
                 >
                     Close

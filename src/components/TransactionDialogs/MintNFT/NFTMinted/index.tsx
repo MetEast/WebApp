@@ -5,13 +5,9 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
 
+export interface ComponentProps {}
 
-
-export interface ComponentProps {
-    txHash: string;
-}
-
-const NFTMinted: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
+const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     
     return (
@@ -26,12 +22,25 @@ const NFTMinted: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/mintnft-nft-minted.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={txHash} />
+                <ViewOnExplorerButton txHash={dialogState.mintTxHash} />
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
-                            setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                            setDialogState({
+                                ...dialogState,
+                                mintTitle: '',
+                                mintAuthor: '',
+                                mintIntroduction: '',
+                                mintCategory: { label: '', value: '' },
+                                mintFile: new File([''], ''),
+                                mintTXFee: 0,
+                                mintTxHash: "",
+                                mintTokenId: "",
+                                mintTokenUri: "",
+                                mintDidUri: "",
+                                createNFTDlgOpened: false,
+                            });
                         }}
                     >
                         Close

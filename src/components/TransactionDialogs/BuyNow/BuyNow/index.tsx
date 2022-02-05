@@ -4,61 +4,81 @@ import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '.
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
-import { AbiItem } from 'web3-utils'
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
+import { AbiItem } from 'web3-utils';
+import { STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
-import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-
+import { useCookies } from 'react-cookie';
+import jwtDecode from 'jwt-decode';
+import { UserTokenType } from 'src/types/auth-types';
+import { getDidUri } from 'src/services/essential';
 
 export interface ComponentProps {}
 
 const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [tokenCookies] = useCookies(['token']);
+    const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
+    const { did, name } = userInfo;
 
-    const callOrderFilled = async (_seller: string, _orderId: number, _royaltyOwner: string, _quoteToken: string, _price: number, _royalty: number) => {
+    const callBuyOrder = async (_orderId: number, _didUri: string, _price: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
-      
+
         let contractAbi = STICKER_CONTRACT_ABI;
         let contractAddress = STICKER_CONTRACT_ADDRESS;
         let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-      
+
         let gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log("Gas price:", gasPrice);
-      
-        console.log("Sending transaction with account address:", accounts[0]);
+        console.log('Gas price:', gasPrice);
+
+        console.log('Sending transaction with account address:', accounts[0]);
         let transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
-            value: 0
+            value: _price,
         };
+        let txHash = '';
 
-        stickerContract.methods.OrderFilled(_seller, accounts[0], _orderId, _royaltyOwner, _quoteToken, _price, _royalty).send(transactionParams)
+        stickerContract.methods
+            .buyOrder(_orderId, _didUri)
+            .send(transactionParams)
             .on('transactionHash', (hash: any) => {
-                console.log("transactionHash", hash);
-                setDialogState({ ...dialogState, buyNowTxHash: hash });
+                console.log('transactionHash', hash);
+                txHash = hash;
             })
             .on('receipt', (receipt: any) => {
-                console.log("receipt", receipt);
-                enqueueSnackbar('Buy now succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
-            })
-            .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log("confirmation", confirmationNumber, receipt);
+                console.log('receipt', receipt);
+                enqueueSnackbar('Buy now succeed!', {
+                    variant: 'success',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                setDialogState({ ...dialogState, buyNowTxHash: txHash, buyNowDlgOpened: true, buyNowDlgStep: 1 });
             })
             .on('error', (error: any, receipt: any) => {
-                console.error("error", error);
-                enqueueSnackbar('Buy now error!', { variant: "warning", anchorOrigin: {horizontal: "right", vertical: "top"} })
+                console.error('error', error);
+                enqueueSnackbar('Buy now error!', {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
             });
-    }
+    };
 
     const handleBuyNow = async () => {
-        const _quoteToken = '0x686c626E48bfC5DC98a30a9992897766fed4Abd3'; // ELA
-        callOrderFilled(dialogState.buyNowSeller, dialogState.buyNowOrderId, dialogState.buyNowRoyaltyOwner, _quoteToken, dialogState.buyNowPrice, dialogState.buyNowRoyalty);
+        const _didUri = await getDidUri(did, '', name);
+        console.log("didUri:----------", _didUri)
+        console.log("orderId:---------", dialogState.buyNowOrderId)
+        console.log("price:---------", BigInt(dialogState.buyNowPrice).toString())
+        await callBuyOrder(
+            dialogState.buyNowOrderId,
+            _didUri,
+            BigInt(dialogState.buyNowPrice).toString()
+        );
     };
 
     return (
@@ -84,30 +104,30 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>0.1 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyNowTxFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: 0.1 ELA
+                    Available: {dialogState.buyNowTxFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton 
+                    <SecondaryButton
                         fullWidth
                         onClick={() => {
-                            setDialogState({ ...dialogState, buyNowDlgOpened: false });
+                            setDialogState({
+                                ...dialogState,
+                                buyNowDlgOpened: false,
+                                buyNowPrice: 0,
+                                buyNowName: '',
+                                buyNowOrderId: 0
+                            });
                         }}
                     >
                         close
                     </SecondaryButton>
-                    <PrimaryButton 
-                        fullWidth
-                        onClick={() => {
-                            handleBuyNow();
-                            setDialogState({ ...dialogState, buyNowDlgOpened: true, buyNowDlgStep: 1 });
-                        }}
-                    >
+                    <PrimaryButton fullWidth onClick={handleBuyNow}>
                         Confirm
                     </PrimaryButton>
                 </Stack>

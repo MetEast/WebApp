@@ -124,7 +124,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || 'No vaule';
+            product.author = itemObject.authorName || '---';
             product.type =
                 itemObject.status === 'ComingSoon'
                     ? enumBlindBoxNFTType.ComingSoon
@@ -144,7 +144,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 let endTime = getTime(itemObject.endTime); // no proper value
                 product.endTime = endTime.date + ' ' + endTime.time;
             } else {
-                product.endTime = 'No value';
+                product.endTime = '---';
             }
             _newProductList.push(product);
         }
