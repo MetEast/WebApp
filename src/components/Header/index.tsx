@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Box, Typography, Stack, IconButton } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import MenuItem from '../MenuItem';
@@ -35,6 +35,16 @@ const Header: React.FC = (): JSX.Element => {
     const [auth, setAuth] = useRecoilState(authAtom);
     const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['token']);
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(['did']);
+
+    // check if essentials has disconnected from mobile app
+    useEffect(() => {
+        if (
+            tokenCookies.token !== undefined && didCookies.did  !== undefined &&
+                !essentialsConnector.hasWalletConnectSession()
+        ) {
+            logOut();
+        }
+    }, [essentialsConnector.hasWalletConnectSession()]);
 
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
