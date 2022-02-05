@@ -61,7 +61,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 setIsOpen={isSortBySelectOpen}
                 handleClick={handleSortChange}
                 // width={260}
-                min_width={onlyShowIcon ? 'auto' : 260}
+                min_width={onlyShowIcon ? 'auto' : 240}
             />
             {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>
