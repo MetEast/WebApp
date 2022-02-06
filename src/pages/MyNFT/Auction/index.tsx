@@ -6,7 +6,7 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton, CancelSaleButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
@@ -228,7 +228,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>View Bids</PrimaryButton>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                        <CancelSaleButton sx={{ width: '100%', height: 40 }}>Cancel Sale</CancelSaleButton>
+                        <PinkButton sx={{ width: '100%', height: 40 }}>Cancel Sale</PinkButton>
                         <SecondaryButton sx={{ width: '100%', height: 40 }}>Change Price</SecondaryButton>
                     </Stack>
                 </Grid>
