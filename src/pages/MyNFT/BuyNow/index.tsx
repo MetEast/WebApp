@@ -6,7 +6,7 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton, CancelSaleButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
@@ -170,7 +170,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                        <CancelSaleButton sx={{ width: '100%' }}>Cancel Sale</CancelSaleButton>
+                        <PinkButton sx={{ width: '100%' }}>Cancel Sale</PinkButton>
                         <PrimaryButton sx={{ width: '100%' }}>Change Price</PrimaryButton>
                     </Stack>
                 </Grid>
