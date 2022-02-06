@@ -29,6 +29,9 @@ import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
@@ -169,8 +172,16 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         getLatestTransaction();
     };
 
+    const setBuyNowTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, buyNowTxFee: parseFloat(gasPrice) * 5000000 / 1e18 });
+    };
+
     useEffect(() => {
         getFetchData();
+        setBuyNowTxFee();
     }, []);
 
     const updateProductLikes = (type: string) => {
@@ -246,8 +257,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                     buyNowDlgStep: 0,
                                     buyNowPrice: productDetail.price_ela,
                                     buyNowName: productDetail.name,
-                                    buyNowOrderId: productDetail.orderId || 0,
-                                    buyNowTxFee: 1
+                                    buyNowOrderId: productDetail.orderId || 0
                                 });
                             } else {
                                 navigate('/login');
