@@ -41,13 +41,14 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             gas: 5000000,
             value: _value, // correct?
         };
+        let txHash = '';
 
         stickerContract.methods
             .BidForOrder(_orderId, _value, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
-                setDialogState({ ...dialogState, placeBidTxHash: hash });
+                txHash = hash;
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -55,9 +56,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-            })
-            .on('confirmation', (confirmationNumber: any, receipt: any) => {
-                console.log('confirmation', confirmationNumber, receipt);
+                setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 2, placeBidTxHash: txHash });
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
@@ -121,18 +120,19 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <SecondaryButton
                         fullWidth
                         onClick={() => {
-                            setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 0 });
+                            setDialogState({
+                                ...dialogState,
+                                placeBidDlgOpened: true,
+                                placeBidDlgStep: 0,
+                                placeBidAmount: 0,
+                                placeBidExpire: { label: '', value: '' },
+                                placeBidTxHash: '',
+                            });
                         }}
                     >
                         Back
                     </SecondaryButton>
-                    <PrimaryButton
-                        fullWidth
-                        onClick={() => {
-                            handlePlaceBid();
-                            setDialogState({ ...dialogState, placeBidDlgOpened: true, placeBidDlgStep: 2 });
-                        }}
-                    >
+                    <PrimaryButton fullWidth onClick={handlePlaceBid}>
                         Confirm
                     </PrimaryButton>
                 </Stack>

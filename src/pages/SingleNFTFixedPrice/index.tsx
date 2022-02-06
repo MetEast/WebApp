@@ -172,6 +172,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         getLatestTransaction();
     };
 
+    useEffect(() => {
+        getFetchData();
+    }, []);
+
     const setBuyNowTxFee = async () => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
@@ -180,9 +184,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     };
 
     useEffect(() => {
-        getFetchData();
         setBuyNowTxFee();
-    }, []);
+    }, [dialogState.buyNowDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -266,7 +269,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     >
                         buy now
                     </PrimaryButton>
-                    {/* <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton> */}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>

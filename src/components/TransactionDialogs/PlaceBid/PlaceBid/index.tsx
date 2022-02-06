@@ -79,6 +79,9 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                             placeBidExpire: { label: '', value: '' },
                             placeBidTxFee: 0,
                             placeBidDlgOpened: false,
+                            placeBidName: '',
+                            placeBidTxHash: '',
+                            placeBidOrderId: 0
                         });
                     }}
                 >
@@ -93,8 +96,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                                 placeBidDlgOpened: true,
                                 placeBidDlgStep: 1,
                                 placeBidAmount: bidAmount,
-                                placeBidExpire: expiration,
-                                placeBidTxFee: 0.01,
+                                placeBidExpire: expiration
                             });
                         else
                             enqueueSnackbar('Form validation failed!', {

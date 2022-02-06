@@ -96,6 +96,8 @@ const defaultState: State = {
     allTxDlgOpened: false,
     // all bids
     allBidDlgOpened: false,
+    // buy blind box
+    
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

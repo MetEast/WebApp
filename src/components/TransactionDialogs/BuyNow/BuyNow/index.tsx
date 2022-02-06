@@ -15,7 +15,7 @@ import jwtDecode from 'jwt-decode';
 import { UserTokenType } from 'src/types/auth-types';
 import { getDidUri } from 'src/services/essential';
 
-export interface ComponentProps {}
+export interface ComponentProps {};
 
 const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
