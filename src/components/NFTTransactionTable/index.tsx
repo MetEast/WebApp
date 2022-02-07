@@ -75,7 +75,7 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                             order={{ xs: 2, sm: 3 }}
                             textAlign={{ xs: 'right', sm: 'left' }}
                         >
-                            <ELAPrice price_ela={item.price} alignRight={priceAlign} />
+                            <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight={priceAlign} />
                         </Grid>
                         <Grid item xs={6} sm={transactionsTblColumns[3].width} order={{ xs: 1, sm: 4 }}>
                             <Typography fontSize={12} fontWeight={500}>
