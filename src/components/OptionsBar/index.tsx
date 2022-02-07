@@ -64,13 +64,13 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 min_width={onlyShowIcon ? 'auto' : 240}
                 listitemsbox_width={240}
             />
-            {/* {!filterBtnHidden && (
+            {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>
                     <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: 4 }} />
                     {displayFilterLable && `Filter`}
                 </FilterButton>
             )}
-            <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
+            {/* <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
                 <Button
                     onClick={() => setProductViewMode('grid2')}
                     sx={{

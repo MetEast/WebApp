@@ -3,7 +3,7 @@ import { BaseButton } from 'src/components/Buttons/styles';
 
 export const FilterButton = styled(Button)`
     background: #e8f4ff;
-    padding: 15px 20px;
+    padding: 0 20px;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 700;
