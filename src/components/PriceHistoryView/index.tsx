@@ -113,7 +113,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         setPriceHistoryUnit(item);
     };
 
-    // get product details from server
     const params = useParams(); // params.id
     var _latestPriceList: any = [];
 
@@ -146,7 +145,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 </Typography>
                 <Select
                     titlebox={
-                        <SelectBtn fullWidth isOpen={priceHistoryUnitSelectOpen ? 1 : 0}>
+                        <SelectBtn fullWidth isopen={priceHistoryUnitSelectOpen ? 1 : 0}>
                             {priceHistoryUnit ? priceHistoryUnit.label : 'Select'}
                             <Icon icon="ph:caret-down" className="arrow-icon" />
                         </SelectBtn>
