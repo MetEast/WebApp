@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import SearchField from '../SearchField';
 import { TypeSelectItem } from 'src/types/select-types';
-import { FilterButton, SortByBtn } from './styles';
+import { FilterButton, SortByBtn, GridButton } from './styles';
 import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
 import { SpacingProps } from '@mui/system';
 import { Icon } from '@iconify/react';
@@ -42,7 +42,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
 
     return (
-        <Stack direction="row" spacing={{ xs: 1, sm: 2 }} {...otherProps}>
+        <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ height: 40 }} {...otherProps}>
             <SearchField handleChange={handleKeyWordChange} />
             <Select
                 titlebox={
@@ -64,7 +64,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 min_width={onlyShowIcon ? 'auto' : 240}
                 listitemsbox_width={240}
             />
-            {!filterBtnHidden && (
+            {/* {!filterBtnHidden && (
                 <FilterButton onClick={handleClickFilterButton}>
                     <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: 4 }} />
                     {displayFilterLable && `Filter`}
@@ -92,7 +92,8 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 >
                     <Grid24Filled />
                 </Button>
-            </Box>
+                <GridButton size='small'></GridButton>
+            </Box> */}
         </Stack>
     );
 };

@@ -1,4 +1,5 @@
 import { styled, Button } from '@mui/material';
+import { BaseButton } from 'src/components/Buttons/styles';
 
 export const FilterButton = styled(Button)`
     background: #e8f4ff;
@@ -40,3 +41,4 @@ export const SortByBtn = styled(Button)<{ isopen: number }>`
     }
 `;
 
+export const GridButton = styled(BaseButton)``;

@@ -6,12 +6,8 @@ interface SearchFieldProps {
     handleChange: (value: string) => void;
 }
 
-const SearchField: React.FC<SearchFieldProps> = ({
-    handleChange
-}): JSX.Element => {
-    
-    const [keyWord, setKeyWord] = useState("");
-
+const SearchField: React.FC<SearchFieldProps> = ({ handleChange }): JSX.Element => {
+    const [keyWord, setKeyWord] = useState('');
 
     const handleChangeKeyWord = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -19,21 +15,22 @@ const SearchField: React.FC<SearchFieldProps> = ({
     };
 
     const handleEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.which === 13) { // press enter
+        if (event.which === 13) {
+            // press enter
             handleChange(keyWord);
         }
-    }
-    
+    };
+
     return (
         <SearchFieldWrapper>
             <Icon icon="ph:magnifying-glass" fontSize={24} color="black" />
-            <SearchTextField 
-                fullWidth 
+            <SearchTextField
+                fullWidth
                 value={keyWord}
                 onChange={handleChangeKeyWord}
                 onKeyPress={handleEnterKey}
-                placeholder="Search..." 
-                sx={{minWidth: 0,}}
+                placeholder="Search..."
+                sx={{ minWidth: 0 }}
             />
         </SearchFieldWrapper>
     );
