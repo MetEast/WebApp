@@ -57,7 +57,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                     </SortByBtn>
                 }
                 options={sortOptions}
-                isOpen={sortBySelectOpen}
+                isOpen={sortBySelectOpen ? 1 : 0}
                 setIsOpen={isSortBySelectOpen}
                 handleClick={handleSortChange}
                 // width={260}

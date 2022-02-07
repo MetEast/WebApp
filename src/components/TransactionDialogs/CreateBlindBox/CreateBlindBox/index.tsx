@@ -177,13 +177,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={blindboxItemSelectOpen}>
+                                    <SelectBtn fullWidth isOpen={blindboxItemSelectOpen ? 1 : 0}>
                                         {blindboxItem ? blindboxItem.label : 'Add  NFT to blind box'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
                                 options={blindboxItemsOptions}
-                                isOpen={blindboxItemSelectOpen}
+                                isOpen={blindboxItemSelectOpen ? 1 : 0}
                                 setIsOpen={setBlindboxItemSelectOpen}
                                 handleClick={handleBlindboxItemChange}
                             />
@@ -231,13 +231,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={saleBeginsSelectOpen}>
+                                    <SelectBtn fullWidth isOpen={saleBeginsSelectOpen ? 1 : 0}>
                                         {saleBegins ? saleBegins.label : 'Pick Date'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
                                 options={saleBeginsOptions}
-                                isOpen={saleBeginsSelectOpen}
+                                isOpen={saleBeginsSelectOpen ? 1 : 0}
                                 setIsOpen={setSaleBeginsSelectOpen}
                                 handleClick={handleSaleBeginsChange}
                             />
@@ -248,13 +248,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={saleEndsSelectOpen}>
+                                    <SelectBtn fullWidth isOpen={saleEndsSelectOpen ? 1 : 0}>
                                         {saleEnds ? saleEnds.label : 'Pick Date'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
                                 options={saleEndsOptions}
-                                isOpen={saleEndsSelectOpen}
+                                isOpen={saleEndsSelectOpen ? 1 : 0}
                                 setIsOpen={setSaleEndsSelectOpen}
                                 handleClick={handleSaleEndsChange}
                             />
@@ -278,7 +278,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 titlebox={
                                     <SelectBtn
                                         fullWidth
-                                        isOpen={sortSelectOpen}
+                                        isOpen={sortSelectOpen ? 1 : 0}
                                         sx={{ justifyContent: 'space-between' }}
                                     >
                                         <Icon icon="ph:sort-ascending" fontSize={20} />
@@ -287,7 +287,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     </SelectBtn>
                                 }
                                 options={sortOptions}
-                                isOpen={sortSelectOpen}
+                                isOpen={sortSelectOpen ? 1 : 0}
                                 setIsOpen={setSortSelectOpen}
                                 handleClick={handleSortChange}
                             />

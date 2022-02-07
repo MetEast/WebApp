@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { AdminTableColumn, AdminBidsItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import CustomTextField from 'src/components/TextField';

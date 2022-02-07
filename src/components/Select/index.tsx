@@ -6,7 +6,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 interface ComponentProps {
     titlebox: React.ReactNode;
     options: Array<TypeSelectItem>;
-    isOpen: boolean;
+    isOpen: number;
     width?: number;
     min_width?: number | string;
     listitemsbox_width?: number | string;

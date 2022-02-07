@@ -57,13 +57,13 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                     </Typography>
                     <Select
                         titlebox={
-                            <SelectBtn fullWidth isOpen={expirationSelectOpen}>
+                            <SelectBtn fullWidth isOpen={expirationSelectOpen ? 1 : 0}>
                                 {expiration ? expiration.label : 'Select'}
                                 <Icon icon="ph:caret-down" className="arrow-icon" />
                             </SelectBtn>
                         }
                         options={expirationOptions}
-                        isOpen={expirationSelectOpen}
+                        isOpen={expirationSelectOpen ? 1 : 0}
                         handleClick={handleCategoryChange}
                         setIsOpen={setExpirationSelectOpen}
                     />

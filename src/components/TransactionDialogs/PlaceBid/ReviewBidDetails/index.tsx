@@ -7,10 +7,8 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { AbiItem } from 'web3-utils';
 import {
-    METEAST_CONTRACT_ABI,
-    METEAST_CONTRACT_ADDRESS,
     STICKER_CONTRACT_ABI,
-    STICKER_CONTRACT_ADDRESS,
+    STICKER_CONTRACT_ADDRESS
 } from 'src/components/ContractMethod/config';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';

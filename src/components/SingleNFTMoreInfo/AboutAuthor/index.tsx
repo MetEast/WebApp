@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Typography, Grid, Snackbar, Alert } from '@mui/material';
+import { Stack, Typography, Grid } from '@mui/material';
 import { reduceHexAddress } from 'src/services/common';
 import { Icon } from '@iconify/react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';

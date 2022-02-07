@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
-import { Box, Typography, Grid } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
@@ -22,7 +21,6 @@ export interface BlindBoxGalleryItemProps {
 
 const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({
     product,
-    onlyShowImage = false,
     index,
     updateLikes,
 }): JSX.Element => {

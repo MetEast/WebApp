@@ -1,4 +1,4 @@
-import { styled, Button, IconButton } from '@mui/material';
+import { styled, IconButton } from '@mui/material';
 
 export const IconBtn = styled(IconButton)`
     height: 40px;

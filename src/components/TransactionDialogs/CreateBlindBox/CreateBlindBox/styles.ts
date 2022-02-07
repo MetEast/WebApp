@@ -15,7 +15,7 @@ export const useStyles = makeStyles((theme: any) => ({
     },
 }));
 
-export const SelectBtn = styled(Button)<{ isOpen: boolean }>`
+export const SelectBtn = styled(Button)<{ isOpen: number }>`
     height: 40px;
     display: flex;
     flex-direction: row;

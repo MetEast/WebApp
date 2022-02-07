@@ -1,6 +1,6 @@
 import { styled, Button } from '@mui/material';
 
-export const SelectTitleBtn = styled(Button)<{ isOpen: boolean }>`
+export const SelectTitleBtn = styled(Button)<{ isOpen: number }>`
     height: 40px;
     display: flex;
     flex-direction: row;

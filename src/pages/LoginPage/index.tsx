@@ -27,13 +27,6 @@ const LoginPage: React.FC = (): JSX.Element => {
       navigate('/profile');
     }
 
-    // disconnect if it is already connected
-    const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
-    if(isLinkedToEssentials) {
-        console.log('----------------------------disconnect');
-        essentialsConnector.disconnectWalletConnect();
-    }
-
     useConnectivitySDK();
 
     const handleWalletConnection = async () => {
@@ -80,7 +73,6 @@ const LoginPage: React.FC = (): JSX.Element => {
                   console.log("Sign in: setting user to:", user);
                   setShowModal(false)
                   setAuth({isLoggedIn: true});
-                  setIsLinkedToEssentials(true);
                   navigate('/profile');
                   enqueueSnackbar('Login succeed.', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
                 } else {
