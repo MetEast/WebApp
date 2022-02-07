@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import SearchField from '../SearchField';
 import { TypeSelectItem } from 'src/types/select-types';
 import { FilterButton, SortByBtn, GridButton } from './styles';
-import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
 import { SpacingProps } from '@mui/system';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
@@ -71,27 +70,6 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 </FilterButton>
             )}
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
-                {/* <Button
-                    onClick={() => setProductViewMode('grid2')}
-                    sx={{
-                        // minWidth: 0,
-                        borderRadius: 3,
-                        color: productViewMode === 'grid2' ? 'white' : '#1890FF',
-                        backgroundColor: productViewMode === 'grid2' ? '#1890FF !important' : '#E8F4FF',
-                    }}
-                >
-                    <GridDots24Filled />
-                </Button>
-                <Button
-                    onClick={() => setProductViewMode('grid1')}
-                    sx={{
-                        borderRadius: 3,
-                        color: productViewMode === 'grid1' ? 'white' : '#1890FF',
-                        backgroundColor: productViewMode === 'grid1' ? '#1890FF !important' : '#E8F4FF',
-                    }}
-                >
-                    <Grid24Filled />
-                </Button> */}
                 <GridButton
                     size="small"
                     selected={productViewMode === 'grid2'}
