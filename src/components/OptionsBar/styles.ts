@@ -41,4 +41,8 @@ export const SortByBtn = styled(Button)<{ isopen: number }>`
     }
 `;
 
-export const GridButton = styled(BaseButton)``;
+export const GridButton = styled(BaseButton)<{ selected: boolean }>`
+    min-width: 40px;
+    color: ${({ selected }) => (selected ? 'white' : '#1890FF')};
+    background: ${({ selected }) => (selected ? '#1890FF' : '#E8F4FF')};
+`;

@@ -70,8 +70,8 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                     {displayFilterLable && `Filter`}
                 </FilterButton>
             )}
-            {/* <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
-                <Button
+            <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
+                {/* <Button
                     onClick={() => setProductViewMode('grid2')}
                     sx={{
                         // minWidth: 0,
@@ -91,9 +91,22 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                     }}
                 >
                     <Grid24Filled />
-                </Button>
-                <GridButton size='small'></GridButton>
-            </Box> */}
+                </Button> */}
+                <GridButton
+                    size="small"
+                    selected={productViewMode === 'grid2'}
+                    onClick={() => setProductViewMode('grid2')}
+                >
+                    <Icon icon="ph:dots-nine" fontSize={20} />
+                </GridButton>
+                <GridButton
+                    size="small"
+                    selected={productViewMode === 'grid1'}
+                    onClick={() => setProductViewMode('grid1')}
+                >
+                    <Icon icon="ph:squares-four" fontSize={20} />
+                </GridButton>
+            </Box>
         </Stack>
     );
 };
