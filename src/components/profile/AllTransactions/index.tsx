@@ -225,7 +225,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 ) : (
                     <>
                         <Stack direction="column" alignItems="center">
-                            <Grid xs={12}>
+                            <Grid xs={12} sx={{ width: "-webkit-fill-available" }} >
                                 <Typography fontSize={16} fontWeight={700} marginTop={3}>
                                     All Bids
                                 </Typography>
