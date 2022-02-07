@@ -158,7 +158,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>All Transactions</DialogTitleTypo>
                 <Select
                     titlebox={
-                        <SelectTitleBtn fullWidth isOpen={sortBySelectOpen ? 1 : 0}>
+                        <SelectTitleBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
                             <Icon icon="ph:sort-ascending" fontSize={20} />
                             {sortby ? sortby.label : 'Sort by'}
                             <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
@@ -225,16 +225,16 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 ) : (
                     <>
                         <Stack direction="column" alignItems="center">
-                            <Grid xs={12} sx={{ width: "-webkit-fill-available" }} >
+                            <Grid item xs={12} sx={{ width: "-webkit-fill-available" }} >
                                 <Typography fontSize={16} fontWeight={700} marginTop={3}>
                                     All Bids
                                 </Typography>
                             </Grid>
-                            <Grid container alignItems="center" xs={12} rowSpacing={2} marginTop={0}>
+                            <Grid item container alignItems="center" xs={12} rowSpacing={2} marginTop={0}>
                                 {bidsTblColumns.map((item, index) => (
                                     <Grid
                                         item
-                                        key={index}
+                                        key={`bid-row-${index}`}
                                         xs={item.width}
                                         fontSize={14}
                                         fontWeight={700}
@@ -253,7 +253,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                     </Stack>
                                 ) : (
                                     bidsList.map((item, index) => (
-                                        <Grid container item key={index}>
+                                        <Grid container item key={`bid-row-${index}`}>
                                             <Grid
                                                 item
                                                 xs={12}
@@ -315,8 +315,8 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     </Grid>
                     <Grid container marginTop={2.5} rowGap={3} alignItems="center">
                         {transactionsList.map((item, index) => (
-                            <>
-                                <Grid item xs={4} key={`transaction-row-${index}`}>
+                            <Grid item container key={`transaction-row-${index}`}>
+                                <Grid item xs={4}>
                                     <Typography fontSize={16} fontWeight={700}>
                                         {item.user}
                                     </Typography>
@@ -329,7 +329,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                 <Grid item xs={4}>
                                     <ELAPrice price_ela={item.price} alignRight={true} />
                                 </Grid>
-                            </>
+                            </Grid>
                         ))}
                     </Grid>
                 </Box>

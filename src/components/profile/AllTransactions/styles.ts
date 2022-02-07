@@ -1,6 +1,6 @@
 import { styled, Button } from '@mui/material';
 
-export const SelectTitleBtn = styled(Button)<{ isOpen: number }>`
+export const SelectTitleBtn = styled(Button)<{ isopen: number }>`
     height: 40px;
     display: flex;
     flex-direction: row;
@@ -14,7 +14,7 @@ export const SelectTitleBtn = styled(Button)<{ isOpen: number }>`
     /* z-index: 20; */
     .arrow-icon {
         margin-left: 4px;
-        transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
+        transform: ${({ isopen }) => (isopen ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
     }
 `;
