@@ -96,7 +96,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>All Bids</DialogTitleTypo>
                 <Select
                     titlebox={
-                        <SelectTitleBtn fullWidth isOpen={sortBySelectOpen ? 1 : 0}>
+                        <SelectTitleBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
                             <Icon icon="ph:sort-ascending" fontSize={20} />
                             {sortby ? sortby.label : 'Sort by'}
                             <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />

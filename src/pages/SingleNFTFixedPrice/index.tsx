@@ -31,7 +31,7 @@ import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSu
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
-import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
@@ -180,7 +180,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, buyNowTxFee: parseFloat(gasPrice) * 5000000 / 1e18 });
+        setDialogState({ ...dialogState, buyNowTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
 
     useEffect(() => {
@@ -253,18 +253,16 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if (auth.isLoggedIn) {
+                            if (auth.isLoggedIn)
                                 setDialogState({
                                     ...dialogState,
                                     buyNowDlgOpened: true,
                                     buyNowDlgStep: 0,
                                     buyNowPrice: productDetail.price_ela,
                                     buyNowName: productDetail.name,
-                                    buyNowOrderId: productDetail.orderId || 0
+                                    buyNowOrderId: productDetail.orderId || 0,
                                 });
-                            } else {
-                                navigate('/login');
-                            }
+                            else navigate('/login');
                         }}
                     >
                         buy now
