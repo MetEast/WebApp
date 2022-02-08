@@ -19,6 +19,7 @@ import {
 } from 'src/types/product-types';
 import { getTime, reduceHexAddress } from 'src/services/common';
 import { useDialogContext } from 'src/context/DialogContext';
+import { singleNFTBids } from 'src/constants/dummyData';
 
 export interface ComponentProps {}
 
@@ -42,6 +43,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
     ];
 
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    // const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [sortby, setSortby] = useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
@@ -203,7 +205,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={4}>
-                                        <ELAPrice price_ela={item.price} />
+                                        <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                                     </Grid>
                                 </>
                             ))}
