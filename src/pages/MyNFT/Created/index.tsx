@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
@@ -11,49 +11,58 @@ import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescript
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
-import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
+import {
+    enumBadgeType,
+    enumSingleNFTType,
+    TypeProduct,
+    TypeProductFetch,
+    TypeFavouritesFetch,
+} from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(["did"]);
-    const defaultValue: TypeProduct = { 
-        tokenId: "", 
-        name: "", 
-        image: "",
-        price_ela: 0, 
-        price_usd: 0, 
+    const [didCookies] = useCookies(['did']);
+    const defaultValue: TypeProduct = {
+        tokenId: '',
+        name: '',
+        image: '',
+        price_ela: 0,
+        price_usd: 0,
         likes: 0,
         views: 0,
-        author: "",
-        authorDescription: "",
-        authorImg: "",
-        authorAddress: "",
-        description: "",
-        tokenIdHex: "",
+        author: '',
+        authorDescription: '',
+        authorImg: '',
+        authorAddress: '',
+        description: '',
+        tokenIdHex: '',
         royalties: 0,
-        createTime: "",
-        holderName: "",
-        holder: "",
+        createTime: '',
+        holderName: '',
+        holder: '',
         type: enumSingleNFTType.BuyNow,
-        isLike: false
+        isLike: false,
     };
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }
-        });
+        const resProductDetail = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
         const dataProductDetail = await resProductDetail.json();
         const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = {...defaultValue};        
+        var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {
             // get individual data
@@ -66,21 +75,26 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
-            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            product.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "---";
-            product.authorDescription = itemObject.authorDescription || "---";
+            product.author = itemObject.authorName || '---';
+            product.authorDescription = itemObject.authorDescription || '---';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "---"; // -- no proper value 
+            product.holderName = '---'; // -- no proper value
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + "" + createTime.time;
+            product.createTime = createTime.date + '' + createTime.time;
         }
-        setProductDetail(product);    
-    }
+        setProductDetail(product);
+    };
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
@@ -93,11 +107,10 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     }, []);
 
     const updateProductLikes = (type: string) => {
-        let prodDetail : TypeProduct = {...productDetail};
-        if(type === 'inc') {
+        let prodDetail: TypeProduct = { ...productDetail };
+        if (type === 'inc') {
             prodDetail.likes += 1;
-        }
-        else if(type === 'dec') {
+        } else if (type === 'dec') {
             prodDetail.likes -= 1;
         }
         setProductDetail(prodDetail);
@@ -126,14 +139,25 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>
                     <Stack spacing={3}>
-                        <AboutAuthor name={productDetail.author} description={productDetail.authorDescription} img={productDetail.authorImg} address={productDetail.authorAddress} />
+                        <AboutAuthor
+                            name={productDetail.author}
+                            description={productDetail.authorDescription}
+                            img={productDetail.authorImg}
+                            address={productDetail.authorAddress}
+                        />
                         <ProductTransHistory sold={false} bought={false} />
                     </Stack>
                 </Grid>
                 <Grid item xs={6}>
                     <Stack spacing={3}>
                         <ProjectDescription description={productDetail.description} />
-                        <ChainDetails tokenId={productDetail.tokenIdHex} ownerName={productDetail.holderName} ownerAddress={productDetail.holder} royalties={productDetail.royalties} createTime={productDetail.createTime} />
+                        <ChainDetails
+                            tokenId={productDetail.tokenIdHex}
+                            ownerName={productDetail.holderName}
+                            ownerAddress={productDetail.holder}
+                            royalties={productDetail.royalties}
+                            createTime={productDetail.createTime}
+                        />
                     </Stack>
                 </Grid>
             </Grid>

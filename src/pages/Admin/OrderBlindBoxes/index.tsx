@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { AdminOrdersBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import ELAPrice from 'src/components/ELAPrice';

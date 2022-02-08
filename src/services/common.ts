@@ -60,7 +60,7 @@ export const selectFromFavourites = (value: TypeFavouritesFetch, tokenId: string
     return value.tokenId === tokenId;
 };
 
-export default function emptyCache() {
+export const emptyCache = () => {
     if ('caches' in window) {
         caches.keys().then((names) => {
             // Delete all the cache files

@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import { ShowMenuBtn, MenuBox, ContentBox } from './styles';
 import { Icon } from '@iconify/react';
@@ -7,7 +7,6 @@ import MenuBar from 'src/components/Admin/MenuBar';
 export interface ComponentProps {}
 
 const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Element => {
-    const [showMenuBar, setShowMenuBar] = useState(false);
 
     return (
         <Box position="relative">

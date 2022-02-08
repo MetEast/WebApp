@@ -39,8 +39,9 @@ const Header: React.FC = (): JSX.Element => {
     // check if essentials has disconnected from mobile app
     useEffect(() => {
         if (
-            tokenCookies.token !== undefined && didCookies.did  !== undefined &&
-                !essentialsConnector.hasWalletConnectSession()
+            tokenCookies.token !== undefined &&
+            didCookies.did !== undefined &&
+            !essentialsConnector.hasWalletConnectSession()
         ) {
             logOut();
         }

@@ -1,6 +1,5 @@
 import { EssentialsConnector } from '@elastosfoundation/essentials-connector-client-browser';
 import { connectivity } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import { useConnectivityContext } from 'src/context/ConnectivityContext';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { IConnector } from '@elastosfoundation/elastos-connectivity-sdk-js/typings/interfaces/connectors';
 
@@ -9,8 +8,6 @@ export const essentialsConnector = new EssentialsConnector();
 let connectivityInitialized = false;
 
 export const useConnectivitySDK = async () => {
-    const [isLinkedToEssentials, setIsLinkedToEssentials] = useConnectivityContext();
-
     if (connectivityInitialized) {
         console.log('EssentialsConnector has already initialized.');
         return;
@@ -34,7 +31,6 @@ export const useConnectivitySDK = async () => {
 
         const hasLink = isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession();
         console.log('Has link to essentials?', hasLink);
-        setIsLinkedToEssentials(hasLink);
 
         /////////////////////
         console.log('Connected?', walletConnectProvider.connected);

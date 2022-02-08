@@ -35,6 +35,9 @@ import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewB
 import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/profile/AllBids';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
@@ -93,7 +96,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {
-            // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
@@ -213,7 +215,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             _myLatestBidsList.push(_bid);
         }
         setMyBidsList(_myLatestBidsList);
-        
     };
 
     const getFetchData = async () => {
@@ -227,7 +228,19 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         getFetchData();
+        setPlaceBidTxFee();
     }, []);
+
+    const setPlaceBidTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, placeBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setPlaceBidTxFee();
+    }, [dialogState.placeBidDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -304,16 +317,15 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if(auth.isLoggedIn)
-                            setDialogState({
-                                ...dialogState,
-                                placeBidDlgOpened: true,
-                                placeBidDlgStep: 0,
-                                placeBidName: productDetail.name,
-                                placeBidOrderId: productDetail.orderId || 0,
-                            });
-                            else
-                            navigate('/login');
+                            if (auth.isLoggedIn)
+                                setDialogState({
+                                    ...dialogState,
+                                    placeBidDlgOpened: true,
+                                    placeBidDlgStep: 0,
+                                    placeBidName: productDetail.name,
+                                    placeBidOrderId: productDetail.orderId || 0,
+                                });
+                            else navigate('/login');
                         }}
                     >
                         Place Bid
