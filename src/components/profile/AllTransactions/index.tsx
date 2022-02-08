@@ -19,6 +19,7 @@ import {
 } from 'src/types/product-types';
 import { getTime, reduceHexAddress } from 'src/services/common';
 import { useDialogContext } from 'src/context/DialogContext';
+import { singleNFTBids } from 'src/constants/dummyData';
 
 export interface ComponentProps {}
 
@@ -50,8 +51,13 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     ];
 
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    // const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
+
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
+
     const [sortby, setSortby] = React.useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
     const handleSortbyChange = (value: string) => {
@@ -174,12 +180,10 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack spacing={3}>
                 {auth.isLoggedIn ? (
                     <>
-                        <Grid container direction="column" alignItems="center">
-                            <Grid item alignItems="center">
-                                <Typography fontSize={16} fontWeight={700} marginTop={3}>
-                                    Your Bids
-                                </Typography>
-                            </Grid>
+                        <Typography fontSize={16} fontWeight={700} textAlign="center" marginTop={3}>
+                            Your Bids
+                        </Typography>
+                        <Grid container alignItems="center">
                             {myBidsList.length === 0 ? (
                                 <Grid item alignItems="center">
                                     <Typography fontSize={14} fontWeight={400}>
@@ -187,14 +191,22 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                     </Typography>
                                 </Grid>
                             ) : (
-                                myBidsList.forEach((item) => {
+                                myBidsList.map((item) => {
                                     return (
-                                        <Grid item direction="row" alignItems="center" justifyContent="space-between">
-                                            <Typography fontSize={14} fontWeight={400}>
-                                                {item.time}
-                                            </Typography>
-                                            <ELAPrice price_ela={item.price} alignRight={true} />
-                                        </Grid>
+                                        <>
+                                            <Grid item xs={6}>
+                                                <Typography fontSize={14} fontWeight={400}>
+                                                    {item.time}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <ELAPrice
+                                                    price_ela={item.price}
+                                                    price_ela_fontsize={14}
+                                                    alignRight={true}
+                                                />
+                                            </Grid>
+                                        </>
                                     );
                                 })
                             )}
@@ -246,7 +258,12 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                     </Grid>
                                 ))}
                                 {bidsList.length === 0 ? (
-                                    <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={3}>
+                                    <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        marginTop={3}
+                                    >
                                         <Typography fontSize={14} fontWeight={400}>
                                             No bids
                                         </Typography>
@@ -280,7 +297,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                                 sm={bidsTblColumns[2].width}
                                                 order={{ xs: 2, sm: 3, md: 3, lg: 3 }}
                                             >
-                                                <ELAPrice price_ela={item.price} alignRight />
+                                                <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
                                             </Grid>
                                         </Grid>
                                     ))
