@@ -35,7 +35,7 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ sold = true, bought = t
                             </Typography>
                         </Box>
                         <Stack alignItems="flex-end">
-                            <ELAPrice price_ela={199} />
+                            <ELAPrice price_ela={199} price_ela_fontsize={14} />
                             <ProductBadge badgeType={enumBadgeType.BuyNow} />
                         </Stack>
                     </Stack>
@@ -59,7 +59,7 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ sold = true, bought = t
                             </Typography>
                         </Box>
                         <Stack alignItems="flex-end">
-                            <ELAPrice price_ela={199} />
+                            <ELAPrice price_ela={199} price_ela_fontsize={14} />
                             <ProductBadge badgeType={enumBadgeType.BuyNow} />
                         </Stack>
                     </Stack>
