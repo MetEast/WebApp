@@ -226,13 +226,13 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     </Typography>
                     <Select
                         titlebox={
-                            <SelectBtn fullWidth isOpen={nftStateSelectOpen}>
+                            <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
                                 {nftState ? nftState.label : 'Select'}
                                 <Icon icon="ph:caret-down" className="arrow-icon" />
                             </SelectBtn>
                         }
                         options={nftStateOptions}
-                        isOpen={nftStateSelectOpen}
+                        isOpen={nftStateSelectOpen ? 1 : 0}
                         handleClick={handleNFTStateChange}
                         setIsOpen={setNftStateSelectOpen}
                         width={140}
@@ -244,13 +244,13 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     </Typography>
                     <Select
                         titlebox={
-                            <SelectBtn fullWidth isOpen={saleTypeSelectOpen}>
+                            <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
                                 {saleType ? saleType.label : 'Select'}
                                 <Icon icon="ph:caret-down" className="arrow-icon" />
                             </SelectBtn>
                         }
                         options={saleTypeOptions}
-                        isOpen={saleTypeSelectOpen}
+                        isOpen={saleTypeSelectOpen ? 1 : 0}
                         handleClick={handleSaleTypeChange}
                         setIsOpen={setSaleTypeSelectOpen}
                         width={140}

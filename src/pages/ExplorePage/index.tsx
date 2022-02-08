@@ -14,11 +14,8 @@ import authAtom from 'src/recoil/auth';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
-import { useNavigate } from 'react-router-dom';
 
 const ExplorePage: React.FC = (): JSX.Element => {
-    const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(['did']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');

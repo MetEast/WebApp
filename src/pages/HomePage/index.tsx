@@ -12,7 +12,6 @@ import authAtom from 'src/recoil/auth';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { EmptyTitleGalleryItem, EmptyBodyGalleryItem } from './styles';
 import { useNavigate } from 'react-router-dom';
 
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
@@ -99,7 +98,8 @@ const HomePage: React.FC = (): JSX.Element => {
         );
 
         const dataPopularCollection = await resPopularCollection.json();
-        const arrPopularCollection = dataPopularCollection.data.result;
+        const arrPopularCollection =
+            dataPopularCollection.data.result === undefined ? [] : dataPopularCollection.data.result;
 
         let _popularCollectionList: any = [];
         for (let i = 0; i < arrPopularCollection.length; i++) {

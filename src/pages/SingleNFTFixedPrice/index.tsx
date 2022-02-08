@@ -29,6 +29,9 @@ import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams(); // params.tokenId
@@ -173,6 +176,17 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         getFetchData();
     }, []);
 
+    const setBuyNowTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, buyNowTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setBuyNowTxFee();
+    }, [dialogState.buyNowDlgStep]);
+
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
         if (type === 'inc') {
@@ -239,7 +253,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if (auth.isLoggedIn) {
+                            if (auth.isLoggedIn)
                                 setDialogState({
                                     ...dialogState,
                                     buyNowDlgOpened: true,
@@ -247,16 +261,12 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                     buyNowPrice: productDetail.price_ela,
                                     buyNowName: productDetail.name,
                                     buyNowOrderId: productDetail.orderId || 0,
-                                    buyNowTxFee: 1
                                 });
-                            } else {
-                                navigate('/login');
-                            }
+                            else navigate('/login');
                         }}
                     >
                         buy now
                     </PrimaryButton>
-                    {/* <ConnectWalletButton toAddress={productDetail.holder} value={productDetail.price_ela.toString()} sx={{ marginTop: 3, width: '100%' }}>buy now</ConnectWalletButton> */}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>

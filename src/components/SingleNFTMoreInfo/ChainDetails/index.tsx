@@ -14,10 +14,19 @@ interface ComponentProps {
     royalties: number;
 }
 
-const ChainDetails: React.FC<ComponentProps> = ({tokenId, ownerName, ownerAddress, royalties, createTime}): JSX.Element => {
+const ChainDetails: React.FC<ComponentProps> = ({
+    tokenId,
+    ownerName,
+    ownerAddress,
+    royalties,
+    createTime,
+}): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const showSnackBar = () => {
-        enqueueSnackbar('Copied to Clipboard!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} });
+        enqueueSnackbar('Copied to Clipboard!', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+        });
     };
     return (
         <Box>
@@ -34,31 +43,57 @@ const ChainDetails: React.FC<ComponentProps> = ({tokenId, ownerName, ownerAddres
                 marginTop={1}
                 sx={{ background: '#F0F1F2' }}
             >
-                <Grid item xs={5} fontWeight={400}>Chain Name</Grid>
-                <Grid item xs={7} textAlign={"right"}>Elastos Smart Chain</Grid>
-                <Grid item xs={5} fontWeight={400}>Token Standard</Grid>
-                <Grid item xs={7} textAlign={"right"}>ERC721</Grid>
-                <Grid item xs={5} fontWeight={400}>Token ID</Grid>
-                <Grid item xs={7} fontSize={12} color={'#1890FF'} textAlign={"right"}>
+                <Grid item xs={5} fontWeight={400}>
+                    Chain Name
+                </Grid>
+                <Grid item xs={7} textAlign={'right'}>
+                    Elastos Smart Chain
+                </Grid>
+                <Grid item xs={5} fontWeight={400}>
+                    Token Standard
+                </Grid>
+                <Grid item xs={7} textAlign={'right'}>
+                    ERC721
+                </Grid>
+                <Grid item xs={5} fontWeight={400}>
+                    Token ID
+                </Grid>
+                <Grid item xs={7} fontSize={12} color={'#1890FF'} textAlign={'right'}>
                     {reduceHexAddress(tokenId, 5)}
                     <CopyToClipboard text={tokenId} onCopy={showSnackBar}>
-                        <CopyToClipboardButton><Icon icon="ph:copy" style={{background: '#F0F1F2'}} /></CopyToClipboardButton>
+                        <CopyToClipboardButton>
+                            <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                        </CopyToClipboardButton>
                     </CopyToClipboard>
                 </Grid>
-                <Grid item xs={5} fontWeight={400}>Owner</Grid>
+                <Grid item xs={5} fontWeight={400}>
+                    Owner
+                </Grid>
                 <Grid container item xs={7} spacing={0.3}>
-                    <Grid item xs={12} textAlign={"right"}>{ownerName}</Grid>
-                    <Grid item xs={12} fontSize={12} color={'#1890FF'} textAlign={"right"}>
-                        {reduceHexAddress(ownerAddress, 4) + " "}
+                    <Grid item xs={12} textAlign={'right'}>
+                        {ownerName}
+                    </Grid>
+                    <Grid item xs={12} fontSize={12} color={'#1890FF'} textAlign={'right'}>
+                        {reduceHexAddress(ownerAddress, 4) + ' '}
                         <CopyToClipboard text={ownerAddress} onCopy={showSnackBar}>
-                            <CopyToClipboardButton><Icon icon="ph:copy" style={{background: '#F0F1F2'}} /></CopyToClipboardButton>
+                            <CopyToClipboardButton>
+                                <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                            </CopyToClipboardButton>
                         </CopyToClipboard>
                     </Grid>
                 </Grid>
-                <Grid item xs={5} fontWeight={400}>Created date</Grid>
-                <Grid item xs={7} textAlign={"right"}>{createTime}</Grid>
-                <Grid item xs={5} fontWeight={400}>Royalties</Grid>
-                <Grid item xs={7} textAlign={"right"}>{royalties}%</Grid>
+                <Grid item xs={5} fontWeight={400}>
+                    Created date
+                </Grid>
+                <Grid item xs={7} textAlign={'right'}>
+                    {createTime}
+                </Grid>
+                <Grid item xs={5} fontWeight={400}>
+                    Royalties
+                </Grid>
+                <Grid item xs={7} textAlign={'right'}>
+                    {royalties}%
+                </Grid>
             </Grid>
         </Box>
     );

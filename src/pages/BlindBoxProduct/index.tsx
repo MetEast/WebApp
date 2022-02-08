@@ -34,7 +34,13 @@ import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 // import ReceivedBids from 'src/components/profile/ReceivedBids';
 
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
-import { enumBadgeType, enumSingleNFTType, TypeProduct, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types'; 
+import {
+    enumBadgeType,
+    enumSingleNFTType,
+    TypeProduct,
+    TypeProductFetch,
+    TypeFavouritesFetch,
+} from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
@@ -45,13 +51,13 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     // get product details from server
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(["did"]);
-    const defaultValue: TypeProduct = { 
-        tokenId: "", 
-        name: "", 
-        image: "",
-        price_ela: 0, 
-        price_usd: 0, 
+    const [didCookies] = useCookies(['did']);
+    const defaultValue: TypeProduct = {
+        tokenId: '',
+        name: '',
+        image: '',
+        price_ela: 0,
+        price_usd: 0,
         likes: 0,
         views: 0,
         author: '',
@@ -85,7 +91,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         const prodDetail = dataProductDetail.data;
         var product: TypeProduct = { ...defaultValue };
 
-        if (prodDetail !== undefined) {           
+        if (prodDetail !== undefined) {
             // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
@@ -96,13 +102,18 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
-            product.isLike = favouritesList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1 ? false : true;
+            product.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || "---";
-            product.authorDescription = itemObject.authorDescription || "---";
+            product.author = itemObject.authorName || '---';
+            product.authorDescription = itemObject.authorDescription || '---';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = "---"; // -- no proper value 
+            product.holderName = '---'; // -- no proper value
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;

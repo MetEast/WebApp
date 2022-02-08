@@ -126,13 +126,13 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={categorySelectOpen}>
+                                    <SelectBtn fullWidth isOpen={categorySelectOpen ? 1 : 0}>
                                         {category ? category.label : 'Select'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
                                 options={categoryOptions}
-                                isOpen={categorySelectOpen}
+                                isOpen={categorySelectOpen ? 1 : 0}
                                 handleClick={(value: string) => {
                                     const item = categoryOptions.find((option) => option.value === value);
                                     setCategory(item);

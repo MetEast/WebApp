@@ -6,7 +6,6 @@ import { SaleTypeButton, SelectBtn } from './styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useSnackbar } from 'notistack';
-import { TypeSaleInputForm } from 'src/types/mint-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import Select from 'src/components/Select';
 import { Icon } from '@iconify/react';
@@ -43,7 +42,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             (saleType === 'buynow' && price !== null) ||
             (saleType === 'auction' && minPrice !== null && saleEnds?.value !== undefined && saleEnds.value !== '')
         ) {
-            if ((saleType === 'buynow' && (price === NaN || price === 0)) || (saleType === 'auction' && (minPrice === NaN || minPrice === 0))) {
+            if ((saleType === 'buynow' && (isNaN(price) || price === 0)) || (saleType === 'auction' && (isNaN(minPrice) || minPrice === 0))) {
                 enqueueSnackbar('Invalid number!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -91,13 +90,13 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={saleEndsSelectOpen}>
+                                    <SelectBtn fullWidth isOpen={saleEndsSelectOpen ? 1 : 0}>
                                         {saleEnds ? saleEnds.label : 'Select'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
                                 options={saleEndsOptions}
-                                isOpen={saleEndsSelectOpen}
+                                isOpen={saleEndsSelectOpen ? 1 : 0}
                                 handleClick={(value: string) => {
                                     const item = saleEndsOptions.find((option) => option.value === value);
                                     setSaleEnds(item);

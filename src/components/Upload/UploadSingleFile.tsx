@@ -1,9 +1,9 @@
 // import { isString } from 'lodash';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 // material
-import { alpha, styled } from '@mui/material/styles';
-import { Paper, Box, Typography, Stack } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Box, Typography, Stack } from '@mui/material';
 import { SxProps } from '@mui/system';
 import { Icon } from '@iconify/react';
 
@@ -52,34 +52,34 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
     ...other
   });
 
-  const ShowRejectionItems = () => (
-    <Paper
-      variant="outlined"
-      sx={{
-        py: 1,
-        px: 2,
-        mt: 3,
-        borderColor: 'error.light',
-        bgcolor: (theme) => alpha(theme.palette.error.main, 0.08)
-      }}
-    >
-      {/* {fileRejections.map(({ file, errors }) => {
-        const { path, size } = file;
-        return (
-          <Box key={path} sx={{ my: 1 }}>
-            <Typography variant="subtitle2" noWrap>
-              {path} - {fData(size)}
-            </Typography>
-            {errors.map((e) => (
-              <Typography key={e.code} variant="caption" component="p">
-                - {e.message}
-              </Typography>
-            ))}
-          </Box>
-        );
-      })} */}
-    </Paper>
-  );
+  // const ShowRejectionItems = () => (
+  //   <Paper
+  //     variant="outlined"
+  //     sx={{
+  //       py: 1,
+  //       px: 2,
+  //       mt: 3,
+  //       borderColor: 'error.light',
+  //       bgcolor: (theme) => alpha(theme.palette.error.main, 0.08)
+  //     }}
+  //   >
+  //     {/* {fileRejections.map(({ file, errors }) => {
+  //       const { path, size } = file;
+  //       return (
+  //         <Box key={path} sx={{ my: 1 }}>
+  //           <Typography variant="subtitle2" noWrap>
+  //             {path} - {fData(size)}
+  //           </Typography>
+  //           {errors.map((e) => (
+  //             <Typography key={e.code} variant="caption" component="p">
+  //               - {e.message}
+  //             </Typography>
+  //           ))}
+  //         </Box>
+  //       );
+  //     })} */}
+  //   </Paper>
+  // );
 
   return (
     <Box sx={{ width: '100%', ...sx }}>

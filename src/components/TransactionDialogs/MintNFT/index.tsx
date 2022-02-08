@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
-import ModalDialog from 'src/components/ModalDialog';
-import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
-import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
-import NFTMinted from 'src/components/TransactionDialogs/MintNFT/NFTMinted';
 import { useDialogContext } from 'src/context/DialogContext';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from "@walletconnect/web3-provider";
-
+import ModalDialog from 'src/components/ModalDialog';
+import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
+import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
+import NFTMinted from 'src/components/TransactionDialogs/MintNFT/NFTMinted';
 import EnterSaleDetails from '../ListNFT/EnterSaleDetails';
 import CheckSaleDetails from '../ListNFT/CheckSaleDetails';
 import ArtworkIsNowForSale from '../ListNFT/ArtworkIsNowForSale';

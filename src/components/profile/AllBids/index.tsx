@@ -11,11 +11,8 @@ import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import {
-    enumTransactionType,
-    TypeNFTTransactionFetch,
-    TypeNFTTransaction,
     TypeSingleNFTBid,
-    TypeSingleNFTBidFetch,
+    TypeSingleNFTBidFetch
 } from 'src/types/product-types';
 import { getTime, reduceHexAddress } from 'src/services/common';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -69,7 +66,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
         let _latestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.others.length; i++) {
             let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-            var _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
             let timestamp = getTime(itemObject.timestamp);
@@ -81,7 +78,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
         let _myLatestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.yours.length; i++) {
             let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
-            var _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
             let timestamp = getTime(itemObject.timestamp);
@@ -101,14 +98,14 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>All Bids</DialogTitleTypo>
                 <Select
                     titlebox={
-                        <SelectTitleBtn fullWidth isOpen={sortBySelectOpen}>
+                        <SelectTitleBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
                             <Icon icon="ph:sort-ascending" fontSize={20} />
                             {sortby ? sortby.label : 'Sort by'}
                             <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
                         </SelectTitleBtn>
                     }
                     options={sortbyOptions}
-                    isOpen={sortBySelectOpen}
+                    isOpen={sortBySelectOpen ? 1: 0}
                     setIsOpen={isSortBySelectOpen}
                     handleClick={handleSortbyChange}
                     width={160}
