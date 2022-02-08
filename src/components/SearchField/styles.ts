@@ -16,6 +16,11 @@ export const SearchFieldWrapper = styled(Box)`
 
 export const SearchTextField = styled(TextField)({
     '& .MuiOutlinedInput-root': {
+        height: 40,
+        '& input': {
+            paddingTop: 0,
+            paddingBottom: 0,
+        },
         '& fieldset': {
             borderWidth: 0,
         },

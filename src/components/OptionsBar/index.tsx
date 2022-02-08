@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import SearchField from '../SearchField';
 import { TypeSelectItem } from 'src/types/select-types';
-import { FilterButton, SortByBtn } from './styles';
-import { Grid24Filled, GridDots24Filled } from '@fluentui/react-icons';
+import { FilterButton, SortByBtn, GridButton } from './styles';
 import { SpacingProps } from '@mui/system';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
@@ -42,7 +41,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
 
     return (
-        <Stack direction="row" spacing={{ xs: 1, sm: 2 }} {...otherProps}>
+        <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ height: 40 }} {...otherProps}>
             <SearchField handleChange={handleKeyWordChange} />
             <Select
                 titlebox={
@@ -71,27 +70,20 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 </FilterButton>
             )}
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
-                <Button
+                <GridButton
+                    size="small"
+                    selected={productViewMode === 'grid2'}
                     onClick={() => setProductViewMode('grid2')}
-                    sx={{
-                        // minWidth: 0,
-                        borderRadius: 3,
-                        color: productViewMode === 'grid2' ? 'white' : '#1890FF',
-                        backgroundColor: productViewMode === 'grid2' ? '#1890FF !important' : '#E8F4FF',
-                    }}
                 >
-                    <GridDots24Filled />
-                </Button>
-                <Button
+                    <Icon icon="ph:dots-nine" fontSize={20} />
+                </GridButton>
+                <GridButton
+                    size="small"
+                    selected={productViewMode === 'grid1'}
                     onClick={() => setProductViewMode('grid1')}
-                    sx={{
-                        borderRadius: 3,
-                        color: productViewMode === 'grid1' ? 'white' : '#1890FF',
-                        backgroundColor: productViewMode === 'grid1' ? '#1890FF !important' : '#E8F4FF',
-                    }}
                 >
-                    <Grid24Filled />
-                </Button>
+                    <Icon icon="ph:squares-four" fontSize={20} />
+                </GridButton>
             </Box>
         </Stack>
     );
