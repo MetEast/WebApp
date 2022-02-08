@@ -98,7 +98,8 @@ const HomePage: React.FC = (): JSX.Element => {
         );
 
         const dataPopularCollection = await resPopularCollection.json();
-        const arrPopularCollection = dataPopularCollection.data.result === undefined ? [] : dataPopularCollection.data.result;
+        const arrPopularCollection =
+            dataPopularCollection.data.result === undefined ? [] : dataPopularCollection.data.result;
 
         let _popularCollectionList: any = [];
         for (let i = 0; i < arrPopularCollection.length; i++) {
