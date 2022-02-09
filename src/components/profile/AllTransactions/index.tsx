@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import Select from 'src/components/Select';
 import { TypeSelectItem } from 'src/types/select-types';
@@ -53,11 +53,11 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     // const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>(nftTransactions); // for test
 
-    // const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
+    const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    // const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
 
-    // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
+    const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
 
     const [sortby, setSortby] = React.useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
@@ -179,7 +179,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 />
             </Stack>
             <Stack spacing={3}>
-                {!auth.isLoggedIn ? (
+                {auth.isLoggedIn ? (
                     <>
                         <Stack direction="column" alignItems="center" spacing={1}>
                             <Typography fontSize={16} fontWeight={700} textAlign="center" marginTop={3}>
@@ -249,17 +249,9 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                             {myBidsList.length !== 0 && (
                                 <Grid container spacing={1}>
                                     <Grid item xs={6}>
-                                        <PrimaryButton
-                                            fullWidth
-                                            size="small"
-                                            sx={{
-                                                background: '#FDEEEE',
-                                                color: '#EB5757',
-                                                '&:hover': { background: '#FFDEDE' },
-                                            }}
-                                        >
+                                        <PinkButton fullWidth size="small">
                                             Cancel Bid
-                                        </PrimaryButton>
+                                        </PinkButton>
                                     </Grid>
                                     <Grid item xs={6}>
                                         <PrimaryButton fullWidth size="small">
