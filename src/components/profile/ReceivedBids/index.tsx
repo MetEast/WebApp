@@ -94,10 +94,19 @@ const ReceivedBids: React.FC<ComponentProps> = (): JSX.Element => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <ELAPrice price_ela={item.price} />
+                                    <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                                 </Grid>
                                 <Grid item xs={3} display="flex" flexDirection="row" justifyContent="flex-end">
-                                    <SecondaryButton size="small" sx={{ paddingX: 2 }}>
+                                    <SecondaryButton
+                                        size="small"
+                                        sx={{
+                                            height: 32,
+                                            fontSize: 14,
+                                            paddingX: 2,
+                                            paddingTop: '12px',
+                                            paddingBottom: '10px',
+                                        }}
+                                    >
                                         Accept
                                     </SecondaryButton>
                                 </Grid>

@@ -12,7 +12,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 // import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 // import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
-import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
+// import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 // import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 // import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
 // import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
@@ -31,7 +31,7 @@ import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 // import YourEarnings from 'src/components/profile/YourEarnings';
 // import AllTransactions from 'src/components/profile/AllTransactions';
 // import AllBids from 'src/components/profile/AllBids';
-// import ReceivedBids from 'src/components/profile/ReceivedBids';
+import ReceivedBids from 'src/components/profile/ReceivedBids';
 
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
 import {
@@ -175,7 +175,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <PlaceBid />
+                <ReceivedBids />
             </ModalDialog>
         </>
     );
