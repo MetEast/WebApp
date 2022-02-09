@@ -81,7 +81,7 @@ const YourEarnings: React.FC<ComponentProps> = (): JSX.Element => {
                             </Box>
                         </Stack>
                         <Stack alignItems="flex-end">
-                            <ELAPrice price_ela={item.price} />
+                            <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                             <ProductBadge badgeType={item.badge} />
                         </Stack>
                     </Stack>
