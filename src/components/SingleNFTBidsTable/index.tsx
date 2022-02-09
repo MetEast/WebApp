@@ -3,7 +3,7 @@ import { Box, Stack, Grid, Typography } from '@mui/material';
 import { ViewAllBtn } from './styles';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
 
 interface ComponentProps {
@@ -45,40 +45,66 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                         View ALL
                     </ViewAllBtn>
                 </Stack>
-                {isLoggedIn && (
+                {!isLoggedIn && (
                     <>
                         <Typography fontSize={16} fontWeight={700} marginTop={3}>
                             Your Bids
                         </Typography>
-                        {myBidsList.forEach((item) => {
-                            return (
-                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                    <Typography fontSize={14} fontWeight={400}>
-                                        {item.time}
-                                    </Typography>
-                                    <ELAPrice price_ela={item.price} alignRight={true} />
-                                </Stack>
-                            );
-                        })}
-                        {myBidsList.length !== 0 && (
-                            <Grid container spacing={1}>
-                                <Grid item xs={6}>
-                                    <PrimaryButton
-                                        sx={{
-                                            marginTop: 3,
-                                            width: '100%',
-                                            textTransform: 'uppercase',
-                                            backgroundColor: '#FDEEEE',
-                                            color: '#EB5757',
-                                        }}
+                        <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
+                            {bidsTblColumns.map((item, index) => (
+                                <Grid
+                                    item
+                                    key={index}
+                                    xs={item.width}
+                                    fontSize={14}
+                                    fontWeight={700}
+                                    sx={{ textTransform: 'uppercase' }}
+                                    textAlign={item.value === 'Price' ? 'right' : 'left'}
+                                    display={{ xs: 'none', sm: 'block' }}
+                                >
+                                    {item.value}
+                                </Grid>
+                            ))}
+                            {myBidsList.map((item, index) => (
+                                <Grid container item key={index}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={bidsTblColumns[0].width}
+                                        order={{ xs: 3, sm: 1, md: 1, lg: 1 }}
                                     >
-                                        Cancel Bid
-                                    </PrimaryButton>
+                                        <Typography fontSize={16} fontWeight={700}>
+                                            {item.user}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={6}
+                                        sm={bidsTblColumns[1].width}
+                                        order={{ xs: 1, sm: 2, md: 2, lg: 2 }}
+                                    >
+                                        <Typography fontSize={12} fontWeight={500}>
+                                            {item.time}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={6}
+                                        sm={bidsTblColumns[2].width}
+                                        order={{ xs: 2, sm: 3, md: 3, lg: 3 }}
+                                    >
+                                        <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
+                                    </Grid>
+                                </Grid>
+                            ))}
+                        </Grid>
+                        {myBidsList.length !== 0 && (
+                            <Grid container spacing={1} marginTop={3}>
+                                <Grid item xs={6}>
+                                    <PinkButton fullWidth>Cancel Bid</PinkButton>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <PrimaryButton sx={{ marginTop: 3, width: '100%', textTransform: 'uppercase' }}>
-                                        Update Bid
-                                    </PrimaryButton>
+                                    <PrimaryButton fullWidth>Update Bid</PrimaryButton>
                                 </Grid>
                             </Grid>
                         )}
@@ -112,7 +138,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                                 </Typography>
                             </Grid>
                             <Grid item xs={6} sm={bidsTblColumns[2].width} order={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
-                                <ELAPrice price_ela={item.price} alignRight />
+                                <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
                             </Grid>
                         </Grid>
                     ))}
