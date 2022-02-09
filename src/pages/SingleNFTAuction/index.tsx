@@ -78,8 +78,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
 
-    // const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>(nftTransactions); // for test
+    const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+    // const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>(nftTransactions); // for test
 
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     // const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test

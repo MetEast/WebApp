@@ -45,7 +45,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                         View ALL
                     </ViewAllBtn>
                 </Stack>
-                {!isLoggedIn && (
+                {isLoggedIn && (
                     <>
                         <Typography fontSize={16} fontWeight={700} marginTop={3}>
                             Your Bids
