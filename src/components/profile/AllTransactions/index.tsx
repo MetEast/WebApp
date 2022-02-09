@@ -150,8 +150,8 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     useEffect(() => {
-        // getLatestTransaction();
-        // getLatestBid();
+        getLatestTransaction();
+        getLatestBid();
     }, [sortby]);
 
     const bidsTblColumns = [
