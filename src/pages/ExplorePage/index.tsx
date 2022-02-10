@@ -5,7 +5,7 @@ import FilterModal from 'src/components/modals/FilterModal';
 import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
-import { sortOptions } from 'src/constants/select-constants'; // sort options
+import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';

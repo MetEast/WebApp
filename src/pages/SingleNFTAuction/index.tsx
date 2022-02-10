@@ -38,7 +38,6 @@ import AllBids from 'src/components/profile/AllBids';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { singleNFTBids, nftTransactions } from 'src/constants/dummyData';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
@@ -46,7 +45,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
-    const params = useParams(); // params.tokenId
+    const params = useParams();
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -79,14 +78,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
 
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    // const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>(nftTransactions); // for test
-
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    // const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
-
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
-
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {

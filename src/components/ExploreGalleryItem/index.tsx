@@ -77,7 +77,6 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                 }}
             >
                 <ImageBox>
-                    {/* <Box position="relative"> */}
                     <img src={product.image} alt="" />
                     <LikeBtn onClick={changeLikeState}>
                         {likeState ? (
@@ -86,7 +85,6 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                             <Icon icon="ph:heart" fontSize="2vw" color="black" />
                         )}
                     </LikeBtn>
-                    {/* </Box> */}
                 </ImageBox>
             </ProductImageContainer>
             <Grid container spacing={1}>
