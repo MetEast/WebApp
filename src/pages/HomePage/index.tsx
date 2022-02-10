@@ -12,12 +12,10 @@ import authAtom from 'src/recoil/auth';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { useNavigate } from 'react-router-dom';
 
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
-    const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(['METEAST_DID']);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);

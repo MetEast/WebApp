@@ -34,7 +34,7 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
-    const params = useParams(); // params.tokenId
+    const params = useParams();
     const auth = useRecoilValue(authAtom);
     const navigate = useNavigate();
     const [didCookies] = useCookies(['METEAST_DID']);
@@ -88,7 +88,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {
-            // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;

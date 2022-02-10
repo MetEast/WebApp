@@ -19,7 +19,6 @@ import {
 } from 'src/types/product-types';
 import { getTime, reduceHexAddress } from 'src/services/common';
 import { useDialogContext } from 'src/context/DialogContext';
-import { singleNFTBids, nftTransactions } from 'src/constants/dummyData';
 
 export interface ComponentProps {}
 
@@ -51,14 +50,8 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     ];
 
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    // const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>(nftTransactions); // for test
-
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    // const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
-
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids); // for test
-
     const [sortby, setSortby] = React.useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
     const handleSortbyChange = (value: string) => {
