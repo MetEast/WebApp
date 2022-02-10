@@ -63,7 +63,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         xaxis: {
             type: 'datetime' as const,
             labels: {
-                format: 'MMM',
+                format: 'MMM dd',
             },
         },
         tooltip: {
@@ -122,17 +122,13 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
 
         let _latestPriceList: Array<TypeChartAxis> = [];
         let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
-        console.log("type: ", priceHistoryUnit?.value, " date list: ", _dateList);
         for (let i = 0; i < _dateList.length; i ++) {
-            // let _price: TypeChartAxis = { x: _dateList[i].toString(), y: getPriceValue(_dateList[i].toString()) };
-            // _price.y = itemObject.price / 1e18; // no proper data
-            // let dateTime = getTime(itemObject.onlyDate);
-            // _price.x = dateTime.date;
-            _latestPriceList.push({ x: _dateList[i].toString(), y: getPriceValue(_dateList[i].toString()) });
-            setChartSeries([{ data: _latestPriceList }]);
+            _latestPriceList.push({ x: getTime((_dateList[i].getTime() / 1000).toString()).date, y: getPriceValue(_dateList[i].toString()) });
         }
+        setChartSeries([{ data: _latestPriceList }]);
     }, [priceHistoryUnit]);
 
+    // console.log(chartSeries);
     return (
         <Stack spacing={2}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5} zIndex={10}>
