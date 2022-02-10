@@ -14,7 +14,6 @@ import { auctionNFTExpirationOptions } from 'src/constants/select-constants';
 export interface ComponentProps {}
 
 const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
-    
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [expiration, setExpiration] = useState<TypeSelectItem>();

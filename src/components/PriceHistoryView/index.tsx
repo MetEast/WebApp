@@ -10,6 +10,7 @@ import { getTime } from 'src/services/common';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
+import { priceHistoryUnitSelectOptions } from 'src/constants/select-constants';
 
 interface ComponentProps {}
 
@@ -91,20 +92,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const [chartOptions, setChartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
 
-    const priceHistoryUnitSelectOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Daily',
-            value: 'Daily',
-        },
-        {
-            label: 'Weekly',
-            value: 'Weekly',
-        },
-        {
-            label: 'Monthly',
-            value: 'Monthly',
-        },
-    ];
+    
     const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(priceHistoryUnitSelectOptions[1]);
     const [priceHistoryUnitSelectOpen, setPriceHistoryUnitSelectOpen] = useState(false);
 
