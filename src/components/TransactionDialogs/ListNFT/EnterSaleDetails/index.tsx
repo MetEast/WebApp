@@ -14,8 +14,6 @@ import { sellNFTSaleEndsOptions } from 'src/constants/select-constants';
 export interface ComponentProps {}
 
 const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
-    
-
     const [dialogState, setDialogState] = useDialogContext();
     const [saleType, setSaleType] = useState<'buynow' | 'auction'>('buynow');
     const [saleEnds, setSaleEnds] = useState<TypeSelectItem>();
@@ -24,19 +22,29 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     // const [royalty, setRoyalty] = useState<string>('');
     const [minPrice, setMinPrice] = useState<number>(0);
     const { enqueueSnackbar } = useSnackbar();
-    
+
     const handleNextStep = () => {
         if (
             (saleType === 'buynow' && price !== null) ||
             (saleType === 'auction' && minPrice !== null && saleEnds?.value !== undefined && saleEnds.value !== '')
         ) {
-            if ((saleType === 'buynow' && (isNaN(price) || price === 0)) || (saleType === 'auction' && (isNaN(minPrice) || minPrice === 0))) {
+            if (
+                (saleType === 'buynow' && (isNaN(price) || price === 0)) ||
+                (saleType === 'auction' && (isNaN(minPrice) || minPrice === 0))
+            ) {
                 enqueueSnackbar('Invalid number!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             } else {
-                setDialogState({ ...dialogState, sellPrice: price, sellMinPrice: minPrice, sellSaleEnds: saleEnds || { label: '', value: '' }, sellSaleType: saleType, createNFTDlgStep: 4 });
+                setDialogState({
+                    ...dialogState,
+                    sellPrice: price,
+                    sellMinPrice: minPrice,
+                    sellSaleEnds: saleEnds || { label: '', value: '' },
+                    sellSaleType: saleType,
+                    createNFTDlgStep: 4,
+                });
             }
         } else
             enqueueSnackbar('Form validation failed!', {

@@ -9,34 +9,17 @@ import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
+import { auctionNFTExpirationOptions } from 'src/constants/select-constants';
 
 export interface ComponentProps {}
 
 const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
-    const expirationOptions: Array<TypeSelectItem> = [
-        {
-            label: '7 days',
-            value: '7 days',
-        },
-        {
-            label: '3 days',
-            value: '3 days',
-        },
-        {
-            label: '1 day',
-            value: '1 day',
-        },
-    ];
+    
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [expiration, setExpiration] = useState<TypeSelectItem>();
     const [expirationSelectOpen, setExpirationSelectOpen] = useState(false);
     const [bidAmount, setBidAmount] = useState(0);
-
-    const handleCategoryChange = (value: string) => {
-        const item = expirationOptions.find((option) => option.value === value);
-        setExpiration(item);
-    };
 
     return (
         <Stack spacing={5} width={320} paddingY={6}>
@@ -62,9 +45,12 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                                 <Icon icon="ph:caret-down" className="arrow-icon" />
                             </SelectBtn>
                         }
-                        options={expirationOptions}
+                        options={auctionNFTExpirationOptions}
                         isOpen={expirationSelectOpen ? 1 : 0}
-                        handleClick={handleCategoryChange}
+                        handleClick={(value: string) => {
+                            const item = auctionNFTExpirationOptions.find((option) => option.value === value);
+                            setExpiration(item);
+                        }}
                         setIsOpen={setExpirationSelectOpen}
                     />
                 </Stack>
