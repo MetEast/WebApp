@@ -77,32 +77,40 @@ export const emptyCache = () => {
 export const getMondayOfWeek = (d: Date) => {
     d = new Date(d);
     let day = d.getDay();
-    let diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+    let diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
     return new Date(d.setDate(diff));
 };
 
 export const getChartDateList = (date: Date, type: string) => {
     let retDateList: Array<Date> = [];
     if (type === 'Daily') {
-        retDateList.push(new Date(date.setDate(-2)));
-        retDateList.push(new Date(date.setDate(-1)));
-        retDateList.push(date);
-        retDateList.push(new Date(date.setDate(1)));
-    }
-    else if (type === 'Weekly') {
-        let curDate = getMondayOfWeek(date);
-        for(let i = 0; i < 7; i ++) {
-            retDateList.push(new Date(curDate.setDate(i)));
+        const dayBeforeYesterday = new Date(date.setDate(date.getDate() - 2));
+        const yesterday = new Date(date.setDate(date.getDate() + 1));
+        const today = new Date(date.setDate(date.getDate() + 1));
+        const tomorrow = new Date(date.setDate(date.getDate() + 1));
+
+        retDateList.push(dayBeforeYesterday);
+        retDateList.push(yesterday);
+        retDateList.push(today);
+        retDateList.push(tomorrow);
+    } else if (type === 'Weekly') {
+        let startDate = getMondayOfWeek(date);
+        retDateList.push(new Date(startDate));
+        let curDate = new Date(startDate);
+        for (let i = 0; i < 6; i++) {
+            let nextDate = new Date(curDate.setDate(curDate.getDate() + 1));
+            retDateList.push(nextDate);
+            curDate = new Date(nextDate);
         }
-    }
-    else if (type === 'Monthly') {
-        let curDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    } else if (type === 'Monthly') {
+        let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        let i = 0;
-        while(curDay <= lastDay) {
-            curDay = new Date(curDay.setDate(i));
-            retDateList.push(curDay);
-            i ++;
+        retDateList.push(firstDay);
+        let curDate = new Date(firstDay);
+        while (curDate < lastDay) {
+            let nextDate = new Date(curDate.setDate(curDate.getDate() + 1));
+            retDateList.push(nextDate);
+            curDate = new Date(nextDate);
         }
     }
     return retDateList;
