@@ -182,7 +182,7 @@ export type TypeSingleNFTBidFetch = {
     gasFee: number;
 };
 
-export type TypeProductPrice = {
+export type TypePriceHistoryFetch = {
     onlyDate: string;
     price: number;
     tokenId: string;

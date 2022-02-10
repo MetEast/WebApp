@@ -72,4 +72,38 @@ export const emptyCache = () => {
         // Makes sure the page reloads. Changes are only visible after you refresh.
         window.location.reload();
     }
-}
+};
+
+export const getMondayOfWeek = (d: Date) => {
+    d = new Date(d);
+    let day = d.getDay();
+    let diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
+};
+
+export const getChartDateList = (date: Date, type: string) => {
+    let retDateList: Array<Date> = [];
+    if (type === 'Daily') {
+        retDateList.push(new Date(date.setDate(-2)));
+        retDateList.push(new Date(date.setDate(-1)));
+        retDateList.push(date);
+        retDateList.push(new Date(date.setDate(1)));
+    }
+    else if (type === 'Weekly') {
+        let curDate = getMondayOfWeek(date);
+        for(let i = 0; i < 7; i ++) {
+            retDateList.push(new Date(curDate.setDate(i)));
+        }
+    }
+    else if (type === 'Monthly') {
+        let curDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        let i = 0;
+        while(curDay <= lastDay) {
+            curDay = new Date(curDay.setDate(i));
+            retDateList.push(curDay);
+            i ++;
+        }
+    }
+    return retDateList;
+};

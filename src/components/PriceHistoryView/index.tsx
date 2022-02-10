@@ -4,9 +4,9 @@ import { Box, Stack, Typography } from '@mui/material';
 import Chart from 'react-apexcharts';
 import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
-import { TypeProductPrice, TypeChartAxis } from 'src/types/product-types';
+import { TypePriceHistoryFetch, TypeChartAxis } from 'src/types/product-types';
 import { TypeSelectItem } from 'src/types/select-types';
-import { getTime } from 'src/services/common';
+import { getChartDateList, getTime } from 'src/services/common';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
@@ -70,6 +70,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             custom: tooltipBox,
         },
     };
+
     const series = [
         {
             data: [
@@ -91,39 +92,47 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
 
     const [chartOptions, setChartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
-
-    
-    const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(priceHistoryUnitSelectOptions[1]);
+    const [productPriceList, setProductPriceList] = useState<Array<TypePriceHistoryFetch>>([]); 
+    const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(
+        priceHistoryUnitSelectOptions[1],
+    );
     const [priceHistoryUnitSelectOpen, setPriceHistoryUnitSelectOpen] = useState(false);
 
     const handlePriceHistoryUnitChange = (value: string) => {
         const item = priceHistoryUnitSelectOptions.find((option) => option.value === value);
         setPriceHistoryUnit(item);
     };
+    const getPriceValue = (value: string) => {
+        const nItem = productPriceList.findIndex((option) => option.onlyDate === value);
+        return nItem === -1 ? 0 : productPriceList[nItem].price;
+    };
+    const params = useParams();
 
-    const params = useParams(); // params.id
-    var _latestPriceList: any = [];
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`)
             .then((response) => {
                 response.json().then((jsonPriceList) => {
-                    if (jsonPriceList.data?.length > 0) {
-                        jsonPriceList.data.forEach(function (itemObject: TypeProductPrice) {
-                            var _price: TypeChartAxis = { x: '01/01/2022', y: 0 };
-                            _price.y = itemObject.price / 1e18; // no proper data
-                            let dateTime = getTime(itemObject.onlyDate);
-                            _price.x = dateTime.date;
-                            _latestPriceList.push(_price);
-                        });
-                        setChartSeries([{ data: _latestPriceList }]);
-                    }
+                    setProductPriceList(jsonPriceList.data);
                 });
             })
             .catch((err) => {
                 console.log(err);
             });
-    }, []);
+
+        let _latestPriceList: Array<TypeChartAxis> = [];
+        console.log(new Date());
+        let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
+        console.log("type: ", priceHistoryUnit?.value, " date list: ", _dateList);
+        for (let i = 0; i < _dateList.length; i ++) {
+            // let _price: TypeChartAxis = { x: _dateList[i].toString(), y: getPriceValue(_dateList[i].toString()) };
+            // _price.y = itemObject.price / 1e18; // no proper data
+            // let dateTime = getTime(itemObject.onlyDate);
+            // _price.x = dateTime.date;
+            _latestPriceList.push({ x: _dateList[i].toString(), y: getPriceValue(_dateList[i].toString()) });
+            setChartSeries([{ data: _latestPriceList }]);
+        }
+    }, [priceHistoryUnit]);
 
     return (
         <Stack spacing={2}>
