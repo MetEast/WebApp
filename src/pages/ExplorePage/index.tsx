@@ -17,7 +17,7 @@ import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(['did']);
+    const [didCookies] = useCookies(['METEAST_DID']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
@@ -130,7 +130,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
         getSearchResult(ela_usd_rate, favouritesList);
     };
 

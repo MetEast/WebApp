@@ -22,8 +22,8 @@ export interface ExploreGalleryItemProps {
 const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(['did']);
-    const [tokenCookies] = useCookies(['token']);
+    const [didCookies] = useCookies(['METEAST_DID']);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -38,7 +38,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
         if (auth.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
-            const reqBody = { token: tokenCookies.token, tokenId: product.tokenId, did: didCookies.did };
+            const reqBody = { token: tokenCookies.METEAST_TOKEN, tokenId: product.tokenId, did: didCookies.METEAST_DID };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
             setLikeState(!likeState);

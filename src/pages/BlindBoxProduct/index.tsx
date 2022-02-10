@@ -51,7 +51,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     // get product details from server
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(['did']);
+    const [didCookies] = useCookies(['METEAST_DID']);
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -127,7 +127,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
     };
 

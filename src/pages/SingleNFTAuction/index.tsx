@@ -43,8 +43,8 @@ import { singleNFTBids, nftTransactions } from 'src/constants/dummyData';
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
     const navigate = useNavigate();
-    const [didCookies] = useCookies(['did']);
-    const [tokenCookies] = useCookies(['token']);
+    const [didCookies] = useCookies(['METEAST_DID']);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
     const params = useParams(); // params.tokenId
     const defaultValue: TypeProduct = {
@@ -228,7 +228,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const getFetchData = async () => {
         updateProductViews();
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
         getLatestTransaction();
         getLatestBid();
@@ -263,7 +263,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const updateProductViews = () => {
         if (auth.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = { token: tokenCookies.token, tokenId: productDetail.tokenId, did: didCookies.did };
+            const reqBody = { token: tokenCookies.METEAST_TOKEN, tokenId: productDetail.tokenId, did: didCookies.METEAST_DID };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
