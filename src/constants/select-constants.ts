@@ -109,3 +109,18 @@ export const auctionNFTExpirationOptions: Array<TypeSelectItem> = [
         value: '1 day',
     },
 ];
+
+export const priceHistoryUnitSelectOptions: Array<TypeSelectItem> = [
+    {
+        label: 'Daily',
+        value: 'Daily',
+    },
+    {
+        label: 'Weekly',
+        value: 'Weekly',
+    },
+    {
+        label: 'Monthly',
+        value: 'Monthly',
+    },
+];
