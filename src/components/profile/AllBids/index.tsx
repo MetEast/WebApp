@@ -16,7 +16,6 @@ import {
 } from 'src/types/product-types';
 import { getTime, reduceHexAddress } from 'src/services/common';
 import { useDialogContext } from 'src/context/DialogContext';
-import { singleNFTBids } from 'src/constants/dummyData';
 
 export interface ComponentProps {}
 

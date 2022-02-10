@@ -11,49 +11,11 @@ import { useSnackbar } from 'notistack';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
+import { mintNFTCategoryOptions } from 'src/constants/select-constants';
 
 export interface ComponentProps {}
 
-const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
-    const categoryOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Original',
-            value: 'Original',
-        },
-        {
-            label: 'Museum',
-            value: 'Museum',
-        },
-        {
-            label: 'Arts',
-            value: 'Arts',
-        },
-        {
-            label: 'Sports',
-            value: 'Sports',
-        },
-        {
-            label: 'Dimension',
-            value: 'Dimension',
-        },
-        {
-            label: 'Pets',
-            value: 'Pets',
-        },
-        {
-            label: 'Recreation',
-            value: 'Recreation',
-        },
-        {
-            label: 'Star',
-            value: 'Star',
-        },
-        {
-            label: 'Other',
-            value: 'Other',
-        },
-    ];
-
+const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {    
     const [dialogState, setDialogState] = useDialogContext();
     const [category, setCategory] = useState<TypeSelectItem>();
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
@@ -131,10 +93,10 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
-                                options={categoryOptions}
+                                options={mintNFTCategoryOptions}
                                 isOpen={categorySelectOpen ? 1 : 0}
                                 handleClick={(value: string) => {
-                                    const item = categoryOptions.find((option) => option.value === value);
+                                    const item = mintNFTCategoryOptions.find((option) => option.value === value);
                                     setCategory(item);
                                 }}
                                 setIsOpen={setCategorySelectOpen}
