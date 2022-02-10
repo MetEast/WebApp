@@ -40,3 +40,42 @@ export const sortOptions: Array<TypeSelectItem> = [
         value: enmSortOptionValues.ending_soon,
     },
 ];
+
+export const mintNFTCategoryOptions: Array<TypeSelectItem> = [
+    {
+        label: 'Original',
+        value: 'Original',
+    },
+    {
+        label: 'Museum',
+        value: 'Museum',
+    },
+    {
+        label: 'Arts',
+        value: 'Arts',
+    },
+    {
+        label: 'Sports',
+        value: 'Sports',
+    },
+    {
+        label: 'Dimension',
+        value: 'Dimension',
+    },
+    {
+        label: 'Pets',
+        value: 'Pets',
+    },
+    {
+        label: 'Recreation',
+        value: 'Recreation',
+    },
+    {
+        label: 'Star',
+        value: 'Star',
+    },
+    {
+        label: 'Other',
+        value: 'Other',
+    },
+];
