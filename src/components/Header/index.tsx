@@ -33,14 +33,14 @@ const Header: React.FC = (): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [auth, setAuth] = useRecoilState(authAtom);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['token']);
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(['did']);
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(['METEAST_DID']);
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['METEAST_TOKEN']);
 
     // check if essentials has disconnected from mobile app
     useEffect(() => {
         if (
-            tokenCookies.token !== undefined &&
-            didCookies.did !== undefined &&
+            tokenCookies.METEAST_TOKEN !== undefined &&
+            didCookies.METEAST_DID !== undefined &&
             !essentialsConnector.hasWalletConnectSession()
         ) {
             logOut();
@@ -50,8 +50,8 @@ const Header: React.FC = (): JSX.Element => {
     const logOut = async () => {
         console.log('Signing out user. Deleting session info, auth token');
         setAuth({ isLoggedIn: false });
-        removeTokenCookie('token');
-        removeDidCookie('did');
+        removeTokenCookie('METEAST_TOKEN');
+        removeDidCookie('METEAST_DID');
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
         window.location.reload();

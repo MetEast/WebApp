@@ -12,8 +12,8 @@ import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 
 const LoginPage: React.FC = (): JSX.Element => {
-    const [tokenCookies, setTokenCookie] = useCookies(['token']);
-    const [didCookies, setDidCookie] = useCookies(['did']);
+    const [didCookies, setDidCookie] = useCookies(['METEAST_DID']);
+    const [tokenCookies, setTokenCookie] = useCookies(['METEAST_TOKEN']);
     const [auth, setAuth] = useRecoilState(authAtom);
     const [showModal, setShowModal] = useState<boolean>(true);
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ const LoginPage: React.FC = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
 
     // prevent sign-in again after page refresh
-    if (tokenCookies.token !== undefined && didCookies.did !== undefined) {
+    if (tokenCookies.METEAST_TOKEN !== undefined && didCookies.METEAST_DID !== undefined) {
         setAuth({ isLoggedIn: true });
         navigate('/profile');
     }
@@ -62,8 +62,8 @@ const LoginPage: React.FC = (): JSX.Element => {
                     if (data.code === 200) {
                         const token = data.token;
 
-                        setTokenCookie('token', token, { path: '/', sameSite: 'none', secure: true });
-                        setDidCookie('did', did, { path: '/', sameSite: 'none', secure: true });
+                        setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                        setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
                         const user = jwtDecode(token);
                         console.log('Sign in: setting user to:', user);
                         setShowModal(false);

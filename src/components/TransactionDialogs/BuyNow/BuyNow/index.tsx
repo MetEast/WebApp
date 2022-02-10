@@ -20,8 +20,8 @@ export interface ComponentProps {};
 const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [tokenCookies] = useCookies(['token']);
-    const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
     const { did, name } = userInfo;
 
     const callBuyOrder = async (_orderId: number, _didUri: string, _price: string) => {

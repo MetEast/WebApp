@@ -25,9 +25,9 @@ export interface ComponentProps {}
 
 const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-    const [tokenCookies] = useCookies(['token']);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
-    const userInfo: UserTokenType = jwtDecode(tokenCookies.token);
+    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
     const { did, name } = userInfo;
 
     const callMintNFT = async (

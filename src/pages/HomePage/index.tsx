@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 const HomePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(['did']);
+    const [didCookies] = useCookies(['METEAST_DID']);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
     const defaultValue: TypeProduct = {
@@ -126,7 +126,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
         getNewProducts(ela_usd_rate, favouritesList);
         getPopularCollection(ela_usd_rate, favouritesList);
     };

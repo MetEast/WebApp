@@ -34,8 +34,8 @@ import { getEssentialWalletAddress, getEssentialWalletBalance } from 'src/servic
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(['did']);
-    const [tokenCookies] = useCookies(['token']);
+    const [didCookies] = useCookies(['METEAST_DID']);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
@@ -73,7 +73,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         isLike: false,
     };
 
-    const userInfo: any = tokenCookies.token === undefined ? '' : jwtDecode(tokenCookies.token);
+    const userInfo: any = tokenCookies.METEAST_TOKEN === undefined ? '' : jwtDecode(tokenCookies.METEAST_TOKEN);
     const accounts: string[] = getEssentialWalletAddress();
     // const accounts: string[] = ["0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0"];
     const [toatlEarned, setTotalEarned] = useState<number>(0);
@@ -104,7 +104,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 nSelected = 4;
                 break;
             case nftGalleryFilterBtnTypes.Liked:
-                reqUrl += `getFavoritesCollectible?did=${didCookies.did}`;
+                reqUrl += `getFavoritesCollectible?did=${didCookies.METEAST_DID}`;
                 nSelected = 5;
                 break;
         }
@@ -193,7 +193,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.did);
+        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
         getSearchResult(ela_usd_rate, favouritesList);
     };
 
