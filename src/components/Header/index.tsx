@@ -54,6 +54,7 @@ const Header: React.FC = (): JSX.Element => {
         removeDidCookie('did');
         await essentialsConnector.disconnectWalletConnect();
         navigate('/');
+        window.location.reload();
     };
 
     return (
