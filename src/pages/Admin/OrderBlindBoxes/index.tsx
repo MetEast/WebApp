@@ -37,7 +37,7 @@ const AdminOrderBlindBoxes: React.FC = (): JSX.Element => {
         {
             id: 'order_amount',
             label: 'Order Amount',
-            cell: (props) => <ELAPrice price_ela={props.value} />,
+            cell: (props) => <ELAPrice price_ela={props.value} price_ela_fontsize={14} />,
             width: 160,
         },
         {
