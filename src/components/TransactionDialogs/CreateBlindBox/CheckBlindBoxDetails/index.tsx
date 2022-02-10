@@ -35,6 +35,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <Typography
                         fontSize={14}
                         fontWeight={500}
+                        color="#1EA557"
                         sx={{
                             display: 'inline-block',
                             background: '#C9F5DC',
@@ -52,7 +53,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 </InfoItemWrapper>
                 <InfoItemWrapper>
                     <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
-                    <ELAPrice price_ela={199} />
+                    <ELAPrice price_ela={199} price_ela_fontsize={14} />
                 </InfoItemWrapper>
                 <InfoItemWrapper>
                     <DetailedInfoTitleTypo>Sale Begins</DetailedInfoTitleTypo>

@@ -52,7 +52,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         {
             id: 'original_price',
             label: 'Original Price',
-            cell: (props) => <ELAPrice price_ela={props.value} />,
+            cell: (props) => <ELAPrice price_ela={props.value} price_ela_fontsize={14} />,
             width: 160,
         },
         {
@@ -68,7 +68,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         {
             id: 'latest_deal_price',
             label: 'Latest deal price',
-            cell: (props) => <ELAPrice price_ela={props.value} />,
+            cell: (props) => <ELAPrice price_ela={props.value} price_ela_fontsize={14} />,
             width: 160,
         },
         {
