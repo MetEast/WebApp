@@ -79,3 +79,18 @@ export const mintNFTCategoryOptions: Array<TypeSelectItem> = [
         value: 'Other',
     },
 ];
+
+export const sellNFTSaleEndsOptions: Array<TypeSelectItem> = [
+    {
+        label: '1 month',
+        value: '1 month',
+    },
+    {
+        label: '1 week',
+        value: '1 week',
+    },
+    {
+        label: '1 day',
+        value: '1 day',
+    },
+];

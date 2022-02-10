@@ -9,24 +9,12 @@ import { useSnackbar } from 'notistack';
 import { useDialogContext } from 'src/context/DialogContext';
 import Select from 'src/components/Select';
 import { Icon } from '@iconify/react';
+import { sellNFTSaleEndsOptions } from 'src/constants/select-constants';
 
 export interface ComponentProps {}
 
 const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
-    const saleEndsOptions: Array<TypeSelectItem> = [
-        {
-            label: '1 month',
-            value: '1 month',
-        },
-        {
-            label: '1 week',
-            value: '1 week',
-        },
-        {
-            label: '1 day',
-            value: '1 day',
-        },
-    ];
+    
 
     const [dialogState, setDialogState] = useDialogContext();
     const [saleType, setSaleType] = useState<'buynow' | 'auction'>('buynow');
@@ -95,10 +83,10 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
-                                options={saleEndsOptions}
+                                options={sellNFTSaleEndsOptions}
                                 isOpen={saleEndsSelectOpen ? 1 : 0}
                                 handleClick={(value: string) => {
-                                    const item = saleEndsOptions.find((option) => option.value === value);
+                                    const item = sellNFTSaleEndsOptions.find((option) => option.value === value);
                                     setSaleEnds(item);
                                 }}
                                 setIsOpen={setSaleEndsSelectOpen}
