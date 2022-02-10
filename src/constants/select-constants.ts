@@ -94,3 +94,18 @@ export const sellNFTSaleEndsOptions: Array<TypeSelectItem> = [
         value: '1 day',
     },
 ];
+
+export const auctionNFTExpirationOptions: Array<TypeSelectItem> = [
+    {
+        label: '7 days',
+        value: '7 days',
+    },
+    {
+        label: '3 days',
+        value: '3 days',
+    },
+    {
+        label: '1 day',
+        value: '1 day',
+    },
+];

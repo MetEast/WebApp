@@ -15,7 +15,7 @@ import { mintNFTCategoryOptions } from 'src/constants/select-constants';
 
 export interface ComponentProps {}
 
-const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {    
+const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [category, setCategory] = useState<TypeSelectItem>();
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
