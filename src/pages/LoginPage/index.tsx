@@ -40,13 +40,11 @@ const LoginPage: React.FC = (): JSX.Element => {
             // Possible exception while using wallet connect (i.e. not an identity wallet)
             // Kill the wallet connect session
             console.warn('Error while getting credentials', e);
-
             try {
                 await walletConnectProvider.disconnect();
             } catch (e) {
                 console.error('Error while trying to disconnect wallet connect session', e);
             }
-
             return;
         }
 
