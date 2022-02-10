@@ -24,7 +24,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <Typography fontSize={18} fontWeight={700}>
                     Blind Box Title
                 </Typography>
-                <ELAPrice price_ela={199} />
+                <ELAPrice price_ela={199} price_ela_fontsize={14} />
                 <Typography fontSize={14} fontWeight={700} marginTop={4} sx={{ textTransform: 'uppercase' }}>
                     Quantity
                 </Typography>

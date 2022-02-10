@@ -8,7 +8,7 @@ import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
-// import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
+import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
 // import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 // import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 // import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
@@ -28,7 +28,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 // import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 // import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
-import YourEarnings from 'src/components/profile/YourEarnings';
+// import YourEarnings from 'src/components/profile/YourEarnings';
 // import AllTransactions from 'src/components/profile/AllTransactions';
 // import AllBids from 'src/components/profile/AllBids';
 // import ReceivedBids from 'src/components/profile/ReceivedBids';
@@ -175,7 +175,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <YourEarnings />
+                <BuyBlindBox />
             </ModalDialog>
         </>
     );
