@@ -121,7 +121,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             });
 
         let _latestPriceList: Array<TypeChartAxis> = [];
-        console.log(new Date());
         let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
         console.log("type: ", priceHistoryUnit?.value, " date list: ", _dateList);
         for (let i = 0; i < _dateList.length; i ++) {
