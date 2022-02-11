@@ -5,10 +5,12 @@ import { IconBtn } from './styles';
 import ELAPrice from 'src/components/ELAPrice';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     const [amount, setAmount] = useState<number>(1);
 
     return (
@@ -69,8 +71,22 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <ELAPrice price_ela={199} price_usd={480} />
             </Stack>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth>close</SecondaryButton>
-                <PrimaryButton fullWidth>Confirm</PrimaryButton>
+                <SecondaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, buyBlindBoxDlgOpened: false });
+                    }}
+                >
+                    close
+                </SecondaryButton>
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, buyBlindBoxDlgStep: 1, buyBlindBoxDlgOpened: true });
+                    }}
+                >
+                    Confirm
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

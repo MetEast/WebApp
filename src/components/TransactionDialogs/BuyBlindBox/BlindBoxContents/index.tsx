@@ -3,10 +3,13 @@ import { Stack, Typography, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
+
     return (
         <Stack spacing={3} width={320}>
             <Stack alignItems="center">
@@ -25,8 +28,22 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                 </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth>Previous</SecondaryButton>
-                <PrimaryButton fullWidth>Next</PrimaryButton>
+                <SecondaryButton
+                    fullWidth
+                    onClick={() => {
+                        console.log('previous');
+                    }}
+                >
+                    Previous
+                </SecondaryButton>
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        console.log('next');
+                    }}
+                >
+                    Next
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

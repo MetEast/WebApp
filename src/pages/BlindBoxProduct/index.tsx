@@ -7,7 +7,25 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
+import { useRecoilValue } from 'recoil';
+import authAtom from 'src/recoil/auth';
+import { useCookies } from 'react-cookie';
+import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
+import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
+import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
+import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
+import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
+import {
+    enumBadgeType,
+    enumSingleNFTType,
+    TypeProduct,
+    TypeProductFetch,
+    TypeFavouritesFetch,
+} from 'src/types/product-types';
+import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
+import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
+
 // import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
 // import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 // import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
@@ -25,7 +43,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 // import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 // import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
-import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
+// import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 // import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 // import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 // import YourEarnings from 'src/components/profile/YourEarnings';
@@ -33,25 +51,11 @@ import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindB
 // import AllBids from 'src/components/profile/AllBids';
 // import ReceivedBids from 'src/components/profile/ReceivedBids';
 
-import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
-import {
-    enumBadgeType,
-    enumSingleNFTType,
-    TypeProduct,
-    TypeProductFetch,
-    TypeFavouritesFetch,
-} from 'src/types/product-types';
-import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
-import { useCookies } from 'react-cookie';
-
 const BlindBoxProduct: React.FC = (): JSX.Element => {
-    const [openDlg, setOpenDlg] = React.useState(false);
-    // get product details from server
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(['METEAST_DID']);
+    const [dialogState, setDialogState] = useDialogContext();
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -166,7 +170,9 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.endTime} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setOpenDlg(true)}>
+                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => {
+                        setDialogState({ ...dialogState, buyBlindBoxDlgOpened: true });
+                    }}>
                         Buy Now
                     </PrimaryButton>
                 </Grid>
@@ -174,8 +180,16 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             <Box marginTop={5}>
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
-            <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <CheckBlindBoxDetails />
+            <ModalDialog
+                open={dialogState.buyBlindBoxDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, buyBlindBoxDlgOpened: false });
+                }}
+            >
+                {dialogState.buyBlindBoxDlgStep === 0 && <BuyBlindBox />}
+                {dialogState.buyBlindBoxDlgStep === 1 && <OrderSummary />}
+                {dialogState.buyBlindBoxDlgStep === 2 && <PurchaseSuccess />}
+                {dialogState.buyBlindBoxDlgStep === 3 && <BlindBoxContents />}
             </ModalDialog>
         </>
     );

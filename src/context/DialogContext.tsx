@@ -48,6 +48,9 @@ interface State {
     allTxDlgOpened: boolean;
     // all bids
     allBidDlgOpened: boolean;
+    // buy blind box
+    buyBlindBoxDlgOpened: boolean;
+    buyBlindBoxDlgStep: number;
 }
 
 const defaultState: State = {
@@ -97,6 +100,8 @@ const defaultState: State = {
     // all bids
     allBidDlgOpened: false,
     // buy blind box
+    buyBlindBoxDlgOpened: false,
+    buyBlindBoxDlgStep: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

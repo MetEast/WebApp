@@ -61,7 +61,6 @@ const LoginPage: React.FC = (): JSX.Element => {
                 .then((data) => {
                     if (data.code === 200) {
                         const token = data.token;
-
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
                         const user = jwtDecode(token);
