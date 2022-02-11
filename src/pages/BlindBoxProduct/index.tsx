@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Stack, Grid, Typography, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -139,6 +142,18 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         getFetchData();
     }, []);
 
+    const setBuyBlindBoxTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, buyBlindBoxTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setBuyBlindBoxTxFee();
+    }, [dialogState.buyBlindBoxDlgStep]);
+
+
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
         if (type === 'inc') {
@@ -170,9 +185,21 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.endTime} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => {
-                        setDialogState({ ...dialogState, buyBlindBoxDlgOpened: true });
-                    }}>
+                    <PrimaryButton
+                        sx={{ marginTop: 3, width: '100%' }}
+                        onClick={() => {
+                            setDialogState({
+                                ...dialogState,
+                                buyBlindBoxDlgOpened: true,
+                                buyBlindBoxDlgStep: 0,
+                                buyBlindBoxName: productDetail.name,
+                                buyBlindBoxPriceEla: productDetail.price_ela,
+                                buyBlindBoxPriceUsd: productDetail.price_usd,
+                                buyBlindBoxAmount: 1,
+                                buyBlindBoxCreator: productDetail.author
+                            });
+                        }}
+                    >
                         Buy Now
                     </PrimaryButton>
                 </Grid>

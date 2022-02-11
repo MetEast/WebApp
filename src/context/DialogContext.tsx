@@ -51,6 +51,13 @@ interface State {
     // buy blind box
     buyBlindBoxDlgOpened: boolean;
     buyBlindBoxDlgStep: number;
+    buyBlindBoxName: string;
+    buyBlindBoxPriceEla: number;
+    buyBlindBoxPriceUsd: number;
+    buyBlindBoxAmount: number;
+    buyBlindBoxTxFee: number;
+    buyBlindBoxTxHash: string;
+    buyBlindBoxCreator: string;
 }
 
 const defaultState: State = {
@@ -102,6 +109,13 @@ const defaultState: State = {
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
+    buyBlindBoxName: '',
+    buyBlindBoxPriceEla: 0,
+    buyBlindBoxPriceUsd: 0, 
+    buyBlindBoxAmount: 0, 
+    buyBlindBoxTxFee: 0, 
+    buyBlindBoxTxHash: '',
+    buyBlindBoxCreator: ''
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

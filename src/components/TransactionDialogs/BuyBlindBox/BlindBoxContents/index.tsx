@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Stack, Typography, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -9,6 +9,7 @@ export interface ComponentProps {}
 
 const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const [imgIndex, setImgIndex] = useState<number>(1);
 
     return (
         <Stack spacing={3} width={320}>
@@ -16,22 +17,22 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Blind Box Contents</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center">
-                <PageNumberTypo>1 of 7</PageNumberTypo>
+                <PageNumberTypo>{imgIndex} of {dialogState.buyBlindBoxAmount}</PageNumberTypo>
                 <Box borderRadius={4} overflow="hidden">
                     <img src="/assets/images/blindbox/blindbox-nft-template2.png" alt="" />
                 </Box>
                 <Typography fontSize={18} fontWeight={700} marginTop={2}>
-                    Project Title
+                    {dialogState.buyBlindBoxName}
                 </Typography>
                 <Typography fontSize={14} fontWeight={400}>
-                    created by Nickname
+                    created by {dialogState.buyBlindBoxCreator}
                 </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
                 <SecondaryButton
                     fullWidth
                     onClick={() => {
-                        console.log('previous');
+                        if(imgIndex > 1) setImgIndex(imgIndex - 1);
                     }}
                 >
                     Previous
@@ -39,7 +40,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        console.log('next');
+                        if(imgIndex < dialogState.buyBlindBoxAmount) setImgIndex(imgIndex + 1);
                     }}
                 >
                     Next
