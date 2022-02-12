@@ -23,6 +23,7 @@ import ModalDialog from 'src/components/ModalDialog';
 import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
 import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
 import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
+import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
 // import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
 // import CheckSaleDetails from 'src/components/TransactionDialogs/ListNFT/CheckSaleDetails';
 // import ArtworkIsNowForSale from 'src/components/TransactionDialogs/ListNFT/ArtworkIsNowForSale';
@@ -183,7 +184,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <CancelBid />
+                <CancelBidSuccess />
             </ModalDialog>
         </>
     );
