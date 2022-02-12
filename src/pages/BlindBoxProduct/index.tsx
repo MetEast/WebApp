@@ -14,11 +14,13 @@ import ModalDialog from 'src/components/ModalDialog';
 // import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 // import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
 // import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
-import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
+// import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 // import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
+// import NFTMinted from 'src/components/TransactionDialogs/MintNFT/NFTMinted';
 // import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 // import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 // import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
+import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
 // import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
 // import CheckSaleDetails from 'src/components/TransactionDialogs/ListNFT/CheckSaleDetails';
 // import ArtworkIsNowForSale from 'src/components/TransactionDialogs/ListNFT/ArtworkIsNowForSale';
@@ -179,7 +181,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <MintNFT />
+                <UpdateBid />
             </ModalDialog>
         </>
     );

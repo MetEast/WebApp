@@ -7,7 +7,7 @@ export interface ComponentProps {
     handleChange?: (value: number) => void;
 }
 
-const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {}}): JSX.Element => {
+const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {} }): JSX.Element => {
     const [input, setInput] = useState(0);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
