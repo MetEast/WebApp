@@ -1,5 +1,20 @@
 import { styled, Button } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { DropzoneArea } from 'material-ui-dropzone';
+
+export const useStyles = makeStyles((theme: any) => ({
+    container: {
+        '&::-webkit-scrollbar': {
+            width: 36,
+        },
+        '&::-webkit-scrollbar-thumb': {
+            border: '14px solid rgba(0, 0, 0, 0)',
+            backgroundClip: 'padding-box',
+            borderRadius: '9999px',
+            backgroundColor: '#AAAAAA',
+        },
+    },
+}));
 
 export const CustomeDropzoneArea = styled(DropzoneArea)`
     width: "100%";

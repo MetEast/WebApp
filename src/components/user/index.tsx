@@ -1,8 +1,8 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 const User: React.FC = (): JSX.Element => {
-    return <Outlet />
-}
+    return <Outlet />;
+};
 
 export default User;

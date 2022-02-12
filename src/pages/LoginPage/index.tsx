@@ -86,6 +86,7 @@ const LoginPage: React.FC = (): JSX.Element => {
         }
     };
 
+    //did:elastos:igGJXJVn9yWDVeVE9cKw2mKiVA1jjofWaa
     // const logIn = async () => {
     //     setDidCookie("METEAST_DID", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/', sameSite: 'none', secure: true});
     //     setTokenCookie("METEAST_TOKEN", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOiJkaWQ6ZWxhc3RvczppWm1oaHZIR0Zob2lmRXFqaWhHSkpBUWtXa2ZiOEpEb3E0IiwidHlwZSI6InVzZXIiLCJuYW1lIjoiVGVydSIsImVtYWlsIjoiIiwiY2FuTWFuYWdlQWRtaW5zIjpmYWxzZSwiaWF0IjoxNjQzMTk5Njg4LCJleHAiOjE2NDM4MDQ0ODh9.h8TpAlHyMlH8fS1aF6haslkOv2uUjyP18qeu0LzcLQ0', {path: '/', sameSite: 'none', secure: true});

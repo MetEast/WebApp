@@ -9,7 +9,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import { useSnackbar } from 'notistack';
 import Select from 'src/components/Select';
-import { SelectBtn } from './styles';
+import { useStyles, SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { mintNFTCategoryOptions } from 'src/constants/select-constants';
 
@@ -40,15 +40,24 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
         }
     }, []);
 
+    const classes = useStyles();
+
     return (
-        <Stack spacing={5} width={700}>
+        <Stack
+            spacing={5}
+            minWidth={{ xs: 360, sm: 580, md: 700 }}
+            paddingRight={{ xs: 2, sm: 0 }}
+            marginRight={{ xs: -5, sm: 0 }}
+            sx={{ overflowY: 'auto', overflowX: 'hidden' }}
+            className={classes.container}
+        >
             <Stack alignItems="center">
                 <PageNumberTypo>1 of 2</PageNumberTypo>
                 <DialogTitleTypo>Mint NFT</DialogTitleTypo>
             </Stack>
             <Box>
                 <Grid container columnSpacing={4}>
-                    <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
+                    <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
                         <CustomTextField
                             title="Project Title"
                             placeholder="Placeholder Text"
@@ -81,7 +90,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             />
                         </Box>
                     </Grid>
-                    <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
+                    <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Category

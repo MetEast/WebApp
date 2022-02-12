@@ -29,9 +29,12 @@ import {
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
 
+// dialogs for test
 // import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
 // import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
-// import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
+// import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
+// import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
+import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 // import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
 // import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 // import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';

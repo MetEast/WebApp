@@ -86,10 +86,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </Layout>
                     }
                 />
-                <Route 
-                    path="/admin" 
-                    element={<AdminPage />} 
-                />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route
                     path="/admin/nfts"
                     element={
@@ -162,7 +159,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </AdminPage>
                     }
                 />
-                <Route path="" element={<RequireAuth><User /></RequireAuth>}>
+                <Route
+                    path=""
+                    element={
+                        <RequireAuth>
+                            <User />
+                        </RequireAuth>
+                    }
+                >
                     <Route
                         path="/profile"
                         element={
