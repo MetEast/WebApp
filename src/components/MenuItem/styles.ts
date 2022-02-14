@@ -2,7 +2,7 @@ import { styled, Button, Typography } from '@mui/material';
 
 export const MenuButton = styled(Button)<{ selected: boolean }>`
     height: 40px;
-    padding: 0 12px;
+    min-width: 40px;
     border-radius: 8px;
     color: ${({ selected }) => (selected ? '#1890FF' : 'black')};
     background: ${({ selected }) => (selected ? '#E8F4FF' : 'transparent')};

@@ -7,9 +7,10 @@ import { useNavigate } from 'react-router-dom';
 export interface IMenuItemProps {
     data: TypeMenuItem;
     isSelected: boolean;
+    mobile?: boolean;
 }
 
-const MenuItem: React.FC<IMenuItemProps> = ({ data: { icon, title, url }, isSelected }): JSX.Element => {
+const MenuItem: React.FC<IMenuItemProps> = ({ data: { icon, title, url }, isSelected, mobile }): JSX.Element => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -17,9 +18,9 @@ const MenuItem: React.FC<IMenuItemProps> = ({ data: { icon, title, url }, isSele
     };
 
     return (
-        <MenuButton selected={isSelected} onClick={handleClick}>
+        <MenuButton selected={isSelected} sx={{ paddingX: mobile ? 0 : 2 }} onClick={handleClick}>
             {icon}
-            <MenuItemTypography selected={isSelected}>{title}</MenuItemTypography>
+            {!mobile && <MenuItemTypography selected={isSelected}>{title}</MenuItemTypography>}
         </MenuButton>
     );
 };

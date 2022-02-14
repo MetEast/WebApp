@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 import Header from '../Header';
-import Navbar from '../Navbar';
+import Footer from '../Footer';
 import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 
@@ -37,7 +37,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 }}
             >
                 <Container>
-                    <Navbar />
+                    <Footer />
                 </Container>
             </Box>
             <MintNFTDlgContainer />
