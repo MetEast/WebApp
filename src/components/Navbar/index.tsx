@@ -2,27 +2,22 @@ import React from 'react';
 import { TypeMenuItem } from 'src/types/layout-types';
 import MenuItem from '../MenuItem';
 import { Box } from '@mui/material';
-import { Home24Filled, AppFolder24Filled, Box24Filled, Person24Filled } from '@fluentui/react-icons';
 import { useLocation } from 'react-router-dom';
 
 const navbarItemList: Array<TypeMenuItem> = [
     {
-        icon: Home24Filled,
         title: 'Home',
         url: '/',
     },
     {
-        icon: AppFolder24Filled,
         title: 'Products',
         url: '/products',
     },
     {
-        icon: Box24Filled,
         title: 'Blind Boxes',
         url: '/blind-box',
     },
     {
-        icon: Person24Filled,
         title: 'Profile',
         url: '/profile',
     },

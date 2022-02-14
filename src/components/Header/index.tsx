@@ -17,14 +17,17 @@ const menuItemsList = [
     {
         title: 'Home',
         url: '/',
+        icon: <Icon icon="ph:house" fontSize={20} style={{ marginRight: 6, marginBottom: 2 }} />,
     },
     {
         title: 'Products',
         url: '/products',
+        icon: <Icon icon="ph:image-square" fontSize={20} style={{ marginRight: 6, marginBottom: 2 }} />,
     },
     {
         title: 'Blind Boxes',
         url: '/blind-box',
+        icon: <Icon icon="ph:cube" fontSize={20} style={{ marginRight: 6, marginBottom: 2 }} />,
     },
 ];
 
@@ -62,7 +65,7 @@ const Header: React.FC = (): JSX.Element => {
             <Typography fontSize={32} fontWeight={900} sx={{ textTransform: 'uppercase' }}>
                 Meteast
             </Typography>
-            <Stack direction="row" spacing={4}>
+            <Stack direction="row" spacing={3}>
                 {menuItemsList.map((item, index) => (
                     <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
                 ))}
