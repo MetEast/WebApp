@@ -72,44 +72,69 @@ const Header: React.FC = (): JSX.Element => {
                 ))}
             </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
-                <Box position="relative">
-                    <IconButton>
-                        <Icon icon="ph:chat-circle" fontSize={28} color="black" />
-                    </IconButton>
-                    <NotificationTypo>2</NotificationTypo>
-                </Box>
-                <IconButton
-                    onClick={() => {
-                        navigate('/profile');
-                    }}
-                >
-                    <Icon icon="ph:user" fontSize={28} color="black" />
-                </IconButton>
                 {auth?.isLoggedIn && (
-                    <Button onClick={logOut}>
-                        <LogoutOutlinedIcon sx={{ color: '#000' }}>Log out</LogoutOutlinedIcon>
-                    </Button>
+                    <PrimaryButton size="small" sx={{ paddingX: 2 }}>
+                        <Icon
+                            icon="ph:sign-in"
+                            fontSize={20}
+                            color="white"
+                            style={{ marginRight: 4, marginBottom: 2 }}
+                        />
+                        Login
+                    </PrimaryButton>
                 )}
-                <PrimaryButton
-                    size="small"
-                    onClick={() => {
-                        if (auth.isLoggedIn)
-                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
-                        else navigate('/login');
-                    }}
-                    sx={{ paddingX: 2 }}
-                >
-                    Create NFT
-                </PrimaryButton>
-                <PrimaryButton
-                    size="small"
-                    sx={{ paddingX: 2 }}
-                    onClick={() => {
-                        navigate('/admin/nfts');
-                    }}
-                >
-                    admin area
-                </PrimaryButton>
+                {!auth?.isLoggedIn && (
+                    <>
+                        <Box position="relative">
+                            <IconButton>
+                                <Icon icon="ph:chat-circle" fontSize={28} color="black" />
+                            </IconButton>
+                            <NotificationTypo>2</NotificationTypo>
+                        </Box>
+                        <IconButton
+                            onClick={() => {
+                                navigate('/profile');
+                            }}
+                        >
+                            <Icon icon="ph:user" fontSize={28} color="black" />
+                        </IconButton>
+                        <IconButton onClick={logOut}>
+                            <Icon icon="ph:sign-out" fontSize={28} color="black" />
+                        </IconButton>
+                        <PrimaryButton
+                            size="small"
+                            onClick={() => {
+                                if (auth.isLoggedIn)
+                                    setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
+                                else navigate('/login');
+                            }}
+                            sx={{ paddingX: 2 }}
+                        >
+                            <Icon
+                                icon="ph:sticker"
+                                fontSize={20}
+                                color="white"
+                                style={{ marginRight: 4, marginBottom: 2 }}
+                            />
+                            Create NFT
+                        </PrimaryButton>
+                        <PrimaryButton
+                            size="small"
+                            sx={{ paddingX: 2 }}
+                            onClick={() => {
+                                navigate('/admin/nfts');
+                            }}
+                        >
+                            admin area
+                            <Icon
+                                icon="ph:arrow-square-out"
+                                fontSize={20}
+                                color="white"
+                                style={{ marginLeft: 4, marginBottom: 4 }}
+                            />
+                        </PrimaryButton>
+                    </>
+                )}
             </Stack>
         </Stack>
     );
