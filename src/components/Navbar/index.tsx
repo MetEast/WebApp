@@ -75,7 +75,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         />
     ));
 
-    const menuButtons = !auth?.isLoggedIn ? (
+    const menuButtons = auth?.isLoggedIn ? (
         <>
             <Box position="relative">
                 <IconButton>
