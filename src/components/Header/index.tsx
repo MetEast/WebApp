@@ -72,7 +72,7 @@ const Header: React.FC = (): JSX.Element => {
                 ))}
             </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
-                {auth?.isLoggedIn && (
+                {!auth?.isLoggedIn && (
                     <PrimaryButton size="small" sx={{ paddingX: 2 }}>
                         <Icon
                             icon="ph:sign-in"
@@ -83,7 +83,7 @@ const Header: React.FC = (): JSX.Element => {
                         Login
                     </PrimaryButton>
                 )}
-                {!auth?.isLoggedIn && (
+                {auth?.isLoggedIn && (
                     <>
                         <Box position="relative">
                             <IconButton>
