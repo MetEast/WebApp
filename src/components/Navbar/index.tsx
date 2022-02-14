@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import { Button, Box, Typography, Stack, IconButton } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
-import MenuItem from '../MenuItem';
+import PageButton from './PageButton';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { useRecoilState } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { essentialsConnector } from '../ConnectWallet/EssentialConnectivity';
@@ -67,11 +66,16 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         window.location.reload();
     };
 
-    const menuButtons = menuItemsList.map((item, index) => (
-        <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} mobile={mobile} />
+    const pageButtons = menuItemsList.map((item, index) => (
+        <PageButton
+            key={`navbaritem-${index}`}
+            data={item}
+            isSelected={item.url === location.pathname}
+            mobile={mobile}
+        />
     ));
 
-    const otherButtons = auth?.isLoggedIn ? (
+    const menuButtons = auth?.isLoggedIn ? (
         <>
             <Box position="relative">
                 <IconButton>
@@ -143,15 +147,19 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 </Stack>
             )}
             {mobile ? (
-                menuButtons
+                pageButtons
             ) : (
                 <Stack direction="row" spacing={3}>
+                    {pageButtons}
+                </Stack>
+            )}
+            {mobile ? (
+                menuButtons
+            ) : (
+                <Stack direction="row" alignItems="center" spacing={2}>
                     {menuButtons}
                 </Stack>
             )}
-            <Stack direction="row" alignItems="center" spacing={2}>
-                {otherButtons}
-            </Stack>
         </Stack>
     );
 };

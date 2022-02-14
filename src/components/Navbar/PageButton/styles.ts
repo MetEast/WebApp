@@ -1,6 +1,6 @@
 import { styled, Button, Typography } from '@mui/material';
 
-export const MenuButton = styled(Button)<{ selected: boolean }>`
+export const PageBtn = styled(Button)<{ selected: boolean }>`
     height: 40px;
     min-width: 40px;
     border-radius: 8px;
