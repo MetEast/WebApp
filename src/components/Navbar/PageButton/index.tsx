@@ -17,7 +17,14 @@ const PageButton: React.FC<ComponentProps> = ({ data: { icon, title, url }, isSe
     };
 
     return (
-        <PageBtn selected={isSelected} sx={{ paddingX: mobile ? 0 : 2 }} onClick={handleClick}>
+        <PageBtn
+            selected={isSelected}
+            sx={{
+                paddingX: mobile ? 0 : 2,
+                display: mobile ? 'inline-flex' : { xs: title === 'Home' ? 'none' : 'inline-flex', lg: 'inline-flex' },
+            }}
+            onClick={handleClick}
+        >
             {icon}
             {!mobile && <MenuItemTypography selected={isSelected}>{title}</MenuItemTypography>}
         </PageBtn>

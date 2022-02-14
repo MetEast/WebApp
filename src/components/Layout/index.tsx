@@ -16,7 +16,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     top: 0,
                     background: '#FFFFFF',
                     zIndex: 20,
-                    display: { xs: 'none', md: 'block' },
+                    display: { xs: 'none', sm: 'block' },
                 }}
             >
                 <Container>
@@ -33,7 +33,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     bottom: 0,
                     background: 'white',
                     zIndex: 20,
-                    display: { md: 'none' },
+                    display: { sm: 'none' },
                 }}
             >
                 <Container>

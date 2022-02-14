@@ -75,23 +75,23 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         />
     ));
 
-    const menuButtons = auth?.isLoggedIn ? (
+    const menuButtons = !auth?.isLoggedIn ? (
         <>
             <Box position="relative">
                 <IconButton>
-                    <Icon icon="ph:chat-circle" fontSize={mobile ? 20 : 28} color="black" />
+                    <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                 </IconButton>
-                <NotificationTypo mobile={mobile}>2</NotificationTypo>
+                <NotificationTypo>2</NotificationTypo>
             </Box>
             <IconButton
                 onClick={() => {
                     navigate('/profile');
                 }}
             >
-                <Icon icon="ph:user" fontSize={mobile ? 20 : 28} color="black" />
+                <Icon icon="ph:user" fontSize={20} color="black" />
             </IconButton>
             <IconButton onClick={logOut}>
-                <Icon icon="ph:sign-out" fontSize={mobile ? 20 : 28} color="black" />
+                <Icon icon="ph:sign-out" fontSize={20} color="black" />
             </IconButton>
             <PrimaryButton
                 size="small"
@@ -126,7 +126,13 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             </PrimaryButton>
         </>
     ) : (
-        <PrimaryButton size="small" sx={{ paddingX: 2 }}>
+        <PrimaryButton
+            size="small"
+            sx={{ paddingX: 2 }}
+            onClick={() => {
+                navigate('/profile');
+            }}
+        >
             <Icon icon="ph:sign-in" fontSize={20} color="white" style={{ marginRight: 4, marginBottom: 2 }} />
             Login
         </PrimaryButton>
@@ -143,7 +149,9 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             {!mobile && (
                 <Stack direction="row" alignItems="center" spacing={1.5}>
                     <img src="/assets/images/header/logo.svg" alt="" />
-                    <img src="/assets/images/header/meteast_label.svg" alt="" />
+                    <Box display={{ xs: 'none', lg: 'block' }}>
+                        <img src="/assets/images/header/meteast_label.svg" alt="" />
+                    </Box>
                 </Stack>
             )}
             {mobile ? (
