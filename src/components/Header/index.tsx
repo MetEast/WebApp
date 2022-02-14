@@ -62,9 +62,10 @@ const Header: React.FC = (): JSX.Element => {
 
     return (
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography fontSize={32} fontWeight={900} sx={{ textTransform: 'uppercase' }}>
-                Meteast
-            </Typography>
+            <Stack direction="row" alignItems="center" spacing={1.5}>
+                <img src="/assets/images/header/logo.svg" alt="" />
+                <img src="/assets/images/header/meteast_label.svg" alt="" />
+            </Stack>
             <Stack direction="row" spacing={3}>
                 {menuItemsList.map((item, index) => (
                     <MenuItem key={`navbaritem-${index}`} data={item} isSelected={item.url === location.pathname} />
