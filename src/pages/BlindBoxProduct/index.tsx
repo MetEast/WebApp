@@ -27,6 +27,7 @@ import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/Cancel
 import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
 import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
+import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 // import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
 // import CheckSaleDetails from 'src/components/TransactionDialogs/ListNFT/CheckSaleDetails';
 // import ArtworkIsNowForSale from 'src/components/TransactionDialogs/ListNFT/ArtworkIsNowForSale';
@@ -187,7 +188,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 <img src="" alt="Blind Box Introduction"></img>
             </Box>
             <ModalDialog open={openDlg} onClose={() => setOpenDlg(false)}>
-                <CancelSale />
+                <CancelSaleSuccess />
             </ModalDialog>
         </>
     );
