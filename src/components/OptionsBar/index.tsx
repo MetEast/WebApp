@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import SearchField from '../SearchField';
 import { TypeSelectItem } from 'src/types/select-types';
-import { FilterButton, SortByBtn, GridButton } from './styles';
+import { FilterButton, FiltersBox, SortByBtn, GridButton } from './styles';
 import { SpacingProps } from '@mui/system';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Select from 'src/components/Select';
+import FilterCard from './FilterCard';
 
 interface OptionsBarProps extends SpacingProps {
     handleKeyWordChange: (value: string) => void;
@@ -37,6 +38,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     const onlyShowIcon = matchDownMd ? true : false;
 
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
+    const [showFiltersCard, setShowFiltersCard] = useState<boolean>(false);
 
     return (
         <Stack direction="row" spacing={{ xs: 1, md: 2 }} sx={{ height: 40 }} {...otherProps}>
@@ -61,9 +63,16 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 min_width={onlyShowIcon ? 'auto' : 240}
                 listitemsbox_width={240}
             />
-            <FilterButton onClick={handleClickFilterButton}>
+            <FilterButton
+                onClick={() => setShowFiltersCard(!showFiltersCard)}
+                onMouseEnter={() => setShowFiltersCard(true)}
+                onMouseLeave={() => setShowFiltersCard(false)}
+            >
                 <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: onlyShowIcon ? 0 : 4 }} />
                 {!onlyShowIcon && `Filter`}
+                <FiltersBox display={showFiltersCard ? 'flex' : 'none'}>
+                    <FilterCard />
+                </FiltersBox>
             </FilterButton>
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
                 <GridButton

@@ -1,9 +1,10 @@
-import { styled, Button } from '@mui/material';
+import { styled, Button, Box, Dialog } from '@mui/material';
 import { BaseButton } from 'src/components/Buttons/styles';
 
 export const FilterButton = styled(Button)`
     min-width: 40px;
     height: 100%;
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -17,6 +18,19 @@ export const FilterButton = styled(Button)`
         justify-content: center;
         padding: 0;
     }
+`;
+
+export const FiltersCard = styled(Dialog)``;
+
+export const FiltersBox = styled(Box)`
+    position: absolute;
+    top: 40px;
+    right: 0;
+    margin-top: 8px;
+    padding: 32px;
+    box-shadow: 0px 4px 40px -26px rgba(0, 20, 39, 0.4);
+    border-radius: 40px;
+    background: white;
 `;
 
 export const SortByBtn = styled(Button)<{ isopen: number }>`
