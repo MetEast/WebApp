@@ -34,14 +34,12 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
     const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
-    const displayFilterLable = matchDownMd ? false : true;
     const onlyShowIcon = matchDownMd ? true : false;
-    const filterBtnHidden = matchDownLg ? false : true;
 
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
 
     return (
-        <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ height: 40 }} {...otherProps}>
+        <Stack direction="row" spacing={{ xs: 1, md: 2 }} sx={{ height: 40 }} {...otherProps}>
             <SearchField handleChange={handleKeyWordChange} />
             <Select
                 titlebox={
@@ -63,12 +61,10 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 min_width={onlyShowIcon ? 'auto' : 240}
                 listitemsbox_width={240}
             />
-            {!filterBtnHidden && (
-                <FilterButton onClick={handleClickFilterButton}>
-                    <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: 4 }} />
-                    {displayFilterLable && `Filter`}
-                </FilterButton>
-            )}
+            <FilterButton onClick={handleClickFilterButton}>
+                <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: onlyShowIcon ? 0 : 4 }} />
+                {!onlyShowIcon && `Filter`}
+            </FilterButton>
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
                 <GridButton
                     size="small"
