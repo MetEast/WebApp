@@ -65,8 +65,8 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
             />
             <FilterButton
                 onClick={() => setShowFiltersCard(!showFiltersCard)}
-                onMouseEnter={() => setShowFiltersCard(true)}
-                onMouseLeave={() => setShowFiltersCard(false)}
+                // onMouseEnter={() => setShowFiltersCard(true)}
+                // onMouseLeave={() => setShowFiltersCard(false)}
             >
                 <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: onlyShowIcon ? 0 : 4 }} />
                 {!onlyShowIcon && `Filter`}

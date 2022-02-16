@@ -11,6 +11,7 @@ theme.components = {
         styleOverrides: {
             root: {
                 color: 'black',
+                textTransform: 'none',
             },
         },
     },
