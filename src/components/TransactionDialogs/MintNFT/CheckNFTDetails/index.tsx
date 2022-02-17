@@ -173,6 +173,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((added: any) => {
                     // Hash of image path - tokenId
                     _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
+                    console.log("mintTokenId: ", _id)
                     return sendIpfsMetaData(added);
                 })
                 .then((metaRecv: any) => {
@@ -183,6 +184,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((didRecv: any) => {
                     // didUri
                     _didUri = `meteast:json:${didRecv.path}`;
+                    console.log("mintDidUri: ", _didUri)
                     resolve({ _id, _uri, _didUri });
                 })
                 .catch((error) => {
