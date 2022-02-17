@@ -24,7 +24,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     <Header />
                 </Container>
             </Box>
-            <Box paddingTop={{ xs: 4, md: 12 }} paddingBottom={{ xs: 12, md: 4 }}>
+            <Box paddingTop={{ xs: 4, sm: 12 }} paddingBottom={{ xs: 12, sm: 4 }}>
                 <Container>{children}</Container>
             </Box>
             <Box

@@ -14,7 +14,6 @@ import { useSnackbar } from 'notistack';
 
 export interface BlindBoxGalleryItemProps {
     product: TypeProduct;
-    onlyShowImage?: boolean;
     index: number;
     updateLikes: (index: number, type: string) => void;
 }
