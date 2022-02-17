@@ -71,7 +71,7 @@ const HomePage: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || '---';
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.type = itemObject.status === 'BUY NOW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
@@ -109,7 +109,7 @@ const HomePage: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || '---'; // -- no proper value
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.type = itemObject.status === 'BUY NOW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
