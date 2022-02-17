@@ -15,12 +15,19 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
+import { useCookies } from 'react-cookie';
+import jwtDecode from 'jwt-decode';
+import { UserTokenType } from 'src/types/auth-types';
+import { getDidUri } from 'src/services/essential';
 
 export interface ComponentProps {}
 
 const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
+    const { did, name } = userInfo;
 
     const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -177,7 +184,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         // console.log("quoteToken: --------", _quoteToken);
         // console.log("price: --------", BigInt(dialogState.sellPrice * 1e18).toString());
         // console.log("didUri: --------", dialogState.mintDidUri);
-
+        const didUri = dialogState.mintDidUri === '' ? await getDidUri(did, '', name) : dialogState.mintDidUri;
         if (dialogState.sellSaleType === 'buynow') {
             await callCreateOrderForSale(
                 dialogState.mintTokenId,
