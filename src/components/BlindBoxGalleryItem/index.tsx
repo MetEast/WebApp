@@ -14,20 +14,15 @@ import { useSnackbar } from 'notistack';
 
 export interface BlindBoxGalleryItemProps {
     product: TypeProduct;
-    onlyShowImage?: boolean;
     index: number;
     updateLikes: (index: number, type: string) => void;
 }
 
-const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({
-    product,
-    index,
-    updateLikes,
-}): JSX.Element => {
+const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const auth = useRecoilValue(authAtom);
-    const [didCookies] = useCookies(["METEAST_DID"]);
-    const [tokenCookies] = useCookies(["METEAST_TOKEN"]);
+    const [didCookies] = useCookies(['METEAST_DID']);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -37,7 +32,11 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({
         if (auth.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
-            const reqBody = { token: tokenCookies.METEAST_TOKEN, tokenId: product.tokenId, did: didCookies.METEAST_DID };
+            const reqBody = {
+                token: tokenCookies.METEAST_TOKEN,
+                tokenId: product.tokenId,
+                did: didCookies.METEAST_DID,
+            };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
             setLikeState(!likeState);
@@ -90,9 +89,9 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({
                     </LikeBtn>
                 </ImageBox>
             </ProductImageContainer>
-            <Grid container spacing={1}>
+            <Grid container marginTop={1}>
                 <Grid item order={1} width={'100%'}>
-                    <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
+                    <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
                         {product.name}
                     </Typography>
                 </Grid>
@@ -104,10 +103,10 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({
                 >
                     <ProductSnippets sold={product.sold} likes={product.likes} />
                 </Grid>
-                <Grid item order={3} width={'100%'}>
+                <Grid item order={3} width={'100%'} marginTop={{ xs: 0.25, md: 1 }}>
                     <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
                 </Grid>
-                <Grid item order={{ xs: 2, sm: 2, md: 4 }} width={'100%'}>
+                <Grid item order={{ xs: 2, sm: 2, md: 4 }} width={'100%'} marginTop={{ xs: 0.25, md: 1 }}>
                     <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
                 </Grid>
             </Grid>

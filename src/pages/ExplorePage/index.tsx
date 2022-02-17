@@ -193,8 +193,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box onClick={() => {}} sx={{ cursor: 'pointer' }}>
-                                <img src={item} alt="" width="100%" />
+                            <Box borderRadius={2.5} overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                                <img src={item} alt="" style={{ minWidth: '100%' }} />
                             </Box>
                         </SwiperSlide>
                     ))}

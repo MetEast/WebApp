@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
@@ -162,8 +162,8 @@ const HomePage: React.FC = (): JSX.Element => {
                     <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                         {adBanners.map((item, index) => (
                             <SwiperSlide key={`banner-carousel-${index}`}>
-                                <Box onClick={() => {}} sx={{ cursor: 'pointer' }}>
-                                    <img src={item} alt="" width="100%" />
+                                <Box borderRadius={2.5} overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                                    <img src={item} alt="" style={{ minWidth: '100%' }} />
                                 </Box>
                             </SwiperSlide>
                         ))}
@@ -175,7 +175,9 @@ const HomePage: React.FC = (): JSX.Element => {
                     )} */}
                 </Box>
                 <Box mt={4}>
-                    <H2Typography mb={1}>New Products</H2Typography>
+                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                        New Products
+                    </Typography>
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
                         {productList.map((product, index) => (
                             <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
@@ -190,7 +192,9 @@ const HomePage: React.FC = (): JSX.Element => {
                     )}
                 </Box>
                 <Box mt={8}>
-                    <H2Typography mb={1}>Popular Collections</H2Typography>
+                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                        Popular Collections
+                    </Typography>
                     <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
                         {collectionList.map((collection, index) => (
                             <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
