@@ -68,7 +68,7 @@ const HomePage: React.FC = (): JSX.Element => {
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price;
+            product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || '---';
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
@@ -106,7 +106,7 @@ const HomePage: React.FC = (): JSX.Element => {
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price;
+            product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || '---'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
