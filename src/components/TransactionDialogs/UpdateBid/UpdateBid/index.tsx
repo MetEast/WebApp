@@ -19,7 +19,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [bidAmount, setBidAmount] = useState(0);
 
     return (
-        <Stack spacing={5} width={320} paddingY={6}>
+        <Stack spacing={5} width={320}>
             <Stack alignItems="center">
                 <PageNumberTypo>1 of 2</PageNumberTypo>
                 <DialogTitleTypo>Update Bid</DialogTitleTypo>

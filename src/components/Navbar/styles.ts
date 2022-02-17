@@ -5,12 +5,12 @@ export const NotificationTypo = styled(Typography)`
     justify-content: center;
     align-items: center;
     position: absolute;
-    right: 4px;
-    top: 4px;
-    width: 18px;
-    height: 18px;
+    right: 6px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
     color: white;
     background: #1890ff;

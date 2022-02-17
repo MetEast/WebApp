@@ -1,9 +1,10 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import Header from '../Header';
-import Navbar from '../Navbar';
+import Footer from '../Footer';
 import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
+import generatedGitInfo from '../../generatedGitInfo.json';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
     return (
@@ -16,7 +17,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     top: 0,
                     background: '#FFFFFF',
                     zIndex: 20,
-                    display: { xs: 'none', md: 'block' },
+                    display: { xs: 'none', sm: 'block' },
                 }}
             >
                 <Container>
@@ -33,12 +34,15 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     bottom: 0,
                     background: 'white',
                     zIndex: 20,
-                    display: { md: 'none' },
+                    display: { sm: 'none' },
                 }}
             >
                 <Container>
-                    <Navbar />
+                    <Footer />
                 </Container>
+            </Box>
+            <Box position="fixed" bottom={10} right={10} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>
+                <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
             </Box>
             <MintNFTDlgContainer />
         </>

@@ -216,7 +216,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 marginTop={5}
             />
             {productList.length === 0 && (
-                <Stack justifyContent="center" alignItems="center" minHeight={200}>
+                <Stack justifyContent="center" alignItems="center" minHeight={600}>
                     <img src="/assets/images/loading.gif" alt="" />
                 </Stack>
             )}
