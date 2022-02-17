@@ -193,16 +193,16 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             // if (dialogState.sellSaleEnds.value === '1 month') endTime += 30 * 24 * 3600;
             // else if (dialogState.sellSaleEnds.value === '1 week') endTime += 7 * 24 * 3600;
             // else if (dialogState.sellSaleEnds.value === '1 day') endTime += 24 * 3600;
-            let acutionTime: number = typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
-            if (dialogState.sellSaleEnds.value === '1 month') acutionTime += 30 * 24;
-            else if (dialogState.sellSaleEnds.value === '1 week') acutionTime += 7 * 24;
-            else if (dialogState.sellSaleEnds.value === '1 day') acutionTime += 24;
+            let auctionTime: number = typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
+            if (dialogState.sellSaleEnds.value === '1 month') auctionTime += 30 * 24 * 3600;
+            else if (dialogState.sellSaleEnds.value === '1 week') auctionTime += 7 * 24 * 3600;
+            else if (dialogState.sellSaleEnds.value === '1 day') auctionTime += 24 * 3600;
             
             await callCreateOrderForAuction(
                 dialogState.mintTokenId,
                 _quoteToken,
                 `0x${BigInt(dialogState.sellMinPrice * 1e18).toString(16)}`,
-                acutionTime.toString(),
+                auctionTime.toString(),
                 dialogState.mintDidUri,
             );
         }
