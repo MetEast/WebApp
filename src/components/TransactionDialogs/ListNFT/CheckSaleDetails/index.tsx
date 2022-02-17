@@ -189,10 +189,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
             const walletConnectWeb3 = new Web3(walletConnectProvider as any);
             const currentBlock = await walletConnectWeb3.eth.getBlock("latest");
-            // let endTime = new Date().getSeconds();
-            // if (dialogState.sellSaleEnds.value === '1 month') endTime += 30 * 24 * 3600;
-            // else if (dialogState.sellSaleEnds.value === '1 week') endTime += 7 * 24 * 3600;
-            // else if (dialogState.sellSaleEnds.value === '1 day') endTime += 24 * 3600;
             let auctionTime: number = typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
             if (dialogState.sellSaleEnds.value === '1 month') auctionTime += 30 * 24 * 3600;
             else if (dialogState.sellSaleEnds.value === '1 week') auctionTime += 7 * 24 * 3600;
