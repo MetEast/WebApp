@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Stack, Typography, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
-import { StatusButton } from './styles';
+import { Container, StatusButton } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 
@@ -16,7 +16,7 @@ const statusButtons = [
 
 const FilterCard: React.FC<ComponentProps> = (): JSX.Element => {
     return (
-        <Stack alignItems="flex-start" width={300}>
+        <Container alignItems="flex-start" width={300}>
             <Typography fontSize={32} fontWeight={700} sx={{ textTransform: 'none' }}>
                 Filters
             </Typography>
@@ -53,7 +53,7 @@ const FilterCard: React.FC<ComponentProps> = (): JSX.Element => {
                 <SecondaryButton fullWidth>close</SecondaryButton>
                 <PrimaryButton fullWidth>apply</PrimaryButton>
             </Stack>
-        </Stack>
+        </Container>
     );
 };
 

@@ -63,17 +63,24 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 min_width={onlyShowIcon ? 'auto' : 240}
                 listitemsbox_width={240}
             />
-            <FilterButton
-                onClick={() => setShowFiltersCard(!showFiltersCard)}
-                // onMouseEnter={() => setShowFiltersCard(true)}
-                // onMouseLeave={() => setShowFiltersCard(false)}
+            <Box
+                position="relative"
+                onMouseEnter={() => setShowFiltersCard(true)}
+                onMouseLeave={() => setShowFiltersCard(false)}
             >
-                <Icon icon="ph:funnel" fontSize={20} color="#1890FF" style={{ marginRight: onlyShowIcon ? 0 : 4 }} />
-                {!onlyShowIcon && `Filter`}
+                <FilterButton onClick={() => setShowFiltersCard(!showFiltersCard)}>
+                    <Icon
+                        icon="ph:funnel"
+                        fontSize={20}
+                        color="#1890FF"
+                        style={{ marginRight: onlyShowIcon ? 0 : 4 }}
+                    />
+                    {!onlyShowIcon && `Filter`}
+                </FilterButton>
                 <FiltersBox display={showFiltersCard ? 'flex' : 'none'}>
                     <FilterCard />
                 </FiltersBox>
-            </FilterButton>
+            </Box>
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
                 <GridButton
                     size="small"

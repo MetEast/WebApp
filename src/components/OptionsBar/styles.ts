@@ -20,17 +20,12 @@ export const FilterButton = styled(Button)`
     }
 `;
 
-export const FiltersCard = styled(Dialog)``;
-
 export const FiltersBox = styled(Box)`
     position: absolute;
     top: 40px;
     right: 0;
-    margin-top: 8px;
-    padding: 32px;
-    box-shadow: 0px 4px 40px -26px rgba(0, 20, 39, 0.4);
-    border-radius: 40px;
-    background: white;
+    padding-top: 8px;
+    z-index: 10;
 `;
 
 export const SortByBtn = styled(Button)<{ isopen: number }>`
