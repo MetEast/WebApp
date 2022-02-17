@@ -40,7 +40,7 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
                 body: JSON.stringify(reqBody)
               }).then(response => response.json()).then(data => {
                 if (data.code === 200) {
-                    enqueueSnackbar('Succeed!', { variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"} })
+                  console.log("succeed");
                 } else {
                   console.log(data);
                 }
