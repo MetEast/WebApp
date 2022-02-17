@@ -5,10 +5,12 @@ import { IconBtn } from './styles';
 import ELAPrice from 'src/components/ELAPrice';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     const [amount, setAmount] = useState<number>(1);
 
     return (
@@ -22,9 +24,9 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     Item
                 </Typography>
                 <Typography fontSize={18} fontWeight={700}>
-                    Blind Box Title
+                    {dialogState.buyBlindBoxName}
                 </Typography>
-                <ELAPrice price_ela={199} price_ela_fontsize={14} />
+                <ELAPrice price_ela={dialogState.buyBlindBoxPriceEla} price_ela_fontsize={14} />
                 <Typography fontSize={14} fontWeight={700} marginTop={4} sx={{ textTransform: 'uppercase' }}>
                     Quantity
                 </Typography>
@@ -66,11 +68,25 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <Typography fontSize={14} fontWeight={700} marginTop={4} sx={{ textTransform: 'uppercase' }}>
                     Subtotal
                 </Typography>
-                <ELAPrice price_ela={199} price_usd={480} />
+                <ELAPrice price_ela={dialogState.buyBlindBoxPriceEla * amount} price_usd={dialogState.buyBlindBoxPriceUsd * amount} />
             </Stack>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth>close</SecondaryButton>
-                <PrimaryButton fullWidth>Confirm</PrimaryButton>
+                <SecondaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, buyBlindBoxDlgOpened: false });
+                    }}
+                >
+                    close
+                </SecondaryButton>
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, buyBlindBoxDlgStep: 1, buyBlindBoxDlgOpened: true, buyBlindBoxAmount: amount });
+                    }}
+                >
+                    Confirm
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

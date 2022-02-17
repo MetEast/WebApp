@@ -2,7 +2,7 @@ import { TypeFavouritesFetch } from 'src/types/product-types';
 
 // custome
 export const getImageFromAsset = (id: string) => {
-    if (id === undefined) return '';
+    if (id === undefined || id === null) return '';
     const prefixLen = id.split(':', 2).join(':').length;
     if (prefixLen >= id.length) return '';
     const uri = id.substring(prefixLen + 1);

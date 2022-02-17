@@ -3,10 +3,13 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
+
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
@@ -19,47 +22,61 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>Product Title</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxName}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Unit Price</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>25.00 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxPriceEla} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Amount</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>2</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxAmount}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Subtotal</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>50.00 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxPriceEla * dialogState.buyBlindBoxAmount} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>0.22 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxTxFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Total</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>50.12 ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxPriceEla * dialogState.buyBlindBoxAmount + dialogState.buyBlindBoxTxFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: 0.22 ELA
+                    Available: {dialogState.buyBlindBoxTxFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton fullWidth>Back</SecondaryButton>
-                    <PrimaryButton fullWidth>Confirm</PrimaryButton>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, buyBlindBoxDlgStep: 0, buyBlindBoxDlgOpened: true });
+                        }}
+                    >
+                        Back
+                    </SecondaryButton>
+                    <PrimaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, buyBlindBoxDlgStep: 2, buyBlindBoxDlgOpened: true });
+                        }}
+                    >
+                        Confirm
+                    </PrimaryButton>
                 </Stack>
                 <WarningTypo width={240}>
                     In case of payment problems, please contact the official customer service
