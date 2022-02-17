@@ -33,6 +33,8 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         const isApproval = await meteastContract.methods.isApprovedForAll(accounts[0], _operator).call();
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
+        // const _quoteToken = '0xe6fd75ff38adca4b97fbcd938c86b98772431867';
+        // const _quoteToken = '0xbFB8e279AA787b1A11d38B76b9723Af5aFd3Cace';
 
         if (isApproval === true) {
             console.log('Operator', _operator, ' is already approved');
@@ -119,7 +121,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         _tokenId: string,
         _quoteToken: string,
         _minPrice: string,
-        _endTime: number,
+        _endTime: string,
         _didUri: string,
     ) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -167,14 +169,14 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const createOrder = async (_quoteToken: string) => {
-        console.log("saleType: --------", dialogState.sellSaleType);
-        console.log("price: --------", dialogState.sellPrice);
-        console.log("minPrice: --------", dialogState.sellMinPrice);
-        console.log("saleEnds: --------", dialogState.sellSaleEnds);
-        console.log("---------- tokenId: --------", dialogState.mintTokenId);
-        console.log("quoteToken: --------", _quoteToken);
-        console.log("price: --------", BigInt(dialogState.sellPrice * 1e18).toString());
-        console.log("didUri: --------", dialogState.mintDidUri);
+        // console.log("saleType: --------", dialogState.sellSaleType);
+        // console.log("price: --------", dialogState.sellPrice);
+        // console.log("minPrice: --------", dialogState.sellMinPrice);
+        // console.log("saleEnds: --------", dialogState.sellSaleEnds);
+        // console.log("---------- tokenId: --------", dialogState.mintTokenId);
+        // console.log("quoteToken: --------", _quoteToken);
+        // console.log("price: --------", BigInt(dialogState.sellPrice * 1e18).toString());
+        // console.log("didUri: --------", dialogState.mintDidUri);
 
         if (dialogState.sellSaleType === 'buynow') {
             await callCreateOrderForSale(
@@ -184,15 +186,23 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 dialogState.mintDidUri,
             );
         } else {
-            let endTime = new Date().getSeconds();
-            if (dialogState.sellSaleEnds.value === '1 month') endTime += 30 * 24 * 3600;
-            else if (dialogState.sellSaleEnds.value === '1 week') endTime += 7 * 24 * 3600;
-            else if (dialogState.sellSaleEnds.value === '1 day') endTime += 24 * 3600;
+            const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+            const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+            const currentBlock = await walletConnectWeb3.eth.getBlock("latest");
+            // let endTime = new Date().getSeconds();
+            // if (dialogState.sellSaleEnds.value === '1 month') endTime += 30 * 24 * 3600;
+            // else if (dialogState.sellSaleEnds.value === '1 week') endTime += 7 * 24 * 3600;
+            // else if (dialogState.sellSaleEnds.value === '1 day') endTime += 24 * 3600;
+            let acutionTime: number = typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
+            if (dialogState.sellSaleEnds.value === '1 month') acutionTime += 30 * 24;
+            else if (dialogState.sellSaleEnds.value === '1 week') acutionTime += 7 * 24;
+            else if (dialogState.sellSaleEnds.value === '1 day') acutionTime += 24;
+            
             await callCreateOrderForAuction(
                 dialogState.mintTokenId,
                 _quoteToken,
                 `0x${BigInt(dialogState.sellMinPrice * 1e18).toString(16)}`,
-                endTime,
+                acutionTime.toString(),
                 dialogState.mintDidUri,
             );
         }
