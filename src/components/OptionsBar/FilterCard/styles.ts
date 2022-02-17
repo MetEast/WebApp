@@ -8,6 +8,11 @@ export const Container = styled(Stack)`
     background: white;
 `;
 
-export const StatusButton = styled(SecondaryButton)`
+export const StatusButton = styled(SecondaryButton)<{ selected: boolean }>`
     width: 142px;
+    background: ${({ selected }) => (selected ? '#1890ff' : '#e8f4ff')};
+    color: ${({ selected }) => (selected ? 'white' : '#1890ff')};
+    &:hover {
+        background: ${({ selected }) => (selected ? '#28a0ff' : '#d8e4ef')};
+    }
 `;

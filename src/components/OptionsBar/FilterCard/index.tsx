@@ -15,6 +15,8 @@ const statusButtons = [
 ];
 
 const FilterCard: React.FC<ComponentProps> = (): JSX.Element => {
+    const [status, setStatus] = useState<number>(0);
+
     return (
         <Container alignItems="flex-start" width={300}>
             <Typography fontSize={32} fontWeight={700} sx={{ textTransform: 'none' }}>
@@ -24,9 +26,9 @@ const FilterCard: React.FC<ComponentProps> = (): JSX.Element => {
                 Status
             </Typography>
             <Grid container rowGap={1} marginTop={1}>
-                {statusButtons.map((item) => (
+                {statusButtons.map((item, index) => (
                     <Grid item xs={6}>
-                        <StatusButton size="small">
+                        <StatusButton size="small" selected={index === status} onClick={() => setStatus(index)}>
                             <Icon icon={item.icon} style={{ marginBottom: 2, marginRight: 4 }} />
                             {item.title}
                         </StatusButton>
