@@ -1,8 +1,8 @@
-import React from 'react';
-import Navbar from '../Navbar';
+import React, { useEffect } from 'react';
+import { Stack, Typography } from '@mui/material';
 
 const Footer: React.FC = (): JSX.Element => {
-    return <Navbar mobile />;
+    return <Stack>Footer</Stack>;
 };
 
 export default Footer;
