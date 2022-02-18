@@ -52,7 +52,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [myNFTForSale, setMyNFTForSale] = useState<Array<TypeProduct>>([]);
     const [myNFTSold, setMyNFTSold] = useState<Array<TypeProduct>>([]);
     const [myNFTLiked, setMyNFTLiked] = useState<Array<TypeProduct>>([]);
-    const [likeStateChanged, setLikeStateChanged] = useState<boolean>(false);
+    const [isOnLikedTab, setIsOnLikedTab] = useState<boolean>(false);
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
 
     const defaultValue: TypeProduct = {
@@ -240,8 +240,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
         getFetchData();
         getPersonalData();
         getEssentialWalletBalance();
-    }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected]);
+    }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab]);
 
+    // setProductList
     useEffect(() => {
         switch (nftGalleryFilterBtnSelected) {
             case nftGalleryFilterBtnTypes.All:
@@ -264,6 +265,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 break;
         }
     }, [nftGalleryFilterBtnSelected, myNFTAll, myNFTAcquired, myNFTCreated, myNFTForSale, myNFTSold, myNFTLiked]);
+    
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -292,13 +294,42 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const updateProductLikes = (id: number, type: string) => {
-        let prodList: Array<TypeProduct> = [...productList];
-        if (type === 'inc') {
-            prodList[id].likes += 1;
-        } else if (type === 'dec') {
-            prodList[id].likes -= 1;
+        if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) {
+            setIsOnLikedTab(!isOnLikedTab);
         }
-        setProductList(prodList);
+        else {
+            let prodList: Array<TypeProduct> = [...productList];
+            let likedList: Array<TypeProduct> = [...myNFTLiked];
+            if (type === 'inc') {
+                prodList[id].likes += 1;
+                likedList.push(prodList[id]);
+            } else if (type === 'dec') {
+                const idx = likedList.indexOf(prodList[id]);
+                likedList.splice(idx, 1);
+                prodList[id].likes -= 1;
+            }
+
+            switch (nftGalleryFilterBtnSelected) {
+                case nftGalleryFilterBtnTypes.All:
+                    setMyNFTAll(prodList);
+                    break;
+                case nftGalleryFilterBtnTypes.Acquired:
+                    setMyNFTAcquired(prodList);
+                    break;
+                case nftGalleryFilterBtnTypes.Created:
+                    setMyNFTCreated(prodList);
+                    break;
+                case nftGalleryFilterBtnTypes.ForSale:
+                    setMyNFTForSale(prodList);
+                    break;
+                case nftGalleryFilterBtnTypes.Sold:
+                    setMyNFTSold(prodList);
+                    break;
+            }
+            setMyNFTLiked(likedList);
+        }
+
+        
     };
 
     const adBanners = [
