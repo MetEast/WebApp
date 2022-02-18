@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Container, LikeBtn } from './styles';
 import { Icon } from '@iconify/react';
-import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from "react-cookie";
 import { TypeProduct } from 'src/types/product-types';
@@ -12,8 +11,7 @@ export interface ComponentProps {
 }
 
 const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes }): JSX.Element => {
-    const navigate = useNavigate();
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(["METEAST_DID"]);
     const [tokenCookies] = useCookies(["METEAST_TOKEN"]);
     const [likeState, setLikeState] = useState(product.isLike);
@@ -46,7 +44,7 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
             });
         }
         else {
-            navigate('/login');
+          setSignInDlgState({...signInDlgState, signInDlgOpened: true })
         }
     };
 

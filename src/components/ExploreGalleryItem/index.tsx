@@ -18,7 +18,7 @@ export interface ExploreGalleryItemProps {
 }
 
 const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index, updateLikes }): JSX.Element => {
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const navigate = useNavigate();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
@@ -63,7 +63,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                     console.log(error);
                 });
         } else {
-            navigate('/login');
+            setSignInDlgState({...signInDlgState, signInDlgOpened: true })
         }
     };
 

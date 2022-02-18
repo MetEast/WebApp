@@ -19,7 +19,7 @@ export interface BlindBoxGalleryItemProps {
 
 const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
@@ -58,7 +58,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, inde
                     console.log(error);
                 });
         } else {
-            navigate('/login');
+            setSignInDlgState({...signInDlgState, signInDlgOpened: true })
         }
     };
 

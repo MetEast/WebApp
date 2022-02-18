@@ -46,13 +46,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
 
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
-    // const [countList, setCountList] = useState<Array<number>>([0, 0, 0, 0, 0, 0]);
     const [myNFTAll, setMyNFTAll] = useState<Array<TypeProduct>>([]);
     const [myNFTAcquired, setMyNFTAcquired] = useState<Array<TypeProduct>>([]);
     const [myNFTCreated, setMyNFTCreated] = useState<Array<TypeProduct>>([]);
     const [myNFTForSale, setMyNFTForSale] = useState<Array<TypeProduct>>([]);
     const [myNFTSold, setMyNFTSold] = useState<Array<TypeProduct>>([]);
     const [myNFTLiked, setMyNFTLiked] = useState<Array<TypeProduct>>([]);
+    const [likeStateChanged, setLikeStateChanged] = useState<boolean>(false);
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
 
     const defaultValue: TypeProduct = {
@@ -81,118 +81,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const accounts: string[] = getEssentialWalletAddress();
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
-
-    // const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-    //     var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
-    //     let nSelected = 0;
-    //     switch (nftGalleryFilterBtnSelected) {
-    //         case nftGalleryFilterBtnTypes.All:
-    //             reqUrl += `getOwnCollectible?selfAddr=${accounts[0]}`;
-    //             nSelected = 0;
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Acquired:
-    //             reqUrl += `getBoughtNotSoldCollectible?selfAddr=${accounts[0]}`;
-    //             nSelected = 1;
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Created:
-    //             reqUrl += `getSelfCreateNotSoldCollectible?selfAddr=${accounts[0]}`;
-    //             nSelected = 2;
-    //             break;
-    //         case nftGalleryFilterBtnTypes.ForSale:
-    //             reqUrl += `getForSaleFixedPriceCollectible?selfAddr=${accounts[0]}`;
-    //             nSelected = 3;
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Sold:
-    //             reqUrl += `getSoldCollectibles?selfAddr=${accounts[0]}`;
-    //             nSelected = 4;
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Liked:
-    //             reqUrl += `getFavoritesCollectible?did=${didCookies.METEAST_DID}`;
-    //             nSelected = 5;
-    //             break;
-    //     }
-    //     reqUrl += `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
-    //     if (sortBy !== undefined) {
-    //         switch (sortBy.value) {
-    //             case 'low_to_high':
-    //                 reqUrl += `&orderType=price_l_to_h`;
-    //                 break;
-    //             case 'high_to_low':
-    //                 reqUrl += `&orderType=price_h_to_l`;
-    //                 break;
-    //             case 'most_viewed':
-    //                 reqUrl += `&orderType=mostviewed`;
-    //                 break;
-    //             case 'most_liked':
-    //                 reqUrl += `&orderType=mostliked`;
-    //                 break;
-    //             case 'most_recent':
-    //                 reqUrl += `&orderType=mostrecent`;
-    //                 break;
-    //             case 'oldest':
-    //                 reqUrl += `&orderType=oldest`;
-    //                 break;
-    //             case 'ending_soon':
-    //                 reqUrl += `&orderType=endingsoon`;
-    //                 break;
-    //             default:
-    //                 reqUrl += `&orderType=mostrecent`;
-    //                 break;
-    //         }
-    //     }
-    //     if (filterRange.min !== undefined) {
-    //         reqUrl += `&filter_min_price=${filterRange.min}`;
-    //     }
-    //     if (filterRange.max !== undefined) {
-    //         reqUrl += `&filter_min_price=${filterRange.max}`;
-    //     }
-    //     if (filters) {
-    //         let filterStatus: string = '';
-    //         filters.forEach((item) => {
-    //             if (item === 0) filterStatus += 'ONAUCTION,';
-    //             else if (item === 1) filterStatus += 'BUYNOW,';
-    //             else if (item === 2) filterStatus += 'HASBID,';
-    //             else if (item === 3) filterStatus += 'NEW,';
-    //         });
-    //         filterStatus.slice(0, filterStatus.length - 1);
-    //         reqUrl += `&filter_status=${filterStatus}`;
-    //     }
-
-    //     const resSearchResult = await fetch(reqUrl, {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             Accept: 'application/json',
-    //         },
-    //     });
-    //     const dataSearchResult = await resSearchResult.json();
-    //     const arrSearchResult = dataSearchResult.data.result;
-    //     const nSearchResult = dataSearchResult.data.total;
-
-    //     let _myNftList: any = [];
-    //     for (let i = 0; i < arrSearchResult.length; i++) {
-    //         let itemObject: TypeProductFetch = arrSearchResult[i];
-    //         var product: TypeProduct = { ...defaultValue };
-    //         product.tokenId = itemObject.tokenId;
-    //         product.name = itemObject.name;
-    //         product.image = getImageFromAsset(itemObject.asset);
-    //         product.price_ela = itemObject.price;
-    //         product.price_usd = product.price_ela * tokenPriceRate;
-    //         product.author = itemObject.authorName || '---';
-    //         product.type = itemObject.status === 'BuyNow' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-    //         product.likes = itemObject.likes;
-    //         product.isLike =
-    //             favouritesList.findIndex((value: TypeFavouritesFetch) =>
-    //                 selectFromFavourites(value, itemObject.tokenId),
-    //             ) === -1
-    //                 ? false
-    //                 : true;
-    //         _myNftList.push(product);
-    //     }
-    //     setProductList(_myNftList);
-    //     let _cntList = [...countList];
-    //     _cntList[nSelected] = nSearchResult;
-    //     setCountList(_cntList);
-    // };
 
     const getMyNftList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>, nTabId: number) => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;

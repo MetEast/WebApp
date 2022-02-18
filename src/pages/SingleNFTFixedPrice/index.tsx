@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import {
@@ -34,8 +34,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
-    const [signInDlgState] = useSignInContext();
-    const navigate = useNavigate();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
@@ -251,7 +250,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if (signInDlgState.isLoggedIn)
+                            if (signInDlgState.isLoggedIn) {
                                 setDialogState({
                                     ...dialogState,
                                     buyNowDlgOpened: true,
@@ -260,7 +259,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                     buyNowName: productDetail.name,
                                     buyNowOrderId: productDetail.orderId || 0,
                                 });
-                            else navigate('/login');
+                            }
+                            else {
+                                setSignInDlgState({...signInDlgState, signInDlgOpened: true })
+                            }
                         }}
                     >
                         buy now
