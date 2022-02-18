@@ -22,11 +22,14 @@ import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from 'react-cookie';
+import { useDialogContext } from 'src/context/DialogContext';
+import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(['METEAST_DID']);
+    const [dialogState, setDialogState] = useDialogContext();
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -133,7 +136,14 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Museum} />
                     </Stack>
                     {/* <ELAPrice price_ela={199} price_usd={480} marginTop={3} /> */}
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>Sell</PrimaryButton>
+                    <PrimaryButton
+                        sx={{ marginTop: 3, width: '100%' }}
+                        onClick={() => {
+                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 3 });
+                        }}
+                    >
+                        Sell
+                    </PrimaryButton>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
@@ -161,6 +171,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
             </Grid>
+            <MintNFTDlgContainer />
         </>
     );
 };

@@ -26,18 +26,27 @@ const ELAPrice: React.FC<ComponentProps> = ({
             spacing={1}
             {...otherProps}
         >
-            <img src="/assets/icons/elatos-ela.svg" alt="" />
-            <Typography fontSize={price_ela_fontsize ? price_ela_fontsize : { md: 20, sm: 14 }} fontWeight={500}>
-                {`${price_ela ? price_ela.toFixed(2) : 0} ELA`}
-            </Typography>
-            {price_usd !== undefined && (
-                <Typography
-                    fontSize={12}
-                    fontWeight={400}
-                    display={detail_page ? 'block' : { xs: 'none', sm: 'none', md: 'block' }}
-                >
-                    {`~$${price_usd ? price_usd.toFixed(2) : 0}`}
-                </Typography>
+            {price_ela > 0 && (
+                <>
+                    <img src="/assets/icons/elatos-ela.svg" alt="" />
+                    <Typography
+                        fontSize={price_ela_fontsize ? price_ela_fontsize : { md: 20, sm: 14 }}
+                        fontWeight={500}
+                    >
+                        {/* {price_ela ? `${price_ela.toFixed(2)}ELA` : ''} */}
+                        {`${price_ela ? price_ela.toFixed(2) : 0} ELA`}
+                    </Typography>
+                    {price_usd !== undefined && (
+                        <Typography
+                            fontSize={12}
+                            fontWeight={400}
+                            display={detail_page ? 'block' : { xs: 'none', sm: 'none', md: 'block' }}
+                        >
+                            {/* {price_usd ? `${price_usd.toFixed(2)}ELA` : ''} */}
+                            {`~$${price_usd ? price_usd.toFixed(2) : 0}`}
+                        </Typography>
+                    )}
+                </>
             )}
         </Stack>
     );

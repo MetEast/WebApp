@@ -15,12 +15,19 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
+import { useCookies } from 'react-cookie';
+import jwtDecode from 'jwt-decode';
+import { UserTokenType } from 'src/types/auth-types';
+import { getDidUri } from 'src/services/essential';
 
 export interface ComponentProps {}
 
 const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
+    const { did, name } = userInfo;
 
     const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -177,7 +184,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         // console.log("quoteToken: --------", _quoteToken);
         // console.log("price: --------", BigInt(dialogState.sellPrice * 1e18).toString());
         // console.log("didUri: --------", dialogState.mintDidUri);
-
+        const didUri = dialogState.mintDidUri === '' ? await getDidUri(did, '', name) : dialogState.mintDidUri;
         if (dialogState.sellSaleType === 'buynow') {
             await callCreateOrderForSale(
                 dialogState.mintTokenId,
@@ -189,20 +196,16 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
             const walletConnectWeb3 = new Web3(walletConnectProvider as any);
             const currentBlock = await walletConnectWeb3.eth.getBlock("latest");
-            // let endTime = new Date().getSeconds();
-            // if (dialogState.sellSaleEnds.value === '1 month') endTime += 30 * 24 * 3600;
-            // else if (dialogState.sellSaleEnds.value === '1 week') endTime += 7 * 24 * 3600;
-            // else if (dialogState.sellSaleEnds.value === '1 day') endTime += 24 * 3600;
-            let acutionTime: number = typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
-            if (dialogState.sellSaleEnds.value === '1 month') acutionTime += 30 * 24;
-            else if (dialogState.sellSaleEnds.value === '1 week') acutionTime += 7 * 24;
-            else if (dialogState.sellSaleEnds.value === '1 day') acutionTime += 24;
+            let auctionTime: number = typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
+            if (dialogState.sellSaleEnds.value === '1 month') auctionTime += 30 * 24 * 3600;
+            else if (dialogState.sellSaleEnds.value === '1 week') auctionTime += 7 * 24 * 3600;
+            else if (dialogState.sellSaleEnds.value === '1 day') auctionTime += 24 * 3600;
             
             await callCreateOrderForAuction(
                 dialogState.mintTokenId,
                 _quoteToken,
                 `0x${BigInt(dialogState.sellMinPrice * 1e18).toString(16)}`,
-                acutionTime.toString(),
+                auctionTime.toString(),
                 dialogState.mintDidUri,
             );
         }
