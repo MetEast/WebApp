@@ -9,8 +9,7 @@ import { enumMyNFTType } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from "react-cookie";
 
 export interface ComponentProps {
@@ -22,7 +21,7 @@ export interface ComponentProps {
 
 const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(["METEAST_DID"]);
     const [tokenCookies] = useCookies(["METEAST_TOKEN"]);
     const [likeState, setLikeState] = useState(product.isLike);
@@ -30,7 +29,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, in
     const changeLikeState = (event: React.MouseEvent) => {
         event.preventDefault(); // 
         event.stopPropagation(); // 
-        if(auth.isLoggedIn) {
+        if(signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes'; 
             const reqBody = {"token": tokenCookies.METEAST_TOKEN, "tokenId": product.tokenId, "did": didCookies.METEAST_DID};

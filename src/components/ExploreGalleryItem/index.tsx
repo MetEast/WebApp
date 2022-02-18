@@ -8,10 +8,8 @@ import { enumSingleNFTType } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
 import { useCookies } from 'react-cookie';
-import { useSnackbar } from 'notistack';
+import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ExploreGalleryItemProps {
     product: TypeProduct;
@@ -20,12 +18,11 @@ export interface ExploreGalleryItemProps {
 }
 
 const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index, updateLikes }): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const navigate = useNavigate();
-    const auth = useRecoilValue(authAtom);
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
-    const { enqueueSnackbar } = useSnackbar();
 
     const getUrl = () => {
         if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
@@ -35,7 +32,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
 
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); //
-        if (auth.isLoggedIn) {
+        if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = {

@@ -6,8 +6,9 @@ import Footer from '../Footer';
 import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import generatedGitInfo from '../../generatedGitInfo.json';
+import SignInDlgContainer from '../SignInDialog';
 
-const Layout: React.FC = ({ children }): JSX.Element => {
+const Layout: React.FC = ({ children }): JSX.Element => {    
     return (
         <>
             <Box
@@ -48,6 +49,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
             </Box>
             <MintNFTDlgContainer />
+            <SignInDlgContainer />
         </>
     );
 };

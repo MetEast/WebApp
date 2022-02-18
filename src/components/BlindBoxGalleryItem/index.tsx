@@ -7,10 +7,9 @@ import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
 import { useCookies } from 'react-cookie';
-import { useSnackbar } from 'notistack';
+import { useSignInContext } from 'src/context/SignInContext';
+
 
 export interface BlindBoxGalleryItemProps {
     product: TypeProduct;
@@ -20,16 +19,15 @@ export interface BlindBoxGalleryItemProps {
 
 const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
-    const { enqueueSnackbar } = useSnackbar();
 
     const changeLikeState = (event: React.MouseEvent) => {
         event.preventDefault(); //
         event.stopPropagation(); //
-        if (auth.isLoggedIn) {
+        if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = {

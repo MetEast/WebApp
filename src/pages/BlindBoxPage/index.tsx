@@ -16,14 +16,13 @@ import {
     enumBlindBoxNFTType,
 } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getTime } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
@@ -153,7 +152,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getSearchResult(ela_usd_rate, favouritesList);
     };
 

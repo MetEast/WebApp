@@ -10,8 +10,7 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
@@ -40,14 +39,14 @@ import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/service
 // import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 // import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 // import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
-import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
-import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
-import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
-import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
-import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
-import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
-import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
-import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
+// import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
+// import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
+// import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
+// import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
+// import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
+// import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
+// import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
+// import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 // import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
 // import CheckSaleDetails from 'src/components/TransactionDialogs/ListNFT/CheckSaleDetails';
 // import ArtworkIsNowForSale from 'src/components/TransactionDialogs/ListNFT/ArtworkIsNowForSale';
@@ -68,7 +67,7 @@ import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/Canc
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [dialogState, setDialogState] = useDialogContext();
     const defaultValue: TypeProduct = {
@@ -146,7 +145,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
     };
 

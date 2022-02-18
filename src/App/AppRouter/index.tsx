@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from 'src/components/Layout';
-import LoginPage from 'src/pages/LoginPage';
 import HomePage from 'src/pages/HomePage';
 import ExplorePage from 'src/pages/ExplorePage';
 import SingleNFTFixedPrice from 'src/pages/SingleNFTFixedPrice';
@@ -23,21 +22,12 @@ import AdminOrderBlindBoxes from 'src/pages/Admin/OrderBlindBoxes';
 import AdminBids from 'src/pages/Admin/Bids';
 import AdminBanners from 'src/pages/Admin/Banners';
 import AdminNotifications from 'src/pages/Admin/Notifications';
-import RequireAuth from './RequireAuth';
 import User from 'src/components/user';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route
-                    path="/login"
-                    element={
-                        <Layout>
-                            <LoginPage />
-                        </Layout>
-                    }
-                />
                 <Route
                     index
                     element={
@@ -162,9 +152,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                 <Route
                     path=""
                     element={
-                        <RequireAuth>
-                            <User />
-                        </RequireAuth>
+                        <User />
                     }
                 >
                     <Route

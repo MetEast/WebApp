@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid, Typography, Stack } from '@mui/material';
 import React, { useState } from 'react';
+import { useSignInContext } from 'src/context/SignInContext';
 import FilterModal from 'src/components/modals/FilterModal';
 import MyNFTGalleryItem from 'src/components/MyNFTGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
@@ -23,8 +24,6 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
@@ -32,7 +31,7 @@ import jwtDecode from 'jwt-decode';
 import { getEssentialWalletAddress, getEssentialWalletBalance } from 'src/services/essential';
 
 const ProfilePage: React.FC = (): JSX.Element => {
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
@@ -47,7 +46,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
 
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
-    const [countList, setCountList] = useState<Array<number>>([0, 0, 0, 0, 0, 0]);
+    // const [countList, setCountList] = useState<Array<number>>([0, 0, 0, 0, 0, 0]);
     const [myNFTAll, setMyNFTAll] = useState<Array<TypeProduct>>([]);
     const [myNFTAcquired, setMyNFTAcquired] = useState<Array<TypeProduct>>([]);
     const [myNFTCreated, setMyNFTCreated] = useState<Array<TypeProduct>>([]);
@@ -317,7 +316,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getMyNftList(ela_usd_rate, favouritesList, 0);
         getMyNftList(ela_usd_rate, favouritesList, 1);
         getMyNftList(ela_usd_rate, favouritesList, 2);

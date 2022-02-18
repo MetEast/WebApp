@@ -8,8 +8,7 @@ import Select from 'src/components/Select';
 import { SelectTitleBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import {
     TypeSingleNFTBid,
     TypeSingleNFTBidFetch
@@ -21,7 +20,7 @@ export interface ComponentProps {}
 
 const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
     const params = useParams(); // params.tokenId
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const sortbyOptions: Array<TypeSelectItem> = [
         {
@@ -111,7 +110,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
                 />
             </Stack>
             <Stack spacing={3}>
-                {auth.isLoggedIn && (
+                {signInDlgState.isLoggedIn && (
                     <>
                         <Grid container direction="column" alignItems="center">
                             <Grid item alignItems="center">

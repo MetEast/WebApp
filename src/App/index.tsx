@@ -12,6 +12,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { ConnectivityContextProvider } from 'src/context/ConnectivityContext';
 import { SnackbarProvider } from 'notistack';
 import { CookiesProvider } from "react-cookie";
+import { SignInContextProvider } from 'src/context/SignInContext';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any): Web3Provider => {
@@ -58,23 +59,25 @@ const App: React.FC = (): JSX.Element => {
         });
     }
     return (
-        <RecoilRoot>
+        // <RecoilRoot>
             <Web3ReactProvider getLibrary={getLibrary}>
                 <ThemeProvider theme={theme}>
                     <AppContextProvider>
-                        <DialogContextProvider>
-                            <SnackbarProvider maxSnack={1} >
-                                <ConnectivityContextProvider>
-                                    <CookiesProvider>   
-                                        <AppRouter />
-                                    </CookiesProvider>
-                                </ConnectivityContextProvider>
-                            </SnackbarProvider>
-                        </DialogContextProvider>
+                        <SignInContextProvider>
+                            <DialogContextProvider>
+                                <SnackbarProvider maxSnack={1} >
+                                    <ConnectivityContextProvider>
+                                        <CookiesProvider>   
+                                            <AppRouter />
+                                        </CookiesProvider>
+                                    </ConnectivityContextProvider>
+                                </SnackbarProvider>
+                            </DialogContextProvider>
+                        </SignInContextProvider>
                     </AppContextProvider>
                 </ThemeProvider>
             </Web3ReactProvider>
-        </RecoilRoot>
+        // </RecoilRoot>
     );
 };
 
