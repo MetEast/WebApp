@@ -138,7 +138,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 3 });
+                            setDialogState({ ...dialogState, mintTokenId: productDetail.tokenIdHex, createNFTDlgOpened: true, createNFTDlgStep: 3 });
                         }}
                     >
                         Sell
