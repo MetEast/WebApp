@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 import TopNavbar from '../Navbar/TopNavbar';
 import BottomNavbar from '../Navbar/BottomNavbar';
+import Footer from '../Footer';
 import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import generatedGitInfo from '../../generatedGitInfo.json';
@@ -34,11 +35,13 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     bottom: 0,
                     background: 'white',
                     zIndex: 20,
-                    display: { sm: 'none' },
                 }}
             >
                 <Container>
-                    <BottomNavbar />
+                    <Footer />
+                    <Box sx={{ display: { sm: 'none' } }}>
+                        <BottomNavbar />
+                    </Box>
                 </Container>
             </Box>
             <Box position="fixed" bottom={10} right={10} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>
