@@ -414,18 +414,21 @@ const ProfilePage: React.FC = (): JSX.Element => {
         setProductList(prodList);
     };
 
+    const adBanners = [
+        '/assets/images/adbanners/banner1.png',
+        '/assets/images/adbanners/banner2.png',
+        '/assets/images/adbanners/banner3.png',
+    ];
+
     return (
         <>
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                    {productList.map((product, index) => (
+                    {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <MyNFTGalleryItem
-                                product={product}
-                                onlyShowImage
-                                index={index}
-                                updateLikes={updateProductLikes}
-                            />
+                            <Box borderRadius={2.5} overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                                <img src={item} alt="" style={{ minWidth: '100%' }} />
+                            </Box>
                         </SwiperSlide>
                     ))}
                     {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
