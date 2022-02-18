@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import authAtom from 'src/recoil/auth';
 import { useCookies } from "react-cookie";
-import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -27,7 +26,6 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, onlyShowImage, in
     const [didCookies] = useCookies(["METEAST_DID"]);
     const [tokenCookies] = useCookies(["METEAST_TOKEN"]);
     const [likeState, setLikeState] = useState(product.isLike);
-    const { enqueueSnackbar } = useSnackbar();
 
     const changeLikeState = (event: React.MouseEvent) => {
         event.preventDefault(); // 

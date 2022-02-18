@@ -27,7 +27,7 @@ const FilterCard: React.FC<ComponentProps> = (): JSX.Element => {
             </Typography>
             <Grid container rowGap={1} marginTop={1}>
                 {statusButtons.map((item, index) => (
-                    <Grid item xs={6}>
+                    <Grid item xs={6} key={`Profile-Optionbar-FilterCard-${index}`} >
                         <StatusButton size="small" selected={index === status} onClick={() => setStatus(index)}>
                             <Icon icon={item.icon} style={{ marginBottom: 2, marginRight: 4 }} />
                             {item.title}
