@@ -79,7 +79,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const userInfo: any = tokenCookies.METEAST_TOKEN === undefined ? '' : jwtDecode(tokenCookies.METEAST_TOKEN);
     const accounts: string[] = getEssentialWalletAddress();
-    // const accounts: string[] = ['0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0'];
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
 
@@ -279,7 +278,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price;
+            product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || '---';
             product.type = itemObject.status === 'BuyNow' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
