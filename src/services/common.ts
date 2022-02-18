@@ -115,3 +115,9 @@ export const getChartDateList = (date: Date, type: string) => {
     }
     return retDateList;
 };
+
+export const isInAppBrowser = () => {
+    return true;
+    // return window.elastos !== undefined && window.elastos.name === 'essentialsiab'
+};
+

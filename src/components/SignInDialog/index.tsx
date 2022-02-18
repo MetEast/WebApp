@@ -1,29 +1,36 @@
 import React, { useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
 import jwtDecode from 'jwt-decode';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import { essentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialConnectivity';
+import {
+    essentialsConnector,
+    isUsingEssentialsConnector,
+    useConnectivitySDK,
+} from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
+import { isInAppBrowser } from 'src/services/common';
 
 export interface ComponentProps {}
 
 const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies, setDidCookie] = useCookies(['METEAST_DID']);
-    const [tokenCookies, setTokenCookie] = useCookies(['METEAST_TOKEN']);
-    // const navigate = useNavigate();
+    const [didCookies, setDidCookie, removeDidCookie] = useCookies(['METEAST_DID']);
+    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
 
     useEffect(() => {
         // prevent sign-in again after page refresh
-        if (tokenCookies.METEAST_TOKEN !== undefined && didCookies.METEAST_DID !== undefined && signInDlgState.isLoggedIn === false) {
-            setSignInDlgState({...signInDlgState, isLoggedIn: true});
+        if (
+            tokenCookies.METEAST_TOKEN !== undefined &&
+            didCookies.METEAST_DID !== undefined &&
+            signInDlgState.isLoggedIn === false
+        ) {
+            setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
         }
     }, [didCookies, tokenCookies]);
 
@@ -66,7 +73,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
                         const user = jwtDecode(token);
                         console.log('Sign in: setting user to:', user);
-                        setSignInDlgState({...signInDlgState, isLoggedIn: true, signInDlgOpened: false});
+                        setSignInDlgState({ ...signInDlgState, isLoggedIn: true, signInDlgOpened: false });
                         enqueueSnackbar('Login succeed.', {
                             variant: 'success',
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -85,18 +92,25 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         }
     };
 
-    //did:elastos:igGJXJVn9yWDVeVE9cKw2mKiVA1jjofWaa
-    // const logIn = async () => {
-    //     setDidCookie("METEAST_DID", 'iZmhhvHGFhoifEqjihGJJAQkWkfb8JDoq4', {path: '/', sameSite: 'none', secure: true});
-    //     setTokenCookie("METEAST_TOKEN", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOiJkaWQ6ZWxhc3RvczppWm1oaHZIR0Zob2lmRXFqaWhHSkpBUWtXa2ZiOEpEb3E0IiwidHlwZSI6InVzZXIiLCJuYW1lIjoiVGVydSIsImVtYWlsIjoiIiwiY2FuTWFuYWdlQWRtaW5zIjpmYWxzZSwiaWF0IjoxNjQzMTk5Njg4LCJleHAiOjE2NDM4MDQ0ODh9.h8TpAlHyMlH8fS1aF6haslkOv2uUjyP18qeu0LzcLQ0', {path: '/', sameSite: 'none', secure: true});
-    //     setSignInDlgState({...signInDlgState, isLoggedIn: true, signInDlgOpened: false});
+    // const signOutWithEssentials = async () => {
+    //     removeDidCookie('METEAST_DID');
+    //     removeTokenCookie('METEAST_TOKEN');
+    //     try {
+    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
+    //         if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
+    //             await essentialsConnector.disconnectWalletConnect();
+    //         if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
+    //             await window.elastos.getWeb3Provider().disconnect();
+    //     } catch (error) {
+    //         console.error('Error while disconnecting the wallet', error);
+    //     }
     // };
 
     return (
         <ModalDialog
             open={signInDlgState.signInDlgOpened}
             onClose={() => {
-                setSignInDlgState({...signInDlgState, signInDlgOpened: false});
+                setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
             }}
         >
             <ConnectDID onConnect={SignInWithEssentials} />
