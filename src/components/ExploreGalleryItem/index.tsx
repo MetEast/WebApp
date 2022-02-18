@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Stack, Box } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType } from 'src/types/product-types';
@@ -54,7 +54,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        console.log("succeed");
+                        console.log('succeed');
                     } else {
                         console.log(data);
                     }
@@ -85,27 +85,26 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                     </LikeBtn>
                 </ImageBox>
             </ProductImageContainer>
-            <Grid container marginTop={1}>
-                <Grid item order={1} width={'100%'}>
+            <Stack marginTop={1} height="100%">
+                <Box>
                     <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
                         {product.name}
                     </Typography>
-                </Grid>
-                <Grid
-                    item
-                    order={{ xs: 4, sm: 4, md: 2 }}
-                    width={'100%'}
-                    display={{ xs: 'none', sm: 'none', md: 'block' }}
+                    <Box display={{ xs: 'none', md: 'block' }}>
+                        <ProductSnippets nickname={product.author} likes={product.likes} />
+                    </Box>
+                </Box>
+                <Stack
+                    direction={{ xs: 'column-reverse', md: 'column' }}
+                    height="100%"
+                    justifyContent={{ xs: 'flex-end', md: 'space-between' }}
+                    marginTop={{ xs: 0.25, md: 1 }}
+                    spacing={{ xs: 0.25, md: 1 }}
                 >
-                    <ProductSnippets nickname={product.author} likes={product.likes} />
-                </Grid>
-                <Grid item order={3} width={'100%'} marginTop={{ xs: 0.25, md: 1 }}>
                     <ProductBadgeContainer nfttype={product.type} />
-                </Grid>
-                <Grid item order={{ xs: 2, sm: 2, md: 4 }} width={'100%'} marginTop={{ xs: 0.25, md: 1 }}>
                     <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
-                </Grid>
-            </Grid>
+                </Stack>
+            </Stack>
         </GalleryItemContainer>
     );
 };

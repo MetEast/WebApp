@@ -11,27 +11,23 @@ export const GalleryItemContainer = styled(Stack)`
 export const ProductImageContainer = styled(Stack)`
     position: relative;
     width: 100%;
-    padding-top: 100%;
+    padding-top: 75%;
     cursor: pointer;
 `;
 
 export const ImageBox = styled(Box)`
-    /* background: #eeeeee; */
     position: absolute;
     inset: 0;
-    display: flex;
+    /* display: flex; */
     border: 1px solid #eeeeee;
-    border-radius: 8px;
-    padding: 16px;
-    /* justify-content: center; */
-    /* align-items: center; */
+    border-radius: 18px;
+    /* box-shadow: 4px 8px 4px -4px rgba(2, 14, 25, 0.2); */
+    /* filter: drop-shadow(0px 4px 8px rgba(7, 43, 76, 0.2)); */
     img {
-        /* width: auto; */
-        /* height: auto; */
-        max-width: 100%;
-        max-height: 100%;
-        /* object-fit: contain; */
-        border-radius: 10px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 18px;
         margin: auto;
     }
 `;

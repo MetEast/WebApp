@@ -26,7 +26,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     <TopNavbar />
                 </Container>
             </Box>
-            <Box paddingTop={{ xs: 4, sm: 12 }} paddingBottom={{ xs: 12, sm: 4 }}>
+            <Box paddingTop={{ xs: 4, sm: 12 }} paddingBottom={{ xs: 46, sm: 16 }}>
                 <Container>{children}</Container>
             </Box>
             <Box
@@ -39,13 +39,13 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 }}
             >
                 <Container>
-                    <Footer />
+                    <Footer marginBottom={2} />
                     <Box sx={{ display: { sm: 'none' } }}>
                         <BottomNavbar />
                     </Box>
                 </Container>
             </Box>
-            <Box position="fixed" bottom={10} right={10} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>
+            <Box position="fixed" bottom={0} right={0} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>
                 <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
             </Box>
             <MintNFTDlgContainer />
