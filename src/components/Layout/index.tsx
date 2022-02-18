@@ -44,9 +44,9 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     </Box>
                 </Container>
             </Box>
-            {/* <Box position="fixed" bottom={100} right={10} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>
+            <Box position="fixed" bottom={0} right={0} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>
                 <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
-            </Box> */}
+            </Box>
             <MintNFTDlgContainer />
         </>
     );
