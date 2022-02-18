@@ -183,14 +183,16 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         // console.log("---------- tokenId: --------", dialogState.mintTokenId);
         // console.log("quoteToken: --------", _quoteToken);
         // console.log("price: --------", BigInt(dialogState.sellPrice * 1e18).toString());
-        // console.log("didUri: --------", dialogState.mintDidUri);
         const didUri = dialogState.mintDidUri === '' ? await getDidUri(did, '', name) : dialogState.mintDidUri;
+        // console.log("didUri: --------", didUri);
+        // console.log(dialogState.mintTokenId)
+
         if (dialogState.sellSaleType === 'buynow') {
             await callCreateOrderForSale(
                 dialogState.mintTokenId,
                 _quoteToken,
                 BigInt(dialogState.sellPrice * 1e18).toString(),
-                dialogState.mintDidUri,
+                didUri,
             );
         } else {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -206,7 +208,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 _quoteToken,
                 `0x${BigInt(dialogState.sellMinPrice * 1e18).toString(16)}`,
                 auctionTime.toString(),
-                dialogState.mintDidUri,
+                didUri,
             );
         }
     };
