@@ -11,7 +11,12 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
 
     return (
         <Stack spacing={2} {...otherProps}>
-            <Stack direction="row" justifyContent="space-between">
+            <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                justifyContent="space-between"
+                alignItems="center"
+                rowGap={3}
+            >
                 <Stack direction="row" alignItems="center" spacing={1.5}>
                     <img src="/assets/images/header/logo.svg" alt="" />
                     <img src="/assets/images/header/meteast_label.svg" alt="" />
@@ -24,7 +29,12 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                     ))}
                 </Stack>
             </Stack>
-            <Stack direction="row" justifyContent="space-between">
+            <Stack
+                direction={{ xs: 'column-reverse', sm: 'row' }}
+                justifyContent="space-between"
+                alignItems="center"
+                rowGap={3}
+            >
                 <Stack direction="row" alignItems="center" spacing={0.5}>
                     <Typography fontSize={12} fontWeight={500}>
                         Powered by
@@ -34,7 +44,7 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                         Elastos
                     </Typography>
                 </Stack>
-                <Stack direction="row" spacing={1}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={1} columnGap={2}>
                     <Button sx={{ fontSize: 16, fontWeight: 700, color: '#1890FF' }}>Docs</Button>
                     <Button sx={{ fontSize: 16, fontWeight: 700, color: '#1890FF' }}>Privacy policy</Button>
                 </Stack>
