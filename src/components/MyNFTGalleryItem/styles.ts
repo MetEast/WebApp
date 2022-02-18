@@ -1,20 +1,37 @@
-import { styled, Box } from '@mui/material';
+import { styled, Stack, Box } from '@mui/material';
 
-export const ProductImageContainer = styled(Box)<{ param?: boolean }>`
+export const GalleryItemContainer = styled(Stack)`
+    height: 100%;
+    justify-content: space-between;
+`;
+
+export const ProductImageContainer = styled(Stack)`
     position: relative;
+    width: 100%;
+    padding-top: 75%;
+    cursor: pointer;
+`;
+
+export const ImageBox = styled(Box)`
+    position: absolute;
+    inset: 0;
+    border: 1px solid #eeeeee;
+    border-radius: 18px;
     img {
-        border-radius: 18px;
         width: 100%;
-        height: ${({ param }) => (param ? '320px' : '100%')};
+        height: 100%;
+        object-fit: cover;
+        border-radius: 18px;
+        margin: auto;
     }
 `;
 
 export const LikeBtn = styled(Box)`
     position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
+    top: 0.8vw;
+    right: 0.8vw;
+    width: 2.5vw;
+    height: 2.5vw;
     border-radius: 100%;
     background: #ffffffcc;
     display: none;
@@ -22,10 +39,5 @@ export const LikeBtn = styled(Box)`
 
     ${(props) => props.theme.breakpoints.up('sm')} {
         display: grid;
-    }
-
-    img {
-        width: 20px;
-        height: 20px;
     }
 `;
