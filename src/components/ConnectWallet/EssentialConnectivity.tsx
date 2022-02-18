@@ -33,37 +33,37 @@ export const useConnectivitySDK = async () => {
         console.log('Has link to essentials?', hasLink);
 
         /////////////////////
-        console.log('Connected?', walletConnectProvider.connected);
+        // console.log('Connected?', walletConnectProvider.connected);
 
-        // Subscribe to accounts change
-        walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
-            console.log(accounts);
-        });
+        // // Subscribe to accounts change
+        // walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
+        //     console.log(accounts);
+        // });
 
-        // Subscribe to chainId change
-        walletConnectProvider.on('chainChanged', (chainId: number) => {
-            console.log(chainId);
-        });
+        // // Subscribe to chainId change
+        // walletConnectProvider.on('chainChanged', (chainId: number) => {
+        //     console.log(chainId);
+        // });
 
-        // Subscribe to session disconnection
-        walletConnectProvider.on('disconnect', (code: number, reason: string) => {
-            console.log(code, reason);
-            essentialsConnector.setWalletConnectProvider(
-                new WalletConnectProvider({
-                    rpc: {
-                        20: 'https://api.elastos.io/eth',
-                        21: 'https://api-testnet.elastos.io/eth',
-                        128: 'https://http-mainnet.hecochain.com',
-                    },
-                    bridge: 'https://wallet-connect.trinity-tech.io/v2',
-                }),
-            );
-        });
+        // // Subscribe to session disconnection
+        // walletConnectProvider.on('disconnect', (code: number, reason: string) => {
+        //     console.log(code, reason);
+        //     essentialsConnector.setWalletConnectProvider(
+        //         new WalletConnectProvider({
+        //             rpc: {
+        //                 20: 'https://api.elastos.io/eth',
+        //                 21: 'https://api-testnet.elastos.io/eth',
+        //                 128: 'https://http-mainnet.hecochain.com',
+        //             },
+        //             bridge: 'https://wallet-connect.trinity-tech.io/v2',
+        //         }),
+        //     );
+        // });
 
-        // Subscribe to session disconnection
-        walletConnectProvider.on('error', (code: number, reason: string) => {
-            console.error(code, reason);
-        });
+        // // Subscribe to session disconnection
+        // walletConnectProvider.on('error', (code: number, reason: string) => {
+        //     console.error(code, reason);
+        // });
         /////////////////
 
         // Restore the wallet connect session - TODO: should be done by the connector itself?

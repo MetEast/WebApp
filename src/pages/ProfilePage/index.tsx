@@ -22,7 +22,7 @@ import {
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
+import { TypeProduct, TypeProductFetch, enumMyNFTType, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
@@ -73,7 +73,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         createTime: '',
         holderName: '',
         holder: '',
-        type: enumSingleNFTType.BuyNow,
+        type: enumMyNFTType.Created,
         isLike: false,
     };
 
@@ -169,7 +169,18 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || '---';
-            product.type = itemObject.status === 'BuyNow' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            if (nTabId === 0 || nTabId === 5) {
+                if (itemObject.status === 'NEW') {
+                    if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
+                    else product.type = enumMyNFTType.Sold;
+                } 
+                else if (itemObject.status === 'BUY NOW' || itemObject.status === 'ON AUCTION') product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            }
+            else if (nTabId === 1) product.type = enumMyNFTType.Sold;
+            else if (nTabId === 2) product.type = enumMyNFTType.Created;
+            else if (nTabId === 3) 
+                product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            else if (nTabId === 4) product.type = enumMyNFTType.Sold;
             product.likes = itemObject.likes;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
@@ -241,7 +252,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         getPersonalData();
         getEssentialWalletBalance();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab]);
-
+    
     // setProductList
     useEffect(() => {
         switch (nftGalleryFilterBtnSelected) {
@@ -264,6 +275,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 setProductList(myNFTLiked);
                 break;
         }
+
     }, [nftGalleryFilterBtnSelected, myNFTAll, myNFTAcquired, myNFTCreated, myNFTForSale, myNFTSold, myNFTLiked]);
     
     const handleKeyWordChange = (value: string) => {
