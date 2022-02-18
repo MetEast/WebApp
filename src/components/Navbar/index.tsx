@@ -4,10 +4,9 @@ import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
 import PageButton from './PageButton';
 import { useNavigate } from 'react-router-dom';
+import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { useRecoilState } from 'recoil';
-import authAtom from 'src/recoil/auth';
 import { essentialsConnector } from '../ConnectWallet/EssentialConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { useCookies } from 'react-cookie';
@@ -18,10 +17,10 @@ interface ComponentProps {
 }
 
 const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const navigate = useNavigate();
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
-    const [auth, setAuth] = useRecoilState(authAtom);
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(['METEAST_DID']);
     const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['METEAST_TOKEN']);
 
@@ -52,17 +51,24 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             didCookies.METEAST_DID !== undefined &&
             !essentialsConnector.hasWalletConnectSession()
         ) {
-            logOut();
+            SignOutWithEssentials();
         }
     }, [essentialsConnector.hasWalletConnectSession()]);
 
-    const logOut = async () => {
+    const SignOutWithEssentials = async () => {
         console.log('Signing out user. Deleting session info, auth token');
-        setAuth({ isLoggedIn: false });
         removeTokenCookie('METEAST_TOKEN');
         removeDidCookie('METEAST_DID');
-        await essentialsConnector.disconnectWalletConnect();
-        navigate('/');
+        setSignInDlgState({...signInDlgState, isLoggedIn: false});
+        try {
+            await essentialsConnector.disconnectWalletConnect();
+        }
+        catch (e) {
+            console.log(e);
+        } 
+        if(location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
+            navigate('/');   
+        }
         window.location.reload();
     };
 
@@ -75,7 +81,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         />
     ));
 
-    const menuButtons = auth?.isLoggedIn ? (
+    const menuButtons = signInDlgState.isLoggedIn ? (
         <>
             <Box position="relative">
                 <IconButton>
@@ -90,15 +96,16 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:user" fontSize={20} color="black" />
             </IconButton>
-            <IconButton onClick={logOut}>
+            <IconButton onClick={SignOutWithEssentials}>
                 <Icon icon="ph:sign-out" fontSize={20} color="black" />
             </IconButton>
             <PrimaryButton
                 size="small"
                 onClick={() => {
-                    if (auth.isLoggedIn)
+                    if (signInDlgState.isLoggedIn)
                         setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
-                    else navigate('/login');
+                    else setSignInDlgState({...signInDlgState, signInDlgOpened: true});
+
                 }}
                 sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
             >
@@ -130,7 +137,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             size="small"
             sx={{ paddingX: 2 }}
             onClick={() => {
-                navigate('/profile');
+                setSignInDlgState({...signInDlgState, signInDlgOpened: true});
             }}
         >
             <Icon icon="ph:sign-in" fontSize={20} color="white" style={{ marginRight: 4, marginBottom: 2 }} />

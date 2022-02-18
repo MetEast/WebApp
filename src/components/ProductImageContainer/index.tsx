@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { Container, LikeBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from "react-cookie";
-import { useSnackbar } from 'notistack';
 import { TypeProduct } from 'src/types/product-types';
 
 export interface ComponentProps {
@@ -15,15 +13,14 @@ export interface ComponentProps {
 
 const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(["METEAST_DID"]);
     const [tokenCookies] = useCookies(["METEAST_TOKEN"]);
     const [likeState, setLikeState] = useState(product.isLike);
-    const { enqueueSnackbar } = useSnackbar();
     
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); // 
-        if(auth.isLoggedIn) {
+        if(signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes'; 
             const reqBody = {"token": tokenCookies.METEAST_TOKEN, "tokenId": product.tokenId, "did": didCookies.METEAST_DID};

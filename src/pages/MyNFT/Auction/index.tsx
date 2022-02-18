@@ -27,15 +27,14 @@ import {
     TypeSingleNFTBidFetch,
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
 
     const defaultValue: TypeProduct = {
@@ -191,7 +190,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     // get your bids
     const getMyBids = async () => {
-        if (auth.isLoggedIn) {
+        if (signInDlgState.isLoggedIn) {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
             const accounts = await walletConnectProvider.accounts;
 
@@ -220,7 +219,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
         getLatestTransaction();
         getLatestBid();

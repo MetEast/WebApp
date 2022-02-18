@@ -8,8 +8,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { SelectTitleBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import {
     enumTransactionType,
     TypeNFTTransactionFetch,
@@ -24,7 +23,7 @@ export interface ComponentProps {}
 
 const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     const params = useParams(); // params.tokenId
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const defaultTransactionValue: TypeNFTTransaction = {
         type: enumTransactionType.Bid,
@@ -172,7 +171,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 />
             </Stack>
             <Stack spacing={3}>
-                {auth.isLoggedIn ? (
+                {signInDlgState.isLoggedIn ? (
                     <>
                         <Stack direction="column" alignItems="center" spacing={1}>
                             <Typography fontSize={16} fontWeight={700} textAlign="center" marginTop={3}>

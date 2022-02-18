@@ -21,8 +21,7 @@ import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { useRecoilValue } from 'recoil';
-import authAtom from 'src/recoil/auth';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
@@ -35,7 +34,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
-    const auth = useRecoilValue(authAtom);
+    const [signInDlgState] = useSignInContext();
     const navigate = useNavigate();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
@@ -166,7 +165,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const getFetchData = async () => {
         updateProductViews();
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(auth.isLoggedIn, didCookies.METEAST_DID);
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
         getLatestTransaction();
     };
@@ -197,7 +196,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     };
 
     const updateProductViews = () => {
-        if (auth.isLoggedIn) {
+        if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = { token: tokenCookies.METEAST_TOKEN, tokenId: productDetail.tokenId, did: didCookies.METEAST_DID };
             fetch(reqUrl, {
@@ -252,7 +251,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if (auth.isLoggedIn)
+                            if (signInDlgState.isLoggedIn)
                                 setDialogState({
                                     ...dialogState,
                                     buyNowDlgOpened: true,
