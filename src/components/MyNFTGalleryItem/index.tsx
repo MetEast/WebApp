@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
@@ -20,7 +19,7 @@ export interface ComponentProps {
 
 const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
@@ -59,7 +58,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, updateLike
                     console.log(error);
                 });
         } else {
-            navigate('/login');
+            setSignInDlgState({...signInDlgState, signInDlgOpened: true })
         }
     };
 

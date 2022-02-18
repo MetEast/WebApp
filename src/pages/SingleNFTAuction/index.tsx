@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
 import {
     enumBadgeType,
@@ -39,8 +39,7 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConne
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
-    const [signInDlgState] = useSignInContext();
-    const navigate = useNavigate();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
@@ -317,7 +316,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            if (signInDlgState.isLoggedIn)
+                            if (signInDlgState.isLoggedIn) {
                                 setDialogState({
                                     ...dialogState,
                                     placeBidDlgOpened: true,
@@ -325,7 +324,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                     placeBidName: productDetail.name,
                                     placeBidOrderId: productDetail.orderId || 0,
                                 });
-                            else navigate('/login');
+                            }
+                            else {
+                                setSignInDlgState({...signInDlgState, signInDlgOpened: true })
+                            }
                         }}
                     >
                         Place Bid
