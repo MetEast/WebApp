@@ -186,6 +186,8 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         const didUri = dialogState.mintDidUri === '' ? await getDidUri(did, '', name) : dialogState.mintDidUri;
         // console.log("didUri: --------", didUri);
         // console.log(dialogState.mintTokenId)
+        alert(didUri)
+        alert(dialogState.mintTokenId)
 
         if (dialogState.sellSaleType === 'buynow') {
             await callCreateOrderForSale(
