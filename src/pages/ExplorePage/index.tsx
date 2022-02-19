@@ -223,8 +223,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 {productList.map((item, index) => (
                     <Grid
                         item
-                        xs={productViewMode === 'grid1' ? 6 : 4}
-                        md={productViewMode === 'grid1' ? 3 : 2}
+                        xs={productViewMode === 'grid1' ? 12 : 6}
+                        md={productViewMode === 'grid1' ? 6 : 3}
                         key={`explore-product-${index}`}
                     >
                         <ExploreGalleryItem product={item} index={index} updateLikes={updateProductLikes} />

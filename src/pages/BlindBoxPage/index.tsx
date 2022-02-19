@@ -234,7 +234,12 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             )}
             <Grid container mt={2} spacing={4}>
                 {blindBoxList.map((item, index) => (
-                    <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
+                    <Grid
+                        item
+                        xs={productViewMode === 'grid1' ? 12 : 6}
+                        md={productViewMode === 'grid1' ? 6 : 3}
+                        key={`explore-product-${index}`}
+                    >
                         <BlindBoxGalleryItem product={item} index={index} updateLikes={updateBlindBoxLikes} />
                     </Grid>
                 ))}
