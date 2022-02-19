@@ -200,7 +200,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     ];
 
     return (
-        <>
+        <Box minHeight="75vh">
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
@@ -228,7 +228,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 marginTop={5}
             />
             {blindBoxList.length === 0 && (
-                <Stack justifyContent="center" alignItems="center" minHeight={600}>
+                <Stack justifyContent="center" alignItems="center" minHeight="50vh">
                     <img src="/assets/images/loading.gif" alt="" />
                 </Stack>
             )}
@@ -246,7 +246,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 filterRange={filterRange}
                 onDone={handleDoneFilterModal}
             />
-        </>
+        </Box>
     );
 };
 

@@ -155,64 +155,58 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     return (
-        <>
-            <Stack direction="column">
-                <Box>
-                    <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                        {adBanners.map((item, index) => (
-                            <SwiperSlide key={`banner-carousel-${index}`}>
-                                <Box borderRadius={2.5} overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
-                                    <img src={item} alt="" style={{ minWidth: '100%' }} />
-                                </Box>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                    {/* {productList.length === 0 && (
+        <Stack direction="column" minHeight="75vh">
+            <Box>
+                <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
+                    {adBanners.map((item, index) => (
+                        <SwiperSlide key={`banner-carousel-${index}`}>
+                            <Box borderRadius={2.5} overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                                <img src={item} alt="" style={{ minWidth: '100%' }} />
+                            </Box>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+                {/* {productList.length === 0 && (
                         <Stack justifyContent="center" alignItems="center" minHeight={320}>
                             <img src="/assets/images/loading.gif" alt="" />
                         </Stack>
                     )} */}
-                </Box>
-                <Box mt={4}>
-                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
-                        New Products
-                    </Typography>
-                    <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
-                        {productList.map((product, index) => (
-                            <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
-                                <ExploreGalleryItem product={product} index={index} updateLikes={updateProductLikes} />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                    {productList.length === 0 && (
-                        <Stack justifyContent="center" alignItems="center" minHeight={200}>
-                            <img src="/assets/images/loading.gif" alt="" />
-                        </Stack>
-                    )}
-                </Box>
-                <Box mt={8}>
-                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
-                        Popular Collections
-                    </Typography>
-                    <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
-                        {collectionList.map((collection, index) => (
-                            <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                                <ExploreGalleryItem
-                                    product={collection}
-                                    index={index}
-                                    updateLikes={updateProductLikes}
-                                />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                    {collectionList.length === 0 && (
-                        <Stack justifyContent="center" alignItems="center" minHeight={200}>
-                            <img src="/assets/images/loading.gif" alt="" />
-                        </Stack>
-                    )}
-                </Box>
-            </Stack>
-        </>
+            </Box>
+            <Box mt={4}>
+                <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                    New Products
+                </Typography>
+                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
+                    {productList.map((product, index) => (
+                        <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
+                            <ExploreGalleryItem product={product} index={index} updateLikes={updateProductLikes} />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+                {productList.length === 0 && (
+                    <Stack justifyContent="center" alignItems="center" minHeight={200}>
+                        <img src="/assets/images/loading.gif" alt="" />
+                    </Stack>
+                )}
+            </Box>
+            <Box mt={8}>
+                <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                    Popular Collections
+                </Typography>
+                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
+                    {collectionList.map((collection, index) => (
+                        <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
+                            <ExploreGalleryItem product={collection} index={index} updateLikes={updateProductLikes} />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+                {collectionList.length === 0 && (
+                    <Stack justifyContent="center" alignItems="center" minHeight={200}>
+                        <img src="/assets/images/loading.gif" alt="" />
+                    </Stack>
+                )}
+            </Box>
+        </Stack>
     );
 };
 

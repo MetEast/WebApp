@@ -47,7 +47,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
     };
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        var reqUrl = `${
+            process.env.REACT_APP_SERVICE_URL
+        }/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch (sortBy.value) {
                 case 'low_to_high':
@@ -185,7 +187,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     ];
 
     return (
-        <>
+        <Box minHeight="75vh">
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
@@ -213,7 +215,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 marginTop={5}
             />
             {productList.length === 0 && (
-                <Stack justifyContent="center" alignItems="center" minHeight={600}>
+                <Stack justifyContent="center" alignItems="center" minHeight="50vh">
                     <img src="/assets/images/loading.gif" alt="" />
                 </Stack>
             )}
@@ -236,7 +238,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 filterRange={filterRange}
                 onDone={handleDoneFilterModal}
             />
-        </>
+        </Box>
     );
 };
 
