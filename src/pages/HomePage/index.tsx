@@ -144,15 +144,11 @@ const HomePage: React.FC = (): JSX.Element => {
 
     const theme = useTheme();
     const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
+    const matchUpmd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUplg = useMediaQuery(theme.breakpoints.up('lg'));
 
-    const slidesPerView = matchUplg ? 4.5 : matchUpsm ? 3.5 : 2.5;
-
-    const getUrl = (product: TypeProduct) => {
-        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
-        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
-        else return `/`;
-    };
+    const slidesPerView = matchUplg ? 4.5 : matchUpmd ? 3.5 : 2.5;
+    const spaceBetweenSlideItems = matchUplg ? 32 : 16;
 
     return (
         <Stack direction="column" minHeight="75vh">
@@ -176,7 +172,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
                     New Products
                 </Typography>
-                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
+                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={spaceBetweenSlideItems}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
                             <NFTPreview product={product} index={index} updateLikes={updateProductLikes} />
@@ -193,7 +189,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
                     Popular Collections
                 </Typography>
-                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
+                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={spaceBetweenSlideItems}>
                     {collectionList.map((collection, index) => (
                         <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
                             <NFTPreview product={collection} index={index} updateLikes={updateProductLikes} />
