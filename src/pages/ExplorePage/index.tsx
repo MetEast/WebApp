@@ -2,7 +2,7 @@ import { Stack, Box, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import FilterModal from 'src/components/modals/FilterModal';
-import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
+import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants';
@@ -227,7 +227,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                         md={productViewMode === 'grid1' ? 6 : 3}
                         key={`explore-product-${index}`}
                     >
-                        <ExploreGalleryItem product={item} index={index} updateLikes={updateProductLikes} />
+                        <NFTPreview product={item} index={index} updateLikes={updateProductLikes} />
                     </Grid>
                 ))}
             </Grid>

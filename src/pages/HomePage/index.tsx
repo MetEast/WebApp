@@ -6,7 +6,7 @@ import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch }
 import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import ExploreGalleryItem from 'src/components/ExploreGalleryItem';
+import NFTPreview from 'src/components/NFTPreview';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
@@ -179,7 +179,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={8}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
-                            <ExploreGalleryItem product={product} index={index} updateLikes={updateProductLikes} />
+                            <NFTPreview product={product} index={index} updateLikes={updateProductLikes} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -196,7 +196,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={8}>
                     {collectionList.map((collection, index) => (
                         <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                            <ExploreGalleryItem product={collection} index={index} updateLikes={updateProductLikes} />
+                            <NFTPreview product={collection} index={index} updateLikes={updateProductLikes} />
                         </SwiperSlide>
                     ))}
                 </Swiper>

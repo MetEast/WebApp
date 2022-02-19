@@ -3,7 +3,7 @@ import { Stack, Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
-import BlindBoxGalleryItem from 'src/components/BlindBoxGalleryItem';
+import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
 import FilterModal from 'src/components/modals/FilterModal';
 import { sortOptions } from 'src/constants/select-constants';
@@ -240,7 +240,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                         md={productViewMode === 'grid1' ? 6 : 3}
                         key={`explore-product-${index}`}
                     >
-                        <BlindBoxGalleryItem product={item} index={index} updateLikes={updateBlindBoxLikes} />
+                        <NFTPreview product={item} index={index} updateLikes={updateBlindBoxLikes} />
                     </Grid>
                 ))}
             </Grid>
