@@ -122,8 +122,8 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        const ela_usd_rate = await getElaUsdRate();
+        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getNewProducts(ela_usd_rate, favouritesList);
         getPopularCollection(ela_usd_rate, favouritesList);
     };

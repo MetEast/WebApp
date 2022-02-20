@@ -54,7 +54,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        console.log('succeed');
+                        console.log(product.tokenId, ' change like status succeed');
                     } else {
                         console.log(data);
                     }

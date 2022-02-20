@@ -17,6 +17,7 @@ export const getElaUsdRate = async () => {
 
 export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     const strDid = loginState ? did : '------------------';
+    alert(loginState)
     const resFavouriteList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible?did=${strDid}`,
         {

@@ -23,16 +23,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
 
-    useEffect(() => {
-        // prevent sign-in again after page refresh
-        if (
-            tokenCookies.METEAST_TOKEN !== undefined &&
-            didCookies.METEAST_DID !== undefined &&
-            signInDlgState.isLoggedIn === false
-        ) {
-            setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
-        }
-    }, [didCookies, tokenCookies]);
+    // useEffect(() => {
+    //     // prevent sign-in again after page refresh
+    //     if (
+    //         tokenCookies.METEAST_TOKEN !== undefined &&
+    //         didCookies.METEAST_DID !== undefined &&
+    //         signInDlgState.isLoggedIn === false
+    //     ) {
+    //         alert(1)
+    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
+    //     }
+    // }, [didCookies, tokenCookies]);
 
     useConnectivitySDK();
 
@@ -78,6 +79,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             variant: 'success',
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
                         });
+                        window.location.reload();
                     } else {
                         console.log(data);
                     }

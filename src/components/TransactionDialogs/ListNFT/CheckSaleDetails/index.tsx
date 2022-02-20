@@ -176,19 +176,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const createOrder = async (_quoteToken: string) => {
-        // console.log("saleType: --------", dialogState.sellSaleType);
-        // console.log("price: --------", dialogState.sellPrice);
-        // console.log("minPrice: --------", dialogState.sellMinPrice);
-        // console.log("saleEnds: --------", dialogState.sellSaleEnds);
-        // console.log("---------- tokenId: --------", dialogState.mintTokenId);
-        // console.log("quoteToken: --------", _quoteToken);
-        // console.log("price: --------", BigInt(dialogState.sellPrice * 1e18).toString());
         const didUri = dialogState.mintDidUri === '' ? await getDidUri(did, '', name) : dialogState.mintDidUri;
-        // console.log("didUri: --------", didUri);
-        // console.log(dialogState.mintTokenId)
-        alert(didUri)
-        alert(dialogState.mintTokenId)
-
         if (dialogState.sellSaleType === 'buynow') {
             await callCreateOrderForSale(
                 dialogState.mintTokenId,
