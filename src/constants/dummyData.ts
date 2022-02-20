@@ -226,7 +226,7 @@ export const newNFTProducts: Array<TypeProduct> = [
         asset: '--',
         kind: '--',
         size: '--',
-        adult: true,
+        category: 'Other',
         status: '--',
 
         instock: 0,
@@ -263,7 +263,7 @@ export const newNFTProducts: Array<TypeProduct> = [
         asset: '--',
         kind: '--',
         size: '--',
-        adult: true,
+        category: 'Other',
         status: '--',
 
         instock: 0,
