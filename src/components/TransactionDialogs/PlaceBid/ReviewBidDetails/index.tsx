@@ -6,10 +6,7 @@ import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { AbiItem } from 'web3-utils';
-import {
-    STICKER_CONTRACT_ABI,
-    STICKER_CONTRACT_ADDRESS
-} from 'src/components/ContractMethod/config';
+import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
@@ -25,9 +22,9 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
-        let contractAbi = STICKER_CONTRACT_ABI;
-        let contractAddress = STICKER_CONTRACT_ADDRESS;
-        let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
         let gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log('Gas price:', gasPrice);
@@ -41,7 +38,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
 
-        stickerContract.methods
+        marketContract.methods
             .BidForOrder(_orderId, _value, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {

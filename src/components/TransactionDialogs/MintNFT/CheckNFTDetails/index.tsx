@@ -12,7 +12,7 @@ import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/MET';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 

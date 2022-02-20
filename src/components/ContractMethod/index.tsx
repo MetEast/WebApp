@@ -1,8 +1,8 @@
 import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { AbiItem } from 'web3-utils'
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS, STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from './config';
-
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/MET';
+// import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 
 export const getABI = (contractAddress: string) => {
     fetch(`${process.env.ETHERSCAN_API_URL}?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHERSACN_API_KEY_TOKEN}`).then(response => {

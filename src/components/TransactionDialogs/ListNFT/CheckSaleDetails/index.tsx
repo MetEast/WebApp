@@ -5,12 +5,8 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import {
-    METEAST_CONTRACT_ABI,
-    METEAST_CONTRACT_ADDRESS,
-    STICKER_CONTRACT_ABI,
-    STICKER_CONTRACT_ADDRESS,
-} from 'src/components/ContractMethod/config';
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/MET';
+import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -40,8 +36,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         const isApproval = await meteastContract.methods.isApprovedForAll(accounts[0], _operator).call();
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
-        // const _quoteToken = '0xe6fd75ff38adca4b97fbcd938c86b98772431867';
-        // const _quoteToken = '0xbFB8e279AA787b1A11d38B76b9723Af5aFd3Cace';
 
         if (isApproval === true) {
             console.log('Operator', _operator, ' is already approved');
@@ -80,14 +74,14 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         }
     };
 
-    const callCreateOrderForSale = async (_tokenId: string, _quoteToken: string, _price: string, _didUri: string) => {
+    const callCreateOrderForSale = async (_tokenId: string, _quoteToken: string, _price: string, _didUri: string, _isBlindBox: boolean) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
-        let contractAbi = STICKER_CONTRACT_ABI;
-        let contractAddress = STICKER_CONTRACT_ADDRESS;
-        let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
         let gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log('Gas price:', gasPrice);
@@ -100,8 +94,8 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             value: 0,
         };
         let txHash = '';
-        stickerContract.methods
-            .createOrderForSale(_tokenId, _quoteToken, _price, _didUri)
+        marketContract.methods
+            .createOrderForSale(_tokenId, _quoteToken, _price, _didUri, _isBlindBox)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
@@ -135,9 +129,9 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
-        let contractAbi = STICKER_CONTRACT_ABI;
-        let contractAddress = STICKER_CONTRACT_ADDRESS; // Elastos Testnet
-        let stickerContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS; // Elastos Testnet
+        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
         let gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log('Gas price:', gasPrice);
@@ -151,7 +145,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         };
 
         let txHash = '';
-        stickerContract.methods
+        marketContract.methods
             .createOrderForAuction(_tokenId, _quoteToken, _minPrice, _endTime, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
@@ -183,6 +177,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 _quoteToken,
                 BigInt(dialogState.sellPrice * 1e18).toString(),
                 didUri,
+                false
             );
         } else {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -204,7 +199,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handleSell = () => {
-        callSetApprovalForAll(STICKER_CONTRACT_ADDRESS, true);
+        callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
     };
 
     return (
