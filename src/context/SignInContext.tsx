@@ -6,6 +6,7 @@ interface State {
     walletAccounts: string[];
     walletBalance: number;
     chainId: number;
+    didUri: string;
 }
 
 const defaultState: State = {
@@ -24,6 +25,7 @@ const defaultState: State = {
     walletAccounts: [],
     walletBalance: 0,
     chainId: 0,
+    didUri: '',
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

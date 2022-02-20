@@ -5,6 +5,7 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import WarningTypo from '../../components/WarningTypo';
 import { TypeSelectItem } from 'src/types/select-types';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import { useSnackbar } from 'notistack';
@@ -12,11 +13,11 @@ import Select from 'src/components/Select';
 import { useStyles, SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { mintNFTCategoryOptions } from 'src/constants/select-constants';
-import { getEssentialsWalletBalance } from 'src/services/essential';
 
 export interface ComponentProps {}
 
 const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [category, setCategory] = useState<TypeSelectItem>();
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
@@ -124,7 +125,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
             </Box>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {getEssentialsWalletBalance()} ELA
+                    Available: {signInDlgState.walletBalance} ELA
                 </Typography>
                 <Stack width="100%" direction="row" spacing={2}>
                     <SecondaryButton

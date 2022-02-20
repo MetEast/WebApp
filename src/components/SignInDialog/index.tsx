@@ -14,6 +14,7 @@ import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from 'src/services/common';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getEssentialsWalletBalance, getDidUri } from 'src/services/essential';
 
 export interface ComponentProps {}
 
@@ -28,10 +29,18 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     
     useEffect(() => {
+        // Subscribe did uri
+        getDidUri(didCookies.METEAST_DID, '', tokenCookies.METEAST_TOKEN.name).then((didUri) => {
+            setSignInDlgState({ ...signInDlgState, didUri: didUri });
+            console.log(didUri);
+        });
+
         // Subscribe to accounts change
         walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
-            setSignInDlgState({ ...signInDlgState, walletAccounts: accounts });
-            console.log(accounts);
+            getEssentialsWalletBalance().then((balance: string) => {
+                setSignInDlgState({ ...signInDlgState, walletAccounts: accounts, walletBalance: parseFloat((parseFloat(balance)  / 1e18).toFixed(2)) });
+                console.log(accounts);
+            });
         });
 
         // Subscribe to chainId change

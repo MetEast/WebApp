@@ -78,7 +78,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const userInfo: any = tokenCookies.METEAST_TOKEN === undefined ? '' : jwtDecode(tokenCookies.METEAST_TOKEN);
-    const accounts: string[] = getEssentialsWalletAddress();
+    // const accounts: string[] = getEssentialsWalletAddress();
+    const accounts: string[] = signInDlgState.walletAccounts;
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
 
