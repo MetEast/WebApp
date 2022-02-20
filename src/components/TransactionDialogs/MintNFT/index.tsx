@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDialogContext } from 'src/context/DialogContext';
 import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import ModalDialog from 'src/components/ModalDialog';
 import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';

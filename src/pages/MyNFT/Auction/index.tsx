@@ -29,7 +29,7 @@ import {
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {

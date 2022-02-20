@@ -12,6 +12,7 @@ import Select from 'src/components/Select';
 import { useStyles, SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { mintNFTCategoryOptions } from 'src/constants/select-constants';
+import { getEssentialsWalletBalance } from 'src/services/essential';
 
 export interface ComponentProps {}
 
@@ -123,7 +124,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
             </Box>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {dialogState.mintTXFee} ELA
+                    Available: {getEssentialsWalletBalance()} ELA
                 </Typography>
                 <Stack width="100%" direction="row" spacing={2}>
                     <SecondaryButton

@@ -28,7 +28,7 @@ import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
-import { getEssentialWalletAddress, getEssentialWalletBalance } from 'src/services/essential';
+import { getEssentialsWalletAddress } from 'src/services/essential';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -78,7 +78,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const userInfo: any = tokenCookies.METEAST_TOKEN === undefined ? '' : jwtDecode(tokenCookies.METEAST_TOKEN);
-    const accounts: string[] = getEssentialWalletAddress();
+    const accounts: string[] = getEssentialsWalletAddress();
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
 
@@ -250,7 +250,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
         getPersonalData();
-        getEssentialWalletBalance();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab]);
     
     // setProductList

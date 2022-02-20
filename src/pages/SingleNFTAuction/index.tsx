@@ -35,7 +35,7 @@ import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlace
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/profile/AllBids';
 import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {

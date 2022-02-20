@@ -181,9 +181,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
     };
 
     const adBanners = [
-        '/assets/images/adbanners/banner1.png',
-        '/assets/images/adbanners/banner2.png',
-        '/assets/images/adbanners/banner3.png',
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
     ];
 
     return (

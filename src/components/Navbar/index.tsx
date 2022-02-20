@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { essentialsConnector } from '../ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from '../ConnectWallet/EssentialsConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { useCookies } from 'react-cookie';
 import { NotificationTypo } from './styles';

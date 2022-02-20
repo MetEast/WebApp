@@ -6,7 +6,7 @@ import WarningTypo from '../../components/WarningTypo';
 import { useDialogContext } from 'src/context/DialogContext';
 import { AbiItem } from 'web3-utils';
 import { STICKER_CONTRACT_ABI, STICKER_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
@@ -71,9 +71,9 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleBuyNow = async () => {
         const _didUri = await getDidUri(did, '', name);
-        console.log("didUri:----------", _didUri)
-        console.log("orderId:---------", dialogState.buyNowOrderId)
-        console.log("price:---------", BigInt(dialogState.buyNowPrice).toString())
+        // console.log("didUri:----------", _didUri)
+        // console.log("orderId:---------", dialogState.buyNowOrderId)
+        // console.log("price:---------", BigInt(dialogState.buyNowPrice).toString())
         await callBuyOrder(
             dialogState.buyNowOrderId,
             _didUri,

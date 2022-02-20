@@ -29,7 +29,7 @@ import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
