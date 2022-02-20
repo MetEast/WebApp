@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
 import { Typography, Grid, Stack, Box } from '@mui/material';
@@ -23,6 +23,10 @@ const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): 
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
+    
+    useEffect(()=>{
+        setLikeState(product.isLike)
+    }, [product.isLike])
 
     let productType = 0; // default: enumSingleNFTType
     if (

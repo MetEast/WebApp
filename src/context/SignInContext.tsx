@@ -10,10 +10,20 @@ interface State {
 
 const defaultState: State = {
     signInDlgOpened: false,
-    isLoggedIn: false,
+    isLoggedIn:
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('METEAST_DID='))
+            ?.split('=')[1] !== undefined &&
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('METEAST_TOKEN='))
+            ?.split('=')[1] !== undefined
+            ? true
+            : false,
     walletAccounts: [],
     walletBalance: 0,
-    chainId: 0
+    chainId: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

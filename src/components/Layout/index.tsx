@@ -7,24 +7,10 @@ import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import generatedGitInfo from '../../generatedGitInfo.json';
 import SignInDlgContainer from '../SignInDialog';
-import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 
 const Layout: React.FC = ({ children }): JSX.Element => {    
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
-    // useEffect(() => {
-    //     // prevent sign-in again after page refresh
-    //     if (
-    //         tokenCookies.METEAST_TOKEN !== undefined &&
-    //         didCookies.METEAST_DID !== undefined &&
-    //         signInDlgState.isLoggedIn === false
-    //     ) {
-    //         // alert(1);
-    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
-    //     }
-    // }, [didCookies, tokenCookies, signInDlgState]);
 
     return (
         <>

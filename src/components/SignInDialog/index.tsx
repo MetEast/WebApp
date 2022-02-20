@@ -24,52 +24,52 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     
-    useEffect(() => {
-        // prevent sign-in again after page refresh
-        if (
-            tokenCookies.METEAST_TOKEN !== undefined &&
-            didCookies.METEAST_DID !== undefined &&
-            signInDlgState.isLoggedIn === false
-        ) {
-            setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
-        }
+    // useEffect(() => {
+    //     // prevent sign-in again after page refresh
+    //     if (
+    //         tokenCookies.METEAST_TOKEN !== undefined &&
+    //         didCookies.METEAST_DID !== undefined &&
+    //         signInDlgState.isLoggedIn === false
+    //     ) {
+    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
+    //     }
 
-        // Subscribe to accounts change
-        walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
-            setSignInDlgState({ ...signInDlgState, walletAccounts: accounts });
-            console.log(accounts);
-        });
+    //     // Subscribe to accounts change
+    //     walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
+    //         setSignInDlgState({ ...signInDlgState, walletAccounts: accounts });
+    //         console.log(accounts);
+    //     });
 
-        // Subscribe to chainId change
-        walletConnectProvider.on('chainChanged', (chainId: number) => {
-            setSignInDlgState({ ...signInDlgState, chainId: chainId });
-            console.log(chainId);
-        });
+    //     // Subscribe to chainId change
+    //     walletConnectProvider.on('chainChanged', (chainId: number) => {
+    //         setSignInDlgState({ ...signInDlgState, chainId: chainId });
+    //         console.log(chainId);
+    //     });
 
-        // // Subscribe to session disconnection
-        // walletConnectProvider.on('disconnect', (code: number, reason: string) => {
-        //     alert('disconnected');
-        //     console.log("disconnected----", code, reason);
-        //     removeDidCookie('METEAST_DID');
-        //     removeTokenCookie('METEAST_TOKEN');
-        //     setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
-        //     // essentialsConnector.setWalletConnectProvider(
-        //     //     new WalletConnectProvider({
-        //     //         rpc: {
-        //     //             20: 'https://api.elastos.io/eth',
-        //     //             21: 'https://api-testnet.elastos.io/eth',
-        //     //             128: 'https://http-mainnet.hecochain.com',
-        //     //         },
-        //     //         bridge: 'https://wallet-connect.trinity-tech.io/v2',
-        //     //     }),
-        //     // );
-        // });
+    //     // // Subscribe to session disconnection
+    //     // walletConnectProvider.on('disconnect', (code: number, reason: string) => {
+    //     //     alert('disconnected');
+    //     //     console.log("disconnected----", code, reason);
+    //     //     removeDidCookie('METEAST_DID');
+    //     //     removeTokenCookie('METEAST_TOKEN');
+    //     //     setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
+    //     //     // essentialsConnector.setWalletConnectProvider(
+    //     //     //     new WalletConnectProvider({
+    //     //     //         rpc: {
+    //     //     //             20: 'https://api.elastos.io/eth',
+    //     //     //             21: 'https://api-testnet.elastos.io/eth',
+    //     //     //             128: 'https://http-mainnet.hecochain.com',
+    //     //     //         },
+    //     //     //         bridge: 'https://wallet-connect.trinity-tech.io/v2',
+    //     //     //     }),
+    //     //     // );
+    //     // });
 
-        // Subscribe to session disconnection
-        walletConnectProvider.on('error', (code: number, reason: string) => {
-            console.error(code, reason);
-        });
-    }, [walletConnectProvider, signInDlgState.isLoggedIn]);
+    //     // Subscribe to session disconnection
+    //     walletConnectProvider.on('error', (code: number, reason: string) => {
+    //         console.error(code, reason);
+    //     });
+    // }, [walletConnectProvider, signInDlgState.isLoggedIn]);
 
     /////////////////
     // useEffect(() => {
