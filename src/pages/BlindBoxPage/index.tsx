@@ -3,7 +3,7 @@ import { Stack, Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
-import BlindBoxGalleryItem from 'src/components/BlindBoxGalleryItem';
+import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
 import FilterModal from 'src/components/modals/FilterModal';
 import { sortOptions } from 'src/constants/select-constants';
@@ -200,7 +200,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     ];
 
     return (
-        <>
+        <Box minHeight="75vh">
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
@@ -228,14 +228,19 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 marginTop={5}
             />
             {blindBoxList.length === 0 && (
-                <Stack justifyContent="center" alignItems="center" minHeight={600}>
+                <Stack justifyContent="center" alignItems="center" minHeight="50vh">
                     <img src="/assets/images/loading.gif" alt="" />
                 </Stack>
             )}
             <Grid container mt={2} spacing={4}>
                 {blindBoxList.map((item, index) => (
-                    <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
-                        <BlindBoxGalleryItem product={item} index={index} updateLikes={updateBlindBoxLikes} />
+                    <Grid
+                        item
+                        xs={productViewMode === 'grid1' ? 12 : 6}
+                        md={productViewMode === 'grid1' ? 6 : 3}
+                        key={`explore-product-${index}`}
+                    >
+                        <NFTPreview product={item} index={index} updateLikes={updateBlindBoxLikes} />
                     </Grid>
                 ))}
             </Grid>
@@ -246,7 +251,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 filterRange={filterRange}
                 onDone={handleDoneFilterModal}
             />
-        </>
+        </Box>
     );
 };
 

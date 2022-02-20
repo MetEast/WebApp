@@ -14,17 +14,17 @@ const Layout: React.FC = ({ children }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
-    useEffect(() => {
-        // prevent sign-in again after page refresh
-        if (
-            tokenCookies.METEAST_TOKEN !== undefined &&
-            didCookies.METEAST_DID !== undefined &&
-            signInDlgState.isLoggedIn === false
-        ) {
-            // alert(1);
-            setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
-        }
-    }, [didCookies, tokenCookies, signInDlgState]);
+    // useEffect(() => {
+    //     // prevent sign-in again after page refresh
+    //     if (
+    //         tokenCookies.METEAST_TOKEN !== undefined &&
+    //         didCookies.METEAST_DID !== undefined &&
+    //         signInDlgState.isLoggedIn === false
+    //     ) {
+    //         // alert(1);
+    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
+    //     }
+    // }, [didCookies, tokenCookies, signInDlgState]);
 
     return (
         <>
@@ -44,8 +44,11 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     <TopNavbar />
                 </Container>
             </Box>
-            <Box paddingTop={{ xs: 4, sm: 12 }} paddingBottom={{ xs: 46, sm: 16 }}>
-                <Container>{children}</Container>
+            <Box paddingTop={{ xs: 4, sm: 12 }} paddingBottom={{ xs: 9, sm: 2 }}>
+                <Container>
+                    {children}
+                    <Footer marginTop={5} />
+                </Container>
             </Box>
             <Box
                 sx={{
@@ -54,13 +57,11 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     bottom: 0,
                     background: 'white',
                     zIndex: 20,
+                    display: { xs: 'block', sm: 'none' },
                 }}
             >
                 <Container>
-                    <Footer marginBottom={2} />
-                    <Box sx={{ display: { sm: 'none' } }}>
-                        <BottomNavbar />
-                    </Box>
+                    <BottomNavbar />
                 </Container>
             </Box>
             <Box position="fixed" bottom={0} right={0} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>

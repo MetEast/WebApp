@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TypeProduct } from 'src/types/product-types';
-import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
+import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from 'src/components/NFTPreview/styles';
 import { Typography, Grid } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';

@@ -4,33 +4,48 @@ import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from '
 import { Typography, Grid, Stack, Box } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
-import { enumSingleNFTType } from 'src/types/product-types';
+import { enumSingleNFTType, enumBlindBoxNFTType } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 
-export interface ExploreGalleryItemProps {
+export interface ComponentProps {
     product: TypeProduct;
     index: number;
     updateLikes: (index: number, type: string) => void;
 }
 
-const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index, updateLikes }): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
 
+    let productType = 0; // default: enumSingleNFTType
+    if (
+        product.type === enumBlindBoxNFTType.ComingSoon ||
+        product.type === enumBlindBoxNFTType.SaleEnds ||
+        product.type === enumBlindBoxNFTType.SaleEnded
+    )
+        productType = 1; // enumBlindBoxNFTType
+
     const getUrl = () => {
         if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
         else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
+        else if (
+            product.type === enumBlindBoxNFTType.ComingSoon ||
+            product.type === enumBlindBoxNFTType.SaleEnds ||
+            product.type === enumBlindBoxNFTType.SaleEnded
+        )
+            return `/blind-box/product/${product.tokenId}`;
         else return `/`;
     };
 
     const changeLikeState = (event: React.MouseEvent) => {
+        event.preventDefault(); //
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
@@ -63,7 +78,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                     console.log(error);
                 });
         } else {
-            setSignInDlgState({...signInDlgState, signInDlgOpened: true })
+            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
         }
     };
 
@@ -91,7 +106,11 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                         {product.name}
                     </Typography>
                     <Box display={{ xs: 'none', md: 'block' }}>
-                        <ProductSnippets nickname={product.author} likes={product.likes} />
+                        {productType === 0 ? (
+                            <ProductSnippets nickname={product.author} likes={product.likes} />
+                        ) : (
+                            <ProductSnippets sold={product.sold} likes={product.likes} />
+                        )}
                     </Box>
                 </Box>
                 <Stack
@@ -101,7 +120,7 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
                     marginTop={{ xs: 0.25, md: 1 }}
                     spacing={{ xs: 0.25, md: 1 }}
                 >
-                    <ProductBadgeContainer nfttype={product.type} />
+                    <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
                     <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
                 </Stack>
             </Stack>
@@ -109,4 +128,4 @@ const ExploreGalleryItem: React.FC<ExploreGalleryItemProps> = ({ product, index,
     );
 };
 
-export default ExploreGalleryItem;
+export default NFTPreview;
