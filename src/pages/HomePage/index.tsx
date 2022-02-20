@@ -132,14 +132,50 @@ const HomePage: React.FC = (): JSX.Element => {
         getFetchData();
     }, [signInDlgState.isLoggedIn]);
 
+    const selectByTokenId = (value: TypeProduct, tokenId: string) => {
+        return value.tokenId === tokenId;
+    };
+
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
+        let colList: Array<TypeProduct> = [...collectionList];
+        const colId = collectionList.findIndex((value: TypeProduct) => selectByTokenId(value, productList[id].tokenId));
         if (type === 'inc') {
             prodList[id].likes += 1;
+            if (colId !== -1) {
+                colList[id].likes += 1;
+                colList[id].isLike = true; 
+            }
         } else if (type === 'dec') {
             prodList[id].likes -= 1;
+            if (colId !== -1) {
+                colList[id].likes -= 1;
+                colList[id].isLike = false; 
+            }
         }
         setProductList(prodList);
+        setCollectionList(colList);
+    };
+
+    const updateCollectionLikes = (id: number, type: string) => {
+        let colList: Array<TypeProduct> = [...collectionList];
+        let prodList: Array<TypeProduct> = [...productList];
+        const prodId = productList.findIndex((value: TypeProduct) => selectByTokenId(value, collectionList[id].tokenId));
+        if (type === 'inc') {
+            colList[id].likes += 1;
+            if (prodId !== -1) {
+                prodList[id].likes += 1;
+                prodList[id].isLike = true; 
+            }
+        } else if (type === 'dec') {
+            colList[id].likes -= 1;
+            if (prodId !== -1) {
+                prodList[id].likes -= 1;
+                prodList[id].isLike = false; 
+            }
+        }
+        setProductList(prodList);
+        setCollectionList(colList);
     };
 
     const theme = useTheme();
@@ -192,7 +228,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={spaceBetweenSlideItems}>
                     {collectionList.map((collection, index) => (
                         <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                            <NFTPreview product={collection} index={index} updateLikes={updateProductLikes} />
+                            <NFTPreview product={collection} index={index} updateLikes={updateCollectionLikes} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
