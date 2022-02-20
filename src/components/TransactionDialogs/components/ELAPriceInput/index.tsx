@@ -8,12 +8,14 @@ export interface ComponentProps {
 }
 
 const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {} }): JSX.Element => {
-    const [input, setInput] = useState(0);
+    const [input, setInput] = useState('0');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        setInput(parseFloat(value));
+        setInput(value);
         handleChange(parseFloat(value));
+        // setInput(isNaN(parseFloat(value)) ? 0 : parseFloat(value));
+        // handleChange(isNaN(parseFloat(value)) ? 0 : parseFloat(value));
     };
     return (
         <Stack spacing={0.5}>
