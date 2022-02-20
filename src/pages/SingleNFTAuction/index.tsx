@@ -323,7 +323,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                     placeBidDlgOpened: true,
                                     placeBidDlgStep: 0,
                                     placeBidName: productDetail.name,
-                                    placeBidOrderId: productDetail.orderId || 0,
+                                    placeBidOrderId: productDetail.orderId || '',
+                                    placeBidMinLimit: productDetail.price_ela
                                 });
                             }
                             else {

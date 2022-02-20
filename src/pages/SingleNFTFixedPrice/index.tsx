@@ -258,7 +258,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                     buyNowDlgStep: 0,
                                     buyNowPrice: productDetail.price_ela,
                                     buyNowName: productDetail.name,
-                                    buyNowOrderId: productDetail.orderId || 0,
+                                    buyNowOrderId: productDetail.orderId || '',
                                 });
                             }
                             else {

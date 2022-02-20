@@ -19,7 +19,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
 
-    const callBuyOrder = async (_orderId: number, _didUri: string, _price: string) => {
+    const callBuyOrder = async (_orderId: string, _didUri: string, _price: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -115,7 +115,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                                 buyNowDlgOpened: false,
                                 buyNowPrice: 0,
                                 buyNowName: '',
-                                buyNowOrderId: 0
+                                buyNowOrderId: ''
                             });
                         }}
                     >

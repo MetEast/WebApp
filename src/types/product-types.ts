@@ -71,7 +71,7 @@ export type TypeProduct = {
     endTime?: string;
     sold?: number;
     instock?: number;
-    orderId?: number;
+    orderId?: string;
 
     blockNumber?: number;
     tokenIndex?: string;
@@ -129,7 +129,7 @@ export type TypeProductFetch = {
     authorDescription: string;
     instock: number;
     sold: number;
-    orderId: number;
+    orderId: string;
     category: string;
 };
 

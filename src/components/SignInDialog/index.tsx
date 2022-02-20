@@ -30,24 +30,27 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     
+    let _didUri = '';
+    let _chainId = 0;
     useEffect(() => {
         // Subscribe did uri
         getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri) => {
-            setSignInDlgState({ ...signInDlgState, didUri: didUri });
+            _didUri = didUri;
             console.log(didUri);
         });
 
         // Subscribe to accounts change
         walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
             getEssentialsWalletBalance().then((balance: string) => {
-                setSignInDlgState({ ...signInDlgState, walletAccounts: accounts, walletBalance: parseFloat((parseFloat(balance)  / 1e18).toFixed(2)) });
+                setSignInDlgState({ ...signInDlgState, walletAccounts: accounts, walletBalance: parseFloat((parseFloat(balance)  / 1e18).toFixed(2)), chainId: _chainId, didUri: _didUri });
                 console.log(accounts);
             });
         });
 
         // Subscribe to chainId change
         walletConnectProvider.on('chainChanged', (chainId: number) => {
-            setSignInDlgState({ ...signInDlgState, chainId: chainId });
+            _chainId = chainId;
+            // setSignInDlgState({ ...signInDlgState, chainId: chainId });
             console.log(chainId);
         });
 

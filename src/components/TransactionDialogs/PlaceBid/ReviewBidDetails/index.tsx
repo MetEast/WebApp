@@ -19,20 +19,20 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
 
-    const callBidForOrder = async (_orderId: number, _value: number, _didUri: string) => {
+    const callBidForOrder = async (_orderId: string, _value: number, _didUri: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
-        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
-        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log('Gas price:', gasPrice);
 
         console.log('Sending transaction with account address:', accounts[0]);
-        let transactionParams = {
+        const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
@@ -41,7 +41,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
         let txHash = '';
 
         marketContract.methods
-            .BidForOrder(_orderId, _value, _didUri)
+            .bidForOrder(_orderId, _value, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
@@ -65,7 +65,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handlePlaceBid = async () => {
-        callBidForOrder(dialogState.placeBidOrderId, dialogState.placeBidAmount, dialogState.mintDidUri);
+        callBidForOrder(dialogState.placeBidOrderId, dialogState.placeBidAmount, signInDlgState.didUri);
     };
     return (
         <Stack spacing={5} width={340}>
