@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, Typography, Stack, IconButton } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
@@ -43,17 +43,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             icon: <Icon icon="ph:cube" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
         },
     ];
-
-    // check if essentials has disconnected from mobile app
-    useEffect(() => {
-        if (
-            tokenCookies.METEAST_TOKEN !== undefined &&
-            didCookies.METEAST_DID !== undefined &&
-            !essentialsConnector.hasWalletConnectSession()
-        ) {
-            SignOutWithEssentials();
-        }
-    }, [essentialsConnector.hasWalletConnectSession()]);
 
     const SignOutWithEssentials = async () => {
         console.log('Signing out user. Deleting session info, auth token');

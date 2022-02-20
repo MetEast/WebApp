@@ -13,10 +13,13 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from 'src/services/common';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(['METEAST_DID']);
     const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['METEAST_TOKEN']);
@@ -24,68 +27,33 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     
-    // useEffect(() => {
-    //     // prevent sign-in again after page refresh
-    //     if (
-    //         tokenCookies.METEAST_TOKEN !== undefined &&
-    //         didCookies.METEAST_DID !== undefined &&
-    //         signInDlgState.isLoggedIn === false
-    //     ) {
-    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
-    //     }
+    useEffect(() => {
+        // Subscribe to accounts change
+        walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
+            setSignInDlgState({ ...signInDlgState, walletAccounts: accounts });
+            console.log(accounts);
+        });
 
-    //     // Subscribe to accounts change
-    //     walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
-    //         setSignInDlgState({ ...signInDlgState, walletAccounts: accounts });
-    //         console.log(accounts);
-    //     });
+        // Subscribe to chainId change
+        walletConnectProvider.on('chainChanged', (chainId: number) => {
+            setSignInDlgState({ ...signInDlgState, chainId: chainId });
+            console.log(chainId);
+        });
 
-    //     // Subscribe to chainId change
-    //     walletConnectProvider.on('chainChanged', (chainId: number) => {
-    //         setSignInDlgState({ ...signInDlgState, chainId: chainId });
-    //         console.log(chainId);
-    //     });
+        // Subscribe to session disconnection
+        walletConnectProvider.on('disconnect', (code: number, reason: string) => {
+            signOutWithEssentials();
+        });
 
-    //     // // Subscribe to session disconnection
-    //     // walletConnectProvider.on('disconnect', (code: number, reason: string) => {
-    //     //     alert('disconnected');
-    //     //     console.log("disconnected----", code, reason);
-    //     //     removeDidCookie('METEAST_DID');
-    //     //     removeTokenCookie('METEAST_TOKEN');
-    //     //     setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
-    //     //     // essentialsConnector.setWalletConnectProvider(
-    //     //     //     new WalletConnectProvider({
-    //     //     //         rpc: {
-    //     //     //             20: 'https://api.elastos.io/eth',
-    //     //     //             21: 'https://api-testnet.elastos.io/eth',
-    //     //     //             128: 'https://http-mainnet.hecochain.com',
-    //     //     //         },
-    //     //     //         bridge: 'https://wallet-connect.trinity-tech.io/v2',
-    //     //     //     }),
-    //     //     // );
-    //     // });
-
-    //     // Subscribe to session disconnection
-    //     walletConnectProvider.on('error', (code: number, reason: string) => {
-    //         console.error(code, reason);
-    //     });
-    // }, [walletConnectProvider, signInDlgState.isLoggedIn]);
-
-    /////////////////
-    // useEffect(() => {
-    //     // prevent sign-in again after page refresh
-    //     if (
-    //         tokenCookies.METEAST_TOKEN !== undefined &&
-    //         didCookies.METEAST_DID !== undefined &&
-    //         signInDlgState.isLoggedIn === false
-    //     ) {
-    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: true });
-    //     }
-    // }, [didCookies, tokenCookies]);
+        // Subscribe to session disconnection
+        walletConnectProvider.on('error', (code: number, reason: string) => {
+            console.error(code, reason);
+        });
+    }, [walletConnectProvider]);
 
     useConnectivitySDK();
 
-    const SignInWithEssentials = async () => {
+    const signInWithEssentials = async () => {
         const didAccess = new DID.DIDAccess();
         let presentation;
         console.log('Trying to sign in using the connectivity SDK');
@@ -127,7 +95,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             variant: 'success',
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
                         });
-                        window.location.reload();
                     } else {
                         console.log(data);
                     }
@@ -140,6 +107,23 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     );
                 });
         }
+    };
+
+    const signOutWithEssentials = async () => {
+        console.log('Signing out user. Deleting session info, auth token');
+        removeTokenCookie('METEAST_TOKEN');
+        removeDidCookie('METEAST_DID');
+        setSignInDlgState({...signInDlgState, isLoggedIn: false});
+        try {
+            await essentialsConnector.disconnectWalletConnect();
+        }
+        catch (e) {
+            console.log(e);
+        } 
+        if(location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
+            navigate('/');   
+        }
+        window.location.reload();
     };
 
     // const signOutWithEssentials = async () => {
@@ -163,7 +147,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
             }}
         >
-            <ConnectDID onConnect={SignInWithEssentials} />
+            <ConnectDID onConnect={async () => {
+                if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
+                    await signOutWithEssentials();
+                    await signInWithEssentials();
+                } else {
+                    await signInWithEssentials();
+                }
+            }} />
         </ModalDialog>
     );
 };

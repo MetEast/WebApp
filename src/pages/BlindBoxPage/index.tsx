@@ -158,7 +158,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         getFetchData();
-    }, [sortBy, filters, filterRange, keyWord, productViewMode]);
+    }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
 
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);

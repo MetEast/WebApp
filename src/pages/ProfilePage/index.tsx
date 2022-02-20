@@ -214,7 +214,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(true, didCookies.METEAST_DID);
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getMyNftList(ela_usd_rate, favouritesList, 0);
         getMyNftList(ela_usd_rate, favouritesList, 1);
         getMyNftList(ela_usd_rate, favouritesList, 2);
@@ -250,7 +250,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
         getPersonalData();
-    }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab]);
+    }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab, signInDlgState.isLoggedIn]);
     
     // setProductList
     useEffect(() => {

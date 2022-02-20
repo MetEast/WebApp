@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 import TopNavbar from '../Navbar/TopNavbar';
 import BottomNavbar from '../Navbar/BottomNavbar';
@@ -7,10 +7,8 @@ import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import generatedGitInfo from '../../generatedGitInfo.json';
 import SignInDlgContainer from '../SignInDialog';
-import { useSignInContext } from 'src/context/SignInContext';
 
 const Layout: React.FC = ({ children }): JSX.Element => {    
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
 
     return (
         <>

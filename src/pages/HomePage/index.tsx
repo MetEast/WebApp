@@ -130,7 +130,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         getFetchData();
-    }, []);
+    }, [signInDlgState.isLoggedIn]);
 
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
