@@ -41,6 +41,7 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintDidUri: "",
                                 createNFTDlgOpened: false,
                             });
+                            window.location.reload();
                         }}
                     >
                         Close

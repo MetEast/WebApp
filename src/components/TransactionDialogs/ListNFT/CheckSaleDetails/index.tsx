@@ -194,6 +194,13 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handleSell = () => {
+        if (dialogState.sellTxFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'warning',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return ;
+        }
         callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
     };
 

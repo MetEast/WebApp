@@ -196,6 +196,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleMint = () => {
         if (!dialogState.mintFile) return;
+        if (dialogState.mintTXFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'warning',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return ;
+        }
         uploadData()
             .then((paramObj) => mint2net(paramObj))
             .then((success) => {
