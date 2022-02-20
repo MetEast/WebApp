@@ -19,7 +19,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
 
-    const callBidForOrder = async (_orderId: string, _value: number, _didUri: string) => {
+    const callBidForOrder = async (_orderId: string, _value: string, _didUri: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -65,7 +65,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handlePlaceBid = async () => {
-        callBidForOrder(dialogState.placeBidOrderId, dialogState.placeBidAmount, signInDlgState.didUri);
+        callBidForOrder(dialogState.placeBidOrderId, BigInt(dialogState.placeBidAmount * 1e18).toString(), signInDlgState.didUri);
     };
     return (
         <Stack spacing={5} width={340}>
