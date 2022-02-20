@@ -3,6 +3,7 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { AbiItem } from 'web3-utils';
@@ -14,6 +15,7 @@ import Web3 from 'web3';
 export interface ComponentProps {}
 
 const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -109,7 +111,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {dialogState.placeBidTxFee} ELA
+                    Available: {signInDlgState.walletBalance} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton

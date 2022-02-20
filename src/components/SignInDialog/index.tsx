@@ -15,6 +15,7 @@ import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from 'src/services/common';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getEssentialsWalletBalance, getDidUri } from 'src/services/essential';
+import { UserTokenType } from 'src/types/auth-types';
 
 export interface ComponentProps {}
 
@@ -24,13 +25,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(['METEAST_DID']);
     const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['METEAST_TOKEN']);
+    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
     const { enqueueSnackbar } = useSnackbar();
 
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     
     useEffect(() => {
         // Subscribe did uri
-        getDidUri(didCookies.METEAST_DID, '', tokenCookies.METEAST_TOKEN.name).then((didUri) => {
+        getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri) => {
             setSignInDlgState({ ...signInDlgState, didUri: didUri });
             console.log(didUri);
         });

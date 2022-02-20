@@ -3,6 +3,7 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { AbiItem } from 'web3-utils';
 import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
@@ -10,19 +11,13 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-import { useCookies } from 'react-cookie';
-import jwtDecode from 'jwt-decode';
-import { UserTokenType } from 'src/types/auth-types';
-import { getDidUri } from 'src/services/essential';
 
 export interface ComponentProps {};
 
 const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
-    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
-    const { did, name } = userInfo;
 
     const callBuyOrder = async (_orderId: number, _didUri: string, _price: string) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -70,13 +65,12 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handleBuyNow = async () => {
-        const _didUri = await getDidUri(did, '', name);
         // console.log("didUri:----------", _didUri)
         // console.log("orderId:---------", dialogState.buyNowOrderId)
         // console.log("price:---------", BigInt(dialogState.buyNowPrice).toString())
         await callBuyOrder(
             dialogState.buyNowOrderId,
-            _didUri,
+            signInDlgState.didUri,
             BigInt(dialogState.buyNowPrice).toString()
         );
     };
@@ -110,7 +104,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {dialogState.buyNowTxFee} ELA
+                    Available: {signInDlgState.walletBalance} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton

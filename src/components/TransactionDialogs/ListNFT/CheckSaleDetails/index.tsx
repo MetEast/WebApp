@@ -9,21 +9,16 @@ import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/M
 import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { useCookies } from 'react-cookie';
-import jwtDecode from 'jwt-decode';
-import { UserTokenType } from 'src/types/auth-types';
-import { getDidUri } from 'src/services/essential';
 
 export interface ComponentProps {}
 
 const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
-    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
-    const { did, name } = userInfo;
 
     const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -170,7 +165,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const createOrder = async (_quoteToken: string) => {
-        const didUri = dialogState.mintDidUri === '' ? await getDidUri(did, '', name) : dialogState.mintDidUri;
+        const didUri = dialogState.mintDidUri === '' ? signInDlgState.didUri : dialogState.mintDidUri;
         if (dialogState.sellSaleType === 'buynow') {
             await callCreateOrderForSale(
                 dialogState.mintTokenId,
@@ -258,7 +253,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {dialogState.sellTxFee} ELA
+                    Available: {signInDlgState.walletBalance} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton
