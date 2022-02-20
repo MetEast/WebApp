@@ -99,7 +99,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price;
+            product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = '---'; // -- no proper value
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
@@ -121,6 +121,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             product.orderId = itemObject.orderId;
+            product.category = itemObject.category;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
             if (itemObject.endTime) {
