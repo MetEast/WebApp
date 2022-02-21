@@ -10,6 +10,7 @@ interface State {
     mintAuthor: string;
     mintIntroduction: string;
     mintFile?: File;
+    mintRoyalties: number;
     mintTokenId: string;
     mintTokenUri: string;
     mintDidUri: string;
@@ -69,6 +70,7 @@ const defaultState: State = {
     mintCategory: { label: '', value: '' },
     mintIntroduction: '',
     mintAuthor: '',
+    mintRoyalties: 0,
     mintTokenId: '',
     mintTokenUri: '',
     mintDidUri: '',

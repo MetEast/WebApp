@@ -286,11 +286,12 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintTokenId: '',
                                 mintTokenUri: '',
                                 mintDidUri: '',
-                                createNFTDlgOpened: false,
+                                createNFTDlgOpened: true,
+                                createNFTDlgStep: 0
                             });
                         }}
                     >
-                        Close
+                        Back
                     </SecondaryButton>
                     <PrimaryButton fullWidth onClick={handleMint}>
                         Confirm

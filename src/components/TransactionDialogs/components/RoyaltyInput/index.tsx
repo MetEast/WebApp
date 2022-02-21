@@ -8,6 +8,14 @@ export interface ComponentProps {
 }
 
 const RoyaltyInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {} }): JSX.Element => {
+    const [text, setText] = useState('');
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setText(value);
+        handleChange(parseFloat(value));
+    };
+
     return (
         <Stack spacing={0.5}>
             {title && (
@@ -24,6 +32,7 @@ const RoyaltyInput: React.FC<ComponentProps> = ({ title, placeholder, handleChan
                 sx={{ background: '#F0F1F2' }}
             >
                 <TextField
+                    value={text}
                     placeholder={placeholder}
                     sx={{
                         width: '100%',
@@ -39,6 +48,7 @@ const RoyaltyInput: React.FC<ComponentProps> = ({ title, placeholder, handleChan
                             },
                         },
                     }}
+                    onChange={handleInputChange}
                 />
                 <Typography fontSize={14} fontWeight={700} marginLeft={0.5}>
                     %
