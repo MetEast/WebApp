@@ -17,8 +17,6 @@ import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
-    const [productList, setProductList] = useState<Array<TypeProduct>>([]);
-    const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([]);
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -40,6 +38,20 @@ const HomePage: React.FC = (): JSX.Element => {
         type: enumSingleNFTType.BuyNow,
         isLike: false,
     };
+    const [productList, setProductList] = useState<Array<TypeProduct>>([
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+    ]);
+    const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+    ]);
 
     const adBanners = [
         '/assets/images/banners/banner1.png',
@@ -144,13 +156,13 @@ const HomePage: React.FC = (): JSX.Element => {
             prodList[id].likes += 1;
             if (colId !== -1) {
                 colList[id].likes += 1;
-                colList[id].isLike = true; 
+                colList[id].isLike = true;
             }
         } else if (type === 'dec') {
             prodList[id].likes -= 1;
             if (colId !== -1) {
                 colList[id].likes -= 1;
-                colList[id].isLike = false; 
+                colList[id].isLike = false;
             }
         }
         setProductList(prodList);
@@ -160,18 +172,20 @@ const HomePage: React.FC = (): JSX.Element => {
     const updateCollectionLikes = (id: number, type: string) => {
         let colList: Array<TypeProduct> = [...collectionList];
         let prodList: Array<TypeProduct> = [...productList];
-        const prodId = productList.findIndex((value: TypeProduct) => selectByTokenId(value, collectionList[id].tokenId));
+        const prodId = productList.findIndex((value: TypeProduct) =>
+            selectByTokenId(value, collectionList[id].tokenId),
+        );
         if (type === 'inc') {
             colList[id].likes += 1;
             if (prodId !== -1) {
                 prodList[id].likes += 1;
-                prodList[id].isLike = true; 
+                prodList[id].isLike = true;
             }
         } else if (type === 'dec') {
             colList[id].likes -= 1;
             if (prodId !== -1) {
                 prodList[id].likes -= 1;
-                prodList[id].isLike = false; 
+                prodList[id].isLike = false;
             }
         }
         setProductList(prodList);
