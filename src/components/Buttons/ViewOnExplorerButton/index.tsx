@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSignInContext } from 'src/context/SignInContext';
 import { Button } from './styles';
 import { Icon } from '@iconify/react';
 import { Link } from '@mui/material';
@@ -8,8 +9,20 @@ export interface ComponentProps {
 }
 
 const ViewOnExplorerButton: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
+    let initUrl = '';
+    if (signInDlgState.chainId === 20) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`;
+    else if (signInDlgState.chainId === 21) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`; 
+    const [txHashUrl, setTxHashUrl] = useState<string>(initUrl);
+    useEffect(() => {
+        let _url = '';
+        if (signInDlgState.chainId === 20) _url = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`;
+        else if (signInDlgState.chainId === 21) _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`; 
+        setTxHashUrl(_url);
+    }, [signInDlgState.chainId]);
+
     return (
-        <Link href={`${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`} underline="none" target="_blank">
+        <Link href={txHashUrl} underline="none" target="_blank">
             <Button>
                 {`View on explorer`}
                 <Icon

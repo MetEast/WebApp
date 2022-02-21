@@ -96,7 +96,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 reqUrl += `getSelfCreateNotSoldCollectible?selfAddr=${accounts[0]}`;
                 break;
             case 3:
-                reqUrl += `getForSaleFixedPriceCollectible?selfAddr=${accounts[0]}`;
+                reqUrl += `getForSaleCollectible?selfAddr=${accounts[0]}`;
                 break;
             case 4:
                 reqUrl += `getSoldCollectibles?selfAddr=${accounts[0]}`;
@@ -162,7 +162,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
         let _myNftList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
-            let itemObject: TypeProductFetch = arrSearchResult[i];
+            const itemObject: TypeProductFetch = arrSearchResult[i];
             var product: TypeProduct = { ...defaultValue };
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;

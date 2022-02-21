@@ -198,11 +198,6 @@ const HomePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {/* {productList.length === 0 && (
-                        <Stack justifyContent="center" alignItems="center" minHeight={320}>
-                            <img src="/assets/images/loading.gif" alt="" />
-                        </Stack>
-                    )} */}
             </Box>
             <Box mt={4}>
                 <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
