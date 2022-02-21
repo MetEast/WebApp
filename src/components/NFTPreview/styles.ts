@@ -21,6 +21,7 @@ export const ImageBox = styled(Box)`
     /* display: flex; */
     border: 1px solid #eeeeee;
     border-radius: 18px;
+    overflow: hidden;
     /* box-shadow: 4px 8px 4px -4px rgba(2, 14, 25, 0.2); */
     /* filter: drop-shadow(0px 4px 8px rgba(7, 43, 76, 0.2)); */
     img {

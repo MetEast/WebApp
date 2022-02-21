@@ -23,7 +23,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-    const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -45,6 +44,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
         type: enumSingleNFTType.BuyNow,
         isLike: false,
     };
+    const [productList, setProductList] = useState<Array<TypeProduct>>([
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+    ]);
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${
