@@ -22,6 +22,8 @@ import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
 import { UserTokenType } from 'src/types/auth-types';
+import ModalDialog from 'src/components/ModalDialog';
+import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -47,6 +49,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [myNFTLiked, setMyNFTLiked] = useState<Array<TypeProduct>>([]);
     const [isOnLikedTab, setIsOnLikedTab] = useState<boolean>(false);
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
+
+    const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
 
     const defaultValue: TypeProduct = {
         tokenId: '',
@@ -391,7 +395,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         {userInfo.name}
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={2}>
-                        <SecondaryButton size="small" sx={{ paddingX: 2.5 }}>
+                        <SecondaryButton
+                            size="small"
+                            sx={{ paddingX: 2.5 }}
+                            onClick={() => {
+                                setEarningsDlgOpen(true);
+                            }}
+                        >
                             Earnings
                         </SecondaryButton>
                         <PrimaryButton
@@ -482,6 +492,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 filterRange={filterRange}
                 onDone={handleDoneFilterModal}
             />
+            <ModalDialog
+                open={earningsDlgOpen}
+                onClose={() => {
+                    setEarningsDlgOpen(false);
+                }}
+            >
+                <YourEarnings />
+            </ModalDialog>
         </>
     );
 };
