@@ -5,11 +5,9 @@ import BottomNavbar from '../Navbar/BottomNavbar';
 import Footer from '../Footer';
 import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
-import generatedGitInfo from '../../generatedGitInfo.json';
 import SignInDlgContainer from '../SignInDialog';
 
-const Layout: React.FC = ({ children }): JSX.Element => {    
-
+const Layout: React.FC = ({ children }): JSX.Element => {
     return (
         <>
             <SignInDlgContainer />
@@ -47,9 +45,6 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 <Container>
                     <BottomNavbar />
                 </Container>
-            </Box>
-            <Box position="fixed" bottom={0} right={0} padding={1} zIndex={100} sx={{ background: '#EEEEEE' }}>
-                <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
             </Box>
             <MintNFTDlgContainer />
         </>
