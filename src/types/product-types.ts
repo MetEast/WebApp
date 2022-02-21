@@ -109,6 +109,7 @@ export type TypeProductFetch = {
     royalties: string;
     royaltyOwner: string;
     holder: string;
+    holderName: string;
     createTime: string;
     timestamp: number;
     endTime: string;
