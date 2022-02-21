@@ -237,11 +237,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 borderRadius={4}
                 sx={{ background: '#F0F1F2' }}
             >
-                <Box borderRadius={4.5} overflow="hidden">
+                <Box borderRadius={4.5} maxHeight={120} overflow="hidden">
                     <img
                         src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
                         alt="file preview"
                         width="100%"
+                        height="100%"
+                        style={{ objectFit: 'cover' }}
                     />
                 </Box>
                 <Grid container>
