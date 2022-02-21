@@ -5,6 +5,7 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
@@ -12,8 +13,8 @@ import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/components/ContractMethod/config';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/MET';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
@@ -21,6 +22,7 @@ const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 export interface ComponentProps {}
 
 const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
@@ -132,7 +134,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     size: added.size,
                     thumbnail: `meteast:image:${added.path}`,
                 },
-                adult: false,
+                category: dialogState.mintCategory.value,
             };
 
             try {
@@ -194,6 +196,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleMint = () => {
         if (!dialogState.mintFile) return;
+        if (dialogState.mintTXFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'warning',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return ;
+        }
         uploadData()
             .then((paramObj) => mint2net(paramObj))
             .then((success) => {
@@ -241,7 +250,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {dialogState.mintTXFee} ELA
+                    Available: {signInDlgState.walletBalance} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton

@@ -1,4 +1,4 @@
-import { TypeFavouritesFetch } from 'src/types/product-types';
+import { enumBadgeType, TypeFavouritesFetch } from 'src/types/product-types';
 
 // custome
 export const getImageFromAsset = (id: string) => {
@@ -58,6 +58,30 @@ export const storeWithExpireTime = (key: string, value: string, ttl: number) => 
 
 export const selectFromFavourites = (value: TypeFavouritesFetch, tokenId: string) => {
     return value.tokenId === tokenId;
+};
+
+export const getMintCategory = (value: string | undefined) => {
+    if (value === undefined) return enumBadgeType.Other;
+    switch(value) {
+        case 'Original': 
+            return enumBadgeType.Original;
+        case 'Museum': 
+            return enumBadgeType.Museum;
+        case 'Arts': 
+            return enumBadgeType.Arts;
+        case 'Sports': 
+            return enumBadgeType.Sports;
+        case 'Dimension': 
+            return enumBadgeType.Dimension;
+        case 'Pets': 
+            return enumBadgeType.Pets;
+        case 'Recreation': 
+            return enumBadgeType.Recreation;
+        case 'Star': 
+            return enumBadgeType.Star;
+        default: 
+            return enumBadgeType.Other;
+    }
 };
 
 export const emptyCache = () => {

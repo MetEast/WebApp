@@ -42,9 +42,9 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const adBanners = [
-        '/assets/images/adbanners/banner1.png',
-        '/assets/images/adbanners/banner2.png',
-        '/assets/images/adbanners/banner3.png',
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
     ];
 
     const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -122,24 +122,60 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        const ela_usd_rate = await getElaUsdRate();
+        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getNewProducts(ela_usd_rate, favouritesList);
         getPopularCollection(ela_usd_rate, favouritesList);
     };
 
     useEffect(() => {
         getFetchData();
-    }, []);
+    }, [signInDlgState.isLoggedIn]);
+
+    const selectByTokenId = (value: TypeProduct, tokenId: string) => {
+        return value.tokenId === tokenId;
+    };
 
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
+        let colList: Array<TypeProduct> = [...collectionList];
+        const colId = collectionList.findIndex((value: TypeProduct) => selectByTokenId(value, productList[id].tokenId));
         if (type === 'inc') {
             prodList[id].likes += 1;
+            if (colId !== -1) {
+                colList[id].likes += 1;
+                colList[id].isLike = true; 
+            }
         } else if (type === 'dec') {
             prodList[id].likes -= 1;
+            if (colId !== -1) {
+                colList[id].likes -= 1;
+                colList[id].isLike = false; 
+            }
         }
         setProductList(prodList);
+        setCollectionList(colList);
+    };
+
+    const updateCollectionLikes = (id: number, type: string) => {
+        let colList: Array<TypeProduct> = [...collectionList];
+        let prodList: Array<TypeProduct> = [...productList];
+        const prodId = productList.findIndex((value: TypeProduct) => selectByTokenId(value, collectionList[id].tokenId));
+        if (type === 'inc') {
+            colList[id].likes += 1;
+            if (prodId !== -1) {
+                prodList[id].likes += 1;
+                prodList[id].isLike = true; 
+            }
+        } else if (type === 'dec') {
+            colList[id].likes -= 1;
+            if (prodId !== -1) {
+                prodList[id].likes -= 1;
+                prodList[id].isLike = false; 
+            }
+        }
+        setProductList(prodList);
+        setCollectionList(colList);
     };
 
     const theme = useTheme();
@@ -162,11 +198,6 @@ const HomePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {/* {productList.length === 0 && (
-                        <Stack justifyContent="center" alignItems="center" minHeight={320}>
-                            <img src="/assets/images/loading.gif" alt="" />
-                        </Stack>
-                    )} */}
             </Box>
             <Box mt={4}>
                 <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
@@ -192,7 +223,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={spaceBetweenSlideItems}>
                     {collectionList.map((collection, index) => (
                         <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                            <NFTPreview product={collection} index={index} updateLikes={updateProductLikes} />
+                            <NFTPreview product={collection} index={index} updateLikes={updateCollectionLikes} />
                         </SwiperSlide>
                     ))}
                 </Swiper>

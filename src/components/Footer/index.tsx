@@ -22,8 +22,8 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                     <img src="/assets/images/header/meteast_label.svg" alt="" />
                 </Stack>
                 <Stack direction="row" spacing={1}>
-                    {socialButtonsList.map((item) => (
-                        <SocialButton size="small">
+                    {socialButtonsList.map((item, index) => (
+                        <SocialButton size="small" key={`social-button-${index}`}>
                             <Icon icon={item} fontSize={20} />
                         </SocialButton>
                     ))}

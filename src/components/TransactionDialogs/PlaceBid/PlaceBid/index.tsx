@@ -66,7 +66,8 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                             placeBidDlgOpened: false,
                             placeBidName: '',
                             placeBidTxHash: '',
-                            placeBidOrderId: 0
+                            placeBidOrderId: '',
+                            placeBidMinLimit: 0
                         });
                     }}
                 >
@@ -76,13 +77,27 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                     fullWidth
                     onClick={() => {
                         if (bidAmount !== 0 && expiration?.value !== undefined && expiration?.value !== '')
-                            setDialogState({
-                                ...dialogState,
-                                placeBidDlgOpened: true,
-                                placeBidDlgStep: 1,
-                                placeBidAmount: bidAmount,
-                                placeBidExpire: expiration
-                            });
+                            if (isNaN(parseFloat(bidAmount.toString()))) {
+                                enqueueSnackbar('Invalid number!', {
+                                    variant: 'warning',
+                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                });
+                            }
+                            else if (bidAmount < dialogState.placeBidMinLimit) {
+                                enqueueSnackbar(`Bid amount must be greater than ${dialogState.placeBidMinLimit}!`, {
+                                    variant: 'warning',
+                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                });
+                            }
+                            else {
+                                setDialogState({
+                                    ...dialogState,
+                                    placeBidDlgOpened: true,
+                                    placeBidDlgStep: 1,
+                                    placeBidAmount: bidAmount,
+                                    placeBidExpire: expiration
+                                });
+                            }
                         else
                             enqueueSnackbar('Form validation failed!', {
                                 variant: 'warning',

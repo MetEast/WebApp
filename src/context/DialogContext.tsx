@@ -27,7 +27,7 @@ interface State {
     buyNowDlgStep: number;
     buyNowName: string;
     buyNowPrice: number;
-    buyNowOrderId: number;
+    buyNowOrderId: string;
     buyNowTxHash: string;
     buyNowTxFee: number;
     // accept bid
@@ -37,7 +37,8 @@ interface State {
     placeBidDlgOpened: boolean;
     placeBidDlgStep: number;
     placeBidName: string;
-    placeBidOrderId: number;
+    placeBidOrderId: string;
+    placeBidMinLimit: number;
     placeBidAmount: number;
     placeBidExpire: TypeSelectItem;
     placeBidTxHash: string;
@@ -86,7 +87,7 @@ const defaultState: State = {
     buyNowName: '',
     buyNowPrice: 0,
     buyNowTxHash: '',
-    buyNowOrderId: 0,
+    buyNowOrderId: '',
     buyNowTxFee: 0,
     // accept bid
     acceptBidDlgOpened: false,
@@ -95,11 +96,12 @@ const defaultState: State = {
     placeBidDlgOpened: false,
     placeBidDlgStep: 0,
     placeBidName: '',
+    placeBidMinLimit: 0,
     placeBidAmount: 0,
     placeBidExpire: { label: '', value: '' },
     placeBidTxHash: '',
     placeBidTxFee: 0,
-    placeBidOrderId: 0,
+    placeBidOrderId: '',
     // update bid
     // cancel bid
     // all transactions

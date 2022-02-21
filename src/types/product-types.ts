@@ -25,7 +25,15 @@ export enum enumBadgeType {
     ForSale = 'For Sale',
     OnAuction = 'On Auction',
     ReservePriceNotMet = 'Reserve Price Not Met',
+    Original = 'Original',
     Museum = 'Museum',
+    Arts = 'Arts',
+    Sports = 'Sports',
+    Dimension = 'Dimension',
+    Pets = 'Pets',
+    Recreation = 'Recreation',
+    Star = 'Star',
+    Other = 'Other',
     Created = 'Created',
     Sold = 'Sold',
     Badge = 'Badge',
@@ -63,7 +71,7 @@ export type TypeProduct = {
     endTime?: string;
     sold?: number;
     instock?: number;
-    orderId?: number;
+    orderId?: string;
 
     blockNumber?: number;
     tokenIndex?: string;
@@ -74,7 +82,7 @@ export type TypeProduct = {
     asset?: string;
     kind?: string;
     size?: string;
-    adult?: boolean;
+    category?: string;
     status?: string;
 };
 
@@ -121,7 +129,8 @@ export type TypeProductFetch = {
     authorDescription: string;
     instock: number;
     sold: number;
-    orderId: number;
+    orderId: string;
+    category: string;
 };
 
 export type TypeFavouritesFetch = {

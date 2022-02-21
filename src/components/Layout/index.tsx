@@ -1,5 +1,5 @@
-import { Box, Typography } from '@mui/material';
 import React from 'react';
+import { Box, Typography } from '@mui/material';
 import TopNavbar from '../Navbar/TopNavbar';
 import BottomNavbar from '../Navbar/BottomNavbar';
 import Footer from '../Footer';
@@ -8,9 +8,11 @@ import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import generatedGitInfo from '../../generatedGitInfo.json';
 import SignInDlgContainer from '../SignInDialog';
 
-const Layout: React.FC = ({ children }): JSX.Element => {
+const Layout: React.FC = ({ children }): JSX.Element => {    
+
     return (
         <>
+            <SignInDlgContainer />
             <Box
                 sx={{
                     width: '100%',
@@ -50,7 +52,6 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
             </Box>
             <MintNFTDlgContainer />
-            <SignInDlgContainer />
         </>
     );
 };

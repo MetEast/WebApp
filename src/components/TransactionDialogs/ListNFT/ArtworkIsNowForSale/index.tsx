@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
@@ -8,6 +9,8 @@ import { useDialogContext } from 'src/context/DialogContext';
 export interface ComponentProps {}
 
 const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
 
     return (
@@ -39,6 +42,10 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
                             mintTokenUri: '',
                             mintDidUri: '',
                         });
+                        if(location.pathname.indexOf('/mynft/created') !== -1) {
+                            navigate('/profile');   
+                        }
+                        else window.location.reload();
                     }}
                 >
                     Close

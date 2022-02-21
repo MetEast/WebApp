@@ -29,7 +29,7 @@ import {
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
@@ -92,7 +92,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price;
+            product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;

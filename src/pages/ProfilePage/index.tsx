@@ -17,7 +17,6 @@ import {
     ProfileImageWrapper,
     ProfileImage,
     EmptyBodyGalleryItem,
-    EmptyTitleGalleryItem,
 } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -28,7 +27,6 @@ import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
-import { getEssentialWalletAddress, getEssentialWalletBalance } from 'src/services/essential';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -78,7 +76,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const userInfo: any = tokenCookies.METEAST_TOKEN === undefined ? '' : jwtDecode(tokenCookies.METEAST_TOKEN);
-    const accounts: string[] = getEssentialWalletAddress();
+    // const accounts: string[] = getEssentialsWalletAddress();
+    const accounts: string[] = signInDlgState.walletAccounts;
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
 
@@ -95,7 +94,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 reqUrl += `getSelfCreateNotSoldCollectible?selfAddr=${accounts[0]}`;
                 break;
             case 3:
-                reqUrl += `getForSaleFixedPriceCollectible?selfAddr=${accounts[0]}`;
+                reqUrl += `getForSaleCollectible?selfAddr=${accounts[0]}`;
                 break;
             case 4:
                 reqUrl += `getSoldCollectibles?selfAddr=${accounts[0]}`;
@@ -161,7 +160,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
         let _myNftList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
-            let itemObject: TypeProductFetch = arrSearchResult[i];
+            const itemObject: TypeProductFetch = arrSearchResult[i];
             var product: TypeProduct = { ...defaultValue };
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
@@ -214,7 +213,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(true, didCookies.METEAST_DID);
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getMyNftList(ela_usd_rate, favouritesList, 0);
         getMyNftList(ela_usd_rate, favouritesList, 1);
         getMyNftList(ela_usd_rate, favouritesList, 2);
@@ -250,8 +249,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
         getPersonalData();
-        getEssentialWalletBalance();
-    }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab]);
+    }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab, signInDlgState.isLoggedIn]);
     
     // setProductList
     useEffect(() => {
@@ -345,9 +343,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const adBanners = [
-        '/assets/images/adbanners/banner1.png',
-        '/assets/images/adbanners/banner2.png',
-        '/assets/images/adbanners/banner3.png',
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
     ];
 
     return (
@@ -361,7 +359,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             </Box>
                         </SwiperSlide>
                     ))}
-                    {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
+                    {/* {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>} */}
                 </Swiper>
             </Box>
             <Box>

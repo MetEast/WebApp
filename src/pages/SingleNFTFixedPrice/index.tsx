@@ -19,7 +19,7 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
-import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
+import { getImageFromAsset, getMintCategory, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
@@ -29,7 +29,7 @@ import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialConnectivity';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
@@ -111,6 +111,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
+            product.category = itemObject.category;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
         }
@@ -239,7 +240,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.BuyNow} />
-                        <ProductBadge badgeType={enumBadgeType.Museum} />
+                        <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice
                         price_ela={productDetail.price_ela}
@@ -257,7 +258,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                     buyNowDlgStep: 0,
                                     buyNowPrice: productDetail.price_ela,
                                     buyNowName: productDetail.name,
-                                    buyNowOrderId: productDetail.orderId || 0,
+                                    buyNowOrderId: productDetail.orderId || '',
                                 });
                             }
                             else {

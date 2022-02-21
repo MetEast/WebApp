@@ -46,7 +46,47 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
             color: '#BF21F1',
             icon: '',
         },
+        [enumBadgeType.Original]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
         [enumBadgeType.Museum]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
+        [enumBadgeType.Arts]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
+        [enumBadgeType.Sports]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
+        [enumBadgeType.Dimension]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
+        [enumBadgeType.Pets]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
+        [enumBadgeType.Recreation]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
+        [enumBadgeType.Star]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:bank" />,
+        },
+        [enumBadgeType.Other]: {
             background: '#24AECC1A',
             color: '#24AECC',
             icon: <Icon icon="ph:bank" />,

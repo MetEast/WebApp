@@ -3,11 +3,29 @@ import React, { createContext, useState, useContext } from 'react';
 interface State {
     signInDlgOpened: boolean;
     isLoggedIn: boolean;
+    walletAccounts: string[];
+    walletBalance: number;
+    chainId: number;
+    didUri: string;
 }
 
 const defaultState: State = {
     signInDlgOpened: false,
-    isLoggedIn: false
+    isLoggedIn:
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('METEAST_DID='))
+            ?.split('=')[1] !== undefined &&
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('METEAST_TOKEN='))
+            ?.split('=')[1] !== undefined
+            ? true
+            : false,
+    walletAccounts: [],
+    walletBalance: 0,
+    chainId: 0,
+    didUri: '',
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
