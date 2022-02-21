@@ -9,11 +9,11 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
-import { useSnackbar } from 'notistack';
 import { UserTokenType } from 'src/types/auth-types';
+import { useSnackbar } from 'notistack';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/MET';
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
@@ -26,7 +26,10 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
-    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
+    const userInfo: UserTokenType =
+        tokenCookies.METEAST_TOKEN === undefined
+            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            : jwtDecode(tokenCookies.METEAST_TOKEN);
     const { did, name } = userInfo;
 
     const callMintNFT = async (
@@ -201,7 +204,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 variant: 'warning',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
-            return ;
+            return;
         }
         uploadData()
             .then((paramObj) => mint2net(paramObj))
