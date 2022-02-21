@@ -73,7 +73,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
         await callBuyOrder(
             dialogState.buyNowOrderId,
             signInDlgState.didUri,
-            BigInt(dialogState.buyNowPrice).toString(),
+            BigInt(dialogState.buyNowPrice * 1e18).toString()
         );
     };
 
