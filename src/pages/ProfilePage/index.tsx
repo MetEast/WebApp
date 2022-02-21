@@ -465,7 +465,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
             {productList.length === 0 && <EmptyBodyGalleryItem>No listed products on marketplace</EmptyBodyGalleryItem>}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
-                    <Grid item xs={productViewMode === 'grid1' ? 6 : 3} key={`explore-product-${index}`}>
+                    <Grid
+                        item
+                        xs={productViewMode === 'grid1' ? 12 : 6}
+                        md={productViewMode === 'grid1' ? 6 : 3}
+                        key={`explore-product-${index}`}
+                    >
                         <MyNFTGalleryItem product={item} index={index} updateLikes={updateProductLikes} />
                     </Grid>
                 ))}
