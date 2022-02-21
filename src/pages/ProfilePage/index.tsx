@@ -17,7 +17,6 @@ import {
     ProfileImageWrapper,
     ProfileImage,
     EmptyBodyGalleryItem,
-    EmptyTitleGalleryItem,
 } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -28,7 +27,6 @@ import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
-import { getEssentialsWalletAddress } from 'src/services/essential';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -361,7 +359,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             </Box>
                         </SwiperSlide>
                     ))}
-                    {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>}
+                    {/* {productList.length === 0 && <EmptyTitleGalleryItem>No data to display</EmptyTitleGalleryItem>} */}
                 </Swiper>
             </Box>
             <Box>
