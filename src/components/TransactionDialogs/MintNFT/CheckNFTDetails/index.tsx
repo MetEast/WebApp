@@ -61,7 +61,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             value: 0,
         };
         let txHash = '';
-        
+
         setLoadingDlgOpened(true);
         meteastContract.methods
             .mint(_tokenId, _tokenUri, _royaltyFee)
@@ -69,6 +69,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
+                setLoadingDlgOpened(false);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
