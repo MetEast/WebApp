@@ -7,9 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { essentialsConnector } from '../ConnectWallet/EssentialsConnectivity';
+import { essentialsConnector, isUsingEssentialsConnector } from '../ConnectWallet/EssentialsConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { useCookies } from 'react-cookie';
 import { NotificationTypo } from './styles';
 
 interface ComponentProps {
@@ -21,8 +20,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
-    const [didCookies, setDidCookie, removeDidCookie] = useCookies(['METEAST_DID']);
-    const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['METEAST_TOKEN']);
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
@@ -46,11 +43,14 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
 
     const SignOutWithEssentials = async () => {
         console.log('Signing out user. Deleting session info, auth token');
-        removeTokenCookie('METEAST_TOKEN');
-        removeDidCookie('METEAST_DID');
+        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`
+        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`
         setSignInDlgState({...signInDlgState, isLoggedIn: false});
         try {
-            await essentialsConnector.disconnectWalletConnect();
+            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
+                await essentialsConnector.getWalletConnectProvider().disconnect();
+                // await essentialsConnector.disconnectWalletConnect();
+            }
         }
         catch (e) {
             console.log(e);

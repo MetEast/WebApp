@@ -18,6 +18,13 @@ export const getEssentialsWalletBalance = async () => {
     return balance;
 };
 
+export const getEssentialsChainId = async () => {
+    const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    const chainId = await walletConnectWeb3.eth.getChainId();
+    return chainId;
+};
+
 export const getDidUri = async (_did: string, _description: string, _name: string) => {
     // create the metadata object we'll be storing
     const didObj = {
