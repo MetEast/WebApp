@@ -42,10 +42,8 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
                             mintTokenUri: '',
                             mintDidUri: '',
                         });
-                        if(location.pathname.indexOf('/mynft/created') !== -1) {
-                            navigate('/profile');   
-                        }
-                        else window.location.reload();
+                        navigate('/products');
+                        window.location.reload();
                     }}
                 >
                     Close
