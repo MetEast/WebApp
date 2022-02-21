@@ -1,7 +1,7 @@
 import React from 'react';
 import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
-import { Stack, Typography, Grid } from '@mui/material';
+import { Stack, Box, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
@@ -229,7 +229,21 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 <PageNumberTypo>2 of 2</PageNumberTypo>
                 <DialogTitleTypo>Check NFT Details</DialogTitleTypo>
             </Stack>
-            <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
+            <Stack
+                alignItems="center"
+                spacing={2}
+                paddingX={4}
+                paddingY={4}
+                borderRadius={4}
+                sx={{ background: '#F0F1F2' }}
+            >
+                <Box borderRadius={4.5} overflow="hidden">
+                    <img
+                        src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
+                        alt="file preview"
+                        width="100%"
+                    />
+                </Box>
                 <Grid container>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
