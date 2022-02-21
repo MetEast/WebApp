@@ -62,11 +62,11 @@ const YourEarnings: React.FC<ComponentProps> = (): JSX.Element => {
     ];
 
     return (
-        <Stack spacing={5} width={520}>
+        <Stack spacing={5} width={{ xs: 360, md: 520 }}>
             <Stack>
-                <DialogTitleTypo sx={{ textAlign: 'left' }}>Your Earnings</DialogTitleTypo>
+                <DialogTitleTypo sx={{ textAlign: 'center' }}>Your Earnings</DialogTitleTypo>
             </Stack>
-            <Stack spacing={3}>
+            <Stack spacing={3} maxHeight={{ xs: 400, md: '100%' }} sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
                 {earnings.map((item, index) => (
                     <Stack direction="row" justifyContent="space-between" spacing={3}>
                         <Stack direction="row" alignItems="center" spacing={1}>
