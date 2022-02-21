@@ -319,7 +319,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         marginTop={3}
                     />
                     {signInDlgState.walletAccounts !== [] &&
-                        productDetail.royaltyOwner !== signInDlgState.walletAccounts[0] && (
+                        productDetail.holder !== signInDlgState.walletAccounts[0] && (
                             <PrimaryButton
                                 sx={{ marginTop: 3, width: '100%' }}
                                 onClick={() => {
