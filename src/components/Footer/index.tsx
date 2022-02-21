@@ -3,6 +3,7 @@ import { Stack, Box, Button, Typography } from '@mui/material';
 import { SpacingProps } from '@mui/system';
 import { SocialButton } from './styles';
 import { Icon } from '@iconify/react';
+import generatedGitInfo from '../../generatedGitInfo.json';
 
 export interface ComponentProps extends SpacingProps {}
 
@@ -35,7 +36,7 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 alignItems="center"
                 rowGap={3}
             >
-                <Stack direction="row" alignItems="center" spacing={0.5}>
+                <Stack direction="row" alignItems="center" spacing={0.5} position="relative">
                     <Typography fontSize={12} fontWeight={500}>
                         Powered by
                     </Typography>
@@ -43,6 +44,9 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                     <Typography fontSize={12} fontWeight={500}>
                         Elastos
                     </Typography>
+                    <Box position="absolute" right="-120px" paddingX={0.5} sx={{ background: '#EEEEEE' }}>
+                        <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
+                    </Box>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={1} columnGap={2}>
                     <Button sx={{ fontSize: 16, fontWeight: 700, color: '#1890FF' }}>Docs</Button>
