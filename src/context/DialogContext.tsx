@@ -38,6 +38,12 @@ interface State {
     changePriceOrderId: string;
     changePriceTxHash: string;
     changePriceTxFee: number;
+    // cancel sale
+    cancelSaleDlgOpened: boolean;
+    cancelSaleDlgStep: number;
+    cancelSaleOrderId: string;
+    cancelSaleTxHash: string;
+    cancelSaleTxFee: number;
     // accept bid
     acceptBidDlgOpened: boolean;
     acceptBidDlgStep: number;
@@ -105,6 +111,12 @@ const defaultState: State = {
     changePriceOrderId: '',
     changePriceTxHash: '',
     changePriceTxFee: 0,
+    // cancel sale
+    cancelSaleDlgOpened: false,
+    cancelSaleDlgStep: 0, 
+    cancelSaleOrderId: '',
+    cancelSaleTxHash: '',
+    cancelSaleTxFee: 0,
     // accept bid
     acceptBidDlgOpened: false,
     acceptBidDlgStep: 0,

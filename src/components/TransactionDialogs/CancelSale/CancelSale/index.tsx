@@ -2,23 +2,125 @@ import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
+import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
+import { AbiItem } from 'web3-utils';
+import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import Web3 from 'web3';
+import ModalDialog from 'src/components/ModalDialog';
+import WaitingConfirm from '../../Others/WaitingConfirm';
 
 export interface ComponentProps {}
 
 const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
+    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
+    const { enqueueSnackbar } = useSnackbar();
+
+    const callCancelOrder = async (_orderId: string) => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const accounts = await walletConnectWeb3.eth.getAccounts();
+
+        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+
+        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        console.log('Gas price:', gasPrice);
+
+        console.log('Sending transaction with account address:', accounts[0]);
+        const transactionParams = {
+            from: accounts[0],
+            gasPrice: gasPrice,
+            gas: 5000000,
+            value: 0,
+        };
+        let txHash = '';
+
+        setLoadingDlgOpened(true);
+        marketContract.methods
+            .cancelOrder(_orderId)
+            .send(transactionParams)
+            .on('transactionHash', (hash: any) => {
+                console.log('transactionHash', hash);
+                txHash = hash;
+                setLoadingDlgOpened(false);
+            })
+            .on('receipt', (receipt: any) => {
+                console.log('receipt', receipt);
+                enqueueSnackbar('Cancel sale succeed!', {
+                    variant: 'success',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                setDialogState({
+                    ...dialogState,
+                    cancelSaleDlgOpened: true,
+                    cancelSaleDlgStep: 1,
+                    cancelSaleTxHash: txHash,
+                });
+            })
+            .on('error', (error: any, receipt: any) => {
+                console.error('error', error);
+                enqueueSnackbar('Cancel sale error!', {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+            });
+    };
+
+    const handleCancelSale = () => {
+        if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'warning',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return;
+        }
+        callCancelOrder(dialogState.cancelSaleOrderId);
+    };
+
     return (
-        <Stack spacing={5} width={320}>
-            <Stack alignItems="center">
-                <DialogTitleTypo>Are you sure?</DialogTitleTypo>
-                <Typography fontSize={16} fontWeight={400} textAlign="center" marginTop={1}>
-                    If you cancel the sale, nobody will be able to buy your amazing artwork.
-                </Typography>
+        <>
+            <Stack spacing={5} width={320}>
+                <Stack alignItems="center">
+                    <DialogTitleTypo>Are you sure?</DialogTitleTypo>
+                    <Typography fontSize={16} fontWeight={400} textAlign="center" marginTop={1}>
+                        If you cancel the sale, nobody will be able to buy your amazing artwork.
+                    </Typography>
+                </Stack>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({
+                                ...dialogState,
+                                cancelSaleTxFee: 0,
+                                cancelSaleOrderId: '',
+                                cancelSaleTxHash: '',
+                                cancelSaleDlgOpened: false,
+                                cancelSaleDlgStep: 0,
+                            });
+                        }}
+                    >
+                        Back
+                    </SecondaryButton>
+                    <PinkButton fullWidth onClick={handleCancelSale}>Cancel sale</PinkButton>
+                </Stack>
             </Stack>
-            <Stack direction="row" alignItems="center" spacing={2}>
-                <SecondaryButton fullWidth>Back</SecondaryButton>
-                <PinkButton fullWidth>Cancel sale</PinkButton>
-            </Stack>
-        </Stack>
+            <ModalDialog
+                open={loadingDlgOpened}
+                onClose={() => {
+                    setLoadingDlgOpened(false);
+                }}
+            >
+                <WaitingConfirm />
+            </ModalDialog>
+        </>
     );
 };
 

@@ -90,6 +90,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
             BigInt(bidAmount * 1e18).toString()
         );
     };
+    
     return (
         <>
             <Stack spacing={5} width={320}>
