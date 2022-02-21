@@ -121,7 +121,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             rows={3}
                             changeHandler={(value: string) => setAuthor(value)}
                         />
-                        <RoyaltyInput title="Royalties" />
+                        <RoyaltyInput title="Royalties" placeholder="5" />
                     </Grid>
                 </Grid>
             </Box>
