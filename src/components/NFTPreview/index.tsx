@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
-import { Typography, Grid, Stack, Box } from '@mui/material';
+import { Typography, Grid, Stack, Box, Skeleton } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType, enumBlindBoxNFTType } from 'src/types/product-types';
@@ -23,10 +23,10 @@ const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): 
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
-    
-    useEffect(()=>{
-        setLikeState(product.isLike)
-    }, [product.isLike])
+
+    useEffect(() => {
+        setLikeState(product.isLike);
+    }, [product.isLike]);
 
     let productType = 0; // default: enumSingleNFTType
     if (
@@ -94,26 +94,42 @@ const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): 
                 }}
             >
                 <ImageBox>
-                    <img src={product.image} alt="" />
-                    <LikeBtn onClick={changeLikeState}>
-                        {likeState ? (
-                            <Icon icon="ph:heart-fill" fontSize="2vw" color="red" />
-                        ) : (
-                            <Icon icon="ph:heart" fontSize="2vw" color="black" />
-                        )}
-                    </LikeBtn>
+                    {product.tokenId === '' ? (
+                        <Skeleton variant="rectangular" animation="wave" width="100%" height="100%" />
+                    ) : (
+                        <>
+                            <img src={product.image} alt="" />
+                            <LikeBtn onClick={changeLikeState}>
+                                {likeState ? (
+                                    <Icon icon="ph:heart-fill" fontSize="2vw" color="red" />
+                                ) : (
+                                    <Icon icon="ph:heart" fontSize="2vw" color="black" />
+                                )}
+                            </LikeBtn>
+                        </>
+                    )}
                 </ImageBox>
             </ProductImageContainer>
             <Stack marginTop={1} height="100%">
                 <Box>
-                    <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
-                        {product.name}
-                    </Typography>
+                    {product.tokenId === '' ? (
+                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                    ) : (
+                        <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
+                            {product.name}
+                        </Typography>
+                    )}
                     <Box display={{ xs: 'none', md: 'block' }}>
-                        {productType === 0 ? (
-                            <ProductSnippets nickname={product.author} likes={product.likes} />
+                        {product.tokenId === '' ? (
+                            <Skeleton variant="rectangular" animation="wave" width="100%" />
                         ) : (
-                            <ProductSnippets sold={product.sold} likes={product.likes} />
+                            <>
+                                {productType === 0 ? (
+                                    <ProductSnippets nickname={product.author} likes={product.likes} />
+                                ) : (
+                                    <ProductSnippets sold={product.sold} likes={product.likes} />
+                                )}
+                            </>
                         )}
                     </Box>
                 </Box>
@@ -124,8 +140,16 @@ const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): 
                     marginTop={{ xs: 0.25, md: 1 }}
                     spacing={{ xs: 0.25, md: 1 }}
                 >
-                    <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
-                    <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
+                    {product.tokenId === '' ? (
+                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                    ) : (
+                        <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
+                    )}
+                    {product.tokenId === '' ? (
+                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                    ) : (
+                        <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
+                    )}
                 </Stack>
             </Stack>
         </GalleryItemContainer>
