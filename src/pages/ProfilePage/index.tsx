@@ -409,7 +409,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 </Stack>
             </Box>
             <Typography fontSize={42} fontWeight={700} marginTop={3}>
-                your NFTs
+                Your NFTs
             </Typography>
             <Grid
                 container
