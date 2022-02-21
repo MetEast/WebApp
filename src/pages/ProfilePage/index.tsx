@@ -11,13 +11,7 @@ import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
 import { TypeSelectItem } from 'src/types/select-types';
-import {
-    FilterItemTypography,
-    FilterButton,
-    ProfileImageWrapper,
-    ProfileImage,
-    EmptyBodyGalleryItem,
-} from './styles';
+import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, EmptyBodyGalleryItem } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -27,6 +21,7 @@ import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
+import { UserTokenType } from 'src/types/auth-types';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -75,7 +70,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
         isLike: false,
     };
 
-    const userInfo: any = tokenCookies.METEAST_TOKEN === undefined ? '' : jwtDecode(tokenCookies.METEAST_TOKEN);
+    const userInfo: UserTokenType =
+        tokenCookies.METEAST_TOKEN === undefined
+            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            : jwtDecode(tokenCookies.METEAST_TOKEN);
     // const accounts: string[] = getEssentialsWalletAddress();
     const accounts: string[] = signInDlgState.walletAccounts;
     const [toatlEarned, setTotalEarned] = useState<number>(0);
@@ -172,12 +170,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 if (itemObject.status === 'NEW') {
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else product.type = enumMyNFTType.Sold;
-                } 
-                else if (itemObject.status === 'BUY NOW' || itemObject.status === 'ON AUCTION') product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            }
-            else if (nTabId === 1) product.type = enumMyNFTType.Sold;
+                } else if (itemObject.status === 'BUY NOW' || itemObject.status === 'ON AUCTION')
+                    product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            } else if (nTabId === 1) product.type = enumMyNFTType.Sold;
             else if (nTabId === 2) product.type = enumMyNFTType.Created;
-            else if (nTabId === 3) 
+            else if (nTabId === 3)
                 product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
             else if (nTabId === 4) product.type = enumMyNFTType.Sold;
             product.likes = itemObject.likes;
@@ -249,8 +246,17 @@ const ProfilePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
         getPersonalData();
-    }, [sortBy, filters, filterRange, keyWord, productViewMode, nftGalleryFilterBtnSelected, isOnLikedTab, signInDlgState.isLoggedIn]);
-    
+    }, [
+        sortBy,
+        filters,
+        filterRange,
+        keyWord,
+        productViewMode,
+        nftGalleryFilterBtnSelected,
+        isOnLikedTab,
+        signInDlgState.isLoggedIn,
+    ]);
+
     // setProductList
     useEffect(() => {
         switch (nftGalleryFilterBtnSelected) {
@@ -273,9 +279,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 setProductList(myNFTLiked);
                 break;
         }
-
     }, [nftGalleryFilterBtnSelected, myNFTAll, myNFTAcquired, myNFTCreated, myNFTForSale, myNFTSold, myNFTLiked]);
-    
+
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -306,8 +311,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const updateProductLikes = (id: number, type: string) => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) {
             setIsOnLikedTab(!isOnLikedTab);
-        }
-        else {
+        } else {
             let prodList: Array<TypeProduct> = [...productList];
             let likedList: Array<TypeProduct> = [...myNFTLiked];
             if (type === 'inc') {
@@ -338,8 +342,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
             }
             setMyNFTLiked(likedList);
         }
-
-        
     };
 
     const adBanners = [

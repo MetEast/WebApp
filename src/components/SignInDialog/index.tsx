@@ -25,24 +25,35 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies, setDidCookie, removeDidCookie] = useCookies(['METEAST_DID']);
     const [tokenCookies, setTokenCookie, removeTokenCookie] = useCookies(['METEAST_TOKEN']);
-    const userInfo: UserTokenType = jwtDecode(tokenCookies.METEAST_TOKEN);
+    const userInfo: UserTokenType =
+        tokenCookies.METEAST_TOKEN === undefined
+            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            : jwtDecode(tokenCookies.METEAST_TOKEN);
     const { enqueueSnackbar } = useSnackbar();
 
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-    
+
     let _didUri = '';
     let _chainId = 0;
     useEffect(() => {
         // Subscribe did uri
-        getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri) => {
-            _didUri = didUri;
-            console.log(didUri);
-        });
+        if (signInDlgState.isLoggedIn) {
+            getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri) => {
+                _didUri = didUri;
+                console.log(didUri);
+            });
+        }
 
         // Subscribe to accounts change
         walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
             getEssentialsWalletBalance().then((balance: string) => {
-                setSignInDlgState({ ...signInDlgState, walletAccounts: accounts, walletBalance: parseFloat((parseFloat(balance)  / 1e18).toFixed(2)), chainId: _chainId, didUri: _didUri });
+                setSignInDlgState({
+                    ...signInDlgState,
+                    walletAccounts: accounts,
+                    walletBalance: parseFloat((parseFloat(balance) / 1e18).toFixed(2)),
+                    chainId: _chainId,
+                    didUri: _didUri,
+                });
                 console.log(accounts);
             });
         });
@@ -127,15 +138,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         console.log('Signing out user. Deleting session info, auth token');
         removeTokenCookie('METEAST_TOKEN');
         removeDidCookie('METEAST_DID');
-        setSignInDlgState({...signInDlgState, isLoggedIn: false});
+        setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
         try {
             await essentialsConnector.disconnectWalletConnect();
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
-        } 
-        if(location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
-            navigate('/');   
+        }
+        if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
+            navigate('/');
         }
         window.location.reload();
     };
@@ -161,14 +171,16 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
             }}
         >
-            <ConnectDID onConnect={async () => {
-                if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
-                    await signOutWithEssentials();
-                    await signInWithEssentials();
-                } else {
-                    await signInWithEssentials();
-                }
-            }} />
+            <ConnectDID
+                onConnect={async () => {
+                    if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
+                        await signOutWithEssentials();
+                        await signInWithEssentials();
+                    } else {
+                        await signInWithEssentials();
+                    }
+                }}
+            />
         </ModalDialog>
     );
 };
