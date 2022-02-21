@@ -30,7 +30,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-    const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([]);
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -54,6 +53,12 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         sold: 0,
         instock: 0,
     };
+    const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+    ]);
 
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${
