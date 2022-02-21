@@ -26,6 +26,9 @@ export const FiltersBox = styled(Box)`
     right: 0;
     padding-top: 8px;
     z-index: 10;
+    ${(props) => props.theme.breakpoints.down('sm')} {
+        right: -80px;
+    }
 `;
 
 export const SortByBtn = styled(Button)<{ isopen: number }>`
