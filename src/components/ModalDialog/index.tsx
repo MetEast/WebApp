@@ -25,7 +25,7 @@ const ModalDialog: React.FC<ComponentProps> = ({ open, onClose, children }): JSX
                     placeContent: 'center',
                     maxWidth: '100%',
                     padding: { xs: 4, md: 8 },
-                    borderRadius: 8,
+                    borderRadius: 15,
                 },
             }}
         >
