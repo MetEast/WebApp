@@ -255,7 +255,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const updateProductViews = () => {
         if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = { token: tokenCookies.METEAST_TOKEN, tokenId: productDetail.tokenId, did: didCookies.METEAST_DID };
+            const reqBody = {
+                token: tokenCookies.METEAST_TOKEN,
+                tokenId: productDetail.tokenId,
+                did: didCookies.METEAST_DID,
+            };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
@@ -314,26 +318,28 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    <PrimaryButton
-                        sx={{ marginTop: 3, width: '100%' }}
-                        onClick={() => {
-                            if (signInDlgState.isLoggedIn) {
-                                setDialogState({
-                                    ...dialogState,
-                                    placeBidDlgOpened: true,
-                                    placeBidDlgStep: 0,
-                                    placeBidName: productDetail.name,
-                                    placeBidOrderId: productDetail.orderId || '',
-                                    placeBidMinLimit: productDetail.price_ela
-                                });
-                            }
-                            else {
-                                setSignInDlgState({...signInDlgState, signInDlgOpened: true })
-                            }
-                        }}
-                    >
-                        Place Bid
-                    </PrimaryButton>
+                    {signInDlgState.walletAccounts !== [] &&
+                        productDetail.royaltyOwner !== signInDlgState.walletAccounts[0] && (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            placeBidDlgOpened: true,
+                                            placeBidDlgStep: 0,
+                                            placeBidName: productDetail.name,
+                                            placeBidOrderId: productDetail.orderId || '',
+                                            placeBidMinLimit: productDetail.price_ela,
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Place Bid
+                            </PrimaryButton>
+                        )}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
@@ -356,7 +362,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     />
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <SingleNFTBidsTable isLoggedIn={signInDlgState.isLoggedIn} myBidsList={myBidsList} bidsList={bidsList} />
+                    <SingleNFTBidsTable
+                        isLoggedIn={signInDlgState.isLoggedIn}
+                        myBidsList={myBidsList}
+                        bidsList={bidsList}
+                    />
                     <PriceHistoryView />
                     <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>
