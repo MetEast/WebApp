@@ -6,6 +6,8 @@ export interface ComponentProps {
     placeholder?: string;
     multiline?: boolean;
     rows?: number;
+    fontSize?: number;
+    fontWeight?: number;
     changeHandler?: (value: string) => void;
 }
 
@@ -14,6 +16,8 @@ const CustomTextField: React.FC<ComponentProps> = ({
     placeholder,
     multiline,
     rows,
+    fontSize,
+    fontWeight,
     changeHandler = () => {},
 }): JSX.Element => {
     const [text, setText] = useState('');
@@ -40,6 +44,8 @@ const CustomTextField: React.FC<ComponentProps> = ({
                     width: '100%',
                     borderRadius: 3,
                     '& .MuiOutlinedInput-root': {
+                        fontSize: fontSize === undefined ? 'auto' : fontSize,
+                        fontWeight: fontWeight === undefined ? 'auto' : fontWeight,
                         height: multiline ? 'auto' : 40,
                         '& fieldset': {
                             borderWidth: 0,
