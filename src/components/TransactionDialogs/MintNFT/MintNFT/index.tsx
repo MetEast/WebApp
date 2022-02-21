@@ -3,6 +3,7 @@ import { Stack, Typography, Grid, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
+import RoyaltyInput from '../../components/RoyaltyInput';
 import WarningTypo from '../../components/WarningTypo';
 import { TypeSelectItem } from 'src/types/select-types';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -120,6 +121,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             rows={3}
                             changeHandler={(value: string) => setAuthor(value)}
                         />
+                        <RoyaltyInput title="Royalties" />
                     </Grid>
                 </Grid>
             </Box>
