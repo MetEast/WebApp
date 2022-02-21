@@ -69,11 +69,11 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             });
     };
 
-    const handlePlaceBid = async () => {
+    const handlePlaceBid = () => {
         callBidForOrder(
             dialogState.placeBidOrderId,
             BigInt(dialogState.placeBidAmount * 1e18).toString(),
-            signInDlgState.didUri,
+            signInDlgState.didUri
         );
     };
     return (

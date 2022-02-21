@@ -31,6 +31,13 @@ interface State {
     buyNowOrderId: string;
     buyNowTxHash: string;
     buyNowTxFee: number;
+    // change price
+    changePriceDlgOpened: boolean;
+    changePriceDlgStep: number;
+    changePriceCurPrice: number;
+    changePriceOrderId: string;
+    changePriceTxHash: string;
+    changePriceTxFee: number;
     // accept bid
     acceptBidDlgOpened: boolean;
     acceptBidDlgStep: number;
@@ -91,6 +98,13 @@ const defaultState: State = {
     buyNowTxHash: '',
     buyNowOrderId: '',
     buyNowTxFee: 0,
+    // change price
+    changePriceDlgOpened: false,
+    changePriceDlgStep: 0,
+    changePriceCurPrice: 0, 
+    changePriceOrderId: '',
+    changePriceTxHash: '',
+    changePriceTxFee: 0,
     // accept bid
     acceptBidDlgOpened: false,
     acceptBidDlgStep: 0,

@@ -16,8 +16,16 @@ const PriceChangeSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Price Changed Successfully!</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={dialogState.placeBidTxHash} />
-                <PrimaryButton fullWidth>Close</PrimaryButton>
+                <ViewOnExplorerButton txHash={dialogState.changePriceTxHash} />
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, changePriceDlgOpened: false });
+                        window.location.reload();
+                    }}
+                >
+                    Close
+                </PrimaryButton>
             </Stack>
         </Stack>
     );
