@@ -155,14 +155,15 @@ const HomePage: React.FC = (): JSX.Element => {
         if (type === 'inc') {
             prodList[id].likes += 1;
             if (colId !== -1) {
-                colList[id].likes += 1;
-                colList[id].isLike = true;
+                console.log(colId, "-------------colId");
+                colList[colId].likes += 1;
+                colList[colId].isLike = true;
             }
         } else if (type === 'dec') {
             prodList[id].likes -= 1;
             if (colId !== -1) {
-                colList[id].likes -= 1;
-                colList[id].isLike = false;
+                colList[colId].likes -= 1;
+                colList[colId].isLike = false;
             }
         }
         setProductList(prodList);
@@ -178,14 +179,14 @@ const HomePage: React.FC = (): JSX.Element => {
         if (type === 'inc') {
             colList[id].likes += 1;
             if (prodId !== -1) {
-                prodList[id].likes += 1;
-                prodList[id].isLike = true;
+                prodList[prodId].likes += 1;
+                prodList[prodId].isLike = true;
             }
         } else if (type === 'dec') {
             colList[id].likes -= 1;
             if (prodId !== -1) {
-                prodList[id].likes -= 1;
-                prodList[id].isLike = false;
+                prodList[prodId].likes -= 1;
+                prodList[prodId].isLike = false;
             }
         }
         setProductList(prodList);
