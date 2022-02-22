@@ -84,11 +84,11 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || '---';
-            product.authorDescription = itemObject.authorDescription || '---';
+            product.author = itemObject.authorName || ' ';
+            product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = '---'; // -- no proper value
+            product.holderName = itemObject.holderName || ' '; // -- no proper value
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;

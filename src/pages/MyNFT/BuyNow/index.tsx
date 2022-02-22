@@ -13,7 +13,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
-import { getImageFromAsset, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
+import { getImageFromAsset, getMintCategory, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
@@ -107,11 +107,11 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || '---';
-            product.authorDescription = itemObject.authorDescription || '---';
+            product.author = itemObject.authorName || ' ';
+            product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = '---'; // -- no proper value
+            product.holderName = itemObject.holderName || ' ';
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.orderId = itemObject.orderId;
@@ -222,10 +222,10 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     <Typography fontSize={56} fontWeight={700}>
                         {productDetail.name}
                     </Typography>
-                    <ProductSnippets nickname="Nickname" likes={productDetail.likes} views={productDetail.views} />
+                    <ProductSnippets nickname={productDetail.author} likes={productDetail.likes} views={productDetail.views} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.ForSale} />
-                        <ProductBadge badgeType={enumBadgeType.Museum} />
+                        <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
