@@ -6,9 +6,11 @@ import ELAPrice from 'src/components/ELAPrice';
 import ProductBadge from 'src/components/ProductBadge';
 import { enumBadgeType } from 'src/types/product-types';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    onClose: () => void;
+}
 
-const YourEarnings: React.FC<ComponentProps> = (): JSX.Element => {
+const YourEarnings: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const earnings = [
         {
             avatar: '/assets/images/avatar-template.png',
@@ -87,7 +89,9 @@ const YourEarnings: React.FC<ComponentProps> = (): JSX.Element => {
                     </Stack>
                 ))}
             </Stack>
-            <SecondaryButton fullWidth>Close</SecondaryButton>
+            <SecondaryButton fullWidth onClick={onClose}>
+                Close
+            </SecondaryButton>
         </Stack>
     );
 };

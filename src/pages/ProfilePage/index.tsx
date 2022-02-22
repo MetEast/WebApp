@@ -258,7 +258,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         productViewMode,
         nftGalleryFilterBtnSelected,
         isOnLikedTab,
-        signInDlgState
+        signInDlgState,
     ]);
 
     // setProductList
@@ -498,7 +498,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     setEarningsDlgOpen(false);
                 }}
             >
-                <YourEarnings />
+                <YourEarnings
+                    onClose={() => {
+                        setEarningsDlgOpen(false);
+                    }}
+                />
             </ModalDialog>
         </>
     );
