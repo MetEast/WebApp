@@ -65,6 +65,25 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     }, [walletConnectProvider]);
 
+    // wallet balance track
+    useEffect(() => {
+        getEssentialsWalletBalance().then((balance: string) => {
+            _setBalance(parseFloat((parseFloat(balance) / 1e18).toFixed(2)));
+            console.log(balance);
+        });
+    }, [
+        dialogState.createNFTDlgStep,
+        dialogState.buyNowDlgStep,
+        dialogState.placeBidDlgStep,
+        dialogState.updateBidDlgStep,
+        dialogState.cancelBidDlgStep,
+        dialogState.acceptBidDlgStep,
+        dialogState.changePriceDlgStep,
+        dialogState.cancelSaleDlgStep,
+        dialogState.buyBlindBoxDlgStep
+    ]);
+
+    // signInDlgContext track
     useEffect(() => {
         const userInfo: UserTokenType =
             tokenCookies.METEAST_TOKEN === undefined
@@ -84,22 +103,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     }, [_chainId, _accounts, _balance, _isLoggedIn, _dlgOpened]);
 
-    useEffect(() => {
-        getEssentialsWalletBalance().then((balance: string) => {
-            _setBalance(parseFloat((parseFloat(balance) / 1e18).toFixed(2)));
-            console.log(balance);
-        });
-    }, [
-        dialogState.createNFTDlgStep,
-        dialogState.buyNowDlgStep,
-        dialogState.placeBidDlgStep,
-        dialogState.updateBidDlgStep,
-        dialogState.cancelBidDlgStep,
-        dialogState.acceptBidDlgStep,
-        dialogState.changePriceDlgStep,
-        dialogState.cancelSaleDlgStep,
-        dialogState.buyBlindBoxDlgStep
-    ]);
+    
 
     useConnectivitySDK();
 

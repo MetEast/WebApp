@@ -70,7 +70,7 @@ const YourEarnings: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             </Stack>
             <Stack spacing={3} maxHeight={{ xs: 400, md: '100%' }} sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
                 {earnings.map((item, index) => (
-                    <Stack direction="row" justifyContent="space-between" spacing={3}>
+                    <Stack direction="row" justifyContent="space-between" key={`earning-item-${index}`} spacing={3}>
                         <Stack direction="row" alignItems="center" spacing={1}>
                             <img src={item.avatar} width={40} height={40} style={{ borderRadius: '100px' }} alt="" />
                             <Box>
