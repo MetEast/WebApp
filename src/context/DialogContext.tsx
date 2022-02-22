@@ -58,7 +58,18 @@ interface State {
     placeBidTxHash: string;
     placeBidTxFee: number;
     // update bid
+    updateBidDlgOpened: boolean;
+    updateBidDlgStep: number;
+    updateBidPrice: number;
+    updateBidOrderId: string;
+    updateBidTxFee: number;
+    updateBidTxHash: string;
     // cancel bid
+    cancelBidDlgOpened: boolean;
+    cancelBidDlgStep: number;
+    cancelBidOrderId: string;
+    cancelBidTxHash: string;
+    cancelBidTxFee: number;
     // all transactions
     allTxDlgOpened: boolean;
     // all bids
@@ -131,7 +142,18 @@ const defaultState: State = {
     placeBidTxFee: 0,
     placeBidOrderId: '',
     // update bid
+    updateBidDlgOpened: false,
+    updateBidDlgStep: 0, 
+    updateBidPrice: 0, 
+    updateBidOrderId: '',
+    updateBidTxFee: 0, 
+    updateBidTxHash: '',
     // cancel bid
+    cancelBidDlgOpened: false, 
+    cancelBidDlgStep: 0, 
+    cancelBidOrderId: '',
+    cancelBidTxHash: '',
+    cancelBidTxFee: 0,
     // all transactions
     allTxDlgOpened: false,
     // all bids

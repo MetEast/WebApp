@@ -1,14 +1,16 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const CancelBidSuccess: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const navigate = useNavigate();
 
     return (
         <Stack spacing={5} width={320}>
@@ -16,8 +18,17 @@ const CancelBidSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Bid canceled successfully!</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={dialogState.placeBidTxHash} />
-                <PrimaryButton fullWidth>Close</PrimaryButton>
+                <ViewOnExplorerButton txHash={dialogState.cancelBidTxHash} />
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, cancelBidDlgOpened: false });
+                        navigate('/profile');
+                        window.location.reload();
+                    }}
+                >
+                    Close
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

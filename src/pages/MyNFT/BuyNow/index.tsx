@@ -36,7 +36,6 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
-// import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
