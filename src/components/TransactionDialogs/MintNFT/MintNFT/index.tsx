@@ -124,7 +124,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                         />
                         <RoyaltyInput
                             title="Royalties"
-                            placeholder="5"
+                            placeholder="10"
                             handleChange={(value: number) => setRoyalties(value)}
                         />
                     </Grid>
