@@ -27,15 +27,23 @@ import {
     TypeSingleNFTBidFetch,
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
+import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
+import ModalDialog from 'src/components/ModalDialog';
+import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
+import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
+import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
+import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
+    const [dialogState, setDialogState] = useDialogContext();
 
     const defaultValue: TypeProduct = {
         tokenId: '',
@@ -112,6 +120,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
+            product.orderId = itemObject.orderId;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
         }
@@ -173,7 +182,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             },
         );
         const dataLatestBid = await resLatestBid.json();
-        const arrLatestBid = dataLatestBid.data;
+        const arrLatestBid = dataLatestBid.data.others;
 
         let _latestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.length; i++) {
@@ -200,7 +209,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 .then((response) => {
                     let _latestBidsList: any = [];
                     response.json().then((jsonBidsList) => {
-                        jsonBidsList.forEach((itemObject: TypeSingleNFTBidFetch) => {
+                        jsonBidsList.data.yours.forEach((itemObject: TypeSingleNFTBidFetch) => {
                             var _bid: TypeSingleNFTBid = { ...defaultBidValue };
                             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data
                             _bid.price = parseFloat(itemObject.price) / 1e18;
@@ -229,6 +238,30 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
     }, []);
+
+    // change price tx fee
+    const setChangePriceTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setChangePriceTxFee();
+    }, [dialogState.changePriceDlgStep]);
+
+    // cancel sale tx fee
+    const setCancelSaleTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setCancelSaleTxFee();
+    }, [dialogState.cancelSaleDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -264,8 +297,41 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <PrimaryButton sx={{ marginTop: 3, width: '100%' }}>View Bids</PrimaryButton>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                        <PinkButton sx={{ width: '100%', height: 40 }}>Cancel Sale</PinkButton>
-                        <SecondaryButton sx={{ width: '100%', height: 40 }}>Change Price</SecondaryButton>
+                        <PinkButton
+                            sx={{ width: '100%', height: 40 }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        cancelSaleDlgOpened: true,
+                                        cancelSaleDlgStep: 0,
+                                        cancelSaleOrderId: productDetail.orderId || '',
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            Cancel Sale
+                        </PinkButton>
+                        <SecondaryButton
+                            sx={{ width: '100%', height: 40 }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        changePriceDlgOpened: true,
+                                        changePriceDlgStep: 0,
+                                        changePriceCurPrice: productDetail.price_ela,
+                                        changePriceOrderId: productDetail.orderId || '',
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            Change Price
+                        </SecondaryButton>
                     </Stack>
                 </Grid>
             </Grid>
@@ -296,6 +362,24 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
             </Grid>
+            <ModalDialog
+                open={dialogState.changePriceDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, changePriceDlgOpened: false });
+                }}
+            >
+                {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
+                {dialogState.changePriceDlgStep === 1 && <PriceChangeSuccess />}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.cancelSaleDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
+                }}
+            >
+                {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
+                {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
+            </ModalDialog>
         </>
     );
 };
