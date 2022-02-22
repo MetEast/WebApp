@@ -4,7 +4,11 @@ import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
 import jwtDecode from 'jwt-decode';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import { essentialsConnector, isUsingEssentialsConnector, useConnectivitySDK } from 'src/components/ConnectWallet/EssentialsConnectivity';
+import {
+    essentialsConnector,
+    isUsingEssentialsConnector,
+    useConnectivitySDK,
+} from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
@@ -12,6 +16,8 @@ import { isInAppBrowser } from 'src/services/common';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getEssentialsWalletBalance, getDidUri } from 'src/services/essential';
 import { UserTokenType } from 'src/types/auth-types';
+import { useDialogContext } from 'src/context/DialogContext';
+import { isEmpty } from '@elastosfoundation/did-js-sdk/typings/utils';
 
 export interface ComponentProps {}
 
@@ -19,6 +25,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [dialogState] = useDialogContext();
     const [didCookies, setDidCookie] = useCookies(['METEAST_DID']);
     const [tokenCookies, setTokenCookie] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
@@ -63,7 +70,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             tokenCookies.METEAST_TOKEN === undefined
                 ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
                 : jwtDecode(tokenCookies.METEAST_TOKEN);
-        getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri: string) => {            
+        getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri: string) => {
             console.log(didUri);
             setSignInDlgState({
                 ...signInDlgState,
@@ -72,10 +79,27 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 chainId: _chainId,
                 didUri: didUri,
                 isLoggedIn: _isLoggedIn,
-                signInDlgOpened: _dlgOpened
+                signInDlgOpened: _dlgOpened,
             });
-        })
+        });
     }, [_chainId, _accounts, _balance, _isLoggedIn, _dlgOpened]);
+
+    useEffect(() => {
+        getEssentialsWalletBalance().then((balance: string) => {
+            _setBalance(parseFloat((parseFloat(balance) / 1e18).toFixed(2)));
+            console.log(balance);
+        });
+    }, [
+        dialogState.createNFTDlgStep,
+        dialogState.buyNowDlgStep,
+        dialogState.placeBidDlgStep,
+        dialogState.updateBidDlgStep,
+        dialogState.cancelBidDlgStep,
+        dialogState.acceptBidDlgStep,
+        dialogState.changePriceDlgStep,
+        dialogState.cancelSaleDlgStep,
+        dialogState.buyBlindBoxDlgStep
+    ]);
 
     useConnectivitySDK();
 
