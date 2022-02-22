@@ -113,7 +113,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.authorDescription = itemObject.authorDescription || '';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = itemObject.holderName || '';
+            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
             product.orderId = itemObject.orderId;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
