@@ -146,7 +146,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
                     break;
-                case 'OrderForAuction':
+                case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
                     break;
                 case 'Bid':
@@ -155,12 +155,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 case 'OrderFilled':
                     _transaction.type = enumTransactionType.SoldTo;
                     break;
-                case 'OrderForSale':
+                case 'SafeTransferFrom':
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
                     break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
-            _transaction.price = itemObject.gasFee; // no proper data
+            _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
             _transaction.time = timestamp.date + ' ' + timestamp.time;
