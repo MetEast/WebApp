@@ -42,6 +42,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [dialogState, setDialogState] = useDialogContext();
+    
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
