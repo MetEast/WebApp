@@ -8,7 +8,7 @@ export interface ComponentProps {
 }
 
 const RoyaltyInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {} }): JSX.Element => {
-    const [text, setText] = useState('');
+    const [text, setText] = useState('10');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;

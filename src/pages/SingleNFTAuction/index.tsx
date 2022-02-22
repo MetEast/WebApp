@@ -118,7 +118,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
             product.holder = itemObject.holder;
-            product.holderName = itemObject.holderName || '';
+            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             product.orderId = itemObject.orderId;

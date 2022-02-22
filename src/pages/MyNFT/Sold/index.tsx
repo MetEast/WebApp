@@ -99,7 +99,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image;
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = itemObject.holderName || ' ';
+            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
