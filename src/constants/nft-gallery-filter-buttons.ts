@@ -1,10 +1,10 @@
 export enum nftGalleryFilterBtnTypes {
     All = 'All',
-    Acquired = 'Acquired',
+    Acquired = 'Owned',
     Created = 'Created',
     ForSale = 'For Sale',
     Sold = 'Sold',
-    Liked = 'Liked',
+    Liked = 'Liked'
 }
 
 export const nftGalleryFilterButtons = [

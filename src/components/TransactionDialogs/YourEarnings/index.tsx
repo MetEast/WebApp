@@ -4,65 +4,14 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductBadge from 'src/components/ProductBadge';
-import { enumBadgeType } from 'src/types/product-types';
+import { TypeYourEarning } from 'src/types/product-types';
 
 export interface ComponentProps {
+    earnings: Array<TypeYourEarning>;
     onClose: () => void;
 }
 
-const YourEarnings: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
-    const earnings = [
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Scuplting with the Heart',
-            time: '2022/02/02 10:00',
-            price: 24,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Art for Everyone',
-            time: '2022/02/02 10:00',
-            price: 2.23,
-            badge: enumBadgeType.Royalties,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Painting with Passion',
-            time: '2022/02/02 10:00',
-            price: 82,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'A Life on Canvas',
-            time: '2022/02/02 10:00',
-            price: 2400,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Beautiful Abstract',
-            time: '2022/02/02 10:00',
-            price: 10,
-            badge: enumBadgeType.Royalties,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Black Rage',
-            time: '2022/02/02 10:00',
-            price: 199,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Colorful Colors',
-            time: '2022/02/02 10:00',
-            price: 40.3,
-            badge: enumBadgeType.Badge,
-        },
-    ];
-
+const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Element => {
     return (
         <Stack spacing={5} width={{ xs: 360, md: 520 }}>
             <Stack>
