@@ -93,7 +93,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
-            _transaction.price = itemObject.gasFee; // no proper data
+            _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
             _transaction.time = timestamp.date + ' ' + timestamp.time;

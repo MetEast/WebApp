@@ -41,11 +41,11 @@ export enum enumBadgeType {
 }
 
 export enum enumTransactionType {
+    CreatedBy = 'Created By',
     Bid = 'Bid',
     OnAuction = 'On Auction',
     SoldTo = 'Sold To',
     ForSale = 'For Sale',
-    CreatedBy = 'Created By',
 }
 
 export type TypeProduct = {
@@ -157,6 +157,7 @@ export type TypeNFTTransactionFetch = {
     blockNumber: number;
     from: string;
     to: string;
+    price: string;
     gasFee: number;
     name: string;
     asset: string;
