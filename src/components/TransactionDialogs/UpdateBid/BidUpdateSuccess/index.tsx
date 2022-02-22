@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
@@ -16,8 +16,16 @@ const BidUpdateSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Bid Updated successfully!</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={dialogState.placeBidTxHash} />
-                <PrimaryButton fullWidth>Close</PrimaryButton>
+                <ViewOnExplorerButton txHash={dialogState.updateBidTxHash} />
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({ ...dialogState, updateBidDlgOpened: false });
+                        window.location.reload();
+                    }}
+                >
+                    Close
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

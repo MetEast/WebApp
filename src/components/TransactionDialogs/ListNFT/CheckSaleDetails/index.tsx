@@ -1,23 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/MET';
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
 import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
+import ModalDialog from 'src/components/ModalDialog';
+import WaitingConfirm from '../../Others/WaitingConfirm';
 
 export interface ComponentProps {}
 
 const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
 
     const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
@@ -45,11 +48,13 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 gas: 5000000,
                 value: 0,
             };
+            setLoadingDlgOpened(true);
             meteastContract.methods
                 .setApprovalForAll(_operator, _approved)
                 .send(transactionParams)
                 .on('transactionHash', (hash: any) => {
                     console.log('transactionHash', hash);
+                    setLoadingDlgOpened(false);
                 })
                 .on('receipt', (receipt: any) => {
                     console.log('receipt', receipt);
@@ -69,7 +74,13 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         }
     };
 
-    const callCreateOrderForSale = async (_tokenId: string, _quoteToken: string, _price: string, _didUri: string, _isBlindBox: boolean) => {
+    const callCreateOrderForSale = async (
+        _tokenId: string,
+        _quoteToken: string,
+        _price: string,
+        _didUri: string,
+        _isBlindBox: boolean,
+    ) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -89,12 +100,14 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             value: 0,
         };
         let txHash = '';
+        setLoadingDlgOpened(true);
         marketContract.methods
             .createOrderForSale(_tokenId, _quoteToken, _price, _didUri, _isBlindBox)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
+                setLoadingDlgOpened(false);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -140,12 +153,14 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         };
 
         let txHash = '';
+        setLoadingDlgOpened(true);
         marketContract.methods
             .createOrderForAuction(_tokenId, _quoteToken, _minPrice, _endTime, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
+                setLoadingDlgOpened(false);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -172,17 +187,18 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 _quoteToken,
                 BigInt(dialogState.sellPrice * 1e18).toString(),
                 didUri,
-                false
+                false,
             );
         } else {
             const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
             const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-            const currentBlock = await walletConnectWeb3.eth.getBlock("latest");
-            let auctionTime: number = typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
+            const currentBlock = await walletConnectWeb3.eth.getBlock('latest');
+            let auctionTime: number =
+                typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
             if (dialogState.sellSaleEnds.value === '1 month') auctionTime += 30 * 24 * 3600;
             else if (dialogState.sellSaleEnds.value === '1 week') auctionTime += 7 * 24 * 3600;
             else if (dialogState.sellSaleEnds.value === '1 day') auctionTime += 24 * 3600;
-            
+
             await callCreateOrderForAuction(
                 dialogState.mintTokenId,
                 _quoteToken,
@@ -199,52 +215,53 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 variant: 'warning',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
-            return ;
+            return;
         }
         callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
     };
 
     return (
-        <Stack spacing={5} width={340}>
-            <Stack alignItems="center">
-                <PageNumberTypo>2 of 2</PageNumberTypo>
-                <DialogTitleTypo>Check Sale Details</DialogTitleTypo>
-            </Stack>
-            <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
-                <Grid container rowSpacing={0.5}>
-                    <Grid item xs={6}>
-                        <DetailedInfoTitleTypo>Sale type</DetailedInfoTitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.sellSaleType}</DetailedInfoLabelTypo>
-                    </Grid>
-                    {dialogState.sellSaleType === 'auction' && (
-                        <>
-                            <Grid item xs={6}>
-                                <DetailedInfoTitleTypo>Min Bid</DetailedInfoTitleTypo>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <DetailedInfoLabelTypo>{dialogState.sellMinPrice} ELA</DetailedInfoLabelTypo>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <DetailedInfoLabelTypo>in {dialogState.sellSaleEnds.value}</DetailedInfoLabelTypo>
-                            </Grid>
-                        </>
-                    )}
-                    {dialogState.sellSaleType === 'buynow' && (
-                        <>
-                            <Grid item xs={6}>
-                                <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <DetailedInfoLabelTypo>{dialogState.sellPrice} ELA</DetailedInfoLabelTypo>
-                            </Grid>
-                        </>
-                    )}
-                    {/* <Grid item xs={6}>
+        <>
+            <Stack spacing={5} width={340}>
+                <Stack alignItems="center">
+                    <PageNumberTypo>2 of 2</PageNumberTypo>
+                    <DialogTitleTypo>Check Sale Details</DialogTitleTypo>
+                </Stack>
+                <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
+                    <Grid container rowSpacing={0.5}>
+                        <Grid item xs={6}>
+                            <DetailedInfoTitleTypo>Sale type</DetailedInfoTitleTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoLabelTypo>{dialogState.sellSaleType}</DetailedInfoLabelTypo>
+                        </Grid>
+                        {dialogState.sellSaleType === 'auction' && (
+                            <>
+                                <Grid item xs={6}>
+                                    <DetailedInfoTitleTypo>Min Bid</DetailedInfoTitleTypo>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <DetailedInfoLabelTypo>{dialogState.sellMinPrice} ELA</DetailedInfoLabelTypo>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <DetailedInfoLabelTypo>in {dialogState.sellSaleEnds.value}</DetailedInfoLabelTypo>
+                                </Grid>
+                            </>
+                        )}
+                        {dialogState.sellSaleType === 'buynow' && (
+                            <>
+                                <Grid item xs={6}>
+                                    <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <DetailedInfoLabelTypo>{dialogState.sellPrice} ELA</DetailedInfoLabelTypo>
+                                </Grid>
+                            </>
+                        )}
+                        {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Royalties</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
@@ -256,30 +273,39 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>0.22 ELA</DetailedInfoLabelTypo>
                     </Grid> */}
-                </Grid>
-            </Stack>
-            <Stack alignItems="center" spacing={1}>
-                <Typography fontSize={14} fontWeight={600}>
-                    Available: {signInDlgState.walletBalance} ELA
-                </Typography>
-                <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton
-                        fullWidth
-                        onClick={() => {
-                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 3 });
-                        }}
-                    >
-                        Back
-                    </SecondaryButton>
-                    <PrimaryButton fullWidth onClick={handleSell}>
-                        Confirm
-                    </PrimaryButton>
+                    </Grid>
                 </Stack>
-                <WarningTypo width={240}>
-                    In case of payment problems, please contact the official customer service
-                </WarningTypo>
+                <Stack alignItems="center" spacing={1}>
+                    <Typography fontSize={14} fontWeight={600}>
+                        Available: {signInDlgState.walletBalance} ELA
+                    </Typography>
+                    <Stack direction="row" width="100%" spacing={2}>
+                        <SecondaryButton
+                            fullWidth
+                            onClick={() => {
+                                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 3 });
+                            }}
+                        >
+                            Back
+                        </SecondaryButton>
+                        <PrimaryButton fullWidth onClick={handleSell}>
+                            Confirm
+                        </PrimaryButton>
+                    </Stack>
+                    <WarningTypo width={240}>
+                        In case of payment problems, please contact the official customer service
+                    </WarningTypo>
+                </Stack>
             </Stack>
-        </Stack>
+            <ModalDialog
+                open={loadingDlgOpened}
+                onClose={() => {
+                    setLoadingDlgOpened(false);
+                }}
+            >
+                <WaitingConfirm />
+            </ModalDialog>
+        </>
     );
 };
 

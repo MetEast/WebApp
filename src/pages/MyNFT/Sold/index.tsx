@@ -12,7 +12,7 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { getImageFromAsset, getUTCTime, selectFromFavourites, reduceHexAddress, getTime } from 'src/services/common';
+import { getImageFromAsset, getUTCTime, selectFromFavourites, reduceHexAddress, getTime, getMintCategory } from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
@@ -95,11 +95,11 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || '---';
-            product.authorDescription = itemObject.authorDescription || '---';
+            product.author = itemObject.authorName || ' ';
+            product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image;
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = '---';
+            product.holderName = itemObject.holderName || ' ';
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -185,12 +185,12 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     <Typography fontSize={56} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
                         Sculpting with the Heart
                     </Typography>
-                    <ProductSnippets nickname="Nickname" likes={88} views={4800} />
+                    <ProductSnippets nickname={productDetail.author} likes={productDetail.likes} views={productDetail.views} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.Sold} />
-                        <ProductBadge badgeType={enumBadgeType.Museum} />
+                        <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
-                    <ELAPrice price_ela={199} price_usd={480} marginTop={3} />
+                    <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>

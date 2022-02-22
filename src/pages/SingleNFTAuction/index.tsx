@@ -38,6 +38,7 @@ import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
+
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
@@ -112,12 +113,12 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || '---';
-            product.authorDescription = itemObject.authorDescription || '---';
+            product.author = itemObject.authorName || '';
+            product.authorDescription = itemObject.authorDescription || '';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = '---'; // -- no proper value
             product.holder = itemObject.holder;
+            product.holderName = itemObject.holderName || '';
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             product.orderId = itemObject.orderId;
@@ -255,7 +256,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const updateProductViews = () => {
         if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = { token: tokenCookies.METEAST_TOKEN, tokenId: productDetail.tokenId, did: didCookies.METEAST_DID };
+            const reqBody = {
+                token: tokenCookies.METEAST_TOKEN,
+                tokenId: productDetail.tokenId,
+                did: didCookies.METEAST_DID,
+            };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
@@ -314,26 +319,28 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    <PrimaryButton
-                        sx={{ marginTop: 3, width: '100%' }}
-                        onClick={() => {
-                            if (signInDlgState.isLoggedIn) {
-                                setDialogState({
-                                    ...dialogState,
-                                    placeBidDlgOpened: true,
-                                    placeBidDlgStep: 0,
-                                    placeBidName: productDetail.name,
-                                    placeBidOrderId: productDetail.orderId || '',
-                                    placeBidMinLimit: productDetail.price_ela
-                                });
-                            }
-                            else {
-                                setSignInDlgState({...signInDlgState, signInDlgOpened: true })
-                            }
-                        }}
-                    >
-                        Place Bid
-                    </PrimaryButton>
+                    {signInDlgState.walletAccounts !== [] &&
+                        productDetail.holder !== signInDlgState.walletAccounts[0] && (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            placeBidDlgOpened: true,
+                                            placeBidDlgStep: 0,
+                                            placeBidName: productDetail.name,
+                                            placeBidOrderId: productDetail.orderId || '',
+                                            placeBidMinLimit: productDetail.price_ela,
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Place Bid
+                            </PrimaryButton>
+                        )}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
@@ -356,7 +363,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     />
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <SingleNFTBidsTable isLoggedIn={signInDlgState.isLoggedIn} myBidsList={myBidsList} bidsList={bidsList} />
+                    <SingleNFTBidsTable
+                        isLoggedIn={signInDlgState.isLoggedIn}
+                        myBidsList={myBidsList}
+                        bidsList={bidsList}
+                    />
                     <PriceHistoryView />
                     <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>

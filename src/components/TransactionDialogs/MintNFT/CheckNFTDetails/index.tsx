@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
 import { Stack, Box, Typography, Grid } from '@mui/material';
@@ -16,6 +16,8 @@ import { AbiItem } from 'web3-utils';
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import ModalDialog from 'src/components/ModalDialog';
+import WaitingConfirm from '../../Others/WaitingConfirm';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
@@ -25,6 +27,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
@@ -36,8 +39,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         _tokenId: string,
         _tokenUri: string,
         _didUri: string,
-        _royaltyFee: number,
-        _gasLimit: number,
+        _royaltyFee: number
     ) => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
@@ -55,17 +57,19 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         let transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
-            gas: _gasLimit,
+            gas: 5000000,
             value: 0,
         };
         let txHash = '';
 
+        setLoadingDlgOpened(true);
         meteastContract.methods
             .mint(_tokenId, _tokenUri, _royaltyFee)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
+                setLoadingDlgOpened(false);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -97,9 +101,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             variant: 'success',
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
         });
-        const _royaltyFee = 10000; // how to set?
-        const _gasLimit = 5000000;
-        await callMintNFT(paramObj._id, paramObj._uri, paramObj._didUri, _royaltyFee, _gasLimit);
+        await callMintNFT(paramObj._id, paramObj._uri, paramObj._didUri, dialogState.mintRoyalties * 1e4);
         return true;
     };
 
@@ -224,83 +226,95 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     return (
-        <Stack spacing={5} width={340}>
-            <Stack alignItems="center">
-                <PageNumberTypo>2 of 2</PageNumberTypo>
-                <DialogTitleTypo>Check NFT Details</DialogTitleTypo>
-            </Stack>
-            <Stack
-                alignItems="center"
-                spacing={2}
-                paddingX={4}
-                paddingY={4}
-                borderRadius={4}
-                sx={{ background: '#F0F1F2' }}
-            >
-                <Box borderRadius={4.5} maxHeight={120} overflow="hidden">
-                    <img
-                        src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
-                        alt="file preview"
-                        width="100%"
-                        height="100%"
-                        style={{ objectFit: 'cover' }}
-                    />
-                </Box>
-                <Grid container>
-                    <Grid item xs={6}>
-                        <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.mintTitle}</DetailedInfoLabelTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoTitleTypo>Collection</DetailedInfoTitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.mintCategory.label}</DetailedInfoLabelTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.mintTXFee} ELA</DetailedInfoLabelTypo>
-                    </Grid>
-                </Grid>
-            </Stack>
-            <Stack alignItems="center" spacing={1}>
-                <Typography fontSize={14} fontWeight={600}>
-                    Available: {signInDlgState.walletBalance} ELA
-                </Typography>
-                <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton
-                        fullWidth
-                        onClick={() => {
-                            setDialogState({
-                                ...dialogState,
-                                mintTitle: '',
-                                mintAuthor: '',
-                                mintIntroduction: '',
-                                mintCategory: { label: '', value: '' },
-                                mintFile: new File([''], ''),
-                                mintTXFee: 0,
-                                mintTokenId: '',
-                                mintTokenUri: '',
-                                mintDidUri: '',
-                                createNFTDlgOpened: false,
-                            });
-                        }}
-                    >
-                        Close
-                    </SecondaryButton>
-                    <PrimaryButton fullWidth onClick={handleMint}>
-                        Confirm
-                    </PrimaryButton>
+        <>
+            <Stack spacing={5} width={340}>
+                <Stack alignItems="center">
+                    <PageNumberTypo>2 of 2</PageNumberTypo>
+                    <DialogTitleTypo>Check NFT Details</DialogTitleTypo>
                 </Stack>
-                <WarningTypo width={240}>
-                    In case of payment problems, please contact the official customer service
-                </WarningTypo>
+                <Stack
+                    alignItems="center"
+                    spacing={2}
+                    paddingX={4}
+                    paddingY={4}
+                    borderRadius={4}
+                    sx={{ background: '#F0F1F2' }}
+                >
+                    <Box borderRadius={4.5} maxHeight={120} overflow="hidden">
+                        <img
+                            src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
+                            alt="file preview"
+                            width="100%"
+                            height="100%"
+                            style={{ objectFit: 'cover' }}
+                        />
+                    </Box>
+                    <Grid container>
+                        <Grid item xs={6}>
+                            <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoLabelTypo>{dialogState.mintTitle}</DetailedInfoLabelTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoTitleTypo>Collection</DetailedInfoTitleTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoLabelTypo>{dialogState.mintCategory.label}</DetailedInfoLabelTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DetailedInfoLabelTypo>{dialogState.mintTXFee} ELA</DetailedInfoLabelTypo>
+                        </Grid>
+                    </Grid>
+                </Stack>
+                <Stack alignItems="center" spacing={1}>
+                    <Typography fontSize={14} fontWeight={600}>
+                        Available: {signInDlgState.walletBalance} ELA
+                    </Typography>
+                    <Stack direction="row" width="100%" spacing={2}>
+                        <SecondaryButton
+                            fullWidth
+                            onClick={() => {
+                                setDialogState({
+                                    ...dialogState,
+                                    mintTitle: '',
+                                    mintAuthor: '',
+                                    mintIntroduction: '',
+                                    mintCategory: { label: '', value: '' },
+                                    mintFile: new File([''], ''),
+                                    mintTXFee: 0,
+                                    mintTokenId: '',
+                                    mintTokenUri: '',
+                                    mintDidUri: '',
+                                    createNFTDlgOpened: true,
+                                    createNFTDlgStep: 0,
+                                });
+                            }}
+                        >
+                            Back
+                        </SecondaryButton>
+                        <PrimaryButton fullWidth onClick={handleMint}>
+                            Confirm
+                        </PrimaryButton>
+                    </Stack>
+                    <WarningTypo width={240}>
+                        In case of payment problems, please contact the official customer service
+                    </WarningTypo>
+                </Stack>
             </Stack>
-        </Stack>
+
+            <ModalDialog
+                open={loadingDlgOpened}
+                onClose={() => {
+                    setLoadingDlgOpened(false);
+                }}
+            >
+                <WaitingConfirm />
+            </ModalDialog>
+        </>
     );
 };
 

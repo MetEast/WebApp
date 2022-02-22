@@ -27,6 +27,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [author, setAuthor] = useState<string>('');
     const [mintFile, setMintFile] = useState<File>();
     const [stateFile, setStateFile] = useState(null);
+    const [royalties, setRoyalties] = useState<number>(0);
     const { enqueueSnackbar } = useSnackbar();
 
     const handleFileChange = (files: Array<File>) => {
@@ -121,7 +122,11 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             rows={3}
                             changeHandler={(value: string) => setAuthor(value)}
                         />
-                        <RoyaltyInput title="Royalties" placeholder="5" />
+                        <RoyaltyInput
+                            title="Royalties"
+                            placeholder="5"
+                            handleChange={(value: number) => setRoyalties(value)}
+                        />
                     </Grid>
                 </Grid>
             </Box>
@@ -140,6 +145,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintIntroduction: '',
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
+                                mintRoyalties: 0,
                                 mintTXFee: 0,
                                 createNFTDlgOpened: false,
                             });
@@ -158,7 +164,10 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 category.label !== '' &&
                                 category.value !== '' &&
                                 mintFile !== null &&
-                                stateFile !== null
+                                stateFile !== null &&
+                                royalties > 0 &&
+                                royalties < 100 &&
+                                isNaN(royalties) !== true
                             ) {
                                 setDialogState({
                                     ...dialogState,
@@ -167,6 +176,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                     mintIntroduction: introduction,
                                     mintCategory: category || { label: '', value: '' },
                                     mintFile: mintFile,
+                                    mintRoyalties: royalties,
                                     createNFTDlgOpened: true,
                                     createNFTDlgStep: 1,
                                 });

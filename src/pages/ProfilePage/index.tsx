@@ -87,19 +87,19 @@ const ProfilePage: React.FC = (): JSX.Element => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
         switch (nTabId) {
             case 0:
-                reqUrl += `getOwnCollectible?selfAddr=${accounts[0]}`;
+                reqUrl += `getOwnCollectible?selfAddr=${signInDlgState.walletAccounts[0]}`;
                 break;
             case 1:
-                reqUrl += `getBoughtNotSoldCollectible?selfAddr=${accounts[0]}`;
+                reqUrl += `getBoughtNotSoldCollectible?selfAddr=${signInDlgState.walletAccounts[0]}`;
                 break;
             case 2:
-                reqUrl += `getSelfCreateNotSoldCollectible?selfAddr=${accounts[0]}`;
+                reqUrl += `getSelfCreateNotSoldCollectible?selfAddr=${signInDlgState.walletAccounts[0]}`;
                 break;
             case 3:
-                reqUrl += `getForSaleCollectible?selfAddr=${accounts[0]}`;
+                reqUrl += `getForSaleCollectible?selfAddr=${signInDlgState.walletAccounts[0]}`;
                 break;
             case 4:
-                reqUrl += `getSoldCollectibles?selfAddr=${accounts[0]}`;
+                reqUrl += `getSoldCollectibles?selfAddr=${signInDlgState.walletAccounts[0]}`;
                 break;
             case 5:
                 reqUrl += `getFavoritesCollectible?did=${didCookies.METEAST_DID}`;
@@ -224,8 +224,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const getPersonalData = async () => {
-        let _totalEarned = await getTotalEarned(accounts[0]);
-        let _todayEarned = await getTodayEarned(accounts[0]);
+        let _totalEarned = await getTotalEarned(signInDlgState.walletAccounts[0]);
+        let _todayEarned = await getTodayEarned(signInDlgState.walletAccounts[0]);
         setTotalEarned(_totalEarned);
         setTodayEarned(_todayEarned);
     };
@@ -258,7 +258,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         productViewMode,
         nftGalleryFilterBtnSelected,
         isOnLikedTab,
-        signInDlgState.isLoggedIn,
+        signInDlgState
     ]);
 
     // setProductList

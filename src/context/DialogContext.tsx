@@ -10,6 +10,7 @@ interface State {
     mintAuthor: string;
     mintIntroduction: string;
     mintFile?: File;
+    mintRoyalties: number;
     mintTokenId: string;
     mintTokenUri: string;
     mintDidUri: string;
@@ -30,6 +31,19 @@ interface State {
     buyNowOrderId: string;
     buyNowTxHash: string;
     buyNowTxFee: number;
+    // change price
+    changePriceDlgOpened: boolean;
+    changePriceDlgStep: number;
+    changePriceCurPrice: number;
+    changePriceOrderId: string;
+    changePriceTxHash: string;
+    changePriceTxFee: number;
+    // cancel sale
+    cancelSaleDlgOpened: boolean;
+    cancelSaleDlgStep: number;
+    cancelSaleOrderId: string;
+    cancelSaleTxHash: string;
+    cancelSaleTxFee: number;
     // accept bid
     acceptBidDlgOpened: boolean;
     acceptBidDlgStep: number;
@@ -44,7 +58,18 @@ interface State {
     placeBidTxHash: string;
     placeBidTxFee: number;
     // update bid
+    updateBidDlgOpened: boolean;
+    updateBidDlgStep: number;
+    updateBidPrice: number;
+    updateBidOrderId: string;
+    updateBidTxFee: number;
+    updateBidTxHash: string;
     // cancel bid
+    cancelBidDlgOpened: boolean;
+    cancelBidDlgStep: number;
+    cancelBidOrderId: string;
+    cancelBidTxHash: string;
+    cancelBidTxFee: number;
     // all transactions
     allTxDlgOpened: boolean;
     // all bids
@@ -69,6 +94,7 @@ const defaultState: State = {
     mintCategory: { label: '', value: '' },
     mintIntroduction: '',
     mintAuthor: '',
+    mintRoyalties: 0,
     mintTokenId: '',
     mintTokenUri: '',
     mintDidUri: '',
@@ -89,6 +115,19 @@ const defaultState: State = {
     buyNowTxHash: '',
     buyNowOrderId: '',
     buyNowTxFee: 0,
+    // change price
+    changePriceDlgOpened: false,
+    changePriceDlgStep: 0,
+    changePriceCurPrice: 0, 
+    changePriceOrderId: '',
+    changePriceTxHash: '',
+    changePriceTxFee: 0,
+    // cancel sale
+    cancelSaleDlgOpened: false,
+    cancelSaleDlgStep: 0, 
+    cancelSaleOrderId: '',
+    cancelSaleTxHash: '',
+    cancelSaleTxFee: 0,
     // accept bid
     acceptBidDlgOpened: false,
     acceptBidDlgStep: 0,
@@ -103,7 +142,18 @@ const defaultState: State = {
     placeBidTxFee: 0,
     placeBidOrderId: '',
     // update bid
+    updateBidDlgOpened: false,
+    updateBidDlgStep: 0, 
+    updateBidPrice: 0, 
+    updateBidOrderId: '',
+    updateBidTxFee: 0, 
+    updateBidTxHash: '',
     // cancel bid
+    cancelBidDlgOpened: false, 
+    cancelBidDlgStep: 0, 
+    cancelBidOrderId: '',
+    cancelBidTxHash: '',
+    cancelBidTxFee: 0,
     // all transactions
     allTxDlgOpened: false,
     // all bids

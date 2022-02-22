@@ -19,7 +19,14 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
-import { getImageFromAsset, getMintCategory, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
+import {
+    getImageFromAsset,
+    getMintCategory,
+    getTime,
+    getUTCTime,
+    reduceHexAddress,
+    selectFromFavourites,
+} from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
@@ -102,11 +109,11 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || '---';
-            product.authorDescription = itemObject.authorDescription || '---';
+            product.author = itemObject.authorName || '';
+            product.authorDescription = itemObject.authorDescription || '';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = '---'; // -- no proper value
+            product.holderName = itemObject.holderName || '';
             product.orderId = itemObject.orderId;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
@@ -198,7 +205,11 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const updateProductViews = () => {
         if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = { token: tokenCookies.METEAST_TOKEN, tokenId: productDetail.tokenId, did: didCookies.METEAST_DID };
+            const reqBody = {
+                token: tokenCookies.METEAST_TOKEN,
+                tokenId: productDetail.tokenId,
+                did: didCookies.METEAST_DID,
+            };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
@@ -248,26 +259,28 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    <PrimaryButton
-                        sx={{ marginTop: 3, width: '100%' }}
-                        onClick={() => {
-                            if (signInDlgState.isLoggedIn) {
-                                setDialogState({
-                                    ...dialogState,
-                                    buyNowDlgOpened: true,
-                                    buyNowDlgStep: 0,
-                                    buyNowPrice: productDetail.price_ela,
-                                    buyNowName: productDetail.name,
-                                    buyNowOrderId: productDetail.orderId || '',
-                                });
-                            }
-                            else {
-                                setSignInDlgState({...signInDlgState, signInDlgOpened: true })
-                            }
-                        }}
-                    >
-                        buy now
-                    </PrimaryButton>
+                    {signInDlgState.walletAccounts !== [] &&
+                        productDetail.holder !== signInDlgState.walletAccounts[0] && (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            buyNowDlgOpened: true,
+                                            buyNowDlgStep: 0,
+                                            buyNowPrice: productDetail.price_ela,
+                                            buyNowName: productDetail.name,
+                                            buyNowOrderId: productDetail.orderId || '',
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                buy now
+                            </PrimaryButton>
+                        )}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
