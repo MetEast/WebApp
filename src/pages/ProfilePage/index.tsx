@@ -24,6 +24,7 @@ import jwtDecode from 'jwt-decode';
 import { UserTokenType } from 'src/types/auth-types';
 import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
+import EditProfile from 'src/components/TransactionDialogs/EditProfile';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -51,6 +52,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
 
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
+    const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
 
     const defaultValue: TypeProduct = {
         tokenId: '',
@@ -258,7 +260,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         productViewMode,
         nftGalleryFilterBtnSelected,
         isOnLikedTab,
-        signInDlgState
+        signInDlgState,
     ]);
 
     // setProductList
@@ -412,7 +414,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         >
                             Create NFT
                         </PrimaryButton>
-                        <SecondaryButton size="small" sx={{ paddingX: 2.5 }}>
+                        <SecondaryButton
+                            size="small"
+                            sx={{ paddingX: 2.5 }}
+                            onClick={() => {
+                                setEditProfileDlgOpen(true);
+                            }}
+                        >
                             Edit Profile
                         </SecondaryButton>
                     </Stack>
@@ -498,7 +506,23 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     setEarningsDlgOpen(false);
                 }}
             >
-                <YourEarnings />
+                <YourEarnings
+                    onClose={() => {
+                        setEarningsDlgOpen(false);
+                    }}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={editProfileDlgOpen}
+                onClose={() => {
+                    setEditProfileDlgOpen(false);
+                }}
+            >
+                <EditProfile
+                    onClose={() => {
+                        setEditProfileDlgOpen(false);
+                    }}
+                />
             </ModalDialog>
         </>
     );

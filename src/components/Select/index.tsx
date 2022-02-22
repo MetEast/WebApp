@@ -1,6 +1,6 @@
 import React from 'react';
-import { ListItemsWrapper } from './styles';
-import { Box, Button, Stack } from '@mui/material';
+import { ListItemsWrapper, ListItemsStack, ItemButton } from './styles';
+import { Box } from '@mui/material';
 import { TypeSelectItem } from 'src/types/select-types';
 
 interface ComponentProps {
@@ -34,7 +34,7 @@ const Select: React.FC<ComponentProps> = ({
         >
             {titlebox}
             <ListItemsWrapper width={listitemsbox_width ? listitemsbox_width : '100%'} isOpen={isOpen}>
-                <Stack borderRadius={3} overflow="hidden" sx={{ background: '#F8F8F8' }}>
+                <ListItemsStack>
                     {options.map((item, index) => (
                         <SelectItem
                             key={`sort-option-${index}`}
@@ -43,7 +43,7 @@ const Select: React.FC<ComponentProps> = ({
                             handleClick={handleClick}
                         />
                     ))}
-                </Stack>
+                </ListItemsStack>
             </ListItemsWrapper>
         </Box>
     );
@@ -57,9 +57,9 @@ interface SelectItemProps {
 
 const SelectItem: React.FC<SelectItemProps> = ({ title, value, handleClick }) => {
     return (
-        <Button sx={{ fontSize: 14, fontWeight: 500 }} onClick={(e) => handleClick(value)}>
+        <ItemButton fullWidth sx={{ fontSize: 14, fontWeight: 500 }} onClick={(e) => handleClick(value)}>
             {title}
-        </Button>
+        </ItemButton>
     );
 };
 
