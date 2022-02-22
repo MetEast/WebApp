@@ -31,6 +31,7 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     );
     const badgeCreated = <ProductBadge badgeType={enumBadgeType.Created} />;
     const badgeSold = <ProductBadge badgeType={enumBadgeType.Sold} />;
+    const badgePurchased = <ProductBadge badgeType={enumBadgeType.Purchased} />;
 
     const child = {
         [enumBlindBoxNFTType.ComingSoon]: {
@@ -60,6 +61,9 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
         [enumMyNFTType.Sold]: {
             element: badgeSold,
         },
+        [enumMyNFTType.Purchased]: {
+            element: badgePurchased,
+        }
     };
     return (
         <Container direction={"row"} alignItems="left" spacing={1} {...otherProps}>

@@ -14,7 +14,7 @@ export enum enumMyNFTType {
     OnAuction = 'MyNFT - On Auction',
     Created = 'MyNFT - Created',
     Sold = 'MyNFT - Sold',
-    // Acquired = 'MyNFT - Acquired',
+    Purchased = 'MyNFT - Purchased'
 }
 
 export enum enumBadgeType {
@@ -24,6 +24,7 @@ export enum enumBadgeType {
     BuyNow = 'Buy Now',
     ForSale = 'For Sale',
     OnAuction = 'On Auction',
+    Purchased = 'Purchased',
     ReservePriceNotMet = 'Reserve Price Not Met',
     Original = 'Original',
     Museum = 'Museum',
@@ -98,6 +99,14 @@ export type TypeSingleNFTBid = {
     user: string;
     price: number;
     time: string;
+};
+
+export type TypeYourEarning = {
+    avatar: string;
+    title: string;
+    time: string;
+    price: number;
+    badge: enumBadgeType;
 };
 
 // ---

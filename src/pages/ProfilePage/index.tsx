@@ -15,7 +15,7 @@ import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, TypeProductFetch, enumMyNFTType, TypeFavouritesFetch } from 'src/types/product-types';
+import { TypeProduct, TypeProductFetch, enumMyNFTType, TypeFavouritesFetch, enumBadgeType, TypeYourEarning } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
@@ -51,9 +51,61 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [isOnLikedTab, setIsOnLikedTab] = useState<boolean>(false);
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
 
+    const earnings = [
+        {
+            avatar: '/assets/images/avatar-template.png',
+            title: 'Scuplting with the Heart',
+            time: '2022/02/02 10:00',
+            price: 24,
+            badge: enumBadgeType.Badge,
+        },
+        {
+            avatar: '/assets/images/avatar-template.png',
+            title: 'Art for Everyone',
+            time: '2022/02/02 10:00',
+            price: 2.23,
+            badge: enumBadgeType.Royalties,
+        },
+        {
+            avatar: '/assets/images/avatar-template.png',
+            title: 'Painting with Passion',
+            time: '2022/02/02 10:00',
+            price: 82,
+            badge: enumBadgeType.Badge,
+        },
+        {
+            avatar: '/assets/images/avatar-template.png',
+            title: 'A Life on Canvas',
+            time: '2022/02/02 10:00',
+            price: 2400,
+            badge: enumBadgeType.Badge,
+        },
+        {
+            avatar: '/assets/images/avatar-template.png',
+            title: 'Beautiful Abstract',
+            time: '2022/02/02 10:00',
+            price: 10,
+            badge: enumBadgeType.Royalties,
+        },
+        {
+            avatar: '/assets/images/avatar-template.png',
+            title: 'Black Rage',
+            time: '2022/02/02 10:00',
+            price: 199,
+            badge: enumBadgeType.Badge,
+        },
+        {
+            avatar: '/assets/images/avatar-template.png',
+            title: 'Colorful Colors',
+            time: '2022/02/02 10:00',
+            price: 40.3,
+            badge: enumBadgeType.Badge,
+        },
+    ];
+    const [earningList, setEarningList] = useState<Array<TypeYourEarning>>(earnings)
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
-
+    
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -169,16 +221,16 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
+            product.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || '---';
+            product.author = itemObject.authorName || ' ';
             if (nTabId === 0 || nTabId === 5) {
                 if (itemObject.status === 'NEW') {
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
-                    else product.type = enumMyNFTType.Sold;
-                } else if (itemObject.status === 'BUY NOW' || itemObject.status === 'ON AUCTION')
+                    else product.type = enumMyNFTType.Purchased;
+                } else if (itemObject.status === 'BUY NOW' || itemObject.status === 'ON AUCTION' || itemObject.status === 'HAS BIDS')
                     product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            } else if (nTabId === 1) product.type = enumMyNFTType.Sold;
+            } else if (nTabId === 1) product.type = enumMyNFTType.Purchased;
             else if (nTabId === 2) product.type = enumMyNFTType.Created;
             else if (nTabId === 3)
                 product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
@@ -507,6 +559,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 }}
             >
                 <YourEarnings
+                    earnings={earningList}
                     onClose={() => {
                         setEarningsDlgOpen(false);
                     }}
