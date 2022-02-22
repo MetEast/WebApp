@@ -14,6 +14,7 @@ export const getEssentialsWalletBalance = async () => {
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     const accounts = await walletConnectWeb3.eth.getAccounts();
+    if (accounts.length === 0) return '0';
     const balance = await walletConnectWeb3.eth.getBalance(accounts[0]);
     return balance;
 };
