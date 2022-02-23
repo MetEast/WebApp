@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { TypeSelectItem } from 'src/types/select-types';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import Select from 'src/components/Select';
 import { SelectTitleBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useParams } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
-import { TypeSingleNFTBid, TypeSingleNFTBidFetch } from 'src/types/product-types';
-import { getTime, reduceHexAddress } from 'src/services/common';
+import { TypeSingleNFTBid } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {
     bidsList: Array<TypeSingleNFTBid>;
     myBidsList: Array<TypeSingleNFTBid>;
+    changeHandler: (value: TypeSelectItem | undefined) => void;
 }
 
-const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList}): JSX.Element => {
-    const params = useParams(); // params.tokenId
+const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList, changeHandler}): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const sortbyOptions: Array<TypeSelectItem> = [
@@ -42,6 +41,7 @@ const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList}): JSX.Element 
     const handleSortbyChange = (value: string) => {
         const item = sortbyOptions.find((option) => option.value === value);
         setSortby(item);
+        changeHandler(item);
     };
 
     // const getLatestBid = async () => {

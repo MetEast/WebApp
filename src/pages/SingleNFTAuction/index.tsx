@@ -37,6 +37,7 @@ import AllBids from 'src/components/profile/AllBids';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { TypeSelectItem } from 'src/types/select-types';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -78,6 +79,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
+    const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
+
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -133,6 +137,66 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         }
         setProductDetail(product);
     };
+
+    const getFetchData = async () => {
+        updateProductViews();
+        let ela_usd_rate = await getElaUsdRate();
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        getProductDetail(ela_usd_rate, favouritesList);
+        getLatestTransaction();
+    };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
+
+    // bid
+    const getLatestBid = async () => {
+        const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
+        const resLatestBid = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
+        const dataLatestBid = await resLatestBid.json();
+        const arrLatestBid = dataLatestBid.data;
+
+        let _latestBidsList: any = [];
+        for (let i = 0; i < arrLatestBid.others.length; i++) {
+            let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
+            _bid.price = parseFloat(itemObject.price) / 1e18;
+            _bid.orderId = itemObject.orderId;
+            let timestamp = getTime(itemObject.timestamp);
+            _bid.time = timestamp.date + ' ' + timestamp.time;
+            _latestBidsList.push(_bid);
+        }
+        setBidsList(_latestBidsList);
+
+        let _myLatestBidsList: any = [];
+        for (let i = 0; i < arrLatestBid.yours.length; i++) {
+            let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
+            _bid.price = parseFloat(itemObject.price) / 1e18;
+            _bid.orderId = itemObject.orderId;
+            let timestamp = getTime(itemObject.timestamp);
+            _bid.time = timestamp.date + ' ' + timestamp.time;
+            _myLatestBidsList.push(_bid);
+        }
+        setMyBidsList(_myLatestBidsList);
+    };
+
+    useEffect(() => {
+        getLatestBid();
+    }, [bidSortBy]);
+
+    // transaction
 
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
@@ -190,59 +254,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         setTransactionsList(_latestTransList);
     };
 
-    const getLatestBid = async () => {
-        const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
-        const resLatestBid = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataLatestBid = await resLatestBid.json();
-        const arrLatestBid = dataLatestBid.data;
-
-        let _latestBidsList: any = [];
-        for (let i = 0; i < arrLatestBid.others.length; i++) {
-            let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
-            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-            _bid.price = parseFloat(itemObject.price) / 1e18;
-            _bid.orderId = itemObject.orderId;
-            let timestamp = getTime(itemObject.timestamp);
-            _bid.time = timestamp.date + ' ' + timestamp.time;
-            _latestBidsList.push(_bid);
-        }
-        setBidsList(_latestBidsList);
-
-        let _myLatestBidsList: any = [];
-        for (let i = 0; i < arrLatestBid.yours.length; i++) {
-            let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
-            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
-            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-            _bid.price = parseFloat(itemObject.price) / 1e18;
-            _bid.orderId = itemObject.orderId;
-            let timestamp = getTime(itemObject.timestamp);
-            _bid.time = timestamp.date + ' ' + timestamp.time;
-            _myLatestBidsList.push(_bid);
-        }
-        setMyBidsList(_myLatestBidsList);
-    };
-
-    const getFetchData = async () => {
-        updateProductViews();
-        let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
-        getLatestTransaction();
-        getLatestBid();
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        getLatestTransaction();
+    }, [transactionSortBy]);
 
     const setPlaceBidTxFee = async () => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -399,7 +413,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allBidDlgOpened: false });
                 }}
             >
-                <AllBids bidsList={bidsList} myBidsList={myBidsList} />
+                {bidsList.length === 0 && myBidsList.length === 0 && <AllBids bidsList={bidsList} myBidsList={myBidsList} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
+                {!(bidsList.length === 0 && myBidsList.length === 0) && <AllBids bidsList={bidsList} myBidsList={myBidsList} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
             </ModalDialog>
             <ModalDialog
                 open={dialogState.allTxDlgOpened}
@@ -407,7 +422,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions />
+                <AllTransactions transactionList={transactionsList} changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)} />
             </ModalDialog>
         </>
     );

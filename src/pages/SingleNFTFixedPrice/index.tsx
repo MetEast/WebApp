@@ -38,6 +38,7 @@ import AllTransactions from 'src/components/profile/AllTransactions';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { TypeSelectItem } from 'src/types/select-types';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -76,6 +77,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -124,6 +126,17 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         }
         setProductDetail(product);
     };
+
+    const getFetchData = async () => {
+        updateProductViews();
+        let ela_usd_rate = await getElaUsdRate();
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        getProductDetail(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
 
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
@@ -181,17 +194,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         setTransactionsList(_latestTransList);
     };
 
-    const getFetchData = async () => {
-        updateProductViews();
-        let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
-        getLatestTransaction();
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        getLatestTransaction();
+    }, [transactionSortBy]);
 
     const setBuyNowTxFee = async () => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -332,7 +337,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions />
+                <AllTransactions transactionList={transactionsList} changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)} />
             </ModalDialog>
         </>
     );
