@@ -12,24 +12,22 @@ import FilterCard from './FilterCard';
 
 interface OptionsBarProps extends SpacingProps {
     handleKeyWordChange: (value: string) => void;
+    handlerFilterChange: (status: number, minPrice: string, maxPrice: string, opened: boolean) => void;
     sortOptions: TypeSelectItem[];
     sortSelected?: TypeSelectItem;
     handleSortChange: (value: string) => void;
-    handleClickFilterButton: () => void;
     productViewMode: string;
     setProductViewMode: (value: 'grid1' | 'grid2') => void;
-    // filterBtnHidden?: boolean;
 }
 
 const OptionsBar: React.FC<OptionsBarProps> = ({
     handleKeyWordChange,
+    handlerFilterChange,
     sortOptions,
     sortSelected,
     handleSortChange,
-    handleClickFilterButton,
     productViewMode,
     setProductViewMode,
-    // filterBtnHidden = false,
     ...otherProps
 }): JSX.Element => {
     const theme = useTheme();
@@ -78,7 +76,10 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                     {!onlyShowIcon && `Filter`}
                 </FilterButton>
                 <FiltersBox display={showFiltersCard ? 'flex' : 'none'}>
-                    <FilterCard />
+                    <FilterCard changeHandler={(status: number, minPrice: string, maxPrice: string, opened: boolean) => {
+                        handlerFilterChange(status, minPrice, maxPrice, opened);
+                        if (!opened) setShowFiltersCard(opened);
+                    }} />
                 </FiltersBox>
             </Box>
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>

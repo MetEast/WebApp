@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Button, TextField, Grid } from '@mui/material';
 import { H2Typography, H5Typography } from 'src/core/typographies';
-import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 
 export interface IFilterModalProps {
     open: boolean;
     onClose: () => void;
-    filters: Array<enmFilterOption>;
+    filters: Array<enumFilterOption>;
     filterRange: TypeFilterRange;
-    onDone: (filters: Array<enmFilterOption>, filterRange: TypeFilterRange) => void;
+    onDone: (filters: Array<enumFilterOption>, filterRange: TypeFilterRange) => void;
 }
 
 const FilterModal: React.FC<IFilterModalProps> = ({
@@ -18,7 +18,7 @@ const FilterModal: React.FC<IFilterModalProps> = ({
     onClose,
     onDone,
 }): JSX.Element => {
-    const [filters, setFilters] = useState<Array<enmFilterOption>>(_filters);
+    const [filters, setFilters] = useState<Array<enumFilterOption>>(_filters);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>(_filterRange);
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const FilterModal: React.FC<IFilterModalProps> = ({
         }
     }, [open, _filters, _filterRange]);
 
-    const handleSelectFilter = (filter: enmFilterOption) => {
+    const handleSelectFilter = (filter: enumFilterOption) => {
         if (!filters.includes(filter)) {
             setFilters([...filters, filter]);
         } else {
@@ -38,13 +38,13 @@ const FilterModal: React.FC<IFilterModalProps> = ({
         }
     };
 
-    const getVariant = (filter: enmFilterOption) => {
+    const getVariant = (filter: enumFilterOption) => {
         if (filters.includes(filter)) return 'contained';
 
         return 'outlined';
     };
 
-    const handleClickFilter = (filter: enmFilterOption) => () => handleSelectFilter(filter);
+    const handleClickFilter = (filter: enumFilterOption) => () => handleSelectFilter(filter);
 
     const handleChangeFilterRange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -97,8 +97,8 @@ const FilterModal: React.FC<IFilterModalProps> = ({
                     <Grid container spacing={1}>
                         <Grid item xs={6}>
                             <Button
-                                variant={getVariant(enmFilterOption.onAuction)}
-                                onClick={handleClickFilter(enmFilterOption.onAuction)}
+                                variant={getVariant(enumFilterOption.onAuction)}
+                                onClick={handleClickFilter(enumFilterOption.onAuction)}
                                 fullWidth
                             >
                                 On Auction
@@ -106,8 +106,8 @@ const FilterModal: React.FC<IFilterModalProps> = ({
                         </Grid>
                         <Grid item xs={6}>
                             <Button
-                                variant={getVariant(enmFilterOption.buyNow)}
-                                onClick={handleClickFilter(enmFilterOption.buyNow)}
+                                variant={getVariant(enumFilterOption.buyNow)}
+                                onClick={handleClickFilter(enumFilterOption.buyNow)}
                                 fullWidth
                             >
                                 Buy Now
@@ -115,8 +115,8 @@ const FilterModal: React.FC<IFilterModalProps> = ({
                         </Grid>
                         <Grid item xs={6}>
                             <Button
-                                variant={getVariant(enmFilterOption.hasBids)}
-                                onClick={handleClickFilter(enmFilterOption.hasBids)}
+                                variant={getVariant(enumFilterOption.hasBids)}
+                                onClick={handleClickFilter(enumFilterOption.hasBids)}
                                 fullWidth
                             >
                                 Has Bids
@@ -124,8 +124,8 @@ const FilterModal: React.FC<IFilterModalProps> = ({
                         </Grid>
                         <Grid item xs={6}>
                             <Button
-                                variant={getVariant(enmFilterOption.new)}
-                                onClick={handleClickFilter(enmFilterOption.new)}
+                                variant={getVariant(enumFilterOption.new)}
+                                onClick={handleClickFilter(enumFilterOption.new)}
                                 fullWidth
                             >
                                 New

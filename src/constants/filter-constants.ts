@@ -1,8 +1,8 @@
-import { enmFilterOption } from 'src/types/filter-types';
+import { enumFilterOption } from 'src/types/filter-types';
 
 export const filterOptions = {
-    [enmFilterOption.onAuction]: 'On Auction',
-    [enmFilterOption.buyNow]: 'Buy Now',
-    [enmFilterOption.hasBids]: 'Has Bids',
-    [enmFilterOption.new]: 'New',
+    [enumFilterOption.onAuction]: 'On Auction',
+    [enumFilterOption.buyNow]: 'Buy Now',
+    [enumFilterOption.hasBids]: 'Has Bids',
+    [enumFilterOption.new]: 'New',
 };

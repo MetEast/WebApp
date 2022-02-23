@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import FilterModal from 'src/components/modals/FilterModal';
 import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
-import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
@@ -19,8 +19,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [didCookies] = useCookies(['METEAST_DID']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
-    const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
-    const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
+    const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
     const defaultValue: TypeProduct = {
@@ -50,11 +49,18 @@ const ExplorePage: React.FC = (): JSX.Element => {
         defaultValue,
         defaultValue,
     ]);
+    const adBanners = [
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
+    ];
 
+    // -------------- Fetch Data -------------- //  
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${
             process.env.REACT_APP_SERVICE_URL
         }/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        
         if (sortBy !== undefined) {
             switch (sortBy.value) {
                 case 'low_to_high':
@@ -89,7 +95,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         if (filterRange.max !== undefined) {
             reqUrl += `&filter_min_price=${filterRange.max}`;
         }
-        if (filters) {
+        if (filters.length !== 0) {
             let filterStatus: string = '';
             filters.forEach((item) => {
                 if (item === 0) filterStatus += 'ONAUCTION,';
@@ -97,8 +103,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 else if (item === 2) filterStatus += 'HASBID,';
                 else if (item === 3) filterStatus += 'NEW,';
             });
-            filterStatus.slice(0, filterStatus.length - 1);
-            reqUrl += `&filter_status=${filterStatus}`;
+            reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
         }
         const resSearchResult = await fetch(reqUrl, {
             headers: {
@@ -107,7 +112,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             },
         });
         const dataSearchResult = await resSearchResult.json();
-        const arrSearchResult = dataSearchResult.data.result;
+        const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
 
         let _newProductList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
@@ -141,7 +146,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
+    // -------------- Fetch Data -------------- //  
 
+    // -------------- Option Bar -------------- //  
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -151,24 +158,19 @@ const ExplorePage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handleCloseFilterModal = () => {
-        setFilterModalOpen(false);
+    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, opened: boolean) => {
+        if (opened) {
+            let filters: Array<enumFilterOption> = [];
+            if (status === 0) filters.push(enumFilterOption.buyNow);
+            else if (status === 1) filters.push(enumFilterOption.onAuction);
+            else if (status === 2) filters.push(enumFilterOption.hasBids);
+            setFilters(filters);
+            setFilterRange({min: minPrice === '' ? undefined : parseFloat(minPrice), max: maxPrice === '' ? undefined : parseFloat(maxPrice)});
+        }
     };
+    // -------------- Option Bar -------------- //  
 
-    const handleClickFilterButton = () => {
-        setFilterModalOpen(true);
-    };
-
-    const handleDoneFilterModal = (filters: Array<enmFilterOption>, filterRange: TypeFilterRange) => {
-        setFilters(filters);
-        setFilterRange(filterRange);
-        setFilterModalOpen(false);
-    };
-
-    // const handleClickFilterItem = (filter: enmFilterOption) => () => {
-    //     if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
-    // };
-
+    // -------------- Views -------------- //  
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
         if (type === 'inc') {
@@ -178,18 +180,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
         }
         setProductList(prodList);
     };
-
-    const getUrl = (product: TypeProduct) => {
-        if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
-        else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
-        else return `/`;
-    };
-
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
 
     return (
         <Box minHeight="75vh">
@@ -203,19 +193,14 @@ const ExplorePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {/* {productList.length === 0 && (
-                    <Stack justifyContent="center" alignItems="center" minHeight={320}>
-                        <img src="/assets/images/loading.gif" alt="" />
-                    </Stack>
-                )} */}
             </Box>
             <OptionsBar
-                handleKeyWordChange={handleKeyWordChange}
                 sortOptions={sortOptions}
                 sortSelected={sortBy}
-                handleSortChange={handleChangeSortBy}
-                handleClickFilterButton={handleClickFilterButton}
                 productViewMode={productViewMode}
+                handleKeyWordChange={handleKeyWordChange}
+                handlerFilterChange={handlerFilterChange}
+                handleSortChange={handleChangeSortBy}
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
@@ -236,13 +221,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     </Grid>
                 ))}
             </Grid>
-            <FilterModal
-                open={filterModalOpen}
-                onClose={handleCloseFilterModal}
-                filters={filters}
-                filterRange={filterRange}
-                onDone={handleDoneFilterModal}
-            />
         </Box>
     );
 };
