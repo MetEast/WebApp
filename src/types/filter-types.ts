@@ -1,4 +1,4 @@
-export enum enmFilterOption {
+export enum enumFilterOption {
     onAuction,
     buyNow,
     hasBids,
@@ -13,6 +13,6 @@ export type TypeFilterRange = {
 export const filterStatusButtons = [
     { title: 'Buy Now', icon: 'ph:lightning' },
     { title: 'ON auction', icon: 'ph:scales' },
-    { title: 'Is new', icon: 'ph:lightning' },
+    // { title: 'Is new', icon: 'ph:lightning' },
     { title: 'Has Bids', icon: 'ph:ticket' },
 ];

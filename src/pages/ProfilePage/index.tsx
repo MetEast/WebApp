@@ -6,7 +6,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import FilterModal from 'src/components/modals/FilterModal';
 import MyNFTGalleryItem from 'src/components/MyNFTGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
-import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
@@ -41,7 +41,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
-    const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
+    const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
@@ -407,13 +407,17 @@ const ProfilePage: React.FC = (): JSX.Element => {
         setFilterModalOpen(true);
     };
 
-    const handleDoneFilterModal = (filters: Array<enmFilterOption>, filterRange: TypeFilterRange) => {
+    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, opened: boolean) => {
+        
+    };
+
+    const handleDoneFilterModal = (filters: Array<enumFilterOption>, filterRange: TypeFilterRange) => {
         setFilters(filters);
         setFilterRange(filterRange);
         setFilterModalOpen(false);
     };
 
-    const handleClickFilterItem = (filter: enmFilterOption) => () => {
+    const handleClickFilterItem = (filter: enumFilterOption) => () => {
         if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
     };
 
@@ -622,10 +626,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Grid item lg={5} md={12} sm={12} xs={12} order={{ lg: 2, md: 1, sm: 1, xs: 1 }}>
                     <OptionsBar
                         handleKeyWordChange={handleKeyWordChange}
+                        handlerFilterChange={handlerFilterChange}
                         sortOptions={sortOptions}
                         sortSelected={sortBy}
                         handleSortChange={handleChangeSortBy}
-                        handleClickFilterButton={handleClickFilterButton}
                         productViewMode={productViewMode}
                         setProductViewMode={setProductViewMode}
                     />

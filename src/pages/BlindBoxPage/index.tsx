@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { enmFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
 import FilterModal from 'src/components/modals/FilterModal';
@@ -27,7 +27,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
-    const [filters, setFilters] = useState<Array<enmFilterOption>>([]);
+    const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
     const defaultValue: TypeProduct = {
@@ -182,11 +182,16 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setFilterModalOpen(true);
     };
 
-    const handleDoneFilterModal = (filters: Array<enmFilterOption>, filterRange: TypeFilterRange) => {
+    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, opened: boolean) => {
+
+    };
+
+    const handleDoneFilterModal = (filters: Array<enumFilterOption>, filterRange: TypeFilterRange) => {
         setFilters(filters);
         setFilterRange(filterRange);
         setFilterModalOpen(false);
     };
+
 
     const updateBlindBoxLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...blindBoxList];
@@ -219,10 +224,10 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             </Box>
             <OptionsBar
                 handleKeyWordChange={handleKeyWordChange}
+                handlerFilterChange={handlerFilterChange}
                 sortOptions={sortOptions}
                 sortSelected={sortBy}
                 handleSortChange={handleChangeSortBy}
-                handleClickFilterButton={handleClickFilterButton}
                 productViewMode={productViewMode}
                 setProductViewMode={setProductViewMode}
                 marginTop={5}

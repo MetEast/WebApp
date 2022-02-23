@@ -68,7 +68,7 @@ const HomePage: React.FC = (): JSX.Element => {
             },
         );
         const dataNewProduct = await resNewProduct.json();
-        const arrNewProduct = dataNewProduct.data.result;
+        const arrNewProduct = dataNewProduct.data === undefined ? [] : dataNewProduct.data.result;
 
         let _newProductList: any = [];
         for (let i = 0; i < arrNewProduct.length; i++) {
@@ -106,7 +106,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
         const dataPopularCollection = await resPopularCollection.json();
         const arrPopularCollection =
-            dataPopularCollection.data.result === undefined ? [] : dataPopularCollection.data.result;
+            dataPopularCollection.data === undefined ? [] : dataPopularCollection.data.result;
 
         let _popularCollectionList: any = [];
         for (let i = 0; i < arrPopularCollection.length; i++) {
@@ -223,11 +223,6 @@ const HomePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {/* {productList.length === 0 && (
-                    <Stack justifyContent="center" alignItems="center" minHeight={200}>
-                        <img src="/assets/images/loading.gif" alt="" />
-                    </Stack>
-                )} */}
             </Box>
             <Box mt={8}>
                 <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
@@ -240,11 +235,6 @@ const HomePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {/* {collectionList.length === 0 && (
-                    <Stack justifyContent="center" alignItems="center" minHeight={200}>
-                        <img src="/assets/images/loading.gif" alt="" />
-                    </Stack>
-                )} */}
             </Box>
         </Stack>
     );
