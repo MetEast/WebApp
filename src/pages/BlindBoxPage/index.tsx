@@ -60,6 +60,13 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         defaultValue,
     ]);
 
+    const adBanners = [
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
+    ];
+
+    // -------------- Fetch Data -------------- //  
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${
             process.env.REACT_APP_SERVICE_URL
@@ -96,18 +103,16 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             reqUrl += `&filter_min_price=${filterRange.min}`;
         }
         if (filterRange.max !== undefined) {
-            reqUrl += `&filter_min_price=${filterRange.max}`;
+            reqUrl += `&filter_max_price=${filterRange.max}`;
         }
-        if (filters) {
+        if (filters.length !== 0) {
             let filterStatus: string = '';
             filters.forEach((item) => {
-                if (item === 0) filterStatus += 'ONAUCTION,';
-                else if (item === 1) filterStatus += 'BUYNOW,';
-                else if (item === 2) filterStatus += 'HASBID,';
-                else if (item === 3) filterStatus += 'NEW,';
+                if (item === 0) filterStatus += 'ON AUCTION,';
+                else if (item === 1) filterStatus += 'BUY NOW,';
+                else if (item === 2) filterStatus += 'HAS BID,';
             });
-            filterStatus.slice(0, filterStatus.length - 1);
-            reqUrl += `&filter_status=${filterStatus}`;
+            reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
         }
 
         const resSearchResult = await fetch(reqUrl, {
@@ -117,7 +122,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             },
         });
         const dataSearchResult = await resSearchResult.json();
-        const arrSearchResult = dataSearchResult.data.result;
+        const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
 
         let _newProductList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
@@ -164,7 +169,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
+    // -------------- Fetch Data -------------- //  
 
+    // -------------- Option Bar -------------- // 
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -174,25 +181,19 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handleCloseFilterModal = () => {
-        setFilterModalOpen(false);
-    };
-
-    const handleClickFilterButton = () => {
-        setFilterModalOpen(true);
-    };
-
     const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, opened: boolean) => {
-
+        if (opened) {
+            let filters: Array<enumFilterOption> = [];
+            if (status === 0) filters.push(enumFilterOption.buyNow);
+            else if (status === 1) filters.push(enumFilterOption.onAuction);
+            else if (status === 2) filters.push(enumFilterOption.hasBids);
+            setFilters(filters);
+            setFilterRange({min: minPrice === '' ? undefined : parseFloat(minPrice), max: maxPrice === '' ? undefined : parseFloat(maxPrice)});
+        }
     };
+    // -------------- Option Bar -------------- //   
 
-    const handleDoneFilterModal = (filters: Array<enumFilterOption>, filterRange: TypeFilterRange) => {
-        setFilters(filters);
-        setFilterRange(filterRange);
-        setFilterModalOpen(false);
-    };
-
-
+    // -------------- Views -------------- //  
     const updateBlindBoxLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...blindBoxList];
         if (type === 'inc') {
@@ -202,12 +203,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         }
         setBlindBoxList(prodList);
     };
-
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
 
     return (
         <Box minHeight="75vh">
@@ -223,12 +218,12 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 </Swiper>
             </Box>
             <OptionsBar
-                handleKeyWordChange={handleKeyWordChange}
-                handlerFilterChange={handlerFilterChange}
                 sortOptions={sortOptions}
                 sortSelected={sortBy}
-                handleSortChange={handleChangeSortBy}
                 productViewMode={productViewMode}
+                handleKeyWordChange={handleKeyWordChange}
+                handlerFilterChange={handlerFilterChange}
+                handleSortChange={handleChangeSortBy}
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
@@ -249,13 +244,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                     </Grid>
                 ))}
             </Grid>
-            <FilterModal
-                open={filterModalOpen}
-                onClose={handleCloseFilterModal}
-                filters={filters}
-                filterRange={filterRange}
-                onDone={handleDoneFilterModal}
-            />
         </Box>
     );
 };

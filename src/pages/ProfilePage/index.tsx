@@ -149,7 +149,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [todayEarned, setTodayEarned] = useState<number>(0);
     let prodList:Array<TypeProduct> = [defaultValue, defaultValue, defaultValue, defaultValue];
     let prodLoading:boolean = true;
-
+    
+    const adBanners = [
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
+    ];
+    // -------------- Fetch Data -------------- //  
     const getMyNftList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>, nTabId: number) => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
         switch (nTabId) {
@@ -211,18 +217,16 @@ const ProfilePage: React.FC = (): JSX.Element => {
             reqUrl += `&filter_min_price=${filterRange.min}`;
         }
         if (filterRange.max !== undefined) {
-            reqUrl += `&filter_min_price=${filterRange.max}`;
+            reqUrl += `&filter_max_price=${filterRange.max}`;
         }
-        if (filters) {
+        if (filters.length !== 0) {
             let filterStatus: string = '';
             filters.forEach((item) => {
-                if (item === 0) filterStatus += 'ONAUCTION,';
-                else if (item === 1) filterStatus += 'BUYNOW,';
-                else if (item === 2) filterStatus += 'HASBID,';
-                else if (item === 3) filterStatus += 'NEW,';
+                if (item === 0) filterStatus += 'ON AUCTION,';
+                else if (item === 1) filterStatus += 'BUY NOW,';
+                else if (item === 2) filterStatus += 'HAS BID,';
             });
-            filterStatus.slice(0, filterStatus.length - 1);
-            reqUrl += `&filter_status=${filterStatus}`;
+            reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
         }
 
         const resSearchResult = await fetch(reqUrl, {
@@ -233,6 +237,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         });
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
+        
         let _myNftList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
             const itemObject: TypeProductFetch = arrSearchResult[i];
@@ -293,31 +298,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 setIsLoadingLiked(false);
                 break;
         }
-
-        // switch (nftGalleryFilterBtnSelected) {
-        //     case nftGalleryFilterBtnTypes.All:
-        //         prodLoading = false;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.Acquired:
-        //         prodLoading = false;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.Created:
-        //         prodLoading = false;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.ForSale:
-        //         prodLoading = false;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.Sold:
-        //         prodLoading = false;
-        //         break;
-        //     case nftGalleryFilterBtnTypes.Liked:
-        //         prodLoading = false;
-        //         break;
-        // }
     };
 
     const getFetchData = async () => {
-        // setIsLoadingProduct(true);
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getMyNftList(ela_usd_rate, favouritesList, 0);
@@ -366,30 +349,42 @@ const ProfilePage: React.FC = (): JSX.Element => {
         signInDlgState,
     ]);
 
-    // // setProductList
-    // useEffect(() => {
-    //     switch (nftGalleryFilterBtnSelected) {
-    //         case nftGalleryFilterBtnTypes.All:
-    //             setProductList(myNFTAll);
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Acquired:
-    //             setProductList(myNFTAcquired);
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Created:
-    //             setProductList(myNFTCreated);
-    //             break;
-    //         case nftGalleryFilterBtnTypes.ForSale:
-    //             setProductList(myNFTForSale);
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Sold:
-    //             setProductList(myNFTSold);
-    //             break;
-    //         case nftGalleryFilterBtnTypes.Liked:
-    //             setProductList(myNFTLiked);
-    //             break;
-    //     }
-    // }, [myNFTAll, myNFTAcquired, myNFTCreated, myNFTForSale, myNFTSold, myNFTLiked]);
+    switch (nftGalleryFilterBtnSelected) {
+        case nftGalleryFilterBtnTypes.All:
+            if (isLoadingAll === false) {
+                prodList = myNFTAll;
+            }
+            break;
+        case nftGalleryFilterBtnTypes.Acquired:
+            if (isLoadingAcquired === false) {
+                prodList = myNFTAcquired;
+            }
+            break;
+        case nftGalleryFilterBtnTypes.Created:
+            if (isLoadingCreated === false) {
+                prodList = myNFTCreated;
+            }
+            break;
+        case nftGalleryFilterBtnTypes.ForSale:
+            if (isLoadingForSale === false) {
+                prodList = myNFTForSale;
+            }
+            break;
+        case nftGalleryFilterBtnTypes.Sold:
+            if (isLoadingSold === false) {
+                prodList = myNFTSold;
+            }
+            break;
+        case nftGalleryFilterBtnTypes.Liked:
+            if (isLoadingLiked === false) {
+                prodList = myNFTLiked;
+            }
+            break;
+    }
+    prodLoading = !(!isLoadingAll && !isLoadingAcquired && !isLoadingCreated && !isLoadingForSale && !isLoadingSold && !isLoadingLiked);
+    // -------------- Fetch Data -------------- //  
 
+    // -------------- Option Bar -------------- // 
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -399,28 +394,23 @@ const ProfilePage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handleCloseFilterModal = () => {
-        setFilterModalOpen(false);
-    };
-
-    const handleClickFilterButton = () => {
-        setFilterModalOpen(true);
-    };
-
     const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, opened: boolean) => {
-        
-    };
-
-    const handleDoneFilterModal = (filters: Array<enumFilterOption>, filterRange: TypeFilterRange) => {
-        setFilters(filters);
-        setFilterRange(filterRange);
-        setFilterModalOpen(false);
+        if (opened) {
+            let filters: Array<enumFilterOption> = [];
+            if (status === 0) filters.push(enumFilterOption.buyNow);
+            else if (status === 1) filters.push(enumFilterOption.onAuction);
+            else if (status === 2) filters.push(enumFilterOption.hasBids);
+            setFilters(filters);
+            setFilterRange({min: minPrice === '' ? undefined : parseFloat(minPrice), max: maxPrice === '' ? undefined : parseFloat(maxPrice)});
+        }
     };
 
     const handleClickFilterItem = (filter: enumFilterOption) => () => {
         if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
     };
+    // -------------- Option Bar -------------- //   
 
+    // -------------- Views -------------- //  
     const updateProductLikes = (id: number, type: string) => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) {
             setIsLikedInfoChanged(!isLikedInfoChanged);
@@ -478,46 +468,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
             setMyNFTLiked(likedList);
         }
     };
-
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
-
-    switch (nftGalleryFilterBtnSelected) {
-        case nftGalleryFilterBtnTypes.All:
-            if (isLoadingAll === false) {
-                prodList = myNFTAll;
-            }
-            break;
-        case nftGalleryFilterBtnTypes.Acquired:
-            if (isLoadingAcquired === false) {
-                prodList = myNFTAcquired;
-            }
-            break;
-        case nftGalleryFilterBtnTypes.Created:
-            if (isLoadingCreated === false) {
-                prodList = myNFTCreated;
-            }
-            break;
-        case nftGalleryFilterBtnTypes.ForSale:
-            if (isLoadingForSale === false) {
-                prodList = myNFTForSale;
-            }
-            break;
-        case nftGalleryFilterBtnTypes.Sold:
-            if (isLoadingSold === false) {
-                prodList = myNFTSold;
-            }
-            break;
-        case nftGalleryFilterBtnTypes.Liked:
-            if (isLoadingLiked === false) {
-                prodList = myNFTLiked;
-            }
-            break;
-    }
-    prodLoading = !(!isLoadingAll && !isLoadingAcquired && !isLoadingCreated && !isLoadingForSale && !isLoadingSold && !isLoadingLiked);
 
     return (
         <>
@@ -625,13 +575,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item lg={5} md={12} sm={12} xs={12} order={{ lg: 2, md: 1, sm: 1, xs: 1 }}>
                     <OptionsBar
-                        handleKeyWordChange={handleKeyWordChange}
-                        handlerFilterChange={handlerFilterChange}
                         sortOptions={sortOptions}
                         sortSelected={sortBy}
-                        handleSortChange={handleChangeSortBy}
                         productViewMode={productViewMode}
+                        handleKeyWordChange={handleKeyWordChange}
+                        handlerFilterChange={handlerFilterChange}
+                        handleSortChange={handleChangeSortBy}
                         setProductViewMode={setProductViewMode}
+                        marginTop={5}
                     />
                 </Grid>
             </Grid>
@@ -655,13 +606,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 ))}
             </Grid>
 
-            <FilterModal
-                open={filterModalOpen}
-                onClose={handleCloseFilterModal}
-                filters={filters}
-                filterRange={filterRange}
-                onDone={handleDoneFilterModal}
-            />
             <ModalDialog
                 open={earningsDlgOpen}
                 onClose={() => {
