@@ -14,16 +14,16 @@ import { useCookies } from 'react-cookie';
 export interface ComponentProps {
     product: TypeProduct;
     index: number;
+    isLoading: boolean;
     updateLikes: (index: number, type: string) => void;
 }
 
-const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, updateLikes }): JSX.Element => {
+const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
-    const [likeState, setLikeState] = useState(product.isLike);
-
+    const [likeState, setLikeState] = useState<boolean>(product.isLike);
     const changeLikeState = (event: React.MouseEvent) => {
         event.preventDefault(); //
         event.stopPropagation(); //
@@ -79,7 +79,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, updateLike
                 }}
             >
                 <ImageBox>
-                    {product.tokenId === '' ? (
+                    {isLoading ? (
                         <Skeleton variant="rectangular" animation="wave" width="100%" height="100%" />
                     ) : (
                         <>
@@ -97,7 +97,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, updateLike
             </ProductImageContainer>
             <Stack marginTop={1} height="100%">
                 <Box>
-                    {product.tokenId === '' ? (
+                    {isLoading ? (
                         <Skeleton variant="rectangular" animation="wave" width="100%" />
                     ) : (
                         <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
@@ -105,7 +105,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, updateLike
                         </Typography>
                     )}
                     <Box display={{ xs: 'none', md: 'block' }}>
-                        {product.tokenId === '' ? (
+                        {isLoading ? (
                             <Skeleton variant="rectangular" animation="wave" width="100%" />
                         ) : (
                             <ProductSnippets nickname={product.author} likes={product.likes} />
@@ -119,12 +119,12 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, updateLike
                     marginTop={{ xs: 0.25, md: 1 }}
                     spacing={{ xs: 0.25, md: 1 }}
                 >
-                    {product.tokenId === '' ? (
+                    {isLoading ? (
                         <Skeleton variant="rectangular" animation="wave" width="100%" />
                     ) : (
                         <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
                     )}
-                    {product.tokenId === '' ? (
+                    {isLoading ? (
                         <Skeleton variant="rectangular" animation="wave" width="100%" />
                     ) : (
                         <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
