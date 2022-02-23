@@ -548,14 +548,19 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </Stack>
                 </Stack>
             </Box>
-            <Grid container marginTop={4} alignItems="center">
-                <Grid item xs={3}>
+            <Grid container marginTop={4} alignItems="center" rowSpacing={2.5}>
+                <Grid item xs={12} md={3} order={0}>
                     <Typography fontSize={42} fontWeight={700} lineHeight={1.1}>
                         Your NFTs
                     </Typography>
                 </Grid>
-                <Grid item xs={9}>
-                    <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                <Grid item xs={12} md={9} order={{ xs: 2, md: 1 }}>
+                    <Stack
+                        direction="row"
+                        flexWrap={{ xs: 'wrap', md: 'nowrap' }}
+                        justifyContent={{ xs: 'center', md: 'flex-end' }}
+                        spacing={2}
+                    >
                         {nftGalleryFilterButtonsList.map((items, index) => (
                             <FilterButton
                                 selected={items.label === nftGalleryFilterBtnSelected}
@@ -567,7 +572,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         ))}
                     </Stack>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} order={{ xs: 1, md: 2 }}>
                     <OptionsBar
                         sortOptions={sortOptions}
                         sortSelected={sortBy}
@@ -576,7 +581,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         handlerFilterChange={handlerFilterChange}
                         handleSortChange={handleChangeSortBy}
                         setProductViewMode={setProductViewMode}
-                        marginTop={2}
                     />
                 </Grid>
             </Grid>
