@@ -13,11 +13,19 @@ import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
     product: TypeProduct;
+    productType: number; //0: from Home page, 1: from Products page, 2: from BlindBox page
     index: number;
     updateLikes: (index: number, type: string) => void;
+    productViewMode?: 'grid1' | 'grid2';
 }
 
-const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): JSX.Element => {
+const NFTPreview: React.FC<ComponentProps> = ({
+    product,
+    productType,
+    index,
+    updateLikes,
+    productViewMode,
+}): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
@@ -27,14 +35,6 @@ const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): 
     useEffect(() => {
         setLikeState(product.isLike);
     }, [product.isLike]);
-
-    let productType = 0; // default: enumSingleNFTType
-    if (
-        product.type === enumBlindBoxNFTType.ComingSoon ||
-        product.type === enumBlindBoxNFTType.SaleEnds ||
-        product.type === enumBlindBoxNFTType.SaleEnded
-    )
-        productType = 1; // enumBlindBoxNFTType
 
     const getUrl = () => {
         if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
@@ -124,11 +124,20 @@ const NFTPreview: React.FC<ComponentProps> = ({ product, index, updateLikes }): 
                             <Skeleton variant="rectangular" animation="wave" width="100%" />
                         ) : (
                             <>
-                                {productType === 0 ? (
+                                {productType === 0 && (
                                     <ProductSnippets nickname={product.author} likes={product.likes} />
-                                ) : (
-                                    <ProductSnippets sold={product.sold} likes={product.likes} />
                                 )}
+                                {productType === 1 &&
+                                    (productViewMode === 'grid1' ? (
+                                        <ProductSnippets
+                                            nickname={product.author}
+                                            likes={product.likes}
+                                            views={product.views}
+                                        />
+                                    ) : (
+                                        <ProductSnippets nickname={product.author} likes={product.likes} />
+                                    ))}
+                                {productType === 2 && <ProductSnippets sold={product.sold} likes={product.likes} />}
                             </>
                         )}
                     </Box>

@@ -105,8 +105,7 @@ const HomePage: React.FC = (): JSX.Element => {
         );
 
         const dataPopularCollection = await resPopularCollection.json();
-        const arrPopularCollection =
-            dataPopularCollection.data === undefined ? [] : dataPopularCollection.data.result;
+        const arrPopularCollection = dataPopularCollection.data === undefined ? [] : dataPopularCollection.data.result;
 
         let _popularCollectionList: any = [];
         for (let i = 0; i < arrPopularCollection.length; i++) {
@@ -219,7 +218,12 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={spaceBetweenSlideItems}>
                     {productList.map((product, index) => (
                         <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
-                            <NFTPreview product={product} index={index} updateLikes={updateProductLikes} />
+                            <NFTPreview
+                                product={product}
+                                productType={0}
+                                index={index}
+                                updateLikes={updateProductLikes}
+                            />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -231,7 +235,12 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={spaceBetweenSlideItems}>
                     {collectionList.map((collection, index) => (
                         <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                            <NFTPreview product={collection} index={index} updateLikes={updateCollectionLikes} />
+                            <NFTPreview
+                                product={collection}
+                                productType={0}
+                                index={index}
+                                updateLikes={updateCollectionLikes}
+                            />
                         </SwiperSlide>
                     ))}
                 </Swiper>

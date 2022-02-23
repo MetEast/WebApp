@@ -240,7 +240,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                         md={productViewMode === 'grid1' ? 6 : 3}
                         key={`explore-product-${index}`}
                     >
-                        <NFTPreview product={item} index={index} updateLikes={updateBlindBoxLikes} />
+                        <NFTPreview product={item} productType={2} index={index} updateLikes={updateBlindBoxLikes} />
                     </Grid>
                 ))}
             </Grid>
