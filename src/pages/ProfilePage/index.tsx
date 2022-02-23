@@ -90,58 +90,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [isLoadingLiked, setIsLoadingLiked] = useState<boolean>(true);
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
 
-    const earnings = [
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Scuplting with the Heart',
-            time: '2022/02/02 10:00',
-            price: 24,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Art for Everyone',
-            time: '2022/02/02 10:00',
-            price: 2.23,
-            badge: enumBadgeType.Royalties,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Painting with Passion',
-            time: '2022/02/02 10:00',
-            price: 82,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'A Life on Canvas',
-            time: '2022/02/02 10:00',
-            price: 2400,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Beautiful Abstract',
-            time: '2022/02/02 10:00',
-            price: 10,
-            badge: enumBadgeType.Royalties,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Black Rage',
-            time: '2022/02/02 10:00',
-            price: 199,
-            badge: enumBadgeType.Badge,
-        },
-        {
-            avatar: '/assets/images/avatar-template.png',
-            title: 'Colorful Colors',
-            time: '2022/02/02 10:00',
-            price: 40.3,
-            badge: enumBadgeType.Badge,
-        },
-    ];
-    const [earningList, setEarningList] = useState<Array<TypeYourEarning>>(earnings);
+    const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
 
@@ -352,7 +301,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             },
         });
         const dataEarnedResult = await resEarnedResult.json();
-        const arrEarnedResult = dataEarnedResult.data === undefined ? [] : dataEarnedResult.data.result;
+        const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
 
         let _myEarningList: any = [];
         for (let i = 0; i < arrEarnedResult.length; i++) {
@@ -362,8 +311,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
             _earning.title = itemObject.name;
             _earning.avatar = getImageFromAsset(itemObject.thumbnail);
             _earning.price = itemObject.iEarned / 1e18;
-            let timestamp = getTime(itemObject.timestamp);
+            let timestamp = getTime(itemObject.updateTime);
             _earning.time = timestamp.date + ' ' + timestamp.time;
+            _earning.badge = (itemObject.Badge === 'Badge') ? enumBadgeType.Badge : enumBadgeType.Royalties;
             _myEarningList.push(_earning);
         }
         setEarningList(_myEarningList);
@@ -393,6 +343,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         case nftGalleryFilterBtnTypes.Acquired:
             if (isLoadingAcquired === false) {
                 prodList = myNFTAcquired;
+                // Array.prototype.push.apply(prodList,myNFTCreated);
             }
             break;
         case nftGalleryFilterBtnTypes.Created:

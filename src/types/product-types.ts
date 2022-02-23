@@ -215,7 +215,7 @@ export type TypeYourEarningFetch = {
     name: string;
     tokenId: string;
     thumbnail: string;
-    timestamp: string;
+    updateTime: string;
 };
 
 export type TypeChartAxis = {
