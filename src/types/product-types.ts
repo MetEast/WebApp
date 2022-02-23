@@ -102,6 +102,7 @@ export type TypeSingleNFTBid = {
 };
 
 export type TypeYourEarning = {
+    // tokenId: string;
     avatar: string;
     title: string;
     time: string;
@@ -206,6 +207,15 @@ export type TypePriceHistoryFetch = {
     onlyDate: string;
     price: number;
     tokenId: string;
+};
+
+export type TypeYourEarningFetch = {
+    Badge: string;
+    iEarned: number;
+    name: string;
+    tokenId: string;
+    thumbnail: string;
+    timestamp: string;
 };
 
 export type TypeChartAxis = {

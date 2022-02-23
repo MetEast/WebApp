@@ -8,7 +8,7 @@ export const getElaUsdRate = async () => {
         });
         const dataElaUsdRate = await resElaUsdRate.json();
         
-        if (dataElaUsdRate && dataElaUsdRate.result.coin_usd) return parseFloat(dataElaUsdRate.result.coin_usd);
+        if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
         return NaN;
       } catch (error) {
         return NaN;

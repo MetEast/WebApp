@@ -3,7 +3,6 @@ import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid, Typography, Stack } from '@mui/material';
 import React, { useState } from 'react';
 import { useSignInContext } from 'src/context/SignInContext';
-import FilterModal from 'src/components/modals/FilterModal';
 import MyNFTGalleryItem from 'src/components/MyNFTGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -22,8 +21,9 @@ import {
     TypeFavouritesFetch,
     enumBadgeType,
     TypeYourEarning,
+    TypeYourEarningFetch
 } from 'src/types/product-types';
-import { getImageFromAsset } from 'src/services/common';
+import { getImageFromAsset, getTime } from 'src/services/common';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList, getTotalEarned, getTodayEarned } from 'src/services/fetch';
@@ -40,7 +40,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
-    const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
@@ -68,6 +67,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
         holder: '',
         type: enumMyNFTType.Created,
         isLike: false,
+    };
+    const defaultEarningValue: TypeYourEarning = {
+        avatar: '',
+        title: '',
+        time: '',
+        price: 0,
+        badge: enumBadgeType.Other
     };
     const [myNFTAll, setMyNFTAll] = useState<Array<TypeProduct>>([]);
     const [myNFTAcquired, setMyNFTAcquired] = useState<Array<TypeProduct>>([]);
@@ -241,7 +247,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         let _myNftList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
             const itemObject: TypeProductFetch = arrSearchResult[i];
-            var product: TypeProduct = { ...defaultValue };
+            let product: TypeProduct = { ...defaultValue };
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
@@ -258,7 +264,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     itemObject.status === 'HAS BIDS'
                 )
                     product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            } else if (nTabId === 1) product.type = enumMyNFTType.Purchased;
+            } else if (nTabId === 1) {
+                if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
+                else product.type = enumMyNFTType.Purchased;
+            }
             else if (nTabId === 2) product.type = enumMyNFTType.Created;
             else if (nTabId === 3)
                 product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
@@ -311,13 +320,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         getMyNftList(ela_usd_rate, favouritesList, 5);
     };
 
-    const getPersonalData = async () => {
-        let _totalEarned = await getTotalEarned(signInDlgState.walletAccounts[0]);
-        let _todayEarned = await getTodayEarned(signInDlgState.walletAccounts[0]);
-        setTotalEarned(_totalEarned);
-        setTodayEarned(_todayEarned);
-    };
-
     const getListCount = (index: number) => {
         switch (index) {
             case 0:
@@ -335,9 +337,41 @@ const ProfilePage: React.FC = (): JSX.Element => {
         }
     };
 
+    const getPersonalData = async () => {
+        let _totalEarned = await getTotalEarned(signInDlgState.walletAccounts[0]);
+        let _todayEarned = await getTodayEarned(signInDlgState.walletAccounts[0]);
+        setTotalEarned(_totalEarned);
+        setTodayEarned(_todayEarned);
+    };
+
+    const getEarningList = async () => {
+        const resEarnedResult = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        });
+        const dataEarnedResult = await resEarnedResult.json();
+        const arrEarnedResult = dataEarnedResult.data === undefined ? [] : dataEarnedResult.data.result;
+        let _myEarningList: any = [];
+        for (let i = 0; i < arrEarnedResult.length; i++) {
+            const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
+            let _earning: TypeYourEarning = { ...defaultEarningValue };
+            // _earning.tokenId = itemObject.tokenId;
+            _earning.title = itemObject.name;
+            _earning.avatar = getImageFromAsset(itemObject.thumbnail);
+            _earning.price = itemObject.iEarned / 1e18;
+            let timestamp = getTime(itemObject.timestamp);
+            _earning.time = timestamp.date + ' ' + timestamp.time;
+            _myEarningList.push(_earning);
+        }
+        setEarningList(_myEarningList);
+    };
+
     useEffect(() => {
         getFetchData();
         getPersonalData();
+        getEarningList();
     }, [
         sortBy,
         filters,
