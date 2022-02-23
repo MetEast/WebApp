@@ -55,12 +55,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
         '/assets/images/banners/banner3.png',
     ];
 
-    // -------------- Fetch Data -------------- //  
+    // -------------- Fetch Data -------------- //
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${
             process.env.REACT_APP_SERVICE_URL
         }/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
-        
+
         if (sortBy !== undefined) {
             switch (sortBy.value) {
                 case 'low_to_high':
@@ -145,9 +145,9 @@ const ExplorePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
-    // -------------- Fetch Data -------------- //  
+    // -------------- Fetch Data -------------- //
 
-    // -------------- Option Bar -------------- //  
+    // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -164,12 +164,15 @@ const ExplorePage: React.FC = (): JSX.Element => {
             else if (status === 1) filters.push(enumFilterOption.onAuction);
             else if (status === 2) filters.push(enumFilterOption.hasBids);
             setFilters(filters);
-            setFilterRange({min: minPrice === '' ? undefined : parseFloat(minPrice), max: maxPrice === '' ? undefined : parseFloat(maxPrice)});
+            setFilterRange({
+                min: minPrice === '' ? undefined : parseFloat(minPrice),
+                max: maxPrice === '' ? undefined : parseFloat(maxPrice),
+            });
         }
     };
-    // -------------- Option Bar -------------- //  
+    // -------------- Option Bar -------------- //
 
-    // -------------- Views -------------- //  
+    // -------------- Views -------------- //
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
         if (type === 'inc') {
@@ -216,7 +219,13 @@ const ExplorePage: React.FC = (): JSX.Element => {
                         md={productViewMode === 'grid1' ? 6 : 3}
                         key={`explore-product-${index}`}
                     >
-                        <NFTPreview product={item} index={index} updateLikes={updateProductLikes} />
+                        <NFTPreview
+                            product={item}
+                            productType={1}
+                            index={index}
+                            updateLikes={updateProductLikes}
+                            productViewMode={productViewMode}
+                        />
                     </Grid>
                 ))}
             </Grid>
