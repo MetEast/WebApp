@@ -38,7 +38,6 @@ import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
-
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
@@ -156,18 +155,30 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
                     break;
-                case 'OrderForAuction':
-                    _transaction.type = enumTransactionType.OnAuction;
-                    break;
-                case 'Bid':
-                    _transaction.type = enumTransactionType.Bid;
-                    break;
-                case 'OrderFilled':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    break;
-                case 'OrderForSale':
+                case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
                     break;
+                case 'CreateOrderForAuction':
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case 'BidOrder':
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case 'ChangeOrderPrice':
+                        _transaction.type = enumTransactionType.ChangeOrder;
+                        break;
+                case 'CancelOrder':
+                    _transaction.type = enumTransactionType.CancelOrder;
+                    break;
+                case 'BuyOrder':
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case 'Transfer':
+                    _transaction.type = enumTransactionType.Transfer;
+                    break;
+                // case 'SettleBidOrder':
+                //     _transaction.type = enumTransactionType.SettleBidOrder;
+                //     break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
@@ -319,28 +330,27 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    {signInDlgState.walletAccounts !== [] &&
-                        productDetail.holder !== signInDlgState.walletAccounts[0] && (
-                            <PrimaryButton
-                                sx={{ marginTop: 3, width: '100%' }}
-                                onClick={() => {
-                                    if (signInDlgState.isLoggedIn) {
-                                        setDialogState({
-                                            ...dialogState,
-                                            placeBidDlgOpened: true,
-                                            placeBidDlgStep: 0,
-                                            placeBidName: productDetail.name,
-                                            placeBidOrderId: productDetail.orderId || '',
-                                            placeBidMinLimit: productDetail.price_ela,
-                                        });
-                                    } else {
-                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                    }
-                                }}
-                            >
-                                Place Bid
-                            </PrimaryButton>
-                        )}
+                    {signInDlgState.walletAccounts !== [] && productDetail.holder !== signInDlgState.walletAccounts[0] && (
+                        <PrimaryButton
+                            sx={{ marginTop: 3, width: '100%' }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        placeBidDlgOpened: true,
+                                        placeBidDlgStep: 0,
+                                        placeBidName: productDetail.name,
+                                        placeBidOrderId: productDetail.orderId || '',
+                                        placeBidMinLimit: productDetail.price_ela,
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            Place Bid
+                        </PrimaryButton>
+                    )}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>

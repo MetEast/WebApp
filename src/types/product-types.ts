@@ -44,9 +44,20 @@ export enum enumBadgeType {
 export enum enumTransactionType {
     CreatedBy = 'Created By',
     Bid = 'Bid',
+    ForSale = 'For Sale',
     OnAuction = 'On Auction',
     SoldTo = 'Sold To',
-    ForSale = 'For Sale',
+    ChangeOrder = 'Change Order',
+    CancelOrder = 'Cancel Order',
+    Transfer = 'Transfer'
+    //
+    // CreateOrderForSale = 'CreateOrderForSale',
+    // CreateOrderForAuciton = 'CreateOrderForAuciton',
+    // BidOrder = 'BidOrder',
+    // ChangeOrderPrice = 'ChangeOrderPrice',
+    // CancelOrder = 'CancelOrder',
+    // BuyOrder = 'BuyOrder', // sold to
+    // SettleBidOrder = 'SettleBidOrder'
 }
 
 export type TypeProduct = {

@@ -146,21 +146,30 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
                     break;
-                case 'CreateOrderForAuction':
-                    _transaction.type = enumTransactionType.OnAuction;
-                    break;
-                case 'Bid':
-                    _transaction.type = enumTransactionType.Bid;
-                    break;
-                case 'OrderFilled':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    break;
-                case 'SafeTransferFrom':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
                     break;
+                case 'CreateOrderForAuction':
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case 'BidOrder':
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case 'ChangeOrderPrice':
+                        _transaction.type = enumTransactionType.ChangeOrder;
+                        break;
+                case 'CancelOrder':
+                    _transaction.type = enumTransactionType.CancelOrder;
+                    break;
+                case 'BuyOrder':
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case 'Transfer':
+                    _transaction.type = enumTransactionType.Transfer;
+                    break;
+                // case 'SettleBidOrder':
+                //     _transaction.type = enumTransactionType.SettleBidOrder;
+                //     break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
