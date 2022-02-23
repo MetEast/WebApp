@@ -2,8 +2,7 @@ import React from 'react';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
-import { PrimaryButton } from 'src/components/Buttons/styles';
-import ELAPrice from 'src/components/ELAPrice';
+import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -11,12 +10,12 @@ export interface ComponentProps {
 
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     return (
-        <Stack spacing={5} width={{ xs: 400, md: 600 }}>
+        <Stack spacing={4} width={{ xs: 400, md: 600 }}>
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Edit Profile</DialogTitleTypo>
             </Stack>
             <Box>
-                <Grid container columnSpacing={3}>
+                <Grid container columnSpacing={3} rowSpacing={2}>
                     <Grid item xs={6}>
                         <Stack padding={3} borderRadius={6} sx={{ background: '#F0F1F2' }}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -72,8 +71,79 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             </Stack>
                         </Stack>
                     </Grid>
+                    <Grid item xs={6}>
+                        <Stack spacing={1}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                Avatar Picture
+                            </Typography>
+                            <Box height={156} borderRadius={5} overflow="hidden">
+                                <img
+                                    src="/assets/images/blindbox/blindbox-nft-template2.png"
+                                    alt=""
+                                    width="100%"
+                                    height="100%"
+                                    style={{ objectFit: 'cover' }}
+                                />
+                            </Box>
+                            <Stack direction="row" spacing={1}>
+                                <PinkButton fullWidth size="small">
+                                    <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
+                                    {`Delete`}
+                                </PinkButton>
+                                <SecondaryButton fullWidth size="small">
+                                    <Icon
+                                        icon="ph:pencil-simple"
+                                        fontSize={20}
+                                        style={{ marginBottom: 4, marginRight: 4 }}
+                                    />
+                                    {`Edit`}
+                                </SecondaryButton>
+                            </Stack>
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Stack spacing={1}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                Cover Picture
+                            </Typography>
+                            <Box height={156} borderRadius={5} overflow="hidden">
+                                <img
+                                    src="/assets/images/blindbox/blindbox-nft-template3.png"
+                                    alt=""
+                                    width="100%"
+                                    height="100%"
+                                    style={{ objectFit: 'cover' }}
+                                />
+                            </Box>
+                            <Stack direction="row" spacing={1}>
+                                <PinkButton fullWidth size="small">
+                                    <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
+                                    {`Delete`}
+                                </PinkButton>
+                                <SecondaryButton fullWidth size="small">
+                                    <Icon
+                                        icon="ph:pencil-simple"
+                                        fontSize={20}
+                                        style={{ marginBottom: 4, marginRight: 4 }}
+                                    />
+                                    {`Edit`}
+                                </SecondaryButton>
+                            </Stack>
+                        </Stack>
+                    </Grid>
                 </Grid>
             </Box>
+            <PrimaryButton fullWidth size="small">
+                CONFIRM
+            </PrimaryButton>
+            <Stack direction="row" spacing={2}>
+                <SecondaryButton fullWidth size="small">
+                    BACK
+                </SecondaryButton>
+                <PrimaryButton fullWidth size="small">
+                    CONFIRM
+                </PrimaryButton>
+            </Stack>
         </Stack>
     );
 };
