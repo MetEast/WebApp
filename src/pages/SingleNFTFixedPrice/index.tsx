@@ -38,6 +38,7 @@ import AllTransactions from 'src/components/profile/AllTransactions';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { TypeSelectItem } from 'src/types/select-types';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -76,6 +77,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -125,6 +127,17 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         setProductDetail(product);
     };
 
+    const getFetchData = async () => {
+        updateProductViews();
+        let ela_usd_rate = await getElaUsdRate();
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        getProductDetail(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
+
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
@@ -146,21 +159,30 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
                     break;
-                case 'CreateOrderForAuction':
-                    _transaction.type = enumTransactionType.OnAuction;
-                    break;
-                case 'Bid':
-                    _transaction.type = enumTransactionType.Bid;
-                    break;
-                case 'OrderFilled':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    break;
-                case 'SafeTransferFrom':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
                     break;
+                case 'CreateOrderForAuction':
+                    _transaction.type = enumTransactionType.OnAuction;
+                    break;
+                case 'BidOrder':
+                    _transaction.type = enumTransactionType.Bid;
+                    break;
+                case 'ChangeOrderPrice':
+                        _transaction.type = enumTransactionType.ChangeOrder;
+                        break;
+                case 'CancelOrder':
+                    _transaction.type = enumTransactionType.CancelOrder;
+                    break;
+                case 'BuyOrder':
+                    _transaction.type = enumTransactionType.SoldTo;
+                    break;
+                case 'Transfer':
+                    _transaction.type = enumTransactionType.Transfer;
+                    break;
+                // case 'SettleBidOrder':
+                //     _transaction.type = enumTransactionType.SettleBidOrder;
+                //     break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
@@ -172,17 +194,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         setTransactionsList(_latestTransList);
     };
 
-    const getFetchData = async () => {
-        updateProductViews();
-        let ela_usd_rate = await getElaUsdRate();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
-        getLatestTransaction();
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        getLatestTransaction();
+    }, [transactionSortBy]);
 
     const setBuyNowTxFee = async () => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
@@ -323,7 +337,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions />
+                <AllTransactions transactionList={transactionsList} changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)} />
             </ModalDialog>
         </>
     );

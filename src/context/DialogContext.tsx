@@ -16,6 +16,7 @@ interface State {
     mintDidUri: string;
     mintTxHash: string;
     mintTXFee: number;
+    mintProgress: number;
     // create order for sale/auction
     sellSaleType: 'buynow' | 'auction';
     sellSaleEnds: TypeSelectItem;
@@ -47,6 +48,11 @@ interface State {
     // accept bid
     acceptBidDlgOpened: boolean;
     acceptBidDlgStep: number;
+    acceptBidName: string;
+    acceptBidPrice: number;
+    acceptBidOrderId: string;
+    acceptBidTxFee: number;
+    acceptBidTxHash: string;
     // place bid
     placeBidDlgOpened: boolean;
     placeBidDlgStep: number;
@@ -100,6 +106,7 @@ const defaultState: State = {
     mintDidUri: '',
     mintTxHash: '',
     mintTXFee: 0,
+    mintProgress: 0,
     // create order for sale/auction
     sellSaleType: 'buynow',
     sellSaleEnds: { label: '', value: '' },
@@ -131,6 +138,11 @@ const defaultState: State = {
     // accept bid
     acceptBidDlgOpened: false,
     acceptBidDlgStep: 0,
+    acceptBidName: '', 
+    acceptBidPrice: 0, 
+    acceptBidOrderId: '',
+    acceptBidTxFee: 0, 
+    acceptBidTxHash: '',
     // place bid
     placeBidDlgOpened: false,
     placeBidDlgStep: 0,
@@ -154,10 +166,6 @@ const defaultState: State = {
     cancelBidOrderId: '',
     cancelBidTxHash: '',
     cancelBidTxFee: 0,
-    // all transactions
-    allTxDlgOpened: false,
-    // all bids
-    allBidDlgOpened: false,
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
@@ -167,7 +175,11 @@ const defaultState: State = {
     buyBlindBoxAmount: 0, 
     buyBlindBoxTxFee: 0, 
     buyBlindBoxTxHash: '',
-    buyBlindBoxCreator: ''
+    buyBlindBoxCreator: '',
+    // all transactions
+    allTxDlgOpened: false,
+    // all bids
+    allBidDlgOpened: false
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

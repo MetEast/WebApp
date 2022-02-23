@@ -44,9 +44,20 @@ export enum enumBadgeType {
 export enum enumTransactionType {
     CreatedBy = 'Created By',
     Bid = 'Bid',
+    ForSale = 'For Sale',
     OnAuction = 'On Auction',
     SoldTo = 'Sold To',
-    ForSale = 'For Sale',
+    ChangeOrder = 'Change Order',
+    CancelOrder = 'Cancel Order',
+    Transfer = 'Transfer'
+    //
+    // CreateOrderForSale = 'CreateOrderForSale',
+    // CreateOrderForAuciton = 'CreateOrderForAuciton',
+    // BidOrder = 'BidOrder',
+    // ChangeOrderPrice = 'ChangeOrderPrice',
+    // CancelOrder = 'CancelOrder',
+    // BuyOrder = 'BuyOrder', // sold to
+    // SettleBidOrder = 'SettleBidOrder'
 }
 
 export type TypeProduct = {
@@ -99,9 +110,11 @@ export type TypeSingleNFTBid = {
     user: string;
     price: number;
     time: string;
+    orderId: string;
 };
 
 export type TypeYourEarning = {
+    // tokenId: string;
     avatar: string;
     title: string;
     time: string;
@@ -206,6 +219,15 @@ export type TypePriceHistoryFetch = {
     onlyDate: string;
     price: number;
     tokenId: string;
+};
+
+export type TypeYourEarningFetch = {
+    Badge: string;
+    iEarned: number;
+    name: string;
+    tokenId: string;
+    thumbnail: string;
+    updateTime: string;
 };
 
 export type TypeChartAxis = {

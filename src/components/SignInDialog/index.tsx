@@ -103,8 +103,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     }, [_chainId, _accounts, _balance, _isLoggedIn, _dlgOpened]);
 
-    
-
     useConnectivitySDK();
 
     const signInWithEssentials = async () => {

@@ -26,6 +26,15 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         [enumTransactionType.CreatedBy]: {
             icon: <Icon icon="ph:palette" fontSize={20} />,
         },
+        [enumTransactionType.ChangeOrder]: {
+            icon: <Icon icon="ph:lightning" fontSize={20} />,
+        },
+        [enumTransactionType.CancelOrder]: {
+            icon: <Icon icon="ph:lightning" fontSize={20} />,
+        },
+        [enumTransactionType.Transfer]: {
+            icon: <Icon icon="ph:lightning" fontSize={20} />,
+        }
     };
 
     const [signInDlgState] = useSignInContext();
@@ -38,7 +47,6 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         if (signInDlgState.chainId === 20) _url = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${transactionHash}`;
         else if (signInDlgState.chainId === 21) _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`; 
         setTxHashUrl(_url);
-        alert(_url)
     }, [signInDlgState.chainId]);
 
     return (

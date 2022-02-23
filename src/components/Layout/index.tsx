@@ -6,11 +6,16 @@ import Footer from '../Footer';
 import Container from '../Container';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import SignInDlgContainer from '../SignInDialog';
+import ProgressBar from '../ProgressBar';
+import { useDialogContext } from 'src/context/DialogContext';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
+    const [dialogState] = useDialogContext();
+
     return (
         <>
             <SignInDlgContainer />
+            <ProgressBar isFinished={(dialogState.mintProgress === 0 || dialogState.mintProgress === 100)} progress={ dialogState.mintProgress } />
             <Box
                 sx={{
                     width: '100%',

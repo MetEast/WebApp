@@ -1,6 +1,6 @@
 export const getElaUsdRate = async () => {
     try {
-        const resElaUsdRate = await fetch(`${process.env.REACT_APP_ELASTOS_LATEST_PRICE_API_URL}`, {
+        const resElaUsdRate = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -8,7 +8,7 @@ export const getElaUsdRate = async () => {
         });
         const dataElaUsdRate = await resElaUsdRate.json();
         
-        if (dataElaUsdRate && dataElaUsdRate.result.coin_usd) return parseFloat(dataElaUsdRate.result.coin_usd);
+        if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
         return NaN;
       } catch (error) {
         return NaN;

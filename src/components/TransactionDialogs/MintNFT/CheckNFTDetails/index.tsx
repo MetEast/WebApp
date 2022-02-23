@@ -63,6 +63,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         let txHash = '';
 
         setLoadingDlgOpened(true);
+        setDialogState({ ...dialogState, mintProgress: 70 });
         meteastContract.methods
             .mint(_tokenId, _tokenUri, _royaltyFee)
             .send(transactionParams)
@@ -85,6 +86,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     mintDidUri: _didUri,
                     createNFTDlgOpened: true,
                     createNFTDlgStep: 2,
+                    mintProgress: 100
                 });
             })
             .on('error', (error: any, receipt: any) => {
@@ -180,18 +182,19 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((added: any) => {
                     // Hash of image path - tokenId
                     _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
-                    // console.log("mintTokenId: ", _id)
+                    setDialogState({ ...dialogState, mintProgress: 10 });
                     return sendIpfsMetaData(added);
                 })
                 .then((metaRecv: any) => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
+                    setDialogState({ ...dialogState, mintProgress: 30 });
                     return sendIpfsDidJson();
                 })
                 .then((didRecv: any) => {
                     // didUri
                     _didUri = `meteast:json:${didRecv.path}`;
-                    // console.log("mintDidUri: ", _didUri)
+                    setDialogState({ ...dialogState, mintProgress: 50 });
                     resolve({ _id, _uri, _didUri });
                 })
                 .catch((error) => {
