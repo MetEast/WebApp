@@ -28,6 +28,7 @@ import EditProfile from 'src/components/TransactionDialogs/EditProfile';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
@@ -39,9 +40,35 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
         nftGalleryFilterBtnTypes.All,
     );
-    const [dialogState, setDialogState] = useDialogContext();
 
-    const [productList, setProductList] = useState<Array<TypeProduct>>([]);
+    const defaultValue: TypeProduct = {
+        tokenId: '',
+        name: '',
+        image: '',
+        price_ela: 0,
+        price_usd: 0,
+        likes: 0,
+        views: 0,
+        author: '',
+        authorDescription: '',
+        authorImg: '',
+        authorAddress: '',
+        description: '',
+        tokenIdHex: '',
+        royalties: 0,
+        createTime: '',
+        holderName: '',
+        holder: '',
+        type: enumMyNFTType.Created,
+        isLike: false,
+    };
+    const [productList, setProductList] = useState<Array<TypeProduct>>([
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+        defaultValue,
+    ]);
     const [myNFTAll, setMyNFTAll] = useState<Array<TypeProduct>>([]);
     const [myNFTAcquired, setMyNFTAcquired] = useState<Array<TypeProduct>>([]);
     const [myNFTCreated, setMyNFTCreated] = useState<Array<TypeProduct>>([]);
@@ -105,35 +132,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>(earnings)
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
-    
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumMyNFTType.Created,
-        isLike: false,
-    };
 
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
             ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
     // const accounts: string[] = getEssentialsWalletAddress();
-    const accounts: string[] = signInDlgState.walletAccounts;
+    // const accounts: string[] = signInDlgState.walletAccounts;
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
 
@@ -532,19 +537,22 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </FilterItemTypography>
                 ))}
             </Box>
-            {productList.length === 0 && <EmptyBodyGalleryItem>No listed products on marketplace</EmptyBodyGalleryItem>}
+            {/* {productList.length === 0 && <EmptyBodyGalleryItem>No listed products on marketplace</EmptyBodyGalleryItem>} */}
             <Grid container mt={2} spacing={4}>
                 {productList.map((item, index) => (
                     <Grid
                         item
                         xs={productViewMode === 'grid1' ? 12 : 6}
                         md={productViewMode === 'grid1' ? 6 : 3}
-                        key={`explore-product-${index}`}
+                        key={`profile-product-${index}`}
                     >
-                        <MyNFTGalleryItem product={item} index={index} updateLikes={updateProductLikes} />
+                        {/* <SwiperSlide key={`profile-product-${index}`} style={{ height: 'auto' }}> */}
+                            <MyNFTGalleryItem product={item} index={index} updateLikes={updateProductLikes} />
+                        {/* </SwiperSlide> */}
                     </Grid>
                 ))}
             </Grid>
+            
             <FilterModal
                 open={filterModalOpen}
                 onClose={handleCloseFilterModal}

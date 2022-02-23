@@ -101,7 +101,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={categorySelectOpen ? 1 : 0}>
+                                    <SelectBtn fullWidth isopen={categorySelectOpen ? 1 : 0}>
                                         {category ? category.label : 'Select'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>

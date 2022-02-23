@@ -27,7 +27,7 @@ export const CustomeDropzoneArea = styled(DropzoneArea)`
     cursor: 'pointer';
 `;
 
-export const SelectBtn = styled(Button)<{ isOpen: number }>`
+export const SelectBtn = styled(Button)<{ isopen: number }>`
     height: 40px;
     display: flex;
     flex-direction: row;
@@ -40,7 +40,7 @@ export const SelectBtn = styled(Button)<{ isOpen: number }>`
     color: #0a0b0c;
     .arrow-icon {
         margin-left: 4px;
-        transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
+        transform: ${({ isopen }) => (isopen ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
     }
 `;
