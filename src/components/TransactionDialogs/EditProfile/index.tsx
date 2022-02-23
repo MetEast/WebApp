@@ -10,13 +10,18 @@ export interface ComponentProps {
 
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     return (
-        <Stack spacing={4} width={{ xs: 400, md: 600 }}>
+        <Stack
+            spacing={4}
+            width={{ md: 600 }}
+            paddingY={{ xs: 4, sm: 0 }}
+            sx={{ overflowY: 'auto', overflowX: 'hidden' }}
+        >
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Edit Profile</DialogTitleTypo>
             </Stack>
             <Box>
                 <Grid container columnSpacing={3} rowSpacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Stack padding={3} borderRadius={6} sx={{ background: '#F0F1F2' }}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center">
                                 <Stack direction="row" alignItems="center" spacing={1}>
@@ -42,7 +47,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             </Typography>
                         </Stack>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Stack padding={3} borderRadius={6} sx={{ background: '#F0F1F2' }}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center">
                                 <Stack direction="row" alignItems="center" spacing={1}>
@@ -71,7 +76,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             </Stack>
                         </Stack>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Stack spacing={1}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Avatar Picture
@@ -101,7 +106,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             </Stack>
                         </Stack>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Stack spacing={1}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Cover Picture
