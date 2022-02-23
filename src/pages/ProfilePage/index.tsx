@@ -203,7 +203,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || ' ';
-            if (nTabId === 0 || nTabId === 5) {
+            if (nTabId === 0 || nTabId === 5) { // all = owned + sold
                 if (itemObject.status === 'NEW') {
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
@@ -215,7 +215,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 )
                     product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
                 
-            } else if (nTabId === 1) {
+            } else if (nTabId === 1) { // owned = purchased + created + for sale
                 if (itemObject.status === 'NEW') {
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else  product.type = enumMyNFTType.Purchased;
