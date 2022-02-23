@@ -16,6 +16,7 @@ interface State {
     mintDidUri: string;
     mintTxHash: string;
     mintTXFee: number;
+    mintProgress: number;
     // create order for sale/auction
     sellSaleType: 'buynow' | 'auction';
     sellSaleEnds: TypeSelectItem;
@@ -100,6 +101,7 @@ const defaultState: State = {
     mintDidUri: '',
     mintTxHash: '',
     mintTXFee: 0,
+    mintProgress: 0,
     // create order for sale/auction
     sellSaleType: 'buynow',
     sellSaleEnds: { label: '', value: '' },

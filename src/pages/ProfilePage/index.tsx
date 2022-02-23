@@ -353,6 +353,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         });
         const dataEarnedResult = await resEarnedResult.json();
         const arrEarnedResult = dataEarnedResult.data === undefined ? [] : dataEarnedResult.data.result;
+
         let _myEarningList: any = [];
         for (let i = 0; i < arrEarnedResult.length; i++) {
             const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
