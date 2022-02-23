@@ -817,10 +817,10 @@ export const nftTransactions: Array<TypeNFTTransaction> = [
 ];
 
 export const singleNFTBids: Array<TypeSingleNFTBid> = [
-    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
-    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
-    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
-    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
-    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
-    { user: 'Nickname', price: 199, time: '2022/02/28  10:00' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00', orderId: '' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00', orderId: '' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00', orderId: '' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00', orderId: '' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00', orderId: '' },
+    { user: 'Nickname', price: 199, time: '2022/02/28  10:00', orderId: '' },
 ];

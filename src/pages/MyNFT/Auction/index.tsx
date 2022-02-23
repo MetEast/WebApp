@@ -73,7 +73,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         time: '',
         txHash: '',
     };
-    const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '' };
+    const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
@@ -184,8 +184,9 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     };
 
     const getLatestBid = async () => {
+        const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
         const resLatestBid = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5`,
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -194,48 +195,33 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             },
         );
         const dataLatestBid = await resLatestBid.json();
-        const arrLatestBid = dataLatestBid.data.others;
+        const arrLatestBid = dataLatestBid.data;
 
         let _latestBidsList: any = [];
-        for (let i = 0; i < arrLatestBid.length; i++) {
-            let itemObject: TypeSingleNFTBidFetch = arrLatestBid[i];
-            var _bid: TypeSingleNFTBid = { ...defaultBidValue };
+        for (let i = 0; i < arrLatestBid.others.length; i++) {
+            let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
+            _bid.orderId = itemObject.orderId;
             let timestamp = getTime(itemObject.timestamp);
             _bid.time = timestamp.date + ' ' + timestamp.time;
             _latestBidsList.push(_bid);
         }
         setBidsList(_latestBidsList);
-    };
 
-    // get your bids
-    const getMyBids = async () => {
-        if (signInDlgState.isLoggedIn) {
-            const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-            const accounts = await walletConnectProvider.accounts;
-
-            fetch(
-                `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5&owner=${accounts[0]}`,
-            )
-                .then((response) => {
-                    let _latestBidsList: any = [];
-                    response.json().then((jsonBidsList) => {
-                        jsonBidsList.data.yours.forEach((itemObject: TypeSingleNFTBidFetch) => {
-                            var _bid: TypeSingleNFTBid = { ...defaultBidValue };
-                            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data
-                            _bid.price = parseFloat(itemObject.price) / 1e18;
-                            let timestamp = getTime(itemObject.timestamp);
-                            _bid.time = timestamp.date + ' ' + timestamp.time;
-                            _latestBidsList.push(_bid);
-                        });
-                        setMyBidsList(_latestBidsList);
-                    });
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        } else setMyBidsList([]);
+        let _myLatestBidsList: any = [];
+        for (let i = 0; i < arrLatestBid.yours.length; i++) {
+            let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
+            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
+            _bid.price = parseFloat(itemObject.price) / 1e18;
+            _bid.orderId = itemObject.orderId;
+            let timestamp = getTime(itemObject.timestamp);
+            _bid.time = timestamp.date + ' ' + timestamp.time;
+            _myLatestBidsList.push(_bid);
+        }
+        setMyBidsList(_myLatestBidsList);
     };
 
     const getFetchData = async () => {
@@ -244,7 +230,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         getProductDetail(ela_usd_rate, favouritesList);
         getLatestTransaction();
         getLatestBid();
-        getMyBids();
     };
 
     useEffect(() => {

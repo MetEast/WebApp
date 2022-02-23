@@ -115,9 +115,9 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const getLatestBid = async () => {
-        const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '' };
+        const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
         const resLatestBid = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&pageNum=1&pageSize=5`,
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -134,6 +134,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
             let _bid: TypeSingleNFTBid = { ...defaultBidValue };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
+            _bid.orderId = itemObject.orderId;
             let timestamp = getTime(itemObject.timestamp);
             _bid.time = timestamp.date + ' ' + timestamp.time;
             _latestBidsList.push(_bid);
@@ -146,6 +147,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
             let _bid: TypeSingleNFTBid = { ...defaultBidValue };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
+            _bid.orderId = itemObject.orderId;
             let timestamp = getTime(itemObject.timestamp);
             _bid.time = timestamp.date + ' ' + timestamp.time;
             _myLatestBidsList.push(_bid);

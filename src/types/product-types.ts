@@ -110,6 +110,7 @@ export type TypeSingleNFTBid = {
     user: string;
     price: number;
     time: string;
+    orderId: string;
 };
 
 export type TypeYourEarning = {
