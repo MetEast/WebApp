@@ -48,6 +48,11 @@ interface State {
     // accept bid
     acceptBidDlgOpened: boolean;
     acceptBidDlgStep: number;
+    acceptBidName: string;
+    acceptBidPrice: number;
+    acceptBidOrderId: string;
+    acceptBidTxFee: number;
+    acceptBidTxHash: string;
     // place bid
     placeBidDlgOpened: boolean;
     placeBidDlgStep: number;
@@ -133,6 +138,11 @@ const defaultState: State = {
     // accept bid
     acceptBidDlgOpened: false,
     acceptBidDlgStep: 0,
+    acceptBidName: '', 
+    acceptBidPrice: 0, 
+    acceptBidOrderId: '',
+    acceptBidTxFee: 0, 
+    acceptBidTxHash: '',
     // place bid
     placeBidDlgOpened: false,
     placeBidDlgStep: 0,

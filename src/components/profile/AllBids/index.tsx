@@ -7,7 +7,6 @@ import ELAPrice from 'src/components/ELAPrice';
 import Select from 'src/components/Select';
 import { SelectTitleBtn } from './styles';
 import { Icon } from '@iconify/react';
-import { useParams } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';

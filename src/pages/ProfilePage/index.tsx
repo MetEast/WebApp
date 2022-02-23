@@ -115,11 +115,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
         switch (nTabId) {
             case 0:
-                reqUrl += `getOwnCollectible?selfAddr=${signInDlgState.walletAccounts[0]}`;
+                reqUrl += `getAllCollectibleByAddress?selfAddr=${signInDlgState.walletAccounts[0]}`;
                 setIsLoadingAll(true);
                 break;
             case 1:
-                reqUrl += `getBoughtNotSoldCollectible?selfAddr=${signInDlgState.walletAccounts[0]}`;
+                reqUrl += `getOwnCollectible?selfAddr=${signInDlgState.walletAccounts[0]}`;
                 setIsLoadingAcquired(true);
                 break;
             case 2:
