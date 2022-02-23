@@ -156,10 +156,6 @@ const defaultState: State = {
     cancelBidOrderId: '',
     cancelBidTxHash: '',
     cancelBidTxFee: 0,
-    // all transactions
-    allTxDlgOpened: false,
-    // all bids
-    allBidDlgOpened: false,
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
@@ -169,7 +165,11 @@ const defaultState: State = {
     buyBlindBoxAmount: 0, 
     buyBlindBoxTxFee: 0, 
     buyBlindBoxTxHash: '',
-    buyBlindBoxCreator: ''
+    buyBlindBoxCreator: '',
+    // all transactions
+    allTxDlgOpened: false,
+    // all bids
+    allBidDlgOpened: false
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

@@ -399,7 +399,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allBidDlgOpened: false });
                 }}
             >
-                <AllBids />
+                <AllBids bidsList={bidsList} myBidsList={myBidsList} />
             </ModalDialog>
             <ModalDialog
                 open={dialogState.allTxDlgOpened}
