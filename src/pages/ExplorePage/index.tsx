@@ -93,15 +93,14 @@ const ExplorePage: React.FC = (): JSX.Element => {
             reqUrl += `&filter_min_price=${filterRange.min}`;
         }
         if (filterRange.max !== undefined) {
-            reqUrl += `&filter_min_price=${filterRange.max}`;
+            reqUrl += `&filter_max_price=${filterRange.max}`;
         }
         if (filters.length !== 0) {
             let filterStatus: string = '';
             filters.forEach((item) => {
-                if (item === 0) filterStatus += 'ONAUCTION,';
-                else if (item === 1) filterStatus += 'BUYNOW,';
-                else if (item === 2) filterStatus += 'HASBID,';
-                else if (item === 3) filterStatus += 'NEW,';
+                if (item === 0) filterStatus += 'ON AUCTION,';
+                else if (item === 1) filterStatus += 'BUY NOW,';
+                else if (item === 2) filterStatus += 'HAS BID,';
             });
             reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
         }
