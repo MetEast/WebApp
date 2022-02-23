@@ -3,7 +3,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
-import { H2Typography } from 'src/core/typographies';
+// import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NFTPreview from 'src/components/NFTPreview';
@@ -11,12 +11,16 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-
 // import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
+    const adBanners = [
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
+    ];
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -52,12 +56,6 @@ const HomePage: React.FC = (): JSX.Element => {
         defaultValue,
         defaultValue,
     ]);
-
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
 
     const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resNewProduct = await fetch(
@@ -155,7 +153,7 @@ const HomePage: React.FC = (): JSX.Element => {
         if (type === 'inc') {
             prodList[id].likes += 1;
             if (colId !== -1) {
-                console.log(colId, "-------------colId");
+                // console.log(colId, "-------------colId");
                 colList[colId].likes += 1;
                 colList[colId].isLike = true;
             }
@@ -225,11 +223,11 @@ const HomePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {productList.length === 0 && (
+                {/* {productList.length === 0 && (
                     <Stack justifyContent="center" alignItems="center" minHeight={200}>
                         <img src="/assets/images/loading.gif" alt="" />
                     </Stack>
-                )}
+                )} */}
             </Box>
             <Box mt={8}>
                 <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
@@ -242,11 +240,11 @@ const HomePage: React.FC = (): JSX.Element => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {collectionList.length === 0 && (
+                {/* {collectionList.length === 0 && (
                     <Stack justifyContent="center" alignItems="center" minHeight={200}>
                         <img src="/assets/images/loading.gif" alt="" />
                     </Stack>
-                )}
+                )} */}
             </Box>
         </Stack>
     );

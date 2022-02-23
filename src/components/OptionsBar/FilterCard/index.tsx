@@ -4,15 +4,9 @@ import { Icon } from '@iconify/react';
 import { Container, StatusButton } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { filterStatusButtons } from 'src/types/filter-types';
 
 interface ComponentProps {}
-
-const statusButtons = [
-    { title: 'Buy Now', icon: 'ph:lightning' },
-    { title: 'ON auction', icon: 'ph:scales' },
-    { title: 'Is new', icon: 'ph:lightning' },
-    { title: 'Has Bids', icon: 'ph:ticket' },
-];
 
 const FilterCard: React.FC<ComponentProps> = (): JSX.Element => {
     const [status, setStatus] = useState<number>(0);
@@ -26,7 +20,7 @@ const FilterCard: React.FC<ComponentProps> = (): JSX.Element => {
                 Status
             </Typography>
             <Grid container rowGap={1} marginTop={1}>
-                {statusButtons.map((item, index) => (
+                {filterStatusButtons.map((item, index) => (
                     <Grid item xs={6} key={`Profile-Optionbar-FilterCard-${index}`} >
                         <StatusButton size="small" selected={index === status} onClick={() => setStatus(index)}>
                             <Icon icon={item.icon} style={{ marginBottom: 2, marginRight: 4 }} />
