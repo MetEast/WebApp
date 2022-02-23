@@ -102,15 +102,15 @@ const ProfilePage: React.FC = (): JSX.Element => {
     // const accounts: string[] = signInDlgState.walletAccounts;
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
-    let prodList:Array<TypeProduct> = [defaultValue, defaultValue, defaultValue, defaultValue];
-    let prodLoading:boolean = true;
-    
+    let prodList: Array<TypeProduct> = [defaultValue, defaultValue, defaultValue, defaultValue];
+    let prodLoading: boolean = true;
+
     const adBanners = [
         '/assets/images/banners/banner1.png',
         '/assets/images/banners/banner2.png',
         '/assets/images/banners/banner3.png',
     ];
-    // -------------- Fetch Data -------------- //  
+    // -------------- Fetch Data -------------- //
     const getMyNftList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>, nTabId: number) => {
         var reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/`;
         switch (nTabId) {
@@ -192,7 +192,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         });
         const dataSearchResult = await resSearchResult.json();
         const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
-        
+
         let _myNftList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
             const itemObject: TypeProductFetch = arrSearchResult[i];
@@ -367,10 +367,17 @@ const ProfilePage: React.FC = (): JSX.Element => {
             }
             break;
     }
-    prodLoading = !(!isLoadingAll && !isLoadingAcquired && !isLoadingCreated && !isLoadingForSale && !isLoadingSold && !isLoadingLiked);
-    // -------------- Fetch Data -------------- //  
+    prodLoading = !(
+        !isLoadingAll &&
+        !isLoadingAcquired &&
+        !isLoadingCreated &&
+        !isLoadingForSale &&
+        !isLoadingSold &&
+        !isLoadingLiked
+    );
+    // -------------- Fetch Data -------------- //
 
-    // -------------- Option Bar -------------- // 
+    // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -387,16 +394,19 @@ const ProfilePage: React.FC = (): JSX.Element => {
             else if (status === 1) filters.push(enumFilterOption.onAuction);
             else if (status === 2) filters.push(enumFilterOption.hasBids);
             setFilters(filters);
-            setFilterRange({min: minPrice === '' ? undefined : parseFloat(minPrice), max: maxPrice === '' ? undefined : parseFloat(maxPrice)});
+            setFilterRange({
+                min: minPrice === '' ? undefined : parseFloat(minPrice),
+                max: maxPrice === '' ? undefined : parseFloat(maxPrice),
+            });
         }
     };
 
     const handleClickFilterItem = (filter: enumFilterOption) => () => {
         if (filters.includes(filter)) setFilters([...filters.filter((item) => item !== filter)]);
     };
-    // -------------- Option Bar -------------- //   
+    // -------------- Option Bar -------------- //
 
-    // -------------- Views -------------- //  
+    // -------------- Views -------------- //
     const updateProductLikes = (id: number, type: string) => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) {
             setIsLikedInfoChanged(!isLikedInfoChanged);
@@ -524,31 +534,20 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </Stack>
                 </Stack>
             </Box>
-            <Typography fontSize={42} fontWeight={700} marginTop={3}>
-                Your NFTs
-            </Typography>
-            <Grid
-                container
-                direction="row"
-                alignItems="center"
-                justifyContent={'space-between'}
-                spacing={2}
-                marginTop={1}
-            >
-                <Grid
-                    item
-                    container
-                    lg={7}
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    order={{ lg: 1, md: 2, sm: 2, xs: 2 }}
-                    direction="row"
-                    spacing={1}
-                    justifyContent={'space-between'}
-                >
-                    {nftGalleryFilterButtonsList.map((items, index) => (
-                        <Grid item key={`profile-gallery-${index}`} xs={4} sm={2}>
+            <Grid container marginTop={4} alignItems="center" rowSpacing={2.5}>
+                <Grid item xs={12} md={3} order={0}>
+                    <Typography fontSize={42} fontWeight={700} lineHeight={1.1}>
+                        Your NFTs
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} md={9} order={{ xs: 2, md: 1 }}>
+                    <Stack
+                        direction="row"
+                        flexWrap={{ xs: 'wrap', md: 'nowrap' }}
+                        justifyContent={{ xs: 'center', md: 'flex-end' }}
+                        spacing={2}
+                    >
+                        {nftGalleryFilterButtonsList.map((items, index) => (
                             <FilterButton
                                 selected={items.label === nftGalleryFilterBtnSelected}
                                 onClick={() => setNftGalleryFilterBtnSelected(items.label)}
@@ -556,10 +555,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 {items.label}
                                 <p>{getListCount(index)}</p>
                             </FilterButton>
-                        </Grid>
-                    ))}
+                        ))}
+                    </Stack>
                 </Grid>
-                <Grid item lg={5} md={12} sm={12} xs={12} order={{ lg: 2, md: 1, sm: 1, xs: 1 }}>
+                <Grid item xs={12} order={{ xs: 1, md: 2 }}>
                     <OptionsBar
                         sortOptions={sortOptions}
                         sortSelected={sortBy}
@@ -568,7 +567,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         handlerFilterChange={handlerFilterChange}
                         handleSortChange={handleChangeSortBy}
                         setProductViewMode={setProductViewMode}
-                        marginTop={5}
                     />
                 </Grid>
             </Grid>
@@ -587,7 +585,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         md={productViewMode === 'grid1' ? 6 : 3}
                         key={`profile-product-${index}`}
                     >
-                        <MyNFTGalleryItem product={item} index={index} updateLikes={updateProductLikes} isLoading={prodLoading} />
+                        <MyNFTGalleryItem
+                            product={item}
+                            index={index}
+                            updateLikes={updateProductLikes}
+                            isLoading={prodLoading}
+                        />
                     </Grid>
                 ))}
             </Grid>
