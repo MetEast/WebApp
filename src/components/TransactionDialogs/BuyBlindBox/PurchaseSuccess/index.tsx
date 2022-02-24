@@ -22,7 +22,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <img src="/assets/images/transactionsdlg/buyblindbox-purchase-success.svg" alt="" />
             </Stack>
             <Stack alignItems="center" spacing={2}>
-                <ViewOnExplorerButton txHash={dialogState.buyBlindBoxTxHash} />
+                <ViewOnExplorerButton txHash={dialogState.buyBlindTxHash} />
                 <PrimaryButton
                     fullWidth
                     onClick={() => {

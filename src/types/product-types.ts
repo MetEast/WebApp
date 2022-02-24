@@ -37,7 +37,7 @@ export enum enumBadgeType {
     Other = 'Other',
     Created = 'Created',
     Sold = 'Sold',
-    Badge = 'Badge',
+    Sale = 'Sale',
     Royalties = 'Royalties',
 }
 

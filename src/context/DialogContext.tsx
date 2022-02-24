@@ -83,23 +83,32 @@ interface State {
     // create blind box
     createBlindBoxDlgOpened: boolean;
     createBlindBoxDlgStep: number;
-    createBlindBoxName: string;
-    createBlindBoxPriceEla: number;
-    createBlindBoxPriceUsd: number;
-    createBlindBoxAmount: number;
-    createBlindBoxTxFee: number;
-    createBlindBoxTxHash: string;
-    createBlindBoxCreator: string;
+    crtBlindTitle: string;
+    crtBlindDescription: string;
+    crtBlindAuthorDescription: string;
+    crtBlindImage?: File;
+    crtBlindItem: TypeSelectItem;
+    crtBlindStatus: 'offline' | 'online';
+    crtBlindCopies: number;
+    crtBlindPrice: number;
+    crtBlindSaleBegin: TypeSelectItem;
+    crtBlindSaleEnd: TypeSelectItem;
+    crtBlindLikes: number;
+    crtBlindViews: number;
+    crtBlindPurchases: number;
+    crtBlindSort: TypeSelectItem;
+    crtBlindTxFee: number;
+    crtBlindTxHash: string;
     // buy blind box
     buyBlindBoxDlgOpened: boolean;
     buyBlindBoxDlgStep: number;
-    buyBlindBoxName: string;
-    buyBlindBoxPriceEla: number;
-    buyBlindBoxPriceUsd: number;
-    buyBlindBoxAmount: number;
-    buyBlindBoxTxFee: number;
-    buyBlindBoxTxHash: string;
-    buyBlindBoxCreator: string;
+    buyBlindName: string;
+    buyBlindPriceEla: number;
+    buyBlindPriceUsd: number;
+    buyBlindAmount: number;
+    buyBlindTxFee: number;
+    buyBlindTxHash: string;
+    buyBlindCreator: string;
 }
 
 const defaultState: State = {
@@ -179,23 +188,31 @@ const defaultState: State = {
     // create blind box
     createBlindBoxDlgOpened: false,
     createBlindBoxDlgStep: 0,
-    createBlindBoxName: '',
-    createBlindBoxPriceEla: 0,
-    createBlindBoxPriceUsd: 0,
-    createBlindBoxAmount: 0,
-    createBlindBoxTxFee: 0,
-    createBlindBoxTxHash: '',
-    createBlindBoxCreator: '',
+    crtBlindTitle: '',
+    crtBlindDescription: '',
+    crtBlindAuthorDescription: '',
+    crtBlindItem: { label: '', value: '' },
+    crtBlindStatus: 'offline',
+    crtBlindCopies: 0,
+    crtBlindPrice: 0,
+    crtBlindSaleBegin: { label: '', value: '' },
+    crtBlindSaleEnd: { label: '', value: '' },
+    crtBlindLikes: 0,
+    crtBlindViews: 0,
+    crtBlindPurchases: 0,
+    crtBlindSort: { label: '', value: '' },
+    crtBlindTxFee: 0,
+    crtBlindTxHash: '',
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
-    buyBlindBoxName: '',
-    buyBlindBoxPriceEla: 0,
-    buyBlindBoxPriceUsd: 0, 
-    buyBlindBoxAmount: 0, 
-    buyBlindBoxTxFee: 0, 
-    buyBlindBoxTxHash: '',
-    buyBlindBoxCreator: '',
+    buyBlindName: '',
+    buyBlindPriceEla: 0,
+    buyBlindPriceUsd: 0, 
+    buyBlindAmount: 0, 
+    buyBlindTxFee: 0, 
+    buyBlindTxHash: '',
+    buyBlindCreator: '',
     // all transactions
     allTxDlgOpened: false,
     // all bids

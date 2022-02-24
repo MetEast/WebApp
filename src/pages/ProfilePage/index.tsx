@@ -328,7 +328,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             _earning.price = itemObject.iEarned / 1e18;
             let timestamp = getTime(itemObject.updateTime);
             _earning.time = timestamp.date + ' ' + timestamp.time;
-            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Badge : enumBadgeType.Royalties;
+            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
             _myEarningList.push(_earning);
         }
         setEarningList(_myEarningList);

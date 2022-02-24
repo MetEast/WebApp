@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import { useStyles, SelectBtn } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
@@ -9,12 +9,18 @@ import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 import ELAPriceInput from '../../components/ELAPriceInput';
 import Select from 'src/components/Select';
+import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
+import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
+import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {}
 
 const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const [stateFile, setStateFile] = useState(null);
+
     const classes = useStyles();
     const blindboxItemsOptions: Array<TypeSelectItem> = [
         {
@@ -76,7 +82,16 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
+    const [blindboxTitle, setBlindboxTitle] = useState<string>('');
+    const [blindboxDescription, setBlindboxDescription] = useState<string>('');
+    const [blindboxAuthorDes, setBlindboxAuthorDesc] = useState<string>('');
+    const [blindboxImage, setBlindboxImage] = useState<File>();
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
+    const [blindboxCopies, setBlindboxCopies] = useState<number>(0);
+    const [blindboxPrice, setBlindboxPrice] = useState<number>(0);
+    const [blindboxLikes, setBlindboxLikes] = useState<number>(0);
+    const [blindboxViews, setBlindboxViews] = useState<number>(0);
+    const [blindboxPurchases, setBlindboxPurchases] = useState<number>(0);
 
     const [blindboxItem, setBlindboxItem] = useState<TypeSelectItem>();
     const [blindboxItemSelectOpen, setBlindboxItemSelectOpen] = useState(false);
@@ -110,6 +125,20 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         setSort(item);
     };
 
+    const handleFileChange = (files: Array<File>) => {
+        handleDropSingleFile(files);
+        if (files !== null && files.length > 0) {
+            setBlindboxImage(files[0]);
+        }
+    };
+
+    const handleDropSingleFile = useCallback((acceptedFiles) => {
+        const file = acceptedFiles[0];
+        if (file) {
+            setStateFile({ ...file, preview: URL.createObjectURL(file) });
+        }
+    }, []);
+
     return (
         <Stack
             spacing={5}
@@ -128,30 +157,44 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                         <CustomTextField
                             title="Blind Box Title"
                             placeholder="Enter Blind Box Title"
-                            changeHandler={(value) => {}}
+                            changeHandler={(value: string) => setBlindboxTitle(value)}
                         />
                         <CustomTextField
                             title="Blind Box Description"
                             placeholder="Is WYSIWYG is needed here?"
                             multiline
                             rows={3}
-                            changeHandler={(value) => {}}
+                            changeHandler={(value: string) => setBlindboxDescription(value)}
                         />
                         <CustomTextField
                             title="Author Description"
                             placeholder="Is WYSIWYG is needed here?"
                             multiline
                             rows={3}
-                            changeHandler={(value) => {}}
+                            changeHandler={(value: string) => setBlindboxAuthorDesc(value)}
                         />
                         <Stack spacing={1}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Blind Box Main Image
                             </Typography>
-                            <img
+                            {/* <img
                                 src="/assets/images/blindbox/blindbox-nft-template2.png"
                                 style={{ borderRadius: '18px' }}
                                 alt=""
+                            /> */}
+                            <UploadSingleFile
+                                file={stateFile}
+                                onDrop={handleFileChange}
+                                sx={{
+                                    // width: '100%',
+                                    // height: '112px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: '1rem',
+                                    borderRadius: '2vw',
+                                    background: '#E8F4FF',
+                                    cursor: 'pointer',
+                                }}
                             />
                             <Stack direction="row" spacing={1}>
                                 <SecondaryButton
@@ -223,7 +266,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                         <CustomTextField
                             title="Number of copies"
                             placeholder="es. 1000"
-                            changeHandler={(value) => {}}
+                            changeHandler={(value: string) => setBlindboxCopies(parseInt(value))}
                         />
                         <ELAPriceInput title="Price" />
                         <Stack spacing={0.5}>
@@ -263,13 +306,17 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                         <CustomTextField
                             title="Number of favourites"
                             placeholder="es. 1000"
-                            changeHandler={(value) => {}}
+                            changeHandler={(value: string) => setBlindboxLikes(parseInt(value))}
                         />
-                        <CustomTextField title="Number of Views" placeholder="es. 1000" changeHandler={(value) => {}} />
+                        <CustomTextField
+                            title="Number of Views"
+                            placeholder="es. 1000"
+                            changeHandler={(value: string) => setBlindboxViews(parseInt(value))}
+                        />
                         <CustomTextField
                             title="Max Num of Purchases"
                             placeholder="es. 1000"
-                            changeHandler={(value) => {}}
+                            changeHandler={(value: string) => setBlindboxPurchases(parseInt(value))}
                         />
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
@@ -298,7 +345,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             </Box>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: 0.22 ELA
+                    Available: {signInDlgState.walletBalance} ELA
                 </Typography>
                 <Stack width="100%" direction="row" spacing={2}>
                     <SecondaryButton
@@ -312,7 +359,24 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     <PrimaryButton
                         fullWidth
                         onClick={() => {
-                            setDialogState({ ...dialogState, createBlindBoxDlgStep: 1 });
+                            setDialogState({
+                                ...dialogState,
+                                createBlindBoxDlgStep: 1,
+                                crtBlindTitle: blindboxTitle,
+                                crtBlindDescription: blindboxDescription,
+                                crtBlindAuthorDescription: blindboxAuthorDes,
+                                crtBlindImage: blindboxImage,
+                                crtBlindItem: blindboxItem || { label: '', value: '' },
+                                crtBlindStatus: blindboxStatus,
+                                crtBlindCopies: blindboxCopies,
+                                crtBlindPrice: blindboxPrice,
+                                crtBlindSaleBegin: saleBegins || { label: '', value: '' },
+                                crtBlindSaleEnd: saleEnds || { label: '', value: '' },
+                                crtBlindLikes: blindboxLikes,
+                                crtBlindViews: blindboxViews,
+                                crtBlindPurchases: blindboxPurchases,
+                                crtBlindSort: sort || { label: '', value: '' }
+                            });
                         }}
                     >
                         Confirm

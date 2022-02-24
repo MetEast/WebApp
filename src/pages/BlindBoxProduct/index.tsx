@@ -157,7 +157,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, buyBlindBoxTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        setDialogState({ ...dialogState, buyBlindTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
 
     useEffect(() => {
@@ -203,11 +203,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 ...dialogState,
                                 buyBlindBoxDlgOpened: true,
                                 buyBlindBoxDlgStep: 0,
-                                buyBlindBoxName: productDetail.name,
-                                buyBlindBoxPriceEla: productDetail.price_ela,
-                                buyBlindBoxPriceUsd: productDetail.price_usd,
-                                buyBlindBoxAmount: 1,
-                                buyBlindBoxCreator: productDetail.author
+                                buyBlindName: productDetail.name,
+                                buyBlindPriceEla: productDetail.price_ela,
+                                buyBlindPriceUsd: productDetail.price_usd,
+                                buyBlindAmount: 1,
+                                buyBlindCreator: productDetail.author
                             });
                         }}
                     >

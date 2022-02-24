@@ -22,43 +22,43 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxName}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindName}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Unit Price</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxPriceEla} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Amount</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxAmount}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindAmount}</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Subtotal</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxPriceEla * dialogState.buyBlindBoxAmount} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla * dialogState.buyBlindAmount} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxTxFee} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindTxFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Total</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.buyBlindBoxPriceEla * dialogState.buyBlindBoxAmount + dialogState.buyBlindBoxTxFee} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla * dialogState.buyBlindAmount + dialogState.buyBlindTxFee} ELA</DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {dialogState.buyBlindBoxTxFee} ELA
+                    Available: {dialogState.buyBlindTxFee} ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
                     <SecondaryButton

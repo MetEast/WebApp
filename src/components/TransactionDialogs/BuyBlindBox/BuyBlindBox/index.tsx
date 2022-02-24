@@ -24,9 +24,9 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     Item
                 </Typography>
                 <Typography fontSize={18} fontWeight={700}>
-                    {dialogState.buyBlindBoxName}
+                    {dialogState.buyBlindName}
                 </Typography>
-                <ELAPrice price_ela={dialogState.buyBlindBoxPriceEla} price_ela_fontsize={14} />
+                <ELAPrice price_ela={dialogState.buyBlindPriceEla} price_ela_fontsize={14} />
                 <Typography fontSize={14} fontWeight={700} marginTop={4} sx={{ textTransform: 'uppercase' }}>
                     Quantity
                 </Typography>
@@ -68,7 +68,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <Typography fontSize={14} fontWeight={700} marginTop={4} sx={{ textTransform: 'uppercase' }}>
                     Subtotal
                 </Typography>
-                <ELAPrice price_ela={dialogState.buyBlindBoxPriceEla * amount} price_usd={dialogState.buyBlindBoxPriceUsd * amount} />
+                <ELAPrice price_ela={dialogState.buyBlindPriceEla * amount} price_usd={dialogState.buyBlindPriceUsd * amount} />
             </Stack>
             <Stack direction="row" spacing={2}>
                 <SecondaryButton
@@ -82,7 +82,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        setDialogState({ ...dialogState, buyBlindBoxDlgStep: 1, buyBlindBoxDlgOpened: true, buyBlindBoxAmount: amount });
+                        setDialogState({ ...dialogState, buyBlindBoxDlgStep: 1, buyBlindBoxDlgOpened: true, buyBlindAmount: amount });
                     }}
                 >
                     Confirm
