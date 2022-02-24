@@ -14,7 +14,7 @@ interface ComponentProps {
 const ProductTransHistory: React.FC<ComponentProps> = ({ sold = true, bought = true, created = true }): JSX.Element => {
     return (
         <Stack spacing={2}>
-            <Typography fontSize={18} fontWeight={700}>
+            <Typography fontSize={22} fontWeight={700}>
                 History
             </Typography>
             {sold && (
