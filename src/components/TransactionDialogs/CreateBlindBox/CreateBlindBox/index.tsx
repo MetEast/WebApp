@@ -9,12 +9,13 @@ import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 import ELAPriceInput from '../../components/ELAPriceInput';
 import Select from 'src/components/Select';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     const classes = useStyles();
-
     const blindboxItemsOptions: Array<TypeSelectItem> = [
         {
             label: 'Item1',
@@ -300,8 +301,22 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     Available: 0.22 ELA
                 </Typography>
                 <Stack width="100%" direction="row" spacing={2}>
-                    <SecondaryButton fullWidth>Back</SecondaryButton>
-                    <PrimaryButton fullWidth>Confirm</PrimaryButton>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, createBlindBoxDlgOpened: false });
+                        }}
+                    >
+                        Back
+                    </SecondaryButton>
+                    <PrimaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, createBlindBoxDlgStep: 1 });
+                        }}
+                    >
+                        Confirm
+                    </PrimaryButton>
                 </Stack>
                 <WarningTypo width={260}>
                     In case of payment problems, please contact the official customer service

@@ -5,12 +5,13 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import ELAPrice from 'src/components/ELAPrice';
 import { useStyles, InfoItemWrapper } from './styles';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     const classes = useStyles();
-
     return (
         <Stack
             spacing={5}
@@ -91,8 +92,22 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     Available: 0.22 ELA
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <SecondaryButton fullWidth>Back</SecondaryButton>
-                    <PrimaryButton fullWidth>Confirm</PrimaryButton>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, createBlindBoxDlgStep: 0 });
+                        }}
+                    >
+                        Back
+                    </SecondaryButton>
+                    <PrimaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, createBlindBoxDlgStep: 2 });
+                        }}
+                    >
+                        Confirm
+                    </PrimaryButton>
                 </Stack>
                 <WarningTypo width={240}>
                     In case of payment problems, please contact the official customer service

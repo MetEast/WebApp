@@ -80,6 +80,16 @@ interface State {
     allTxDlgOpened: boolean;
     // all bids
     allBidDlgOpened: boolean;
+    // create blind box
+    createBlindBoxDlgOpened: boolean;
+    createBlindBoxDlgStep: number;
+    createBlindBoxName: string;
+    createBlindBoxPriceEla: number;
+    createBlindBoxPriceUsd: number;
+    createBlindBoxAmount: number;
+    createBlindBoxTxFee: number;
+    createBlindBoxTxHash: string;
+    createBlindBoxCreator: string;
     // buy blind box
     buyBlindBoxDlgOpened: boolean;
     buyBlindBoxDlgStep: number;
@@ -166,6 +176,16 @@ const defaultState: State = {
     cancelBidOrderId: '',
     cancelBidTxHash: '',
     cancelBidTxFee: 0,
+    // create blind box
+    createBlindBoxDlgOpened: false,
+    createBlindBoxDlgStep: 0,
+    createBlindBoxName: '',
+    createBlindBoxPriceEla: 0,
+    createBlindBoxPriceUsd: 0,
+    createBlindBoxAmount: 0,
+    createBlindBoxTxFee: 0,
+    createBlindBoxTxHash: '',
+    createBlindBoxCreator: '',
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
