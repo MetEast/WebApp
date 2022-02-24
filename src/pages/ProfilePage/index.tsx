@@ -21,7 +21,7 @@ import {
     TypeFavouritesFetch,
     enumBadgeType,
     TypeYourEarning,
-    TypeYourEarningFetch
+    TypeYourEarningFetch,
 } from 'src/types/product-types';
 import { getImageFromAsset, getTime } from 'src/services/common';
 import { useCookies } from 'react-cookie';
@@ -32,6 +32,7 @@ import { UserTokenType } from 'src/types/auth-types';
 import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
+import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -73,7 +74,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         title: '',
         time: '',
         price: 0,
-        badge: enumBadgeType.Other
+        badge: enumBadgeType.Other,
     };
     const [myNFTAll, setMyNFTAll] = useState<Array<TypeProduct>>([]);
     const [myNFTAcquired, setMyNFTAcquired] = useState<Array<TypeProduct>>([]);
@@ -203,11 +204,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
             product.author = itemObject.authorName || ' ';
-            if (nTabId === 0 || nTabId === 5) { // all = owned + sold
+            if (nTabId === 0 || nTabId === 5) {
+                // all = owned + sold
                 if (itemObject.status === 'NEW') {
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
-                    else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Purchased;
+                    else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
+                        product.type = enumMyNFTType.Purchased;
                 } else if (
                     itemObject.status === 'BUY NOW' ||
                     itemObject.status === 'ON AUCTION' ||
@@ -219,15 +222,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
             } else if (nTabId === 1) { // owned = purchased + created + for sale
                 if (itemObject.status === 'NEW') {
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
-                    else  product.type = enumMyNFTType.Purchased;
+                    else product.type = enumMyNFTType.Purchased;
                 } else if (
                     itemObject.status === 'BUY NOW' ||
                     itemObject.status === 'ON AUCTION' ||
                     itemObject.status === 'HAS BIDS'
                 )
                     product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            }
-            else if (nTabId === 2) product.type = enumMyNFTType.Created;
+            } else if (nTabId === 2) product.type = enumMyNFTType.Created;
             else if (nTabId === 3)
                 product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
             else if (nTabId === 4) product.type = enumMyNFTType.Sold;
@@ -304,12 +306,15 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const getEarningList = async () => {
-        const resEarnedResult = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
+        const resEarnedResult = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
             },
-        });
+        );
         const dataEarnedResult = await resEarnedResult.json();
         const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
 
@@ -323,7 +328,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             _earning.price = itemObject.iEarned / 1e18;
             let timestamp = getTime(itemObject.updateTime);
             _earning.time = timestamp.date + ' ' + timestamp.time;
-            _earning.badge = (itemObject.Badge === 'Badge') ? enumBadgeType.Badge : enumBadgeType.Royalties;
+            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Badge : enumBadgeType.Royalties;
             _myEarningList.push(_earning);
         }
         setEarningList(_myEarningList);
@@ -587,6 +592,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </FilterItemTypography>
                 ))}
             </Box>
+            {!prodLoading && prodList.length === 0 && <LooksEmptyBox />}
             <Grid container mt={2} spacing={4}>
                 {prodList.map((item, index) => (
                     <Grid
