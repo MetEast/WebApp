@@ -212,9 +212,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     itemObject.status === 'BUY NOW' ||
                     itemObject.status === 'ON AUCTION' ||
                     itemObject.status === 'HAS BIDS'
-                )
-                    product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-                
+                ) {
+                    if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
+                    else product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                }                
             } else if (nTabId === 1) { // owned = purchased + created + for sale
                 if (itemObject.status === 'NEW') {
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;

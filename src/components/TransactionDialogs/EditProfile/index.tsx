@@ -3,12 +3,23 @@ import { Stack, Box, Grid, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
+import { useSignInContext } from 'src/context/SignInContext';
+import { useCookies } from 'react-cookie';
+import jwtDecode from 'jwt-decode';
+import { UserTokenType } from 'src/types/auth-types';
+import { reduceHexAddress } from 'src/services/common';
 
 export interface ComponentProps {
     onClose: () => void;
 }
 
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const userInfo: UserTokenType =
+        tokenCookies.METEAST_TOKEN === undefined
+            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            : jwtDecode(tokenCookies.METEAST_TOKEN);
     return (
         <Stack
             spacing={4}
@@ -40,10 +51,10 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                             <Typography fontSize={14} fontWeight={400} marginTop={3} alignSelf="flex-end">
-                                0x8d1...19Ff
+                                {reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
                             </Typography>
                             <Typography fontSize={18} fontWeight={700} alignSelf="flex-end">
-                                Damian Anderson
+                                {userInfo.name}
                             </Typography>
                         </Stack>
                     </Grid>
@@ -66,12 +77,12 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                             <Typography fontSize={14} fontWeight={400} marginTop={3} alignSelf="flex-end">
-                                0x8d1...19Ff
+                                {reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
                             </Typography>
                             <Stack direction="row" alignItems="center" alignSelf="flex-end" spacing={0.25}>
                                 <img src="/assets/icons/elatos-ela.svg" alt="" style={{ marginBottom: '2px' }} />
                                 <Typography fontSize={18} fontWeight={700}>
-                                    {`199.00 ELA`}
+                                    {`${signInDlgState.walletBalance} ELA`}
                                 </Typography>
                             </Stack>
                         </Stack>
@@ -142,7 +153,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 CONFIRM
             </PrimaryButton>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth size="small">
+                <SecondaryButton fullWidth size="small" onClick={onClose}>
                     BACK
                 </SecondaryButton>
                 <PrimaryButton fullWidth size="small">
