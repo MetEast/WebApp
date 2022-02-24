@@ -17,6 +17,7 @@ export const ImageBox = styled(Box)`
     inset: 0;
     border: 1px solid #eeeeee;
     border-radius: 18px;
+    overflow: hidden;
     img {
         width: 100%;
         height: 100%;

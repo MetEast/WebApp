@@ -596,7 +596,7 @@ export const blindboxNFTProducts: Array<TypeProduct> = [
 export const myNFTProducts: Array<TypeProduct> = [
     {
         tokenId: '0',
-        image: '/assets/images/mynft/mynft-template1.png',
+        image: '/assets/images/profile/mynft-template1.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -619,7 +619,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
     {
         tokenId: '1',
-        image: '/assets/images/mynft/mynft-template2.png',
+        image: '/assets/images/profile/mynft-template2.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -642,7 +642,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
     {
         tokenId: '2',
-        image: '/assets/images/mynft/mynft-template3.png',
+        image: '/assets/images/profile/mynft-template3.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -664,7 +664,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
     {
         tokenId: '3',
-        image: '/assets/images/mynft/mynft-template4.png',
+        image: '/assets/images/profile/mynft-template4.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -687,7 +687,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
     {
         tokenId: '4',
-        image: '/assets/images/mynft/mynft-template1.png',
+        image: '/assets/images/profile/mynft-template1.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -710,7 +710,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
     {
         tokenId: '5',
-        image: '/assets/images/mynft/mynft-template2.png',
+        image: '/assets/images/profile/mynft-template2.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -732,7 +732,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
     {
         tokenId: '6',
-        image: '/assets/images/mynft/mynft-template3.png',
+        image: '/assets/images/profile/mynft-template3.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,
@@ -755,7 +755,7 @@ export const myNFTProducts: Array<TypeProduct> = [
     },
     {
         tokenId: '7',
-        image: '/assets/images/mynft/mynft-template4.png',
+        image: '/assets/images/profile/mynft-template4.png',
         name: 'Project Title',
         price_ela: 199,
         price_usd: 88,

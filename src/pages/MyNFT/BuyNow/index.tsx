@@ -13,7 +13,14 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
-import { getImageFromAsset, getMintCategory, getTime, getUTCTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
+import {
+    getImageFromAsset,
+    getMintCategory,
+    getTime,
+    getUTCTime,
+    reduceHexAddress,
+    selectFromFavourites,
+} from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
@@ -42,7 +49,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [dialogState, setDialogState] = useDialogContext();
-    
+
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -154,8 +161,8 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                        _transaction.type = enumTransactionType.ChangeOrder;
-                        break;
+                    _transaction.type = enumTransactionType.ChangeOrder;
+                    break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.CancelOrder;
                     break;
@@ -235,7 +242,11 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     <Typography fontSize={56} fontWeight={700}>
                         {productDetail.name}
                     </Typography>
-                    <ProductSnippets nickname={productDetail.author} likes={productDetail.likes} views={productDetail.views} />
+                    <ProductSnippets
+                        nickname={productDetail.author}
+                        likes={productDetail.likes}
+                        views={productDetail.views}
+                    />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.ForSale} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
@@ -280,23 +291,17 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={5}>
-                <Grid item xs={6}>
-                    <Stack spacing={3}>
+            <Grid container marginTop={5} columnSpacing={10}>
+                <Grid item xs={4}>
+                    <Stack spacing={5}>
+                        <ProductTransHistory />
+                        <ProjectDescription description={productDetail.description} />
                         <AboutAuthor
                             name={productDetail.author}
                             description={productDetail.authorDescription}
                             img={productDetail.authorImg}
                             address={productDetail.authorAddress}
                         />
-                        <PriceHistoryView />
-                        <ProductTransHistory />
-                    </Stack>
-                </Grid>
-                <Grid item xs={6}>
-                    <Stack spacing={3}>
-                        <ProjectDescription description={productDetail.description} />
-                        <NFTTransactionTable transactionsList={transactionsList} />
                         <ChainDetails
                             tokenId={productDetail.tokenIdHex}
                             ownerName={productDetail.holderName}
@@ -304,6 +309,12 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                             royalties={productDetail.royalties}
                             createTime={productDetail.createTime}
                         />
+                    </Stack>
+                </Grid>
+                <Grid item xs={8}>
+                    <Stack spacing={10}>
+                        <PriceHistoryView />
+                        <NFTTransactionTable transactionsList={transactionsList} />
                     </Stack>
                 </Grid>
             </Grid>

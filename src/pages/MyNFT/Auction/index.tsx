@@ -13,6 +13,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
+import NFTBidTable from 'src/components/NFTBidTable';
 import { getImageFromAsset, getUTCTime, getTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
 import {
     enumBadgeType,
@@ -41,6 +42,7 @@ import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/Canc
 import ReceivedBids from 'src/components/profile/ReceivedBids';
 import { TypeSelectItem } from 'src/types/select-types';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import { singleNFTBids } from 'src/constants/dummyData';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -84,6 +86,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
     // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
+    const [dummyBidsList, setdummyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids);
 
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
@@ -164,8 +167,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                        _transaction.type = enumTransactionType.ChangeOrder;
-                        break;
+                    _transaction.type = enumTransactionType.ChangeOrder;
+                    break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.CancelOrder;
                     break;
@@ -304,7 +307,9 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setViewBidDlgOpened(true)} >View Bids</PrimaryButton>
+                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setViewBidDlgOpened(true)}>
+                        View Bids
+                    </PrimaryButton>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                         <PinkButton
                             sx={{ width: '100%', height: 40 }}
@@ -344,23 +349,17 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={5}>
-                <Grid item xs={6}>
-                    <Stack spacing={3}>
+            <Grid container marginTop={5} columnSpacing={10}>
+                <Grid item xs={4}>
+                    <Stack spacing={5}>
+                        <ProductTransHistory />
+                        <ProjectDescription description={productDetail.description} />
                         <AboutAuthor
                             name={productDetail.author}
                             description={productDetail.authorDescription}
                             img={productDetail.authorImg}
                             address={productDetail.authorAddress}
                         />
-                        <PriceHistoryView />
-                        <ProductTransHistory />
-                    </Stack>
-                </Grid>
-                <Grid item xs={6}>
-                    <Stack spacing={3}>
-                        <ProjectDescription description={productDetail.description} />
-                        <NFTTransactionTable transactionsList={transactionsList} />
                         <ChainDetails
                             tokenId={productDetail.tokenIdHex}
                             ownerName={productDetail.holderName}
@@ -368,6 +367,13 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                             royalties={productDetail.royalties}
                             createTime={productDetail.createTime}
                         />
+                    </Stack>
+                </Grid>
+                <Grid item xs={8}>
+                    <Stack spacing={10}>
+                        <NFTBidTable bidsList={dummyBidsList} />
+                        <NFTTransactionTable transactionsList={transactionsList} />
+                        <PriceHistoryView />
                     </Stack>
                 </Grid>
             </Grid>
@@ -395,16 +401,31 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions transactionList={transactionsList} changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)} />
+                <AllTransactions
+                    transactionList={transactionsList}
+                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
+                />
             </ModalDialog>
             <ModalDialog
                 open={viewBidDlgOpened}
                 onClose={() => {
-                    setViewBidDlgOpened(false)
+                    setViewBidDlgOpened(false);
                 }}
             >
-                {bidsList.length === 0 && <ReceivedBids bidsList={bidsList} closeDlg={() => setViewBidDlgOpened(false)} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
-                {bidsList.length !== 0 && <ReceivedBids bidsList={bidsList} closeDlg={() => setViewBidDlgOpened(false)} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
+                {bidsList.length === 0 && (
+                    <ReceivedBids
+                        bidsList={bidsList}
+                        closeDlg={() => setViewBidDlgOpened(false)}
+                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                    />
+                )}
+                {bidsList.length !== 0 && (
+                    <ReceivedBids
+                        bidsList={bidsList}
+                        closeDlg={() => setViewBidDlgOpened(false)}
+                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                    />
+                )}
             </ModalDialog>
         </>
     );
