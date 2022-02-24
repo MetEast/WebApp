@@ -13,6 +13,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
+import NFTBidTable from 'src/components/NFTBidTable';
 import { getImageFromAsset, getUTCTime, getTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
 import {
     enumBadgeType,
@@ -41,6 +42,7 @@ import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/Canc
 import ReceivedBids from 'src/components/profile/ReceivedBids';
 import { TypeSelectItem } from 'src/types/select-types';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import { singleNFTBids } from 'src/constants/dummyData';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -84,6 +86,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
     // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
+    const [dummyBidsList, setdummyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids);
 
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
@@ -368,8 +371,9 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={8}>
                     <Stack spacing={10}>
-                        <PriceHistoryView />
+                        <NFTBidTable bidsList={dummyBidsList} />
                         <NFTTransactionTable transactionsList={transactionsList} />
+                        <PriceHistoryView />
                     </Stack>
                 </Grid>
             </Grid>
