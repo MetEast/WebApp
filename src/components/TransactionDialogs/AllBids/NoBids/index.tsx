@@ -7,10 +7,16 @@ export interface ComponentProps {}
 
 const NoBids: React.FC<ComponentProps> = (): JSX.Element => {
     return (
-        <Stack spacing={3} width={320}>
+        <Stack spacing={3} width={280} alignItems="center">
             <Stack alignItems="center">
                 <DialogTitleTypo>No Bids Yet</DialogTitleTypo>
             </Stack>
+            <img
+                src="/assets/images/transactionsdlg/no-bids-yet.svg"
+                alt="Looks Empty Here"
+                style={{ width: 180, height: 160 }}
+            />
+            <PrimaryButton fullWidth>Close</PrimaryButton>
         </Stack>
     );
 };
