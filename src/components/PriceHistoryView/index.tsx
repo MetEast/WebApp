@@ -103,8 +103,9 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         setPriceHistoryUnit(item);
     };
     const getPriceValue = (value: string) => {
-        const nItem = productPriceList.findIndex((option) => option.onlyDate === value);
-        return nItem === -1 ? 0 : productPriceList[nItem].price;
+        // const nItem = productPriceList.findIndex((option) => option.onlyDate === value);
+        const nItem = productPriceList.findIndex((option) => option.onlyDate.startsWith(value));
+        return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
     };
     const params = useParams();
 
@@ -119,14 +120,18 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             .catch((err) => {
                 console.log(err);
             });
+    }, [priceHistoryUnit]);
 
+    useEffect(() => {
+        console.log(productPriceList)
         let _latestPriceList: Array<TypeChartAxis> = [];
         let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
+        console.log(_dateList)
         for (let i = 0; i < _dateList.length; i ++) {
-            _latestPriceList.push({ x: getTime((_dateList[i].getTime() / 1000).toString()).date, y: getPriceValue(_dateList[i].toString()) });
+            _latestPriceList.push({ x: getTime((_dateList[i].getTime() / 1000).toString()).date, y: getPriceValue( getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')) });
         }
         setChartSeries([{ data: _latestPriceList }]);
-    }, [priceHistoryUnit]);
+    }, [productPriceList]);
 
     // console.log(chartSeries);
     return (
