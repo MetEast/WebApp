@@ -248,7 +248,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         views={productDetail.views}
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={enumBadgeType.ForSale} />
+                        <ProductBadge badgeType={enumBadgeType.BuyNow} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
