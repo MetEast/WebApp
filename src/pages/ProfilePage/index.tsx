@@ -236,6 +236,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
             else if (nTabId === 4) product.type = enumMyNFTType.Sold;
             product.likes = itemObject.likes;
+            product.status = itemObject.status;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
