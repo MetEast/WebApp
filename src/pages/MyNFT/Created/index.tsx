@@ -10,13 +10,14 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import { getImageFromAsset, getMintCategory, getUTCTime, selectFromFavourites } from 'src/services/common';
+import { getImageFromAsset, getMintCategory, getUTCTime, getTime, selectFromFavourites } from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
     TypeProduct,
     TypeProductFetch,
     TypeFavouritesFetch,
+    TypeNFTHisotry
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -50,8 +51,15 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         type: enumSingleNFTType.BuyNow,
         isLike: false,
     };
+    const defaultProdTransHisotryValue: TypeNFTHisotry = {
+        type: '',
+        user: '',
+        price: 0,
+        time: '',
+        saleType: ''
+    };
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
-
+    const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
@@ -67,14 +75,13 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {
-            // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
             product.isLike =
@@ -94,6 +101,16 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
+
+            // let _prodTransHistory: Array<TypeNFTHisotry> = [];
+            let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+            _prodTrans.type = 'Created';
+            _prodTrans.price = itemObject.price / 1e18;
+            _prodTrans.user = product.author;
+            let timestamp = getTime(itemObject.timestamp.toString());
+            _prodTrans.time = timestamp.date + ' ' + timestamp.time;
+            // _prodTrans.saleType = (itemObject)
+            setProdTransHistory([_prodTrans]);
         }
         setProductDetail(product);
     };
@@ -154,7 +171,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                             img={productDetail.authorImg}
                             address={productDetail.authorAddress}
                         />
-                        <ProductTransHistory sold={false} bought={false} />
+                        <ProductTransHistory historyList={prodTransHistory} />
                     </Stack>
                 </Grid>
                 <Grid item xs={6}>

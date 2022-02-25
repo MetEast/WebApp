@@ -106,6 +106,14 @@ export type TypeNFTTransaction = {
     txHash: string;
 };
 
+export type TypeNFTHisotry = {
+    type: string;
+    price: number;
+    user: string;
+    time: string;
+    saleType: string;
+};
+
 export type TypeSingleNFTBid = {
     user: string;
     price: number;

@@ -123,17 +123,14 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     }, [priceHistoryUnit]);
 
     useEffect(() => {
-        console.log(productPriceList)
         let _latestPriceList: Array<TypeChartAxis> = [];
         let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
-        console.log(_dateList)
         for (let i = 0; i < _dateList.length; i ++) {
             _latestPriceList.push({ x: getTime((_dateList[i].getTime() / 1000).toString()).date, y: getPriceValue( getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')) });
         }
         setChartSeries([{ data: _latestPriceList }]);
-    }, [productPriceList]);
+    }, [productPriceList, priceHistoryUnit]);
 
-    // console.log(chartSeries);
     return (
         <Stack spacing={2}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5} zIndex={10}>
