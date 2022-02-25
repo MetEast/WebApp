@@ -6,14 +6,15 @@ import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
+import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from "@walletconnect/web3-provider";
+import SearchBlindBoxItems from 'src/components/TransactionDialogs/CreateBlindBox/SearchBlindBoxItems';
 
 const AdminBlindBoxes: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
@@ -140,6 +141,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
     useEffect(() => {
         setCreateBlindBoxTxFee();
     }, [dialogState.createBlindBoxDlgStep]);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
     return (
         <>
@@ -174,6 +176,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                         sx={{ paddingX: 3, marginLeft: 2 }}
                         onClick={() => {
                             setDialogState({ ...dialogState, createBlindBoxDlgOpened: true, createBlindBoxDlgStep: 0 });
+                            setDialogOpen(true);
                         }}
                     >
                         <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
