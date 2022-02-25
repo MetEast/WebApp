@@ -12,7 +12,14 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { getImageFromAsset, getUTCTime, selectFromFavourites, reduceHexAddress, getTime, getMintCategory } from 'src/services/common';
+import {
+    getImageFromAsset,
+    getUTCTime,
+    selectFromFavourites,
+    reduceHexAddress,
+    getTime,
+    getMintCategory,
+} from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
@@ -22,7 +29,7 @@ import {
     TypeFavouritesFetch,
     TypeNFTTransaction,
     TypeNFTTransactionFetch,
-    TypeNFTHisotry
+    TypeNFTHisotry,
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -65,7 +72,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: ''
+        saleType: '',
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -150,8 +157,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                        _transaction.type = enumTransactionType.ChangeOrder;
-                        break;
+                    _transaction.type = enumTransactionType.ChangeOrder;
+                    break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.CancelOrder;
                     break;
@@ -174,9 +181,17 @@ const MyNFTSold: React.FC = (): JSX.Element => {
 
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
                 let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
-                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Brought From');
+                _prodTrans.type =
+                    itemObject.event === 'Mint'
+                        ? 'Created'
+                        : itemObject.royaltyOwner === signInDlgState.walletAccounts[0]
+                        ? 'Sold To'
+                        : 'Brought From';
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+                _prodTrans.user = reduceHexAddress(
+                    itemObject.from === burnAddress ? itemObject.to : itemObject.from,
+                    4,
+                ); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
                 // _prodTrans.saleType = (itemObject)
@@ -219,7 +234,11 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     <Typography fontSize={56} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
                         Sculpting with the Heart
                     </Typography>
-                    <ProductSnippets nickname={productDetail.author} likes={productDetail.likes} views={productDetail.views} />
+                    <ProductSnippets
+                        nickname={productDetail.author}
+                        likes={productDetail.likes}
+                        views={productDetail.views}
+                    />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.Sold} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
@@ -228,8 +247,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>
-                <Grid item xs={5}>
-                    <Stack spacing={3}>
+                <Grid item xs={4}>
+                    <Stack spacing={5}>
                         <ProductTransHistory historyList={prodTransHistory} />
                         <ProjectDescription description={productDetail.description} />
                         <AboutAuthor
@@ -247,8 +266,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                         />
                     </Stack>
                 </Grid>
-                <Grid item xs={7}>
-                    <Stack spacing={3}>
+                <Grid item xs={8}>
+                    <Stack spacing={10}>
                         <NFTTransactionTable transactionsList={transactionsList} />
                         <PriceHistoryView />
                     </Stack>
