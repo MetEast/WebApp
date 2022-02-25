@@ -126,6 +126,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
         if (presentation) {
             const did = presentation.getHolder().getMethodSpecificId() || '';
+            
             fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
                 method: 'POST',
                 headers: {

@@ -89,7 +89,7 @@ interface State {
     crtBlindImage?: File;
     crtBlindItem: TypeSelectItem;
     crtBlindStatus: 'offline' | 'online';
-    crtBlindCopies: number;
+    crtBlindQuantity: number;
     crtBlindPrice: number;
     crtBlindSaleBegin: TypeSelectItem;
     crtBlindSaleEnd: TypeSelectItem;
@@ -193,7 +193,7 @@ const defaultState: State = {
     crtBlindAuthorDescription: '',
     crtBlindItem: { label: '', value: '' },
     crtBlindStatus: 'offline',
-    crtBlindCopies: 0,
+    crtBlindQuantity: 0,
     crtBlindPrice: 0,
     crtBlindSaleBegin: { label: '', value: '' },
     crtBlindSaleEnd: { label: '', value: '' },
