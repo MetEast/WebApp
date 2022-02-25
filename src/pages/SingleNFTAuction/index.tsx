@@ -33,7 +33,7 @@ import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
-import AllBids from 'src/components/profile/AllBids';
+import AllBids from 'src/components/TransactionDialogs/AllBids';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
