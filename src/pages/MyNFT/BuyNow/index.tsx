@@ -30,6 +30,7 @@ import {
     TypeNFTTransactionFetch,
     TypeFavouritesFetch,
     TypeNFTTransaction,
+    TypeNFTHisotry
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useCookies } from 'react-cookie';
@@ -78,9 +79,17 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         time: '',
         txHash: '',
     };
+    const defaultProdTransHisotryValue: TypeNFTHisotry = {
+        type: '',
+        user: '',
+        price: 0,
+        time: '',
+        saleType: ''
+    };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+    const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
@@ -105,7 +114,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
             product.isLike =
@@ -143,10 +152,11 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         const dataLatestTransaction = await resLatestTransaction.json();
         const arrLatestTransaction = dataLatestTransaction.data;
 
-        let _latestTransList: any = [];
+        let _latestTransList: Array<TypeNFTTransaction> = [];
+        let _prodTransHistory: Array<TypeNFTHisotry> = [];
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
-            var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
+            let _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
@@ -182,8 +192,20 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             let timestamp = getTime(itemObject.timestamp.toString());
             _transaction.time = timestamp.date + ' ' + timestamp.time;
             _latestTransList.push(_transaction);
+            
+            if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
+                let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Brought From');
+                _prodTrans.price = parseInt(itemObject.price) / 1e18;
+                _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+                let prodTransTimestamp = getTime(itemObject.timestamp.toString());
+                _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
+                // _prodTrans.saleType = (itemObject)
+                _prodTransHistory.push(_prodTrans);
+            }
         }
         setTransactionsList(_latestTransList);
+        setProdTransHistory(_prodTransHistory);
     };
 
     const getFetchData = async () => {
@@ -248,7 +270,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         views={productDetail.views}
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={enumBadgeType.ForSale} />
+                        <ProductBadge badgeType={enumBadgeType.BuyNow} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
@@ -294,7 +316,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             <Grid container marginTop={5} columnSpacing={10}>
                 <Grid item xs={4}>
                     <Stack spacing={5}>
-                        <ProductTransHistory />
+                        <ProductTransHistory historyList={prodTransHistory} />
                         <ProjectDescription description={productDetail.description} />
                         <AboutAuthor
                             name={productDetail.author}

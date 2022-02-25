@@ -22,6 +22,7 @@ import {
     TypeFavouritesFetch,
     TypeNFTTransaction,
     TypeNFTTransactionFetch,
+    TypeNFTHisotry
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -59,8 +60,16 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         time: '',
         txHash: '',
     };
+    const defaultProdTransHisotryValue: TypeNFTHisotry = {
+        type: '',
+        user: '',
+        price: 0,
+        time: '',
+        saleType: ''
+    };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
@@ -122,7 +131,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         const dataLatestTransaction = await resLatestTransaction.json();
         const arrLatestTransaction = dataLatestTransaction.data;
 
-        let _latestTransList: any = [];
+        let _latestTransList: Array<TypeNFTTransaction> = [];
+        let _prodTransHistory: Array<TypeNFTHisotry> = [];
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
@@ -161,8 +171,20 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             let timestamp = getTime(itemObject.timestamp.toString());
             _transaction.time = timestamp.date + ' ' + timestamp.time;
             _latestTransList.push(_transaction);
+
+            if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
+                let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Brought From');
+                _prodTrans.price = parseInt(itemObject.price) / 1e18;
+                _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+                let prodTransTimestamp = getTime(itemObject.timestamp.toString());
+                _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
+                // _prodTrans.saleType = (itemObject)
+                _prodTransHistory.push(_prodTrans);
+            }
         }
         setTransactionsList(_latestTransList);
+        setProdTransHistory(_prodTransHistory);
     };
 
     const getFetchData = async () => {
@@ -208,7 +230,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             <Grid container marginTop={5} columnSpacing={10}>
                 <Grid item xs={5}>
                     <Stack spacing={3}>
-                        <ProductTransHistory />
+                        <ProductTransHistory historyList={prodTransHistory} />
                         <ProjectDescription description={productDetail.description} />
                         <AboutAuthor
                             name={productDetail.author}

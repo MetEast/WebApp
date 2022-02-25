@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Typography, Stack, IconButton } from '@mui/material';
 import Table from 'src/components/Admin/Table';
 import { AdminBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
@@ -6,10 +6,18 @@ import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
+import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
+import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
+import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 import SearchBlindBoxItems from 'src/components/TransactionDialogs/CreateBlindBox/SearchBlindBoxItems';
 
 const AdminBlindBoxes: React.FC = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     const columns: AdminTableColumn[] = [
         {
             id: 'blindbox_id',
@@ -123,6 +131,16 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
     );
 
     const [tabledata, setTabledata] = useState(data);
+    const setCreateBlindBoxTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, crtBlindTxFee: parseFloat(gasPrice) * 5000000 / 1e18 });
+    };
+
+    useEffect(() => {
+        setCreateBlindBoxTxFee();
+    }, [dialogState.createBlindBoxDlgStep]);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
     return (
@@ -157,6 +175,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                         size="small"
                         sx={{ paddingX: 3, marginLeft: 2 }}
                         onClick={() => {
+                            setDialogState({ ...dialogState, createBlindBoxDlgOpened: true, createBlindBoxDlgStep: 0 });
                             setDialogOpen(true);
                         }}
                     >
@@ -167,12 +186,14 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                 <Table tabledata={tabledata} columns={columns} />
             </Stack>
             <ModalDialog
-                open={dialogOpen}
+                open={dialogState.createBlindBoxDlgOpened}
                 onClose={() => {
-                    setDialogOpen(false);
+                    setDialogState({ ...dialogState, createBlindBoxDlgOpened: false });
                 }}
             >
-                <SearchBlindBoxItems />
+                {dialogState.createBlindBoxDlgStep === 0 && <CreateBlindBox />}
+                {dialogState.createBlindBoxDlgStep === 1 && <CheckBlindBoxDetails />}
+                {dialogState.createBlindBoxDlgStep === 2 && <BlindBoxCreateSuccess />}
             </ModalDialog>
         </>
     );

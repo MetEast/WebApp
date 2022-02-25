@@ -206,33 +206,37 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.author = itemObject.authorName || ' ';
             if (nTabId === 0 || nTabId === 5) {
                 // all = owned + sold
-                if (itemObject.status === 'NEW') {
+                if (itemObject.status === 'NEW') { // not on market
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
                     else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
                         product.type = enumMyNFTType.Purchased;
-                } else if (
-                    itemObject.status === 'BUY NOW' ||
-                    itemObject.status === 'ON AUCTION' ||
-                    itemObject.status === 'HAS BIDS'
-                )
-                    product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            } else if (nTabId === 1) {
-                // owned = purchased + created + for sale
-                if (itemObject.status === 'NEW') {
+                } else {
+                    // if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
+                    // else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
+                    //     product.type = enumMyNFTType.Purchased;
+                    // else 
+                    product.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                }              
+            } else if (nTabId === 1) { // owned = purchased + created + for sale
+                if (itemObject.status === 'NEW') { // not on market
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else product.type = enumMyNFTType.Purchased;
-                } else if (
-                    itemObject.status === 'BUY NOW' ||
-                    itemObject.status === 'ON AUCTION' ||
-                    itemObject.status === 'HAS BIDS'
-                )
-                    product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            } else if (nTabId === 2) product.type = enumMyNFTType.Created;
+                } else {
+                    product.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                } 
+            } else if (nTabId === 2) {
+                if (itemObject.status === 'NEW') { // not on market
+                    product.type = enumMyNFTType.Created;
+                } else {
+                    product.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                }
+            }
             else if (nTabId === 3)
                 product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
             else if (nTabId === 4) product.type = enumMyNFTType.Sold;
             product.likes = itemObject.likes;
+            product.status = itemObject.status;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
@@ -327,7 +331,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             _earning.price = itemObject.iEarned / 1e18;
             let timestamp = getTime(itemObject.updateTime);
             _earning.time = timestamp.date + ' ' + timestamp.time;
-            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Badge : enumBadgeType.Royalties;
+            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
             _myEarningList.push(_earning);
         }
         setEarningList(_myEarningList);

@@ -15,7 +15,7 @@ const BidPlaceSuccess: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <DialogTitleTypo>Bid placed successfully!</DialogTitleTypo>
                 <Typography fontSize={16} fontWeight={400}>
-                    You've just bid 50 ELA for Project Name
+                    You've just bid {dialogState.placeBidAmount} for {dialogState.placeBidName}
                 </Typography>
             </Stack>
             <Stack>
@@ -27,6 +27,7 @@ const BidPlaceSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     fullWidth
                     onClick={() => {
                         setDialogState({ ...dialogState, placeBidDlgOpened: false });
+                        window.location.reload();
                     }}
                 >
                     Close

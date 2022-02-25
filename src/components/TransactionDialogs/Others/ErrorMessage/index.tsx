@@ -3,9 +3,11 @@ import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    onClose: () => void;
+}
 
-const ErrorMessage: React.FC<ComponentProps> = (): JSX.Element => {
+const ErrorMessage: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
@@ -17,7 +19,9 @@ const ErrorMessage: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack>
                 <img src="/assets/images/transactionsdlg/error-message.svg" height={240} alt="" />
             </Stack>
-            <PrimaryButton fullWidth>Close</PrimaryButton>
+            <PrimaryButton fullWidth onClick={onClose}>
+                Close
+            </PrimaryButton>
         </Stack>
     );
 };

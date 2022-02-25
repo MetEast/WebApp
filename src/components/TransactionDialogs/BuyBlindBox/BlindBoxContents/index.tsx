@@ -17,15 +17,15 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Blind Box Contents</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center">
-                <PageNumberTypo>{imgIndex} of {dialogState.buyBlindBoxAmount}</PageNumberTypo>
+                <PageNumberTypo>{imgIndex} of {dialogState.buyBlindAmount}</PageNumberTypo>
                 <Box borderRadius={4} overflow="hidden">
                     <img src="/assets/images/blindbox/blindbox-nft-template2.png" alt="" />
                 </Box>
                 <Typography fontSize={18} fontWeight={700} marginTop={2}>
-                    {dialogState.buyBlindBoxName}
+                    {dialogState.buyBlindName}
                 </Typography>
                 <Typography fontSize={14} fontWeight={400}>
-                    created by {dialogState.buyBlindBoxCreator}
+                    created by {dialogState.buyBlindCreator}
                 </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
@@ -40,7 +40,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        if(imgIndex < dialogState.buyBlindBoxAmount) setImgIndex(imgIndex + 1);
+                        if(imgIndex < dialogState.buyBlindAmount) setImgIndex(imgIndex + 1);
                     }}
                 >
                     Next

@@ -79,9 +79,10 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || '---';
-            product.type = itemObject.status === 'BUY NOW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.author = itemObject.authorName || ' ';
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
+            product.status = itemObject.status;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
@@ -116,9 +117,10 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || '---'; // -- no proper value
-            product.type = itemObject.status === 'BUY NOW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.author = itemObject.authorName || ' ';
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
+            product.status = itemObject.status;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
@@ -152,7 +154,6 @@ const HomePage: React.FC = (): JSX.Element => {
         if (type === 'inc') {
             prodList[id].likes += 1;
             if (colId !== -1) {
-                // console.log(colId, "-------------colId");
                 colList[colId].likes += 1;
                 colList[colId].isLike = true;
             }

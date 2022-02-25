@@ -37,7 +37,7 @@ export enum enumBadgeType {
     Other = 'Other',
     Created = 'Created',
     Sold = 'Sold',
-    Badge = 'Badge',
+    Sale = 'Sale',
     Royalties = 'Royalties',
 }
 
@@ -104,6 +104,14 @@ export type TypeNFTTransaction = {
     price: number;
     time: string;
     txHash: string;
+};
+
+export type TypeNFTHisotry = {
+    type: string;
+    price: number;
+    user: string;
+    time: string;
+    saleType: string;
 };
 
 export type TypeSingleNFTBid = {

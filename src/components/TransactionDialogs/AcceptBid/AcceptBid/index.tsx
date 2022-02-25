@@ -66,6 +66,8 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
+                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, acceptBidDlgOpened: false, errorMessageDlgOpened: true });
             });
     };
 

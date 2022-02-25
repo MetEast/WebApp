@@ -95,7 +95,7 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
           ...(file && { padding: '12% 0' })
         }}
       >
-        <input {...getInputProps()} />
+        <input name='imgFile' {...getInputProps()} />
 
         {/* <UploadIllustration sx={{ width: 220 }} /> */}
 

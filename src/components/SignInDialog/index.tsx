@@ -17,7 +17,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getEssentialsWalletBalance, getDidUri } from 'src/services/essential';
 import { UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
-import { isEmpty } from '@elastosfoundation/did-js-sdk/typings/utils';
 
 export interface ComponentProps {}
 
@@ -127,6 +126,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
         if (presentation) {
             const did = presentation.getHolder().getMethodSpecificId() || '';
+            
             fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
                 method: 'POST',
                 headers: {

@@ -26,17 +26,18 @@ import {
     TypeFavouritesFetch,
     TypeSingleNFTBid,
     TypeSingleNFTBidFetch,
+    TypeNFTHisotry
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import ModalDialog from 'src/components/ModalDialog';
-import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
-import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import ModalDialog from 'src/components/ModalDialog';
+import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
+import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import ReceivedBids from 'src/components/profile/ReceivedBids';
@@ -78,8 +79,16 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         time: '',
         txHash: '',
     };
+    const defaultProdTransHisotryValue: TypeNFTHisotry = {
+        type: '',
+        user: '',
+        price: 0,
+        time: '',
+        saleType: ''
+    };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
@@ -149,7 +158,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         const dataLatestTransaction = await resLatestTransaction.json();
         const arrLatestTransaction = dataLatestTransaction.data;
 
-        let _latestTransList: any = [];
+        let _latestTransList: Array<TypeNFTTransaction> = [];
+        let _prodTransHistory: Array<TypeNFTHisotry> = [];
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
@@ -188,8 +198,20 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             let timestamp = getTime(itemObject.timestamp.toString());
             _transaction.time = timestamp.date + ' ' + timestamp.time;
             _latestTransList.push(_transaction);
+
+            if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
+                let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Brought From');
+                _prodTrans.price = parseInt(itemObject.price) / 1e18;
+                _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+                let prodTransTimestamp = getTime(itemObject.timestamp.toString());
+                _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
+                // _prodTrans.saleType = (itemObject)
+                _prodTransHistory.push(_prodTrans);
+            }
         }
         setTransactionsList(_latestTransList);
+        setProdTransHistory(_prodTransHistory);
     };
 
     const getLatestBid = async () => {
@@ -352,7 +374,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             <Grid container marginTop={5} columnSpacing={10}>
                 <Grid item xs={4}>
                     <Stack spacing={5}>
-                        <ProductTransHistory />
+                        <ProductTransHistory historyList={prodTransHistory} />
                         <ProjectDescription description={productDetail.description} />
                         <AboutAuthor
                             name={productDetail.author}

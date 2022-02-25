@@ -95,6 +95,8 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
+                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, createNFTDlgOpened: false, errorMessageDlgOpened: true });
             });
     };
 
