@@ -84,7 +84,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: ''
+        saleType: enumTransactionType.ForSale
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -188,7 +188,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.SettleBidOrder;
                     break;
             }
-            _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+            _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
@@ -202,7 +202,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                 _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                // _prodTrans.saleType = (itemObject)
+                _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type; 
                 _prodTransHistory.push(_prodTrans);
             }
         }

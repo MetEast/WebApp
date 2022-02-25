@@ -104,7 +104,7 @@ export type TypeNFTHisotry = {
     price: number;
     user: string;
     time: string;
-    saleType: string;
+    saleType: enumTransactionType;
 };
 
 export type TypeSingleNFTBid = {

@@ -14,10 +14,11 @@ import { getImageFromAsset, getMintCategory, getUTCTime, getTime, selectFromFavo
 import {
     enumBadgeType,
     enumSingleNFTType,
+    enumTransactionType,
     TypeProduct,
     TypeProductFetch,
     TypeFavouritesFetch,
-    TypeNFTHisotry,
+    TypeNFTHisotry
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -56,7 +57,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: '',
+        saleType: enumTransactionType.ForSale
     };
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
@@ -110,7 +111,6 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             _prodTrans.user = product.author;
             let timestamp = getTime(itemObject.timestamp.toString());
             _prodTrans.time = timestamp.date + ' ' + timestamp.time;
-            // _prodTrans.saleType = (itemObject)
             setProdTransHistory([_prodTrans]);
         }
         setProductDetail(product);

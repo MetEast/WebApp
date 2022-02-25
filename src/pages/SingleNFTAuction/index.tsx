@@ -250,7 +250,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.SettleBidOrder;
                     break;
             }
-            _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+            _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());

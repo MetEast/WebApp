@@ -3,7 +3,7 @@ import { Stack, Typography, Box } from '@mui/material';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductBadge from 'src/components/ProductBadge';
-import { enumBadgeType, TypeNFTHisotry } from 'src/types/product-types';
+import { enumBadgeType, enumTransactionType, TypeNFTHisotry } from 'src/types/product-types';
 
 interface ComponentProps {
     historyList: Array<TypeNFTHisotry>;
@@ -48,7 +48,7 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Ele
                                     badgeType={
                                         item.type === 'Created'
                                             ? enumBadgeType.Created
-                                            : item.saleType === 'Buy Now'
+                                            : item.saleType === enumTransactionType.ForSale
                                             ? enumBadgeType.BuyNow
                                             : enumBadgeType.OnAuction
                                     }
