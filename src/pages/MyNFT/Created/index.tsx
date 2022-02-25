@@ -17,7 +17,7 @@ import {
     TypeProduct,
     TypeProductFetch,
     TypeFavouritesFetch,
-    TypeNFTHisotry
+    TypeNFTHisotry,
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -56,7 +56,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: ''
+        saleType: '',
     };
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
@@ -147,7 +147,11 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     <Typography fontSize={56} fontWeight={700}>
                         {productDetail.name}
                     </Typography>
-                    <ProductSnippets nickname={productDetail.author} likes={productDetail.likes} views={productDetail.views} />
+                    <ProductSnippets
+                        nickname={productDetail.author}
+                        likes={productDetail.likes}
+                        views={productDetail.views}
+                    />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.Created} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
@@ -156,28 +160,29 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
-                            setDialogState({ ...dialogState, mintTokenId: productDetail.tokenIdHex, createNFTDlgOpened: true, createNFTDlgStep: 3 });
+                            setDialogState({
+                                ...dialogState,
+                                mintTokenId: productDetail.tokenIdHex,
+                                createNFTDlgOpened: true,
+                                createNFTDlgStep: 3,
+                            });
                         }}
                     >
                         Sell
                     </PrimaryButton>
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={5}>
-                <Grid item xs={6}>
-                    <Stack spacing={3}>
+            <Grid container marginTop={5} columnSpacing={10}>
+                <Grid item xs={4}>
+                    <Stack spacing={5}>
+                        <ProductTransHistory historyList={prodTransHistory} />
+                        <ProjectDescription description={productDetail.description} />
                         <AboutAuthor
                             name={productDetail.author}
                             description={productDetail.authorDescription}
                             img={productDetail.authorImg}
                             address={productDetail.authorAddress}
                         />
-                        <ProductTransHistory historyList={prodTransHistory} />
-                    </Stack>
-                </Grid>
-                <Grid item xs={6}>
-                    <Stack spacing={3}>
-                        <ProjectDescription description={productDetail.description} />
                         <ChainDetails
                             tokenId={productDetail.tokenIdHex}
                             ownerName={productDetail.holderName}
@@ -186,6 +191,9 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                             createTime={productDetail.createTime}
                         />
                     </Stack>
+                </Grid>
+                <Grid item xs={8}>
+                    <Stack spacing={10}></Stack>
                 </Grid>
             </Grid>
             <MintNFTDlgContainer />
