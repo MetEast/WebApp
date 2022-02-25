@@ -74,8 +74,6 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleChangePrice = () => {
         if (dialogState.changePriceTxFee > signInDlgState.walletBalance) {
-            alert(signInDlgState.walletBalance);
-            alert(dialogState.changePriceTxFee)
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'warning',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
