@@ -99,7 +99,7 @@ const BlindBoxGalleryItem: React.FC<BlindBoxGalleryItemProps> = ({ product, inde
                     <ProductSnippets sold={product.sold} likes={product.likes} />
                 </Grid>
                 <Grid item order={3} width={'100%'} marginTop={{ xs: 0.25, md: 1 }}>
-                    <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
+                    <ProductBadgeContainer nfttype={product.type} content={product.endTime} isReservedAuction={product.status === 'HAS BIDS'} />
                 </Grid>
                 <Grid item order={{ xs: 2, sm: 2, md: 4 }} width={'100%'} marginTop={{ xs: 0.25, md: 1 }}>
                     <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />

@@ -130,6 +130,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             product.orderId = itemObject.orderId;
             product.category = itemObject.category;
+            product.status = itemObject.status;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
             if (itemObject.endTime) {
@@ -335,9 +336,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                             <Grid item xs={'auto'}>
                                 <ProductBadge badgeType={enumBadgeType.OnAuction} />
                             </Grid>
-                            <Grid item xs={'auto'}>
-                                <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-                            </Grid>
+                            {productDetail.status !== 'HAS BIDS' && (
+                                <Grid item xs={'auto'}>
+                                    <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
+                                </Grid>
+                            )}
                             <Grid item xs={12} sm={'auto'}>
                                 <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
                             </Grid>

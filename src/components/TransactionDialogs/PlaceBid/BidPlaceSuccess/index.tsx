@@ -27,6 +27,7 @@ const BidPlaceSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     fullWidth
                     onClick={() => {
                         setDialogState({ ...dialogState, placeBidDlgOpened: false });
+                        window.location.reload();
                     }}
                 >
                     Close

@@ -122,7 +122,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
                     {isLoading ? (
                         <Skeleton variant="rectangular" animation="wave" width="100%" />
                     ) : (
-                        <ProductBadgeContainer nfttype={product.type} content={product.endTime} />
+                        <ProductBadgeContainer nfttype={product.type} content={product.endTime} isReservedAuction={product.status === 'HAS BIDS'} />
                     )}
                     {isLoading ? (
                         <Skeleton variant="rectangular" animation="wave" width="100%" />

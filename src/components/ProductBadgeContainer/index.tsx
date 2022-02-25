@@ -8,11 +8,13 @@ import { Grid } from '@mui/material';
 interface ProductBadgeContainerProps extends SpacingProps {
     nfttype: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
     content?: string;
+    isReservedAuction: boolean;
 }
 
 const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     nfttype,
     content,
+    isReservedAuction,
     ...otherProps
 }): JSX.Element => {
     const badgeComingSoon = <ProductBadge badgeType={enumBadgeType.ComingSoon} content={content} />;
@@ -24,9 +26,9 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
             <Grid item >
                 <ProductBadge badgeType={enumBadgeType.OnAuction} />
             </Grid>
-            <Grid item>
+            {!isReservedAuction && <Grid item>
                 <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-            </Grid>
+            </Grid>}
         </Grid>
     );
     const badgeCreated = <ProductBadge badgeType={enumBadgeType.Created} />;
