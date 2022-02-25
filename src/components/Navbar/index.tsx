@@ -46,8 +46,9 @@ import ModalDialog from 'src/components/ModalDialog';
 // import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 // import YourEarnings from 'src/components/profile/YourEarnings';
 // import AllTransactions from 'src/components/profile/AllTransactions';
-import AllBids from 'src/components/TransactionDialogs/AllBids';
 // import ReceivedBids from 'src/components/profile/ReceivedBids';
+// import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
+import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -216,7 +217,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     setTestdlgOpen(false);
                 }}
             >
-                <AllBids bidsList={[]} myBidsList={[]} changeHandler={() => {}} />
+                <NoBids />
             </ModalDialog>
         </>
     );

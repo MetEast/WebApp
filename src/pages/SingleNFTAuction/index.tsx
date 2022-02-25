@@ -33,7 +33,7 @@ import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
-import AllBids from 'src/components/TransactionDialogs/AllBids';
+import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -229,8 +229,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                        _transaction.type = enumTransactionType.ChangeOrder;
-                        break;
+                    _transaction.type = enumTransactionType.ChangeOrder;
+                    break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.CancelOrder;
                     break;
@@ -413,8 +413,20 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allBidDlgOpened: false });
                 }}
             >
-                {bidsList.length === 0 && myBidsList.length === 0 && <AllBids bidsList={bidsList} myBidsList={myBidsList} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
-                {!(bidsList.length === 0 && myBidsList.length === 0) && <AllBids bidsList={bidsList} myBidsList={myBidsList} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
+                {bidsList.length === 0 && myBidsList.length === 0 && (
+                    <AllBids
+                        bidsList={bidsList}
+                        myBidsList={myBidsList}
+                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                    />
+                )}
+                {!(bidsList.length === 0 && myBidsList.length === 0) && (
+                    <AllBids
+                        bidsList={bidsList}
+                        myBidsList={myBidsList}
+                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                    />
+                )}
             </ModalDialog>
             <ModalDialog
                 open={dialogState.allTxDlgOpened}
@@ -422,7 +434,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions transactionList={transactionsList} changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)} />
+                <AllTransactions
+                    transactionList={transactionsList}
+                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
+                />
             </ModalDialog>
         </>
     );
