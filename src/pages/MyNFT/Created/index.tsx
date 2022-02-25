@@ -149,7 +149,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     </Typography>
                     <ProductSnippets nickname={productDetail.author} likes={productDetail.likes} views={productDetail.views} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={productDetail.authorAddress !== productDetail.holder ? enumBadgeType.Purchased : enumBadgeType.Created} />
+                        <ProductBadge badgeType={enumBadgeType.Created} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     {/* <ELAPrice price_ela={199} price_usd={480} marginTop={3} /> */}

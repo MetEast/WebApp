@@ -23,6 +23,7 @@ import AdminBids from 'src/pages/Admin/Bids';
 import AdminBanners from 'src/pages/Admin/Banners';
 import AdminNotifications from 'src/pages/Admin/Notifications';
 import User from 'src/components/user';
+import MyNFTPurchased from 'src/pages/MyNFT/Purchased';
 
 const AppRouter: React.FC = (): JSX.Element => {
     return (
@@ -192,6 +193,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                         element={
                             <Layout>
                                 <MyNFTSold />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/mynft/purchased/:id"
+                        element={
+                            <Layout>
+                                <MyNFTPurchased />
                             </Layout>
                         }
                     />

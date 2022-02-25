@@ -45,7 +45,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 
-const MyNFTBuyNow: React.FC = (): JSX.Element => {
+const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
@@ -272,7 +272,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         views={productDetail.views}
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={enumBadgeType.BuyNow} />
+                        <ProductBadge badgeType={enumBadgeType.Purchased} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
@@ -364,4 +364,4 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     );
 };
 
-export default MyNFTBuyNow;
+export default MyNFTPurchased;

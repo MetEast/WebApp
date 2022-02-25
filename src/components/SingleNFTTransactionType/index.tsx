@@ -32,7 +32,7 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         [enumTransactionType.CancelOrder]: {
             icon: <Icon icon="ph:lightning" fontSize={20} />,
         },
-        [enumTransactionType.Transfer]: {
+        [enumTransactionType.SettleBidOrder]: {
             icon: <Icon icon="ph:lightning" fontSize={20} />,
         }
     };

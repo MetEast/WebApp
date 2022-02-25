@@ -163,6 +163,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         let _prodTransHistory: Array<TypeNFTHisotry> = [];
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            if (itemObject.event === 'Transfer') continue;
             var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
             switch (itemObject.event) {
                 case 'Mint':
@@ -186,12 +187,12 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
                     break;
-                case 'Transfer':
-                    _transaction.type = enumTransactionType.Transfer;
-                    break;
-                // case 'SettleBidOrder':
-                //     _transaction.type = enumTransactionType.SettleBidOrder;
+                // case 'Transfer':
+                //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
+                case 'SettleBidOrder':
+                    _transaction.type = enumTransactionType.SettleBidOrder;
+                    break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;

@@ -49,15 +49,8 @@ export enum enumTransactionType {
     SoldTo = 'Sold To',
     ChangeOrder = 'Change Order',
     CancelOrder = 'Cancel Order',
-    Transfer = 'Transfer'
-    //
-    // CreateOrderForSale = 'CreateOrderForSale',
-    // CreateOrderForAuciton = 'CreateOrderForAuciton',
-    // BidOrder = 'BidOrder',
-    // ChangeOrderPrice = 'ChangeOrderPrice',
-    // CancelOrder = 'CancelOrder',
-    // BuyOrder = 'BuyOrder', // sold to
-    // SettleBidOrder = 'SettleBidOrder'
+    // Transfer = 'Transfer'
+    SettleBidOrder = 'SettleBidOrder'
 }
 
 export type TypeProduct = {
