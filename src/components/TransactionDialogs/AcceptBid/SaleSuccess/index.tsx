@@ -15,7 +15,7 @@ const SaleSuccess: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <DialogTitleTypo>Sale Successful!</DialogTitleTypo>
                 <Typography fontSize={16} fontWeight={400} textAlign="center">
-                    Congratulations! Your artwork has been sold to NICKNAME for AMOUNT
+                    Congratulations! Your artwork has been sold to {dialogState.acceptBidName} for {dialogState.acceptBidPrice}
                 </Typography>
             </Stack>
             <Stack>
