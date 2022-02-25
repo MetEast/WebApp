@@ -37,7 +37,7 @@ import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/Pr
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
-import AllBids from 'src/components/profile/AllBids';
+import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
