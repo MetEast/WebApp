@@ -74,6 +74,8 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
+                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, changePriceDlgOpened: false, errorMessageDlgOpened: true });
             });
     };
 
