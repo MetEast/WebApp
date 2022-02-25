@@ -125,6 +125,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             product.author = itemObject.authorName || ' ';
             product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
+            product.status = itemObject.status;
             product.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),

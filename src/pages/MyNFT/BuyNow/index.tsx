@@ -107,7 +107,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {
-            // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
@@ -131,6 +130,8 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
+            product.category = itemObject.category;
+            product.holder = itemObject.holder;
             product.orderId = itemObject.orderId;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
@@ -195,7 +196,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
                 let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
-                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Brought From');
+                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Bought From');
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
                 _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());

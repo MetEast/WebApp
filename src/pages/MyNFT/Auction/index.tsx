@@ -137,6 +137,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
+            product.category = itemObject.category;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             product.orderId = itemObject.orderId;
             let createTime = getUTCTime(itemObject.createTime);

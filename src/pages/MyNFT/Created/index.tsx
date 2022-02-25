@@ -99,6 +99,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
+            product.category = itemObject.category;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
 
@@ -148,7 +149,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     </Typography>
                     <ProductSnippets nickname={productDetail.author} likes={productDetail.likes} views={productDetail.views} />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={productDetail.royaltyOwner !== productDetail.holder ? enumBadgeType.Purchased : enumBadgeType.Created} />
+                        <ProductBadge badgeType={productDetail.authorAddress !== productDetail.holder ? enumBadgeType.Purchased : enumBadgeType.Created} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     {/* <ELAPrice price_ela={199} price_usd={480} marginTop={3} /> */}
