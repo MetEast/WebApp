@@ -13,7 +13,7 @@ import {
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
@@ -39,6 +39,10 @@ import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { TypeSelectItem } from 'src/types/select-types';
+import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
+import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
+import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
+import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -101,7 +105,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
             product.isLike =
@@ -111,8 +115,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || '';
-            product.authorDescription = itemObject.authorDescription || '';
+            product.author = itemObject.authorName || ' ';
+            product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
             product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
@@ -169,8 +173,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                        _transaction.type = enumTransactionType.ChangeOrder;
-                        break;
+                    _transaction.type = enumTransactionType.ChangeOrder;
+                    break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.CancelOrder;
                     break;
@@ -208,6 +212,30 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     useEffect(() => {
         setBuyNowTxFee();
     }, [dialogState.buyNowDlgStep]);
+
+    // change price tx fee
+    const setChangePriceTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setChangePriceTxFee();
+    }, [dialogState.changePriceDlgStep]);
+
+    // cancel sale tx fee
+    const setCancelSaleTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setCancelSaleTxFee();
+    }, [dialogState.cancelSaleDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -277,27 +305,65 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         marginTop={3}
                     />
                     {signInDlgState.walletAccounts !== [] &&
-                        productDetail.holder !== signInDlgState.walletAccounts[0] && (
-                            <PrimaryButton
-                                sx={{ marginTop: 3, width: '100%' }}
+                    productDetail.holder !== signInDlgState.walletAccounts[0] ? (
+                        <PrimaryButton
+                            sx={{ marginTop: 3, width: '100%' }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        buyNowDlgOpened: true,
+                                        buyNowDlgStep: 0,
+                                        buyNowPrice: productDetail.price_ela,
+                                        buyNowName: productDetail.name,
+                                        buyNowOrderId: productDetail.orderId || '',
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            buy now
+                        </PrimaryButton>
+                    ) : (
+                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                            <PinkButton
+                                sx={{ width: '100%' }}
                                 onClick={() => {
                                     if (signInDlgState.isLoggedIn) {
                                         setDialogState({
                                             ...dialogState,
-                                            buyNowDlgOpened: true,
-                                            buyNowDlgStep: 0,
-                                            buyNowPrice: productDetail.price_ela,
-                                            buyNowName: productDetail.name,
-                                            buyNowOrderId: productDetail.orderId || '',
+                                            cancelSaleDlgOpened: true,
+                                            cancelSaleDlgStep: 0,
+                                            cancelSaleOrderId: productDetail.orderId || '',
                                         });
                                     } else {
                                         setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                     }
                                 }}
                             >
-                                buy now
+                                Cancel Sale
+                            </PinkButton>
+                            <PrimaryButton
+                                sx={{ width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            changePriceDlgOpened: true,
+                                            changePriceDlgStep: 0,
+                                            changePriceCurPrice: productDetail.price_ela,
+                                            changePriceOrderId: productDetail.orderId || '',
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Change Price
                             </PrimaryButton>
-                        )}
+                        </Stack>
+                    )}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
@@ -337,7 +403,28 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions transactionList={transactionsList} changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)} />
+                <AllTransactions
+                    transactionList={transactionsList}
+                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.changePriceDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, changePriceDlgOpened: false });
+                }}
+            >
+                {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
+                {dialogState.changePriceDlgStep === 1 && <PriceChangeSuccess />}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.cancelSaleDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
+                }}
+            >
+                {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
+                {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
             </ModalDialog>
         </>
     );

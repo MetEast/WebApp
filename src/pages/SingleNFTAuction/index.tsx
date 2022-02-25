@@ -18,7 +18,7 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
@@ -32,6 +32,10 @@ import ModalDialog from 'src/components/ModalDialog';
 import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
 import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
 import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
+import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
+import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
+import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
+import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/profile/AllBids';
 import Web3 from 'web3';
@@ -105,8 +109,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = '---'; // -- no proper value
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.author = itemObject.authorName || '';
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
             product.isLike =
@@ -229,8 +233,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                        _transaction.type = enumTransactionType.ChangeOrder;
-                        break;
+                    _transaction.type = enumTransactionType.ChangeOrder;
+                    break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.CancelOrder;
                     break;
@@ -366,6 +370,47 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                             Place Bid
                         </PrimaryButton>
                     )}
+                    {signInDlgState.walletAccounts !== [] &&
+                        productDetail.holder === signInDlgState.walletAccounts[0] &&
+                        bidsList.length === 0 && (
+                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                <PinkButton
+                                    sx={{ width: '100%', height: 40 }}
+                                    onClick={() => {
+                                        if (signInDlgState.isLoggedIn) {
+                                            setDialogState({
+                                                ...dialogState,
+                                                cancelSaleDlgOpened: true,
+                                                cancelSaleDlgStep: 0,
+                                                cancelSaleOrderId: productDetail.orderId || '',
+                                            });
+                                        } else {
+                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                        }
+                                    }}
+                                >
+                                    Cancel Sale
+                                </PinkButton>
+                                <SecondaryButton
+                                    sx={{ width: '100%', height: 40 }}
+                                    onClick={() => {
+                                        if (signInDlgState.isLoggedIn) {
+                                            setDialogState({
+                                                ...dialogState,
+                                                changePriceDlgOpened: true,
+                                                changePriceDlgStep: 0,
+                                                changePriceCurPrice: productDetail.price_ela,
+                                                changePriceOrderId: productDetail.orderId || '',
+                                            });
+                                        } else {
+                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                        }
+                                    }}
+                                >
+                                    Change Price
+                                </SecondaryButton>
+                            </Stack>
+                        )}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={5}>
@@ -408,13 +453,43 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 {dialogState.placeBidDlgStep === 2 && <BidPlaceSuccess />}
             </ModalDialog>
             <ModalDialog
+                open={dialogState.changePriceDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, changePriceDlgOpened: false });
+                }}
+            >
+                {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
+                {dialogState.changePriceDlgStep === 1 && <PriceChangeSuccess />}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.cancelSaleDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
+                }}
+            >
+                {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
+                {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
+            </ModalDialog>
+            <ModalDialog
                 open={dialogState.allBidDlgOpened}
                 onClose={() => {
                     setDialogState({ ...dialogState, allBidDlgOpened: false });
                 }}
             >
-                {bidsList.length === 0 && myBidsList.length === 0 && <AllBids bidsList={bidsList} myBidsList={myBidsList} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
-                {!(bidsList.length === 0 && myBidsList.length === 0) && <AllBids bidsList={bidsList} myBidsList={myBidsList} changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)} />}
+                {bidsList.length === 0 && myBidsList.length === 0 && (
+                    <AllBids
+                        bidsList={bidsList}
+                        myBidsList={myBidsList}
+                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                    />
+                )}
+                {!(bidsList.length === 0 && myBidsList.length === 0) && (
+                    <AllBids
+                        bidsList={bidsList}
+                        myBidsList={myBidsList}
+                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                    />
+                )}
             </ModalDialog>
             <ModalDialog
                 open={dialogState.allTxDlgOpened}
@@ -422,7 +497,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions transactionList={transactionsList} changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)} />
+                <AllTransactions
+                    transactionList={transactionsList}
+                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
+                />
             </ModalDialog>
         </>
     );
