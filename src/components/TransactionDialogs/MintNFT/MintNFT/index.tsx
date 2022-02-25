@@ -27,7 +27,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [author, setAuthor] = useState<string>('');
     const [mintFile, setMintFile] = useState<File>();
     const [stateFile, setStateFile] = useState(null);
-    const [royalties, setRoyalties] = useState<number>(0);
+    const [royalties, setRoyalties] = useState<number>(10);
     const { enqueueSnackbar } = useSnackbar();
 
     const handleFileChange = (files: Array<File>) => {
