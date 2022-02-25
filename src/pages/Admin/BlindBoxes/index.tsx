@@ -6,6 +6,8 @@ import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
+import ModalDialog from 'src/components/ModalDialog';
+import SearchBlindBoxItems from 'src/components/TransactionDialogs/CreateBlindBox/SearchBlindBoxItems';
 
 const AdminBlindBoxes: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -121,41 +123,58 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
     );
 
     const [tabledata, setTabledata] = useState(data);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
     return (
-        <Stack height="100%" spacing={4}>
-            <Stack direction="row" alignItems="flex-end" columnGap={1}>
-                <CustomTextField title="Blind Box ID" placeholder="Enter ID" />
-                <CustomTextField title="Blind Box Name" placeholder="Enter Name" />
-                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon
-                        icon="ph:magnifying-glass"
-                        fontSize={20}
-                        color="white"
-                        style={{ marginBottom: 2, marginRight: 4 }}
-                    />
-                    {`Search`}
-                </PrimaryButton>
-                <Stack spacing={0.5} marginLeft={2}>
-                    <Typography fontSize={12} fontWeight={700}>
-                        Blind Box Status
-                    </Typography>
-                    <Stack direction="row" spacing={1}>
-                        <SecondaryButton size="small" sx={{ paddingX: 3 }}>
-                            Offline
-                        </SecondaryButton>
-                        <SecondaryButton size="small" sx={{ paddingX: 3 }}>
-                            Online
-                        </SecondaryButton>
+        <>
+            <Stack height="100%" spacing={4}>
+                <Stack direction="row" alignItems="flex-end" columnGap={1}>
+                    <CustomTextField title="Blind Box ID" placeholder="Enter ID" />
+                    <CustomTextField title="Blind Box Name" placeholder="Enter Name" />
+                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                        <Icon
+                            icon="ph:magnifying-glass"
+                            fontSize={20}
+                            color="white"
+                            style={{ marginBottom: 2, marginRight: 4 }}
+                        />
+                        {`Search`}
+                    </PrimaryButton>
+                    <Stack spacing={0.5} marginLeft={2}>
+                        <Typography fontSize={12} fontWeight={700}>
+                            Blind Box Status
+                        </Typography>
+                        <Stack direction="row" spacing={1}>
+                            <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                                Offline
+                            </SecondaryButton>
+                            <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                                Online
+                            </SecondaryButton>
+                        </Stack>
                     </Stack>
+                    <PrimaryButton
+                        size="small"
+                        sx={{ paddingX: 3, marginLeft: 2 }}
+                        onClick={() => {
+                            setDialogOpen(true);
+                        }}
+                    >
+                        <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
+                        {`New Blind Box`}
+                    </PrimaryButton>
                 </Stack>
-                <PrimaryButton size="small" sx={{ paddingX: 3, marginLeft: 2 }}>
-                    <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
-                    {`New Blind Box`}
-                </PrimaryButton>
+                <Table tabledata={tabledata} columns={columns} />
             </Stack>
-            <Table tabledata={tabledata} columns={columns} />
-        </Stack>
+            <ModalDialog
+                open={dialogOpen}
+                onClose={() => {
+                    setDialogOpen(false);
+                }}
+            >
+                <SearchBlindBoxItems />
+            </ModalDialog>
+        </>
     );
 };
 
