@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid, Typography, Stack } from '@mui/material';
 import React, { useState } from 'react';
@@ -33,6 +33,8 @@ import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import { Icon } from '@iconify/react';
+import UserAvatarBox from 'src/components/profile/UserAvatarBox';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -206,7 +208,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
             product.author = itemObject.authorName || ' ';
             if (nTabId === 0 || nTabId === 5) {
                 // all = owned + sold
-                if (itemObject.status === 'NEW') { // not on market
+                if (itemObject.status === 'NEW') {
+                    // not on market
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
                     else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
@@ -215,24 +218,26 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     // if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
                     // else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
                     //     product.type = enumMyNFTType.Purchased;
-                    // else 
+                    // else
                     product.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-                }              
-            } else if (nTabId === 1) { // owned = purchased + created + for sale
-                if (itemObject.status === 'NEW') { // not on market
+                }
+            } else if (nTabId === 1) {
+                // owned = purchased + created + for sale
+                if (itemObject.status === 'NEW') {
+                    // not on market
                     if (itemObject.holder === itemObject.royaltyOwner) product.type = enumMyNFTType.Created;
                     else product.type = enumMyNFTType.Purchased;
                 } else {
                     product.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-                } 
+                }
             } else if (nTabId === 2) {
-                if (itemObject.status === 'NEW') { // not on market
+                if (itemObject.status === 'NEW') {
+                    // not on market
                     product.type = enumMyNFTType.Created;
                 } else {
                     product.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
                 }
-            }
-            else if (nTabId === 3)
+            } else if (nTabId === 3)
                 product.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
             else if (nTabId === 4) product.type = enumMyNFTType.Sold;
             product.likes = itemObject.likes;
@@ -483,6 +488,23 @@ const ProfilePage: React.FC = (): JSX.Element => {
         }
     };
 
+    const [userAvatarFile, setUserAvatarFile] = useState<File>();
+    const [userAvatarStateFile, setUserAvatarStateFile] = useState(null);
+
+    const handleUserAvatarFileChange = (files: Array<File>) => {
+        handleUserAvatarStateFileChange(files);
+        if (files !== null && files.length > 0) {
+            setUserAvatarFile(files[0]);
+        }
+    };
+
+    const handleUserAvatarStateFileChange = useCallback((acceptedFiles) => {
+        const file = acceptedFiles[0];
+        if (file) {
+            setUserAvatarStateFile({ ...file, preview: URL.createObjectURL(file) });
+        }
+    }, []);
+
     return (
         <>
             <Box>
@@ -496,11 +518,28 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     ))}
                 </Swiper>
             </Box>
-            <Box>
-                <ProfileImageWrapper>
+            <Stack alignItems="center">
+                {/* <ProfileImageWrapper>
                     <ProfileImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" />
-                </ProfileImageWrapper>
-                <Stack direction="row" justifyContent="space-between" marginTop={-6}>
+                </ProfileImageWrapper> */}
+                <UserAvatarBox
+                    file={userAvatarStateFile}
+                    onDrop={handleUserAvatarFileChange}
+                    sx={{
+                        width: '180px',
+                        height: '180px',
+                        marginTop: '-90px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '50%',
+                        background: '#E8F4FF',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        zIndex: 10,
+                    }}
+                />
+                <Stack width="100%" direction="row" justifyContent="space-between" marginTop={-6}>
                     <Box>
                         <Typography fontSize={20} fontWeight={900}>
                             {toatlEarned}&nbsp;ELA
@@ -551,7 +590,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         </SecondaryButton>
                     </Stack>
                 </Stack>
-            </Box>
+            </Stack>
             <Grid container marginTop={4} alignItems="center" rowSpacing={2.5}>
                 <Grid item xs={12} md={3} order={0}>
                     <Typography fontSize={42} fontWeight={700} lineHeight={1.1}>

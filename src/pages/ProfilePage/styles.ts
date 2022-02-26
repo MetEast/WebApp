@@ -35,8 +35,12 @@ export const FilterButton = styled(Button)<{ selected: boolean }>`
 export const ProfileImageWrapper = styled(Box)`
     display: grid;
     place-content: center;
-    margin-top: -90px;
     position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    margin-top: -90px;
+    background: #e8f4ff;
     z-index: 10;
 `;
 
@@ -50,7 +54,7 @@ export const ProfileImage = styled('img')`
 
 export const EmptyTitleGalleryItem = styled(Typography)`
     border-radius: 8px;
-    background: #DCDDDF;
+    background: #dcdddf;
     margin: 20px 8px;
     display: grid;
     align-items: center;
