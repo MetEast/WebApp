@@ -7,23 +7,29 @@ import { Icon } from '@iconify/react';
 
 const DropZoneStyle = styled('div')(({ theme }) => ({
     outline: 'none',
-    display: 'flex',
-    overflow: 'hidden',
-    textAlign: 'center',
     position: 'relative',
-    alignItems: 'center',
+    display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
-    // padding: theme.spacing(5, 0),
-    borderRadius: theme.shape.borderRadius,
     transition: theme.transitions.create('padding'),
-    // backgroundColor: theme.palette.background.neutral,
-    // border: `1px dashed ${theme.palette.grey[500_32]}`,
-    '&:hover': {
-        opacity: 0.72,
+    '.hover_box_container': {
+        position: 'absolute',
+        width: '100%',
+        paddingTop: '100%',
+        background: '#1890FF',
         cursor: 'pointer',
+        opacity: 0,
+        '&:hover': {
+            opacity: 0.8,
+        },
+        '.hover_box': {
+            position: 'absolute',
+            inset: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
     },
-    [theme.breakpoints.up('md')]: { textAlign: 'left', flexDirection: 'row' },
 }));
 
 // ----------------------------------------------------------------------
@@ -60,11 +66,7 @@ const UserAvatarBox: React.FC<ComponentProps> = ({ error, file, sx, ...other }):
                 }}
             >
                 <input name="imgFile" {...getInputProps()} />
-                {!file && (
-                    <Stack justifyContent="center" alignItems="center">
-                        <Icon icon="ph:user" fontSize={80} color="#1890FF" />
-                    </Stack>
-                )}
+                {!file && <Icon icon="ph:user" fontSize={80} color="#1890FF" />}
                 {file && (
                     <Box
                         component="img"
@@ -77,6 +79,14 @@ const UserAvatarBox: React.FC<ComponentProps> = ({ error, file, sx, ...other }):
                         }}
                     />
                 )}
+                <Box className="hover_box_container">
+                    <Stack className="hover_box" spacing={0.5}>
+                        <Icon icon="ph:pencil-simple" fontSize={40} color="white" />
+                        <Typography fontSize={32} fontWeight={700} color="white">
+                            Edit
+                        </Typography>
+                    </Stack>
+                </Box>
             </DropZoneStyle>
         </Box>
     );

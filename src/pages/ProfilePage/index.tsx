@@ -529,13 +529,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         width: '180px',
                         height: '180px',
                         marginTop: '-90px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
                         borderRadius: '50%',
                         background: '#E8F4FF',
                         overflow: 'hidden',
-                        cursor: 'pointer',
                         zIndex: 10,
                     }}
                 />
