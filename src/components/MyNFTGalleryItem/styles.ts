@@ -12,10 +12,10 @@ export const ProductImageContainer = styled(Stack)`
     cursor: pointer;
 `;
 
-export const ImageBox = styled(Box)`
+export const ImageBox = styled(Box)<{ loading: boolean }>`
     position: absolute;
     inset: 0;
-    border: 1px solid #eeeeee;
+    border: ${({ loading }) => (loading ? `0 solid #eeeeee` : `1px solid #eeeeee`)};
     border-radius: 18px;
     overflow: hidden;
     img {

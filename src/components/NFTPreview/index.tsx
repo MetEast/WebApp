@@ -93,9 +93,15 @@ const NFTPreview: React.FC<ComponentProps> = ({
                     navigate(getUrl());
                 }}
             >
-                <ImageBox>
+                <ImageBox loading={product.tokenId === ''}>
                     {product.tokenId === '' ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" height="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height="100%"
+                            sx={{ bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
                         <>
                             <img src={product.image} alt="" />
@@ -113,17 +119,19 @@ const NFTPreview: React.FC<ComponentProps> = ({
             <Stack marginTop={1} height="100%">
                 <Box>
                     {product.tokenId === '' ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height={24}
+                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
-                        <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
-                            {product.name}
-                        </Typography>
-                    )}
-                    <Box display={{ xs: 'none', md: 'block' }}>
-                        {product.tokenId === '' ? (
-                            <Skeleton variant="rectangular" animation="wave" width="100%" />
-                        ) : (
-                            <>
+                        <Box>
+                            <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
+                                {product.name}
+                            </Typography>
+                            <Box display={{ xs: 'none', md: 'block' }}>
                                 {productType === 0 && (
                                     <ProductSnippets nickname={product.author} likes={product.likes} />
                                 )}
@@ -138,9 +146,9 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                         <ProductSnippets nickname={product.author} likes={product.likes} />
                                     ))}
                                 {productType === 2 && <ProductSnippets sold={product.sold} likes={product.likes} />}
-                            </>
-                        )}
-                    </Box>
+                            </Box>
+                        </Box>
+                    )}
                 </Box>
                 <Stack
                     direction={{ xs: 'column-reverse', md: 'column' }}
@@ -150,12 +158,28 @@ const NFTPreview: React.FC<ComponentProps> = ({
                     spacing={{ xs: 0.25, md: 1 }}
                 >
                     {product.tokenId === '' ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height={16}
+                            sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
-                        <ProductBadgeContainer nfttype={product.type} content={product.endTime} isReservedAuction={product.status === 'HAS BIDS'} />
+                        <ProductBadgeContainer
+                            nfttype={product.type}
+                            content={product.endTime}
+                            isReservedAuction={product.status === 'HAS BIDS'}
+                        />
                     )}
                     {product.tokenId === '' ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height={16}
+                            sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
                         <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
                     )}

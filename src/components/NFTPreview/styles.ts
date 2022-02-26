@@ -15,11 +15,11 @@ export const ProductImageContainer = styled(Stack)`
     cursor: pointer;
 `;
 
-export const ImageBox = styled(Box)`
+export const ImageBox = styled(Box)<{ loading: boolean }>`
     position: absolute;
     inset: 0;
     /* display: flex; */
-    border: 1px solid #eeeeee;
+    border: ${({ loading }) => (loading ? `0 solid #eeeeee` : `1px solid #eeeeee`)};
     border-radius: 18px;
     overflow: hidden;
     /* box-shadow: 4px 8px 4px -4px rgba(2, 14, 25, 0.2); */

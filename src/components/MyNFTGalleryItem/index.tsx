@@ -78,9 +78,15 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
                     navigate(getUrl());
                 }}
             >
-                <ImageBox>
+                <ImageBox loading={isLoading}>
                     {isLoading ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" height="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height="100%"
+                            sx={{ bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
                         <>
                             <img src={product.image} alt="" />
@@ -98,19 +104,23 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
             <Stack marginTop={1} height="100%">
                 <Box>
                     {isLoading ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height={24}
+                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
-                        <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
-                            {product.name}
-                        </Typography>
+                        <Box>
+                            <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
+                                {product.name}
+                            </Typography>
+                            <Box display={{ xs: 'none', md: 'block' }}>
+                                <ProductSnippets nickname={product.author} likes={product.likes} />
+                            </Box>
+                        </Box>
                     )}
-                    <Box display={{ xs: 'none', md: 'block' }}>
-                        {isLoading ? (
-                            <Skeleton variant="rectangular" animation="wave" width="100%" />
-                        ) : (
-                            <ProductSnippets nickname={product.author} likes={product.likes} />
-                        )}
-                    </Box>
                 </Box>
                 <Stack
                     direction={{ xs: 'column-reverse', md: 'column' }}
@@ -120,12 +130,28 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
                     spacing={{ xs: 0.25, md: 1 }}
                 >
                     {isLoading ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height={16}
+                            sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
-                        <ProductBadgeContainer nfttype={product.type} content={product.endTime} isReservedAuction={product.status === 'HAS BIDS'} />
+                        <ProductBadgeContainer
+                            nfttype={product.type}
+                            content={product.endTime}
+                            isReservedAuction={product.status === 'HAS BIDS'}
+                        />
                     )}
                     {isLoading ? (
-                        <Skeleton variant="rectangular" animation="wave" width="100%" />
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height={16}
+                            sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
+                        />
                     ) : (
                         <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
                     )}
