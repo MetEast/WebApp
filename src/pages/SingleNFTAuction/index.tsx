@@ -42,6 +42,7 @@ import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { TypeSelectItem } from 'src/types/select-types';
+import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -137,7 +138,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 let endTime = getTime(itemObject.endTime); // no proper value
                 product.endTime = endTime.date + ' ' + endTime.time;
             } else {
-                product.endTime = '---';
+                product.endTime = ' ';
             }
             product.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
         }
@@ -492,14 +493,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allBidDlgOpened: false });
                 }}
             >
-                {bidsList.length === 0 && myBidsList.length === 0 && (
-                    <AllBids
-                        bidsList={bidsList}
-                        myBidsList={myBidsList}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                {bidsList.length === 0 && myBidsList.length === 0 ? (
+                    <NoBids
+                        onClose={() => {
+                            setDialogState({ ...dialogState, allBidDlgOpened: false });
+                        }}
                     />
-                )}
-                {!(bidsList.length === 0 && myBidsList.length === 0) && (
+                ) : (
                     <AllBids
                         bidsList={bidsList}
                         myBidsList={myBidsList}

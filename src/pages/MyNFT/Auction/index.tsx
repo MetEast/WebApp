@@ -45,6 +45,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
+import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -519,11 +520,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 }}
             >
                 {bidsList.length === 0 ? (
-                    <ReceivedBids
-                        bidsList={bidsList}
-                        closeDlg={() => setViewBidDlgOpened(false)}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
-                    />
+                    <NoBids onClose={() => setViewBidDlgOpened(false)} />
                 ) : (
                     <ReceivedBids
                         bidsList={bidsList}

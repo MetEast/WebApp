@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Stack, Typography, Box } from '@mui/material';
+import React from 'react';
+import { Stack } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    onClose: () => void;
+}
 
-const NoBids: React.FC<ComponentProps> = (): JSX.Element => {
+const NoBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     return (
         <Stack spacing={3} width={280} alignItems="center">
             <Stack alignItems="center">
@@ -16,7 +18,9 @@ const NoBids: React.FC<ComponentProps> = (): JSX.Element => {
                 alt="Looks Empty Here"
                 style={{ width: 180, height: 160 }}
             />
-            <PrimaryButton fullWidth>Close</PrimaryButton>
+            <PrimaryButton fullWidth onClick={onClose}>
+                Close
+            </PrimaryButton>
         </Stack>
     );
 };
