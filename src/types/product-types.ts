@@ -125,6 +125,14 @@ export type TypeYourEarning = {
     badge: enumBadgeType;
 };
 
+export type TypeBlindBoxSelectItem = {
+    id: number;
+    tokenId: string;
+    nftIdentity: string;
+    projectTitle: string;
+    projectType: string;
+};
+
 // ---
 export type TypeProductFetch = {
     blockNumber: number;

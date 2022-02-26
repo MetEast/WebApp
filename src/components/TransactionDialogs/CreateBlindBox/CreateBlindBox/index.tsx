@@ -14,6 +14,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
+import SearchBlindBoxItems from '../SearchBlindBoxItems';
 
 export interface ComponentProps {}
 
@@ -106,7 +107,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
 
     const [sort, setSort] = useState<TypeSelectItem>();
     const [sortSelectOpen, setSortSelectOpen] = useState(false);
-    const [selectDlgOpened, setSelectDlgOpend] = useState<boolean>(false);
+    const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
     const handleBlindboxItemChange = (value: string) => {
         const item = blindboxItemsOptions.find((option) => option.value === value);
@@ -241,7 +242,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     setIsOpen={setBlindboxItemSelectOpen}
                                     handleClick={handleBlindboxItemChange}
                                 />
-                                <PrimaryButton fullWidth size="small" onClick={() => setSelectDlgOpend(true)}>
+                                <PrimaryButton fullWidth size="small" onClick={() => setSelectDlgOpened(true)}>
                                     Choose NFTs to add
                                 </PrimaryButton>
                             </Stack>
@@ -373,6 +374,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             fullWidth
                             onClick={() => {
                                 if (
+                                    dialogState.crtBlindTokenIds !== '' &&
                                     blindboxTitle !== '' &&
                                     blindboxDescription !== '' &&
                                     blindboxAuthorDes !== '' &&
@@ -394,7 +396,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         crtBlindDescription: blindboxDescription,
                                         crtBlindAuthorDescription: blindboxAuthorDes,
                                         crtBlindImage: blindboxImage,
-                                        crtBlindItem: blindboxItem || { label: '', value: '' },
                                         crtBlindStatus: blindboxStatus,
                                         crtBlindQuantity: blindboxQuantity,
                                         crtBlindPrice: blindboxPrice,
@@ -421,14 +422,14 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     </WarningTypo>
                 </Stack>
             </Stack>
-            {/* <ModalDialog
+            <ModalDialog
                 open={selectDlgOpened}
                 onClose={() => {
-                    setSelectDlgOpend(false);
+                    setSelectDlgOpened(false);
                 }}
             >
-                < />
-            </ModalDialog> */}
+                <SearchBlindBoxItems onClose={() => setSelectDlgOpened(false)} />
+            </ModalDialog>
         </>
     );
 };
