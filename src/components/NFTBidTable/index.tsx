@@ -14,10 +14,10 @@ interface ComponentProps {
 
 const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
     const bidsTblColumns = [
-        { value: 'User', width: 3.5 },
-        { value: 'Date', width: 3.5 },
-        { value: 'Price', width: 3.5 },
-        { value: '', width: 1.5 },
+        { value: 'User', width: 4 },
+        { value: 'Date', width: 4 },
+        { value: 'Price', width: 4 },
+        // { value: '', width: 1.5 },
     ];
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -66,7 +66,7 @@ const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
                         <Grid item xs={6} sm={bidsTblColumns[2].width} order={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
                             <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                         </Grid>
-                        <Grid
+                        {/* <Grid
                             item
                             xs={6}
                             sm={bidsTblColumns[3].width}
@@ -78,7 +78,7 @@ const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
                             <SecondaryButton sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}>
                                 ACCEPT
                             </SecondaryButton>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 ))}
             </Grid>

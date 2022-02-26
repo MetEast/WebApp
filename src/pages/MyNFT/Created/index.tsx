@@ -10,7 +10,7 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import { getImageFromAsset, getMintCategory, getUTCTime, getTime, selectFromFavourites } from 'src/services/common';
+import { getImageFromAsset, getMintCategory, getUTCTime, getTime, selectFromFavourites, reduceHexAddress } from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
@@ -18,7 +18,8 @@ import {
     TypeProduct,
     TypeProductFetch,
     TypeFavouritesFetch,
-    TypeNFTHisotry
+    TypeNFTHisotry,
+    TypeNFTTransactionFetch
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -60,8 +61,11 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         saleType: enumTransactionType.ForSale,
         txHash: ''
     };
+
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
+    const burnAddress = '0x0000000000000000000000000000000000000000';
+
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
@@ -104,23 +108,44 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             product.category = itemObject.category;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
-
-            let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
-            _prodTrans.type = 'Created';
-            _prodTrans.price = itemObject.price / 1e18;
-            _prodTrans.user = product.author;
-            let timestamp = getTime(itemObject.timestamp.toString());
-            _prodTrans.time = timestamp.date + ' ' + timestamp.time;
-            _prodTrans.txHash = itemObject.tokenId; 
-            setProdTransHistory([_prodTrans]);
         }
         setProductDetail(product);
+    };
+
+    const getLatestTransaction = async () => {
+        const resLatestTransaction = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
+        const dataLatestTransaction = await resLatestTransaction.json();
+        const arrLatestTransaction = dataLatestTransaction.data;
+
+        let _prodTransHistory: Array<TypeNFTHisotry> = [];
+        for (let i = 0; i < arrLatestTransaction.length; i ++) {
+            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            if (itemObject.event !== 'Mint') continue;
+            let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+            _prodTrans.type = 'Created';
+            _prodTrans.price = parseInt(itemObject.price) / 1e18;
+            _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+            let timestamp = getTime(itemObject.timestamp.toString());
+            _prodTrans.time = timestamp.date + ' ' + timestamp.time;
+            _prodTrans.txHash = itemObject.tHash; 
+            _prodTransHistory.push(_prodTrans);
+        }
+        setProdTransHistory(_prodTransHistory);
     };
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
+        getLatestTransaction();
     };
 
     useEffect(() => {

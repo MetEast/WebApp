@@ -139,6 +139,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             } else {
                 product.endTime = '---';
             }
+            product.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
         }
         setProductDetail(product);
     };
@@ -250,7 +251,14 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.SettleBidOrder;
                     break;
             }
-            _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
+            _transaction.user = reduceHexAddress(
+                itemObject.event === 'BuyOrder'
+                    ? itemObject.to
+                    : itemObject.from === burnAddress
+                    ? itemObject.to
+                    : itemObject.from,
+                4,
+            ); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
@@ -343,7 +351,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 </Grid>
                             )}
                             <Grid item xs={12} sm={'auto'}>
-                                <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                                {productDetail.isExpired ? (
+                                    <ProductBadge badgeType={enumBadgeType.SaleEnded} />
+                                ) : (
+                                    <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                                )}
                             </Grid>
                         </Grid>
                     </Stack>

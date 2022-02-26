@@ -26,7 +26,7 @@ import {
     TypeFavouritesFetch,
     TypeSingleNFTBid,
     TypeSingleNFTBidFetch,
-    TypeNFTHisotry
+    TypeNFTHisotry,
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useCookies } from 'react-cookie';
@@ -43,7 +43,8 @@ import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/Canc
 import ReceivedBids from 'src/components/profile/ReceivedBids';
 import { TypeSelectItem } from 'src/types/select-types';
 import AllTransactions from 'src/components/profile/AllTransactions';
-import { singleNFTBids } from 'src/constants/dummyData';
+import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
+import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -85,7 +86,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         price: 0,
         time: '',
         saleType: enumTransactionType.ForSale,
-        txHash: ''
+        txHash: '',
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -96,7 +97,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
     // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
-    const [dummyBidsList, setdummyBidsList] = useState<Array<TypeSingleNFTBid>>(singleNFTBids);
 
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
@@ -141,8 +141,16 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             product.category = itemObject.category;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             product.orderId = itemObject.orderId;
+            product.status = itemObject.status;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
+            if (itemObject.endTime) {
+                let endTime = getTime(itemObject.endTime); // no proper value
+                product.endTime = endTime.date + ' ' + endTime.time;
+            } else {
+                product.endTime = '';
+            }
+            product.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
         }
         setProductDetail(product);
     };
@@ -195,7 +203,14 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.SettleBidOrder;
                     break;
             }
-            _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
+            _transaction.user = reduceHexAddress(
+                itemObject.event === 'BuyOrder'
+                    ? itemObject.to
+                    : itemObject.from === burnAddress
+                    ? itemObject.to
+                    : itemObject.from,
+                4,
+            ); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
@@ -204,13 +219,25 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
                 let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
-                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Brought From');
+                _prodTrans.type =
+                    itemObject.event === 'Mint'
+                        ? 'Created'
+                        : itemObject.royaltyOwner === signInDlgState.walletAccounts[0]
+                        ? 'Sold To'
+                        : 'Brought From';
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+                _prodTrans.user = reduceHexAddress(
+                    itemObject.from === burnAddress ? itemObject.to : itemObject.from,
+                    4,
+                ); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                if (itemObject.event === 'BuyOrder') _prodTrans.saleType = arrLatestTransaction[i + 2].event === "CreateOrderForSale" ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
-                _prodTrans.txHash = itemObject.tHash;  
+                if (itemObject.event === 'BuyOrder')
+                    _prodTrans.saleType =
+                        arrLatestTransaction[i + 2].event === 'CreateOrderForSale'
+                            ? enumTransactionType.ForSale
+                            : enumTransactionType.OnAuction;
+                _prodTrans.txHash = itemObject.tHash;
                 _prodTransHistory.push(_prodTrans);
             }
         }
@@ -301,6 +328,18 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         setCancelSaleTxFee();
     }, [dialogState.cancelSaleDlgStep]);
 
+    // accept bid tx Fee
+    const setAcceptBidTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
+
+    useEffect(() => {
+        setAcceptBidTxFee();
+    }, [dialogState.acceptBidDlgStep]);
+
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
         if (type === 'inc') {
@@ -329,50 +368,82 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                         <ProductBadge badgeType={enumBadgeType.OnAuction} />
-                        <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-                        <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                        {productDetail.status !== 'HAS BIDS' && (
+                            <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
+                        )}
+                        {productDetail.isExpired ? (
+                            <ProductBadge badgeType={enumBadgeType.SaleEnded} />
+                        ) : (
+                            <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                        )}
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
                     <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setViewBidDlgOpened(true)}>
                         View Bids
                     </PrimaryButton>
-                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                        <PinkButton
-                            sx={{ width: '100%', height: 40 }}
-                            onClick={() => {
-                                if (signInDlgState.isLoggedIn) {
-                                    setDialogState({
-                                        ...dialogState,
-                                        cancelSaleDlgOpened: true,
-                                        cancelSaleDlgStep: 0,
-                                        cancelSaleOrderId: productDetail.orderId || '',
-                                    });
-                                } else {
-                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                }
-                            }}
-                        >
-                            Cancel Sale
-                        </PinkButton>
-                        <SecondaryButton
-                            sx={{ width: '100%', height: 40 }}
-                            onClick={() => {
-                                if (signInDlgState.isLoggedIn) {
-                                    setDialogState({
-                                        ...dialogState,
-                                        changePriceDlgOpened: true,
-                                        changePriceDlgStep: 0,
-                                        changePriceCurPrice: productDetail.price_ela,
-                                        changePriceOrderId: productDetail.orderId || '',
-                                    });
-                                } else {
-                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                }
-                            }}
-                        >
-                            Change Price
-                        </SecondaryButton>
-                    </Stack>
+
+                    {productDetail.status !== 'HAS BIDS' && (
+                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                            <PinkButton
+                                sx={{ width: '100%', height: 40 }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            cancelSaleDlgOpened: true,
+                                            cancelSaleDlgStep: 0,
+                                            cancelSaleOrderId: productDetail.orderId || '',
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Cancel Sale
+                            </PinkButton>
+                            <SecondaryButton
+                                sx={{ width: '100%', height: 40 }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            changePriceDlgOpened: true,
+                                            changePriceDlgStep: 0,
+                                            changePriceCurPrice: productDetail.price_ela,
+                                            changePriceOrderId: productDetail.orderId || '',
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Change Price
+                            </SecondaryButton>
+                        </Stack>
+                    )}
+                    {productDetail.isExpired && (
+                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                            <SecondaryButton
+                                sx={{ width: '100%', height: 40 }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            acceptBidDlgOpened: true,
+                                            acceptBidDlgStep: 0,
+                                            acceptBidName: bidsList[0].user,
+                                            acceptBidOrderId: bidsList[0].orderId || '',
+                                            acceptBidPrice: bidsList[0].price,
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Settle Auction
+                            </SecondaryButton>
+                        </Stack>
+                    )}
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>
@@ -397,7 +468,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={8}>
                     <Stack spacing={10}>
-                        <NFTBidTable bidsList={dummyBidsList} />
+                        <NFTBidTable bidsList={bidsList} />
                         <NFTTransactionTable transactionsList={transactionsList} />
                         <PriceHistoryView />
                     </Stack>
@@ -433,19 +504,27 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 />
             </ModalDialog>
             <ModalDialog
+                open={dialogState.acceptBidDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, acceptBidDlgOpened: false });
+                }}
+            >
+                {dialogState.acceptBidDlgStep === 0 && <AcceptBid />}
+                {dialogState.acceptBidDlgStep === 1 && <SaleSuccess />}
+            </ModalDialog>
+            <ModalDialog
                 open={viewBidDlgOpened}
                 onClose={() => {
                     setViewBidDlgOpened(false);
                 }}
             >
-                {bidsList.length === 0 && (
+                {bidsList.length === 0 ? (
                     <ReceivedBids
                         bidsList={bidsList}
                         closeDlg={() => setViewBidDlgOpened(false)}
                         changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
                     />
-                )}
-                {bidsList.length !== 0 && (
+                ) : (
                     <ReceivedBids
                         bidsList={bidsList}
                         closeDlg={() => setViewBidDlgOpened(false)}

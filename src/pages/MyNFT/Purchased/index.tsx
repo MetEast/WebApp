@@ -6,7 +6,7 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
@@ -219,10 +219,16 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         getFetchData();
     }, []);
 
+    const setSaleTxFee = async () => {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+        setDialogState({ ...dialogState, sellTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+    };
 
     useEffect(() => {
-        console.log('--------', prodTransHistory)
-    }, [prodTransHistory]);
+        setSaleTxFee();
+    }, [dialogState.createNFTDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };

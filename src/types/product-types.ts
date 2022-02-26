@@ -89,6 +89,7 @@ export type TypeProduct = {
     size?: string;
     category?: string;
     status?: string;
+    isExpired?: boolean;
 };
 
 export type TypeNFTTransaction = {
