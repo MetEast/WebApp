@@ -199,8 +199,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                 _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                // console.log('------------', _latestTransList[i].type)
-                // _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type;
+                if (itemObject.event === 'BuyOrder') _prodTrans.saleType = arrLatestTransaction[i + 2].event === "CreateOrderForSale" ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
                 _prodTrans.txHash = itemObject.tHash;  
                 _prodTransHistory.push(_prodTrans);
             }
