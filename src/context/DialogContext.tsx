@@ -87,8 +87,8 @@ interface State {
     crtBlindStatus: 'offline' | 'online';
     crtBlindQuantity: number;
     crtBlindPrice: number;
-    crtBlindSaleBegin: TypeSelectItem;
-    crtBlindSaleEnd: TypeSelectItem;
+    crtBlindSaleBegin: string;
+    crtBlindSaleEnd: string;
     crtBlindLikes: number;
     crtBlindViews: number;
     crtBlindPurchases: number;
@@ -146,23 +146,23 @@ const defaultState: State = {
     // change price
     changePriceDlgOpened: false,
     changePriceDlgStep: 0,
-    changePriceCurPrice: 0, 
+    changePriceCurPrice: 0,
     changePriceOrderId: '',
     changePriceTxHash: '',
     changePriceTxFee: 0,
     // cancel sale
     cancelSaleDlgOpened: false,
-    cancelSaleDlgStep: 0, 
+    cancelSaleDlgStep: 0,
     cancelSaleOrderId: '',
     cancelSaleTxHash: '',
     cancelSaleTxFee: 0,
     // accept bid
     acceptBidDlgOpened: false,
     acceptBidDlgStep: 0,
-    acceptBidName: '', 
-    acceptBidPrice: 0, 
+    acceptBidName: '',
+    acceptBidPrice: 0,
     acceptBidOrderId: '',
-    acceptBidTxFee: 0, 
+    acceptBidTxFee: 0,
     acceptBidTxHash: '',
     // place bid
     placeBidDlgOpened: false,
@@ -176,14 +176,14 @@ const defaultState: State = {
     placeBidOrderId: '',
     // update bid
     updateBidDlgOpened: false,
-    updateBidDlgStep: 0, 
-    updateBidPrice: 0, 
+    updateBidDlgStep: 0,
+    updateBidPrice: 0,
     updateBidOrderId: '',
-    updateBidTxFee: 0, 
+    updateBidTxFee: 0,
     updateBidTxHash: '',
     // cancel bid
-    cancelBidDlgOpened: false, 
-    cancelBidDlgStep: 0, 
+    cancelBidDlgOpened: false,
+    cancelBidDlgStep: 0,
     cancelBidOrderId: '',
     cancelBidTxHash: '',
     cancelBidTxFee: 0,
@@ -197,8 +197,8 @@ const defaultState: State = {
     crtBlindStatus: 'offline',
     crtBlindQuantity: 0,
     crtBlindPrice: 0,
-    crtBlindSaleBegin: { label: '', value: '' },
-    crtBlindSaleEnd: { label: '', value: '' },
+    crtBlindSaleBegin: '',
+    crtBlindSaleEnd: '',
     crtBlindLikes: 0,
     crtBlindViews: 0,
     crtBlindPurchases: 0,
@@ -210,9 +210,9 @@ const defaultState: State = {
     buyBlindBoxDlgStep: 0,
     buyBlindName: '',
     buyBlindPriceEla: 0,
-    buyBlindPriceUsd: 0, 
-    buyBlindAmount: 0, 
-    buyBlindTxFee: 0, 
+    buyBlindPriceUsd: 0,
+    buyBlindAmount: 0,
+    buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',
     // error msg
@@ -220,7 +220,7 @@ const defaultState: State = {
     // all transactions
     allTxDlgOpened: false,
     // all bids
-    allBidDlgOpened: false
+    allBidDlgOpened: false,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { styled, Button } from '@mui/material';
+import { styled, Button, TextField } from '@mui/material';
 
 export const useStyles = makeStyles((theme: any) => ({
     container: {
@@ -30,5 +30,19 @@ export const SelectBtn = styled(Button)<{ isOpen: number }>`
         margin-left: 4px;
         transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
+    }
+`;
+
+export const DateTimeInput = styled(TextField)`
+    border-radius: 12px;
+    & .MuiOutlinedInput-root {
+        & fieldset {
+            border-style: none;
+        }
+        & input {
+            height: 40px;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
     }
 `;

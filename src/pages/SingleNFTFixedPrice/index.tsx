@@ -367,8 +367,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     )}
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={5}>
-                <Grid item md={6} xs={12}>
+            <Grid container marginTop={5} columnSpacing={10}>
+                <Grid item md={4} xs={12}>
                     <SingleNFTMoreInfo
                         author={productDetail.author}
                         authorDescription={productDetail.authorDescription}
@@ -384,7 +384,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         vertically={true}
                     />
                 </Grid>
-                <Grid item md={6} xs={12}>
+                <Grid item md={8} xs={12}>
                     <PriceHistoryView />
                     <NFTTransactionTable transactionsList={transactionsList} />
                 </Grid>

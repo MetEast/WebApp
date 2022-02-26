@@ -430,7 +430,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         )}
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={5}>
+            <Grid container marginTop={5} columnSpacing={10}>
                 <Grid item md={4} xs={12}>
                     <SingleNFTMoreInfo
                         author={productDetail.author}
