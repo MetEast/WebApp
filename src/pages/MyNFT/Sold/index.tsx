@@ -72,7 +72,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: enumTransactionType.ForSale
+        saleType: enumTransactionType.ForSale,
+        txHash: ''
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -195,7 +196,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                 ); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type; 
+                _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type;
+                _prodTrans.txHash = itemObject.tHash;  
                 _prodTransHistory.push(_prodTrans);
             }
         }

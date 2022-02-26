@@ -84,7 +84,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: enumTransactionType.ForSale
+        saleType: enumTransactionType.ForSale,
+        txHash: ''
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -208,7 +209,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type; 
+                _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type;
+                _prodTrans.txHash = itemObject.tHash;  
                 _prodTransHistory.push(_prodTrans);
             }
         }

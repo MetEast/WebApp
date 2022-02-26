@@ -36,14 +36,9 @@ import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import ModalDialog from 'src/components/ModalDialog';
-import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
-import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
-import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -84,7 +79,8 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: enumTransactionType.ForSale
+        saleType: enumTransactionType.ForSale,
+        txHash: ''
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -155,7 +151,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
 
         let _latestTransList: Array<TypeNFTTransaction> = [];
         let _prodTransHistory: Array<TypeNFTHisotry> = [];
-        for (let i = 0; i < arrLatestTransaction.length; i++) {
+        for (let i = 0; i < arrLatestTransaction.length; i ++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event === 'Transfer') continue;
             let _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
@@ -188,13 +184,14 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.SettleBidOrder;
                     break;
             }
+
             _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
             _transaction.time = timestamp.date + ' ' + timestamp.time;
             _latestTransList.push(_transaction);
-            
+
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
                 let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
                 _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Bought From');
@@ -202,7 +199,9 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                 _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type; 
+                // console.log('------------', _latestTransList[i].type)
+                // _prodTrans.saleType = _latestTransList[_latestTransList.length - 2].type;
+                _prodTrans.txHash = itemObject.tHash;  
                 _prodTransHistory.push(_prodTrans);
             }
         }
@@ -221,29 +220,10 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         getFetchData();
     }, []);
 
-    // change price tx fee
-    const setChangePriceTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
 
     useEffect(() => {
-        setChangePriceTxFee();
-    }, [dialogState.changePriceDlgStep]);
-
-    // cancel sale tx fee
-    const setCancelSaleTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
-    useEffect(() => {
-        setCancelSaleTxFee();
-    }, [dialogState.cancelSaleDlgStep]);
+        console.log('--------', prodTransHistory)
+    }, [prodTransHistory]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -276,43 +256,19 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
-                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                        <PinkButton
-                            sx={{ width: '100%' }}
-                            onClick={() => {
-                                if (signInDlgState.isLoggedIn) {
-                                    setDialogState({
-                                        ...dialogState,
-                                        cancelSaleDlgOpened: true,
-                                        cancelSaleDlgStep: 0,
-                                        cancelSaleOrderId: productDetail.orderId || '',
-                                    });
-                                } else {
-                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                }
-                            }}
-                        >
-                            Cancel Sale
-                        </PinkButton>
-                        <PrimaryButton
-                            sx={{ width: '100%' }}
-                            onClick={() => {
-                                if (signInDlgState.isLoggedIn) {
-                                    setDialogState({
-                                        ...dialogState,
-                                        changePriceDlgOpened: true,
-                                        changePriceDlgStep: 0,
-                                        changePriceCurPrice: productDetail.price_ela,
-                                        changePriceOrderId: productDetail.orderId || '',
-                                    });
-                                } else {
-                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                }
-                            }}
-                        >
-                            Change Price
-                        </PrimaryButton>
-                    </Stack>
+                    <PrimaryButton
+                        sx={{ marginTop: 3, width: '100%' }}
+                        onClick={() => {
+                            setDialogState({
+                                ...dialogState,
+                                mintTokenId: productDetail.tokenIdHex,
+                                createNFTDlgOpened: true,
+                                createNFTDlgStep: 3,
+                            });
+                        }}
+                    >
+                        Sell
+                    </PrimaryButton>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>
@@ -342,24 +298,6 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
             </Grid>
-            <ModalDialog
-                open={dialogState.changePriceDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, changePriceDlgOpened: false });
-                }}
-            >
-                {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
-                {dialogState.changePriceDlgStep === 1 && <PriceChangeSuccess />}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.cancelSaleDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
-                }}
-            >
-                {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
-                {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
-            </ModalDialog>
         </>
     );
 };

@@ -24,7 +24,7 @@ import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
-import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
+// import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -57,7 +57,8 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: enumTransactionType.ForSale
+        saleType: enumTransactionType.ForSale,
+        txHash: ''
     };
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
@@ -104,13 +105,13 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
 
-            // let _prodTransHistory: Array<TypeNFTHisotry> = [];
             let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
             _prodTrans.type = 'Created';
             _prodTrans.price = itemObject.price / 1e18;
             _prodTrans.user = product.author;
             let timestamp = getTime(itemObject.timestamp.toString());
             _prodTrans.time = timestamp.date + ' ' + timestamp.time;
+            _prodTrans.txHash = itemObject.tokenId; 
             setProdTransHistory([_prodTrans]);
         }
         setProductDetail(product);
@@ -196,7 +197,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     <Stack spacing={10}></Stack>
                 </Grid>
             </Grid>
-            <MintNFTDlgContainer />
+            {/* <MintNFTDlgContainer /> */}
         </>
     );
 };
