@@ -48,48 +48,43 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             };
         });
 
-    // const createFetchParam = () =>
+    // const sendServerBlindBoxInfo = () =>
     //     new Promise((resolve, reject) => {
-    //         if (!dialogState.crtBlindImage) reject('no file');
-    //         try {
-    //             const fetchParams = {
-    //                 token: tokenCookies.METEAST_TOKEN,
-    //                 did: didCookies.METEAST_DID,
-    //                 title: dialogState.crtBlindTitle,
-    //                 description: dialogState.crtBlindDescription,
-    //                 authorDescription: dialogState.crtBlindAuthorDescription,
-    //                 filename: dialogState.crtBlindImage,
-    //                 tokenId: dialogState.crtBlindTokenIds,
-    //                 status: dialogState.crtBlindStatus,
-    //                 copies: dialogState.crtBlindQuantity,
-    //                 price: dialogState.crtBlindPrice,
-    //                 saleBegin: dialogState.crtBlindSaleBegin.value,
-    //                 saleEnd: dialogState.crtBlindSaleEnd.value,
-    //                 likes: dialogState.crtBlindLikes,
-    //                 views: dialogState.crtBlindViews,
-    //                 purchases: dialogState.crtBlindPurchases,
-    //                 sort: dialogState.crtBlindSort.value,
-    //             };
-    //             resolve(fetchParams);
-    //         } catch (error) {
-    //             reject(error);
-    //         }
+    //         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/updateBlinxboxIds`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({tokenIds: dialogState.crtBlindTokenIds}),
+    //         })
+    //             .then((response) => response.json())
+    //             .then((data) => {
+    //                 if (data.code === 200) {
+    //                     alert('success');
+    //                     resolve(true);
+    //                 } else {
+    //                     alert('error');
+    //                     resolve(false);
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 reject(error);
+    //             });
     //     });
 
     const uploadBlindBoxInfo = (imgUri: string) =>
         new Promise((resolve, reject) => {
-            // Create an object of formData
             const formData = new FormData();
             formData.append('token', tokenCookies.METEAST_TOKEN);
             formData.append('did', didCookies.METEAST_DID);
-            formData.append('title', dialogState.crtBlindTitle);
+            formData.append('name', dialogState.crtBlindTitle);
             formData.append('description', dialogState.crtBlindDescription);
             formData.append('authorDescription', dialogState.crtBlindAuthorDescription);
-            formData.append('file', imgUri);
+            formData.append('asset', imgUri);
             formData.append('tokenIds', dialogState.crtBlindTokenIds);
             formData.append('status', dialogState.crtBlindStatus);
             formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
-            formData.append('maxPrice', dialogState.crtBlindPrice.toString());
+            formData.append('blindPrice', dialogState.crtBlindPrice.toString());
             formData.append('saleBegin', (new Date(dialogState.crtBlindSaleBegin).getTime() / 1e3).toString());
             formData.append('saleEnd', (new Date(dialogState.crtBlindSaleEnd).getTime() / 1e3).toString());
             formData.append('maxLikes', dialogState.crtBlindLikes.toString());
@@ -102,6 +97,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 },
             };
             axios
+
+                // .post(`https://94c0-80-237-47-16.ngrok.io/api/v1/createBlindBox`, formData, config)
                 .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, formData, config)
                 .then((response) => {
                     console.log(response);
@@ -253,20 +250,14 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         let _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
         let _inQuoteTokens: string[] = Array(_inTokenIds.length);
         let _inPrices: string[] = Array(_inTokenIds.length);
-        _inQuoteTokens.fill(_quoteToken)
+        _inQuoteTokens.fill(_quoteToken);
         _inPrices.fill(BigInt(dialogState.crtBlindPrice * 1e18).toString());
-        console.log('=========', _inTokenIds)
-        console.log('=========', _inQuoteTokens)
-        console.log('=========', _inPrices)
-        console.log('=========', signInDlgState.didUri)
+        console.log('=========', _inTokenIds);
+        console.log('=========', _inQuoteTokens);
+        console.log('=========', _inPrices);
+        console.log('=========', signInDlgState.didUri);
 
-        await callCreateOrderForSaleBatch(
-            _inTokenIds,
-            _inQuoteTokens,
-            _inPrices,
-            signInDlgState.didUri,
-            true,
-        );
+        await callCreateOrderForSaleBatch(_inTokenIds, _inQuoteTokens, _inPrices, signInDlgState.didUri, true);
     };
 
     const handleCreateBlindBox = () => {
@@ -280,7 +271,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         }
         sendIpfsImage(dialogState.crtBlindImage)
             .then((added: any) => {
-                const imgUri = added.path;
+                const imgUri = `meteast:image:${added.path}`;
                 return uploadBlindBoxInfo(imgUri);
             })
             .then((success) => {
@@ -289,7 +280,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
+                    // return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
+                    // return sendServerBlindBoxInfo();
                 } else {
                     enqueueSnackbar('Upload data to backend servce error!', {
                         variant: 'warning',
@@ -297,7 +289,12 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     });
                 }
             })
+            // .then((success) => {
+            //     console.log(success);
+            //     // return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
+            // })
             .catch((error) => {
+                console.log(error);
                 enqueueSnackbar('Create Blind Box error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },

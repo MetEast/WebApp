@@ -165,6 +165,17 @@ export type TypeProductFetch = {
     sold: number;
     orderId: string;
     category: string;
+//
+    blindBoxIndex: number;
+    blindPrice: string;
+    maxLikes: string;
+    maxPurchases: string;
+    maxQuantity: string;
+    maxViews: string;
+    saleBegin: string;
+    saleEnd: string;
+    sort: string;
+    state: string;
 };
 
 export type TypeFavouritesFetch = {

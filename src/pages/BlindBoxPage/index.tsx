@@ -58,12 +58,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         defaultValue,
         defaultValue,
     ]);
-    const [bBList, setBBList] = useState<Array<TypeProduct>>([
-        defaultValue,
-        defaultValue,
-        defaultValue,
-        defaultValue,
-    ]);
+    const [bBList, setBBList] = useState<Array<TypeProduct>>([defaultValue, defaultValue, defaultValue, defaultValue]);
 
     const adBanners = [
         '/assets/images/banners/banner1.png',
@@ -71,7 +66,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         '/assets/images/banners/banner3.png',
     ];
 
-    // -------------- Fetch Data -------------- //  
+    // -------------- Fetch Data -------------- //
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${
             process.env.REACT_APP_SERVICE_URL
@@ -166,9 +161,10 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     };
 
     const getBlindBoxList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        var reqUrl = `${
-            process.env.REACT_APP_BACKEND_URL
-        }/api/v1/searchBlindBox?did=${didCookies.METEAST_DID}&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        // let reqUrl = `https://94c0-80-237-47-16.ngrok.io/api/v1/searchBlindBox?did=${didCookies.METEAST_DID}&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/searchBlindBox?did=${
+            didCookies.METEAST_DID
+        }&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch (sortBy.value) {
                 case 'low_to_high':
@@ -225,35 +221,37 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         let _blindBoxList: Array<TypeProduct> = [];
         for (let i = 0; i < arrBlindBoxList.length; i++) {
             let itemObject: TypeProductFetch = arrBlindBoxList[i];
-            var product: TypeProduct = { ...defaultValue };
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || ' ';
-            product.type =
-                itemObject.status === 'ComingSoon'
+            let blindboxItem: TypeProduct = { ...defaultValue };
+            blindboxItem.tokenId = itemObject.blindBoxIndex.toString();
+            blindboxItem.name = itemObject.name;
+            blindboxItem.image = getImageFromAsset(itemObject.asset);
+            blindboxItem.price_ela = parseInt(itemObject.blindPrice);
+            blindboxItem.price_usd = blindboxItem.price_ela * tokenPriceRate;
+            // blindboxItem.author = itemObject.authorName || ' ';
+            let curTimestamp = new Date().getTime() / 1000;
+            blindboxItem.type =
+                parseInt(itemObject.saleBegin) > curTimestamp
                     ? enumBlindBoxNFTType.ComingSoon
-                    : itemObject.status === 'SaleEnded'
-                    ? enumBlindBoxNFTType.SaleEnded
-                    : enumBlindBoxNFTType.SaleEnds;
-            product.likes = itemObject.likes;
-            product.isLike =
+                    : parseInt(itemObject.saleEnd) >= curTimestamp
+                    ? enumBlindBoxNFTType.SaleEnds
+                    : enumBlindBoxNFTType.SaleEnded;
+
+            blindboxItem.likes = itemObject.likes;
+            blindboxItem.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
                 ) === -1
                     ? false
                     : true;
-            product.sold = itemObject.sold || 0;
-            product.instock = itemObject.instock || 0;
-            if (itemObject.endTime) {
-                let endTime = getTime(itemObject.endTime); // no proper value
-                product.endTime = endTime.date + ' ' + endTime.time;
+            blindboxItem.sold = itemObject.sold || 0;
+            blindboxItem.instock = itemObject.instock || 0;
+            if (itemObject.saleEnd) {
+                let endTime = getTime(itemObject.saleEnd); // no proper value
+                blindboxItem.endTime = endTime.date + ' ' + endTime.time;
             } else {
-                product.endTime = '---';
+                blindboxItem.endTime = '';
             }
-            _blindBoxList.push(product);
+            _blindBoxList.push(blindboxItem);
         }
         setBBList(_blindBoxList);
     };
@@ -268,9 +266,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     useEffect(() => {
         getFetchData();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
-    // -------------- Fetch Data -------------- //  
+    // -------------- Fetch Data -------------- //
 
-    // -------------- Option Bar -------------- // 
+    // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -287,12 +285,15 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             else if (status === 1) filters.push(enumFilterOption.onAuction);
             else if (status === 2) filters.push(enumFilterOption.hasBids);
             setFilters(filters);
-            setFilterRange({min: minPrice === '' ? undefined : parseFloat(minPrice), max: maxPrice === '' ? undefined : parseFloat(maxPrice)});
+            setFilterRange({
+                min: minPrice === '' ? undefined : parseFloat(minPrice),
+                max: maxPrice === '' ? undefined : parseFloat(maxPrice),
+            });
         }
     };
-    // -------------- Option Bar -------------- //   
+    // -------------- Option Bar -------------- //
 
-    // -------------- Views -------------- //  
+    // -------------- Views -------------- //
     const updateBlindBoxLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...blindBoxList];
         if (type === 'inc') {
@@ -332,7 +333,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 </Stack>
             )}
             <Grid container mt={2} spacing={4}>
-                {blindBoxList.map((item, index) => (
+                {bBList.map((item, index) => (
                     <Grid
                         item
                         xs={productViewMode === 'grid1' ? 12 : 6}
