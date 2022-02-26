@@ -85,17 +85,17 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
                 <Stack spacing={3}>
                     <Box>
                         <Grid container>
-                            <Grid item xs={3}>
+                            <Grid item xs={4}>
                                 <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                                     User
                                 </Typography>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={4}>
                                 <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                                     Date
                                 </Typography>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={4}>
                                 <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                                     Price
                                 </Typography>
@@ -104,20 +104,20 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
                         <Grid container marginTop={2.5} rowGap={3} alignItems="center">
                             {bidsList.map((item, index) => (
                                 <>
-                                    <Grid item xs={3}>
+                                    <Grid item xs={4}>
                                         <Typography fontSize={16} fontWeight={700}>
                                             {item.user}
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={3}>
+                                    <Grid item xs={4}>
                                         <Typography fontSize={12} fontWeight={500}>
                                             {item.time}
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={3}>
+                                    <Grid item xs={4}>
                                         <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                                     </Grid>
-                                    <Grid item xs={3} display="flex" flexDirection="row" justifyContent="flex-end">
+                                    {/* <Grid item xs={3} display="flex" flexDirection="row" justifyContent="flex-end">
                                         <SecondaryButton
                                             size="small"
                                             sx={{
@@ -144,7 +144,7 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
                                         >
                                             Accept
                                         </SecondaryButton>
-                                    </Grid>
+                                    </Grid> */}
                                 </>
                             ))}
                         </Grid>
