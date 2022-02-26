@@ -38,7 +38,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 // import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 // import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
-// import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
+import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 // import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 // import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 // import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
@@ -60,6 +60,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [testdlgOpen, setTestdlgOpen] = React.useState<boolean>(false);
+    const testDlgShow = false;
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
@@ -203,24 +204,28 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 ) : (
                     <Stack direction="row" alignItems="center" spacing={2}>
                         {menuButtons}
-                        {/* <Button
-                            onClick={() => {
-                                setTestdlgOpen(true);
-                            }}
-                        >
-                            DlgTest
-                        </Button> */}
+                        {testDlgShow && (
+                            <Button
+                                onClick={() => {
+                                    setTestdlgOpen(true);
+                                }}
+                            >
+                                DlgTest
+                            </Button>
+                        )}
                     </Stack>
                 )}
             </Stack>
-            {/* <ModalDialog
-                open={testdlgOpen}
-                onClose={() => {
-                    setTestdlgOpen(false);
-                }}
-            >
-                <NoBids />
-            </ModalDialog> */}
+            {testDlgShow && (
+                <ModalDialog
+                    open={testdlgOpen}
+                    onClose={() => {
+                        setTestdlgOpen(false);
+                    }}
+                >
+                    <WaitingConfirm />
+                </ModalDialog>
+            )}
         </>
     );
 };
