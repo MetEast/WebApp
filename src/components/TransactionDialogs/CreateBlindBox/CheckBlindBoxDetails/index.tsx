@@ -101,7 +101,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 // .post(`https://94c0-80-237-47-16.ngrok.io/api/v1/createBlindBox`, formData, config)
                 .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, formData, config)
                 .then((response) => {
-                    console.log(response);
                     if (response.data.code === 200) {
                         resolve(true);
                     } else resolve(false);

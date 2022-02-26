@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Stack, IconButton, Link } from '@mui/material';
+import { Box, Typography, Stack, IconButton, Link, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
 import PageButton from './PageButton';

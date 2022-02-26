@@ -104,6 +104,7 @@ interface State {
     buyBlindPriceUsd: number;
     buyBlindAmount: number;
     buyBlindOrderId: string;
+    buyBlindImage: string;
     buyBlindTxFee: number;
     buyBlindTxHash: string;
     buyBlindCreator: string;
@@ -216,6 +217,7 @@ const defaultState: State = {
     buyBlindPriceUsd: 0,
     buyBlindAmount: 0,
     buyBlindOrderId: '',
+    buyBlindImage: '',
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',

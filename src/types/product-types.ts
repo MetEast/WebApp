@@ -14,7 +14,7 @@ export enum enumMyNFTType {
     OnAuction = 'MyNFT - On Auction',
     Created = 'MyNFT - Created',
     Sold = 'MyNFT - Sold',
-    Purchased = 'MyNFT - Purchased'
+    Purchased = 'MyNFT - Purchased',
 }
 
 export enum enumBadgeType {
@@ -50,7 +50,7 @@ export enum enumTransactionType {
     ChangeOrder = 'Change Order',
     CancelOrder = 'Cancel Order',
     // Transfer = 'Transfer'
-    SettleBidOrder = 'SettleBidOrder'
+    SettleBidOrder = 'SettleBidOrder',
 }
 
 export type TypeProduct = {
@@ -90,6 +90,11 @@ export type TypeProduct = {
     category?: string;
     status?: string;
     isExpired?: boolean;
+    state?: string;
+    maxPurchases?: number;
+    maxViews?: number;
+    maxLikes?: number;
+    maxQuantity?: number;
 };
 
 export type TypeNFTTransaction = {
@@ -165,7 +170,7 @@ export type TypeProductFetch = {
     sold: number;
     orderId: string;
     category: string;
-//
+    //
     blindBoxIndex: number;
     blindPrice: string;
     maxLikes: string;

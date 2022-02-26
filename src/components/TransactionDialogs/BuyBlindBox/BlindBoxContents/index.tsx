@@ -10,6 +10,7 @@ export interface ComponentProps {}
 const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [imgIndex, setImgIndex] = useState<number>(1);
+    const [selImg, setSelImg] = useState<string>(dialogState.buyBlindImage);
 
     return (
         <Stack spacing={3} width={320}>
@@ -19,7 +20,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <PageNumberTypo>{imgIndex} of {dialogState.buyBlindAmount}</PageNumberTypo>
                 <Box borderRadius={4} overflow="hidden">
-                    <img src="/assets/images/blindbox/blindbox-nft-template2.png" alt="" />
+                    <img src={selImg} alt="" />
                 </Box>
                 <Typography fontSize={18} fontWeight={700} marginTop={2}>
                     {dialogState.buyBlindName}
