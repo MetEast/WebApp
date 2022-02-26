@@ -25,7 +25,7 @@ const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
 
     return (
         <Box>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5}>
+            <Stack direction="row" alignItems="center" spacing={2} marginTop={5}>
                 <Typography fontSize={22} fontWeight={700}>
                     Latest Bids
                 </Typography>

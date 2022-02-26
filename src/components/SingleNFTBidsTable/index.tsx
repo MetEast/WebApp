@@ -69,7 +69,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                 }
             >
                 <Stack direction="column" alignItems="left" justifyContent="space-between" marginTop={1}>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5}>
+                    <Stack direction="row" alignItems="center" spacing={2} marginTop={5}>
                         <Typography fontSize={22} fontWeight={700}>
                             Latest Bids
                         </Typography>
