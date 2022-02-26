@@ -231,7 +231,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || '---';
+            product.author = itemObject.authorName || ' ';
             product.type =
                 itemObject.status === 'ComingSoon'
                     ? enumBlindBoxNFTType.ComingSoon
@@ -332,7 +332,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 </Stack>
             )}
             <Grid container mt={2} spacing={4}>
-                {bBList.map((item, index) => (
+                {blindBoxList.map((item, index) => (
                     <Grid
                         item
                         xs={productViewMode === 'grid1' ? 12 : 6}

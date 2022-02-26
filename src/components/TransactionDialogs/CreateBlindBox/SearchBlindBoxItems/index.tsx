@@ -12,13 +12,14 @@ export interface ComponentProps {
     onClose: () => void;
 }
 
-const SearchBlindBoxItems: React.FC<ComponentProps> = ({onClose}): JSX.Element => {
+const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
     const [keyWord, setKeyWord] = useState<string>('');
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
+    const [indeterminateChecked, setIndeterminateChecked] = useState<boolean>(false);
     const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>([]);
 
     const defaultValue: TypeBlindBoxSelectItem = {
@@ -28,6 +29,9 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({onClose}): JSX.Element =
         projectTitle: '',
         projectType: '',
     };
+
+    let allTokenIds: Array<string> = [];
+    for (let i = 0; i < itemList.length; i ++) allTokenIds.push(itemList[i].tokenId);
 
     // -------------- Fetch Data -------------- //
     const getBlindBoxItemList = async () => {
@@ -70,6 +74,16 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({onClose}): JSX.Element =
     // -------------- Fetch Data -------------- //
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let _itemChecked: Array<boolean> = Array(itemList.length);
+        if (event.target.checked) {
+            _itemChecked.fill(true);
+            setSelectedTokenIds(allTokenIds);        
+        }
+        else {
+            _itemChecked.fill(false);
+            setSelectedTokenIds([]);        
+        }
+        setItemChecked(_itemChecked);
         setAllChecked(event.target.checked);
     };
 
@@ -77,13 +91,25 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({onClose}): JSX.Element =
         let checkState: Array<boolean> = [...itemChecked];
         let selTokenIds: Array<string> = [...selectedTokenIds];
         checkState[index] = event.target.checked;
-        if (event.target.checked) selTokenIds.push(itemList[index].tokenId);
+        if (event.target.checked) {
+            selTokenIds.push(itemList[index].tokenId);
+        }
         else {
             const id = selTokenIds.indexOf(itemList[index].tokenId);
-            selTokenIds = selTokenIds.splice(id,  1);
+            selTokenIds.splice(id, 1);
         }
         setItemChecked(checkState);
         setSelectedTokenIds(selTokenIds);
+        
+        if (selTokenIds.length === itemList.length) { // all selected
+            setIndeterminateChecked(false);
+            setAllChecked(true);
+        }
+        else {
+            if (selTokenIds.length === 0) setIndeterminateChecked(false);
+            else setIndeterminateChecked(true);
+            setAllChecked(false);
+        }
     };
 
     return (
@@ -101,7 +127,8 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({onClose}): JSX.Element =
                     <Grid item xs={1} paddingY={1}>
                         <Checkbox
                             color="primary"
-                            indeterminate={!allChecked}
+                            checked={allChecked}
+                            indeterminate={indeterminateChecked}
                             sx={{ padding: 0 }}
                             onChange={handleSelectAll}
                         />
@@ -124,7 +151,8 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({onClose}): JSX.Element =
                                 <Checkbox
                                     color="primary"
                                     sx={{ padding: 0 }}
-                                    checked={allChecked || itemChecked[index]}
+                                    value="off"
+                                    checked={itemChecked[index] === undefined ? false : itemChecked[index]}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         handleSelect(event, index);
                                     }}
@@ -149,7 +177,8 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({onClose}): JSX.Element =
             <PrimaryButton
                 onClick={() => {
                     setDialogState({
-                        ...dialogState, crtBlindTokenIds: selectedTokenIds.join(';')
+                        ...dialogState,
+                        crtBlindTokenIds: selectedTokenIds.join(';')
                     });
                     onClose();
                 }}

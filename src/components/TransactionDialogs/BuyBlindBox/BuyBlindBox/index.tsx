@@ -13,6 +13,18 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [amount, setAmount] = useState<number>(1);
 
+    const selectFromBlindBox = async () => {
+        const resNFTList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/sticker/api/v1/selectBlindBoxToken?${dialogState.buyBlindBoxId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        });
+        const dataNFTList = await resNFTList.json();
+        // const prodNFTList = dataNFTList.data;
+        console.log(resNFTList);
+        setDialogState({ ...dialogState, buyBlindBoxDlgStep: 1, buyBlindBoxDlgOpened: true, buyBlindAmount: amount });
+    };
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
@@ -68,7 +80,10 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <Typography fontSize={14} fontWeight={700} marginTop={4} sx={{ textTransform: 'uppercase' }}>
                     Subtotal
                 </Typography>
-                <ELAPrice price_ela={dialogState.buyBlindPriceEla * amount} price_usd={dialogState.buyBlindPriceUsd * amount} />
+                <ELAPrice
+                    price_ela={dialogState.buyBlindPriceEla * amount}
+                    price_usd={dialogState.buyBlindPriceUsd * amount}
+                />
             </Stack>
             <Stack direction="row" spacing={2}>
                 <SecondaryButton
@@ -79,12 +94,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 >
                     close
                 </SecondaryButton>
-                <PrimaryButton
-                    fullWidth
-                    onClick={() => {
-                        setDialogState({ ...dialogState, buyBlindBoxDlgStep: 1, buyBlindBoxDlgOpened: true, buyBlindAmount: amount });
-                    }}
-                >
+                <PrimaryButton fullWidth onClick={selectFromBlindBox}>
                     Confirm
                 </PrimaryButton>
             </Stack>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import { useStyles, SelectBtn, DateTimeInput } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
@@ -39,36 +39,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
-    const saleBeginsOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Begin Date 1',
-            value: 'Begin Date 1',
-        },
-        {
-            label: 'Begin Date 2',
-            value: 'Begin Date 2',
-        },
-        {
-            label: 'Begin Date 3',
-            value: 'Begin Date 3',
-        },
-    ];
-
-    const saleEndsOptions: Array<TypeSelectItem> = [
-        {
-            label: 'End Date 1',
-            value: 'End Date 1',
-        },
-        {
-            label: 'End Date 2',
-            value: 'End Date 2',
-        },
-        {
-            label: 'End Date 3',
-            value: 'End Date 3',
-        },
-    ];
-
     const sortOptions: Array<TypeSelectItem> = [
         {
             label: 'Sort Option 1',
@@ -90,14 +60,14 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxImage, setBlindboxImage] = useState<File>();
     const [stateFile, setStateFile] = useState(null);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
-    const [blindboxQuantity, setblindboxQuantity] = useState<number>(0);
+    const [blindboxQuantity, setBlindboxQuantity] = useState<number>(0);
     const [blindboxPrice, setBlindboxPrice] = useState<number>(0);
     const [blindboxLikes, setBlindboxLikes] = useState<number>(0);
     const [blindboxViews, setBlindboxViews] = useState<number>(0);
     const [blindboxPurchases, setBlindboxPurchases] = useState<number>(0);
 
     const [blindboxItem, setBlindboxItem] = useState<TypeSelectItem>();
-    const [blindboxItemSelectOpen, setBlindboxItemSelectOpen] = useState(false);
+    // const [blindboxItemSelectOpen, setBlindboxItemSelectOpen] = useState(false);
 
     const [saleBegins, setSaleBegins] = React.useState<string>('');
     const [saleEnds, setSaleEnds] = useState<string>('');
@@ -106,10 +76,10 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [sortSelectOpen, setSortSelectOpen] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
-    const handleBlindboxItemChange = (value: string) => {
-        const item = blindboxItemsOptions.find((option) => option.value === value);
-        setBlindboxItem(item);
-    };
+    // const handleBlindboxItemChange = (value: string) => {
+    //     const item = blindboxItemsOptions.find((option) => option.value === value);
+    //     setBlindboxItem(item);
+    // };
 
     const handleSortChange = (value: string) => {
         const item = sortOptions.find((option) => option.value === value);
@@ -129,6 +99,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             setStateFile({ ...file, preview: URL.createObjectURL(file) });
         }
     }, []);
+
+    useEffect(() => {
+        let tokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
+        setBlindboxQuantity(tokenIds.length);
+    }, [dialogState.crtBlindTokenIds]);
 
     return (
         <>
@@ -188,7 +163,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         cursor: 'pointer',
                                     }}
                                 />
-                                <Stack direction="row" spacing={1}>
+                                {/* <Stack direction="row" spacing={1}>
                                     <SecondaryButton
                                         fullWidth
                                         size="small"
@@ -211,13 +186,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         />
                                         {`Edit`}
                                     </SecondaryButton>
-                                </Stack>
+                                </Stack> */}
                             </Stack>
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Blind box items
                                 </Typography>
-                                <Select
+                                {/* <Select
                                     titlebox={
                                         <SelectBtn fullWidth isOpen={blindboxItemSelectOpen ? 1 : 0}>
                                             {blindboxItem ? blindboxItem.label : 'Add  NFT to blind box'}
@@ -228,7 +203,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     isOpen={blindboxItemSelectOpen ? 1 : 0}
                                     setIsOpen={setBlindboxItemSelectOpen}
                                     handleClick={handleBlindboxItemChange}
-                                />
+                                /> */}
                                 <PrimaryButton fullWidth size="small" onClick={() => setSelectDlgOpened(true)}>
                                     Choose NFTs to add
                                 </PrimaryButton>
@@ -265,9 +240,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 </Stack>
                             </Stack>
                             <CustomTextField
+                                disabled
+                                inputValue={blindboxQuantity.toString() || ''}
                                 title="Number of copies"
                                 placeholder="es. 1000"
-                                changeHandler={(value: string) => setblindboxQuantity(parseInt(value))}
+                                changeHandler={(value: string) => setBlindboxQuantity(parseInt(value))}
                             />
                             <ELAPriceInput title="Price" handleChange={setBlindboxPrice} />
                             <Stack spacing={0.5}>
@@ -405,7 +382,9 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     setSelectDlgOpened(false);
                 }}
             >
-                <SearchBlindBoxItems onClose={() => setSelectDlgOpened(false)} />
+                <SearchBlindBoxItems onClose={() => {
+                    setSelectDlgOpened(false);
+                }} />
             </ModalDialog>
         </>
     );

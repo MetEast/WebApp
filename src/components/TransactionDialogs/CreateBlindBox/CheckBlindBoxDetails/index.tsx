@@ -90,8 +90,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             formData.append('status', dialogState.crtBlindStatus);
             formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
             formData.append('maxPrice', dialogState.crtBlindPrice.toString());
-            formData.append('saleBegin', dialogState.crtBlindSaleBegin);
-            formData.append('saleEnd', dialogState.crtBlindSaleEnd);
+            formData.append('saleBegin', (new Date(dialogState.crtBlindSaleBegin).getTime() / 1e3).toString());
+            formData.append('saleEnd', (new Date(dialogState.crtBlindSaleEnd).getTime() / 1e3).toString());
             formData.append('maxLikes', dialogState.crtBlindLikes.toString());
             formData.append('maxViews', dialogState.crtBlindViews.toString());
             formData.append('maxPurchases', dialogState.crtBlindPurchases.toString());
@@ -103,13 +103,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             };
             axios
                 .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, formData, config)
-                // .then((response) => response.json())
                 .then((response) => {
                     console.log(response);
                     if (response.data.code === 200) {
                         resolve(true);
                     } else resolve(false);
-                    // resolve(true)
                 });
             // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, {
             //     method: 'POST',
@@ -307,10 +305,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             });
     };
 
-    React.useEffect(() => {
-        console.log('++++++++++++', dialogState.crtBlindTokenIds);
-    }, [dialogState.crtBlindTokenIds]);
-
     const classes = useStyles();
     return (
         <>
@@ -359,11 +353,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     </InfoItemWrapper>
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Sale Begins</DetailedInfoTitleTypo>
-                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleBegin}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleBegin.replace('T', ' ')}</DetailedInfoLabelTypo>
                     </InfoItemWrapper>
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
-                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleEnd}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleEnd.replace('T', ' ')}</DetailedInfoLabelTypo>
                     </InfoItemWrapper>
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Max num of purchases</DetailedInfoTitleTypo>
@@ -381,10 +375,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             {dialogState.crtBlindAuthorDescription}
                         </DetailedInfoLabelTypo>
                     </InfoItemWrapper>
-                    <InfoItemWrapper>
+                    {/* <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Items</DetailedInfoTitleTypo>
                         <DetailedInfoLabelTypo textAlign="right">{dialogState.crtBlindTokenIds}</DetailedInfoLabelTypo>
-                    </InfoItemWrapper>
+                    </InfoItemWrapper> */}
                 </Stack>
                 <Stack alignItems="center" spacing={1}>
                     <Typography fontSize={14} fontWeight={600}>

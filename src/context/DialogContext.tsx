@@ -98,10 +98,12 @@ interface State {
     // buy blind box
     buyBlindBoxDlgOpened: boolean;
     buyBlindBoxDlgStep: number;
+    buyBlindBoxId: number;
     buyBlindName: string;
     buyBlindPriceEla: number;
     buyBlindPriceUsd: number;
     buyBlindAmount: number;
+    buyBlindOrderId: string;
     buyBlindTxFee: number;
     buyBlindTxHash: string;
     buyBlindCreator: string;
@@ -208,10 +210,12 @@ const defaultState: State = {
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
+    buyBlindBoxId: 0,
     buyBlindName: '',
     buyBlindPriceEla: 0,
     buyBlindPriceUsd: 0,
     buyBlindAmount: 0,
+    buyBlindOrderId: '',
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',

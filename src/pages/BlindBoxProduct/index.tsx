@@ -80,7 +80,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
             product.isLike =
@@ -170,7 +170,9 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 buyBlindPriceEla: productDetail.price_ela,
                                 buyBlindPriceUsd: productDetail.price_usd,
                                 buyBlindAmount: 1,
-                                buyBlindCreator: productDetail.author
+                                buyBlindCreator: productDetail.author,
+                                buyBlindOrderId: productDetail.orderId || '',
+                                buyBlindBoxId: 1,
                             });
                         }}
                     >
