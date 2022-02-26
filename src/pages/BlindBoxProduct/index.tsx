@@ -20,14 +20,13 @@ import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSum
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
 import {
     enumBadgeType,
-    enumSingleNFTType,
     enumBlindBoxNFTType,
     TypeProduct,
     TypeProductFetch,
     TypeFavouritesFetch,
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { getImageFromAsset, getUTCTime, selectFromFavourites, getTime } from 'src/services/common';
+import { getImageFromAsset, selectFromFavourites, getTime } from 'src/services/common';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id

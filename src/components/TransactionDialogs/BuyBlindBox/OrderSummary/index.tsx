@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -10,6 +10,7 @@ import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'sr
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
+import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
@@ -20,6 +21,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
 
     const callBuyOrder = async (_orderId: string, _didUri: string, _price: string) => {
@@ -58,7 +60,36 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, buyBlindBoxDlgOpened: true, buyBlindBoxDlgStep: 2, buyBlindTxHash: txHash });
+                //
+                let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
+                const reqBody = {
+                    token: tokenCookies.METEAST_TOKEN,
+                    blindBoxId: dialogState.buyBlindBoxId,
+                    tokenId: dialogState.buyBlindTokenId,
+                };
+                fetch(reqUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reqBody),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.code === 200) {
+                            setDialogState({
+                                ...dialogState,
+                                buyBlindBoxDlgOpened: true,
+                                buyBlindBoxDlgStep: 2,
+                                buyBlindTxHash: txHash,
+                            });
+                        } else {
+                            console.log(data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);

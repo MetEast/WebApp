@@ -48,30 +48,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             };
         });
 
-    // const sendServerBlindBoxInfo = () =>
-    //     new Promise((resolve, reject) => {
-    //         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/updateBlinxboxIds`, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({tokenIds: dialogState.crtBlindTokenIds}),
-    //         })
-    //             .then((response) => response.json())
-    //             .then((data) => {
-    //                 if (data.code === 200) {
-    //                     alert('success');
-    //                     resolve(true);
-    //                 } else {
-    //                     alert('error');
-    //                     resolve(false);
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 reject(error);
-    //             });
-    //     });
-
     const uploadBlindBoxInfo = (imgUri: string) =>
         new Promise((resolve, reject) => {
             const formData = new FormData();
@@ -97,39 +73,12 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 },
             };
             axios
-
-                // .post(`https://94c0-80-237-47-16.ngrok.io/api/v1/createBlindBox`, formData, config)
                 .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, formData, config)
                 .then((response) => {
                     if (response.data.code === 200) {
                         resolve(true);
                     } else resolve(false);
                 });
-            // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(fetchParams),
-            // })
-            //     .then((response) => response.json())
-            //     .then((data) => {
-            //         if (data.code === 200) {
-            //             alert('success');
-            //             resolve(true);
-            //         } else {
-            //             alert('error');
-            //             console.log(data);
-            //             resolve(false);
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         enqueueSnackbar(
-            //             `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
-            //             { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
-            //         );
-            //         reject(error);
-            //     });
         });
 
     const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
@@ -245,17 +194,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const createOrder = async (_quoteToken: string) => {
-        console.log('************', dialogState.crtBlindTokenIds);
         let _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
         let _inQuoteTokens: string[] = Array(_inTokenIds.length);
         let _inPrices: string[] = Array(_inTokenIds.length);
         _inQuoteTokens.fill(_quoteToken);
         _inPrices.fill(BigInt(dialogState.crtBlindPrice * 1e18).toString());
-        console.log('=========', _inTokenIds);
-        console.log('=========', _inQuoteTokens);
-        console.log('=========', _inPrices);
-        console.log('=========', signInDlgState.didUri);
-
         await callCreateOrderForSaleBatch(_inTokenIds, _inQuoteTokens, _inPrices, signInDlgState.didUri, true);
     };
 
@@ -279,8 +222,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    // return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
-                    // return sendServerBlindBoxInfo();
+                    return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
                 } else {
                     enqueueSnackbar('Upload data to backend servce error!', {
                         variant: 'warning',
@@ -288,10 +230,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     });
                 }
             })
-            // .then((success) => {
-            //     console.log(success);
-            //     // return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
-            // })
             .catch((error) => {
                 console.log(error);
                 enqueueSnackbar('Create Blind Box error!', {

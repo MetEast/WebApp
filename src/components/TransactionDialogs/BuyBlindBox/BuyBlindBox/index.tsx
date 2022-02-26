@@ -66,6 +66,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             const itemObject: TypeProductFetch = productDetail;
             product.orderId = itemObject.orderId;
             product.image = getImageFromAsset(itemObject.asset);
+            product.tokenId = itemObject.tokenId;
             // product.tokenId = itemObject.tokenId;
             // product.name = itemObject.name;
             // product.image = getImageFromAsset(itemObject.asset);
@@ -99,6 +100,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             buyBlindAmount: amount,
             buyBlindOrderId: product.orderId || '',
             buyBlindImage: product.image,
+            buyBlindTokenId: product.tokenId
         });
     };
     return (

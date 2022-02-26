@@ -29,8 +29,8 @@ import {
 } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useCookies } from 'react-cookie';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
