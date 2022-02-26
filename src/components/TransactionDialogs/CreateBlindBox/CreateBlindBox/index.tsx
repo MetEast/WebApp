@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-import { useStyles, SelectBtn } from './styles';
+import { useStyles, SelectBtn, DateTimeInput } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
@@ -98,11 +98,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxItem, setBlindboxItem] = useState<TypeSelectItem>();
     const [blindboxItemSelectOpen, setBlindboxItemSelectOpen] = useState(false);
 
-    const [saleBegins, setSaleBegins] = useState<TypeSelectItem>();
-    const [saleBeginsSelectOpen, setSaleBeginsSelectOpen] = useState(false);
-
-    const [saleEnds, setSaleEnds] = useState<TypeSelectItem>();
-    const [saleEndsSelectOpen, setSaleEndsSelectOpen] = useState(false);
+    const [saleBegins, setSaleBegins] = React.useState<string>('');
+    const [saleEnds, setSaleEnds] = useState<string>('');
 
     const [sort, setSort] = useState<TypeSelectItem>();
     const [sortSelectOpen, setSortSelectOpen] = useState(false);
@@ -111,16 +108,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const handleBlindboxItemChange = (value: string) => {
         const item = blindboxItemsOptions.find((option) => option.value === value);
         setBlindboxItem(item);
-    };
-
-    const handleSaleBeginsChange = (value: string) => {
-        const item = saleBeginsOptions.find((option) => option.value === value);
-        setSaleBegins(item);
-    };
-
-    const handleSaleEndsChange = (value: string) => {
-        const item = saleEndsOptions.find((option) => option.value === value);
-        setSaleEnds(item);
     };
 
     const handleSortChange = (value: string) => {
@@ -286,35 +273,25 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 <Typography fontSize={12} fontWeight={700}>
                                     Sale Begins
                                 </Typography>
-                                <Select
-                                    titlebox={
-                                        <SelectBtn fullWidth isOpen={saleBeginsSelectOpen ? 1 : 0}>
-                                            {saleBegins ? saleBegins.label : 'Pick Date'}
-                                            <Icon icon="ph:caret-down" className="arrow-icon" />
-                                        </SelectBtn>
-                                    }
-                                    options={saleBeginsOptions}
-                                    isOpen={saleBeginsSelectOpen ? 1 : 0}
-                                    setIsOpen={setSaleBeginsSelectOpen}
-                                    handleClick={handleSaleBeginsChange}
-                                />
+                                <DateTimeInput
+                                    type="datetime-local"
+                                    value={saleBegins}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setSaleBegins(event.target.value);
+                                    }}
+                                ></DateTimeInput>
                             </Stack>
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Sale Ends
                                 </Typography>
-                                <Select
-                                    titlebox={
-                                        <SelectBtn fullWidth isOpen={saleEndsSelectOpen ? 1 : 0}>
-                                            {saleEnds ? saleEnds.label : 'Pick Date'}
-                                            <Icon icon="ph:caret-down" className="arrow-icon" />
-                                        </SelectBtn>
-                                    }
-                                    options={saleEndsOptions}
-                                    isOpen={saleEndsSelectOpen ? 1 : 0}
-                                    setIsOpen={setSaleEndsSelectOpen}
-                                    handleClick={handleSaleEndsChange}
-                                />
+                                <DateTimeInput
+                                    type="datetime-local"
+                                    value={saleEnds}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setSaleEnds(event.target.value);
+                                    }}
+                                ></DateTimeInput>
                             </Stack>
                             <CustomTextField
                                 title="Number of favourites"
@@ -380,8 +357,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     blindboxItem?.value !== '' &&
                                     blindboxQuantity > 0 &&
                                     blindboxPrice > 0 &&
-                                    saleBegins?.value !== '' &&
-                                    saleEnds?.value !== '' &&
+                                    saleBegins !== '' &&
+                                    saleEnds !== '' &&
                                     blindboxLikes > 0 &&
                                     blindboxViews > 0 &&
                                     blindboxPurchases > 0 &&
@@ -398,8 +375,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         crtBlindStatus: blindboxStatus,
                                         crtBlindQuantity: blindboxQuantity,
                                         crtBlindPrice: blindboxPrice,
-                                        crtBlindSaleBegin: saleBegins || { label: '', value: '' },
-                                        crtBlindSaleEnd: saleEnds || { label: '', value: '' },
+                                        crtBlindSaleBegin: saleBegins,
+                                        crtBlindSaleEnd: saleEnds,
                                         crtBlindLikes: blindboxLikes,
                                         crtBlindViews: blindboxViews,
                                         crtBlindPurchases: blindboxPurchases,

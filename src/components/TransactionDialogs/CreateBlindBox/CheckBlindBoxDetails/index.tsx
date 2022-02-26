@@ -57,8 +57,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     status: dialogState.crtBlindStatus,
                     copies: dialogState.crtBlindQuantity,
                     price: dialogState.crtBlindPrice,
-                    saleBegin: dialogState.crtBlindSaleBegin.value,
-                    saleEnd: dialogState.crtBlindSaleEnd.value,
+                    saleBegin: dialogState.crtBlindSaleBegin,
+                    saleEnd: dialogState.crtBlindSaleEnd,
                     likes: dialogState.crtBlindLikes,
                     views: dialogState.crtBlindViews,
                     purchases: dialogState.crtBlindPurchases,
@@ -80,12 +80,15 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             formData.append('description', dialogState.crtBlindDescription);
             formData.append('authorDescription', dialogState.crtBlindAuthorDescription);
             formData.append('file', imgUri);
-            formData.append('tokenIds', '38849327409920734835477143637279288805665423210925588473023669586505758977592');
+            formData.append(
+                'tokenIds',
+                '38849327409920734835477143637279288805665423210925588473023669586505758977592',
+            );
             formData.append('status', dialogState.crtBlindStatus);
             formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
             formData.append('maxPrice', dialogState.crtBlindPrice.toString());
-            formData.append('saleBegin', dialogState.crtBlindSaleBegin.value);
-            formData.append('saleEnd', dialogState.crtBlindSaleEnd.value);
+            formData.append('saleBegin', dialogState.crtBlindSaleBegin);
+            formData.append('saleEnd', dialogState.crtBlindSaleEnd);
             formData.append('maxLikes', dialogState.crtBlindLikes.toString());
             formData.append('maxViews', dialogState.crtBlindViews.toString());
             formData.append('maxPurchases', dialogState.crtBlindPurchases.toString());
@@ -215,11 +218,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     </InfoItemWrapper>
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Sale Begins</DetailedInfoTitleTypo>
-                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleBegin.value}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleBegin}</DetailedInfoLabelTypo>
                     </InfoItemWrapper>
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
-                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleEnd.value}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.crtBlindSaleEnd}</DetailedInfoLabelTypo>
                     </InfoItemWrapper>
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Max num of purchases</DetailedInfoTitleTypo>
@@ -263,8 +266,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     crtBlindStatus: 'offline',
                                     crtBlindQuantity: 0,
                                     crtBlindPrice: 0,
-                                    crtBlindSaleBegin: { label: '', value: '' },
-                                    crtBlindSaleEnd: { label: '', value: '' },
+                                    crtBlindSaleBegin: '',
+                                    crtBlindSaleEnd: '',
                                     crtBlindLikes: 0,
                                     crtBlindViews: 0,
                                     crtBlindPurchases: 0,
