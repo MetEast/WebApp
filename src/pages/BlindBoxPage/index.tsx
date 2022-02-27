@@ -232,7 +232,11 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
-            {blindBoxList.length === 0 && <LooksEmptyBox />}
+            {blindBoxList.length === 0 && (
+                <Stack mt={6}>
+                    <LooksEmptyBox />
+                </Stack>
+            )}
             <Grid container mt={2} spacing={4}>
                 {blindBoxList.map((item, index) => (
                     <Grid
