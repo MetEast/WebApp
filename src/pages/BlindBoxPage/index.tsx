@@ -20,6 +20,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getTime } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
+import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -58,7 +59,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         defaultValue,
         defaultValue,
     ]);
-    const [bBList, setBBList] = useState<Array<TypeProduct>>([defaultValue, defaultValue, defaultValue, defaultValue]);
 
     const adBanners = [
         '/assets/images/banners/banner1.png',
@@ -67,101 +67,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     ];
 
     // -------------- Fetch Data -------------- //
-    const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        var reqUrl = `${
-            process.env.REACT_APP_SERVICE_URL
-        }/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
-        if (sortBy !== undefined) {
-            switch (sortBy.value) {
-                case 'low_to_high':
-                    reqUrl += `&orderType=price_l_to_h`;
-                    break;
-                case 'high_to_low':
-                    reqUrl += `&orderType=price_h_to_l`;
-                    break;
-                case 'most_viewed':
-                    reqUrl += `&orderType=mostviewed`;
-                    break;
-                case 'most_liked':
-                    reqUrl += `&orderType=mostliked`;
-                    break;
-                case 'most_recent':
-                    reqUrl += `&orderType=mostrecent`;
-                    break;
-                case 'oldest':
-                    reqUrl += `&orderType=oldest`;
-                    break;
-                case 'ending_soon':
-                    reqUrl += `&orderType=endingsoon`;
-                    break;
-                default:
-                    reqUrl += `&orderType=mostrecent`;
-                    break;
-            }
-        }
-        if (filterRange.min !== undefined) {
-            reqUrl += `&filter_min_price=${filterRange.min}`;
-        }
-        if (filterRange.max !== undefined) {
-            reqUrl += `&filter_max_price=${filterRange.max}`;
-        }
-        if (filters.length !== 0) {
-            let filterStatus: string = '';
-            filters.forEach((item) => {
-                if (item === 0) filterStatus += 'ON AUCTION,';
-                else if (item === 1) filterStatus += 'BUY NOW,';
-                else if (item === 2) filterStatus += 'HAS BID,';
-            });
-            reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
-        }
-
-        const resSearchResult = await fetch(reqUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        });
-        const dataSearchResult = await resSearchResult.json();
-        const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
-
-        let _newProductList: any = [];
-        for (let i = 0; i < arrSearchResult.length; i++) {
-            let itemObject: TypeProductFetch = arrSearchResult[i];
-            var product: TypeProduct = { ...defaultValue };
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || '---';
-            product.type =
-                itemObject.status === 'ComingSoon'
-                    ? enumBlindBoxNFTType.ComingSoon
-                    : itemObject.status === 'SaleEnded'
-                    ? enumBlindBoxNFTType.SaleEnded
-                    : enumBlindBoxNFTType.SaleEnds;
-            product.likes = itemObject.likes;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            product.sold = itemObject.sold || 0;
-            product.instock = itemObject.instock || 0;
-            if (itemObject.endTime) {
-                let endTime = getTime(itemObject.endTime); // no proper value
-                product.endTime = endTime.date + ' ' + endTime.time;
-            } else {
-                product.endTime = '---';
-            }
-            _newProductList.push(product);
-        }
-        setBlindBoxList(_newProductList);
-    };
-
     const getBlindBoxList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        // let reqUrl = `https://94c0-80-237-47-16.ngrok.io/api/v1/searchBlindBox?did=${didCookies.METEAST_DID}&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/searchBlindBox?did=${
             didCookies.METEAST_DID
         }&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
@@ -253,13 +159,12 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             }
             _blindBoxList.push(blindboxItem);
         }
-        setBBList(_blindBoxList);
+        setBlindBoxList(_blindBoxList);
     };
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getSearchResult(ela_usd_rate, favouritesList);
         getBlindBoxList(ela_usd_rate, favouritesList);
     };
 
@@ -327,13 +232,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
-            {bBList.length === 0 && (
-                <Stack justifyContent="center" alignItems="center" minHeight="50vh">
-                    <img src="/assets/images/loading.gif" alt="" />
-                </Stack>
-            )}
+            {blindBoxList.length === 0 && <LooksEmptyBox />}
             <Grid container mt={2} spacing={4}>
-                {bBList.map((item, index) => (
+                {blindBoxList.map((item, index) => (
                     <Grid
                         item
                         xs={productViewMode === 'grid1' ? 12 : 6}
