@@ -144,7 +144,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     </Typography>
                 )}
             </PrimaryButton>
-            <PrimaryButton
+            {/* <PrimaryButton
                 size="small"
                 sx={{ paddingX: 2 }}
                 onClick={() => {
@@ -158,6 +158,18 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     color="white"
                     style={{ marginLeft: 4, marginBottom: 4 }}
                 />
+            </PrimaryButton> */}
+            <PrimaryButton
+                size="small"
+                sx={{ paddingX: 2 }}
+                onClick={() => {
+                    if (signInDlgState.isLoggedIn)
+                        setDialogState({ ...dialogState, createBlindBoxDlgOpened: true, createBlindBoxDlgStep: 0 });
+                    else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                }}
+            >
+                <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 4, marginRight: 4 }} />
+                {mobile ? 'Blind Box' : 'New Blind Box'}
             </PrimaryButton>
         </>
     ) : (
@@ -183,7 +195,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 paddingBottom={mobile ? 1.5 : 0}
             >
                 {!mobile && (
-                    <Link href='/'>
+                    <Link href="/">
                         <Stack direction="row" alignItems="center" spacing={1.5}>
                             <img src="/assets/images/header/logo.svg" alt="" />
                             <Box display={{ xs: 'none', lg: 'block' }}>

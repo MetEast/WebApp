@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import TopNavbar from '../Navbar/TopNavbar';
 import BottomNavbar from '../Navbar/BottomNavbar';
 import Footer from '../Footer';
@@ -8,6 +8,7 @@ import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import SignInDlgContainer from '../SignInDialog';
 import ProgressBar from '../ProgressBar';
 import { useDialogContext } from 'src/context/DialogContext';
+import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
     const [dialogState] = useDialogContext();
@@ -52,6 +53,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 </Container>
             </Box>
             <MintNFTDlgContainer />
+            <CreateBlindBoxDlgContainer />
         </>
     );
 };
