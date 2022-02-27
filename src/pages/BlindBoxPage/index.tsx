@@ -26,7 +26,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [didCookies] = useCookies(['METEAST_DID']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
-    const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
@@ -59,6 +58,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         defaultValue,
         defaultValue,
     ]);
+    const [bBList, setBBList] = useState<Array<TypeProduct>>([defaultValue, defaultValue, defaultValue, defaultValue]);
 
     const adBanners = [
         '/assets/images/banners/banner1.png',
@@ -66,7 +66,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         '/assets/images/banners/banner3.png',
     ];
 
-    // -------------- Fetch Data -------------- //  
+    // -------------- Fetch Data -------------- //
     const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         var reqUrl = `${
             process.env.REACT_APP_SERVICE_URL
@@ -160,18 +160,115 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setBlindBoxList(_newProductList);
     };
 
+    const getBlindBoxList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+        // let reqUrl = `https://94c0-80-237-47-16.ngrok.io/api/v1/searchBlindBox?did=${didCookies.METEAST_DID}&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/searchBlindBox?did=${
+            didCookies.METEAST_DID
+        }&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        if (sortBy !== undefined) {
+            switch (sortBy.value) {
+                case 'low_to_high':
+                    reqUrl += `&orderType=price_l_to_h`;
+                    break;
+                case 'high_to_low':
+                    reqUrl += `&orderType=price_h_to_l`;
+                    break;
+                case 'most_viewed':
+                    reqUrl += `&orderType=mostviewed`;
+                    break;
+                case 'most_liked':
+                    reqUrl += `&orderType=mostliked`;
+                    break;
+                case 'most_recent':
+                    reqUrl += `&orderType=mostrecent`;
+                    break;
+                case 'oldest':
+                    reqUrl += `&orderType=oldest`;
+                    break;
+                case 'ending_soon':
+                    reqUrl += `&orderType=endingsoon`;
+                    break;
+                default:
+                    reqUrl += `&orderType=mostrecent`;
+                    break;
+            }
+        }
+        if (filterRange.min !== undefined) {
+            reqUrl += `&filter_min_price=${filterRange.min}`;
+        }
+        if (filterRange.max !== undefined) {
+            reqUrl += `&filter_max_price=${filterRange.max}`;
+        }
+        if (filters.length !== 0) {
+            let filterStatus: string = '';
+            filters.forEach((item) => {
+                if (item === 0) filterStatus += 'ON AUCTION,';
+                else if (item === 1) filterStatus += 'BUY NOW,';
+                else if (item === 2) filterStatus += 'HAS BID,';
+            });
+            reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
+        }
+
+        const resBlindBoxList = await fetch(reqUrl, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        });
+        const dataBlindBoxList = await resBlindBoxList.json();
+        const arrBlindBoxList = dataBlindBoxList.data === undefined ? [] : dataBlindBoxList.data.result;
+
+        let _blindBoxList: Array<TypeProduct> = [];
+        for (let i = 0; i < arrBlindBoxList.length; i++) {
+            let itemObject: TypeProductFetch = arrBlindBoxList[i];
+            let blindboxItem: TypeProduct = { ...defaultValue };
+            blindboxItem.tokenId = itemObject.blindBoxIndex.toString();
+            blindboxItem.name = itemObject.name;
+            blindboxItem.image = getImageFromAsset(itemObject.asset);
+            blindboxItem.price_ela = parseInt(itemObject.blindPrice);
+            blindboxItem.price_usd = blindboxItem.price_ela * tokenPriceRate;
+            // blindboxItem.author = itemObject.authorName || ' ';
+            let curTimestamp = new Date().getTime() / 1000;
+            blindboxItem.type =
+                parseInt(itemObject.saleBegin) > curTimestamp
+                    ? enumBlindBoxNFTType.ComingSoon
+                    : parseInt(itemObject.saleEnd) >= curTimestamp
+                    ? enumBlindBoxNFTType.SaleEnds
+                    : enumBlindBoxNFTType.SaleEnded;
+
+            blindboxItem.likes = itemObject.likes;
+            blindboxItem.isLike =
+                favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                    selectFromFavourites(value, itemObject.tokenId),
+                ) === -1
+                    ? false
+                    : true;
+            blindboxItem.sold = itemObject.sold || 0;
+            blindboxItem.instock = itemObject.instock || 0;
+            if (itemObject.saleEnd) {
+                let endTime = getTime(itemObject.saleEnd); // no proper value
+                blindboxItem.endTime = endTime.date + ' ' + endTime.time;
+            } else {
+                blindboxItem.endTime = '';
+            }
+            _blindBoxList.push(blindboxItem);
+        }
+        setBBList(_blindBoxList);
+    };
+
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getSearchResult(ela_usd_rate, favouritesList);
+        getBlindBoxList(ela_usd_rate, favouritesList);
     };
 
     useEffect(() => {
         getFetchData();
     }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
-    // -------------- Fetch Data -------------- //  
+    // -------------- Fetch Data -------------- //
 
-    // -------------- Option Bar -------------- // 
+    // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
     };
@@ -188,12 +285,15 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             else if (status === 1) filters.push(enumFilterOption.onAuction);
             else if (status === 2) filters.push(enumFilterOption.hasBids);
             setFilters(filters);
-            setFilterRange({min: minPrice === '' ? undefined : parseFloat(minPrice), max: maxPrice === '' ? undefined : parseFloat(maxPrice)});
+            setFilterRange({
+                min: minPrice === '' ? undefined : parseFloat(minPrice),
+                max: maxPrice === '' ? undefined : parseFloat(maxPrice),
+            });
         }
     };
-    // -------------- Option Bar -------------- //   
+    // -------------- Option Bar -------------- //
 
-    // -------------- Views -------------- //  
+    // -------------- Views -------------- //
     const updateBlindBoxLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...blindBoxList];
         if (type === 'inc') {
@@ -227,13 +327,13 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 setProductViewMode={setProductViewMode}
                 marginTop={5}
             />
-            {blindBoxList.length === 0 && (
+            {bBList.length === 0 && (
                 <Stack justifyContent="center" alignItems="center" minHeight="50vh">
                     <img src="/assets/images/loading.gif" alt="" />
                 </Stack>
             )}
             <Grid container mt={2} spacing={4}>
-                {blindBoxList.map((item, index) => (
+                {bBList.map((item, index) => (
                     <Grid
                         item
                         xs={productViewMode === 'grid1' ? 12 : 6}

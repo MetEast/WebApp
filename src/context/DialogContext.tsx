@@ -83,7 +83,7 @@ interface State {
     crtBlindDescription: string;
     crtBlindAuthorDescription: string;
     crtBlindImage?: File;
-    crtBlindItem: TypeSelectItem;
+    crtBlindTokenIds: string;
     crtBlindStatus: 'offline' | 'online';
     crtBlindQuantity: number;
     crtBlindPrice: number;
@@ -98,10 +98,14 @@ interface State {
     // buy blind box
     buyBlindBoxDlgOpened: boolean;
     buyBlindBoxDlgStep: number;
+    buyBlindBoxId: number;
     buyBlindName: string;
     buyBlindPriceEla: number;
     buyBlindPriceUsd: number;
     buyBlindAmount: number;
+    buyBlindOrderId: string;
+    buyBlindTokenId: string;
+    buyBlindImage: string;
     buyBlindTxFee: number;
     buyBlindTxHash: string;
     buyBlindCreator: string;
@@ -193,7 +197,7 @@ const defaultState: State = {
     crtBlindTitle: '',
     crtBlindDescription: '',
     crtBlindAuthorDescription: '',
-    crtBlindItem: { label: '', value: '' },
+    crtBlindTokenIds: '',
     crtBlindStatus: 'offline',
     crtBlindQuantity: 0,
     crtBlindPrice: 0,
@@ -208,10 +212,14 @@ const defaultState: State = {
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
+    buyBlindBoxId: 0,
     buyBlindName: '',
     buyBlindPriceEla: 0,
     buyBlindPriceUsd: 0,
     buyBlindAmount: 0,
+    buyBlindOrderId: '',
+    buyBlindTokenId: '',
+    buyBlindImage: '',
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',

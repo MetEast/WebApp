@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Stack, Box, Button, Typography } from '@mui/material';
+import React from 'react';
+import { Stack, Box, Button, Typography, Link } from '@mui/material';
 import { SpacingProps } from '@mui/system';
 import { SocialButton } from './styles';
 import { Icon } from '@iconify/react';
@@ -18,10 +18,12 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 alignItems="center"
                 rowGap={3}
             >
-                <Stack direction="row" alignItems="center" spacing={1.5}>
-                    <img src="/assets/images/header/logo.svg" alt="" />
-                    <img src="/assets/images/header/meteast_label.svg" alt="" />
-                </Stack>
+                <Link href="/">
+                    <Stack direction="row" alignItems="center" spacing={1.5}>
+                        <img src="/assets/images/header/logo.svg" alt="" />
+                        <img src="/assets/images/header/meteast_label.svg" alt="" />
+                    </Stack>
+                </Link>
                 <Stack direction="row" spacing={1}>
                     {socialButtonsList.map((item, index) => (
                         <SocialButton size="small" key={`social-button-${index}`}>

@@ -20,13 +20,13 @@ import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSum
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
 import {
     enumBadgeType,
-    enumSingleNFTType,
+    enumBlindBoxNFTType,
     TypeProduct,
     TypeProductFetch,
     TypeFavouritesFetch,
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-import { getImageFromAsset, getUTCTime, selectFromFavourites } from 'src/services/common';
+import { getImageFromAsset, selectFromFavourites, getTime } from 'src/services/common';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -51,16 +51,16 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         createTime: '',
         holderName: '',
         holder: '',
-        type: enumSingleNFTType.BuyNow,
+        type: enumBlindBoxNFTType.ComingSoon,
         isLike: false,
         sold: 0,
         instock: 0,
     };
-    const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(defaultValue);
 
-    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
+    const getBlindBoxDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+        const resBlindBoxDetail = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxId=${params.id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,48 +68,55 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 },
             },
         );
-        const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
+        const dataBlindBoxDetail = await resBlindBoxDetail.json();
+        const blindDetail = dataBlindBoxDetail.data.result;
+        var blind: TypeProduct = { ...defaultValue };
 
-        if (prodDetail !== undefined) {
-            // get individual data
-            const itemObject: TypeProductFetch = prodDetail;
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.isLike =
+        if (blindDetail !== undefined) {
+            const itemObject: TypeProductFetch = blindDetail;
+            blind.tokenId = itemObject.blindBoxIndex.toString();
+            blind.name = itemObject.name;
+            blind.image = getImageFromAsset(itemObject.asset);
+            blind.price_ela = parseInt(itemObject.blindPrice);
+            blind.price_usd = blind.price_ela * tokenPriceRate;
+            let curTimestamp = new Date().getTime() / 1000;
+            blind.type =
+                curTimestamp < parseInt(itemObject.saleBegin)
+                    ? enumBlindBoxNFTType.ComingSoon
+                    : curTimestamp <= parseInt(itemObject.saleEnd)
+                    ? enumBlindBoxNFTType.SaleEnds
+                    : enumBlindBoxNFTType.SaleEnded;
+            blind.likes = itemObject.likes;
+            blind.views = itemObject.views;
+            blind.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
                 ) === -1
                     ? false
                     : true;
-            product.description = itemObject.description;
-            product.author = itemObject.authorName || '---';
-            product.authorDescription = itemObject.authorDescription || '---';
-            product.authorImg = product.image; // -- no proper value
-            product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = '---'; // -- no proper value
-            product.holder = itemObject.holder;
-            product.tokenIdHex = itemObject.tokenIdHex;
-            product.royalties = parseInt(itemObject.royalties) / 1e4;
-            let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + '' + createTime.time;
-            product.instock = itemObject.instock || 0;
-            product.sold = itemObject.sold || 0;
+            blind.description = itemObject.description;
+            blind.authorDescription = itemObject.authorDescription || ' ';
+            blind.instock = itemObject.instock || 0;
+            blind.sold = itemObject.sold || 0;
+            if (itemObject.saleEnd) {
+                let endTime = getTime(itemObject.saleEnd);
+                blind.endTime = endTime.date + ' ' + endTime.time;
+            } else {
+                blind.endTime = '';
+            }
+            blind.state = itemObject.state;
+            blind.maxPurchases = parseInt(itemObject.maxPurchases);
+            blind.maxLikes = parseInt(itemObject.maxLikes);
+            blind.maxViews = parseInt(itemObject.maxViews);
+            blind.maxQuantity = parseInt(itemObject.maxQuantity);
         }
-        setProductDetail(product);
+        setBlindBoxDetail(blind);
     };
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
+        getBlindBoxDetail(ela_usd_rate, favouritesList);
     };
 
     useEffect(() => {
@@ -127,15 +134,14 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         setBuyBlindBoxTxFee();
     }, [dialogState.buyBlindBoxDlgStep]);
 
-
     const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...productDetail };
+        let prodDetail: TypeProduct = { ...blindBoxDetail };
         if (type === 'inc') {
             prodDetail.likes += 1;
         } else if (type === 'dec') {
             prodDetail.likes -= 1;
         }
-        setProductDetail(prodDetail);
+        setBlindBoxDetail(prodDetail);
     };
 
     return (
@@ -143,39 +149,52 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                    <ProductImageContainer product={blindBoxDetail} updateLikes={updateProductLikes} />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
-                        {productDetail.name}
+                        {blindBoxDetail.name}
                     </Typography>
                     <ProductSnippets
-                        sold={productDetail.sold}
-                        instock={productDetail.instock}
-                        likes={productDetail.likes}
-                        views={productDetail.views}
+                        sold={blindBoxDetail.sold}
+                        instock={blindBoxDetail.instock}
+                        likes={blindBoxDetail.likes}
+                        views={blindBoxDetail.views}
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={enumBadgeType.ComingSoon} content={productDetail.endTime} />
+                        <ProductBadge
+                            badgeType={
+                                blindBoxDetail.type === enumBlindBoxNFTType.ComingSoon
+                                    ? enumBadgeType.ComingSoon
+                                    : blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds
+                                    ? enumBadgeType.SaleEnds
+                                    : enumBadgeType.SaleEnded
+                            }
+                            content={blindBoxDetail.endTime}
+                        />
                     </Stack>
-                    <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
-                    <PrimaryButton
-                        sx={{ marginTop: 3, width: '100%' }}
-                        onClick={() => {
-                            setDialogState({
-                                ...dialogState,
-                                buyBlindBoxDlgOpened: true,
-                                buyBlindBoxDlgStep: 0,
-                                buyBlindName: productDetail.name,
-                                buyBlindPriceEla: productDetail.price_ela,
-                                buyBlindPriceUsd: productDetail.price_usd,
-                                buyBlindAmount: 1,
-                                buyBlindCreator: productDetail.author
-                            });
-                        }}
-                    >
-                        Buy Now
-                    </PrimaryButton>
+                    <ELAPrice price_ela={blindBoxDetail.price_ela} price_usd={blindBoxDetail.price_usd} marginTop={3} />
+                    {blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds && blindBoxDetail.state === 'online' && (
+                        <PrimaryButton
+                            sx={{ marginTop: 3, width: '100%' }}
+                            onClick={() => {
+                                setDialogState({
+                                    ...dialogState,
+                                    buyBlindBoxDlgOpened: true,
+                                    buyBlindBoxDlgStep: 0,
+                                    buyBlindName: blindBoxDetail.name,
+                                    buyBlindPriceEla: blindBoxDetail.price_ela,
+                                    buyBlindPriceUsd: blindBoxDetail.price_usd,
+                                    buyBlindAmount: 1,
+                                    // buyBlindCreator: blindBoxDetail.author,
+                                    // buyBlindOrderId: blindBoxDetail.orderId || '',
+                                    buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                });
+                            }}
+                        >
+                            Buy Now
+                        </PrimaryButton>
+                    )}
                 </Grid>
             </Grid>
             <Box marginTop={5}>

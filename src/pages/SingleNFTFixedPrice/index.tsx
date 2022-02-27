@@ -29,8 +29,8 @@ import {
 } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useCookies } from 'react-cookie';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
@@ -158,6 +158,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         let _latestTransList: any = [];
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            if (itemObject.event === 'Transfer') continue;
             var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
             switch (itemObject.event) {
                 case 'Mint':
@@ -181,12 +182,12 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
                     break;
-                case 'Transfer':
-                    _transaction.type = enumTransactionType.Transfer;
-                    break;
-                // case 'SettleBidOrder':
-                //     _transaction.type = enumTransactionType.SettleBidOrder;
+                // case 'Transfer':
+                //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
+                case 'SettleBidOrder':
+                    _transaction.type = enumTransactionType.SettleBidOrder;
+                    break;
             }
             _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;

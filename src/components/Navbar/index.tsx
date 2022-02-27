@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Stack, IconButton, Button } from '@mui/material';
+import { Box, Typography, Stack, IconButton, Link, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
 import PageButton from './PageButton';
@@ -183,12 +183,14 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 paddingBottom={mobile ? 1.5 : 0}
             >
                 {!mobile && (
-                    <Stack direction="row" alignItems="center" spacing={1.5}>
-                        <img src="/assets/images/header/logo.svg" alt="" />
-                        <Box display={{ xs: 'none', lg: 'block' }}>
-                            <img src="/assets/images/header/meteast_label.svg" alt="" />
-                        </Box>
-                    </Stack>
+                    <Link href='/'>
+                        <Stack direction="row" alignItems="center" spacing={1.5}>
+                            <img src="/assets/images/header/logo.svg" alt="" />
+                            <Box display={{ xs: 'none', lg: 'block' }}>
+                                <img src="/assets/images/header/meteast_label.svg" alt="" />
+                            </Box>
+                        </Stack>
+                    </Link>
                 )}
                 {mobile ? (
                     pageButtons

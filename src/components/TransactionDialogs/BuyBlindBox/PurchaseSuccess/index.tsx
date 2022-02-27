@@ -15,7 +15,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <DialogTitleTypo>Purchase Successful!</DialogTitleTypo>
                 <Typography fontSize={16} fontWeight={400}>
-                    You have just received 1 Blind Box!
+                    You have just received {dialogState.buyBlindAmount} Blind Box!
                 </Typography>
             </Stack>
             <Stack>

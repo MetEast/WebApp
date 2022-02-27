@@ -10,20 +10,22 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import { getImageFromAsset, getMintCategory, getUTCTime, getTime, selectFromFavourites } from 'src/services/common';
+import { getImageFromAsset, getMintCategory, getUTCTime, getTime, selectFromFavourites, reduceHexAddress } from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
+    enumTransactionType,
     TypeProduct,
     TypeProductFetch,
     TypeFavouritesFetch,
     TypeNFTHisotry,
+    TypeNFTTransactionFetch
 } from 'src/types/product-types';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
-import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
+// import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -56,10 +58,14 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: '',
+        saleType: enumTransactionType.ForSale,
+        txHash: ''
     };
+
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
+    const burnAddress = '0x0000000000000000000000000000000000000000';
+
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
@@ -99,26 +105,47 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
+            product.category = itemObject.category;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
-
-            // let _prodTransHistory: Array<TypeNFTHisotry> = [];
-            let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
-            _prodTrans.type = 'Created';
-            _prodTrans.price = itemObject.price / 1e18;
-            _prodTrans.user = product.author;
-            let timestamp = getTime(itemObject.timestamp.toString());
-            _prodTrans.time = timestamp.date + ' ' + timestamp.time;
-            // _prodTrans.saleType = (itemObject)
-            setProdTransHistory([_prodTrans]);
         }
         setProductDetail(product);
+    };
+
+    const getLatestTransaction = async () => {
+        const resLatestTransaction = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
+        const dataLatestTransaction = await resLatestTransaction.json();
+        const arrLatestTransaction = dataLatestTransaction.data;
+
+        let _prodTransHistory: Array<TypeNFTHisotry> = [];
+        for (let i = 0; i < arrLatestTransaction.length; i ++) {
+            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            if (itemObject.event !== 'Mint') continue;
+            let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+            _prodTrans.type = 'Created';
+            _prodTrans.price = parseInt(itemObject.price) / 1e18;
+            _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+            let timestamp = getTime(itemObject.timestamp.toString());
+            _prodTrans.time = timestamp.date + ' ' + timestamp.time;
+            _prodTrans.txHash = itemObject.tHash; 
+            _prodTransHistory.push(_prodTrans);
+        }
+        setProdTransHistory(_prodTransHistory);
     };
 
     const getFetchData = async () => {
         let ela_usd_rate = await getElaUsdRate();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
+        getLatestTransaction();
     };
 
     useEffect(() => {
@@ -152,13 +179,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                         views={productDetail.views}
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge
-                            badgeType={
-                                productDetail.royaltyOwner !== productDetail.holder
-                                    ? enumBadgeType.Purchased
-                                    : enumBadgeType.Created
-                            }
-                        />
+                        <ProductBadge badgeType={enumBadgeType.Created} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     {/* <ELAPrice price_ela={199} price_usd={480} marginTop={3} /> */}
@@ -201,7 +222,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     <Stack spacing={10}></Stack>
                 </Grid>
             </Grid>
-            <MintNFTDlgContainer />
+            {/* <MintNFTDlgContainer /> */}
         </>
     );
 };

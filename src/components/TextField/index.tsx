@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Stack, Typography, TextField } from '@mui/material';
 
 export interface ComponentProps {
+    disabled?: boolean;
     title?: string;
+    inputValue?: string;
     placeholder?: string;
     multiline?: boolean;
     rows?: number;
@@ -12,6 +14,8 @@ export interface ComponentProps {
 }
 
 const CustomTextField: React.FC<ComponentProps> = ({
+    disabled,
+    inputValue,
     title,
     placeholder,
     multiline,
@@ -20,13 +24,17 @@ const CustomTextField: React.FC<ComponentProps> = ({
     fontWeight,
     changeHandler = () => {},
 }): JSX.Element => {
-    const [text, setText] = useState('');
+    const [text, setText] = useState(inputValue);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setText(value);
         changeHandler(value);
     };
+
+    React.useEffect(() => {
+        setText(inputValue);
+    }, [inputValue]);
 
     return (
         <Stack spacing={0.5}>
@@ -36,6 +44,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
                 </Typography>
             )}
             <TextField
+                disabled={disabled}
                 placeholder={placeholder}
                 value={text}
                 multiline={multiline}

@@ -42,6 +42,7 @@ import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { TypeSelectItem } from 'src/types/select-types';
+import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -137,8 +138,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 let endTime = getTime(itemObject.endTime); // no proper value
                 product.endTime = endTime.date + ' ' + endTime.time;
             } else {
-                product.endTime = '---';
+                product.endTime = ' ';
             }
+            product.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
         }
         setProductDetail(product);
     };
@@ -219,6 +221,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         let _latestTransList: any = [];
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            if (itemObject.event === 'Transfer') continue;
             var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
             switch (itemObject.event) {
                 case 'Mint':
@@ -242,14 +245,21 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
                     break;
-                case 'Transfer':
-                    _transaction.type = enumTransactionType.Transfer;
-                    break;
-                // case 'SettleBidOrder':
-                //     _transaction.type = enumTransactionType.SettleBidOrder;
+                // case 'Transfer':
+                //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
+                case 'SettleBidOrder':
+                    _transaction.type = enumTransactionType.SettleBidOrder;
+                    break;
             }
-            _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+            _transaction.user = reduceHexAddress(
+                itemObject.event === 'BuyOrder'
+                    ? itemObject.to
+                    : itemObject.from === burnAddress
+                    ? itemObject.to
+                    : itemObject.from,
+                4,
+            ); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
@@ -342,7 +352,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 </Grid>
                             )}
                             <Grid item xs={12} sm={'auto'}>
-                                <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                                {productDetail.isExpired ? (
+                                    <ProductBadge badgeType={enumBadgeType.SaleEnded} />
+                                ) : (
+                                    <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                                )}
                             </Grid>
                         </Grid>
                     </Stack>
@@ -479,14 +493,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allBidDlgOpened: false });
                 }}
             >
-                {bidsList.length === 0 && myBidsList.length === 0 && (
-                    <AllBids
-                        bidsList={bidsList}
-                        myBidsList={myBidsList}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                {bidsList.length === 0 && myBidsList.length === 0 ? (
+                    <NoBids
+                        onClose={() => {
+                            setDialogState({ ...dialogState, allBidDlgOpened: false });
+                        }}
                     />
-                )}
-                {!(bidsList.length === 0 && myBidsList.length === 0) && (
+                ) : (
                     <AllBids
                         bidsList={bidsList}
                         myBidsList={myBidsList}

@@ -208,7 +208,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             await callCreateOrderForAuction(
                 dialogState.mintTokenId,
                 _quoteToken,
-                `0x${BigInt(dialogState.sellMinPrice * 1e18).toString(16)}`,
+                BigInt(dialogState.sellMinPrice * 1e18).toString(),
                 auctionTime.toString(),
                 didUri,
             );

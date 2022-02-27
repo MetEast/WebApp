@@ -84,7 +84,8 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         user: '',
         price: 0,
         time: '',
-        saleType: ''
+        saleType: enumTransactionType.ForSale,
+        txHash: ''
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -107,7 +108,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         var product: TypeProduct = { ...defaultValue };
 
         if (prodDetail !== undefined) {
-            // get individual data
             const itemObject: TypeProductFetch = prodDetail;
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
@@ -131,6 +131,8 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
+            product.category = itemObject.category;
+            product.holder = itemObject.holder;
             product.orderId = itemObject.orderId;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             let createTime = getUTCTime(itemObject.createTime);
@@ -154,8 +156,9 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
 
         let _latestTransList: Array<TypeNFTTransaction> = [];
         let _prodTransHistory: Array<TypeNFTHisotry> = [];
-        for (let i = 0; i < arrLatestTransaction.length; i++) {
+        for (let i = 0; i < arrLatestTransaction.length; i ++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+            if (itemObject.event === 'Transfer') continue;
             let _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
             switch (itemObject.event) {
                 case 'Mint':
@@ -179,14 +182,14 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
                     break;
-                case 'Transfer':
-                    _transaction.type = enumTransactionType.Transfer;
-                    break;
-                // case 'SettleBidOrder':
-                //     _transaction.type = enumTransactionType.SettleBidOrder;
+                // case 'Transfer':
+                //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
+                case 'SettleBidOrder':
+                    _transaction.type = enumTransactionType.SettleBidOrder;
+                    break;
             }
-            _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+            _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
@@ -195,12 +198,13 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
                 let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
-                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Brought From');
+                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Bought From');
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
                 _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                // _prodTrans.saleType = (itemObject)
+                if (itemObject.event === 'BuyOrder') _prodTrans.saleType = arrLatestTransaction[i + 2].event === "CreateOrderForSale" ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
+                _prodTrans.txHash = itemObject.tHash; 
                 _prodTransHistory.push(_prodTrans);
             }
         }

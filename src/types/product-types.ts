@@ -14,7 +14,7 @@ export enum enumMyNFTType {
     OnAuction = 'MyNFT - On Auction',
     Created = 'MyNFT - Created',
     Sold = 'MyNFT - Sold',
-    Purchased = 'MyNFT - Purchased'
+    Purchased = 'MyNFT - Purchased',
 }
 
 export enum enumBadgeType {
@@ -49,15 +49,8 @@ export enum enumTransactionType {
     SoldTo = 'Sold To',
     ChangeOrder = 'Change Order',
     CancelOrder = 'Cancel Order',
-    Transfer = 'Transfer'
-    //
-    // CreateOrderForSale = 'CreateOrderForSale',
-    // CreateOrderForAuciton = 'CreateOrderForAuciton',
-    // BidOrder = 'BidOrder',
-    // ChangeOrderPrice = 'ChangeOrderPrice',
-    // CancelOrder = 'CancelOrder',
-    // BuyOrder = 'BuyOrder', // sold to
-    // SettleBidOrder = 'SettleBidOrder'
+    // Transfer = 'Transfer'
+    SettleBidOrder = 'SettleBidOrder',
 }
 
 export type TypeProduct = {
@@ -96,6 +89,12 @@ export type TypeProduct = {
     size?: string;
     category?: string;
     status?: string;
+    isExpired?: boolean;
+    state?: string;
+    maxPurchases?: number;
+    maxViews?: number;
+    maxLikes?: number;
+    maxQuantity?: number;
 };
 
 export type TypeNFTTransaction = {
@@ -111,7 +110,8 @@ export type TypeNFTHisotry = {
     price: number;
     user: string;
     time: string;
-    saleType: string;
+    saleType: enumTransactionType;
+    txHash: string;
 };
 
 export type TypeSingleNFTBid = {
@@ -128,6 +128,14 @@ export type TypeYourEarning = {
     time: string;
     price: number;
     badge: enumBadgeType;
+};
+
+export type TypeBlindBoxSelectItem = {
+    id: number;
+    tokenId: string;
+    nftIdentity: string;
+    projectTitle: string;
+    projectType: string;
 };
 
 // ---
@@ -162,6 +170,17 @@ export type TypeProductFetch = {
     sold: number;
     orderId: string;
     category: string;
+    //
+    blindBoxIndex: number;
+    blindPrice: string;
+    maxLikes: string;
+    maxPurchases: string;
+    maxQuantity: string;
+    maxViews: string;
+    saleBegin: string;
+    saleEnd: string;
+    sort: string;
+    state: string;
 };
 
 export type TypeFavouritesFetch = {
