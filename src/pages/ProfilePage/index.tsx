@@ -101,8 +101,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         tokenCookies.METEAST_TOKEN === undefined
             ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
-    // const accounts: string[] = getEssentialsWalletAddress();
-    // const accounts: string[] = signInDlgState.walletAccounts;
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
     let prodList: Array<TypeProduct> = [defaultValue, defaultValue, defaultValue, defaultValue];
@@ -366,7 +364,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         case nftGalleryFilterBtnTypes.Acquired:
             if (isLoadingAcquired === false) {
                 prodList = myNFTAcquired;
-                // Array.prototype.push.apply(prodList,myNFTCreated);
             }
             break;
         case nftGalleryFilterBtnTypes.Created:
@@ -574,6 +571,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             }}
                         >
                             Create NFT
+                        </PrimaryButton>
+                        <PrimaryButton
+                            sx={{ paddingX: 4 }}
+                            onClick={() => {
+                                setDialogState({ ...dialogState, createBlindBoxDlgOpened: true, createBlindBoxDlgStep: 0 });
+                            }}
+                        >
+                            New Blind Box
                         </PrimaryButton>
                         <SecondaryButton
                             size="small"
