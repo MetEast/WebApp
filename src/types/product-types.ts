@@ -51,6 +51,8 @@ export enum enumTransactionType {
     CancelOrder = 'Cancel Order',
     // Transfer = 'Transfer'
     SettleBidOrder = 'SettleBidOrder',
+    PriceChanged = 'Price Changed',
+    SaleCanceled = 'Sale Canceled',
 }
 
 export type TypeProduct = {
