@@ -7,27 +7,32 @@ export const getElaUsdRate = async () => {
             },
         });
         const dataElaUsdRate = await resElaUsdRate.json();
-        
+
         if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
         return NaN;
-      } catch (error) {
+    } catch (error) {
         return NaN;
-      }
+    }
 };
 
 export const getMyFavouritesList = async (loginState: boolean, did: string) => {
-    const strDid = loginState ? did : '------------------';
-    const resFavouriteList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible?did=${strDid}`,
-        {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        },
-    );
-    const dataFavouriteList = await resFavouriteList.json();
-    return dataFavouriteList.data.result;
+    if (loginState) {
+        try {
+            const resFavouriteList = await fetch(
+                `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                },
+            );
+            const dataFavouriteList = await resFavouriteList.json();
+            return dataFavouriteList.data.result;
+        } catch (error) {
+            return [];
+        }
+    } else return [];
 };
 
 export const getTotalEarned = async (address: string) => {
