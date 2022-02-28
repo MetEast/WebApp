@@ -93,7 +93,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                     navigate(getUrl());
                 }}
             >
-                <ImageBox loading={product.tokenId === ''}>
+                <ImageBox loading={product.tokenId === '' ? 1 : 0}>
                     {product.tokenId === '' ? (
                         <Skeleton
                             variant="rectangular"

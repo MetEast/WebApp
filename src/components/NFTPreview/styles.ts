@@ -15,7 +15,7 @@ export const ProductImageContainer = styled(Stack)`
     cursor: pointer;
 `;
 
-export const ImageBox = styled(Box)<{ loading: boolean }>`
+export const ImageBox = styled(Box)<{ loading: number }>`
     position: absolute;
     inset: 0;
     /* display: flex; */
