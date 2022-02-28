@@ -485,22 +485,25 @@ const ProfilePage: React.FC = (): JSX.Element => {
         }
     };
 
-    const [userAvatarFile, setUserAvatarFile] = useState<File>();
-    const [userAvatarStateFile, setUserAvatarStateFile] = useState(null);
+    // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
+    const [userAvatarURL, setUserAvatarURL] = useState<string>('');
 
-    const handleUserAvatarFileChange = (files: Array<File>) => {
-        handleUserAvatarStateFileChange(files);
-        if (files !== null && files.length > 0) {
-            setUserAvatarFile(files[0]);
-        }
-    };
+    // const [userAvatarFile, setUserAvatarFile] = useState<File>();
+    // const [userAvatarStateFile, setUserAvatarStateFile] = useState(null);
 
-    const handleUserAvatarStateFileChange = useCallback((acceptedFiles) => {
-        const file = acceptedFiles[0];
-        if (file) {
-            setUserAvatarStateFile({ ...file, preview: URL.createObjectURL(file) });
-        }
-    }, []);
+    // const handleUserAvatarFileChange = (files: Array<File>) => {
+    //     handleUserAvatarStateFileChange(files);
+    //     if (files !== null && files.length > 0) {
+    //         setUserAvatarFile(files[0]);
+    //     }
+    // };
+
+    // const handleUserAvatarStateFileChange = useCallback((acceptedFiles) => {
+    //     const file = acceptedFiles[0];
+    //     if (file) {
+    //         setUserAvatarStateFile({ ...file, preview: URL.createObjectURL(file) });
+    //     }
+    // }, []);
 
     return (
         <>
@@ -516,10 +519,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 </Swiper>
             </Box>
             <Stack alignItems="center">
-                {/* <ProfileImageWrapper>
-                    <ProfileImage src="https://miro.medium.com/focal/58/58/50/50/0*sViPWB4sXg5xE1TT" />
-                </ProfileImageWrapper> */}
-                <UserAvatarBox
+                <ProfileImageWrapper>
+                    {userAvatarURL !== '' ? (
+                        <ProfileImage src={userAvatarURL} />
+                    ) : (
+                        <Icon icon="ph:user" fontSize={80} color="#1890FF" />
+                    )}
+                </ProfileImageWrapper>
+                {/* <UserAvatarBox
                     file={userAvatarStateFile}
                     onDrop={handleUserAvatarFileChange}
                     sx={{
@@ -531,7 +538,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         overflow: 'hidden',
                         zIndex: 10,
                     }}
-                />
+                /> */}
                 <Stack width="100%" direction="row" justifyContent="space-between" marginTop={-6}>
                     <Box>
                         <Typography fontSize={20} fontWeight={900}>
@@ -575,7 +582,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         <PrimaryButton
                             sx={{ paddingX: 4 }}
                             onClick={() => {
-                                setDialogState({ ...dialogState, createBlindBoxDlgOpened: true, createBlindBoxDlgStep: 0 });
+                                setDialogState({
+                                    ...dialogState,
+                                    createBlindBoxDlgOpened: true,
+                                    createBlindBoxDlgStep: 0,
+                                });
                             }}
                         >
                             New Blind Box
