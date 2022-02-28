@@ -34,18 +34,28 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         },
         [enumTransactionType.SettleBidOrder]: {
             icon: <Icon icon="ph:lightning" fontSize={20} />,
-        }
+        },
+        [enumTransactionType.PriceChanged]: {
+            icon: <Icon icon="ph:pencil-simple" fontSize={20} />,
+        },
+        [enumTransactionType.SaleCanceled]: {
+            icon: <Icon icon="ph:x" fontSize={20} />,
+        },
     };
 
     const [signInDlgState] = useSignInContext();
+
     let initUrl = '';
     if (signInDlgState.chainId === 20) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${transactionHash}`;
-    else if (signInDlgState.chainId === 21) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`; 
+    else if (signInDlgState.chainId === 21)
+        initUrl = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`;
     const [txHashUrl, setTxHashUrl] = useState<string>(initUrl);
+
     useEffect(() => {
         let _url = '';
         if (signInDlgState.chainId === 20) _url = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${transactionHash}`;
-        else if (signInDlgState.chainId === 21) _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`; 
+        else if (signInDlgState.chainId === 21)
+            _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`;
         setTxHashUrl(_url);
     }, [signInDlgState.chainId]);
 
@@ -60,7 +70,7 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
                     icon="ph:arrow-square-out-bold"
                     fontSize={16}
                     color="#1890FF"
-                    style={{ marginLeft: 4, marginBottom: 4 }}
+                    // style={{ marginLeft: 4, marginBottom: 4 }}
                 />
             </Link>
         </Stack>

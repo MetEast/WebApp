@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PrimaryButton } from 'src/components/Buttons/styles';
-import { Typography, Stack } from '@mui/material';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { Typography, Stack, Button } from '@mui/material';
+import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 
 export interface ComponentProps {
     onConnect: () => void;
@@ -18,29 +19,25 @@ const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
     });
 
     return (
-        <Stack alignItems="center" width={300} spacing={3.5}>
-            <Typography fontSize={32} fontWeight={700}>
-                Let's Get Started
+        <Stack alignItems="center" width={360}>
+            <DialogTitleTypo>Let's Get Started</DialogTitleTypo>
+            <Typography fontSize={16} fontWeight={400} textAlign="center" marginTop={1}>
+                Please connect your wallet
             </Typography>
-            <Typography fontSize={16} fontWeight={400} textAlign="center">
-                You'll need an Elastos Decentralised Identity (DID) to use this application.
-            </Typography>
-            <Stack
-                width={186}
-                alignItems="center"
-                spacing={1}
-                paddingY={2}
-                borderRadius={4}
-                sx={{ background: '#F1F1F1' }}
-            >
-                <img src="/assets/icons/elastos-essential.svg" alt="" />
-                <Typography fontSize={14} fontWeight={600}>
-                    Elastos Essentials DID
+            <Stack width="100%" alignItems="center" spacing={2} paddingX={4} marginTop={5} boxSizing="border-box">
+                <PrimaryButton fullWidth onClick={onConnect}>
+                    <img src="/assets/icons/elastos-essential.svg" alt="" style={{ marginRight: 8 }} />
+                    {`Elastos Essentials`}
+                </PrimaryButton>
+                <SecondaryButton fullWidth>
+                    <img src="/assets/icons/metamask.svg" alt="" style={{ marginRight: 8 }} />
+                    {`Metamask`}
+                </SecondaryButton>
+                <Button sx={{ fontSize: 14, fontWeight: 700 }}>don't have a wallet?</Button>
+                <Typography fontSize={12} fontWeight={500} textAlign="center" color="#A3A9B1">
+                    We do not own your private keys and cannot access your funds without your confirmation
                 </Typography>
             </Stack>
-            <PrimaryButton fullWidth onClick={onConnect}>
-                Connect DID
-            </PrimaryButton>
         </Stack>
     );
 };
