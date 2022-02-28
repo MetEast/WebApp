@@ -67,6 +67,10 @@ const CustomTextField: React.FC<ComponentProps> = ({
                             borderWidth: 2,
                             borderColor: error ? '#EB5757' : '#1890FF',
                         },
+                        '& input': {
+                            height: 40,
+                            paddingY: 0,
+                        },
                     },
                 }}
                 onChange={handleInputChange}
