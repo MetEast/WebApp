@@ -9,7 +9,7 @@ import NFTPreview from 'src/components/NFTPreview';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
-import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -131,7 +131,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        const ela_usd_rate = await getElaUsdRate();
+        const ela_usd_rate = await getELA2USD();
         const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getNewProducts(ela_usd_rate, favouritesList);
         getPopularCollection(ela_usd_rate, favouritesList);

@@ -31,7 +31,7 @@ import {
     TypeNFTTransactionFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
-import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 
@@ -206,7 +206,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getElaUsdRate();
+        let ela_usd_rate = await getELA2USD();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
         getLatestTransaction();
