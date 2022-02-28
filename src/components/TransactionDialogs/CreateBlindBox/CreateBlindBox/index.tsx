@@ -297,7 +297,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     titlebox={
                                         <SelectBtn
                                             fullWidth
-                                            isOpen={sortSelectOpen ? 1 : 0}
+                                            isopen={sortSelectOpen ? 1 : 0}
                                             sx={{ justifyContent: 'space-between' }}
                                         >
                                             <Icon icon="ph:sort-ascending" fontSize={20} />
