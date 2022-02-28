@@ -10,6 +10,7 @@ export interface ComponentProps {
     rows?: number;
     fontSize?: number;
     fontWeight?: number;
+    number?: boolean;
     changeHandler?: (value: string) => void;
 }
 
@@ -22,14 +23,17 @@ const CustomTextField: React.FC<ComponentProps> = ({
     rows,
     fontSize,
     fontWeight,
+    number = false,
     changeHandler = () => {},
 }): JSX.Element => {
     const [text, setText] = useState(inputValue);
+    const [error, setError] = useState<boolean>(false);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setText(value);
         changeHandler(value);
+        if (number) setError(value !== '' && isNaN(Number(value)));
     };
 
     React.useEffect(() => {
@@ -60,7 +64,8 @@ const CustomTextField: React.FC<ComponentProps> = ({
                             borderWidth: 0,
                         },
                         '&.Mui-focused fieldset': {
-                            borderWidth: 0,
+                            borderWidth: 2,
+                            borderColor: error ? '#EB5757' : '#1890FF',
                         },
                     },
                 }}

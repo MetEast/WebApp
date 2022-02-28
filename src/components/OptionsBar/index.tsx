@@ -59,7 +59,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 handleClick={handleSortChange}
                 // width={260}
                 min_width={onlyShowIcon ? 'auto' : 240}
-                listitemsbox_width={240}
+                listitemsbox_width={onlyShowIcon ? 160 : 240}
             />
             <Box
                 position="relative"
@@ -76,10 +76,12 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                     {!onlyShowIcon && `Filter`}
                 </FilterButton>
                 <FiltersBox display={showFiltersCard ? 'flex' : 'none'}>
-                    <FilterCard changeHandler={(status: number, minPrice: string, maxPrice: string, opened: boolean) => {
-                        handlerFilterChange(status, minPrice, maxPrice, opened);
-                        if (!opened) setShowFiltersCard(opened);
-                    }} />
+                    <FilterCard
+                        changeHandler={(status: number, minPrice: string, maxPrice: string, opened: boolean) => {
+                            handlerFilterChange(status, minPrice, maxPrice, opened);
+                            if (!opened) setShowFiltersCard(opened);
+                        }}
+                    />
                 </FiltersBox>
             </Box>
             <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
