@@ -12,7 +12,7 @@ export const ProductImageContainer = styled(Stack)`
     cursor: pointer;
 `;
 
-export const ImageBox = styled(Box)<{ loading: boolean }>`
+export const ImageBox = styled(Box)<{ loading: number }>`
     position: absolute;
     inset: 0;
     border: ${({ loading }) => (loading ? `0 solid #eeeeee` : `1px solid #eeeeee`)};

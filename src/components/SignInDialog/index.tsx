@@ -102,6 +102,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     }, [_chainId, _accounts, _balance, _isLoggedIn, _dlgOpened]);
 
+    useEffect(() => {
+        console.log("--------accounts: ", signInDlgState.walletAccounts)
+        console.log("--------balance: ", signInDlgState.walletBalance)
+    }, [signInDlgState]);
+
     useConnectivitySDK();
 
     const signInWithEssentials = async () => {

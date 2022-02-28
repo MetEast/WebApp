@@ -618,6 +618,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     >
                         {nftGalleryFilterButtonsList.map((items, index) => (
                             <FilterButton
+                                key={`filter-button-${index}`}
                                 selected={items.label === nftGalleryFilterBtnSelected}
                                 onClick={() => setNftGalleryFilterBtnSelected(items.label)}
                             >
