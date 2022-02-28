@@ -78,7 +78,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
                     navigate(getUrl());
                 }}
             >
-                <ImageBox loading={isLoading}>
+                <ImageBox loading={isLoading ? 1 : 0}>
                     {isLoading ? (
                         <Skeleton
                             variant="rectangular"
