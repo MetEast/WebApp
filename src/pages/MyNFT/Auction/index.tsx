@@ -28,7 +28,7 @@ import {
     TypeSingleNFTBidFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
-import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -288,7 +288,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getElaUsdRate();
+        let ela_usd_rate = await getELA2USD();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
     };

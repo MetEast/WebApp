@@ -25,7 +25,7 @@ import {
     TypeProductFetch,
     TypeFavouritesFetch,
 } from 'src/types/product-types';
-import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { getImageFromAsset, selectFromFavourites, getTime } from 'src/services/common';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
@@ -114,7 +114,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getElaUsdRate();
+        let ela_usd_rate = await getELA2USD();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getBlindBoxDetail(ela_usd_rate, favouritesList);
     };

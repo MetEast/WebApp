@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 // const [elaPrice, setElaPrice] = useState<number>(0);
-// export const getElaUsdRate = useCallback(async () => {
+// export const getELA2USD = useCallback(async () => {
 //     try {
 //         const resElaUsdRate = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`, {
 //             headers: {
@@ -17,7 +17,14 @@ import { useCallback } from "react";
 //     }
 // }, []);
 
-export const getElaUsdRate = async () => {
+export const FETCH_CONFIG_JSON = {
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+    }
+}
+
+export const getELA2USD = async () => {
     try {
         const resElaUsdRate = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`, {
             headers: {
@@ -28,9 +35,9 @@ export const getElaUsdRate = async () => {
         const dataElaUsdRate = await resElaUsdRate.json();
 
         if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
-        return NaN;
+        return 0;
     } catch (error) {
-        return NaN;
+        return 0;
     }
 };
 
@@ -55,29 +62,39 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
 };
 
 export const getTotalEarned = async (address: string) => {
-    const resTotalEarnedResult = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedByWalletAddress?address=${address}`,
-        {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
+    try {
+        const resTotalEarnedResult = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedByWalletAddress?address=${address}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
             },
-        },
-    );
-    const dataTotalEarnedResult = await resTotalEarnedResult.json();
-    return dataTotalEarnedResult.data;
+        );
+        const dataTotalEarnedResult = await resTotalEarnedResult.json();
+        if (dataTotalEarnedResult && dataTotalEarnedResult.data) return parseFloat(dataTotalEarnedResult.data);
+        return 0;
+    } catch (error) {
+        return 0;
+    }
 };
 
 export const getTodayEarned = async (address: string) => {
-    const resTodayEarnedResult = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTodayEarnedByWalletAddress?address=${address}`,
-        {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
+    try {
+        const resTodayEarnedResult = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTodayEarnedByWalletAddress?address=${address}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
             },
-        },
-    );
-    const dataTodayEarnedResult = await resTodayEarnedResult.json();
-    return dataTodayEarnedResult.data;
+        );
+        const dataTodayEarnedResult = await resTodayEarnedResult.json();
+        if (dataTodayEarnedResult && dataTodayEarnedResult.data) return parseFloat(dataTodayEarnedResult.data);
+        return 0;
+    } catch (error) {
+        return 0;
+    }
 };

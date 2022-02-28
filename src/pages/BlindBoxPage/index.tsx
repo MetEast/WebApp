@@ -19,7 +19,7 @@ import { getImageFromAsset } from 'src/services/common';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getTime } from 'src/services/common';
-import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
@@ -161,7 +161,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getElaUsdRate();
+        let ela_usd_rate = await getELA2USD();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getBlindBoxList(ela_usd_rate, favouritesList);
     };
