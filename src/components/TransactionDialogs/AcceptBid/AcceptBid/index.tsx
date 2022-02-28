@@ -44,6 +44,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
         let txHash = '';
 
         setLoadingDlgOpened(true);
+        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
         marketContract.methods
             .settleAuctionOrder(_orderId)
             .send(transactionParams)
@@ -51,6 +52,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                 console.log('transactionHash', hash);
                 txHash = hash;
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -67,6 +69,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
                 setDialogState({ ...dialogState, acceptBidDlgOpened: false, errorMessageDlgOpened: true });
             });
     };

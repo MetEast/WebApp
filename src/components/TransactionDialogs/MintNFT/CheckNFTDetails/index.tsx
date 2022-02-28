@@ -63,6 +63,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         let txHash = '';
 
         setLoadingDlgOpened(true);
+        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
         setDialogState({ ...dialogState, mintProgress: 70 });
         meteastContract.methods
             .mint(_tokenId, _tokenUri, _royaltyFee)
@@ -71,6 +72,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 console.log('transactionHash', hash);
                 txHash = hash;
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -96,6 +98,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
                 setDialogState({ ...dialogState, createNFTDlgOpened: false, errorMessageDlgOpened: true });
             });
     };

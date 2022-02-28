@@ -107,12 +107,14 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 value: 0,
             };
             setLoadingDlgOpened(true);
+            const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
             meteastContract.methods
                 .setApprovalForAll(_operator, _approved)
                 .send(transactionParams)
                 .on('transactionHash', (hash: any) => {
                     console.log('transactionHash', hash);
                     setLoadingDlgOpened(false);
+                    clearTimeout(timer);
                 })
                 .on('receipt', (receipt: any) => {
                     console.log('receipt', receipt);
@@ -129,6 +131,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                     setLoadingDlgOpened(false);
+                    clearTimeout(timer);
                     setDialogState({ ...dialogState, createBlindBoxDlgOpened: false, errorMessageDlgOpened: true });
                 });
         }
@@ -161,6 +164,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
         setLoadingDlgOpened(true);
+        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
         marketContract.methods
             .createOrderForSaleBatch(_tokenIds, _quoteTokens, _prices, _didUri, _isBlindBox)
             .send(transactionParams)
@@ -168,6 +172,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 console.log('transactionHash', hash);
                 txHash = hash;
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -189,6 +194,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
                 setDialogState({ ...dialogState, createBlindBoxDlgOpened: false, errorMessageDlgOpened: true });
             });
     };
