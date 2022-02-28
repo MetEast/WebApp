@@ -39,16 +39,17 @@ export const ProfileImageWrapper = styled(Box)`
     width: 180px;
     height: 180px;
     border-radius: 50%;
+    overflow: hidden;
     margin-top: -90px;
     background: #e8f4ff;
     z-index: 10;
 `;
 
 export const ProfileImage = styled('img')`
-    width: 180px;
-    height: 180px;
-    padding: 4px;
-    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    /* padding: 4px; */
+    /* border-radius: 50%; */
     background: white;
 `;
 
