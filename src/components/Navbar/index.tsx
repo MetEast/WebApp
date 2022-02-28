@@ -84,6 +84,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
 
     const SignOutWithEssentials = async () => {
         console.log('Signing out user. Deleting session info, auth token');
+        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
         setSignInDlgState({ ...signInDlgState, isLoggedIn: false });

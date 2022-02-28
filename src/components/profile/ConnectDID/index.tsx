@@ -5,7 +5,7 @@ import { Typography, Stack, Button } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 
 export interface ComponentProps {
-    onConnect: () => void;
+    onConnect: (wallet: string) => void;
 }
 
 const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
@@ -25,11 +25,11 @@ const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
                 Please connect your wallet
             </Typography>
             <Stack width="100%" alignItems="center" spacing={2} paddingX={4} marginTop={5} boxSizing="border-box">
-                <PrimaryButton fullWidth onClick={onConnect}>
+                <PrimaryButton fullWidth onClick={() => onConnect('EE')}>
                     <img src="/assets/icons/elastos-essential.svg" alt="" style={{ marginRight: 8 }} />
                     {`Elastos Essentials`}
                 </PrimaryButton>
-                <SecondaryButton fullWidth>
+                <SecondaryButton fullWidth onClick={() => onConnect('MM')}>
                     <img src="/assets/icons/metamask.svg" alt="" style={{ marginRight: 8 }} />
                     {`Metamask`}
                 </SecondaryButton>

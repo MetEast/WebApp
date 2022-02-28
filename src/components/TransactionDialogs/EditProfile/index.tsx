@@ -32,6 +32,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const signOutWithEssentials = async () => {
         console.log('Signing out user. Deleting session info, auth token');
         setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
+        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
         try {

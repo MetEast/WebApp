@@ -7,7 +7,7 @@ export const essentialsConnector = new EssentialsConnector();
 
 let connectivityInitialized = false;
 
-export const useConnectivitySDK = async () => {
+export const initConnectivitySDK = async () => {
     if (connectivityInitialized) {
         // console.log('EssentialsConnector has already initialized.');
         return;

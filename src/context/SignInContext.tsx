@@ -1,27 +1,29 @@
 import React, { createContext, useState, useContext } from 'react';
 
-interface State {
+export interface SignInState {
     signInDlgOpened: boolean;
     isLoggedIn: boolean;
+    loginType: string;
     walletAccounts: string[];
     walletBalance: number;
     chainId: number;
     didUri: string;
 }
 
-const defaultState: State = {
+const defaultState: SignInState = {
     signInDlgOpened: false,
     isLoggedIn:
         document.cookie
             .split('; ')
-            .find((row) => row.startsWith('METEAST_DID='))
-            ?.split('=')[1] !== undefined &&
-        document.cookie
-            .split('; ')
-            .find((row) => row.startsWith('METEAST_TOKEN='))
-            ?.split('=')[1] !== undefined
+            .find((row) => row.startsWith('METEAST_LINK='))
+            ?.split('=')[1] || '' !== ''
             ? true
             : false,
+    loginType:
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('METEAST_LINK='))
+            ?.split('=')[1] || '',
     walletAccounts: [],
     walletBalance: 0,
     chainId: 0,
@@ -30,16 +32,16 @@ const defaultState: State = {
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
 
-const defaultContextValue: ContextType<State> = [defaultState, () => {}];
+const defaultContextValue: ContextType<SignInState> = [defaultState, () => {}];
 
 export const SignInContext = createContext(defaultContextValue);
 
 export const SignInContextProvider: React.FC = ({ children, ...props }) => {
-    const [contextState, setContextState] = useState<State>(defaultState);
+    const [contextState, setContextState] = useState<SignInState>(defaultState);
 
-    const ctxValue: ContextType<State> = [
+    const ctxValue: ContextType<SignInState> = [
         contextState,
-        (value: State) => {
+        (value: SignInState) => {
             setContextState(value);
         },
     ];
