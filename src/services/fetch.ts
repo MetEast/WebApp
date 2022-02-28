@@ -1,3 +1,22 @@
+import { useCallback } from "react";
+// const [elaPrice, setElaPrice] = useState<number>(0);
+// export const getElaUsdRate = useCallback(async () => {
+//     try {
+//         const resElaUsdRate = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`, {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 Accept: 'application/json',
+//             },
+//         });
+//         const dataElaUsdRate = await resElaUsdRate.json();
+
+//         if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
+//         return NaN;
+//     } catch (error) {
+//         return NaN;
+//     }
+// }, []);
+
 export const getElaUsdRate = async () => {
     try {
         const resElaUsdRate = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`, {

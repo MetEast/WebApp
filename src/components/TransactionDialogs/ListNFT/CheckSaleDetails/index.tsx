@@ -49,12 +49,14 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 value: 0,
             };
             setLoadingDlgOpened(true);
+            const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
             meteastContract.methods
                 .setApprovalForAll(_operator, _approved)
                 .send(transactionParams)
                 .on('transactionHash', (hash: any) => {
                     console.log('transactionHash', hash);
                     setLoadingDlgOpened(false);
+                    clearTimeout(timer);
                 })
                 .on('receipt', (receipt: any) => {
                     console.log('receipt', receipt);
@@ -71,6 +73,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                     setLoadingDlgOpened(false);
+                    clearTimeout(timer);
                     setDialogState({ ...dialogState, createNFTDlgOpened: false, errorMessageDlgOpened: true });
                 });
         }
@@ -103,6 +106,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
         setLoadingDlgOpened(true);
+        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
         marketContract.methods
             .createOrderForSale(_tokenId, _quoteToken, _price, _didUri, _isBlindBox)
             .send(transactionParams)
@@ -110,6 +114,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 console.log('transactionHash', hash);
                 txHash = hash;
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -126,6 +131,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
                 setDialogState({ ...dialogState, createNFTDlgOpened: false, errorMessageDlgOpened: true });
             });
     };
@@ -158,6 +164,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         let txHash = '';
         setLoadingDlgOpened(true);
+        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
         marketContract.methods
             .createOrderForAuction(_tokenId, _quoteToken, _minPrice, _endTime, _didUri)
             .send(transactionParams)
@@ -165,6 +172,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 console.log('transactionHash', hash);
                 txHash = hash;
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
@@ -181,6 +189,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setLoadingDlgOpened(false);
+                clearTimeout(timer);
                 setDialogState({ ...dialogState, createNFTDlgOpened: false, errorMessageDlgOpened: true });
             });
     };
