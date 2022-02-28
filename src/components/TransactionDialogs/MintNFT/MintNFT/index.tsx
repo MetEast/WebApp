@@ -14,6 +14,7 @@ import Select from 'src/components/Select';
 import { useStyles, SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { mintNFTCategoryOptions } from 'src/constants/select-constants';
+import { NumberRow20Filled } from '@fluentui/react-icons';
 
 export interface ComponentProps {}
 
@@ -21,6 +22,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [category, setCategory] = useState<TypeSelectItem>();
+    const [categoryError, setCategoryError] = useState(false);
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
     const [title, setTitle] = useState<string>('');
     const [titleError, setTitleError] = useState(false);
@@ -29,6 +31,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [author, setAuthor] = useState<string>('');
     const [authorError, setAutorError] = useState(false);
     const [mintFile, setMintFile] = useState<File>();
+    const [mintFileError, setMintFileError] = useState(false);
     const [stateFile, setStateFile] = useState(null);
     const [royalties, setRoyalties] = useState<number>(10);
     const [royaltiesError, setRoyaltiesError] = useState(false);
@@ -38,6 +41,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
         handleDropSingleFile(files);
         if (files !== null && files.length > 0) {
             setMintFile(files[0]);
+            setMintFileError(false);
         }
     };
 
@@ -82,7 +86,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             errorText="Project introduction can not be empty."
                             changeHandler={(value: string) => setIntroduction(value)}
                         />
-                        <Box>
+                        <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Source File
                             </Typography>
@@ -100,7 +104,12 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                     cursor: 'pointer',
                                 }}
                             />
-                        </Box>
+                            {mintFileError && (
+                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                    Source file should be selected.
+                                </Typography>
+                            )}
+                        </Stack>
                     </Grid>
                     <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
                         <Stack spacing={0.5}>
@@ -119,9 +128,15 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 handleClick={(value: string) => {
                                     const item = mintNFTCategoryOptions.find((option) => option.value === value);
                                     setCategory(item);
+                                    setCategoryError(false);
                                 }}
                                 setIsOpen={setCategorySelectOpen}
                             />
+                            {categoryError && (
+                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                    Category should be selected.
+                                </Typography>
+                            )}
                         </Stack>
                         <CustomTextField
                             title="About the author"
@@ -199,8 +214,9 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 setTitleError(title === '');
                                 setIntroductionError(introduction === '');
                                 setAutorError(author === '');
-                                console.log('royalties, ', royalties);
                                 setRoyaltiesError(royalties <= 0 || royalties >= 100);
+                                setCategoryError(category === undefined);
+                                setMintFileError(mintFile === undefined);
                                 enqueueSnackbar('Form validation failed!', {
                                     variant: 'warning',
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
