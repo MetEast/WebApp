@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
-import { Stack, Typography, TextField } from '@mui/material';
+import { Stack, Box, Typography, TextField } from '@mui/material';
 
 export interface ComponentProps {
     title?: string;
     placeholder?: string;
-    handleChange?: (value: number) => void;
+    error?: boolean;
+    errorText?: string;
+    handleChange?: (value: string) => void;
 }
 
-const RoyaltyInput: React.FC<ComponentProps> = ({ title, placeholder, handleChange = () => {} }): JSX.Element => {
+const RoyaltyInput: React.FC<ComponentProps> = ({
+    title,
+    placeholder,
+    error = false,
+    errorText = '',
+    handleChange = () => {},
+}): JSX.Element => {
     const [text, setText] = useState('10');
+    const [invalid, setInvalid] = useState<boolean>(true);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setText(value);
-        handleChange(parseFloat(value));
+        handleChange(value);
+        setInvalid(value === '' || isNaN(Number(value)) || Number(value) <= 0 || Number(value) >= 100);
     };
 
     return (
@@ -23,37 +33,38 @@ const RoyaltyInput: React.FC<ComponentProps> = ({ title, placeholder, handleChan
                     {title}
                 </Typography>
             )}
-            <Stack
-                direction="row"
-                alignItems="center"
-                borderRadius={3}
-                paddingRight={2}
-                overflow="hidden"
-                sx={{ background: '#F0F1F2' }}
-            >
+            <Box position="relative">
                 <TextField
                     value={text}
                     placeholder={placeholder}
                     sx={{
                         width: '100%',
+                        borderRadius: 3,
                         '& .MuiOutlinedInput-root': {
                             height: 40,
                             fontSize: 20,
                             fontWeight: 500,
-                            '& fieldset': {
-                                borderWidth: 0,
+                            '& fieldset, &:hover fieldset': {
+                                borderWidth: error && invalid ? 2 : 0,
+                                borderColor: error && invalid ? '#EB5757' : 'white',
                             },
                             '&.Mui-focused fieldset': {
-                                borderWidth: 0,
+                                borderWidth: 2,
+                                borderColor: error && invalid ? '#EB5757' : '#1890FF',
                             },
                         },
                     }}
                     onChange={handleInputChange}
                 />
-                <Typography fontSize={14} fontWeight={700} marginLeft={0.5}>
+                <Typography fontSize={14} fontWeight={700} position="absolute" right="12px" top="10px">
                     %
                 </Typography>
-            </Stack>
+            </Box>
+            {error && invalid && (
+                <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                    {errorText}
+                </Typography>
+            )}
         </Stack>
     );
 };

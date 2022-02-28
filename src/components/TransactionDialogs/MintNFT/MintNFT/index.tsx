@@ -23,11 +23,15 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [category, setCategory] = useState<TypeSelectItem>();
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
     const [title, setTitle] = useState<string>('');
+    const [titleError, setTitleError] = useState(false);
     const [introduction, setIntroduction] = useState<string>('');
+    const [introductionError, setIntroductionError] = useState(false);
     const [author, setAuthor] = useState<string>('');
+    const [authorError, setAutorError] = useState(false);
     const [mintFile, setMintFile] = useState<File>();
     const [stateFile, setStateFile] = useState(null);
     const [royalties, setRoyalties] = useState<number>(10);
+    const [royaltiesError, setRoyaltiesError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
     const handleFileChange = (files: Array<File>) => {
@@ -65,6 +69,8 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                         <CustomTextField
                             title="Project Title"
                             placeholder="Placeholder Text"
+                            error={titleError}
+                            errorText="Project title can not be empty."
                             changeHandler={(value: string) => setTitle(value)}
                         />
                         <CustomTextField
@@ -72,6 +78,8 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             placeholder="Enter Introduction"
                             multiline
                             rows={3}
+                            error={introductionError}
+                            errorText="Project introduction can not be empty."
                             changeHandler={(value: string) => setIntroduction(value)}
                         />
                         <Box>
@@ -120,12 +128,19 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             placeholder="Enter author introduction"
                             multiline
                             rows={3}
+                            error={authorError}
+                            errorText="Author can not be empty."
                             changeHandler={(value: string) => setAuthor(value)}
                         />
                         <RoyaltyInput
                             title="Royalties"
                             placeholder="10"
-                            handleChange={(value: number) => setRoyalties(value)}
+                            error={royaltiesError}
+                            errorText="Royalties should be between 0 and 100."
+                            handleChange={(value: string) => {
+                                if (value === '' || isNaN(Number(value))) setRoyalties(0);
+                                else setRoyalties(parseFloat(value));
+                            }}
                         />
                     </Grid>
                 </Grid>
@@ -180,11 +195,17 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                     createNFTDlgOpened: true,
                                     createNFTDlgStep: 1,
                                 });
-                            } else
+                            } else {
+                                setTitleError(title === '');
+                                setIntroductionError(introduction === '');
+                                setAutorError(author === '');
+                                console.log('royalties, ', royalties);
+                                setRoyaltiesError(royalties <= 0 || royalties >= 100);
                                 enqueueSnackbar('Form validation failed!', {
                                     variant: 'warning',
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                                 });
+                            }
                         }}
                     >
                         Next

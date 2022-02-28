@@ -11,6 +11,8 @@ export interface ComponentProps {
     fontSize?: number;
     fontWeight?: number;
     number?: boolean;
+    error?: boolean;
+    errorText?: string;
     changeHandler?: (value: string) => void;
 }
 
@@ -24,16 +26,20 @@ const CustomTextField: React.FC<ComponentProps> = ({
     fontSize,
     fontWeight,
     number = false,
+    error = false,
+    errorText = '',
     changeHandler = () => {},
 }): JSX.Element => {
     const [text, setText] = useState(inputValue);
-    const [error, setError] = useState<boolean>(false);
+    const [invalid, setInvalid] = useState<boolean>(true);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setText(value);
         changeHandler(value);
-        if (number) setError(value !== '' && isNaN(Number(value)));
+
+        if (number) setInvalid(value === '' || isNaN(Number(value)));
+        else setInvalid(value === '');
     };
 
     React.useEffect(() => {
@@ -60,12 +66,13 @@ const CustomTextField: React.FC<ComponentProps> = ({
                         fontSize: fontSize === undefined ? 'auto' : fontSize,
                         fontWeight: fontWeight === undefined ? 'auto' : fontWeight,
                         height: multiline ? 'auto' : 40,
-                        '& fieldset': {
-                            borderWidth: 0,
+                        '& fieldset, &:hover fieldset': {
+                            borderWidth: error && invalid ? 2 : 0,
+                            borderColor: error && invalid ? '#EB5757' : 'white',
                         },
                         '&.Mui-focused fieldset': {
                             borderWidth: 2,
-                            borderColor: error ? '#EB5757' : '#1890FF',
+                            borderColor: error && invalid ? '#EB5757' : '#1890FF',
                         },
                         '& input': {
                             height: 40,
@@ -75,6 +82,11 @@ const CustomTextField: React.FC<ComponentProps> = ({
                 }}
                 onChange={handleInputChange}
             />
+            {error && invalid && (
+                <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                    {errorText}
+                </Typography>
+            )}
         </Stack>
     );
 };
