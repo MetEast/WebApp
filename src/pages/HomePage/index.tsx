@@ -3,7 +3,6 @@ import { Box, Stack, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
-// import { H2Typography } from 'src/core/typographies';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NFTPreview from 'src/components/NFTPreview';
@@ -11,7 +10,6 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
 import { getElaUsdRate, getMyFavouritesList } from 'src/services/fetch';
-// import { XboxConsole24Filled } from '@fluentui/react-icons/lib/cjs/index';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
