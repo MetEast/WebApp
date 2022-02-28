@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Typography, Grid } from '@mui/material';
+import { Stack, Typography, Grid, Skeleton } from '@mui/material';
 import { reduceHexAddress } from 'src/services/common';
 import { Icon } from '@iconify/react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -30,7 +30,17 @@ const AboutAuthor: React.FC<ComponentProps> = ({ name, description, img, address
             <Stack direction="row" alignItems="center" spacing={1}>
                 <Grid container columnSpacing={1} rowGap={5}>
                     <Grid item>
-                        <img src={img} width={39} height={39} style={{ borderRadius: '9999px' }} alt="" />
+                        {img ? (
+                            <img src={img} width={40} height={40} style={{ borderRadius: '9999px' }} alt="" />
+                        ) : (
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width={40}
+                                height={40}
+                                sx={{ borderRadius: '50%', bgcolor: '#E8F4FF' }}
+                            />
+                        )}
                     </Grid>
                     <Grid item>
                         <Typography fontSize={16} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
