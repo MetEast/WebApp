@@ -274,16 +274,19 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             <CustomTextField
                                 title="Number of favourites"
                                 placeholder="es. 1000"
+                                number={true}
                                 changeHandler={(value: string) => setBlindboxLikes(parseInt(value))}
                             />
                             <CustomTextField
                                 title="Number of Views"
                                 placeholder="es. 1000"
+                                number={true}
                                 changeHandler={(value: string) => setBlindboxViews(parseInt(value))}
                             />
                             <CustomTextField
                                 title="Max Num of Purchases"
                                 placeholder="es. 1000"
+                                number={true}
                                 changeHandler={(value: string) => setBlindboxPurchases(parseInt(value))}
                             />
                             <Stack spacing={0.5}>
@@ -382,9 +385,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     setSelectDlgOpened(false);
                 }}
             >
-                <SearchBlindBoxItems onClose={() => {
-                    setSelectDlgOpened(false);
-                }} />
+                <SearchBlindBoxItems
+                    onClose={() => {
+                        setSelectDlgOpened(false);
+                    }}
+                />
             </ModalDialog>
         </>
     );
