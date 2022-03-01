@@ -21,7 +21,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
-            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
 
     // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');

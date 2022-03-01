@@ -4,10 +4,12 @@ export type AuthContextType = {
 
 export type UserTokenType = {
     did: string;
+    name: string;
+    description: string;
+    avatar: string;
     email: string;
     exp: number;
     iat: number;
-    name: string;
     type: string;
     canManageAdmins: boolean;
 }

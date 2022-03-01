@@ -31,7 +31,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
-            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
     const { did, name } = userInfo;
 

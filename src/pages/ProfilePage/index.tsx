@@ -104,7 +104,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
-            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
 
     const adBanners = [
