@@ -93,6 +93,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     : enumBlindBoxNFTType.SaleEnded;
             blind.likes = itemObject.likes;
             blind.views = itemObject.views;
+            blind.holder = itemObject.authorName; // no data ------------------------------------
             blind.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
@@ -177,27 +178,30 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         />
                     </Stack>
                     <ELAPrice price_ela={blindBoxDetail.price_ela} price_usd={blindBoxDetail.price_usd} marginTop={3} />
-                    {blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds && blindBoxDetail.state === 'online' && (
-                        <PrimaryButton
-                            sx={{ marginTop: 3, width: '100%' }}
-                            onClick={() => {
-                                setDialogState({
-                                    ...dialogState,
-                                    buyBlindBoxDlgOpened: true,
-                                    buyBlindBoxDlgStep: 0,
-                                    buyBlindName: blindBoxDetail.name,
-                                    buyBlindPriceEla: blindBoxDetail.price_ela,
-                                    buyBlindPriceUsd: blindBoxDetail.price_usd,
-                                    buyBlindAmount: 1,
-                                    // buyBlindCreator: blindBoxDetail.author,
-                                    // buyBlindOrderId: blindBoxDetail.orderId || '',
-                                    buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                });
-                            }}
-                        >
-                            Buy Now
-                        </PrimaryButton>
-                    )}
+                    {signInDlgState.walletAccounts !== [] &&
+                        blindBoxDetail.holder === signInDlgState.walletAccounts[0] &&
+                        blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
+                        blindBoxDetail.state === 'online' && (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    setDialogState({
+                                        ...dialogState,
+                                        buyBlindBoxDlgOpened: true,
+                                        buyBlindBoxDlgStep: 0,
+                                        buyBlindName: blindBoxDetail.name,
+                                        buyBlindPriceEla: blindBoxDetail.price_ela,
+                                        buyBlindPriceUsd: blindBoxDetail.price_usd,
+                                        buyBlindAmount: 1,
+                                        // buyBlindCreator: blindBoxDetail.author,
+                                        // buyBlindOrderId: blindBoxDetail.orderId || '',
+                                        buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                    });
+                                }}
+                            >
+                                Buy Now
+                            </PrimaryButton>
+                        )}
                 </Grid>
             </Grid>
             <Box marginTop={5}>

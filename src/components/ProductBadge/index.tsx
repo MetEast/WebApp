@@ -137,8 +137,14 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
                 fontWeight={500}
                 color={styles[badgeType].color}
             >
-                <Grid item>{`${badgeType}${content ? ':' : ''}`}&nbsp;</Grid>
-                <Grid item>{content ? content : ''}</Grid>
+                {badgeType === enumBadgeType.SaleEnded ? (
+                    <Grid item>{badgeType}&nbsp;</Grid>
+                ) : (
+                    <>
+                        <Grid item>{`${badgeType}${content ? ':' : ''}`}&nbsp;</Grid>
+                        <Grid item>{content ? content : ''}</Grid>
+                    </>
+                )}
             </Grid>
         </Container>
     );
