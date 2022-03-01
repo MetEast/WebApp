@@ -179,10 +179,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                    _transaction.type = enumTransactionType.ChangeOrder;
+                    _transaction.type = enumTransactionType.PriceChanged;
                     break;
                 case 'CancelOrder':
-                    _transaction.type = enumTransactionType.CancelOrder;
+                    _transaction.type = enumTransactionType.SaleCanceled;
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;

@@ -14,24 +14,24 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         [enumTransactionType.Bid]: {
             icon: <Icon icon="ph:ticket" fontSize={20} />,
         },
+        [enumTransactionType.CreatedBy]: {
+            icon: <Icon icon="ph:palette" fontSize={20} />,
+        },
+        [enumTransactionType.ForSale]: {
+            icon: <Icon icon="ph:lightning" fontSize={20} />,
+        },
         [enumTransactionType.OnAuction]: {
             icon: <Icon icon="ph:scales" fontSize={20} />,
         },
         [enumTransactionType.SoldTo]: {
             icon: <Icon icon="ph:handshake" fontSize={20} />,
         },
-        [enumTransactionType.ForSale]: {
-            icon: <Icon icon="ph:lightning" fontSize={20} />,
-        },
-        [enumTransactionType.CreatedBy]: {
-            icon: <Icon icon="ph:palette" fontSize={20} />,
-        },
-        [enumTransactionType.ChangeOrder]: {
-            icon: <Icon icon="ph:lightning" fontSize={20} />,
-        },
-        [enumTransactionType.CancelOrder]: {
-            icon: <Icon icon="ph:lightning" fontSize={20} />,
-        },
+        // [enumTransactionType.ChangeOrder]: {
+        //     icon: <Icon icon="ph:lightning" fontSize={20} />,
+        // },
+        // [enumTransactionType.CancelOrder]: {
+        //     icon: <Icon icon="ph:lightning" fontSize={20} />,
+        // },
         [enumTransactionType.SettleBidOrder]: {
             icon: <Icon icon="ph:lightning" fontSize={20} />,
         },

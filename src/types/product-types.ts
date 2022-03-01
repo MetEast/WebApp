@@ -47,8 +47,8 @@ export enum enumTransactionType {
     ForSale = 'For Sale',
     OnAuction = 'On Auction',
     SoldTo = 'Sold To',
-    ChangeOrder = 'Change Order',
-    CancelOrder = 'Cancel Order',
+    // ChangeOrder = 'Change Order',
+    // CancelOrder = 'Cancel Order',
     // Transfer = 'Transfer'
     SettleBidOrder = 'SettleBidOrder',
     PriceChanged = 'Price Changed',
