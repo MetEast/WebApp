@@ -20,6 +20,7 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     const badgeComingSoon = <ProductBadge badgeType={enumBadgeType.ComingSoon} content={content} />;
     const badgeSaleEnds = <ProductBadge badgeType={enumBadgeType.SaleEnds} content={content} />;
     const badgeSaleEnded = <ProductBadge badgeType={enumBadgeType.SaleEnded} />;
+    const badgeSoldOut = <ProductBadge badgeType={enumBadgeType.SoldOut} />;
     const badgeBuyNow = <ProductBadge badgeType={enumBadgeType.BuyNow} />;
     const badgeOnAuction = (
         <Grid container spacing={1}>
@@ -44,6 +45,9 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
         },
         [enumBlindBoxNFTType.SaleEnded]: {
             element: badgeSaleEnded,
+        },
+        [enumBlindBoxNFTType.SoldOut]: {
+            element: badgeSoldOut,
         },
         [enumSingleNFTType.BuyNow]: {
             element: badgeBuyNow,

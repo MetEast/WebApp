@@ -26,6 +26,11 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
             color: '#EB5757',
             icon: '',
         },
+        [enumBadgeType.SoldOut]: {
+            background: '#FDEEEE',
+            color: '#EB5757',
+            icon: '',
+        },
         [enumBadgeType.BuyNow]: {
             background: '#E8F4FF',
             color: '#1890FF',

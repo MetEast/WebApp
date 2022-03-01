@@ -2,6 +2,7 @@ export enum enumBlindBoxNFTType {
     ComingSoon = 'BlindBoxNFT - Coming Soon',
     SaleEnds = 'BlindBoxNFT - Sale Ends',
     SaleEnded = 'BlindBoxNFT - Sale Ended',
+    SoldOut = 'BlindBoxNFT - Sold Out',
 }
 
 export enum enumSingleNFTType {
@@ -21,6 +22,7 @@ export enum enumBadgeType {
     ComingSoon = 'Coming Soon',
     SaleEnds = 'Sale Ends',
     SaleEnded = 'Sale Ended',
+    SoldOut = 'Sold Out',
     BuyNow = 'Buy Now',
     ForSale = 'For Sale',
     OnAuction = 'On Auction',

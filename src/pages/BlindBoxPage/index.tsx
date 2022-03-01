@@ -68,7 +68,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
 
     // -------------- Fetch Data -------------- //
     const getBlindBoxList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/SearchBlindBox?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+        let reqUrl = `${
+            process.env.REACT_APP_BACKEND_URL
+        }/api/v1/SearchBlindBox?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
             switch (sortBy.value) {
                 case 'low_to_high':
@@ -134,7 +136,9 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             // blindboxItem.author = itemObject.authorName || ' ';
             let curTimestamp = new Date().getTime() / 1000;
             blindboxItem.type =
-                parseInt(itemObject.saleBegin) > curTimestamp
+                itemObject.instock === itemObject.sold
+                    ? enumBlindBoxNFTType.SoldOut
+                    : parseInt(itemObject.saleBegin) > curTimestamp
                     ? enumBlindBoxNFTType.ComingSoon
                     : parseInt(itemObject.saleEnd) >= curTimestamp
                     ? enumBlindBoxNFTType.SaleEnds
