@@ -126,7 +126,9 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:user" fontSize={20} color="black" />
             </IconButton>
-            <IconButton onClick={SignOutWithEssentials}>
+            <IconButton onClick={() => {
+                setSignInDlgState({ ...signInDlgState, signOut: true});
+            }}>
                 <Icon icon="ph:sign-out" fontSize={20} color="black" />
             </IconButton>
             <PrimaryButton

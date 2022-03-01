@@ -1,6 +1,9 @@
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 import { create } from 'ipfs-http-client';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
@@ -39,3 +42,22 @@ export const getDidUri = async (_did: string, _description: string, _name: strin
     const didUri = await client.add(jsonDidObj);
     return `did:elastos:${didUri.path}`;
 };
+
+export const resetWalletConnector = (connector: any) => {
+    if (connector && connector instanceof WalletConnectConnector) {
+        connector.walletConnectProvider = undefined;
+    }
+};
+
+export const getWalletBalance = async (library: any, account: string) => {
+    if (!library) return '0';
+    const walletConnectWeb3 = new Web3(library.provider as any);
+    const balance = await walletConnectWeb3.eth.getBalance(account);
+    // const { data: balance } = useSWR(['getBalance', account, 'latest'], {
+    //   fetcher: fetcher(library),
+    // })
+    // if(!balance) {
+    //   return '0';
+    // }
+    return balance;
+  }

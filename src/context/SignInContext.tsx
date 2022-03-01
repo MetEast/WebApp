@@ -8,6 +8,7 @@ export interface SignInState {
     walletBalance: number;
     chainId: number;
     didUri: string;
+    signOut: boolean;
 }
 
 const defaultState: SignInState = {
@@ -28,6 +29,7 @@ const defaultState: SignInState = {
     walletBalance: 0,
     chainId: 0,
     didUri: '',
+    signOut: false,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
