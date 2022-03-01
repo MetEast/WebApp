@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { essentialsConnector, isUsingEssentialsConnector } from '../ConnectWallet/EssentialsConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { NotificationTypo } from './styles';
 import ModalDialog from 'src/components/ModalDialog';
@@ -81,26 +80,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             icon: <Icon icon="ph:cube" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
         },
     ];
-
-    const SignOutWithEssentials = async () => {
-        console.log('Signing out user. Deleting session info, auth token');
-        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
-        setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
-        try {
-            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
-                await essentialsConnector.getWalletConnectProvider().disconnect();
-                // await essentialsConnector.disconnectWalletConnect();
-            }
-        } catch (e) {
-            console.log(e);
-        }
-        if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
-            navigate('/');
-        }
-        window.location.reload();
-    };
 
     const pageButtons = menuItemsList.map((item, index) => (
         <PageButton

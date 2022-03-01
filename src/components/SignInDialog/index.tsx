@@ -178,11 +178,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // listen for disconnect
     useEffect(() => {
-        if (signInDlgState.signOut && signInDlgState.isLoggedIn) {
-            if (signInDlgState.loginType === '1') signOutWithEssentials();
-            else if (signInDlgState.loginType === '2') signOutWithWallet();
+        if (signInDlgState.isLoggedIn) {
+            if (signInDlgState.signOut) {
+                if (signInDlgState.loginType === '1') signOutWithEssentials();
+                else if (signInDlgState.loginType === '2') signOutWithWallet();
+            }
+            else if (signInDlgState.disconnectWallet) {
+                if (signInDlgState.loginType === '1') disconnectEssentials();
+                else if (signInDlgState.loginType === '2') signOutWithWallet();
+            }
         }
-    }, [signInDlgState.signOut]);
+    }, [signInDlgState.signOut, signInDlgState.disconnectWallet]);
 
     useEffect(() => {
         console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
@@ -295,6 +301,18 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             navigate('/');
         }
         window.location.reload();
+    };
+
+    const disconnectEssentials = async () => {
+        console.log('Disconnect wallet.');
+        setSignInDlgState({ ...signInDlgState, isLoggedIn: false, disconnectWallet: false });
+        try {
+            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
+                await essentialsConnector.disconnectWalletConnect();
+            }
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     // const signOutWithEssentials = async () => {
