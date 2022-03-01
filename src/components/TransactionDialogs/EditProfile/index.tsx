@@ -11,7 +11,7 @@ import { reduceHexAddress } from 'src/services/common';
 import { essentialsConnector, isUsingEssentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { disconnect } from 'process';
-import { ProfileImageWrapper, ProfileImage } from './styles';
+import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
 import CustomTextField from 'src/components/TextField';
 
 export interface ComponentProps {
@@ -79,6 +79,12 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     ) : (
                         <Icon icon="ph:user" fontSize={40} color="#1890FF" />
                     )}
+                    <Stack className="hover_box_container">
+                        <Icon icon="ph:pencil-simple" fontSize={14} color="white" />
+                        <Typography fontSize={14} fontWeight={700} color="white">
+                            Edit
+                        </Typography>
+                    </Stack>
                 </ProfileImageWrapper>
                 <CustomTextField
                     title="Author name"
@@ -91,22 +97,34 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     <Typography fontSize={12} fontWeight={700}>
                         Cover Picture
                     </Typography>
-                    <Box
-                        height={156}
-                        borderRadius={4.5}
-                        overflow="hidden"
-                        sx={{
-                            boxShadow: '0px 4px 2px -2px rgba(2, 14, 25, 0.2)',
-                            filter: 'drop-shadow(0px 4px 8px rgba(7, 43, 76, 0.2))',
-                        }}
-                    >
+                    <BannerBox>
                         <img
                             src="/assets/images/blindbox/blindbox-nft-template1.png"
                             width="100%"
                             height="100%"
                             alt=""
                         />
-                    </Box>
+                        <Stack
+                            className="hover_box_container"
+                            direction="row"
+                            justifyContent="flex-end"
+                            padding={2}
+                            spacing={1}
+                        >
+                            <PinkButton size="small" sx={{ width: 120 }}>
+                                <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
+                                {`Delete`}
+                            </PinkButton>
+                            <SecondaryButton size="small" sx={{ width: 120 }}>
+                                <Icon
+                                    icon="ph:pencil-simple"
+                                    fontSize={20}
+                                    style={{ marginBottom: 4, marginRight: 4 }}
+                                />
+                                {`Change`}
+                            </SecondaryButton>
+                        </Stack>
+                    </BannerBox>
                 </Stack>
             </Stack>
             <Stack direction="row" spacing={2} paddingTop={5}>
