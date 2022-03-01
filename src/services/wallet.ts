@@ -17,12 +17,18 @@ declare global {
 }
 
 export const getEssentialsWalletAddress = () => {
-    const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-    return walletConnectProvider.wc.accounts;
+    if (isInAppBrowser()) {
+        const inAppProvider: any = window.elastos.getWeb3Provider();
+        return [inAppProvider.address];
+    }
+    else {
+        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        return walletConnectProvider.wc.accounts;
+    }
 };
 
 export const getEssentialsWalletBalance = async () => {
-    const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser() ? window.elastos.getWeb3Provider() : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     const accounts = await walletConnectWeb3.eth.getAccounts();
     if (accounts.length === 0) return '0';
@@ -31,7 +37,7 @@ export const getEssentialsWalletBalance = async () => {
 };
 
 export const getEssentialsChainId = async () => {
-    const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser() ? window.elastos.getWeb3Provider() : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     const chainId = await walletConnectWeb3.eth.getChainId();
     return chainId;
