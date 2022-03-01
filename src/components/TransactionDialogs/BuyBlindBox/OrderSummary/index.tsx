@@ -14,6 +14,7 @@ import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
@@ -24,9 +25,12 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
 
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+
     const callBuyOrder = async (_orderId: string, _didUri: string, _price: string) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_MARKET_CONTRACT_ABI;

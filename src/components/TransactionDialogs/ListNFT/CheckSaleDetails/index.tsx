@@ -14,6 +14,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
@@ -22,10 +23,12 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_CONTRACT_ABI;
@@ -86,8 +89,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         _didUri: string,
         _isBlindBox: boolean,
     ) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_MARKET_CONTRACT_ABI;
@@ -143,8 +144,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         _endTime: string,
         _didUri: string,
     ) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_MARKET_CONTRACT_ABI;
@@ -205,8 +204,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 false,
             );
         } else {
-            const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-            const walletConnectWeb3 = new Web3(walletConnectProvider as any);
             const currentBlock = await walletConnectWeb3.eth.getBlock('latest');
             let auctionTime: number =
                 typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;

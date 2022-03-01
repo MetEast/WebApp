@@ -18,6 +18,7 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
@@ -34,6 +35,10 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
     const { did, name } = userInfo;
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const callMintNFT = async (
         _tokenId: string,
@@ -41,9 +46,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         _didUri: string,
         _royaltyFee: number
     ) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_CONTRACT_ABI;

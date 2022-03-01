@@ -27,6 +27,7 @@ import {
 } from 'src/types/product-types';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { getImageFromAsset, selectFromFavourites, getTime } from 'src/services/common';
+import { isInAppBrowser } from 'src/services/wallet';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -57,6 +58,10 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         instock: 0,
     };
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(defaultValue);
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const getBlindBoxDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resBlindBoxDetail = await fetch(
@@ -124,8 +129,6 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     }, []);
 
     const setBuyBlindBoxTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, buyBlindTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };

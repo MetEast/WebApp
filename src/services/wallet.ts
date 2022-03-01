@@ -2,8 +2,6 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 import { create } from 'ipfs-http-client';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });

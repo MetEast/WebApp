@@ -46,6 +46,7 @@ import AllTransactions from 'src/components/profile/AllTransactions';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
+import { isInAppBrowser } from 'src/services/wallet';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -100,6 +101,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
 
     const burnAddress = '0x0000000000000000000000000000000000000000';
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
@@ -307,8 +312,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     // change price tx fee
     const setChangePriceTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
@@ -319,8 +322,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     // cancel sale tx fee
     const setCancelSaleTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
@@ -331,8 +332,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     // accept bid tx Fee
     const setAcceptBidTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };

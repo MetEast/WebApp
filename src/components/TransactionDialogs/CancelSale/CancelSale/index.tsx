@@ -12,6 +12,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
@@ -20,10 +21,12 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const callCancelOrder = async (_orderId: string) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         const contractAbi = METEAST_MARKET_CONTRACT_ABI;
@@ -114,7 +117,9 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                     >
                         Back
                     </SecondaryButton>
-                    <PinkButton fullWidth onClick={handleCancelSale}>Cancel sale</PinkButton>
+                    <PinkButton fullWidth onClick={handleCancelSale}>
+                        Cancel sale
+                    </PinkButton>
                 </Stack>
             </Stack>
             <ModalDialog
