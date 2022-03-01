@@ -82,3 +82,7 @@ export const getWalletBalance = async (library: any, account: string) => {
     return balance;
 };
 
+export const isInAppBrowser = () => {
+    return window.elastos !== undefined && window.elastos.name === 'essentialsiab';
+};
+

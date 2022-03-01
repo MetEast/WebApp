@@ -62,24 +62,24 @@ export const selectFromFavourites = (value: TypeFavouritesFetch, tokenId: string
 
 export const getMintCategory = (value: string | undefined) => {
     if (value === undefined) return enumBadgeType.Other;
-    switch(value) {
-        case 'Original': 
+    switch (value) {
+        case 'Original':
             return enumBadgeType.Original;
-        case 'Museum': 
+        case 'Museum':
             return enumBadgeType.Museum;
-        case 'Arts': 
+        case 'Arts':
             return enumBadgeType.Arts;
-        case 'Sports': 
+        case 'Sports':
             return enumBadgeType.Sports;
-        case 'Dimension': 
+        case 'Dimension':
             return enumBadgeType.Dimension;
-        case 'Pets': 
+        case 'Pets':
             return enumBadgeType.Pets;
-        case 'Recreation': 
+        case 'Recreation':
             return enumBadgeType.Recreation;
-        case 'Star': 
+        case 'Star':
             return enumBadgeType.Star;
-        default: 
+        default:
             return enumBadgeType.Other;
     }
 };
@@ -139,9 +139,3 @@ export const getChartDateList = (date: Date, type: string) => {
     }
     return retDateList;
 };
-
-export const isInAppBrowser = () => {
-    return true;
-    // return window.elastos !== undefined && window.elastos.name === 'essentialsiab'
-};
-

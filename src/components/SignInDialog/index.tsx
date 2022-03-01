@@ -13,15 +13,13 @@ import { injected, walletconnect } from 'src/components/ConnectWallet/connectors
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
-import { isInAppBrowser } from 'src/services/common';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
     getEssentialsWalletBalance,
     getDidUri,
     resetWalletConnector,
     getWalletBalance,
-    getWalletChainId,
-    getWalletAccounts,
+    isInAppBrowser,
 } from 'src/services/wallet';
 import { UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -48,10 +46,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         null,
     );
     const [walletConnectProvider] = useState<WalletConnectProvider>(essentialsConnector.getWalletConnectProvider());
+    // const [walletConnectProvider] = useState<WalletConnectProvider>(
+    //     isInAppBrowser() ? window.elastos.getWeb3Provider() : essentialsConnector.getWalletConnectProvider(),
+    // );
 
     const [_signInState, _setSignInState] = useState<SignInState>(signInDlgState);
     let linkType = linkCookies.METEAST_LINK;
 
+    // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
         let currentConnector = null;
         if (wallet === 'MM') {
@@ -103,7 +105,21 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // ------------------------------ EE Connection ------------------------------ //
     useEffect(() => {
-        if (linkType === '1') {
+        if (isInAppBrowser()) {
+            _setSignInState((prevState: SignInState) => {
+                const _state = { ...prevState };
+                const inAppProvider: any = window.elastos.getWeb3Provider();
+                _state.walletAccounts = [inAppProvider.address];
+                const inAppWeb3 = new Web3(inAppProvider as any);
+                inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
+                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                });
+                inAppWeb3.eth.getChainId().then((chainId: number) => {
+                    _state.chainId = chainId;
+                });
+                return _state;
+            });
+        } else {
             // Subscribe to accounts change
             walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
                 getEssentialsWalletBalance().then((balance: string) => {
@@ -134,65 +150,65 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             walletConnectProvider.on('error', (code: number, reason: string) => {
                 console.error(code, reason);
             });
-        } else {
-            if (linkType === undefined) {
-                if (active) {
-                    // alert('new sign in');
-                    if (account) {
-                        const timer = setTimeout(() => {
-                            getWalletBalance(library, account).then((balance: string) => {
-                                _setSignInState((prevState: SignInState) => {
-                                    const _state = { ...prevState };
-                                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                                    clearTimeout(timer);
-                                    return _state;
-                                });
+        }
+
+        if (linkType === undefined) {
+            if (active) {
+                // alert('new sign in');
+                if (account) {
+                    const timer = setTimeout(() => {
+                        getWalletBalance(library, account).then((balance: string) => {
+                            _setSignInState((prevState: SignInState) => {
+                                const _state = { ...prevState };
+                                _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                                clearTimeout(timer);
+                                return _state;
                             });
-                        }, 100);
-                    }
-                } else {
-                    // alert('log out');
+                        });
+                    }, 100);
                 }
             } else {
-                if (!active) {
-                    if (activatingConnector !== null) {
-                        // alert('disconnect');
-                        signOutWithWallet();
-                    } else {
-                        // alert('refresh');
-                        const timer = setTimeout(async () => {
-                            if (linkType === '2') {
-                                setActivatingConnector(injected);
-                                await activate(injected);
-                            } else if (linkType === '3') {
-                                setActivatingConnector(walletconnect);
-                                await activate(walletconnect);
-                            }
-                            clearTimeout(timer);
-                        }, 0);
+                // alert('log out');
+            }
+        } else if (linkType === '2') {
+            if (!active) {
+                if (activatingConnector !== null) {
+                    // alert('disconnect');
+                    signOutWithWallet();
+                } else {
+                    // alert('refresh');
+                    const timer = setTimeout(async () => {
+                        if (linkType === '2') {
+                            setActivatingConnector(injected);
+                            await activate(injected);
+                        } else if (linkType === '3') {
+                            setActivatingConnector(walletconnect);
+                            await activate(walletconnect);
+                        }
+                        clearTimeout(timer);
+                    }, 0);
+                }
+            } else {
+                if (library) {
+                    // alert('library');
+                    _setSignInState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.chainId = chainId || 0;
+                        _state.walletAccounts = account ? [account] : [];
+                        return _state;
+                    });
+                    if (account) {
+                        // must be placed here
+                        getWalletBalance(library, account).then((balance: string) => {
+                            _setSignInState((prevState: SignInState) => {
+                                const _state = { ...prevState };
+                                _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                                return _state;
+                            });
+                        });
                     }
                 } else {
-                    if (library) {
-                        // alert('library');
-                        _setSignInState((prevState: SignInState) => {
-                            const _state = { ...prevState };
-                            _state.chainId = chainId || 0;
-                            _state.walletAccounts = account ? [account] : [];
-                            return _state;
-                        });
-                        if (account) {
-                            // must be placed here
-                            getWalletBalance(library, account).then((balance: string) => {
-                                _setSignInState((prevState: SignInState) => {
-                                    const _state = { ...prevState };
-                                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                                    return _state;
-                                });
-                            });
-                        }
-                    } else {
-                        // alert('no library');
-                    }
+                    // alert('no library');
                 }
             }
         }
@@ -256,9 +272,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         }
     }, [signInDlgState.signOut, signInDlgState.disconnectWallet]);
 
-    useEffect(() => {
-        console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
-    }, [signInDlgState]);
+    // useEffect(() => {
+    //     console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
+    //     // alert(signInDlgState.walletAccounts);
+    //     // alert(signInDlgState.walletBalance);
+    // }, [signInDlgState]);
 
     if (linkType === '1') initConnectivitySDK();
 
@@ -294,6 +312,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((data) => {
                     if (data.code === 200) {
                         const token = data.token;
+                        linkType = '1';
                         setLinkCookie('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
@@ -304,6 +323,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             _state.isLoggedIn = true;
                             _state.loginType = '1';
                             _state.signInDlgOpened = false;
+                            if (isInAppBrowser()) {
+                                const inAppProvider: any = window.elastos.getWeb3Provider();
+                                _state.walletAccounts = [inAppProvider.address];
+                                const inAppWeb3 = new Web3(inAppProvider as any);
+                                inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
+                                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                                });
+                                inAppWeb3.eth.getChainId().then((chainId: number) => {
+                                    _state.chainId = chainId;
+                                });
+                            }
                             return _state;
                         });
                         enqueueSnackbar('Login succeed.', {
