@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
@@ -11,6 +11,8 @@ import { reduceHexAddress } from 'src/services/common';
 import { essentialsConnector, isUsingEssentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { disconnect } from 'process';
+import { ProfileImageWrapper, ProfileImage } from './styles';
+import CustomTextField from 'src/components/TextField';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -57,6 +59,9 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         }
     };
 
+    // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
+    const [userAvatarURL, setUserAvatarURL] = useState<string>('');
+
     return (
         <Stack
             spacing={4}
@@ -67,7 +72,44 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Edit Profile</DialogTitleTypo>
             </Stack>
-            <Stack direction="row" spacing={2}>
+            <Stack spacing={2}>
+                <ProfileImageWrapper>
+                    {userAvatarURL !== '' ? (
+                        <ProfileImage src={userAvatarURL} />
+                    ) : (
+                        <Icon icon="ph:user" fontSize={40} color="#1890FF" />
+                    )}
+                </ProfileImageWrapper>
+                <CustomTextField
+                    title="Author name"
+                    placeholder="Enter your name"
+                    height={56}
+                    sx={{ marginTop: 2.5 }}
+                />
+                <CustomTextField title="About the author" placeholder="Enter author introduction" multiline rows={5} />
+                <Stack spacing={1}>
+                    <Typography fontSize={12} fontWeight={700}>
+                        Cover Picture
+                    </Typography>
+                    <Box
+                        height={156}
+                        borderRadius={4.5}
+                        overflow="hidden"
+                        sx={{
+                            boxShadow: '0px 4px 2px -2px rgba(2, 14, 25, 0.2)',
+                            filter: 'drop-shadow(0px 4px 8px rgba(7, 43, 76, 0.2))',
+                        }}
+                    >
+                        <img
+                            src="/assets/images/blindbox/blindbox-nft-template1.png"
+                            width="100%"
+                            height="100%"
+                            alt=""
+                        />
+                    </Box>
+                </Stack>
+            </Stack>
+            <Stack direction="row" spacing={2} paddingTop={5}>
                 <SecondaryButton fullWidth onClick={onClose}>
                     Close
                 </SecondaryButton>

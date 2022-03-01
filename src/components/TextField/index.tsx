@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Stack, Typography, TextField } from '@mui/material';
+import { SxProps } from '@mui/system';
 
 export interface ComponentProps {
     disabled?: boolean;
     title?: string;
     inputValue?: string;
     placeholder?: string;
+    height?: number;
     multiline?: boolean;
     rows?: number;
     fontSize?: number;
@@ -13,6 +15,7 @@ export interface ComponentProps {
     number?: boolean;
     error?: boolean;
     errorText?: string;
+    sx?: SxProps;
     changeHandler?: (value: string) => void;
 }
 
@@ -21,6 +24,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
     inputValue,
     title,
     placeholder,
+    height,
     multiline,
     rows,
     fontSize,
@@ -28,6 +32,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
     number = false,
     error = false,
     errorText = '',
+    sx,
     changeHandler = () => {},
 }): JSX.Element => {
     const [text, setText] = useState(inputValue);
@@ -47,7 +52,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
     }, [inputValue]);
 
     return (
-        <Stack spacing={0.5}>
+        <Stack spacing={0.5} sx={{ ...sx }}>
             {title && (
                 <Typography fontSize={12} fontWeight={700}>
                     {title}
@@ -65,7 +70,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
                     '& .MuiOutlinedInput-root': {
                         fontSize: fontSize === undefined ? 'auto' : fontSize,
                         fontWeight: fontWeight === undefined ? 'auto' : fontWeight,
-                        height: multiline ? 'auto' : 40,
+                        height: multiline ? 'auto' : height === undefined ? 40 : height,
                         '& fieldset, &:hover fieldset': {
                             borderWidth: error && invalid ? 2 : 0,
                             borderColor: error && invalid ? '#EB5757' : 'white',
@@ -75,7 +80,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
                             borderColor: error && invalid ? '#EB5757' : '#1890FF',
                         },
                         '& input': {
-                            height: 40,
+                            height: height === undefined ? 40 : height,
                             paddingY: 0,
                         },
                     },
