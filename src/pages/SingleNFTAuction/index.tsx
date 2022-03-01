@@ -369,7 +369,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    {signInDlgState.walletAccounts !== [] && productDetail.holder !== signInDlgState.walletAccounts[0] && (
+                    {signInDlgState.walletAccounts !== [] && productDetail.holder !== signInDlgState.walletAccounts[0] && !productDetail.isExpired && (
                         <PrimaryButton
                             sx={{ marginTop: 3, width: '100%' }}
                             onClick={() => {

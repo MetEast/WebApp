@@ -84,7 +84,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             blind.image = getImageFromAsset(itemObject.asset);
             blind.price_ela = parseInt(itemObject.blindPrice);
             blind.price_usd = blind.price_ela * tokenPriceRate;
-            let curTimestamp = new Date().getTime() / 1000;
+            const curTimestamp = new Date().getTime() / 1000;
             blind.type =
                 curTimestamp < parseInt(itemObject.saleBegin)
                     ? enumBlindBoxNFTType.ComingSoon
