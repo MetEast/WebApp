@@ -14,6 +14,7 @@ import MyNFTCreated from 'src/pages/MyNFT/Created';
 import MyNFTSold from 'src/pages/MyNFT/Sold';
 import AdminPage from 'src/pages/Admin';
 import AdminNFTs from 'src/pages/Admin/NFTs';
+import AdminUsers from 'src/pages/Admin/Users';
 import AdminBlindBoxes from 'src/pages/Admin/BlindBoxes';
 import AdminHomePopular from 'src/pages/Admin/HomePopular';
 import AdminHomeUpcoming from 'src/pages/Admin/HomeUpcoming';
@@ -87,6 +88,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     }
                 />
                 <Route
+                    path="/admin/users"
+                    element={
+                        <AdminPage>
+                            <AdminUsers />
+                        </AdminPage>
+                    }
+                />
+                <Route
                     path="/admin/blindboxes"
                     element={
                         <AdminPage>
@@ -150,12 +159,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </AdminPage>
                     }
                 />
-                <Route
-                    path=""
-                    element={
-                        <User />
-                    }
-                >
+                <Route path="" element={<User />}>
                     <Route
                         path="/profile"
                         element={
