@@ -15,7 +15,14 @@ import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from 'src/services/common';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getEssentialsWalletBalance, getDidUri, resetWalletConnector, getWalletBalance } from 'src/services/wallet';
+import {
+    getEssentialsWalletBalance,
+    getDidUri,
+    resetWalletConnector,
+    getWalletBalance,
+    getWalletChainId,
+    getWalletAccounts,
+} from 'src/services/wallet';
 import { UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useWeb3React } from '@web3-react/core';
@@ -43,6 +50,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [walletConnectProvider] = useState<WalletConnectProvider>(essentialsConnector.getWalletConnectProvider());
 
     const [_signInState, _setSignInState] = useState<SignInState>(signInDlgState);
+    let linkType = linkCookies.METEAST_LINK;
 
     const signInWithWallet = async (wallet: string) => {
         let currentConnector = null;
@@ -55,19 +63,22 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             await activate(currentConnector);
         }
         const retAddress = await currentConnector?.getAccount();
-        if (retAddress !== undefined) {
+        if (retAddress !== undefined && retAddress !== null) {
             console.log('loged in');
             if (currentConnector === injected) {
                 setLinkCookie('METEAST_LINK', '2');
+                linkType = 2;
             } else if (currentConnector === walletconnect) {
                 setLinkCookie('METEAST_LINK', '3');
+                linkType = 3;
             }
             setActivatingConnector(currentConnector);
             _setSignInState((prevState: SignInState) => {
                 const _state = { ...prevState };
                 _state.isLoggedIn = true;
-                _state.loginType = '1';
+                _state.loginType = '2';
                 _state.signInDlgOpened = false;
+                _state.walletAccounts = [retAddress];
                 return _state;
             });
         }
@@ -82,9 +93,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         window.location.reload();
     };
 
+    const disconnectWallet = async () => {
+        if (activatingConnector !== null) activatingConnector.deactivate();
+        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
+        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
+        setActivatingConnector(null);
+    };
+
     // ------------------------------ EE Connection ------------------------------ //
     useEffect(() => {
-        if (linkCookies.METEAST_LINK === '1') {
+        if (linkType === '1') {
             // Subscribe to accounts change
             walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
                 getEssentialsWalletBalance().then((balance: string) => {
@@ -115,25 +134,73 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             walletConnectProvider.on('error', (code: number, reason: string) => {
                 console.error(code, reason);
             });
-        } else if (linkCookies.METEAST_LINK === '2' && library) {
-            _setSignInState((prevState: SignInState) => {
-                const _state = { ...prevState };
-                _state.isLoggedIn = active;
-                _state.chainId = chainId || -1;
-                _state.walletAccounts = account ? [account] : [];
-                if (!account) _state.walletBalance = 0;
-                else
-                    getWalletBalance(library, account).then((balance: string) => {
-                        _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                    });
-                return _state;
-            });
+        } else {
+            if (linkType === undefined) {
+                if (active) {
+                    // alert('new sign in');
+                    if (account) {
+                        const timer = setTimeout(() => {
+                            getWalletBalance(library, account).then((balance: string) => {
+                                _setSignInState((prevState: SignInState) => {
+                                    const _state = { ...prevState };
+                                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                                    clearTimeout(timer);
+                                    return _state;
+                                });
+                            });
+                        }, 100);
+                    }
+                } else {
+                    // alert('log out');
+                }
+            } else {
+                if (!active) {
+                    if (activatingConnector !== null) {
+                        // alert('disconnect');
+                        signOutWithWallet();
+                    } else {
+                        // alert('refresh');
+                        const timer = setTimeout(async () => {
+                            if (linkType === '2') {
+                                setActivatingConnector(injected);
+                                await activate(injected);
+                            } else if (linkType === '3') {
+                                setActivatingConnector(walletconnect);
+                                await activate(walletconnect);
+                            }
+                            clearTimeout(timer);
+                        }, 0);
+                    }
+                } else {
+                    if (library) {
+                        // alert('library');
+                        _setSignInState((prevState: SignInState) => {
+                            const _state = { ...prevState };
+                            _state.chainId = chainId || 0;
+                            _state.walletAccounts = account ? [account] : [];
+                            return _state;
+                        });
+                        if (account) {
+                            // must be placed here
+                            getWalletBalance(library, account).then((balance: string) => {
+                                _setSignInState((prevState: SignInState) => {
+                                    const _state = { ...prevState };
+                                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                                    return _state;
+                                });
+                            });
+                        }
+                    } else {
+                        // alert('no library');
+                    }
+                }
+            }
         }
-    }, [walletConnectProvider, chainId, account, active]);
+    }, [walletConnectProvider, chainId, account, active, library]);
 
     // update wallet balance after every transactions
     useEffect(() => {
-        if (linkCookies.METEAST_LINK === '1') {
+        if (linkType === '1') {
             getEssentialsWalletBalance().then((balance: string) => {
                 _setSignInState((prevState: SignInState) => {
                     const _state = { ...prevState };
@@ -144,7 +211,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         } else {
             _setSignInState((prevState: SignInState) => {
                 const _state = { ...prevState };
-                _state.chainId = chainId || -1;
+                _state.chainId = chainId || 0;
                 if (!account) _state.walletBalance = 0;
                 else
                     getWalletBalance(library, account).then((balance: string) => {
@@ -182,8 +249,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             if (signInDlgState.signOut) {
                 if (signInDlgState.loginType === '1') signOutWithEssentials();
                 else if (signInDlgState.loginType === '2') signOutWithWallet();
-            }
-            else if (signInDlgState.disconnectWallet) {
+            } else if (signInDlgState.disconnectWallet) {
                 if (signInDlgState.loginType === '1') disconnectEssentials();
                 else if (signInDlgState.loginType === '2') signOutWithWallet();
             }
@@ -194,7 +260,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
     }, [signInDlgState]);
 
-    if (linkCookies.METEAST_LINK === '1') initConnectivitySDK();
+    if (linkType === '1') initConnectivitySDK();
 
     const signInWithEssentials = async () => {
         initConnectivitySDK();

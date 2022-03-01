@@ -8,6 +8,14 @@ import { create } from 'ipfs-http-client';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
+declare global {
+    interface Window {
+        ethereum: any;
+        web3: any;
+        elastos: any;
+    }
+}
+
 export const getEssentialsWalletAddress = () => {
     const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
     return walletConnectProvider.wc.accounts;
@@ -35,7 +43,7 @@ export const getDidUri = async (_did: string, _description: string, _name: strin
         // version: '1',
         did: _did,
         description: _description,
-        name: _name
+        name: _name,
     };
     const jsonDidObj = JSON.stringify(didObj);
     // add the metadata itself as well
@@ -49,6 +57,18 @@ export const resetWalletConnector = (connector: any) => {
     }
 };
 
+export const getWalletChainId = async (library: any) => {
+    if (!library) return 0;
+    const walletConnectWeb3 = new Web3(library.provider as any);
+    return await walletConnectWeb3.eth.getChainId();
+};
+
+export const getWalletAccounts = async (library: any) => {
+    if (!library) return [];
+    const walletConnectWeb3 = new Web3(library.provider as any);
+    return await walletConnectWeb3.eth.getAccounts();
+};
+
 export const getWalletBalance = async (library: any, account: string) => {
     if (!library) return '0';
     const walletConnectWeb3 = new Web3(library.provider as any);
@@ -60,4 +80,5 @@ export const getWalletBalance = async (library: any, account: string) => {
     //   return '0';
     // }
     return balance;
-  }
+};
+
