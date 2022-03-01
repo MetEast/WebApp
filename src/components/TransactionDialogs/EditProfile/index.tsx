@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
@@ -8,6 +8,8 @@ import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { UserTokenType } from 'src/types/auth-types';
 import { reduceHexAddress } from 'src/services/common';
+import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
+import CustomTextField from 'src/components/TextField';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -22,6 +24,9 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
 
+    // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
+    const [userAvatarURL, setUserAvatarURL] = useState<string>('');
+
     return (
         <Stack
             spacing={4}
@@ -32,144 +37,66 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Edit Profile</DialogTitleTypo>
             </Stack>
-            <Box>
-                <Grid container columnSpacing={3} rowSpacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        <Stack padding={3} borderRadius={6} sx={{ background: '#F0F1F2' }}>
-                            <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                    <Icon icon="ph:user" fontSize={20} color="black" />
-                                    <Typography
-                                        fontSize={14}
-                                        fontWeight={700}
-                                        color="black"
-                                        sx={{ textTransform: 'uppercase' }}
-                                    >
-                                        Identity
-                                    </Typography>
-                                </Stack>
-                                <PrimaryButton
-                                    sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
-                                    onClick={() => {
-                                        setSignInDlgState({ ...signInDlgState, signOut: true });
-                                    }}
-                                >
-                                    sign out
-                                </PrimaryButton>
-                            </Stack>
-                            <Typography fontSize={14} fontWeight={400} marginTop={3} alignSelf="flex-end">
-                                {`did:elastos:${reduceHexAddress(didCookies.METEAST_DID, 5)}`}
-                            </Typography>
-                            <Typography fontSize={18} fontWeight={700} alignSelf="flex-end">
-                                {userInfo.name}
-                            </Typography>
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Stack padding={3} borderRadius={6} sx={{ background: '#F0F1F2' }}>
-                            <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                    <Icon icon="ph:wallet" fontSize={20} color="black" />
-                                    <Typography
-                                        fontSize={14}
-                                        fontWeight={700}
-                                        color="black"
-                                        sx={{ textTransform: 'uppercase' }}
-                                    >
-                                        Wallet
-                                    </Typography>
-                                </Stack>
-                                <PrimaryButton
-                                    sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
-                                    onClick={() => {
-                                        setSignInDlgState({ ...signInDlgState, disconnectWallet: true });
-                                    }}                                >
-                                    Disconnect
-                                </PrimaryButton>
-                            </Stack>
-                            <Typography fontSize={14} fontWeight={400} marginTop={3} alignSelf="flex-end">
-                                {reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
-                            </Typography>
-                            <Stack direction="row" alignItems="center" alignSelf="flex-end" spacing={0.25}>
-                                <img src="/assets/icons/elatos-ela.svg" alt="" style={{ marginBottom: '2px' }} />
-                                <Typography fontSize={18} fontWeight={700}>
-                                    {`${signInDlgState.walletBalance} ELA`}
-                                </Typography>
-                            </Stack>
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Stack spacing={1}>
-                            <Typography fontSize={12} fontWeight={700}>
-                                Avatar Picture
-                            </Typography>
-                            <Box height={156} borderRadius={5} overflow="hidden">
-                                <img
-                                    src="/assets/images/blindbox/blindbox-nft-template2.png"
-                                    alt=""
-                                    width="100%"
-                                    height="100%"
-                                    style={{ objectFit: 'cover' }}
+            <Stack spacing={2}>
+                <ProfileImageWrapper>
+                    {userAvatarURL !== '' ? (
+                        <ProfileImage src={userAvatarURL} />
+                    ) : (
+                        <Icon icon="ph:user" fontSize={40} color="#1890FF" />
+                    )}
+                    <Stack className="hover_box_container">
+                        <Icon icon="ph:pencil-simple" fontSize={14} color="white" />
+                        <Typography fontSize={14} fontWeight={700} color="white">
+                            Edit
+                        </Typography>
+                    </Stack>
+                </ProfileImageWrapper>
+                <CustomTextField
+                    title="Author name"
+                    placeholder="Enter your name"
+                    height={56}
+                    sx={{ marginTop: 2.5 }}
+                />
+                <CustomTextField title="About the author" placeholder="Enter author introduction" multiline rows={5} />
+                <Stack spacing={1}>
+                    <Typography fontSize={12} fontWeight={700}>
+                        Cover Picture
+                    </Typography>
+                    <BannerBox>
+                        <img
+                            src="/assets/images/blindbox/blindbox-nft-template1.png"
+                            width="100%"
+                            height="100%"
+                            alt=""
+                        />
+                        <Stack
+                            className="hover_box_container"
+                            direction="row"
+                            justifyContent="flex-end"
+                            padding={2}
+                            spacing={1}
+                        >
+                            <PinkButton size="small" sx={{ width: 120 }}>
+                                <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
+                                {`Delete`}
+                            </PinkButton>
+                            <SecondaryButton size="small" sx={{ width: 120 }}>
+                                <Icon
+                                    icon="ph:pencil-simple"
+                                    fontSize={20}
+                                    style={{ marginBottom: 4, marginRight: 4 }}
                                 />
-                            </Box>
-                            <Stack direction="row" spacing={1}>
-                                <PinkButton fullWidth size="small">
-                                    <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
-                                    {`Delete`}
-                                </PinkButton>
-                                <SecondaryButton fullWidth size="small">
-                                    <Icon
-                                        icon="ph:pencil-simple"
-                                        fontSize={20}
-                                        style={{ marginBottom: 4, marginRight: 4 }}
-                                    />
-                                    {`Edit`}
-                                </SecondaryButton>
-                            </Stack>
+                                {`Change`}
+                            </SecondaryButton>
                         </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Stack spacing={1}>
-                            <Typography fontSize={12} fontWeight={700}>
-                                Cover Picture
-                            </Typography>
-                            <Box height={156} borderRadius={5} overflow="hidden">
-                                <img
-                                    src="/assets/images/blindbox/blindbox-nft-template3.png"
-                                    alt=""
-                                    width="100%"
-                                    height="100%"
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            </Box>
-                            <Stack direction="row" spacing={1}>
-                                <PinkButton fullWidth size="small">
-                                    <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
-                                    {`Delete`}
-                                </PinkButton>
-                                <SecondaryButton fullWidth size="small">
-                                    <Icon
-                                        icon="ph:pencil-simple"
-                                        fontSize={20}
-                                        style={{ marginBottom: 4, marginRight: 4 }}
-                                    />
-                                    {`Edit`}
-                                </SecondaryButton>
-                            </Stack>
-                        </Stack>
-                    </Grid>
-                </Grid>
-            </Box>
-            <PrimaryButton fullWidth size="small">
-                CONFIRM
-            </PrimaryButton>
-            <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth size="small" onClick={onClose}>
-                    BACK
+                    </BannerBox>
+                </Stack>
+            </Stack>
+            <Stack direction="row" spacing={2} paddingTop={5}>
+                <SecondaryButton fullWidth onClick={onClose}>
+                    Close
                 </SecondaryButton>
-                <PrimaryButton fullWidth size="small">
-                    CONFIRM
-                </PrimaryButton>
+                <PrimaryButton fullWidth>CONFIRM</PrimaryButton>
             </Stack>
         </Stack>
     );
