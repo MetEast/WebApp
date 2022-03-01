@@ -18,6 +18,11 @@ export type AdminNFTItemType = {
     original_owner: string;
 };
 
+export type AdminUsersItemType = {
+    id: number; // required
+    address: string;
+};
+
 export type AdminBlindBoxItemType = {
     id: number; // required
     blindbox_id: string;
@@ -78,6 +83,7 @@ export type AdminBannersItemType = {
 
 export type AdminTableItemType =
     | AdminNFTItemType
+    | AdminUsersItemType
     | AdminBlindBoxItemType
     | AdminHomeItemType
     | AdminOrdersBlindBoxItemType

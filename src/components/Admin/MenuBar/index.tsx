@@ -51,6 +51,11 @@ const MenuBar: React.FC = (): JSX.Element => {
             icon: <Icon icon="ph:image-square" fontSize={20} />,
             url: '/admin/nfts',
         },
+        {
+            title: 'USERS',
+            icon: <Icon icon="ph:cube" fontSize={20} />,
+            url: '/admin/users',
+        },
         { title: 'BLIND BOXES', icon: <Icon icon="ph:cube" fontSize={20} />, url: '/admin/blindboxes' },
         {
             title: 'HOME',
