@@ -15,9 +15,9 @@ export const ListItemsStack = styled(Stack)`
     box-shadow: 0px 4px 40px -26px rgba(0, 20, 39, 0.8);
 `;
 
-export const ItemButton = styled(Button)`
+export const ItemButton = styled(Button)<{ selected: boolean }>`
     border-radius: 12px;
-    background: transparent;
+    background: ${({ selected }) => (selected ? '#e8f4ff' : 'transparent')};
     color: #0a0b0c;
     &:hover {
         background: #e8f4ff;
