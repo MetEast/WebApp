@@ -76,8 +76,6 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
         else return `/mynft/buynow/${product.tokenId}`;
     };
 
-    console.log(product.name, '----------', product.type)
-
     return (
         <GalleryItemContainer>
             <ProductImageContainer
