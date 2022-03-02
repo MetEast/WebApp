@@ -168,33 +168,40 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'BidOrder':
                     _transaction.type = enumTransactionType.Bid;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
                 case 'ChangeOrderPrice':
                     _transaction.type = enumTransactionType.PriceChanged;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.SaleCanceled;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
                 // case 'Transfer':
                 //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
                 case 'SettleBidOrder':
                     _transaction.type = enumTransactionType.SettleBidOrder;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
             }
-            _transaction.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());

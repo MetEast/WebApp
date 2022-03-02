@@ -31,7 +31,7 @@ import {
     TypeNFTTransactionFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 
@@ -129,12 +129,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
+            FETCH_CONFIG_JSON,
         );
         const dataLatestTransaction = await resLatestTransaction.json();
         const arrLatestTransaction = dataLatestTransaction.data;
@@ -144,37 +139,44 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event === 'Transfer') continue;
-            var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
+            let _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'BidOrder':
                     _transaction.type = enumTransactionType.Bid;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
                 case 'ChangeOrderPrice':
                     _transaction.type = enumTransactionType.PriceChanged;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.SaleCanceled;
+                    _transaction.user = reduceHexAddress(itemObject.from , 4);
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
                 // case 'Transfer':
                 //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
                 case 'SettleBidOrder':
                     _transaction.type = enumTransactionType.SettleBidOrder;
+                    _transaction.user = reduceHexAddress(itemObject.to , 4);
                     break;
             }
-            _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
@@ -186,18 +188,19 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                 _prodTrans.type =
                     itemObject.event === 'Mint'
                         ? 'Created'
-                        : itemObject.royaltyOwner === signInDlgState.walletAccounts[0]
-                        ? 'Sold To'
-                        : 'Brought From';
+                        : itemObject.to === signInDlgState.walletAccounts[0]
+                        ? 'Bought From'
+                        : 'Sold To';
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(
-                    itemObject.from === burnAddress ? itemObject.to : itemObject.from,
-                    4,
-                ); // no proper data
+                _prodTrans.user = reduceHexAddress(_prodTrans.type === 'Bought From' ? itemObject.from : itemObject.to, 4); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                if (itemObject.event === 'BuyOrder') _prodTrans.saleType = arrLatestTransaction[i + 2].event === "CreateOrderForSale" ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
-                _prodTrans.txHash = itemObject.tHash;  
+                if (itemObject.event === 'BuyOrder')
+                    _prodTrans.saleType =
+                        arrLatestTransaction[i + 2].event === 'CreateOrderForSale'
+                            ? enumTransactionType.ForSale
+                            : enumTransactionType.OnAuction;
+                _prodTrans.txHash = itemObject.tHash;
                 _prodTransHistory.push(_prodTrans);
             }
         }
