@@ -7,12 +7,14 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { filterStatusButtons } from 'src/types/filter-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { useLocation } from 'react-router-dom';
 
 interface ComponentProps {
     changeHandler: (status: number, minPrice: string, maxPrice: string, opened: boolean) => void;
 }
 
 const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element => {
+    const location = useLocation();
     const [status, setStatus] = useState<number>(-1);
     const [minPrice, setMinPrice] = useState<string>('0');
     const [maxPrice, setMaxPrice] = useState<string>('0');
@@ -25,19 +27,23 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
             <Typography fontSize={32} fontWeight={700} sx={{ textTransform: 'none' }}>
                 Filters
             </Typography>
-            <Typography fontSize={16} fontWeight={700} marginTop={3} sx={{ textTransform: 'uppercase' }}>
-                Status
-            </Typography>
-            <Grid container columnSpacing={1} rowGap={1} marginTop={1}>
-                {filterStatusButtons.map((item, index) => (
-                    <Grid item xs={6} key={`Profile-Optionbar-FilterCard-${index}`}>
-                        <StatusButton size="small" selected={index === status} onClick={() => setStatus(index)}>
-                            <Icon icon={item.icon} style={{ marginBottom: 2, marginRight: 4 }} />
-                            {item.title}
-                        </StatusButton>
+            {location.pathname.indexOf('/blind-box') === -1 && (
+                <>
+                    <Typography fontSize={16} fontWeight={700} marginTop={3} sx={{ textTransform: 'uppercase' }}>
+                        Status
+                    </Typography>
+                    <Grid container columnSpacing={1} rowGap={1} marginTop={1}>
+                        {filterStatusButtons.map((item, index) => (
+                            <Grid item xs={6} key={`Profile-Optionbar-FilterCard-${index}`}>
+                                <StatusButton size="small" selected={index === status} onClick={() => setStatus(index)}>
+                                    <Icon icon={item.icon} style={{ marginBottom: 2, marginRight: 4 }} />
+                                    {item.title}
+                                </StatusButton>
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
-            </Grid>
+                </>
+            )}
             <Typography fontSize={16} fontWeight={700} marginTop={2} sx={{ textTransform: 'uppercase' }}>
                 price Range
             </Typography>
