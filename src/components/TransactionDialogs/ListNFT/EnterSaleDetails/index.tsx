@@ -91,6 +91,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
+                                selectedItem={saleEnds}
                                 options={sellNFTSaleEndsOptions}
                                 isOpen={saleEndsSelectOpen ? 1 : 0}
                                 handleClick={(value: string) => {

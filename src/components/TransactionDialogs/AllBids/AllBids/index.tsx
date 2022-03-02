@@ -100,6 +100,7 @@ const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList, changeHandler}
                             <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
                         </SelectTitleBtn>
                     }
+                    selectedItem={sortby}
                     options={sortbyOptions}
                     isOpen={sortBySelectOpen ? 1 : 0}
                     setIsOpen={isSortBySelectOpen}

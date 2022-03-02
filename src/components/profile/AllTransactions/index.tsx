@@ -52,6 +52,7 @@ const AllTransactions: React.FC<ComponentProps> = ({ transactionList, changeHand
                             <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
                         </SelectTitleBtn>
                     }
+                    selectedItem={sortby}
                     options={sortbyOptions}
                     isOpen={sortBySelectOpen ? 1 : 0}
                     setIsOpen={isSortBySelectOpen}

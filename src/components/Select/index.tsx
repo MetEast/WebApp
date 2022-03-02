@@ -5,6 +5,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 
 interface ComponentProps {
     titlebox: React.ReactNode;
+    selectedItem?: TypeSelectItem;
     options: Array<TypeSelectItem>;
     isOpen: number;
     width?: number;
@@ -16,6 +17,7 @@ interface ComponentProps {
 
 const Select: React.FC<ComponentProps> = ({
     titlebox,
+    selectedItem,
     options,
     isOpen,
     width,
@@ -40,6 +42,7 @@ const Select: React.FC<ComponentProps> = ({
                             key={`sort-option-${index}`}
                             title={item.label}
                             value={item.value}
+                            selectedValue={selectedItem?.value}
                             handleClick={handleClick}
                         />
                     ))}
@@ -53,11 +56,17 @@ interface SelectItemProps {
     handleClick: (value: string) => void;
     title: string;
     value: string;
+    selectedValue?: string;
 }
 
-const SelectItem: React.FC<SelectItemProps> = ({ title, value, handleClick }) => {
+const SelectItem: React.FC<SelectItemProps> = ({ title, value, selectedValue, handleClick }) => {
     return (
-        <ItemButton fullWidth sx={{ fontSize: 14, fontWeight: 500 }} onClick={(e) => handleClick(value)}>
+        <ItemButton
+            fullWidth
+            selected={value === selectedValue}
+            sx={{ fontSize: 14, fontWeight: 500 }}
+            onClick={(e) => handleClick(value)}
+        >
             {title}
         </ItemButton>
     );

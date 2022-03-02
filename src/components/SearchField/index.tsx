@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { SearchFieldWrapper, SearchTextField } from './styles';
 import { Icon } from '@iconify/react';
 
-interface SearchFieldProps {
+interface ComponentProps {
     handleChange: (value: string) => void;
+    placeholder?: string;
 }
 
-const SearchField: React.FC<SearchFieldProps> = ({ handleChange }): JSX.Element => {
+const SearchField: React.FC<ComponentProps> = ({ handleChange, placeholder }): JSX.Element => {
     const [keyWord, setKeyWord] = useState('');
 
     const handleChangeKeyWord = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +30,7 @@ const SearchField: React.FC<SearchFieldProps> = ({ handleChange }): JSX.Element 
                 value={keyWord}
                 onChange={handleChangeKeyWord}
                 onKeyPress={handleEnterKey}
-                placeholder="Search..."
+                placeholder={placeholder === undefined ? 'Search...' : placeholder}
                 sx={{ minWidth: 0 }}
             />
         </SearchFieldWrapper>

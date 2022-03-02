@@ -40,7 +40,10 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
 
     return (
         <Stack direction="row" spacing={{ xs: 1, md: 2 }} sx={{ height: 40 }} {...otherProps}>
-            <SearchField handleChange={handleKeyWordChange} />
+            <SearchField
+                placeholder="Search name, description, address and tokenID"
+                handleChange={handleKeyWordChange}
+            />
             <Select
                 titlebox={
                     <SortByBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
@@ -53,6 +56,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                         )}
                     </SortByBtn>
                 }
+                selectedItem={sortSelected}
                 options={sortOptions}
                 isOpen={sortBySelectOpen ? 1 : 0}
                 setIsOpen={isSortBySelectOpen}
