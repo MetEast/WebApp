@@ -44,7 +44,9 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
+import AllTransactions from 'src/components/profile/AllTransactions';
 import { isInAppBrowser } from 'src/services/wallet';
+import { TypeSelectItem } from 'src/types/select-types';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -92,7 +94,9 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
+    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const burnAddress = '0x0000000000000000000000000000000000000000';
+
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -146,6 +150,16 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         }
         setProductDetail(product);
     };
+
+    const getFetchData = async () => {
+        let ela_usd_rate = await getELA2USD();
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        getProductDetail(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
 
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
@@ -228,17 +242,10 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         setTransactionsList(_latestTransList);
         setProdTransHistory(_prodTransHistory);
     };
-
-    const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
-        getLatestTransaction();
-    };
-
+    
     useEffect(() => {
-        getFetchData();
-    }, []);
+        getLatestTransaction();
+    }, [transactionSortBy]);
 
     // change price tx fee
     const setChangePriceTxFee = async () => {
@@ -376,6 +383,17 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             >
                 {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
                 {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.allTxDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allTxDlgOpened: false });
+                }}
+            >
+                <AllTransactions
+                    transactionList={transactionsList}
+                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
+                />
             </ModalDialog>
         </>
     );
