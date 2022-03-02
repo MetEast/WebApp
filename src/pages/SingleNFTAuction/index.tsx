@@ -71,6 +71,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         holder: '',
         type: enumSingleNFTType.BuyNow,
         isLike: false,
+        isExpired: true,
     };
     const defaultTransactionValue: TypeNFTTransaction = {
         type: enumTransactionType.Bid,
@@ -88,7 +89,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
 
-    const burnAddress = '0x0000000000000000000000000000000000000000';
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
