@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, LikeBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -16,6 +16,10 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
+
+    useEffect(() => {
+        setLikeState(product.isLike);
+    }, [product.isLike]);
 
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); //
