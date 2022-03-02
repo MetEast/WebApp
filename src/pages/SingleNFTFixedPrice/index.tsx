@@ -145,10 +145,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         getFetchData();
     }, []);
 
-    useEffect(() => {
-        updateProductViews(productDetail.tokenId);
-    }, [productDetail.tokenId]);
-
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
@@ -285,6 +281,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 });
         }
     };
+
+    useEffect(() => {
+        updateProductViews(productDetail.tokenId);
+    }, [productDetail.tokenId]);
 
     return (
         <>
