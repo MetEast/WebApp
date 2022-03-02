@@ -27,7 +27,7 @@ import {
     reduceHexAddress,
     selectFromFavourites,
 } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useCookies } from 'react-cookie';
@@ -83,7 +83,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
-    const burnAddress = '0x0000000000000000000000000000000000000000';
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -100,11 +99,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             },
         );
         const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
+        const itemObject: TypeProductFetch = dataProductDetail.data;
 
-        if (prodDetail !== undefined) {
-            const itemObject: TypeProductFetch = prodDetail;
+        if (itemObject !== undefined) {
+            const product: TypeProduct = { ...productDetail };
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
@@ -120,7 +118,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+            product.author =
+                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
@@ -130,16 +129,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
             product.category = itemObject.category;
-            let createTime = getUTCTime(itemObject.createTime);
+            const createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
+            setProductDetail(product);
         }
-        setProductDetail(product);
     };
 
     const getFetchData = async () => {
-        updateProductViews();
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        const ela_usd_rate = await getELA2USD();
+        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
     };
 
@@ -147,15 +145,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         getFetchData();
     }, []);
 
+    useEffect(() => {
+        updateProductViews(productDetail.tokenId);
+    }, [productDetail.tokenId]);
+
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
+            FETCH_CONFIG_JSON,
         );
         const dataLatestTransaction = await resLatestTransaction.json();
         const arrLatestTransaction = dataLatestTransaction.data;
@@ -168,38 +165,38 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'BidOrder':
                     _transaction.type = enumTransactionType.Bid;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
                 case 'ChangeOrderPrice':
                     _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
                 // case 'Transfer':
                 //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
                 case 'SettleBidOrder':
                     _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
             }
             _transaction.price = parseInt(itemObject.price) / 1e18;
@@ -245,21 +242,23 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     }, [dialogState.cancelSaleDlgStep]);
 
     const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...productDetail };
-        if (type === 'inc') {
-            prodDetail.likes += 1;
-        } else if (type === 'dec') {
-            prodDetail.likes -= 1;
-        }
-        setProductDetail(prodDetail);
+        setProductDetail((prevState: TypeProduct) => {
+            const prodDetail: TypeProduct = { ...prevState };
+            if (type === 'inc') {
+                prodDetail.likes++;
+            } else if (type === 'dec') {
+                prodDetail.likes--;
+            }
+            return prodDetail;
+        });
     };
 
-    const updateProductViews = () => {
-        if (signInDlgState.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+    const updateProductViews = (tokenId: string) => {
+        if (signInDlgState.isLoggedIn && tokenId) {
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
                 token: tokenCookies.METEAST_TOKEN,
-                tokenId: productDetail.tokenId,
+                tokenId: tokenId,
                 did: didCookies.METEAST_DID,
             };
             fetch(reqUrl, {
@@ -272,9 +271,11 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        let prodDetail: TypeProduct = { ...productDetail };
-                        prodDetail.views += 1;
-                        setProductDetail(prodDetail);
+                        setProductDetail((prevState: TypeProduct) => {
+                            const prodDetail: TypeProduct = { ...prevState };
+                            prodDetail.views += 1;
+                            return prodDetail;
+                        });
                     } else {
                         console.log(data);
                     }
