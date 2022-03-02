@@ -60,7 +60,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [testdlgOpen, setTestdlgOpen] = React.useState<boolean>(false);
-    const testDlgShow = true;
+    const testDlgShow = false;
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
