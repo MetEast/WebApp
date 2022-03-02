@@ -21,7 +21,17 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
-            ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
+            ? {
+                  did: '',
+                  name: '',
+                  description: '',
+                  avatar: '',
+                  email: '',
+                  exp: 0,
+                  iat: 0,
+                  type: '',
+                  canManageAdmins: false,
+              }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
 
     // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
@@ -34,6 +44,19 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             paddingY={{ xs: 4, sm: 0 }}
             sx={{ overflowY: 'auto', overflowX: 'hidden' }}
         >
+            <SecondaryButton
+                size="small"
+                onClick={onClose}
+                sx={{ width: 105, alignSelf: 'flex-start', display: { xs: 'flex', sm: 'none' } }}
+            >
+                <Icon
+                    icon="ph:caret-left-bold"
+                    fontSize={20}
+                    color="#1890FF"
+                    style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
+                />
+                Back
+            </SecondaryButton>
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Edit Profile</DialogTitleTypo>
             </Stack>
@@ -93,7 +116,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 </Stack>
             </Stack>
             <Stack direction="row" spacing={2} paddingTop={5}>
-                <SecondaryButton fullWidth onClick={onClose}>
+                <SecondaryButton fullWidth onClick={onClose} sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Close
                 </SecondaryButton>
                 <PrimaryButton fullWidth>CONFIRM</PrimaryButton>
