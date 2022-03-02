@@ -149,7 +149,7 @@ const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList, changeHandler}
                         </Grid>
                         <Grid container marginTop={2.5} rowGap={3} alignItems="center">
                             {bidsList.map((item, index) => (
-                                <>
+                                <Grid container item key={`all-bids-${index}`}>
                                     <Grid item xs={4}>
                                         <Typography fontSize={16} fontWeight={700}>
                                             {item.user}
@@ -163,7 +163,7 @@ const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList, changeHandler}
                                     <Grid item xs={4}>
                                         <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                                     </Grid>
-                                </>
+                                </Grid>
                             ))}
                         </Grid>
                     </Box>
