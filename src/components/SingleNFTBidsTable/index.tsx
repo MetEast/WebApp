@@ -89,19 +89,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                                     <Grid container item key={index}>
                                         <Grid
                                             item
-                                            xs={12}
-                                            sm={bidsTblColumns[0].width}
-                                            order={{ xs: 3, sm: 1, md: 1, lg: 1 }}
-                                        >
-                                            <Typography fontSize={16} fontWeight={700}>
-                                                {item.user}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            item
                                             xs={6}
-                                            sm={bidsTblColumns[1].width}
-                                            order={{ xs: 1, sm: 2, md: 2, lg: 2 }}
                                         >
                                             <Typography fontSize={12} fontWeight={500}>
                                                 {item.time}
@@ -110,55 +98,12 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                                         <Grid
                                             item
                                             xs={6}
-                                            sm={bidsTblColumns[2].width}
-                                            order={{ xs: 2, sm: 3, md: 3, lg: 3 }}
                                         >
                                             <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
                                         </Grid>
                                     </Grid>
                                 ))}
                             </Grid>
-                            {/* <Grid container spacing={1} marginTop={3}>
-                                <Grid item xs={6}>
-                                    <PinkButton
-                                        fullWidth
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    cancelBidDlgOpened: true,
-                                                    cancelBidDlgStep: 0,
-                                                    cancelBidOrderId: myBidsList[0].orderId || '',
-                                                });
-                                            } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                            }
-                                        }}
-                                    >
-                                        Cancel Bid
-                                    </PinkButton>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <PrimaryButton
-                                        fullWidth
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    updateBidDlgOpened: true,
-                                                    updateBidDlgStep: 0,
-                                                    updateBidPrice: myBidsList[0].price,
-                                                    updateBidOrderId: myBidsList[0].orderId || '',
-                                                });
-                                            } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                            }
-                                        }}
-                                    >
-                                        Update Bid
-                                    </PrimaryButton>
-                                </Grid>
-                            </Grid> */}
                         </>
                     )}
                     {bidsList.length !== 0 && (
