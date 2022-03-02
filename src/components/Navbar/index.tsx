@@ -37,7 +37,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 // import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 // import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
-import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
+// import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
 // import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 // import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 // import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
@@ -48,6 +48,7 @@ import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConf
 // import ReceivedBids from 'src/components/profile/ReceivedBids';
 // import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 // import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
+import ManageProfile from 'src/components/profile/ManageProfile';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -59,7 +60,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [testdlgOpen, setTestdlgOpen] = React.useState<boolean>(false);
-    const testDlgShow = false;
+    const testDlgShow = true;
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
@@ -105,9 +106,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:user" fontSize={20} color="black" />
             </IconButton>
-            <IconButton onClick={() => {
-                setSignInDlgState({ ...signInDlgState, signOut: true});
-            }}>
+            <IconButton
+                onClick={() => {
+                    setSignInDlgState({ ...signInDlgState, signOut: true });
+                }}
+            >
                 <Icon icon="ph:sign-out" fontSize={20} color="black" />
             </IconButton>
             <PrimaryButton
@@ -217,7 +220,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                         setTestdlgOpen(false);
                     }}
                 >
-                    <WaitingConfirm />
+                    <ManageProfile
+                        onClose={() => {
+                            setTestdlgOpen(false);
+                        }}
+                    />
                 </ModalDialog>
             )}
         </>
