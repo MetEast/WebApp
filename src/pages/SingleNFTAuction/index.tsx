@@ -105,11 +105,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             },
         );
         const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
-
-        if (prodDetail !== undefined) {
-            const itemObject: TypeProductFetch = prodDetail;
+        const itemObject: TypeProductFetch = dataProductDetail.data;
+        if (itemObject !== undefined) {
+            const product: TypeProduct = { ...productDetail };
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);
@@ -145,12 +143,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 product.endTime = ' ';
             }
             product.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+            setProductDetail(product);
         }
-        setProductDetail(product);
     };
 
     const getFetchData = async () => {
-        updateProductViews();
         let ela_usd_rate = await getELA2USD();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
@@ -287,21 +284,23 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     }, [dialogState.placeBidDlgStep]);
 
     const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...productDetail };
-        if (type === 'inc') {
-            prodDetail.likes += 1;
-        } else if (type === 'dec') {
-            prodDetail.likes -= 1;
-        }
-        setProductDetail(prodDetail);
+        setProductDetail((prevState: TypeProduct) => {
+            const prodDetail: TypeProduct = { ...prevState };
+            if (type === 'inc') {
+                prodDetail.likes++;
+            } else if (type === 'dec') {
+                prodDetail.likes--;
+            }
+            return prodDetail;
+        });
     };
 
-    const updateProductViews = () => {
-        if (signInDlgState.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+    const updateProductViews = (tokenId: string) => {
+        if (signInDlgState.isLoggedIn && tokenId) {
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
                 token: tokenCookies.METEAST_TOKEN,
-                tokenId: productDetail.tokenId,
+                tokenId: tokenId,
                 did: didCookies.METEAST_DID,
             };
             fetch(reqUrl, {
@@ -314,9 +313,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        let prodDetail: TypeProduct = { ...productDetail };
-                        prodDetail.views += 1;
-                        setProductDetail(prodDetail);
+                        setProductDetail((prevState: TypeProduct) => {
+                            const prodDetail: TypeProduct = { ...prevState };
+                            prodDetail.views += 1;
+                            return prodDetail;
+                        });
                     } else {
                         console.log(data);
                     }
@@ -327,6 +328,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         }
     };
 
+    useEffect(() => {
+        updateProductViews(productDetail.tokenId);
+    }, [productDetail.tokenId]);
+    
     return (
         <>
             <ProductPageHeader />
