@@ -147,7 +147,9 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                         views={product.views}
                                     />
                                 )}
-                                {productType === 2 && <ProductSnippets sold={product.sold} likes={product.likes} />}
+                                {productType === 2 && (
+                                    <ProductSnippets sold={product.sold} likes={product.likes} views={product.views} />
+                                )}
                             </Box>
                         </Box>
                     )}
