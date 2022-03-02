@@ -305,6 +305,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                             <Icon icon="ph:caret-down" className="arrow-icon" />
                                         </SelectBtn>
                                     }
+                                    selectedItem={sort}
                                     options={sortOptions}
                                     isOpen={sortSelectOpen ? 1 : 0}
                                     setIsOpen={setSortSelectOpen}

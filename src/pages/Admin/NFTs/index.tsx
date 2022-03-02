@@ -231,6 +231,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                                 <Icon icon="ph:caret-down" className="arrow-icon" />
                             </SelectBtn>
                         }
+                        selectedItem={nftState}
                         options={nftStateOptions}
                         isOpen={nftStateSelectOpen ? 1 : 0}
                         handleClick={handleNFTStateChange}
@@ -249,6 +250,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                                 <Icon icon="ph:caret-down" className="arrow-icon" />
                             </SelectBtn>
                         }
+                        selectedItem={saleType}
                         options={saleTypeOptions}
                         isOpen={saleTypeSelectOpen ? 1 : 0}
                         handleClick={handleSaleTypeChange}

@@ -92,7 +92,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
 
     const [chartOptions, setChartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
-    const [productPriceList, setProductPriceList] = useState<Array<TypePriceHistoryFetch>>([]); 
+    const [productPriceList, setProductPriceList] = useState<Array<TypePriceHistoryFetch>>([]);
     const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(
         priceHistoryUnitSelectOptions[1],
     );
@@ -109,7 +109,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     };
     const params = useParams();
 
-
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`)
             .then((response) => {
@@ -125,8 +124,11 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         let _latestPriceList: Array<TypeChartAxis> = [];
         let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
-        for (let i = 0; i < _dateList.length; i ++) {
-            _latestPriceList.push({ x: getTime((_dateList[i].getTime() / 1000).toString()).date, y: getPriceValue( getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')) });
+        for (let i = 0; i < _dateList.length; i++) {
+            _latestPriceList.push({
+                x: getTime((_dateList[i].getTime() / 1000).toString()).date,
+                y: getPriceValue(getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')),
+            });
         }
         setChartSeries([{ data: _latestPriceList }]);
     }, [productPriceList, priceHistoryUnit]);
@@ -144,6 +146,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                             <Icon icon="ph:caret-down" className="arrow-icon" />
                         </SelectBtn>
                     }
+                    selectedItem={priceHistoryUnit}
                     options={priceHistoryUnitSelectOptions}
                     isOpen={priceHistoryUnitSelectOpen ? 1 : 0}
                     handleClick={handlePriceHistoryUnitChange}

@@ -135,6 +135,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
                                     <Icon icon="ph:caret-down" className="arrow-icon" />
                                 </SelectBtn>
                             }
+                            selectedItem={expiration}
                             options={auctionNFTExpirationOptions}
                             isOpen={expirationSelectOpen ? 1 : 0}
                             handleClick={(value: string) => {

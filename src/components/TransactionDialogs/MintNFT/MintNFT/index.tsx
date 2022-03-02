@@ -123,6 +123,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
                                 }
+                                selectedItem={category}
                                 options={mintNFTCategoryOptions}
                                 isOpen={categorySelectOpen ? 1 : 0}
                                 handleClick={(value: string) => {
