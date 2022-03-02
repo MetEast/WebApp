@@ -122,7 +122,11 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
                                 {product.name}
                             </Typography>
                             <Box display={{ xs: 'none', md: 'block' }}>
-                                <ProductSnippets nickname={product.author} likes={product.likes} />
+                                <ProductSnippets
+                                    nickname={product.author}
+                                    likes={product.likes}
+                                    views={product.views}
+                                />
                             </Box>
                         </Box>
                     )}
