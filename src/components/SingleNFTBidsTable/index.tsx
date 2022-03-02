@@ -3,8 +3,6 @@ import { Box, Stack, Grid, Typography } from '@mui/material';
 import { ViewAllBtn } from './styles';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
-import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
@@ -14,6 +12,7 @@ import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/Cancel
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { isInAppBrowser } from 'src/services/wallet';
 
 interface ComponentProps {
     isLoggedIn: boolean;
@@ -28,7 +27,6 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
     bidsList,
     onlyShowDownSm = false,
 }): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
 
     const bidsTblColumns = [
@@ -36,11 +34,13 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
         { value: 'Date', width: 4 },
         { value: 'Price', width: 4 },
     ];
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     // update bid tx fee
     const setUpdateBidTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, updateBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
@@ -51,8 +51,6 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
 
     // cancel bid tx fee
     const setCancelBidTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, cancelBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };

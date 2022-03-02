@@ -43,6 +43,7 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { TypeSelectItem } from 'src/types/select-types';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
+import { isInAppBrowser } from 'src/services/wallet';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -88,6 +89,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
 
     const burnAddress = '0x0000000000000000000000000000000000000000';
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
@@ -237,10 +242,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                    _transaction.type = enumTransactionType.ChangeOrder;
+                    _transaction.type = enumTransactionType.PriceChanged;
                     break;
                 case 'CancelOrder':
-                    _transaction.type = enumTransactionType.CancelOrder;
+                    _transaction.type = enumTransactionType.SaleCanceled;
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
@@ -274,8 +279,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     }, [transactionSortBy]);
 
     const setPlaceBidTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, placeBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
@@ -366,7 +369,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    {signInDlgState.walletAccounts !== [] && productDetail.holder !== signInDlgState.walletAccounts[0] && (
+                    {signInDlgState.walletAccounts !== [] && productDetail.holder !== signInDlgState.walletAccounts[0] && !productDetail.isExpired && (
                         <PrimaryButton
                             sx={{ marginTop: 3, width: '100%' }}
                             onClick={() => {

@@ -30,7 +30,7 @@ import {
     TypeNFTTransactionFetch,
     TypeFavouritesFetch,
     TypeNFTTransaction,
-    TypeNFTHisotry
+    TypeNFTHisotry,
 } from 'src/types/product-types';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useCookies } from 'react-cookie';
@@ -44,6 +44,7 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
+import { isInAppBrowser } from 'src/services/wallet';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -85,13 +86,17 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         price: 0,
         time: '',
         saleType: enumTransactionType.ForSale,
-        txHash: ''
+        txHash: '',
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const burnAddress = '0x0000000000000000000000000000000000000000';
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
@@ -156,7 +161,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
 
         let _latestTransList: Array<TypeNFTTransaction> = [];
         let _prodTransHistory: Array<TypeNFTHisotry> = [];
-        for (let i = 0; i < arrLatestTransaction.length; i ++) {
+        for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event === 'Transfer') continue;
             let _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
@@ -174,10 +179,10 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                    _transaction.type = enumTransactionType.ChangeOrder;
+                    _transaction.type = enumTransactionType.PriceChanged;
                     break;
                 case 'CancelOrder':
-                    _transaction.type = enumTransactionType.CancelOrder;
+                    _transaction.type = enumTransactionType.SaleCanceled;
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
@@ -189,22 +194,41 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.SettleBidOrder;
                     break;
             }
-            _transaction.user = reduceHexAddress(itemObject.event === 'BuyOrder' ? itemObject.to : (itemObject.from === burnAddress ? itemObject.to : itemObject.from), 4); // no proper data
+            _transaction.user = reduceHexAddress(
+                itemObject.event === 'BuyOrder'
+                    ? itemObject.to
+                    : itemObject.from === burnAddress
+                    ? itemObject.to
+                    : itemObject.from,
+                4,
+            ); // no proper data
             _transaction.price = parseInt(itemObject.price) / 1e18;
             _transaction.txHash = itemObject.tHash;
             let timestamp = getTime(itemObject.timestamp.toString());
             _transaction.time = timestamp.date + ' ' + timestamp.time;
             _latestTransList.push(_transaction);
-            
+
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
                 let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
-                _prodTrans.type = (itemObject.event === 'Mint') ? 'Created' : ((itemObject.royaltyOwner === signInDlgState.walletAccounts[0]) ? 'Sold To' : 'Bought From');
+                _prodTrans.type =
+                    itemObject.event === 'Mint'
+                        ? 'Created'
+                        : itemObject.royaltyOwner === signInDlgState.walletAccounts[0]
+                        ? 'Sold To'
+                        : 'Bought From';
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+                _prodTrans.user = reduceHexAddress(
+                    itemObject.from === burnAddress ? itemObject.to : itemObject.from,
+                    4,
+                ); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                if (itemObject.event === 'BuyOrder') _prodTrans.saleType = arrLatestTransaction[i + 2].event === "CreateOrderForSale" ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
-                _prodTrans.txHash = itemObject.tHash; 
+                if (itemObject.event === 'BuyOrder')
+                    _prodTrans.saleType =
+                        arrLatestTransaction[i + 2].event === 'CreateOrderForSale'
+                            ? enumTransactionType.ForSale
+                            : enumTransactionType.OnAuction;
+                _prodTrans.txHash = itemObject.tHash;
                 _prodTransHistory.push(_prodTrans);
             }
         }
@@ -225,8 +249,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
 
     // change price tx fee
     const setChangePriceTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
@@ -237,8 +259,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
 
     // cancel sale tx fee
     const setCancelSaleTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };

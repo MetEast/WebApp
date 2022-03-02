@@ -8,15 +8,18 @@ import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/Cre
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
 const CreateBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const setCreateBlindBoxTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, crtBlindTxFee: parseFloat(gasPrice) * 5000000 / 1e18 });
     };

@@ -17,9 +17,9 @@ import { useSnackbar } from 'notistack';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { create } from 'ipfs-http-client';
-import { createHash } from 'crypto';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
@@ -32,6 +32,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const sendIpfsImage = (f: File) =>
         new Promise((resolve, reject) => {
@@ -82,8 +86,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         });
 
     const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_CONTRACT_ABI;
@@ -144,8 +146,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         _didUri: string,
         _isBlindBox: boolean,
     ) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_MARKET_CONTRACT_ABI;

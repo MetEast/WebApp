@@ -7,11 +7,11 @@ import SwiperCore, { Autoplay } from 'swiper';
 import { AppContextProvider } from 'src/context/AppContext';
 import { DialogContextProvider } from 'src/context/DialogContext';
 // import Web3 from 'web3'
-import { Web3ReactProvider } from '@web3-react/core'
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3ReactProvider } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 import { ConnectivityContextProvider } from 'src/context/ConnectivityContext';
 import { SnackbarProvider } from 'notistack';
-import { CookiesProvider } from "react-cookie";
+import { CookiesProvider } from 'react-cookie';
 import { SignInContextProvider } from 'src/context/SignInContext';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +22,6 @@ const getLibrary = (provider: any): Web3Provider => {
 };
 
 const App: React.FC = (): JSX.Element => {
-
     SwiperCore.use([Autoplay]);
     if (process.env.REACT_APP_PUBLIC_ENV !== 'development') {
         if (document.addEventListener) {
@@ -59,25 +58,23 @@ const App: React.FC = (): JSX.Element => {
         });
     }
     return (
-        // <RecoilRoot>
-            <Web3ReactProvider getLibrary={getLibrary}>
-                <ThemeProvider theme={theme}>
-                    <AppContextProvider>
-                        <SignInContextProvider>
-                            <DialogContextProvider>
-                                <SnackbarProvider maxSnack={1} >
-                                    <ConnectivityContextProvider>
-                                        <CookiesProvider>   
-                                            <AppRouter />
-                                        </CookiesProvider>
-                                    </ConnectivityContextProvider>
-                                </SnackbarProvider>
-                            </DialogContextProvider>
-                        </SignInContextProvider>
-                    </AppContextProvider>
-                </ThemeProvider>
-            </Web3ReactProvider>
-        // </RecoilRoot>
+        <ThemeProvider theme={theme}>
+            <AppContextProvider>
+                <Web3ReactProvider getLibrary={getLibrary}>
+                    <SignInContextProvider>
+                        <DialogContextProvider>
+                            <SnackbarProvider maxSnack={1}>
+                                <ConnectivityContextProvider>
+                                    <CookiesProvider>
+                                        <AppRouter />
+                                    </CookiesProvider>
+                                </ConnectivityContextProvider>
+                            </SnackbarProvider>
+                        </DialogContextProvider>
+                    </SignInContextProvider>
+                </Web3ReactProvider>
+            </AppContextProvider>
+        </ThemeProvider>
     );
 };
 

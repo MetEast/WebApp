@@ -13,6 +13,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
@@ -22,9 +23,12 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
 
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+
     const callSettleAuctionOrder = async (_orderId: string) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         const contractAbi = METEAST_MARKET_CONTRACT_ABI;
@@ -60,7 +64,12 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, acceptBidDlgOpened: true, acceptBidDlgStep: 2, acceptBidTxHash: txHash });
+                setDialogState({
+                    ...dialogState,
+                    acceptBidDlgOpened: true,
+                    acceptBidDlgStep: 2,
+                    acceptBidTxHash: txHash,
+                });
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
@@ -75,9 +84,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handleAcceptBid = () => {
-        callSettleAuctionOrder(
-            dialogState.acceptBidOrderId
-        );
+        callSettleAuctionOrder(dialogState.acceptBidOrderId);
     };
 
     return (

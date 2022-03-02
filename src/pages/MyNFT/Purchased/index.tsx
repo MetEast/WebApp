@@ -39,6 +39,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { isInAppBrowser } from 'src/services/wallet';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -87,6 +88,10 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const burnAddress = '0x0000000000000000000000000000000000000000';
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
@@ -169,10 +174,10 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     _transaction.type = enumTransactionType.Bid;
                     break;
                 case 'ChangeOrderPrice':
-                    _transaction.type = enumTransactionType.ChangeOrder;
+                    _transaction.type = enumTransactionType.PriceChanged;
                     break;
                 case 'CancelOrder':
-                    _transaction.type = enumTransactionType.CancelOrder;
+                    _transaction.type = enumTransactionType.SaleCanceled;
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
@@ -220,8 +225,6 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     }, []);
 
     const setSaleTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, sellTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };

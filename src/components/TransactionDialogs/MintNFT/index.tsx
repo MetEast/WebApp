@@ -11,22 +11,22 @@ import EnterSaleDetails from '../ListNFT/EnterSaleDetails';
 import CheckSaleDetails from '../ListNFT/CheckSaleDetails';
 import ArtworkIsNowForSale from '../ListNFT/ArtworkIsNowForSale';
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
 const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     // update later
     const setMintTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, mintTXFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
     const setSaleTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, sellTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
     };
@@ -57,9 +57,11 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     setDialogState({ ...dialogState, errorMessageDlgOpened: false });
                 }}
             >
-                <ErrorMessage onClose={() => {
-                    setDialogState({ ...dialogState, errorMessageDlgOpened: false });
-                }} />
+                <ErrorMessage
+                    onClose={() => {
+                        setDialogState({ ...dialogState, errorMessageDlgOpened: false });
+                    }}
+                />
             </ModalDialog>
         </>
     );

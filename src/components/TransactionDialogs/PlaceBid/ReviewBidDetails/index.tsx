@@ -13,6 +13,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
@@ -21,10 +22,12 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
-
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    
     const callBidForOrder = async (_orderId: string, _value: string, _didUri: string) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         const contractAbi = METEAST_MARKET_CONTRACT_ABI;
@@ -78,7 +81,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
         callBidForOrder(
             dialogState.placeBidOrderId,
             BigInt(dialogState.placeBidAmount * 1e18).toString(),
-            signInDlgState.didUri
+            signInDlgState.didUri,
         );
     };
     return (

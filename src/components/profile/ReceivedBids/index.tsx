@@ -8,8 +8,6 @@ import Select from 'src/components/Select';
 import { SelectTitleBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { TypeSingleNFTBid } from 'src/types/product-types';
-import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import Web3 from 'web3';
@@ -17,6 +15,7 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {
     bidsList: Array<TypeSingleNFTBid>;
@@ -25,11 +24,10 @@ export interface ComponentProps {
 }
 
 const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHandler }): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [sortby, setSortby] = useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
-    
+
     const sortbyOptions: Array<TypeSelectItem> = [
         {
             label: 'Option1',
@@ -52,7 +50,9 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
 
     // tx Fee
     const setAcceptBidTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+            ? window.elastos.getWeb3Provider()
+            : essentialsConnector.getWalletConnectProvider();
         const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
         setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });

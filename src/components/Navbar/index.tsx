@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { essentialsConnector, isUsingEssentialsConnector } from '../ConnectWallet/EssentialsConnectivity';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { NotificationTypo } from './styles';
 import ModalDialog from 'src/components/ModalDialog';
@@ -82,25 +81,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         },
     ];
 
-    const SignOutWithEssentials = async () => {
-        console.log('Signing out user. Deleting session info, auth token');
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
-        setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
-        try {
-            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
-                await essentialsConnector.getWalletConnectProvider().disconnect();
-                // await essentialsConnector.disconnectWalletConnect();
-            }
-        } catch (e) {
-            console.log(e);
-        }
-        if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
-            navigate('/');
-        }
-        window.location.reload();
-    };
-
     const pageButtons = menuItemsList.map((item, index) => (
         <PageButton
             key={`navbaritem-${index}`}
@@ -125,7 +105,9 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:user" fontSize={20} color="black" />
             </IconButton>
-            <IconButton onClick={SignOutWithEssentials}>
+            <IconButton onClick={() => {
+                setSignInDlgState({ ...signInDlgState, signOut: true});
+            }}>
                 <Icon icon="ph:sign-out" fontSize={20} color="black" />
             </IconButton>
             <PrimaryButton

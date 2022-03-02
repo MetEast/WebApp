@@ -18,6 +18,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
+import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
@@ -29,10 +30,12 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     const callChangeOrderPrice = async (_orderId: string, _price: string) => {
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         const contractAbi = METEAST_MARKET_CONTRACT_ABI;
@@ -47,7 +50,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
-            value: 0
+            value: 0,
         };
         let txHash = '';
 
@@ -68,7 +71,12 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, changePriceDlgOpened: true, changePriceDlgStep: 1, changePriceTxHash: txHash });
+                setDialogState({
+                    ...dialogState,
+                    changePriceDlgOpened: true,
+                    changePriceDlgStep: 1,
+                    changePriceTxHash: txHash,
+                });
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
@@ -88,19 +96,15 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
                 variant: 'warning',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
-            return ;
-        }
-        else if (isNaN(bidAmount) || bidAmount <= 0) {
+            return;
+        } else if (isNaN(bidAmount) || bidAmount <= 0) {
             enqueueSnackbar('Invalid price!', {
                 variant: 'warning',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
-            return ;
+            return;
         }
-        callChangeOrderPrice(
-            dialogState.updateBidOrderId,
-            BigInt(bidAmount * 1e18).toString()
-        );
+        callChangeOrderPrice(dialogState.updateBidOrderId, BigInt(bidAmount * 1e18).toString());
     };
 
     return (

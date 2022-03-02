@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
 import { Stack, Box, Grid, Typography, Skeleton } from '@mui/material';
@@ -24,6 +24,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState<boolean>(product.isLike);
+
     const changeLikeState = (event: React.MouseEvent) => {
         event.preventDefault(); //
         event.stopPropagation(); //
@@ -61,6 +62,10 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
             setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
         }
     };
+
+    useEffect(() => {
+        setLikeState(product.isLike);
+    }, [product.isLike]);
 
     const getUrl = () => {
         if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.tokenId}`;

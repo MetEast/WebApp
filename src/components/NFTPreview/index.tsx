@@ -42,7 +42,8 @@ const NFTPreview: React.FC<ComponentProps> = ({
         else if (
             product.type === enumBlindBoxNFTType.ComingSoon ||
             product.type === enumBlindBoxNFTType.SaleEnds ||
-            product.type === enumBlindBoxNFTType.SaleEnded
+            product.type === enumBlindBoxNFTType.SaleEnded ||
+            product.type === enumBlindBoxNFTType.SoldOut
         )
             return `/blind-box/product/${product.tokenId}`;
         else return `/`;
@@ -93,7 +94,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                     navigate(getUrl());
                 }}
             >
-                <ImageBox loading={product.tokenId === ''}>
+                <ImageBox loading={product.tokenId === '' ? 1 : 0}>
                     {product.tokenId === '' ? (
                         <Skeleton
                             variant="rectangular"

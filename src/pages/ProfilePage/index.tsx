@@ -26,13 +26,7 @@ import {
 import { getImageFromAsset, getTime } from 'src/services/common';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
-import {
-    getELA2USD,
-    getMyFavouritesList,
-    getTotalEarned,
-    getTodayEarned,
-    FETCH_CONFIG_JSON,
-} from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList, getTotalEarned, getTodayEarned, FETCH_CONFIG_JSON } from 'src/services/fetch';
 import jwtDecode from 'jwt-decode';
 import { UserTokenType } from 'src/types/auth-types';
 import ModalDialog from 'src/components/ModalDialog';
@@ -102,9 +96,19 @@ const ProfilePage: React.FC = (): JSX.Element => {
         'getFavoritesCollectible',
     ];
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
-    const userInfo: UserTokenType =
+    let userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
-            ? { did: '', email: '', exp: 0, iat: 0, name: '', type: '', canManageAdmins: false }
+            ? {
+                  did: '',
+                  name: '',
+                  description: '',
+                  avatar: '',
+                  email: '',
+                  exp: 0,
+                  iat: 0,
+                  type: '',
+                  canManageAdmins: false,
+              }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
 
     const adBanners = [
@@ -113,7 +117,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         '/assets/images/banners/banner3.png',
     ];
 
-    
     // -------------- Fetch Data -------------- //
     const setLoadingState = (id: number, state: boolean) => {
         setIsLoadingAssets((prevState) => {
@@ -121,18 +124,17 @@ const ProfilePage: React.FC = (): JSX.Element => {
             _isLoadingAssets[id] = state;
             return _isLoadingAssets;
         });
-
     };
 
     const setMyNFTData = (id: number, myNFT: Array<TypeProduct>) => {
-        if (!myNFT) return ;
+        if (!myNFT) return;
         setMyNFTList((prevState) => {
             const _myNFTList = [...prevState];
             _myNFTList[id] = myNFT;
             return _myNFTList;
         });
     };
-    
+
     const addSortOptions = () => {
         let url = `&pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
         if (sortBy !== undefined) {
@@ -390,7 +392,29 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
-    const [userAvatarURL, setUserAvatarURL] = useState<string>('');
+    const [userAvatarURL, setUserAvatarURL] = useState<string>(userInfo.avatar);
+
+    useEffect(() => {
+        if (signInDlgState.isLoggedIn) {
+            if (signInDlgState.loginType === '1') {
+                userInfo =
+                    tokenCookies.METEAST_TOKEN === undefined
+                        ? {
+                              did: '',
+                              name: '',
+                              description: '',
+                              avatar: '',
+                              email: '',
+                              exp: 0,
+                              iat: 0,
+                              type: '',
+                              canManageAdmins: false,
+                          }
+                        : jwtDecode(tokenCookies.METEAST_TOKEN);
+                setUserAvatarURL(userInfo.avatar);
+            }
+        }
+    }, [signInDlgState]);
 
     // const [userAvatarFile, setUserAvatarFile] = useState<File>();
     // const [userAvatarStateFile, setUserAvatarStateFile] = useState(null);
@@ -551,7 +575,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </FilterItemTypography>
                 ))}
             </Box>
-            {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && <LooksEmptyBox />}
+            {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
+                <LooksEmptyBox />
+            )}
             <Grid container mt={2} spacing={4}>
                 {myNFTList[getSelectedTabIndex()].map((item, index) => (
                     <Grid
