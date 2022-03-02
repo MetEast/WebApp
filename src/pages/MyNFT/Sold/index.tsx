@@ -112,7 +112,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName || ' ';
+            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image;
             product.authorAddress = itemObject.royaltyOwner;

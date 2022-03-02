@@ -23,7 +23,7 @@ import {
     TypeYourEarning,
     TypeYourEarningFetch,
 } from 'src/types/product-types';
-import { getImageFromAsset, getTime } from 'src/services/common';
+import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList, getTotalEarned, getTodayEarned, FETCH_CONFIG_JSON } from 'src/services/fetch';
@@ -205,7 +205,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             product.image = getImageFromAsset(itemObject.asset);
                             product.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
                             product.price_usd = product.price_ela * tokenPriceRate;
-                            product.author = itemObject.authorName || ' ';
+                            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
                             if (i === 0 || i === 5) {
                                 // all = owned + sold
                                 if (itemObject.status === 'NEW') {
@@ -311,12 +311,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const getEarningList = async () => {
         const resEarnedResult = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
+            FETCH_CONFIG_JSON
         );
         const dataEarnedResult = await resEarnedResult.json();
         const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
