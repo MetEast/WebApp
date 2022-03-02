@@ -33,6 +33,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
     const defaultValue: TypeProduct = {
         tokenId: '',
@@ -138,22 +139,61 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         setBuyBlindBoxTxFee();
     }, [dialogState.buyBlindBoxDlgStep]);
 
-    const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...blindBoxDetail };
-        if (type === 'inc') {
-            prodDetail.likes += 1;
-        } else if (type === 'dec') {
-            prodDetail.likes -= 1;
-        }
-        setBlindBoxDetail(prodDetail);
+    const updateBlindBoxLikes = (type: string) => {
+        setBlindBoxDetail((prevState: TypeProduct) => {
+            const blindDetail: TypeProduct = { ...prevState };
+            if (type === 'inc') {
+                blindDetail.likes ++;
+            } else if (type === 'dec') {
+                blindDetail.likes --;
+            }
+            return blindDetail;
+        });
     };
+
+    const updateBlindBoxViews = (tokenId: string) => {
+        if (signInDlgState.isLoggedIn && tokenId) {
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: tokenCookies.METEAST_TOKEN,
+                tokenId: tokenId,
+                did: didCookies.METEAST_DID,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        setBlindBoxDetail((prevState: TypeProduct) => {
+                            const blindDetail: TypeProduct = { ...prevState };
+                            blindDetail.views += 1;
+                            return blindDetail;
+                        });
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    useEffect(() => {
+        updateBlindBoxViews(blindBoxDetail.tokenId);
+    }, [blindBoxDetail.tokenId]);
 
     return (
         <>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <ProductImageContainer product={blindBoxDetail} updateLikes={updateProductLikes} />
+                    <ProductImageContainer product={blindBoxDetail} updateLikes={updateBlindBoxLikes} />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
