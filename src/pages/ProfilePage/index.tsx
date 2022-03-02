@@ -468,37 +468,67 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     }}
                 /> */}
                 <Stack width="100%" direction="row" justifyContent="space-between" marginTop={-6}>
-                    <Box>
+                    <SecondaryButton
+                        size="small"
+                        sx={{ paddingX: 2.5 }}
+                        onClick={() => {
+                            setEarningsDlgOpen(true);
+                        }}
+                    >
+                        <Icon
+                            icon="ph:coin"
+                            fontSize={20}
+                            color="#1890FF"
+                            style={{ marginBottom: 1, marginRight: 4 }}
+                        />
+                        Earnings
+                    </SecondaryButton>
+                    <SecondaryButton
+                        size="small"
+                        sx={{ paddingX: 2.5 }}
+                        onClick={() => {
+                            setEditProfileDlgOpen(true);
+                        }}
+                    >
+                        <Icon
+                            icon="ph:magic-wand"
+                            fontSize={20}
+                            color="#1890FF"
+                            style={{ marginBottom: 1, marginRight: 4 }}
+                        />
+                        Edit Profile
+                    </SecondaryButton>
+                </Stack>
+                <Stack width="100%" direction="row" justifyContent="space-between" marginTop={4}>
+                    <Stack>
                         <Typography fontSize={20} fontWeight={900}>
                             {toatlEarned}&nbsp;ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Total Earned
                         </Typography>
-                    </Box>
-                    <Box>
+                    </Stack>
+                    <Stack alignItems="flex-end">
                         <Typography fontSize={20} fontWeight={900}>
                             {todayEarned}&nbsp;ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Earned Today
                         </Typography>
-                    </Box>
+                    </Stack>
                 </Stack>
-                <Stack alignItems="center">
-                    <Typography fontSize={56} fontWeight={700}>
-                        {userInfo.name}
-                    </Typography>
+                <Stack alignItems="center" marginTop={-6}>
+                    {userInfo.name && (
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <Typography fontSize={56} fontWeight={700}>
+                                {userInfo.name}
+                            </Typography>
+                            <SecondaryButton sx={{ minWidth: 50, height: 50 }}>
+                                <Icon icon="ci:settings-future" fontSize={24} color="black" />
+                            </SecondaryButton>
+                        </Stack>
+                    )}
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={2}>
-                        <SecondaryButton
-                            size="small"
-                            sx={{ paddingX: 2.5 }}
-                            onClick={() => {
-                                setEarningsDlgOpen(true);
-                            }}
-                        >
-                            Earnings
-                        </SecondaryButton>
                         <PrimaryButton
                             sx={{ paddingX: 4 }}
                             onClick={() => {
@@ -508,7 +538,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             Create NFT
                         </PrimaryButton>
                         <PrimaryButton
-                            sx={{ paddingX: 4 }}
+                            sx={{ paddingX: 4, background: '#A453D6', '&:hover': { background: '#A463D6' } }}
                             onClick={() => {
                                 setDialogState({
                                     ...dialogState,
@@ -519,15 +549,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         >
                             New Blind Box
                         </PrimaryButton>
-                        <SecondaryButton
-                            size="small"
-                            sx={{ paddingX: 2.5 }}
-                            onClick={() => {
-                                setEditProfileDlgOpen(true);
-                            }}
-                        >
-                            Edit Profile
-                        </SecondaryButton>
                     </Stack>
                 </Stack>
             </Stack>
