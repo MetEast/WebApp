@@ -134,19 +134,22 @@ const NFTPreview: React.FC<ComponentProps> = ({
                             </Typography>
                             <Box display={{ xs: 'none', md: 'block' }}>
                                 {productType === 0 && (
-                                    <ProductSnippets nickname={product.author} likes={product.likes} />
+                                    <ProductSnippets
+                                        nickname={product.author}
+                                        likes={product.likes}
+                                        views={product.views}
+                                    />
                                 )}
-                                {productType === 1 &&
-                                    (productViewMode === 'grid1' ? (
-                                        <ProductSnippets
-                                            nickname={product.author}
-                                            likes={product.likes}
-                                            views={product.views}
-                                        />
-                                    ) : (
-                                        <ProductSnippets nickname={product.author} likes={product.likes} />
-                                    ))}
-                                {productType === 2 && <ProductSnippets sold={product.sold} likes={product.likes} />}
+                                {productType === 1 && (
+                                    <ProductSnippets
+                                        nickname={product.author}
+                                        likes={product.likes}
+                                        views={product.views}
+                                    />
+                                )}
+                                {productType === 2 && (
+                                    <ProductSnippets sold={product.sold} likes={product.likes} views={product.views} />
+                                )}
                             </Box>
                         </Box>
                     )}
