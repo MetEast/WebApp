@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Stack, Grid, Typography } from '@mui/material';
+import { Stack, Grid, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import {
     enumBadgeType,
@@ -295,7 +295,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography noWrap fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
-                        {productDetail.name}
+                        {productDetail.name ? (
+                            productDetail.name
+                        ) : (
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                sx={{ borderRadius: 4.5, bgcolor: '#E8F4FF' }}
+                            />
+                        )}
                     </Typography>
                     <ProductSnippets
                         nickname={productDetail.author}

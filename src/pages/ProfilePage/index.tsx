@@ -199,8 +199,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         const arrSearchResult = jsonAssets.data === undefined ? [] : jsonAssets.data.result;
 
                         let _myNftList: any = [];
-                        for (let i = 0; i < arrSearchResult.length; i++) {
-                            const itemObject: TypeProductFetch = arrSearchResult[i];
+                        for (let j = 0; j < arrSearchResult.length; j ++) {
+                            const itemObject: TypeProductFetch = arrSearchResult[j];
                             let product: TypeProduct = { ...defaultValue };
                             product.tokenId = itemObject.tokenId;
                             product.name = itemObject.name;
@@ -219,10 +219,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
                                         product.type = enumMyNFTType.Purchased;
                                 } else {
-                                    // if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
-                                    // else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
-                                    //     product.type = enumMyNFTType.Purchased;
-                                    // else
+                                    if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
+                                    else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
+                                        product.type = enumMyNFTType.Purchased;
+                                    else
                                     product.type =
                                         itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
                                 }
