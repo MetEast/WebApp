@@ -13,7 +13,7 @@ interface ComponentProps {
 }
 
 const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element => {
-    const [status, setStatus] = useState<number>(0);
+    const [status, setStatus] = useState<number>(-1);
     const [minPrice, setMinPrice] = useState<string>('0');
     const [maxPrice, setMaxPrice] = useState<string>('0');
 
@@ -60,10 +60,9 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                 size="small"
                 sx={{ width: 142, background: 'transparent', marginTop: 3, alignSelf: 'center' }}
                 onClick={() => {
-                    setStatus(0);
+                    setStatus(-1);
                     setMinPrice('');
                     setMaxPrice('');
-                    changeHandler(-1, '', '', true);
                 }}
             >
                 Clear all
