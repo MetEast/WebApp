@@ -8,7 +8,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import NFTPreview from 'src/components/NFTPreview';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
-import { selectFromFavourites, getImageFromAsset } from 'src/services/common';
+import { selectFromFavourites, getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 
 const HomePage: React.FC = (): JSX.Element => {
@@ -77,7 +77,7 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || ' ';
+            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.status = itemObject.status;
@@ -115,7 +115,7 @@ const HomePage: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName || ' ';
+            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.status = itemObject.status;
