@@ -106,13 +106,13 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:user" fontSize={20} color="black" />
             </IconButton>
-            <IconButton
+            {/* <IconButton
                 onClick={() => {
                     setSignInDlgState({ ...signInDlgState, signOut: true });
                 }}
             >
                 <Icon icon="ph:sign-out" fontSize={20} color="black" />
-            </IconButton>
+            </IconButton> */}
             <PrimaryButton
                 size="small"
                 onClick={() => {
@@ -122,10 +122,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 }}
                 sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
             >
-                <Icon icon="ph:sticker" fontSize={20} color="white" style={{ marginBottom: 2 }} />
+                <Icon icon="ph:sticker" fontSize={20} color="white" style={{ marginBottom: 1 }} />
                 {!mobile && (
                     <Typography fontWeight={700} color="white" marginLeft={0.5}>
-                        Create NFT
+                        CREATE NFT
                     </Typography>
                 )}
             </PrimaryButton>
@@ -146,15 +146,15 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             </PrimaryButton> */}
             <PrimaryButton
                 size="small"
-                sx={{ paddingX: 2 }}
+                sx={{ minWidth: 40, background: '#A453D6', '&:hover': { background: '#A463D6' } }}
                 onClick={() => {
                     if (signInDlgState.isLoggedIn)
                         setDialogState({ ...dialogState, createBlindBoxDlgOpened: true, createBlindBoxDlgStep: 0 });
                     else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                 }}
             >
-                <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 4, marginRight: 4 }} />
-                {mobile ? 'Blind Box' : 'New Blind Box'}
+                <Icon icon="ph:cube" fontSize={20} color="white" style={{ marginBottom: 2 }} />
+                {/* {mobile ? 'Blind Box' : 'New Blind Box'} */}
             </PrimaryButton>
         </>
     ) : (
