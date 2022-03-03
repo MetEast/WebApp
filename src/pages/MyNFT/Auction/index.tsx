@@ -43,6 +43,7 @@ import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/Canc
 import ReceivedBids from 'src/components/profile/ReceivedBids';
 import { TypeSelectItem } from 'src/types/select-types';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
@@ -127,7 +128,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
             product.isLike =
@@ -516,6 +517,26 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     <ReceivedBids
                         bidsList={bidsList}
                         closeDlg={() => setViewBidDlgOpened(false)}
+                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
+                    />
+                )}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.allBidDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allBidDlgOpened: false });
+                }}
+            >
+                {bidsList.length === 0 ? (
+                    <NoBids
+                        onClose={() => {
+                            setDialogState({ ...dialogState, allBidDlgOpened: false });
+                        }}
+                    />
+                ) : (
+                    <AllBids
+                        bidsList={bidsList}
+                        myBidsList={[]}
                         changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
                     />
                 )}
