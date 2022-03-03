@@ -144,6 +144,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                     : enumBlindBoxNFTType.SaleEnded;
 
             blindboxItem.likes = itemObject.likes;
+            blindboxItem.views = itemObject.views;
             blindboxItem.isLike =
                 favouritesList.findIndex((value: TypeFavouritesFetch) =>
                     selectFromFavourites(value, itemObject.tokenId),
