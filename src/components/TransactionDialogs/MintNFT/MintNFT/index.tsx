@@ -69,7 +69,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             <Box>
                 <Grid container columnSpacing={4}>
-                    <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
+                    <Grid item xs={12} sm={6} display="flex" flexDirection="column">
                         <CustomTextField
                             title="Project Title"
                             placeholder="Placeholder Text"
@@ -84,35 +84,10 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             rows={3}
                             error={introductionError}
                             errorText="Project introduction can not be empty."
+                            sx={{ marginTop: 3 }}
                             changeHandler={(value: string) => setIntroduction(value)}
                         />
-                        <Stack spacing={0.5}>
-                            <Typography fontSize={12} fontWeight={700}>
-                                Source File
-                            </Typography>
-                            <UploadSingleFile
-                                file={stateFile}
-                                onDrop={handleFileChange}
-                                sx={{
-                                    width: '100%',
-                                    height: '112px',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginTop: '1rem',
-                                    borderRadius: '2vw',
-                                    background: '#E8F4FF',
-                                    cursor: 'pointer',
-                                }}
-                            />
-                            {mintFileError && (
-                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                    Source file should be selected.
-                                </Typography>
-                            )}
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
-                        <Stack spacing={0.5}>
+                        <Stack spacing={0.5} marginTop={1}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Category
                             </Typography>
@@ -139,7 +114,44 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 </Typography>
                             )}
                         </Stack>
-                        <CustomTextField
+                        <RoyaltyInput
+                            title="Royalties"
+                            placeholder="10"
+                            error={royaltiesError}
+                            errorText="Royalties should be between 0 and 100."
+                            sx={{ marginTop: 3 }}
+                            handleChange={(value: string) => {
+                                if (value === '' || isNaN(Number(value))) setRoyalties(0);
+                                else setRoyalties(parseFloat(value));
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
+                        <Stack height="100%" spacing={0.5}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                Source File
+                            </Typography>
+                            <UploadSingleFile
+                                file={stateFile}
+                                onDrop={handleFileChange}
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    // justifyContent: 'center',
+                                    // alignItems: 'center',
+                                    marginTop: '1rem',
+                                    borderRadius: '8px',
+                                    background: '#E8F4FF',
+                                    cursor: 'pointer',
+                                }}
+                            />
+                            {mintFileError && (
+                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                    Source file should be selected.
+                                </Typography>
+                            )}
+                        </Stack>
+                        {/* <CustomTextField
                             title="About the author"
                             placeholder="Enter author introduction"
                             multiline
@@ -147,17 +159,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             error={authorError}
                             errorText="Author can not be empty."
                             changeHandler={(value: string) => setAuthor(value)}
-                        />
-                        <RoyaltyInput
-                            title="Royalties"
-                            placeholder="10"
-                            error={royaltiesError}
-                            errorText="Royalties should be between 0 and 100."
-                            handleChange={(value: string) => {
-                                if (value === '' || isNaN(Number(value))) setRoyalties(0);
-                                else setRoyalties(parseFloat(value));
-                            }}
-                        />
+                        /> */}
                     </Grid>
                 </Grid>
             </Box>
@@ -190,7 +192,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             if (
                                 title !== '' &&
                                 introduction !== '' &&
-                                author !== '' &&
+                                // author !== '' &&
                                 category !== undefined &&
                                 category.label !== '' &&
                                 category.value !== '' &&
