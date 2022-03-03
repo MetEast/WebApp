@@ -31,7 +31,7 @@ const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
                 </Typography>
                 <ViewAllBtn
                     onClick={() => {
-                        setDialogState({ ...dialogState, allTxDlgOpened: true });
+                        setDialogState({ ...dialogState, allBidDlgOpened: true });
                     }}
                 >
                     View ALL

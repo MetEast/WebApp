@@ -298,45 +298,43 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
-                    {productDetail.status !== 'HAS BIDS' && (
-                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                            <PinkButton
-                                sx={{ width: '100%' }}
-                                onClick={() => {
-                                    if (signInDlgState.isLoggedIn) {
-                                        setDialogState({
-                                            ...dialogState,
-                                            cancelSaleDlgOpened: true,
-                                            cancelSaleDlgStep: 0,
-                                            cancelSaleOrderId: productDetail.orderId || '',
-                                        });
-                                    } else {
-                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                    }
-                                }}
-                            >
-                                Cancel Sale
-                            </PinkButton>
-                            <PrimaryButton
-                                sx={{ width: '100%' }}
-                                onClick={() => {
-                                    if (signInDlgState.isLoggedIn) {
-                                        setDialogState({
-                                            ...dialogState,
-                                            changePriceDlgOpened: true,
-                                            changePriceDlgStep: 0,
-                                            changePriceCurPrice: productDetail.price_ela,
-                                            changePriceOrderId: productDetail.orderId || '',
-                                        });
-                                    } else {
-                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                    }
-                                }}
-                            >
-                                Change Price
-                            </PrimaryButton>
-                        </Stack>
-                    )}
+                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                        <PinkButton
+                            sx={{ width: '100%' }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        cancelSaleDlgOpened: true,
+                                        cancelSaleDlgStep: 0,
+                                        cancelSaleOrderId: productDetail.orderId || '',
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            Cancel Sale
+                        </PinkButton>
+                        <PrimaryButton
+                            sx={{ width: '100%' }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        changePriceDlgOpened: true,
+                                        changePriceDlgStep: 0,
+                                        changePriceCurPrice: productDetail.price_ela,
+                                        changePriceOrderId: productDetail.orderId || '',
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            Change Price
+                        </PrimaryButton>
+                    </Stack>
                 </Grid>
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>

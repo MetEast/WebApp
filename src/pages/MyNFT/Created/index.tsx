@@ -32,7 +32,6 @@ import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
-// import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -235,7 +234,6 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     <Stack spacing={10}></Stack>
                 </Grid>
             </Grid>
-            {/* <MintNFTDlgContainer /> */}
         </>
     );
 };
