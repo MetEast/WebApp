@@ -10,7 +10,14 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import { getImageFromAsset, getMintCategory, getUTCTime, getTime, selectFromFavourites, reduceHexAddress } from 'src/services/common';
+import {
+    getImageFromAsset,
+    getMintCategory,
+    getUTCTime,
+    getTime,
+    selectFromFavourites,
+    reduceHexAddress,
+} from 'src/services/common';
 import {
     enumBadgeType,
     enumSingleNFTType,
@@ -19,7 +26,7 @@ import {
     TypeProductFetch,
     TypeFavouritesFetch,
     TypeNFTHisotry,
-    TypeNFTTransactionFetch
+    TypeNFTTransactionFetch,
 } from 'src/types/product-types';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -59,7 +66,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         price: 0,
         time: '',
         saleType: enumTransactionType.ForSale,
-        txHash: ''
+        txHash: '',
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -97,11 +104,15 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+            product.author =
+                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = (itemObject.holderName === '' || itemObject.holder === itemObject.royaltyOwner) ? itemObject.authorName : itemObject.holderName;
+            product.holderName =
+                itemObject.holderName === '' || itemObject.holder === itemObject.royaltyOwner
+                    ? itemObject.authorName
+                    : itemObject.holderName;
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -126,7 +137,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         const arrLatestTransaction = dataLatestTransaction.data;
 
         let _prodTransHistory: Array<TypeNFTHisotry> = [];
-        for (let i = 0; i < arrLatestTransaction.length; i ++) {
+        for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event !== 'Mint') continue;
             let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
@@ -135,7 +146,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
             let timestamp = getTime(itemObject.timestamp.toString());
             _prodTrans.time = timestamp.date + ' ' + timestamp.time;
-            _prodTrans.txHash = itemObject.tHash; 
+            _prodTrans.txHash = itemObject.tHash;
             _prodTransHistory.push(_prodTrans);
         }
         setProdTransHistory(_prodTransHistory);
@@ -153,13 +164,15 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     }, []);
 
     const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...productDetail };
-        if (type === 'inc') {
-            prodDetail.likes += 1;
-        } else if (type === 'dec') {
-            prodDetail.likes -= 1;
-        }
-        setProductDetail(prodDetail);
+        setProductDetail((prevState: TypeProduct) => {
+            const prodDetail: TypeProduct = { ...prevState };
+            if (type === 'inc') {
+                prodDetail.likes++;
+            } else if (type === 'dec') {
+                prodDetail.likes--;
+            }
+            return prodDetail;
+        });
     };
 
     return (
