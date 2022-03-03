@@ -190,7 +190,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const theme = useTheme();
-    const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
+    // const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
     const matchUpmd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUplg = useMediaQuery(theme.breakpoints.up('lg'));
 

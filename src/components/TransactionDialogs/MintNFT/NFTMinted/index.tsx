@@ -32,7 +32,7 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                             setDialogState({
                                 ...dialogState,
                                 mintTitle: '',
-                                mintAuthor: '',
+                                // mintAuthor: '',
                                 mintIntroduction: '',
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),

@@ -1,7 +1,6 @@
 import { Stack, Box, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import FilterModal from 'src/components/modals/FilterModal';
 import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
