@@ -53,6 +53,7 @@
     "react-modal": "^3.14.4",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
+    "react-share": "4.4.0",
     "recoil": "^0.5.2",
     "styled-components": "^5.3.3",
     "swiper": "6.8.3",
