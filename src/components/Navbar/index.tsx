@@ -59,8 +59,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
+    const [manageProfileDlgOpen, setManageProfileDlgOpen] = React.useState<boolean>(false);
     const [testdlgOpen, setTestdlgOpen] = React.useState<boolean>(false);
     const testDlgShow = false;
+
+    const isProfilePage = location.pathname === '/profile';
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
@@ -93,12 +96,14 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
 
     const menuButtons = signInDlgState.isLoggedIn ? (
         <>
-            <Box position="relative">
-                <IconButton>
-                    <Icon icon="ph:chat-circle" fontSize={20} color="black" />
-                </IconButton>
-                <NotificationTypo>2</NotificationTypo>
-            </Box>
+            {!mobile && (
+                <Box position="relative">
+                    <IconButton>
+                        <Icon icon="ph:chat-circle" fontSize={20} color="black" />
+                    </IconButton>
+                    <NotificationTypo>2</NotificationTypo>
+                </Box>
+            )}
             <IconButton
                 onClick={() => {
                     navigate('/profile');
@@ -113,49 +118,71 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:sign-out" fontSize={20} color="black" />
             </IconButton> */}
-            <PrimaryButton
-                size="small"
-                onClick={() => {
-                    if (signInDlgState.isLoggedIn)
-                        setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
-                    else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                }}
-                sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
-            >
-                <Icon icon="ph:sticker" fontSize={20} color="white" style={{ marginBottom: 1 }} />
-                {!mobile && (
-                    <Typography fontWeight={700} color="white" marginLeft={0.5}>
-                        CREATE NFT
-                    </Typography>
-                )}
-            </PrimaryButton>
-            {/* <PrimaryButton
-                size="small"
-                sx={{ paddingX: 2 }}
-                onClick={() => {
-                    navigate('/admin/nfts');
-                }}
-            >
-                {mobile ? 'admin' : 'admin area'}
-                <Icon
-                    icon="ph:arrow-square-out"
-                    fontSize={20}
-                    color="white"
-                    style={{ marginLeft: 4, marginBottom: 4 }}
-                />
-            </PrimaryButton> */}
-            <PrimaryButton
-                size="small"
-                sx={{ minWidth: 40, background: '#A453D6', '&:hover': { background: '#A463D6' } }}
-                onClick={() => {
-                    if (signInDlgState.isLoggedIn)
-                        setDialogState({ ...dialogState, createBlindBoxDlgOpened: true, createBlindBoxDlgStep: 0 });
-                    else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                }}
-            >
-                <Icon icon="ph:cube" fontSize={20} color="white" style={{ marginBottom: 2 }} />
-                {/* {mobile ? 'Blind Box' : 'New Blind Box'} */}
-            </PrimaryButton>
+            {isProfilePage ? (
+                <PrimaryButton
+                    size="small"
+                    sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
+                    onClick={() => {
+                        setManageProfileDlgOpen(true);
+                    }}
+                >
+                    <Icon icon="ci:settings-future" fontSize={20} color="white" style={{ marginBottom: 1 }} />
+                    {!mobile && (
+                        <Typography fontWeight={700} color="white" marginLeft={0.5}>
+                            MANAGE PROFILE
+                        </Typography>
+                    )}
+                </PrimaryButton>
+            ) : (
+                <>
+                    <PrimaryButton
+                        size="small"
+                        onClick={() => {
+                            if (signInDlgState.isLoggedIn)
+                                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
+                            else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                        }}
+                        sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
+                    >
+                        <Icon icon="ph:sticker" fontSize={20} color="white" style={{ marginBottom: 1 }} />
+                        {!mobile && (
+                            <Typography fontWeight={700} color="white" marginLeft={0.5}>
+                                CREATE NFT
+                            </Typography>
+                        )}
+                    </PrimaryButton>
+                    {/* <PrimaryButton
+                        size="small"
+                        sx={{ paddingX: 2 }}
+                        onClick={() => {
+                            navigate('/admin/nfts');
+                        }}
+                    >
+                        {mobile ? 'admin' : 'admin area'}
+                        <Icon
+                            icon="ph:arrow-square-out"
+                            fontSize={20}
+                            color="white"
+                            style={{ marginLeft: 4, marginBottom: 4 }}
+                        />
+                    </PrimaryButton> */}
+                    <PrimaryButton
+                        size="small"
+                        sx={{ minWidth: 40, background: '#A453D6', '&:hover': { background: '#A463D6' } }}
+                        onClick={() => {
+                            if (signInDlgState.isLoggedIn)
+                                setDialogState({
+                                    ...dialogState,
+                                    createBlindBoxDlgOpened: true,
+                                    createBlindBoxDlgStep: 0,
+                                });
+                            else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                        }}
+                    >
+                        <Icon icon="ph:cube" fontSize={20} color="white" style={{ marginBottom: 2 }} />
+                    </PrimaryButton>
+                </>
+            )}
         </>
     ) : (
         <PrimaryButton
@@ -213,6 +240,18 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     </Stack>
                 )}
             </Stack>
+            <ModalDialog
+                open={manageProfileDlgOpen}
+                onClose={() => {
+                    setManageProfileDlgOpen(false);
+                }}
+            >
+                <ManageProfile
+                    onClose={() => {
+                        setManageProfileDlgOpen(false);
+                    }}
+                />
+            </ModalDialog>
             {testDlgShow && (
                 <ModalDialog
                     open={testdlgOpen}
