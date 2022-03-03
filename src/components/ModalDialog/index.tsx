@@ -21,8 +21,10 @@ const ModalDialog: React.FC<ComponentProps> = ({ open, onClose, children }): JSX
             sx={{ background: '#1890FF90' }}
             PaperProps={{
                 sx: {
-                    display: 'grid',
-                    placeContent: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     maxWidth: '100%',
                     padding: { xs: 4, md: 8 },
                     borderRadius: { xs: 0, md: 15 },
