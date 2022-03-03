@@ -29,7 +29,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
-    // const [onProgress, setOnProgress] = useState<boolean>(false);
+    const [onProgress, setOnProgress] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
@@ -51,7 +51,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-    let onProgress: boolean = false;
 
     const callMintNFT = async (_tokenId: string, _tokenUri: string, _didUri: string, _royaltyFee: number) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -103,7 +102,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     createNFTDlgStep: 2,
                     mintProgress: 100,
                 });
-                onProgress = false;
+                setOnProgress(false);
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
@@ -119,7 +118,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     errorMessageDlgOpened: true,
                     mintProgress: 0,
                 });
-                onProgress = false;
+                setOnProgress(false);
             });
     };
 
@@ -228,7 +227,8 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         });
 
     const handleMint = () => {
-        if (!dialogState.mintFile || onProgress) return;
+        if (!dialogState.mintFile) return;
+        console.log('is pressed');
         if (dialogState.mintTXFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'warning',
@@ -236,7 +236,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             });
             return;
         }
-        onProgress = true;
+        setOnProgress(true);
         uploadData()
             .then((paramObj) => mint2net(paramObj))
             .then((success) => {
@@ -326,7 +326,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         >
                             Back
                         </SecondaryButton>
-                        <PrimaryButton fullWidth onClick={handleMint}>
+                        <PrimaryButton fullWidth disabled={onProgress} onClick={handleMint}>
                             Confirm
                         </PrimaryButton>
                     </Stack>
