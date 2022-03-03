@@ -67,7 +67,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Mint NFT</DialogTitleTypo>
             </Stack>
             <Box>
-                <Grid container columnSpacing={4}>
+                <Grid container columnSpacing={4} rowGap={3}>
                     <Grid item xs={12} sm={6} display="flex" flexDirection="column">
                         <CustomTextField
                             title="Project Title"
