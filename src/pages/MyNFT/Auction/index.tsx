@@ -302,7 +302,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         // }
         // setMyBidsList(_myLatestBidsList);
     };
-    
+
     useEffect(() => {
         getLatestBid();
     }, [bidSortBy]);
@@ -466,7 +466,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={8}>
                     <Stack spacing={10}>
-                        <NFTBidTable bidsList={bidsList} />
+                        {bidsList.length !== 0 && <NFTBidTable bidsList={bidsList} />}
                         <NFTTransactionTable transactionsList={transactionsList} />
                         <PriceHistoryView />
                     </Stack>
