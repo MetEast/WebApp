@@ -140,6 +140,7 @@ export type TypeBlindBoxSelectItem = {
     nftIdentity: string;
     projectTitle: string;
     projectType: string;
+    url: string;
 };
 
 // ---
