@@ -48,7 +48,10 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
         let txHash = '';
 
         setLoadingDlgOpened(true);
-        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
+        const timer = setTimeout(() => {
+            setLoadingDlgOpened(false);
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+        }, 120000);
         marketContract.methods
             .settleAuctionOrder(_orderId)
             .send(transactionParams)

@@ -109,7 +109,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 value: 0,
             };
             setLoadingDlgOpened(true);
-            const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
+            const timer = setTimeout(() => {
+                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+            }, 120000);
             meteastContract.methods
                 .setApprovalForAll(_operator, _approved)
                 .send(transactionParams)
@@ -164,7 +167,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
         setLoadingDlgOpened(true);
-        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
+        const timer = setTimeout(() => {
+            setLoadingDlgOpened(false);
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+        }, 120000);
         marketContract.methods
             .createOrderForSaleBatch(_tokenIds, _quoteTokens, _prices, _didUri, _isBlindBox)
             .send(transactionParams)
