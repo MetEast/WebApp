@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Stack, Box, Typography, TextField } from '@mui/material';
+import { SxProps } from '@mui/system';
 
 export interface ComponentProps {
     title?: string;
     placeholder?: string;
     error?: boolean;
     errorText?: string;
+    sx?: SxProps;
     handleChange?: (value: string) => void;
 }
 
@@ -14,6 +16,7 @@ const RoyaltyInput: React.FC<ComponentProps> = ({
     placeholder,
     error = false,
     errorText = '',
+    sx,
     handleChange = () => {},
 }): JSX.Element => {
     const [text, setText] = useState('10');
@@ -27,7 +30,7 @@ const RoyaltyInput: React.FC<ComponentProps> = ({
     };
 
     return (
-        <Stack spacing={0.5}>
+        <Stack spacing={0.5} sx={{ ...sx }}>
             {title && (
                 <Typography fontSize={12} fontWeight={700}>
                     {title}
