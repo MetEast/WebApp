@@ -59,6 +59,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
+    const [manageProfileDlgOpen, setManageProfileDlgOpen] = React.useState<boolean>(false);
     const [testdlgOpen, setTestdlgOpen] = React.useState<boolean>(false);
     const testDlgShow = false;
 
@@ -118,7 +119,13 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 <Icon icon="ph:sign-out" fontSize={20} color="black" />
             </IconButton> */}
             {isProfilePage ? (
-                <PrimaryButton size="small" sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}>
+                <PrimaryButton
+                    size="small"
+                    sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
+                    onClick={() => {
+                        setManageProfileDlgOpen(true);
+                    }}
+                >
                     <Icon icon="ci:settings-future" fontSize={20} color="white" style={{ marginBottom: 1 }} />
                     {!mobile && (
                         <Typography fontWeight={700} color="white" marginLeft={0.5}>
@@ -233,6 +240,18 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     </Stack>
                 )}
             </Stack>
+            <ModalDialog
+                open={manageProfileDlgOpen}
+                onClose={() => {
+                    setManageProfileDlgOpen(false);
+                }}
+            >
+                <ManageProfile
+                    onClose={() => {
+                        setManageProfileDlgOpen(false);
+                    }}
+                />
+            </ModalDialog>
             {testDlgShow && (
                 <ModalDialog
                     open={testdlgOpen}
