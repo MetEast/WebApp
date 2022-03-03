@@ -257,7 +257,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack
                 spacing={5}
                 width={400}
-                maxHeight={'60vh'}
+                maxHeight={'80vh'}
                 sx={{ overflowY: 'auto', overflowX: 'hidden' }}
                 className={classes.container}
             >
@@ -265,7 +265,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <PageNumberTypo>2 of 2</PageNumberTypo>
                     <DialogTitleTypo>Check Blind Box Details</DialogTitleTypo>
                 </Stack>
-                <Stack paddingX={6} paddingY={4} spacing={1} borderRadius={4} sx={{ background: '#F0F1F2' }}>
+                <Stack paddingX={6} paddingY={4} spacing={1} borderRadius={5} sx={{ background: '#F0F1F2' }}>
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Title</DetailedInfoTitleTypo>
                         <Typography fontSize={20} fontWeight={500}>
@@ -290,7 +290,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         </Typography>
                     </InfoItemWrapper>
                     <InfoItemWrapper>
-                        <DetailedInfoTitleTypo># Of Copies</DetailedInfoTitleTypo>
+                        <DetailedInfoTitleTypo># Of Nft</DetailedInfoTitleTypo>
                         <DetailedInfoLabelTypo>{dialogState.crtBlindQuantity}</DetailedInfoLabelTypo>
                     </InfoItemWrapper>
                     <InfoItemWrapper>
@@ -315,16 +315,16 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             {dialogState.crtBlindDescription}
                         </DetailedInfoLabelTypo>
                     </InfoItemWrapper>
-                    <InfoItemWrapper>
+                    {/* <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Author Description</DetailedInfoTitleTypo>
                         <DetailedInfoLabelTypo textAlign="right">
                             {dialogState.crtBlindAuthorDescription}
                         </DetailedInfoLabelTypo>
-                    </InfoItemWrapper>
-                    {/* <InfoItemWrapper>
+                    </InfoItemWrapper> */}
+                    <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Items</DetailedInfoTitleTypo>
                         <DetailedInfoLabelTypo textAlign="right">{dialogState.crtBlindTokenIds}</DetailedInfoLabelTypo>
-                    </InfoItemWrapper> */}
+                    </InfoItemWrapper>
                 </Stack>
                 <Stack alignItems="center" spacing={1}>
                     <Typography fontSize={14} fontWeight={600}>

@@ -20,6 +20,7 @@ import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getTime } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import Container from 'src/components/Container';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -217,40 +218,48 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box borderRadius={2.5} overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                            <Box overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
                                 <img src={item} alt="" style={{ minWidth: '100%' }} />
                             </Box>
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </Box>
-            <OptionsBar
-                sortOptions={sortOptions}
-                sortSelected={sortBy}
-                productViewMode={productViewMode}
-                handleKeyWordChange={handleKeyWordChange}
-                handlerFilterChange={handlerFilterChange}
-                handleSortChange={handleChangeSortBy}
-                setProductViewMode={setProductViewMode}
-                marginTop={5}
-            />
-            {blindBoxList.length === 0 && (
-                <Stack mt={6}>
-                    <LooksEmptyBox />
-                </Stack>
-            )}
-            <Grid container mt={2} spacing={4}>
-                {blindBoxList.map((item, index) => (
-                    <Grid
-                        item
-                        xs={productViewMode === 'grid1' ? 12 : 6}
-                        md={productViewMode === 'grid1' ? 6 : 3}
-                        key={`explore-product-${index}`}
-                    >
-                        <NFTPreview product={item} productType={2} index={index} updateLikes={updateBlindBoxLikes} isBlindBox={true} />
-                    </Grid>
-                ))}
-            </Grid>
+            <Container>
+                <OptionsBar
+                    sortOptions={sortOptions}
+                    sortSelected={sortBy}
+                    productViewMode={productViewMode}
+                    handleKeyWordChange={handleKeyWordChange}
+                    handlerFilterChange={handlerFilterChange}
+                    handleSortChange={handleChangeSortBy}
+                    setProductViewMode={setProductViewMode}
+                    marginTop={5}
+                />
+                {blindBoxList.length === 0 && (
+                    <Stack mt={6}>
+                        <LooksEmptyBox />
+                    </Stack>
+                )}
+                <Grid container mt={2} spacing={4}>
+                    {blindBoxList.map((item, index) => (
+                        <Grid
+                            item
+                            xs={productViewMode === 'grid1' ? 12 : 6}
+                            md={productViewMode === 'grid1' ? 6 : 3}
+                            key={`explore-product-${index}`}
+                        >
+                            <NFTPreview
+                                product={item}
+                                productType={2}
+                                index={index}
+                                updateLikes={updateBlindBoxLikes}
+                                isBlindBox={true}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
         </Box>
     );
 };

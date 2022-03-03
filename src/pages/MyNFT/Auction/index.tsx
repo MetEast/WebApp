@@ -48,6 +48,7 @@ import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
+import Container from 'src/components/Container';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -347,7 +348,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     };
 
     return (
-        <>
+        <Container>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>
@@ -545,7 +546,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     />
                 )}
             </ModalDialog>
-        </>
+        </Container>
     );
 };
 

@@ -28,6 +28,7 @@ import {
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { getImageFromAsset, selectFromFavourites, getTime } from 'src/services/common';
 import { isInAppBrowser } from 'src/services/wallet';
+import Container from 'src/components/Container';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -189,7 +190,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     }, [blindBoxDetail.tokenId]);
 
     return (
-        <>
+        <Container>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -258,7 +259,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 {dialogState.buyBlindBoxDlgStep === 2 && <PurchaseSuccess />}
                 {dialogState.buyBlindBoxDlgStep === 3 && <BlindBoxContents />}
             </ModalDialog>
-        </>
+        </Container>
     );
 };
 

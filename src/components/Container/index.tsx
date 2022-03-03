@@ -1,10 +1,15 @@
 import React from 'react';
 import { ContainerWrapper } from './styles';
+import { SxProps } from '@mui/system';
 
-const Container: React.FC = ({ children }): JSX.Element => {
+export interface ComponentProps {
+    sx?: SxProps;
+}
+
+const Container: React.FC<ComponentProps> = ({ sx, children }): JSX.Element => {
     return (
         <>
-            <ContainerWrapper>{children}</ContainerWrapper>
+            <ContainerWrapper sx={{ ...sx }}>{children}</ContainerWrapper>
         </>
     );
 };

@@ -10,6 +10,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import Container from 'src/components/Container';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -205,47 +206,57 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box borderRadius={2.5} overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
+                            <Box overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
                                 <img src={item} alt="" style={{ minWidth: '100%' }} />
                             </Box>
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </Box>
-            <Box mt={4}>
-                <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
-                    New Products
-                </Typography>
-                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 4000 }} spaceBetween={spaceBetweenSlideItems}>
-                    {productList.map((product, index) => (
-                        <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
-                            <NFTPreview
-                                product={product}
-                                productType={0}
-                                index={index}
-                                updateLikes={updateProductLikes}
-                            />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </Box>
-            <Box mt={8}>
-                <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
-                    Popular Collections
-                </Typography>
-                <Swiper slidesPerView={slidesPerView} autoplay={{ delay: 3000 }} spaceBetween={spaceBetweenSlideItems}>
-                    {collectionList.map((collection, index) => (
-                        <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
-                            <NFTPreview
-                                product={collection}
-                                productType={0}
-                                index={index}
-                                updateLikes={updateCollectionLikes}
-                            />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </Box>
+            <Container>
+                <Box mt={4}>
+                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                        New Products
+                    </Typography>
+                    <Swiper
+                        slidesPerView={slidesPerView}
+                        autoplay={{ delay: 4000 }}
+                        spaceBetween={spaceBetweenSlideItems}
+                    >
+                        {productList.map((product, index) => (
+                            <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
+                                <NFTPreview
+                                    product={product}
+                                    productType={0}
+                                    index={index}
+                                    updateLikes={updateProductLikes}
+                                />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </Box>
+                <Box mt={8}>
+                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                        Popular Collections
+                    </Typography>
+                    <Swiper
+                        slidesPerView={slidesPerView}
+                        autoplay={{ delay: 3000 }}
+                        spaceBetween={spaceBetweenSlideItems}
+                    >
+                        {collectionList.map((collection, index) => (
+                            <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
+                                <NFTPreview
+                                    product={collection}
+                                    productType={0}
+                                    index={index}
+                                    updateLikes={updateCollectionLikes}
+                                />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </Box>
+            </Container>
         </Stack>
     );
 };

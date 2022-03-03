@@ -44,6 +44,7 @@ import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/Pr
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import { isInAppBrowser } from 'src/services/wallet';
+import Container from 'src/components/Container';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -287,7 +288,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId]);
 
     return (
-        <>
+        <Container>
             <ProductPageHeader />
             <Grid container marginTop={6} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -442,7 +443,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
                 {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
             </ModalDialog>
-        </>
+        </Container>
     );
 };
 
