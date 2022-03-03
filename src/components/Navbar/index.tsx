@@ -94,7 +94,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         />
     ));
 
-    const menuButtons = !signInDlgState.isLoggedIn ? (
+    const menuButtons = signInDlgState.isLoggedIn ? (
         <>
             {!mobile && (
                 <Box position="relative">
