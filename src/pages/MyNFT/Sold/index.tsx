@@ -133,6 +133,16 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         setProductDetail(product);
     };
 
+    const getFetchData = async () => {
+        let ela_usd_rate = await getELA2USD();
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        getProductDetail(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
+
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
@@ -214,17 +224,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         setTransactionsList(_latestTransList);
         setProdTransHistory(_prodTransHistory);
     };
-
-    const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
-    };
-
-    useEffect(() => {
-        getFetchData();
-    }, []);
-
+    
     useEffect(() => {
         getLatestTransaction();
     }, [transactionSortBy]);

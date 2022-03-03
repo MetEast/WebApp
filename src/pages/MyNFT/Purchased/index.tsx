@@ -40,6 +40,9 @@ import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { isInAppBrowser } from 'src/services/wallet';
+import { TypeSelectItem } from 'src/types/select-types';
+import ModalDialog from 'src/components/ModalDialog';
+import AllTransactions from 'src/components/profile/AllTransactions';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -86,8 +89,8 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
+    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
-    const burnAddress = '0x0000000000000000000000000000000000000000';
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -140,6 +143,16 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         }
         setProductDetail(product);
     };
+
+    const getFetchData = async () => {
+        let ela_usd_rate = await getELA2USD();
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        getProductDetail(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
 
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
@@ -223,16 +236,9 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         setProdTransHistory(_prodTransHistory);
     };
 
-    const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
-        getLatestTransaction();
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        getLatestTransaction();
+    }, [transactionSortBy]);
 
     const setSaleTxFee = async () => {
         const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
@@ -316,6 +322,17 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
             </Grid>
+            <ModalDialog
+                open={dialogState.allTxDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allTxDlgOpened: false });
+                }}
+            >
+                <AllTransactions
+                    transactionList={transactionsList}
+                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
+                />
+            </ModalDialog>
         </>
     );
 };
