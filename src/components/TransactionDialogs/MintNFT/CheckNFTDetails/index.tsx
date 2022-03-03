@@ -33,7 +33,17 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
-            ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
+            ? {
+                  did: '',
+                  name: '',
+                  description: '',
+                  avatar: '',
+                  email: '',
+                  exp: 0,
+                  iat: 0,
+                  type: '',
+                  canManageAdmins: false,
+              }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
     const { did, name } = userInfo;
 
@@ -43,13 +53,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     let onProgress: boolean = false;
 
-
-    const callMintNFT = async (
-        _tokenId: string,
-        _tokenUri: string,
-        _didUri: string,
-        _royaltyFee: number
-    ) => {
+    const callMintNFT = async (_tokenId: string, _tokenUri: string, _didUri: string, _royaltyFee: number) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_CONTRACT_ABI;
@@ -69,7 +73,10 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         let txHash = '';
 
         setLoadingDlgOpened(true);
-        const timer = setTimeout(() => setLoadingDlgOpened(false), 120000);
+        const timer = setTimeout(() => {
+            setLoadingDlgOpened(false);
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+        }, 120000);
         setDialogState({ ...dialogState, mintProgress: 70 });
         meteastContract.methods
             .mint(_tokenId, _tokenUri, _royaltyFee)
@@ -94,7 +101,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     mintDidUri: _didUri,
                     createNFTDlgOpened: true,
                     createNFTDlgStep: 2,
-                    mintProgress: 100
+                    mintProgress: 100,
                 });
                 onProgress = false;
             })
@@ -106,7 +113,12 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 setLoadingDlgOpened(false);
                 clearTimeout(timer);
-                setDialogState({ ...dialogState, createNFTDlgOpened: false, errorMessageDlgOpened: true, mintProgress: 0 });
+                setDialogState({
+                    ...dialogState,
+                    createNFTDlgOpened: false,
+                    errorMessageDlgOpened: true,
+                    mintProgress: 0,
+                });
                 onProgress = false;
             });
     };
@@ -306,7 +318,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     mintTokenId: '',
                                     mintTokenUri: '',
                                     mintDidUri: '',
-                                    mintProgress: 0, 
+                                    mintProgress: 0,
                                     createNFTDlgOpened: true,
                                     createNFTDlgStep: 0,
                                 });
