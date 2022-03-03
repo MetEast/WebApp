@@ -138,7 +138,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+            product.author =
+                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image; // -- no proper value
             product.authorAddress = itemObject.royaltyOwner;
@@ -179,38 +180,38 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'BidOrder':
                     _transaction.type = enumTransactionType.Bid;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
                 case 'ChangeOrderPrice':
                     _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user = reduceHexAddress(itemObject.from , 4);
+                    _transaction.user = reduceHexAddress(itemObject.from, 4);
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
                 // case 'Transfer':
                 //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
                 case 'SettleBidOrder':
                     _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user = reduceHexAddress(itemObject.to , 4);
+                    _transaction.user = reduceHexAddress(itemObject.to, 4);
                     break;
             }
             _transaction.price = parseInt(itemObject.price) / 1e18;
@@ -228,7 +229,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                         ? 'Bought From'
                         : 'Sold To';
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(_prodTrans.type === 'Bought From' ? itemObject.from : itemObject.to, 4); // no proper data
+                _prodTrans.user = reduceHexAddress(
+                    _prodTrans.type === 'Bought From' ? itemObject.from : itemObject.to,
+                    4,
+                ); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
                 if (itemObject.event === 'BuyOrder')
@@ -371,49 +375,50 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                         )}
                     </Stack>
                     <ELAPrice price_ela={productDetail.price_ela} price_usd={productDetail.price_usd} marginTop={3} />
-                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setViewBidDlgOpened(true)}>
-                        View Bids
-                    </PrimaryButton>
-
-                    {productDetail.status !== 'HAS BIDS' && (
-                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                            <PinkButton
-                                sx={{ width: '100%', height: 40 }}
-                                onClick={() => {
-                                    if (signInDlgState.isLoggedIn) {
-                                        setDialogState({
-                                            ...dialogState,
-                                            cancelSaleDlgOpened: true,
-                                            cancelSaleDlgStep: 0,
-                                            cancelSaleOrderId: productDetail.orderId || '',
-                                        });
-                                    } else {
-                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                    }
-                                }}
-                            >
-                                Cancel Sale
-                            </PinkButton>
-                            <SecondaryButton
-                                sx={{ width: '100%', height: 40 }}
-                                onClick={() => {
-                                    if (signInDlgState.isLoggedIn) {
-                                        setDialogState({
-                                            ...dialogState,
-                                            changePriceDlgOpened: true,
-                                            changePriceDlgStep: 0,
-                                            changePriceCurPrice: productDetail.price_ela,
-                                            changePriceOrderId: productDetail.orderId || '',
-                                        });
-                                    } else {
-                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                    }
-                                }}
-                            >
-                                Change Price
-                            </SecondaryButton>
-                        </Stack>
+                    {productDetail.status === 'HAS BIDS' && (
+                        <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={() => setViewBidDlgOpened(true)}>
+                            View Bids
+                        </PrimaryButton>
                     )}
+                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                        <PinkButton
+                            disabled={productDetail.status === 'HAS BIDS'}
+                            sx={{ width: '100%', height: 40 }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        cancelSaleDlgOpened: true,
+                                        cancelSaleDlgStep: 0,
+                                        cancelSaleOrderId: productDetail.orderId || '',
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            Cancel Sale
+                        </PinkButton>
+                        <SecondaryButton
+                            disabled={productDetail.status === 'HAS BIDS'}
+                            sx={{ width: '100%', height: 40 }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn) {
+                                    setDialogState({
+                                        ...dialogState,
+                                        changePriceDlgOpened: true,
+                                        changePriceDlgStep: 0,
+                                        changePriceCurPrice: productDetail.price_ela,
+                                        changePriceOrderId: productDetail.orderId || '',
+                                    });
+                                } else {
+                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                }
+                            }}
+                        >
+                            Change Price
+                        </SecondaryButton>
+                    </Stack>
                     {productDetail.isExpired && (
                         <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                             <SecondaryButton

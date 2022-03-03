@@ -313,11 +313,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        setProductDetail((prevState: TypeProduct) => {
-                            const prodDetail: TypeProduct = { ...prevState };
-                            prodDetail.views += 1;
-                            return prodDetail;
-                        });
+                        // setProductDetail((prevState: TypeProduct) => {
+                        //     const prodDetail: TypeProduct = { ...prevState };
+                        //     // prodDetail.views += 1;
+                        //     return prodDetail;
+                        // });
                     } else {
                         console.log(data);
                     }
