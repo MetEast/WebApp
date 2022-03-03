@@ -44,6 +44,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { TypeSelectItem } from 'src/types/select-types';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
+import Container from 'src/components/Container';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -333,7 +334,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId]);
     
     return (
-        <>
+        <Container>
             <ProductPageHeader />
             <Grid container marginTop={6} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -525,7 +526,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
                 />
             </ModalDialog>
-        </>
+        </Container>
     );
 };
 

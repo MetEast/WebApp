@@ -16,7 +16,10 @@ const Layout: React.FC = ({ children }): JSX.Element => {
     return (
         <>
             <SignInDlgContainer />
-            <ProgressBar isFinished={(dialogState.mintProgress === 0 || dialogState.mintProgress === 100)} progress={ dialogState.mintProgress } />
+            <ProgressBar
+                isFinished={dialogState.mintProgress === 0 || dialogState.mintProgress === 100}
+                progress={dialogState.mintProgress}
+            />
             <Box
                 sx={{
                     width: '100%',
@@ -33,8 +36,8 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                 </Container>
             </Box>
             <Box paddingTop={{ xs: 4, sm: 12 }} paddingBottom={{ xs: 9, sm: 2 }}>
+                {children}
                 <Container>
-                    {children}
                     <Footer marginTop={5} />
                 </Container>
             </Box>

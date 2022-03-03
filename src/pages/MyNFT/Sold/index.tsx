@@ -38,6 +38,7 @@ import { useCookies } from 'react-cookie';
 import { TypeSelectItem } from 'src/types/select-types';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
+import Container from 'src/components/Container';
 
 const MyNFTSold: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -79,7 +80,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         price: 0,
         time: '',
         saleType: enumTransactionType.ForSale,
-        txHash: ''
+        txHash: '',
     };
 
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
@@ -240,7 +241,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     };
 
     return (
-        <>
+        <Container>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>
@@ -300,7 +301,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
                 />
             </ModalDialog>
-        </>
+        </Container>
     );
 };
 
