@@ -389,7 +389,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
-    const [userAvatarURL, setUserAvatarURL] = useState<string>(userInfo.avatar);
+    const [userAvatarURL, setUserAvatarURL] = useState<string>(getImageFromAsset(userInfo.avatar));
 
     useEffect(() => {
         if (signInDlgState.isLoggedIn) {
@@ -408,6 +408,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                               canManageAdmins: false,
                           }
                         : jwtDecode(tokenCookies.METEAST_TOKEN);
+                console.log(userInfo, '=====================');
                 setUserAvatarURL(userInfo.avatar);
             }
         }
@@ -532,7 +533,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Stack alignItems="center" marginTop={{ sm: -29, md: -7 }}>
                     <Stack alignItems="center">
                         <Typography fontSize={{ xs: 32, sm: 56 }} fontWeight={700}>
-                            {userInfo.name}
+                            {userInfo.name === '' ? reduceHexAddress(signInDlgState.walletAccounts[0], 4) : userInfo.name}
                         </Typography>
                         {/* <SecondaryButton sx={{ minWidth: 50, height: 50 }}>
                             <Icon icon="ci:settings-future" fontSize={24} color="black" />
@@ -563,8 +564,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         textAlign="center"
                         marginTop={1}
                     >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim
+                        {userInfo.description}
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3.5}>
                         <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'flex', sm: 'none' } }}>

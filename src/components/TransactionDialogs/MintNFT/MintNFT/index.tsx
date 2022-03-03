@@ -14,7 +14,6 @@ import Select from 'src/components/Select';
 import { useStyles, SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { mintNFTCategoryOptions } from 'src/constants/select-constants';
-import { NumberRow20Filled } from '@fluentui/react-icons';
 
 export interface ComponentProps {}
 
@@ -28,8 +27,8 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [titleError, setTitleError] = useState(false);
     const [introduction, setIntroduction] = useState<string>('');
     const [introductionError, setIntroductionError] = useState(false);
-    const [author, setAuthor] = useState<string>('');
-    const [authorError, setAutorError] = useState(false);
+    // const [author, setAuthor] = useState<string>('');
+    // const [authorError, setAutorError] = useState(false);
     const [mintFile, setMintFile] = useState<File>();
     const [mintFileError, setMintFileError] = useState(false);
     const [stateFile, setStateFile] = useState(null);
@@ -174,7 +173,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             setDialogState({
                                 ...dialogState,
                                 mintTitle: '',
-                                mintAuthor: '',
+                                // mintAuthor: '',
                                 mintIntroduction: '',
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
@@ -205,7 +204,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 setDialogState({
                                     ...dialogState,
                                     mintTitle: title,
-                                    mintAuthor: author,
+                                    // mintAuthor: author,
                                     mintIntroduction: introduction,
                                     mintCategory: category || { label: '', value: '' },
                                     mintFile: mintFile,
@@ -216,7 +215,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             } else {
                                 setTitleError(title === '');
                                 setIntroductionError(introduction === '');
-                                setAutorError(author === '');
+                                // setAutorError(author === '');
                                 setRoyaltiesError(royalties <= 0 || royalties >= 100);
                                 setCategoryError(category === undefined);
                                 setMintFileError(mintFile === undefined);

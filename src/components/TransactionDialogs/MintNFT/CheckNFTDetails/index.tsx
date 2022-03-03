@@ -45,7 +45,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                   canManageAdmins: false,
               }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
-    const { did, name } = userInfo;
+    const { did, name, description } = userInfo;
 
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
@@ -157,7 +157,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 description: dialogState.mintIntroduction,
                 creator: {
                     did: did,
-                    description: dialogState.mintAuthor,
+                    description: description,
                     name: name,
                 },
                 data: {
@@ -184,7 +184,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             // create the metadata object we'll be storing
             const didObj = {
                 did: did,
-                description: dialogState.mintAuthor,
+                description: description,
                 name: name,
             };
             try {
@@ -310,7 +310,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 setDialogState({
                                     ...dialogState,
                                     mintTitle: '',
-                                    mintAuthor: '',
+                                    // mintAuthor: '',
                                     mintIntroduction: '',
                                     mintCategory: { label: '', value: '' },
                                     mintFile: new File([''], ''),

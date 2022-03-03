@@ -101,7 +101,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
 
-    const burnAddress = '0x0000000000000000000000000000000000000000';
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();

@@ -7,7 +7,7 @@ interface State {
     createNFTDlgStep: number;
     mintCategory: TypeSelectItem;
     mintTitle: string;
-    mintAuthor: string;
+    // mintAuthor: string;
     mintIntroduction: string;
     mintFile?: File;
     mintRoyalties: number;
@@ -124,7 +124,7 @@ const defaultState: State = {
     mintTitle: '',
     mintCategory: { label: '', value: '' },
     mintIntroduction: '',
-    mintAuthor: '',
+    // mintAuthor: '',
     mintRoyalties: 0,
     mintTokenId: '',
     mintTokenUri: '',

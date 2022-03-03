@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, Box, Grid, Typography } from '@mui/material';
+import { Stack, Box, Grid, Typography, Button } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
@@ -61,18 +61,20 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Edit Profile</DialogTitleTypo>
             </Stack>
             <Stack spacing={2}>
-                <ProfileImageWrapper>
+                <ProfileImageWrapper onClick={() => {}}>
                     {userAvatarURL !== '' ? (
                         <ProfileImage src={userAvatarURL} />
                     ) : (
                         <Icon icon="ph:user" fontSize={40} color="#1890FF" />
                     )}
-                    <Stack className="hover_box_container">
-                        <Icon icon="ph:pencil-simple" fontSize={14} color="white" />
-                        <Typography fontSize={14} fontWeight={700} color="white">
-                            Edit
-                        </Typography>
-                    </Stack>
+                    <Box className="hover_box_container" onClick={() => {}}>
+                        <Stack sx={{ alignItems: 'center' }}>
+                            <Icon icon="ph:pencil-simple" fontSize={14} color="white" />
+                            <Stack fontSize={14} fontWeight={700} color="white">
+                                Edit
+                            </Stack>
+                        </Stack>
+                    </Box>
                 </ProfileImageWrapper>
                 <CustomTextField
                     title="Author name"

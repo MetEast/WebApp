@@ -5,7 +5,6 @@ import 'swiper/swiper-bundle.css';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
-import FilterModal from 'src/components/modals/FilterModal';
 import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import {
