@@ -10,7 +10,7 @@ import { filterOptions } from 'src/constants/filter-constants';
 import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
 import { TypeSelectItem } from 'src/types/select-types';
-import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage } from './styles';
+import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, NotificationTypo } from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -535,13 +535,31 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </Stack>
                 </Stack>
                 <Stack alignItems="center" marginTop={{ sm: -29, md: -7 }}>
-                    <Stack direction="row" alignItems="center" spacing={2}>
+                    <Stack alignItems="center">
                         <Typography fontSize={{ xs: 32, sm: 56 }} fontWeight={700}>
                             Mary S. Megmore
                         </Typography>
                         {/* <SecondaryButton sx={{ minWidth: 50, height: 50 }}>
                             <Icon icon="ci:settings-future" fontSize={24} color="black" />
                         </SecondaryButton> */}
+                        <SecondaryButton
+                            sx={{
+                                height: 32,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                borderRadius: 2,
+                                textTransform: 'none',
+                                display: { xs: 'flex', sm: 'none' },
+                            }}
+                        >
+                            <Icon
+                                icon="ph:user"
+                                fontSize={16}
+                                color="#1890FF"
+                                style={{ marginBottom: 1, marginRight: 4 }}
+                            />
+                            Admin
+                        </SecondaryButton>
                     </Stack>
                     <Typography
                         width={{ xs: '90%', sm: '80%', md: '60%' }}
@@ -554,6 +572,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         labore et dolore magna aliqua. Ut enim ad minim
                     </Typography>
                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3.5}>
+                        <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'flex', sm: 'none' } }}>
+                            <Icon icon="ph:chat-circle" fontSize={20} color="black" />
+                            <NotificationTypo>2</NotificationTypo>
+                        </SecondaryButton>
                         <PrimaryButton
                             size={matchDownSm ? 'small' : undefined}
                             sx={{ paddingX: { xs: 2, sm: 4 } }}
