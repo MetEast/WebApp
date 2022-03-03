@@ -80,7 +80,7 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
                             Upload Image
                         </Typography>
                     </Stack>
-                )}
+                )}  
             </DropZoneStyle>
 
             {/* {fileRejections.length > 0 && <ShowRejectionItems />} */}

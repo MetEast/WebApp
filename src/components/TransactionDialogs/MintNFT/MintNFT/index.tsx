@@ -136,7 +136,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 onDrop={handleFileChange}
                                 sx={{
                                     width: '100%',
-                                    height: '100%',
+                                    height: { xs: '240px', sm: '100%' },
                                     // justifyContent: 'center',
                                     // alignItems: 'center',
                                     marginTop: '1rem',
@@ -227,7 +227,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             }
                         }}
                     >
-                        Next
+                        Confirm
                     </PrimaryButton>
                 </Stack>
                 <WarningTypo width={260}>
