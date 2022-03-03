@@ -163,6 +163,16 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         setProductDetail(product);
     };
 
+    const getFetchData = async () => {
+        let ela_usd_rate = await getELA2USD();
+        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        getProductDetail(ela_usd_rate, favouritesList);
+    };
+
+    useEffect(() => {
+        getFetchData();
+    }, []);
+
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
@@ -248,6 +258,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         setProdTransHistory(_prodTransHistory);
     };
 
+    useEffect(() => {
+        getLatestTransaction();
+    }, [transactionSortBy]);
+
     const getLatestBid = async () => {
         const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
         const resLatestBid = await fetch(
@@ -288,21 +302,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         // }
         // setMyBidsList(_myLatestBidsList);
     };
-
-    const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
-    };
-
-    useEffect(() => {
-        getFetchData();
-    }, []);
-
-    useEffect(() => {
-        getLatestTransaction();
-    }, [transactionSortBy]);
-
+    
     useEffect(() => {
         getLatestBid();
     }, [bidSortBy]);

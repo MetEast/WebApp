@@ -156,7 +156,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
                 token: tokenCookies.METEAST_TOKEN,
-                tokenId: tokenId,
+                blindBoxId: tokenId,
                 did: didCookies.METEAST_DID,
             };
             fetch(reqUrl, {
@@ -169,11 +169,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        setBlindBoxDetail((prevState: TypeProduct) => {
-                            const blindDetail: TypeProduct = { ...prevState };
-                            blindDetail.views += 1;
-                            return blindDetail;
-                        });
+                        // setBlindBoxDetail((prevState: TypeProduct) => {
+                        //     const blindDetail: TypeProduct = { ...prevState };
+                        //     blindDetail.views += 1;
+                        //     return blindDetail;
+                        // });
                     } else {
                         console.log(data);
                     }

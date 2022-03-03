@@ -33,12 +33,18 @@ import {
 } from 'src/types/product-types';
 import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 import { useCookies } from 'react-cookie';
+import { TypeSelectItem } from 'src/types/select-types';
+import ModalDialog from 'src/components/ModalDialog';
+import AllTransactions from 'src/components/profile/AllTransactions';
 
 const MyNFTSold: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [signInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
+    const [dialogState, setDialogState] = useDialogContext();
+
     const defaultValue: TypeProduct = {
         tokenId: '',
         name: '',
@@ -79,7 +85,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const burnAddress = '0x0000000000000000000000000000000000000000';
+    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
 
     const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
         const resProductDetail = await fetch(
@@ -120,6 +126,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             product.holder = itemObject.holder;
             product.tokenIdHex = itemObject.tokenIdHex;
             product.royalties = parseInt(itemObject.royalties) / 1e4;
+            product.category = itemObject.category;
             let createTime = getUTCTime(itemObject.createTime);
             product.createTime = createTime.date + '' + createTime.time;
         }
@@ -212,12 +219,15 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         let ela_usd_rate = await getELA2USD();
         let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
         getProductDetail(ela_usd_rate, favouritesList);
-        getLatestTransaction();
     };
 
     useEffect(() => {
         getFetchData();
     }, []);
+
+    useEffect(() => {
+        getLatestTransaction();
+    }, [transactionSortBy]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -279,6 +289,17 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
             </Grid>
+            <ModalDialog
+                open={dialogState.allTxDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allTxDlgOpened: false });
+                }}
+            >
+                <AllTransactions
+                    transactionList={transactionsList}
+                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
+                />
+            </ModalDialog>
         </>
     );
 };
