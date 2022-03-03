@@ -371,7 +371,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) {
             setIsLikedInfoChanged(!isLikedInfoChanged);
         } else {
-            let prodList: Array<TypeProduct> = myNFTList[id];
+            const prodList: Array<TypeProduct> = myNFTList[getSelectedTabIndex()];
             let likedList: Array<TypeProduct> = myNFTList[5];
             if (type === 'inc') {
                 prodList[id].likes += 1;

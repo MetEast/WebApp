@@ -26,8 +26,8 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
     const [likeState, setLikeState] = useState<boolean>(product.isLike);
 
     const changeLikeState = (event: React.MouseEvent) => {
-        event.preventDefault(); //
-        event.stopPropagation(); //
+        event.preventDefault();
+        event.stopPropagation();
         if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
