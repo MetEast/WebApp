@@ -4,15 +4,15 @@ import TopNavbar from '../Navbar/TopNavbar';
 import BottomNavbar from '../Navbar/BottomNavbar';
 import Footer from '../Footer';
 import Container from '../Container';
-import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import SignInDlgContainer from '../SignInDialog';
 import ProgressBar from '../ProgressBar';
 import { useDialogContext } from 'src/context/DialogContext';
+import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';
+import ManageProfileDlgContainer from '../ManageProfile';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
     const [dialogState] = useDialogContext();
-
     return (
         <>
             <SignInDlgContainer />
@@ -54,6 +54,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
             </Box>
             <MintNFTDlgContainer />
             <CreateBlindBoxDlgContainer />
+            <ManageProfileDlgContainer />
         </>
     );
 };

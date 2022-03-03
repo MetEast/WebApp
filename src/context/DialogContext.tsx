@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext } from 'react';
 import { TypeSelectItem } from 'src/types/select-types';
 
 interface State {
+    // manage profile
+    manageProfileDlgOpened: boolean;
     // mint nft
     createNFTDlgOpened: boolean;
     createNFTDlgStep: number;
@@ -118,6 +120,8 @@ interface State {
 }
 
 const defaultState: State = {
+    // manage profile
+    manageProfileDlgOpened: false,
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
