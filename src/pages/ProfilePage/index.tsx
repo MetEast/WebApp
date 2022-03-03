@@ -82,7 +82,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         price: 0,
         badge: enumBadgeType.Other,
     };
-    const [isLikedInfoChanged, setIsLikedInfoChanged] = useState<boolean>(false);
+    const [reload, setReload] = useState<boolean>(false);
 
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
@@ -199,7 +199,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         const arrSearchResult = jsonAssets.data === undefined ? [] : jsonAssets.data.result;
 
                         let _myNftList: any = [];
-                        for (let j = 0; j < arrSearchResult.length; j ++) {
+                        for (let j = 0; j < arrSearchResult.length; j++) {
                             const itemObject: TypeProductFetch = arrSearchResult[j];
                             let product: TypeProduct = { ...defaultValue };
                             product.tokenId = itemObject.tokenId;
@@ -207,7 +207,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             product.image = getImageFromAsset(itemObject.asset);
                             product.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
                             product.price_usd = product.price_ela * tokenPriceRate;
-                            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+                            product.author =
+                                itemObject.authorName === ''
+                                    ? reduceHexAddress(itemObject.royaltyOwner, 4)
+                                    : itemObject.authorName;
                             if (i === 0 || i === 5) {
                                 // all = owned + sold
                                 if (itemObject.status === 'NEW') {
@@ -219,12 +222,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
                                         product.type = enumMyNFTType.Purchased;
                                 } else {
-                                    if (itemObject.holder !== signInDlgState.walletAccounts[0]) product.type = enumMyNFTType.Sold;
+                                    if (itemObject.holder !== signInDlgState.walletAccounts[0])
+                                        product.type = enumMyNFTType.Sold;
                                     else if (itemObject.royaltyOwner !== signInDlgState.walletAccounts[0])
                                         product.type = enumMyNFTType.Purchased;
                                     else
-                                    product.type =
-                                        itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                                        product.type =
+                                            itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
                                 }
                             } else if (i === 1) {
                                 // owned = purchased + created + for sale
@@ -252,9 +256,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             product.likes = itemObject.likes;
                             product.status = itemObject.status;
                             product.isLike =
-                                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                                    selectFromFavourites(value, itemObject.tokenId),
-                                ) === -1
+                                i === 5
+                                    ? true
+                                    : favouritesList.findIndex((value: TypeFavouritesFetch) =>
+                                          selectFromFavourites(value, itemObject.tokenId),
+                                      ) === -1
                                     ? false
                                     : true;
                             _myNftList.push(product);
@@ -281,7 +287,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         keyWord,
         productViewMode,
         // nftGalleryFilterBtnSelected,
-        isLikedInfoChanged,
+        reload,
         signInDlgState,
     ]);
 
@@ -313,7 +319,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const getEarningList = async () => {
         const resEarnedResult = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`,
-            FETCH_CONFIG_JSON
+            FETCH_CONFIG_JSON,
         );
         const dataEarnedResult = await resEarnedResult.json();
         const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
@@ -371,22 +377,29 @@ const ProfilePage: React.FC = (): JSX.Element => {
     // -------------- Views -------------- //
     const updateProductLikes = (id: number, type: string) => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) {
-            setIsLikedInfoChanged(!isLikedInfoChanged);
+            setReload(!reload);
         } else {
-            const prodList: Array<TypeProduct> = myNFTList[getSelectedTabIndex()];
-            let likedList: Array<TypeProduct> = myNFTList[5];
+            const _myNFTList: Array<Array<TypeProduct>> = [...myNFTList];
+            const prodList: Array<TypeProduct> = _myNFTList[getSelectedTabIndex()];
+            const likedList: Array<TypeProduct> = _myNFTList[5];
             if (type === 'inc') {
                 prodList[id].likes += 1;
+                prodList[id].isLike = true;
                 likedList.push(prodList[id]);
             } else if (type === 'dec') {
                 const idx = likedList.indexOf(prodList[id]);
                 likedList.splice(idx, 1);
+                prodList[id].isLike = false;
                 prodList[id].likes -= 1;
             }
             setMyNFTData(id, prodList);
             setMyNFTData(5, likedList);
         }
     };
+
+    useEffect(() => {
+        if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) setReload(!reload);
+    }, [nftGalleryFilterBtnSelected]);
 
     // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
     const [userAvatarURL, setUserAvatarURL] = useState<string>(getImageFromAsset(userInfo.avatar));
@@ -413,6 +426,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             }
         }
     }, [signInDlgState]);
+    console.log('============');
 
     // const [userAvatarFile, setUserAvatarFile] = useState<File>();
     // const [userAvatarStateFile, setUserAvatarStateFile] = useState(null);
@@ -533,7 +547,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Stack alignItems="center" marginTop={{ sm: -29, md: -7 }}>
                     <Stack alignItems="center">
                         <Typography fontSize={{ xs: 32, sm: 56 }} fontWeight={700}>
-                            {userInfo.name === '' ? reduceHexAddress(signInDlgState.walletAccounts[0], 4) : userInfo.name}
+                            {userInfo.name === ''
+                                ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
+                                : userInfo.name}
                         </Typography>
                         {/* <SecondaryButton sx={{ minWidth: 50, height: 50 }}>
                             <Icon icon="ci:settings-future" fontSize={24} color="black" />

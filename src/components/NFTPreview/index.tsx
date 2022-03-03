@@ -60,7 +60,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
             const reqBody = isBlindBox
                 ? {
                       token: tokenCookies.METEAST_TOKEN,
-                      blindBoxId: product.tokenId,
+                      blindBoxIndex: product.tokenId,
                       did: didCookies.METEAST_DID,
                   }
                 : {

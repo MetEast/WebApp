@@ -36,6 +36,16 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
     const [userAvatarURL, setUserAvatarURL] = useState<string>('');
+    const [onProgress, setOnProgress] = useState<boolean>(false);
+    const handleSubmit = () => {
+        setOnProgress(true);
+    };
+
+    // const [images, setImages] = useState<Array<any>>([]);
+    // const onImageChange = (e: any) => {
+    //     setImages([...e.target.files]);
+    // };
+    // const fileInput = React.useRef();
 
     return (
         <Stack
@@ -76,6 +86,14 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         </Stack>
                     </Box>
                 </ProfileImageWrapper>
+                {/* <input type="file" multiple accept="images/*" onChange={onImageChange}></input> */}
+                {/* <div>
+                    <Button variant="contained" color="primary" onClick={() => fileInput.current.click()}>
+                        upload file
+                    </Button>
+
+                    <input ref={fileInput} type="file" style={{ display: 'none' }} />
+                </div> */}
                 <CustomTextField
                     title="Author name"
                     placeholder="Enter your name"
@@ -121,7 +139,9 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 <SecondaryButton fullWidth onClick={onClose} sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Close
                 </SecondaryButton>
-                <PrimaryButton fullWidth>CONFIRM</PrimaryButton>
+                <PrimaryButton fullWidth disabled={onProgress} onClick={handleSubmit}>
+                    CONFIRM
+                </PrimaryButton>
             </Stack>
         </Stack>
     );
