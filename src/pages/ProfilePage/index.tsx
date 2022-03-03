@@ -537,7 +537,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Stack alignItems="center" marginTop={{ sm: -29, md: -7 }}>
                     <Stack alignItems="center">
                         <Typography fontSize={{ xs: 32, sm: 56 }} fontWeight={700}>
-                            Mary S. Megmore
+                            {userInfo.name}
                         </Typography>
                         {/* <SecondaryButton sx={{ minWidth: 50, height: 50 }}>
                             <Icon icon="ci:settings-future" fontSize={24} color="black" />
