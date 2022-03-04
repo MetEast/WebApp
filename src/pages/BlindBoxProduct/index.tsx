@@ -67,7 +67,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
 
     const getBlindBoxDetail = async (tokenPriceRate: number) => {
         const resBlindBoxDetail = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxId=${params.id}`,
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxIndex=${params.id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
