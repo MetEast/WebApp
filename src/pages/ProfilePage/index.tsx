@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid, Typography, Stack } from '@mui/material';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -10,7 +10,6 @@ import { sortOptions } from 'src/constants/select-constants';
 import { nftGalleryFilterBtnTypes, nftGalleryFilterButtons } from 'src/constants/nft-gallery-filter-buttons';
 import { TypeSelectItem } from 'src/types/select-types';
 import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, NotificationTypo } from './styles';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
@@ -109,12 +108,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                   iat: 0,
               }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
-
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
 
     // -------------- Fetch Data -------------- //
     const setLoadingState = (id: number, state: boolean) => {
@@ -483,7 +476,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) setReload(!reload);
     }, [nftGalleryFilterBtnSelected]);
 
-    // const [userAvatarURL, setUserAvatarURL] = useState<string>('/assets/images/avatar-template.png');
     const [userAvatarURL, setUserAvatarURL] = useState<string>(getImageFromAsset(userInfo.avatar));
 
     useEffect(() => {
@@ -510,16 +502,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     return (
         <>
-            <Box>
-                <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
-                    {adBanners.map((item, index) => (
-                        <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
-                                <img src={item} alt="" style={{ minWidth: '100%' }} />
-                            </Box>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+            <Box
+                onClick={() => {}}
+                sx={{ height: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}
+            >
+                {userInfo.avatar !== '' && <img src={userInfo.avatar} alt="" style={{ minWidth: '100%' }} />}
             </Box>
             <Container sx={{ overflow: 'visible' }}>
                 <Stack alignItems="center">

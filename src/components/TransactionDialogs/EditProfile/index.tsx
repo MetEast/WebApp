@@ -161,17 +161,10 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     <Typography fontSize={12} fontWeight={700}>
                         Cover Picture
                     </Typography>
-                    <BannerBox>
-                        <img
-                            src={
-                                userCoverImageURL.preview !== ''
-                                    ? userCoverImageURL.preview
-                                    : '/assets/images/blindbox/blindbox-nft-template1.png'
-                            }
-                            width="100%"
-                            height="100%"
-                            alt=""
-                        />
+                    <BannerBox sx={{ backgroundColor: '#C3C5C8' }}>
+                        {userCoverImageURL.preview !== '' && (
+                            <img src={userCoverImageURL.preview} width="100%" height="100%" alt="" />
+                        )}
                         <Stack
                             className="hover_box_container"
                             direction="row"
