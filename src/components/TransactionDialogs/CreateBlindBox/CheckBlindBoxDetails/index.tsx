@@ -16,12 +16,10 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { create } from 'ipfs-http-client';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
-
-const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
+import { uploadImage2Ipfs } from 'src/services/ipfs';
 
 export interface ComponentProps {}
 
@@ -38,21 +36,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-
-    const sendIpfsImage = (f: File) =>
-        new Promise((resolve, reject) => {
-            const reader = new window.FileReader();
-            reader.readAsArrayBuffer(f);
-            reader.onloadend = async () => {
-                try {
-                    const fileContent = Buffer.from(reader.result as string);
-                    const added = await client.add(fileContent);
-                    resolve({ ...added, type: f.type } as any);
-                } catch (error) {
-                    reject(error);
-                }
-            };
-        });
 
     const uploadBlindBoxInfo = (imgUri: string) =>
         new Promise((resolve, reject) => {
@@ -226,7 +209,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-        sendIpfsImage(dialogState.crtBlindImage)
+        uploadImage2Ipfs(dialogState.crtBlindImage)
             .then((added: any) => {
                 const imgUri = `meteast:image:${added.path}`;
                 return uploadBlindBoxInfo(imgUri);

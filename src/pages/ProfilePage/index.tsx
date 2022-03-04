@@ -105,11 +105,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
-                  email: '',
                   exp: 0,
                   iat: 0,
-                  type: '',
-                  canManageAdmins: false,
               }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
 
@@ -499,34 +496,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
                               name: '',
                               description: '',
                               avatar: '',
-                              email: '',
                               exp: 0,
                               iat: 0,
-                              type: '',
-                              canManageAdmins: false,
                           }
                         : jwtDecode(tokenCookies.METEAST_TOKEN);
                 setUserAvatarURL(userInfo.avatar);
             }
         }
     }, [signInDlgState]);
-
-    // const [userAvatarFile, setUserAvatarFile] = useState<File>();
-    // const [userAvatarStateFile, setUserAvatarStateFile] = useState(null);
-
-    // const handleUserAvatarFileChange = (files: Array<File>) => {
-    //     handleUserAvatarStateFileChange(files);
-    //     if (files !== null && files.length > 0) {
-    //         setUserAvatarFile(files[0]);
-    //     }
-    // };
-
-    // const handleUserAvatarStateFileChange = useCallback((acceptedFiles) => {
-    //     const file = acceptedFiles[0];
-    //     if (file) {
-    //         setUserAvatarStateFile({ ...file, preview: URL.createObjectURL(file) });
-    //     }
-    // }, []);
 
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -553,19 +530,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             <Icon icon="ph:user" fontSize={80} color="#1890FF" />
                         )}
                     </ProfileImageWrapper>
-                    {/* <UserAvatarBox
-                        file={userAvatarStateFile}
-                        onDrop={handleUserAvatarFileChange}
-                        sx={{
-                            width: '180px',
-                            height: '180px',
-                            marginTop: '-90px',
-                            borderRadius: '50%',
-                            background: '#E8F4FF',
-                            overflow: 'hidden',
-                            zIndex: 10,
-                        }}
-                    /> */}
                     <Stack
                         width="100%"
                         direction="row"
@@ -635,9 +599,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
                                     : userInfo.name}
                             </Typography>
-                            {/* <SecondaryButton sx={{ minWidth: 50, height: 50 }}>
-                                <Icon icon="ci:settings-future" fontSize={24} color="black" />
-                            </SecondaryButton> */}
                             <SecondaryButton
                                 sx={{
                                     height: 32,

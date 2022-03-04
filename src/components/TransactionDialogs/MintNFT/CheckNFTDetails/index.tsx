@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { create } from 'ipfs-http-client';
 import { createHash } from 'crypto';
 import { Stack, Box, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
@@ -11,6 +10,7 @@ import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { UserTokenType } from 'src/types/auth-types';
 import { useSnackbar } from 'notistack';
+import { uploadDidUri2Ipfs, uploadImage2Ipfs, uploadMetaData2Ipfs } from 'src/services/ipfs';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
@@ -19,8 +19,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
-
-const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
 export interface ComponentProps {}
 
@@ -38,11 +36,8 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
-                  email: '',
                   exp: 0,
                   iat: 0,
-                  type: '',
-                  canManageAdmins: false,
               }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
     const { did, name, description } = userInfo;
@@ -131,89 +126,32 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         return true;
     };
 
-    const sendIpfsImage = (f: File) =>
-        new Promise((resolve, reject) => {
-            const reader = new window.FileReader();
-            reader.readAsArrayBuffer(f);
-            reader.onloadend = async () => {
-                try {
-                    const fileContent = Buffer.from(reader.result as string);
-                    const added = await client.add(fileContent);
-                    resolve({ ...added, type: f.type } as any);
-                } catch (error) {
-                    reject(error);
-                }
-            };
-        });
-
-    const sendIpfsMetaData = (added: any) =>
-        new Promise((resolve, reject) => {
-            // create the metadata object we'll be storing
-            const metaObj = {
-                version: '1',
-                type: 'image',
-                name: dialogState.mintTitle,
-                description: dialogState.mintIntroduction,
-                creator: {
-                    did: did,
-                    description: description,
-                    name: name,
-                },
-                data: {
-                    image: `meteast:image:${added.path}`,
-                    kind: added.type.replace('image/', ''),
-                    size: added.size,
-                    thumbnail: `meteast:image:${added.path}`,
-                },
-                category: dialogState.mintCategory.value,
-            };
-
-            try {
-                const jsonMetaObj = JSON.stringify(metaObj);
-                // add the metadata itself as well
-                const metaRecv = Promise.resolve(client.add(jsonMetaObj));
-                resolve(metaRecv);
-            } catch (error) {
-                reject(error);
-            }
-        });
-
-    const sendIpfsDidJson = () =>
-        new Promise((resolve, reject) => {
-            // create the metadata object we'll be storing
-            const didObj = {
-                did: did,
-                description: description,
-                name: name,
-            };
-            try {
-                const jsonDidObj = JSON.stringify(didObj);
-                // add the metadata itself as well
-                const didRecv = Promise.resolve(client.add(jsonDidObj));
-                resolve(didRecv);
-            } catch (error) {
-                reject(error);
-            }
-        });
-
     const uploadData = () =>
         new Promise((resolve, reject) => {
             let _id = '';
             let _uri = '';
             let _didUri = '';
             if (!dialogState.mintFile) return;
-            sendIpfsImage(dialogState.mintFile)
+            uploadImage2Ipfs(dialogState.mintFile)
                 .then((added: any) => {
                     // Hash of image path - tokenId
                     _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
                     setDialogState({ ...dialogState, mintProgress: 10 });
-                    return sendIpfsMetaData(added);
+                    return uploadMetaData2Ipfs(
+                        added,
+                        did,
+                        name,
+                        description,
+                        dialogState.mintTitle,
+                        dialogState.mintIntroduction,
+                        dialogState.mintCategory.value,
+                    );
                 })
                 .then((metaRecv: any) => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
                     setDialogState({ ...dialogState, mintProgress: 30 });
-                    return sendIpfsDidJson();
+                    return uploadDidUri2Ipfs(did, name, description);
                 })
                 .then((didRecv: any) => {
                     // didUri

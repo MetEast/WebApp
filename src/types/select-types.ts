@@ -5,5 +5,5 @@ export type TypeSelectItem = {
 
 export type TypeImageFile = {
     preview: string;
-    raw: string;
+    raw: File;
 };

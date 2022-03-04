@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, Box, Grid, Typography, Button } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
@@ -7,10 +7,13 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { UserTokenType } from 'src/types/auth-types';
-import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
+import { getImageFromAsset } from 'src/services/common';
 import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { TypeImageFile } from 'src/types/select-types';
+import { uploadImage2Ipfs } from 'src/services/ipfs';
+import { uploadProfileData } from 'src/services/fetch';
+import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -20,6 +23,8 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const { enqueueSnackbar } = useSnackbar();
+    const [onProgress, setOnProgress] = useState<boolean>(false);
     const userInfo: UserTokenType =
         tokenCookies.METEAST_TOKEN === undefined
             ? {
@@ -27,24 +32,18 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
-                  email: '',
                   exp: 0,
                   iat: 0,
-                  type: '',
-                  canManageAdmins: false,
               }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
-
-    const [onProgress, setOnProgress] = useState<boolean>(false);
-    const handleSubmit = () => {
-        setOnProgress(true);
-    };
-
     const [userAvatarURL, setUserAvatarURL] = useState<TypeImageFile>({
         preview: getImageFromAsset(userInfo.avatar),
-        raw: '',
+        raw: new File([''], ''),
     });
-    const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({ preview: '', raw: '' });
+    const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({ preview: '', raw: new File([''], '') });
+    const [userName, setUserName] = useState<string>(userInfo.name);
+    const [userDescription, setUserDescription] = useState<string>(userInfo.description);
+
     const handleSelectAvatar = (e: any) => {
         if (e.target.files.length) {
             setUserAvatarURL({
@@ -63,18 +62,47 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         }
     };
 
-    const handleUpload = async (e: any) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('image', userAvatarURL.raw);
-
-        await fetch('YOUR_URL', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            body: formData,
-        });
+    const handleSubmit = async () => {
+        setOnProgress(true);
+        let avatarUrl: string = '';
+        uploadImage2Ipfs(userAvatarURL.raw)
+            .then((added: any) => {
+                avatarUrl = added.path;
+                return uploadImage2Ipfs(userCoverImageURL.raw);
+            })
+            .then((added: any) => {
+                alert(1);
+                console.log(
+                    tokenCookies.METEAST_TOKEN,
+                    didCookies.METEAST_DID,
+                    userName,
+                    userDescription,
+                    avatarUrl,
+                    added.path,
+                );
+                // return uploadProfileData(
+                //     tokenCookies.METEAST_TOKEN,
+                //     didCookies.METEAST_DID,
+                //     userName,
+                //     userDescription,
+                //     avatarUrl,
+                //     added.path,
+                // );
+                return true;
+            })
+            .then((success) => {
+                if (!success)
+                    enqueueSnackbar('Error!', {
+                        variant: 'warning',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+            })
+            .catch((error) => {
+                enqueueSnackbar('Error!', {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+            });
     };
 
     return (
@@ -127,8 +155,15 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     placeholder="Enter your name"
                     height={56}
                     sx={{ marginTop: 2.5 }}
+                    changeHandler={(value: string) => setUserName(value)}
                 />
-                <CustomTextField title="About the author" placeholder="Enter author introduction" multiline rows={5} />
+                <CustomTextField
+                    title="About the author"
+                    placeholder="Enter author introduction"
+                    multiline
+                    rows={5}
+                    changeHandler={(value: string) => setUserDescription(value)}
+                />
                 <Stack spacing={1}>
                     <Typography fontSize={12} fontWeight={700}>
                         Cover Picture
@@ -157,7 +192,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 onClick={() =>
                                     setUserCoverImageURL({
                                         preview: '',
-                                        raw: '',
+                                        raw: new File([''], ''),
                                     })
                                 }
                             >

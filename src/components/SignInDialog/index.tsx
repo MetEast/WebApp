@@ -252,7 +252,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         const userInfo: UserTokenType =
             tokenCookies.METEAST_TOKEN === undefined
-                ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
+                ? { did: '', name: '', description: '', avatar: '', exp: 0, iat: 0 }
                 : jwtDecode(tokenCookies.METEAST_TOKEN);
         getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri: string) => {
             setSignInDlgState({ ..._signInState, didUri: didUri });

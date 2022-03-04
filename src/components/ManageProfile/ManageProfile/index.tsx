@@ -7,11 +7,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
-import {
-    enumBadgeType,
-    TypeYourEarning,
-    TypeYourEarningFetch,
-} from 'src/types/product-types';
+import { enumBadgeType, TypeYourEarning, TypeYourEarningFetch } from 'src/types/product-types';
 import { useCookies } from 'react-cookie';
 import { UserTokenType } from 'src/types/auth-types';
 import jwtDecode from 'jwt-decode';
@@ -42,11 +38,8 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
-                  email: '',
                   exp: 0,
                   iat: 0,
-                  type: '',
-                  canManageAdmins: false,
               }
             : jwtDecode(tokenCookies.METEAST_TOKEN);
     const defaultEarningValue: TypeYourEarning = {
