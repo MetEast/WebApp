@@ -154,6 +154,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     placeholder="Enter author introduction"
                     multiline
                     rows={5}
+                    limit={140}
                     changeHandler={(value: string) => setUserDescription(value)}
                 />
                 <Stack spacing={1}>
