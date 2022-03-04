@@ -23,7 +23,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Container alignItems="flex-start">
+        <Container>
             <Typography fontSize={32} fontWeight={700} sx={{ textTransform: 'none' }}>
                 Filters
             </Typography>

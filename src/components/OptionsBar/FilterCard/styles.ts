@@ -8,9 +8,10 @@ export const Container = styled(Stack)`
     border-radius: 40px;
     background: white;
     ${(props) => props.theme.breakpoints.down('sm')} {
-        width: 270px;
+        width: 100%;
         padding: 20px;
-        border-radius: 20px;
+        border-radius: 0;
+        justify-content: center;
     }
 `;
 
