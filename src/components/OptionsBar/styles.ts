@@ -30,7 +30,12 @@ export const FiltersBox = styled(Box)`
     padding-top: 8px;
     z-index: 10;
     ${(props) => props.theme.breakpoints.down('sm')} {
-        right: -80px;
+        width: 100vw;
+        height: 100vh;
+        padding-top: 0;
+        position: fixed;
+        inset: 0;
+        z-index: 30;
     }
 `;
 
