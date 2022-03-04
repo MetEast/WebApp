@@ -31,8 +31,8 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     ...otherProps
 }): JSX.Element => {
     const theme = useTheme();
+    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-    const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
     const onlyShowIcon = matchDownMd ? true : false;
 
     const [sortBySelectOpen, setSortBySelectOpen] = useState(false);
@@ -68,7 +68,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
             />
             <Box
                 position="relative"
-                onMouseEnter={() => setShowFiltersCard(true)}
+                onMouseEnter={matchDownSm ? undefined : () => setShowFiltersCard(true)}
                 onMouseLeave={() => setShowFiltersCard(false)}
             >
                 <FilterButton onClick={() => setShowFiltersCard(!showFiltersCard)}>

@@ -14,6 +14,9 @@ export const FilterButton = styled(Button)`
     font-size: 14px;
     font-weight: 700;
     color: #1890ff;
+    :focus {
+        background: #e8f4ff;
+    }
     ${(props) => props.theme.breakpoints.down('md')} {
         justify-content: center;
         padding: 0;
@@ -43,6 +46,9 @@ export const SortByBtn = styled(Button)<{ isopen: number }>`
     font-size: 14px;
     font-weight: 700;
     color: #1890ff;
+    :focus {
+        background: #e8f4ff;
+    }
     .arrow-icon {
         transform: ${({ isopen }) => (isopen ? 'rotate(-180deg)' : 'rotate(0deg)')};
         transition: transform 200ms linear;
@@ -55,6 +61,9 @@ export const SortByBtn = styled(Button)<{ isopen: number }>`
 
 export const GridButton = styled(BaseButton)<{ selected: boolean }>`
     min-width: 40px;
-    color: ${({ selected }) => (selected ? 'white' : '#1890FF')};
-    background: ${({ selected }) => (selected ? '#1890FF' : '#E8F4FF')};
+    color: ${({ selected }) => (selected ? 'white' : '#1890ff')};
+    background: ${({ selected }) => (selected ? '#1890ff' : '#e8f4ff')};
+    :focus {
+        background: #1890ff;
+    }
 `;
