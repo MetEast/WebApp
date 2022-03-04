@@ -83,18 +83,15 @@ interface State {
     createBlindBoxDlgStep: number;
     crtBlindTitle: string;
     crtBlindDescription: string;
-    crtBlindAuthorDescription: string;
     crtBlindImage?: File;
     crtBlindTokenIds: string;
+    crtBlindTokenNames: string;
     crtBlindStatus: 'offline' | 'online';
     crtBlindQuantity: number;
     crtBlindPrice: number;
     crtBlindSaleBegin: string;
     crtBlindSaleEnd: string;
-    crtBlindLikes: number;
-    crtBlindViews: number;
     crtBlindPurchases: number;
-    crtBlindSort: TypeSelectItem;
     crtBlindTxFee: number;
     crtBlindTxHash: string;
     // buy blind box
@@ -200,17 +197,14 @@ const defaultState: State = {
     createBlindBoxDlgStep: 0,
     crtBlindTitle: '',
     crtBlindDescription: '',
-    crtBlindAuthorDescription: '',
     crtBlindTokenIds: '',
+    crtBlindTokenNames: '',
     crtBlindStatus: 'offline',
     crtBlindQuantity: 0,
     crtBlindPrice: 0,
     crtBlindSaleBegin: '',
     crtBlindSaleEnd: '',
-    crtBlindLikes: 0,
-    crtBlindViews: 0,
     crtBlindPurchases: 0,
-    crtBlindSort: { label: '', value: '' },
     crtBlindTxFee: 0,
     crtBlindTxHash: '',
     // buy blind box

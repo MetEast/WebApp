@@ -32,6 +32,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [didCookies] = useCookies(['METEAST_DID']);
     const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
+    const [onProgress, setOnProgress] = useState<boolean>(false);
+
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -59,7 +61,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             formData.append('did', didCookies.METEAST_DID);
             formData.append('name', dialogState.crtBlindTitle);
             formData.append('description', dialogState.crtBlindDescription);
-            formData.append('authorDescription', dialogState.crtBlindAuthorDescription);
             formData.append('asset', imgUri);
             formData.append('tokenIds', dialogState.crtBlindTokenIds);
             formData.append('status', dialogState.crtBlindStatus);
@@ -67,10 +68,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             formData.append('blindPrice', dialogState.crtBlindPrice.toString());
             formData.append('saleBegin', (new Date(dialogState.crtBlindSaleBegin).getTime() / 1e3).toString());
             formData.append('saleEnd', (new Date(dialogState.crtBlindSaleEnd).getTime() / 1e3).toString());
-            formData.append('maxLikes', dialogState.crtBlindLikes.toString());
-            formData.append('maxViews', dialogState.crtBlindViews.toString());
             formData.append('maxPurchases', dialogState.crtBlindPurchases.toString());
-            formData.append('sort', dialogState.crtBlindSort.value);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data',
@@ -82,6 +80,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     if (response.data.code === 200) {
                         resolve(true);
                     } else resolve(false);
+                }).catch((e) => {
+                    reject(e);
                 });
         });
 
@@ -182,7 +182,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .on('receipt', (receipt: any) => {
                 console.log('receipt', receipt);
-                enqueueSnackbar('Order for sale succeed!', {
+                enqueueSnackbar('Create Blind Box succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
@@ -192,16 +192,18 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     createBlindBoxDlgOpened: true,
                     createBlindBoxDlgStep: 2,
                 });
+                setOnProgress(false);
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
-                enqueueSnackbar('Order for sale error!', {
+                enqueueSnackbar('Create Blind Box error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setLoadingDlgOpened(false);
                 clearTimeout(timer);
                 setDialogState({ ...dialogState, createBlindBoxDlgOpened: false, errorMessageDlgOpened: true });
+                setOnProgress(false);
             });
     };
 
@@ -223,6 +225,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             });
             return;
         }
+        setOnProgress(true);
         sendIpfsImage(dialogState.crtBlindImage)
             .then((added: any) => {
                 const imgUri = `meteast:image:${added.path}`;
@@ -249,6 +252,18 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             });
+    };
+
+    const displayItemNames = (names: string) => {
+        let ret: string = '';
+        if (names !== undefined) {
+            const itemNameList: string[] = names.split(';').filter((value: string) => value.length > 0);
+            itemNameList.forEach((item: string) => {
+                ret += `${item}, `;
+            });
+            return ret.slice(0, ret.length - 2);
+        }
+        else return ret;
     };
 
     const classes = useStyles();
@@ -315,15 +330,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             {dialogState.crtBlindDescription}
                         </DetailedInfoLabelTypo>
                     </InfoItemWrapper>
-                    {/* <InfoItemWrapper>
-                        <DetailedInfoTitleTypo>Author Description</DetailedInfoTitleTypo>
-                        <DetailedInfoLabelTypo textAlign="right">
-                            {dialogState.crtBlindAuthorDescription}
-                        </DetailedInfoLabelTypo>
-                    </InfoItemWrapper> */}
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Items</DetailedInfoTitleTypo>
-                        <DetailedInfoLabelTypo textAlign="right">{dialogState.crtBlindTokenIds}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo textAlign="right">
+                            {displayItemNames(dialogState.crtBlindTokenNames)}
+                        </DetailedInfoLabelTypo>
                     </InfoItemWrapper>
                 </Stack>
                 <Stack alignItems="center" spacing={1}>
@@ -339,7 +350,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     createBlindBoxDlgStep: 0,
                                     crtBlindTitle: '',
                                     crtBlindDescription: '',
-                                    crtBlindAuthorDescription: '',
                                     crtBlindImage: new File([''], ''),
                                     crtBlindTokenIds: '',
                                     crtBlindStatus: 'offline',
@@ -347,16 +357,13 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     crtBlindPrice: 0,
                                     crtBlindSaleBegin: '',
                                     crtBlindSaleEnd: '',
-                                    crtBlindLikes: 0,
-                                    crtBlindViews: 0,
                                     crtBlindPurchases: 0,
-                                    crtBlindSort: { label: '', value: '' },
                                 });
                             }}
                         >
                             Back
                         </SecondaryButton>
-                        <PrimaryButton fullWidth onClick={handleCreateBlindBox}>
+                        <PrimaryButton fullWidth disabled={onProgress} onClick={handleCreateBlindBox}>
                             Confirm
                         </PrimaryButton>
                     </Stack>

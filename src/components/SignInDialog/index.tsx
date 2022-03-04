@@ -267,16 +267,16 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 else if (signInDlgState.loginType === '2') signOutWithWallet();
             } else if (signInDlgState.disconnectWallet) {
                 if (signInDlgState.loginType === '1') disconnectEssentials();
-                else if (signInDlgState.loginType === '2') signOutWithWallet();
+                else if (signInDlgState.loginType === '2') disconnectWallet();
             }
         }
     }, [signInDlgState.signOut, signInDlgState.disconnectWallet]);
 
-    // useEffect(() => {
-    //     console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
-    //     // alert(signInDlgState.walletAccounts);
-    //     // alert(signInDlgState.walletBalance);
-    // }, [signInDlgState]);
+    useEffect(() => {
+        console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
+        // alert(signInDlgState.walletAccounts);
+        // alert(signInDlgState.walletBalance);
+    }, [signInDlgState]);
 
     if (linkType === '1') initConnectivitySDK();
 
@@ -306,11 +306,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     DID.simpleIdClaim('Your avatar', 'avatar', false),
                 ],
             });
-            // _setSignInState((prevState: SignInState) => {
-            //     const _state = { ...prevState };
-            //     _state.signInDlgOpened = true;
-            //     return _state;
-            // });
         } catch (e) {
             console.warn('Error while getting credentials', e);
             try {

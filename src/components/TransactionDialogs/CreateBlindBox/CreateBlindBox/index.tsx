@@ -1,14 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-import { useStyles, SelectBtn, DateTimeInput } from './styles';
+import { useStyles, DateTimeInput } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import WarningTypo from '../../components/WarningTypo';
-import { Icon } from '@iconify/react';
-import { TypeSelectItem } from 'src/types/select-types';
 import ELAPriceInput from '../../components/ELAPriceInput';
-import Select from 'src/components/Select';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
@@ -24,67 +21,17 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const classes = useStyles();
 
-    const blindboxItemsOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Item1',
-            value: 'Item1',
-        },
-        {
-            label: 'Item2',
-            value: 'Item2',
-        },
-        {
-            label: 'Item3',
-            value: 'Item3',
-        },
-    ];
-
-    const sortOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Sort Option 1',
-            value: 'Sort Option 1',
-        },
-        {
-            label: 'Sort Option 2',
-            value: 'Sort Option 2',
-        },
-        {
-            label: 'Sort Option 3',
-            value: 'Sort Option 3',
-        },
-    ];
-
     const [blindboxTitle, setBlindboxTitle] = useState<string>('');
     const [blindboxDescription, setBlindboxDescription] = useState<string>('');
-    const [blindboxAuthorDes, setBlindboxAuthorDesc] = useState<string>('');
     const [blindboxImage, setBlindboxImage] = useState<File>();
     const [stateFile, setStateFile] = useState(null);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [blindboxQuantity, setBlindboxQuantity] = useState<number>(0);
     const [blindboxPrice, setBlindboxPrice] = useState<number>(0);
-    const [blindboxLikes, setBlindboxLikes] = useState<number>(0);
-    const [blindboxViews, setBlindboxViews] = useState<number>(0);
     const [blindboxPurchases, setBlindboxPurchases] = useState<number>(0);
-
-    const [blindboxItem, setBlindboxItem] = useState<TypeSelectItem>();
-    // const [blindboxItemSelectOpen, setBlindboxItemSelectOpen] = useState(false);
-
     const [saleBegins, setSaleBegins] = React.useState<string>('');
     const [saleEnds, setSaleEnds] = useState<string>('');
-
-    const [sort, setSort] = useState<TypeSelectItem>();
-    const [sortSelectOpen, setSortSelectOpen] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
-
-    // const handleBlindboxItemChange = (value: string) => {
-    //     const item = blindboxItemsOptions.find((option) => option.value === value);
-    //     setBlindboxItem(item);
-    // };
-
-    const handleSortChange = (value: string) => {
-        const item = sortOptions.find((option) => option.value === value);
-        setSort(item);
-    };
 
     const handleFileChange = (files: Array<File>) => {
         handleDropSingleFile(files);
@@ -101,10 +48,10 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     }, []);
 
     useEffect(() => {
-        let tokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
+        const tokenIds: string[] = dialogState.crtBlindTokenIds.split(';').filter((item: string) => item.length > 0); 
         setBlindboxQuantity(tokenIds.length);
     }, [dialogState.crtBlindTokenIds]);
-
+    
     return (
         <>
             <Stack
@@ -133,13 +80,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 rows={3}
                                 changeHandler={(value: string) => setBlindboxDescription(value)}
                             />
-                            {/* <CustomTextField
-                                title="Author Description"
-                                placeholder="Is WYSIWYG is needed here?"
-                                multiline
-                                rows={3}
-                                changeHandler={(value: string) => setBlindboxAuthorDesc(value)}
-                            /> */}
                             <Stack height="100%" spacing={1}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Blind Box Main Image
@@ -236,41 +176,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     }}
                                 ></DateTimeInput>
                             </Stack>
-                            {/* <CustomTextField
-                                title="Number of favourites"
-                                placeholder="es. 1000"
-                                number={true}
-                                changeHandler={(value: string) => setBlindboxLikes(parseInt(value))}
-                            />
-                            <CustomTextField
-                                title="Number of Views"
-                                placeholder="es. 1000"
-                                number={true}
-                                changeHandler={(value: string) => setBlindboxViews(parseInt(value))}
-                            />
-                            <Stack spacing={0.5}>
-                                <Typography fontSize={12} fontWeight={700}>
-                                    Sort
-                                </Typography>
-                                <Select
-                                    titlebox={
-                                        <SelectBtn
-                                            fullWidth
-                                            isopen={sortSelectOpen ? 1 : 0}
-                                            sx={{ justifyContent: 'space-between' }}
-                                        >
-                                            <Icon icon="ph:sort-ascending" fontSize={20} />
-                                            {sort ? sort.label : 'Select'}
-                                            <Icon icon="ph:caret-down" className="arrow-icon" />
-                                        </SelectBtn>
-                                    }
-                                    selectedItem={sort}
-                                    options={sortOptions}
-                                    isOpen={sortSelectOpen ? 1 : 0}
-                                    setIsOpen={setSortSelectOpen}
-                                    handleClick={handleSortChange}
-                                />
-                            </Stack> */}
                         </Grid>
                     </Grid>
                 </Box>
@@ -294,34 +199,25 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     dialogState.crtBlindTokenIds !== '' &&
                                     blindboxTitle !== '' &&
                                     blindboxDescription !== '' &&
-                                    blindboxAuthorDes !== '' &&
                                     blindboxImage !== null &&
-                                    blindboxItem?.value !== '' &&
                                     blindboxQuantity > 0 &&
                                     blindboxPrice > 0 &&
                                     saleBegins !== '' &&
                                     saleEnds !== '' &&
-                                    blindboxLikes > 0 &&
-                                    blindboxViews > 0 &&
-                                    blindboxPurchases > 0 &&
-                                    sort?.value !== ''
+                                    blindboxPurchases > 0
                                 ) {
                                     setDialogState({
                                         ...dialogState,
                                         createBlindBoxDlgStep: 1,
                                         crtBlindTitle: blindboxTitle,
                                         crtBlindDescription: blindboxDescription,
-                                        crtBlindAuthorDescription: blindboxAuthorDes,
                                         crtBlindImage: blindboxImage,
                                         crtBlindStatus: blindboxStatus,
                                         crtBlindQuantity: blindboxQuantity,
                                         crtBlindPrice: blindboxPrice,
                                         crtBlindSaleBegin: saleBegins,
                                         crtBlindSaleEnd: saleEnds,
-                                        crtBlindLikes: blindboxLikes,
-                                        crtBlindViews: blindboxViews,
                                         crtBlindPurchases: blindboxPurchases,
-                                        crtBlindSort: sort || { label: '', value: '' },
                                     });
                                 } else {
                                     enqueueSnackbar('Form validation failed!', {

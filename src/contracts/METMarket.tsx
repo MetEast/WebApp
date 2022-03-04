@@ -6,34 +6,16 @@ export const METEAST_MARKET_CONTRACT_ABI = [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_owner",
+        "name": "_codeAddress",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_approved",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
       }
     ],
-    "name": "Approval",
+    "name": "CodeUpdated",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
       {
         "indexed": true,
         "internalType": "address",
@@ -41,13 +23,31 @@ export const METEAST_MARKET_CONTRACT_ABI = [
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_tokenAddress",
+        "type": "address"
+      },
+      {
         "indexed": false,
-        "internalType": "bool",
-        "name": "_approved",
-        "type": "bool"
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
       }
     ],
-    "name": "ApprovalForAll",
+    "name": "ERC721TokenReceived",
     "type": "event"
   },
   {
@@ -56,11 +56,289 @@ export const METEAST_MARKET_CONTRACT_ABI = [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_codeAddress",
+        "name": "_libraryAddress",
         "type": "address"
       }
     ],
-    "name": "CodeUpdated",
+    "name": "LibraryContract",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderBid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_sellerUri",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_buyerUri",
+        "type": "string"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderDIDURI",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_royaltyOwner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_royaltyFee",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_platformAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_platformFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderFilled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_minPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_endTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderForAuction",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderForSale",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_oldPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_newPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderPriceChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderTakenDown",
     "type": "event"
   },
   {
@@ -83,69 +361,6 @@ export const METEAST_MARKET_CONTRACT_ABI = [
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_fee",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "RoyaltyFee",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "RoyaltyOwner",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "Transfer",
-    "type": "event"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -161,17 +376,188 @@ export const METEAST_MARKET_CONTRACT_ABI = [
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
       },
+      {
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_didUri",
+        "type": "string"
+      }
+    ],
+    "name": "bidForOrder",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_didUri",
+        "type": "string"
+      }
+    ],
+    "name": "buyOrder",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_orderIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "string",
+        "name": "_didUri",
+        "type": "string"
+      }
+    ],
+    "name": "buyOrderBatch",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
+    "name": "changeOrderPrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_endTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_didUri",
+        "type": "string"
       }
     ],
-    "name": "approve",
+    "name": "createOrderForAuction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_didUri",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isBlindBox",
+        "type": "bool"
+      }
+    ],
+    "name": "createOrderForSale",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_tokenIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_quoteTokens",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_prices",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "string",
+        "name": "_didUri",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isBlindBox",
+        "type": "bool"
+      }
+    ],
+    "name": "createOrderForSaleBatch",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -180,11 +566,158 @@ export const METEAST_MARKET_CONTRACT_ABI = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "_owner",
+        "name": "_buyer",
         "type": "address"
       }
     ],
-    "name": "balanceOf",
+    "name": "getBuyerByAddr",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filledCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "joinTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastActionTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.BuyerInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBuyerByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filledCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "joinTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastActionTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.BuyerInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_indexes",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getBuyerByIndexBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filledCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "joinTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastActionTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.BuyerInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBuyerCount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -198,61 +731,583 @@ export const METEAST_MARKET_CONTRACT_ABI = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_id",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
       }
     ],
-    "name": "burn",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "getBuyerFeeInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "paid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royalty",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.BuyerFeeInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "_owner",
+        "name": "_buyer",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_id",
+        "name": "_index",
         "type": "uint256"
       }
     ],
-    "name": "burnFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "decimals",
+    "name": "getBuyerFilledByIndex",
     "outputs": [
       {
-        "internalType": "uint8",
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo",
         "name": "",
-        "type": "uint8"
+        "type": "tuple"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_indexes",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getBuyerFilledByIndexBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "_tokenId",
+        "name": "_index",
         "type": "uint256"
       }
     ],
-    "name": "getApproved",
+    "name": "getBuyerOrderByIndex",
     "outputs": [
       {
-        "internalType": "address",
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo",
         "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_buyer",
         "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_indexes",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getBuyerOrderByIndexBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo[]",
+        "name": "",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -273,6 +1328,19 @@ export const METEAST_MARKET_CONTRACT_ABI = [
   },
   {
     "inputs": [],
+    "name": "getLibraryContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "_libraryAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getMagic",
     "outputs": [
       {
@@ -285,8 +1353,1327 @@ export const METEAST_MARKET_CONTRACT_ABI = [
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOpenOrderByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_indexes",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getOpenOrderByIndexBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "getTradeMarket",
+    "name": "getOpenOrderCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOrderById",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_orderIds",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getOrderByIdBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOrderCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPlatformFee",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "_platformAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_platformFeeRate",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      }
+    ],
+    "name": "getSellerByAddr",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "joinTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastActionTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.SellerInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSellerByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "joinTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastActionTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.SellerInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_indexes",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getSellerByIndexBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "openCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "joinTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastActionTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.SellerInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSellerCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteToken",
+        "type": "address"
+      }
+    ],
+    "name": "getSellerFeeInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "earned",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royalty",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.SellerFeeInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSellerOpenByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_indexes",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getSellerOpenByIndexBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSellerOrderByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_indexes",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getSellerOrderByIndexBatch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "orderId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "orderState",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sellerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyerAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bids",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "lastBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "filled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "sellerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "buyerUri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "platformAddr",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBlindBox",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updateTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMarketDataAndEvents.OrderInfo[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTokenAddress",
     "outputs": [
       {
         "internalType": "address",
@@ -321,7 +2708,7 @@ export const METEAST_MARKET_CONTRACT_ABI = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "_tradeMarket",
+        "name": "_tokenAddress",
         "type": "address"
       }
     ],
@@ -333,30 +2720,6 @@ export const METEAST_MARKET_CONTRACT_ABI = [
   {
     "inputs": [],
     "name": "initialized",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_operator",
-        "type": "address"
-      }
-    ],
-    "name": "isApprovedForAll",
     "outputs": [
       {
         "internalType": "bool",
@@ -408,84 +2771,40 @@ export const METEAST_MARKET_CONTRACT_ABI = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "_uri",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_royaltyFee",
-        "type": "uint256"
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
       }
     ],
-    "name": "mint",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_tokenIds",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "_uris",
-        "type": "string[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_royaltyFees",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "mintBatch",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "name",
+    "name": "onERC721Received",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "bytes4",
         "name": "",
-        "type": "string"
+        "type": "bytes4"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "ownerOf",
     "outputs": [
       {
         "internalType": "address",
@@ -527,191 +2846,6 @@ export const METEAST_MARKET_CONTRACT_ABI = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "royaltyCountOf",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_uri",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_royaltyFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "safeMint",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_tokenIds",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "_uris",
-        "type": "string[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_royaltyFees",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "bytes[]",
-        "name": "_datas",
-        "type": "bytes[]"
-      }
-    ],
-    "name": "safeMintBatch",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "safeTransfer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "safeTransfer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_operator",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "_approved",
-        "type": "bool"
-      }
-    ],
-    "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "_addr",
         "type": "address"
       },
@@ -730,11 +2864,42 @@ export const METEAST_MARKET_CONTRACT_ABI = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "_tradeMarket",
+        "name": "_libraryAddress",
         "type": "address"
       }
     ],
-    "name": "setTradeMarket",
+    "name": "setLibraryContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_platformAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_platformFeeRate",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPlatformFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_orderId",
+        "type": "uint256"
+      }
+    ],
+    "name": "settleAuctionOrder",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -759,258 +2924,14 @@ export const METEAST_MARKET_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "symbol",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_index",
+        "name": "_orderId",
         "type": "uint256"
       }
     ],
-    "name": "tokenByIndex",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenInfo",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenIndex",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "tokenOwner",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "tokenUri",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "royaltyOwner",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "royaltyFee",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "tokenMinter",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "createTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "updateTime",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct INFTInfo.TokenInfo",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_index",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenOfOwnerByIndex",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_index",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenOfRoyaltyOwnerByIndex",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenRoyaltyFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenRoyaltyOwner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenURI",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalSupply",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "transfer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "transferFrom",
+    "name": "takeDownOrder",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
