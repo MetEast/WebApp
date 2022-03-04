@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid, Typography, Checkbox, FormControlLabel } from '@mui/material';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import SearchField from 'src/components/SearchField';
 import { TblHeaderTypo, TblBodyTypo, ImageBox } from './styles';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -284,17 +284,21 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                     </Grid>
                 )}
             </Box>
-            <PrimaryButton
-                onClick={() => {
-                    setDialogState({
-                        ...dialogState,
-                        crtBlindTokenIds: selectedTokenIds.join(';'),
-                    });
-                    onClose();
-                }}
-            >
-                Confirm
-            </PrimaryButton>
+            <Stack direction="row" spacing={2}>
+                <SecondaryButton fullWidth>Back</SecondaryButton>
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({
+                            ...dialogState,
+                            crtBlindTokenIds: selectedTokenIds.join(';'),
+                        });
+                        onClose();
+                    }}
+                >
+                    Confirm
+                </PrimaryButton>
+            </Stack>
         </Stack>
     );
 };
