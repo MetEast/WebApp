@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Box, Grid, Typography, Checkbox } from '@mui/material';
+import { Stack, Box, Grid, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import SearchField from 'src/components/SearchField';
 import { TblHeaderTypo, TblBodyTypo } from './styles';
@@ -7,6 +7,8 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeBlindBoxSelectItem, TypeProductFetch } from 'src/types/product-types';
 import { reduceHexAddress } from 'src/services/common';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -155,19 +157,26 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
         }
     };
 
+    const theme = useTheme();
+    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+
     return (
-        <Stack spacing={3} width={720} maxHeight={600}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack spacing={3} width={{ xs: '100%', md: 720 }} maxHeight={600}>
+            <Stack
+                direction={{ xs: 'column', md: 'row' }}
+                justifyContent="space-between"
+                alignItems={{ xs: 'flex-start', md: 'center' }}
+                rowGap={2}
+            >
                 <Typography fontSize={22} fontWeight={700}>
                     Blind Box Items
                 </Typography>
-                <Box width={300}>
-                    <SearchField handleChange={(value: string) => setKeyWord(value)} />
-                </Box>
-            </Stack>
-            <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                <Grid container columns={25} rowGap={3} direction="row" alignItems="center">
-                    <Grid item xs={1} paddingY={1}>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                    <SearchField
+                        handleChange={(value: string) => setKeyWord(value)}
+                        sx={{ width: { xs: 200, md: 300 } }}
+                    />
+                    <Stack direction="row" alignItems="center" spacing={0.5} display={{ xs: 'flex', md: 'none' }}>
                         <Checkbox
                             color="primary"
                             checked={allChecked}
@@ -175,61 +184,81 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                             sx={{ padding: 0 }}
                             onChange={handleSelectAll}
                         />
-                    </Grid>
-                    <Grid item xs={4} paddingY={1}>
-                        <TblHeaderTypo>ID</TblHeaderTypo>
-                    </Grid>
-                    <Grid item xs={5} paddingY={1}>
-                        <TblHeaderTypo>NFT ImAGE</TblHeaderTypo>
-                    </Grid>
-                    <Grid item xs={5} paddingY={1}>
-                        <TblHeaderTypo>NFT Identity</TblHeaderTypo>
-                    </Grid>
-                    <Grid item xs={5} paddingY={1}>
-                        <TblHeaderTypo>project Title</TblHeaderTypo>
-                    </Grid>
-                    <Grid item xs={5} paddingY={1}>
-                        <TblHeaderTypo>project type</TblHeaderTypo>
-                    </Grid>
-                    {itemList.map((item, index) => (
-                        <Grid item container alignItems="center" key={`search-blind-item-${index}`}>
-                            <Grid item xs={1}>
-                                <Checkbox
-                                    color="primary"
-                                    sx={{ padding: 0 }}
-                                    value="off"
-                                    checked={itemChecked[index] === undefined ? false : itemChecked[index]}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        handleSelect(event, index);
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <TblBodyTypo>{item.id}</TblBodyTypo>
-                            </Grid>
-                            <Grid item xs={5}>
-                                <Box borderRadius={2} width={72} height={50} overflow="hidden">
-                                    <img
-                                        src={item.url}
-                                        width="100%"
-                                        height="100%"
-                                        style={{ objectFit: 'cover' }}
-                                        alt=""
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={5}>
-                                <TblBodyTypo>{reduceHexAddress(item.nftIdentity, 4)}</TblBodyTypo>
-                            </Grid>
-                            <Grid item xs={5}>
-                                <TblBodyTypo>{item.projectTitle}</TblBodyTypo>
-                            </Grid>
-                            <Grid item xs={5}>
-                                <TblBodyTypo>{item.projectType}</TblBodyTypo>
-                            </Grid>
+                        <Typography fontSize={16} fontWeight={700} paddingTop="2px">
+                            ALL
+                        </Typography>
+                    </Stack>
+                </Stack>
+            </Stack>
+            <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                {matchDownMd ? (
+                    <></>
+                ) : (
+                    <Grid container columns={25} rowGap={3} direction="row" alignItems="center">
+                        <Grid item xs={1} paddingY={1}>
+                            <Checkbox
+                                color="primary"
+                                checked={allChecked}
+                                indeterminate={indeterminateChecked}
+                                sx={{ padding: 0 }}
+                                onChange={handleSelectAll}
+                            />
                         </Grid>
-                    ))}
-                </Grid>
+                        <Grid item xs={4} paddingY={1}>
+                            <TblHeaderTypo>ID</TblHeaderTypo>
+                        </Grid>
+                        <Grid item xs={5} paddingY={1}>
+                            <TblHeaderTypo>NFT ImAGE</TblHeaderTypo>
+                        </Grid>
+                        <Grid item xs={5} paddingY={1}>
+                            <TblHeaderTypo>NFT Identity</TblHeaderTypo>
+                        </Grid>
+                        <Grid item xs={5} paddingY={1}>
+                            <TblHeaderTypo>project Title</TblHeaderTypo>
+                        </Grid>
+                        <Grid item xs={5} paddingY={1}>
+                            <TblHeaderTypo>project type</TblHeaderTypo>
+                        </Grid>
+                        {itemList.map((item, index) => (
+                            <Grid item container alignItems="center" key={`search-blind-item-${index}`}>
+                                <Grid item xs={1}>
+                                    <Checkbox
+                                        color="primary"
+                                        sx={{ padding: 0 }}
+                                        value="off"
+                                        checked={itemChecked[index] === undefined ? false : itemChecked[index]}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            handleSelect(event, index);
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <TblBodyTypo>{item.id}</TblBodyTypo>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Box borderRadius={2} width={72} height={50} overflow="hidden">
+                                        <img
+                                            src={item.url}
+                                            width="100%"
+                                            height="100%"
+                                            style={{ objectFit: 'cover' }}
+                                            alt=""
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <TblBodyTypo>{reduceHexAddress(item.nftIdentity, 4)}</TblBodyTypo>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <TblBodyTypo>{item.projectTitle}</TblBodyTypo>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <TblBodyTypo>{item.projectType}</TblBodyTypo>
+                                </Grid>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
             </Box>
             <PrimaryButton
                 onClick={() => {
