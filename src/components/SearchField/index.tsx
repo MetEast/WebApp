@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { SearchFieldWrapper, SearchTextField } from './styles';
 import { Icon } from '@iconify/react';
+import { SxProps } from '@mui/system';
 
 interface ComponentProps {
     handleChange: (value: string) => void;
     placeholder?: string;
+    sx?: SxProps;
 }
 
-const SearchField: React.FC<ComponentProps> = ({ handleChange, placeholder }): JSX.Element => {
+const SearchField: React.FC<ComponentProps> = ({ handleChange, placeholder, sx }): JSX.Element => {
     const [keyWord, setKeyWord] = useState('');
 
     const handleChangeKeyWord = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +25,7 @@ const SearchField: React.FC<ComponentProps> = ({ handleChange, placeholder }): J
     };
 
     return (
-        <SearchFieldWrapper>
+        <SearchFieldWrapper sx={{ ...sx }}>
             <Icon icon="ph:magnifying-glass" fontSize={24} color="black" />
             <SearchTextField
                 fullWidth
