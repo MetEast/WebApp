@@ -3,7 +3,7 @@ import { styled, Box, Stack, Button } from '@mui/material';
 export const ListItemsWrapper = styled(Box)<{ isOpen: number }>`
     display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
     position: absolute;
-    margin-top: 8px;
+    padding-top: 8px;
     z-index: 10;
 `;
 

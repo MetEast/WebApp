@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid, Typography, Checkbox } from '@mui/material';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import SearchField from 'src/components/SearchField';
-import { TblHeaderTypo, TblBodyTypo } from './styles';
+import { TblHeaderTypo, TblBodyTypo, ImageBox } from './styles';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeBlindBoxSelectItem, TypeProductFetch } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { Icon } from '@iconify/react';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -148,9 +149,32 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                     </Stack>
                 </Stack>
             </Stack>
+            {matchDownMd && (
+                <Typography fontSize={22} fontWeight={400} color="#4C4C4C">
+                    5 Nft Selected
+                </Typography>
+            )}
             <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
                 {matchDownMd ? (
-                    <></>
+                    <Grid container columnSpacing={3.5} rowGap={2}>
+                        {itemList.map((item, index) => (
+                            <Grid item xs={6}>
+                                <Stack width="100%" spacing={1}>
+                                    <ImageBox selected={true}>
+                                        <Box className="image_box">
+                                            <img src={item.url} alt="" />
+                                        </Box>
+                                        <Box className="check_box">
+                                            <Icon icon="ph:check" fontSize={20} color="#1890FF" />
+                                        </Box>
+                                    </ImageBox>
+                                    <Typography fontSize={12} fontWeight={700}>
+                                        {item.projectTitle}
+                                    </Typography>
+                                </Stack>
+                            </Grid>
+                        ))}
+                    </Grid>
                 ) : (
                     <Grid container columns={25} rowGap={3} direction="row" alignItems="center">
                         <Grid item xs={1} paddingY={1}>
@@ -218,23 +242,30 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                     </Grid>
                 )}
             </Box>
-            <PrimaryButton
-                onClick={() => {
-                    let selectedTokenNames: Array<string> = [];
-                    selectedTokenIds.forEach((item: string, index: number) => {
-                        selectedTokenNames.push(itemList[itemList.findIndex((value: TypeBlindBoxSelectItem) => value.tokenId === item)].projectTitle);
-                    });
+            <Stack direction="row" spacing={2}>
+                <SecondaryButton fullWidth>Back</SecondaryButton>
+                <PrimaryButton
+                    fullWidth
+                    onClick={() => {
+                        let selectedTokenNames: Array<string> = [];
+                        selectedTokenIds.forEach((item: string, index: number) => {
+                            selectedTokenNames.push(
+                                itemList[itemList.findIndex((value: TypeBlindBoxSelectItem) => value.tokenId === item)]
+                                    .projectTitle,
+                            );
+                        });
 
-                    setDialogState({
-                        ...dialogState,
-                        crtBlindTokenIds: selectedTokenIds.join(';'),
-                        crtBlindTokenNames: selectedTokenNames.join(';'),
-                    });
-                    onClose();
-                }}
-            >
-                Confirm
-            </PrimaryButton>
+                        setDialogState({
+                            ...dialogState,
+                            crtBlindTokenIds: selectedTokenIds.join(';'),
+                            crtBlindTokenNames: selectedTokenNames.join(';'),
+                        });
+                        onClose();
+                    }}
+                >
+                    Confirm
+                </PrimaryButton>
+            </Stack>
         </Stack>
     );
 };
