@@ -23,10 +23,10 @@ import {
     enumBlindBoxNFTType,
     TypeProduct,
     TypeProductFetch,
-    TypeFavouritesFetch,
+    TypeBlindListLikes,
 } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
-import { getImageFromAsset, selectFromFavourites, getTime } from 'src/services/common';
+import { getELA2USD } from 'src/services/fetch';
+import { getImageFromAsset, getTime } from 'src/services/common';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 
@@ -65,7 +65,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
-    const getBlindBoxDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+    const getBlindBoxDetail = async (tokenPriceRate: number) => {
         const resBlindBoxDetail = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxId=${params.id}`,
             {
@@ -96,12 +96,13 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             blind.likes = itemObject.likes;
             blind.views = itemObject.views;
             blind.holder = itemObject.authorName; // no data ------------------------------------
-            blind.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
+            blind.isLike = signInDlgState.isLoggedIn
+                ? itemObject.list_likes.findIndex(
+                      (value: TypeBlindListLikes) => value.did === `did:elastos:${didCookies.METEAST_DID}`,
+                  ) === -1
                     ? false
-                    : true;
+                    : true
+                : false;
             blind.description = itemObject.description;
             blind.authorDescription = itemObject.authorDescription || ' ';
             blind.instock = itemObject.instock || 0;
@@ -122,9 +123,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getBlindBoxDetail(ela_usd_rate, favouritesList);
+        getBlindBoxDetail(await getELA2USD());
     };
 
     useEffect(() => {
@@ -144,9 +143,9 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         setBlindBoxDetail((prevState: TypeProduct) => {
             const blindDetail: TypeProduct = { ...prevState };
             if (type === 'inc') {
-                blindDetail.likes ++;
+                blindDetail.likes++;
             } else if (type === 'dec') {
-                blindDetail.likes --;
+                blindDetail.likes--;
             }
             return blindDetail;
         });

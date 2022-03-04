@@ -11,14 +11,14 @@ import {
     TypeProduct,
     TypeProductFetch,
     enumSingleNFTType,
-    TypeFavouritesFetch,
     enumBlindBoxNFTType,
+    TypeBlindListLikes
 } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useCookies } from 'react-cookie';
-import { selectFromFavourites, getTime } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { getTime } from 'src/services/common';
+import { getELA2USD } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 
@@ -67,7 +67,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     ];
 
     // -------------- Fetch Data -------------- //
-    const getBlindBoxList = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
+    const getBlindBoxList = async (tokenPriceRate: number) => {
         let reqUrl = `${
             process.env.REACT_APP_BACKEND_URL
         }/api/v1/SearchBlindBox?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
@@ -146,12 +146,13 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
 
             blindboxItem.likes = itemObject.likes;
             blindboxItem.views = itemObject.views;
-            blindboxItem.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
+            blindboxItem.isLike = signInDlgState.isLoggedIn
+                ? itemObject.list_likes.findIndex(
+                      (value: TypeBlindListLikes) => value.did === `did:elastos:${didCookies.METEAST_DID}`,
+                  ) === -1
                     ? false
-                    : true;
+                    : true
+                : false;
             blindboxItem.sold = itemObject.sold || 0;
             blindboxItem.instock = itemObject.instock || 0;
             if (itemObject.saleEnd) {
@@ -166,9 +167,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getBlindBoxList(ela_usd_rate, favouritesList);
+        getBlindBoxList(await getELA2USD());
     };
 
     useEffect(() => {
