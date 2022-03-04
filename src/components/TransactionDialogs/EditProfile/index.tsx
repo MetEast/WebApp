@@ -12,7 +12,7 @@ import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
-import { uploadProfileData } from 'src/services/fetch';
+import { uploadUserProfile } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {
@@ -67,12 +67,11 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         let avatarUrl: string = '';
         uploadImage2Ipfs(userAvatarURL.raw)
             .then((added: any) => {
-                avatarUrl = added.path;
+                avatarUrl = `meteast:image:${added.path}`;
                 return uploadImage2Ipfs(userCoverImageURL.raw);
             })
             .then((added: any) => {
-                alert(1);
-                console.log(
+                return uploadUserProfile(
                     tokenCookies.METEAST_TOKEN,
                     didCookies.METEAST_DID,
                     userName,
@@ -80,15 +79,6 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     avatarUrl,
                     added.path,
                 );
-                // return uploadProfileData(
-                //     tokenCookies.METEAST_TOKEN,
-                //     didCookies.METEAST_DID,
-                //     userName,
-                //     userDescription,
-                //     avatarUrl,
-                //     added.path,
-                // );
-                return true;
             })
             .then((success) => {
                 if (!success)
@@ -96,12 +86,14 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         variant: 'warning',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                setOnProgress(false);
             })
             .catch((error) => {
                 enqueueSnackbar('Error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
+                setOnProgress(false);
             });
     };
 

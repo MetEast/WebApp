@@ -80,7 +80,7 @@ export const getTodayEarned = async (address: string) => {
     }
 };
 
-export const uploadProfileData = (
+export const uploadUserProfile = (
     token: string,
     did: string,
     name: string,
@@ -89,7 +89,7 @@ export const uploadProfileData = (
     _urlCoverImage: string,
 ) =>
     new Promise((resolve, reject) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
         const reqBody = {
             token: token,
             did: did,
