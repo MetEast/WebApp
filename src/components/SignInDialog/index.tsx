@@ -55,7 +55,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
-        let currentConnector = null;
+        let currentConnector: any = null;
         if (wallet === 'MM') {
             currentConnector = injected;
             await activate(currentConnector);
@@ -66,23 +66,65 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         }
         const retAddress = await currentConnector?.getAccount();
         if (retAddress !== undefined && retAddress !== null) {
-            console.log('loged in');
-            if (currentConnector === injected) {
-                setLinkCookie('METEAST_LINK', '2');
-                linkType = 2;
-            } else if (currentConnector === walletconnect) {
-                setLinkCookie('METEAST_LINK', '3');
-                linkType = 3;
-            }
-            setActivatingConnector(currentConnector);
-            _setSignInState((prevState: SignInState) => {
-                const _state = { ...prevState };
-                _state.isLoggedIn = true;
-                _state.loginType = '2';
-                _state.signInDlgOpened = false;
-                _state.walletAccounts = [retAddress];
-                return _state;
-            });
+            const reqBody = {
+                isMetaMask: 1,
+                did: retAddress,
+                name: '',
+                avatar: '',
+                description: '',
+            };
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        console.log('loged in');
+                        if (currentConnector === injected) {
+                            setLinkCookie('METEAST_LINK', '2');
+                            linkType = 2;
+                        } else if (currentConnector === walletconnect) {
+                            setLinkCookie('METEAST_LINK', '3');
+                            linkType = 3;
+                        }
+                        setActivatingConnector(currentConnector);
+                        _setSignInState((prevState: SignInState) => {
+                            const _state = { ...prevState };
+                            _state.isLoggedIn = true;
+                            _state.loginType = '2';
+                            _state.signInDlgOpened = false;
+                            _state.walletAccounts = [retAddress];
+                            return _state;
+                        });
+                        enqueueSnackbar('Login succeed.', {
+                            variant: 'success',
+                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                        });
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    enqueueSnackbar(
+                        `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
+                        { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                    );
+                    try {
+                        currentConnector
+                            .deactivate()
+                            .then((res: any) => {})
+                            .catch((e: any) => {
+                                console.log(e);
+                            });
+                    } catch (e) {
+                        console.error('Error while trying to disconnect wallet connect session', e);
+                    }
+                });
         }
     };
 
