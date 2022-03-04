@@ -1,23 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
-import { TypeYourEarning } from 'src/types/product-types';
+import {
+    enumBadgeType,
+    TypeYourEarning,
+    TypeYourEarningFetch,
+} from 'src/types/product-types';
+import { useCookies } from 'react-cookie';
+import { UserTokenType } from 'src/types/auth-types';
+import jwtDecode from 'jwt-decode';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyToClipboardButton } from './styles';
+import { useSnackbar } from 'notistack';
+import { getTotalEarned, getTodayEarned, FETCH_CONFIG_JSON } from 'src/services/fetch';
+import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
 
 export interface ComponentProps {
     onClose: () => void;
 }
 
 const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
-    const [signedIn, setSignedIn] = React.useState<boolean>(true);
-
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [didCookies] = useCookies(['METEAST_DID']);
+    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const { enqueueSnackbar } = useSnackbar();
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
+    const [toatlEarned, setTotalEarned] = useState<number>(0);
+    const [todayEarned, setTodayEarned] = useState<number>(0);
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
+    const userInfo: UserTokenType =
+        tokenCookies.METEAST_TOKEN === undefined
+            ? {
+                  did: '',
+                  name: '',
+                  description: '',
+                  avatar: '',
+                  email: '',
+                  exp: 0,
+                  iat: 0,
+                  type: '',
+                  canManageAdmins: false,
+              }
+            : jwtDecode(tokenCookies.METEAST_TOKEN);
+    const defaultEarningValue: TypeYourEarning = {
+        avatar: '',
+        title: '',
+        time: '',
+        price: 0,
+        badge: enumBadgeType.Other,
+    };
+    const showSnackBar = () => {
+        enqueueSnackbar('Copied to Clipboard!', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+        });
+    };
+
+    const getPersonalData = async () => {
+        let _totalEarned = await getTotalEarned(signInDlgState.walletAccounts[0]);
+        let _todayEarned = await getTodayEarned(signInDlgState.walletAccounts[0]);
+        setTotalEarned(_totalEarned);
+        setTodayEarned(_todayEarned);
+        getEarningList();
+    };
+
+    const getEarningList = async () => {
+        const resEarnedResult = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`,
+            FETCH_CONFIG_JSON,
+        );
+        const dataEarnedResult = await resEarnedResult.json();
+        const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
+
+        let _myEarningList: any = [];
+        for (let i = 0; i < arrEarnedResult.length; i++) {
+            const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
+            let _earning: TypeYourEarning = { ...defaultEarningValue };
+            _earning.title = itemObject.name;
+            _earning.avatar = getImageFromAsset(itemObject.thumbnail);
+            _earning.price = itemObject.iEarned / 1e18;
+            let timestamp = getTime(itemObject.updateTime);
+            _earning.time = timestamp.date + ' ' + timestamp.time;
+            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
+            _myEarningList.push(_earning);
+        }
+        setEarningList(_myEarningList);
+    };
+
+    useEffect(() => {
+        if (signInDlgState.walletAccounts.length) getPersonalData();
+    }, [signInDlgState]);
 
     return (
         <>
@@ -93,19 +172,34 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 Identity
                             </Typography>
                         </Stack>
-                        <PrimaryButton sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}>
-                            {signedIn ? 'sign out' : 'sign in'}
+                        <PrimaryButton
+                            sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
+                            onClick={() => {
+                                signInDlgState.isLoggedIn
+                                    ? setSignInDlgState({ ...signInDlgState, disconnectWallet: true })
+                                    : setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                            }}
+                        >
+                            {signInDlgState.isLoggedIn ? 'sign out' : 'sign in'}
                         </PrimaryButton>
                     </Stack>
-                    {signedIn && (
+                    {signInDlgState.isLoggedIn && (
                         <>
                             <Typography fontSize={18} fontWeight={700} marginTop={3}>
-                                Damian Anderson
+                                {userInfo.name}
                             </Typography>
                             <Stack direction="row" spacing={0.5}>
-                                <Icon icon="ph:copy" color="#1890FF" style={{ marginTop: '1px', cursor: 'pointer' }} />
+                                <CopyToClipboard text={userInfo.did} onCopy={showSnackBar}>
+                                    <CopyToClipboardButton>
+                                        <Icon
+                                            icon="ph:copy"
+                                            color="#1890FF"
+                                            style={{ marginTop: '1px', cursor: 'pointer' }}
+                                        />
+                                    </CopyToClipboardButton>
+                                </CopyToClipboard>
                                 <Typography fontSize={14} fontWeight={400}>
-                                    {`did:elastos:${`io2jy4d...JNwDa`}`}
+                                    {`did:elastos:${reduceHexAddress(didCookies.METEAST_DID, 7)}`}
                                 </Typography>
                             </Stack>
                         </>
@@ -124,18 +218,29 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 Wallet
                             </Typography>
                         </Stack>
-                        <PrimaryButton sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}>Disconnect</PrimaryButton>
+                        <PrimaryButton
+                            sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
+                            onClick={() => {
+                                setSignInDlgState({ ...signInDlgState, disconnectWallet: true });
+                            }}
+                        >
+                            Disconnect
+                        </PrimaryButton>
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing={0.25} marginTop={3}>
                         <img src="/assets/icons/elatos-ela.svg" alt="" style={{ marginBottom: '2px' }} />
                         <Typography fontSize={18} fontWeight={700}>
-                            199.00 ELA
+                            {signInDlgState.walletBalance} ELA
                         </Typography>
                     </Stack>
                     <Stack direction="row" spacing={0.5}>
-                        <Icon icon="ph:copy" color="#1890FF" style={{ marginTop: '1px', cursor: 'pointer' }} />
+                        <CopyToClipboard text={signInDlgState.walletAccounts[0]} onCopy={showSnackBar}>
+                            <CopyToClipboardButton>
+                                <Icon icon="ph:copy" color="#1890FF" style={{ marginTop: '1px', cursor: 'pointer' }} />
+                            </CopyToClipboardButton>
+                        </CopyToClipboard>
                         <Typography fontSize={14} fontWeight={400}>
-                            0x8d1...19Ff
+                            {reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
                         </Typography>
                     </Stack>
                 </Stack>

@@ -1,7 +1,6 @@
-import { useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid, Typography, Stack } from '@mui/material';
-import React, { useState } from 'react';
 import { useSignInContext } from 'src/context/SignInContext';
 import MyNFTGalleryItem from 'src/components/MyNFTGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
