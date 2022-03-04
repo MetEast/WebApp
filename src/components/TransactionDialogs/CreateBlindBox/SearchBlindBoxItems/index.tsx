@@ -151,7 +151,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
             </Stack>
             {matchDownMd && (
                 <Typography fontSize={22} fontWeight={400} color="#4C4C4C">
-                    5 Nft Selected
+                    {itemList.length} Nft Selected
                 </Typography>
             )}
             <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
@@ -243,7 +243,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 )}
             </Box>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth>Back</SecondaryButton>
+                <SecondaryButton fullWidth onClick={onClose}>Back</SecondaryButton>
                 <PrimaryButton
                     fullWidth
                     onClick={() => {

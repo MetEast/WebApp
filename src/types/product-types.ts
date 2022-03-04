@@ -217,7 +217,9 @@ export type TypeVeiwsLikesFetch = {
 export type TypeNFTTransactionFetch = {
     blockNumber: number;
     from: string;
+    fromName: string;
     to: string;
+    toName: string;
     price: string;
     gasFee: number;
     name: string;
