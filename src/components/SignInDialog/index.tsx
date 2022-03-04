@@ -83,7 +83,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        console.log('loged in');
                         if (currentConnector === injected) {
                             setLinkCookie('METEAST_LINK', '2');
                             linkType = 2;
@@ -92,6 +91,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             linkType = 3;
                         }
                         setActivatingConnector(currentConnector);
+                        const token = data.token;
+                        setLinkCookie('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
+                        setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                        setDidCookie('METEAST_DID', retAddress, { path: '/', sameSite: 'none', secure: true });
+                        const user = jwtDecode(token);
+                        console.log('Sign in with MM: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
                             const _state = { ...prevState };
                             _state.isLoggedIn = true;
@@ -312,10 +317,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 else if (signInDlgState.loginType === '2') disconnectWallet();
             }
         }
-    }, [signInDlgState.signOut, signInDlgState.disconnectWallet]);
+    }, [signInDlgState]);
 
     useEffect(() => {
-        console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
+        console.log('--------accounts: ', signInDlgState, jwtDecode(tokenCookies.METEAST_TOKEN));
         // alert(signInDlgState.walletAccounts);
         // alert(signInDlgState.walletBalance);
     }, [signInDlgState]);
@@ -376,7 +381,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
                         const user = jwtDecode(token);
-                        console.log('Sign in: setting user to:', user);
+                        console.log('Sign in with EE: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
                             const _state = { ...prevState };
                             _state.isLoggedIn = true;
