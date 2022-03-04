@@ -35,7 +35,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
     const onlyShowIcon = matchDownMd ? true : false;
 
-    const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
+    const [sortBySelectOpen, setSortBySelectOpen] = useState(false);
     const [showFiltersCard, setShowFiltersCard] = useState<boolean>(false);
 
     return (
@@ -59,11 +59,12 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 selectedItem={sortSelected}
                 options={sortOptions}
                 isOpen={sortBySelectOpen ? 1 : 0}
-                setIsOpen={isSortBySelectOpen}
+                setIsOpen={setSortBySelectOpen}
                 handleClick={handleSortChange}
                 // width={260}
                 min_width={onlyShowIcon ? 'auto' : 240}
                 listitemsbox_width={onlyShowIcon ? 160 : 240}
+                onMouseLeave={() => setSortBySelectOpen(false)}
             />
             <Box
                 position="relative"

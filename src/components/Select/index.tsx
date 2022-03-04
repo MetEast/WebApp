@@ -13,6 +13,7 @@ interface ComponentProps {
     listitemsbox_width?: number | string;
     setIsOpen: (value: boolean) => void;
     handleClick: (value: string) => void;
+    onMouseLeave?: () => void;
 }
 
 const Select: React.FC<ComponentProps> = ({
@@ -25,6 +26,7 @@ const Select: React.FC<ComponentProps> = ({
     listitemsbox_width,
     setIsOpen,
     handleClick,
+    onMouseLeave,
 }) => {
     return (
         <Box
@@ -33,6 +35,7 @@ const Select: React.FC<ComponentProps> = ({
             }}
             position="relative"
             sx={{ width: width ? width : 'auto', minWidth: min_width ? min_width : 'auto' }}
+            onMouseLeave={onMouseLeave}
         >
             {titlebox}
             <ListItemsWrapper width={listitemsbox_width ? listitemsbox_width : '100%'} isOpen={isOpen}>
