@@ -112,7 +112,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 <Stack direction="row" justifyContent="space-between" display={{ xs: 'flex', md: 'none' }}>
                     <Stack>
                         <Typography fontSize={20} fontWeight={900}>
-                            420.00 ELA
+                            {toatlEarned.toFixed(2)} ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Total Earned
@@ -120,7 +120,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     </Stack>
                     <Stack alignItems="flex-end">
                         <Typography fontSize={20} fontWeight={900}>
-                            6.80 ELA
+                            {todayEarned.toFixed(2)} ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Earned Today
