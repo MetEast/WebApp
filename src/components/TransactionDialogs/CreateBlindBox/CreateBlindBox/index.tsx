@@ -109,8 +109,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         <>
             <Stack
                 spacing={5}
-                width={720}
-                maxHeight={'60vh'}
+                minWidth={{ xs: 360, sm: 580, md: 700 }}
+                maxHeight={'70vh'}
                 sx={{ overflowY: 'auto', overflowX: 'hidden' }}
                 className={classes.container}
             >
@@ -119,8 +119,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     <DialogTitleTypo>Create Blind Box</DialogTitleTypo>
                 </Stack>
                 <Box>
-                    <Grid container columnSpacing={4}>
-                        <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
+                    <Grid container columnSpacing={4} rowGap={3}>
+                        <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
                             <CustomTextField
                                 title="Blind Box Title"
                                 placeholder="Enter Blind Box Title"
@@ -133,83 +133,55 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 rows={3}
                                 changeHandler={(value: string) => setBlindboxDescription(value)}
                             />
-                            <CustomTextField
+                            {/* <CustomTextField
                                 title="Author Description"
                                 placeholder="Is WYSIWYG is needed here?"
                                 multiline
                                 rows={3}
                                 changeHandler={(value: string) => setBlindboxAuthorDesc(value)}
-                            />
-                            <Stack spacing={1}>
+                            /> */}
+                            <Stack height="100%" spacing={1}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Blind Box Main Image
                                 </Typography>
-                                {/* <img
-                                src="/assets/images/blindbox/blindbox-nft-template2.png"
-                                style={{ borderRadius: '18px' }}
-                                alt=""
-                            /> */}
                                 <UploadSingleFile
                                     file={stateFile}
                                     onDrop={handleFileChange}
                                     sx={{
-                                        // width: '100%',
-                                        // height: '112px',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
+                                        width: '100%',
+                                        height: { xs: '200px', sm: '100%' },
                                         marginTop: '1rem',
-                                        borderRadius: '2vw',
+                                        borderRadius: '8px',
                                         background: '#E8F4FF',
                                         cursor: 'pointer',
                                     }}
                                 />
-                                {/* <Stack direction="row" spacing={1}>
-                                    <SecondaryButton
-                                        fullWidth
-                                        size="small"
-                                        sx={{ background: '#FDEEEE', color: '#EB5757' }}
-                                        onClick={() => {}}
-                                    >
-                                        <Icon
-                                            icon="ph:trash"
-                                            fontSize={20}
-                                            style={{ marginBottom: 2, marginRight: 4 }}
-                                            onClick={() => {}}
-                                        />
-                                        {`Delete`}
-                                    </SecondaryButton>
-                                    <SecondaryButton fullWidth size="small" onClick={() => {}}>
-                                        <Icon
-                                            icon="ph:pencil-simple"
-                                            fontSize={20}
-                                            style={{ marginBottom: 4, marginRight: 4 }}
-                                        />
-                                        {`Edit`}
-                                    </SecondaryButton>
-                                </Stack> */}
                             </Stack>
+                        </Grid>
+                        <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={2}>
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Blind box items
                                 </Typography>
-                                {/* <Select
-                                    titlebox={
-                                        <SelectBtn fullWidth isOpen={blindboxItemSelectOpen ? 1 : 0}>
-                                            {blindboxItem ? blindboxItem.label : 'Add  NFT to blind box'}
-                                            <Icon icon="ph:caret-down" className="arrow-icon" />
-                                        </SelectBtn>
-                                    }
-                                    options={blindboxItemsOptions}
-                                    isOpen={blindboxItemSelectOpen ? 1 : 0}
-                                    setIsOpen={setBlindboxItemSelectOpen}
-                                    handleClick={handleBlindboxItemChange}
-                                /> */}
                                 <PrimaryButton fullWidth size="small" onClick={() => setSelectDlgOpened(true)}>
                                     Choose NFTs to add
                                 </PrimaryButton>
                             </Stack>
-                        </Grid>
-                        <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
+                            <Stack direction="row" spacing={3}>
+                                <CustomTextField
+                                    disabled
+                                    inputValue={blindboxQuantity.toString() || ''}
+                                    title="Number of NFT"
+                                    placeholder="es. 1000"
+                                    changeHandler={(value: string) => setBlindboxQuantity(parseInt(value))}
+                                />
+                                <CustomTextField
+                                    title="Max Num of Purchases"
+                                    placeholder="es. 1000"
+                                    number={true}
+                                    changeHandler={(value: string) => setBlindboxPurchases(parseInt(value))}
+                                />
+                            </Stack>
                             <Stack spacing={1}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Blind Box Status
@@ -239,13 +211,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     </PrimaryButton>
                                 </Stack>
                             </Stack>
-                            <CustomTextField
-                                disabled
-                                inputValue={blindboxQuantity.toString() || ''}
-                                title="Number of copies"
-                                placeholder="es. 1000"
-                                changeHandler={(value: string) => setBlindboxQuantity(parseInt(value))}
-                            />
                             <ELAPriceInput title="Price" handleChange={setBlindboxPrice} />
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
@@ -271,7 +236,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     }}
                                 ></DateTimeInput>
                             </Stack>
-                            <CustomTextField
+                            {/* <CustomTextField
                                 title="Number of favourites"
                                 placeholder="es. 1000"
                                 number={true}
@@ -282,12 +247,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 placeholder="es. 1000"
                                 number={true}
                                 changeHandler={(value: string) => setBlindboxViews(parseInt(value))}
-                            />
-                            <CustomTextField
-                                title="Max Num of Purchases"
-                                placeholder="es. 1000"
-                                number={true}
-                                changeHandler={(value: string) => setBlindboxPurchases(parseInt(value))}
                             />
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
@@ -311,7 +270,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     setIsOpen={setSortSelectOpen}
                                     handleClick={handleSortChange}
                                 />
-                            </Stack>
+                            </Stack> */}
                         </Grid>
                     </Grid>
                 </Box>

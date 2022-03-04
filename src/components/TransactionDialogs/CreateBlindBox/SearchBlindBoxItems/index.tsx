@@ -12,10 +12,54 @@ export interface ComponentProps {
     onClose: () => void;
 }
 
+const testItemsList: Array<TypeBlindBoxSelectItem> = [
+    {
+        id: 1,
+        tokenId: '32459024',
+        nftIdentity: 'NFT Identity',
+        projectTitle: 'Project Title',
+        projectType: 'Project Type',
+        url: '/assets/images/blindbox/blindbox-nft-template1.png',
+    },
+    {
+        id: 2,
+        tokenId: '32459024',
+        nftIdentity: 'NFT Identity',
+        projectTitle: 'Project Title',
+        projectType: 'Project Type',
+        url: '/assets/images/blindbox/blindbox-nft-template2.png',
+    },
+    {
+        id: 3,
+        tokenId: '32459024',
+        nftIdentity: 'NFT Identity',
+        projectTitle: 'Project Title',
+        projectType: 'Project Type',
+        url: '/assets/images/blindbox/blindbox-nft-template3.png',
+    },
+    {
+        id: 4,
+        tokenId: '32459024',
+        nftIdentity: 'NFT Identity',
+        projectTitle: 'Project Title',
+        projectType: 'Project Type',
+        url: '/assets/images/blindbox/blindbox-nft-template4.png',
+    },
+    {
+        id: 5,
+        tokenId: '32459024',
+        nftIdentity: 'NFT Identity',
+        projectTitle: 'Project Title',
+        projectType: 'Project Type',
+        url: '/assets/images/blindbox/blindbox-nft-template2.png',
+    },
+];
+
 const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
+    // const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>(testItemsList);
     const [keyWord, setKeyWord] = useState<string>('');
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
@@ -28,10 +72,11 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
         nftIdentity: '',
         projectTitle: '',
         projectType: '',
+        url: '',
     };
 
     let allTokenIds: Array<string> = [];
-    for (let i = 0; i < itemList.length; i ++) allTokenIds.push(itemList[i].tokenId);
+    for (let i = 0; i < itemList.length; i++) allTokenIds.push(itemList[i].tokenId);
 
     // -------------- Fetch Data -------------- //
     const getBlindBoxItemList = async () => {
@@ -77,11 +122,10 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
         let _itemChecked: Array<boolean> = Array(itemList.length);
         if (event.target.checked) {
             _itemChecked.fill(true);
-            setSelectedTokenIds(allTokenIds);        
-        }
-        else {
+            setSelectedTokenIds(allTokenIds);
+        } else {
             _itemChecked.fill(false);
-            setSelectedTokenIds([]);        
+            setSelectedTokenIds([]);
         }
         setItemChecked(_itemChecked);
         setAllChecked(event.target.checked);
@@ -93,19 +137,18 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
         checkState[index] = event.target.checked;
         if (event.target.checked) {
             selTokenIds.push(itemList[index].tokenId);
-        }
-        else {
+        } else {
             const id = selTokenIds.indexOf(itemList[index].tokenId);
             selTokenIds.splice(id, 1);
         }
         setItemChecked(checkState);
         setSelectedTokenIds(selTokenIds);
-        
-        if (selTokenIds.length === itemList.length) { // all selected
+
+        if (selTokenIds.length === itemList.length) {
+            // all selected
             setIndeterminateChecked(false);
             setAllChecked(true);
-        }
-        else {
+        } else {
             if (selTokenIds.length === 0) setIndeterminateChecked(false);
             else setIndeterminateChecked(true);
             setAllChecked(false);
@@ -113,7 +156,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     };
 
     return (
-        <Stack spacing={3} width={600} maxHeight={600}>
+        <Stack spacing={3} width={720} maxHeight={600}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography fontSize={22} fontWeight={700}>
                     Blind Box Items
@@ -123,7 +166,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 </Box>
             </Stack>
             <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                <Grid container columns={20} columnSpacing={1} rowGap={3} direction="row" alignItems="center">
+                <Grid container columns={25} rowGap={3} direction="row" alignItems="center">
                     <Grid item xs={1} paddingY={1}>
                         <Checkbox
                             color="primary"
@@ -137,6 +180,9 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                         <TblHeaderTypo>ID</TblHeaderTypo>
                     </Grid>
                     <Grid item xs={5} paddingY={1}>
+                        <TblHeaderTypo>NFT ImAGE</TblHeaderTypo>
+                    </Grid>
+                    <Grid item xs={5} paddingY={1}>
                         <TblHeaderTypo>NFT Identity</TblHeaderTypo>
                     </Grid>
                     <Grid item xs={5} paddingY={1}>
@@ -146,7 +192,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                         <TblHeaderTypo>project type</TblHeaderTypo>
                     </Grid>
                     {itemList.map((item, index) => (
-                        <Grid item container key={`search-blind-item-${index}`}>
+                        <Grid item container alignItems="center" key={`search-blind-item-${index}`}>
                             <Grid item xs={1}>
                                 <Checkbox
                                     color="primary"
@@ -160,6 +206,17 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                             </Grid>
                             <Grid item xs={4}>
                                 <TblBodyTypo>{item.id}</TblBodyTypo>
+                            </Grid>
+                            <Grid item xs={5}>
+                                <Box borderRadius={2} width={72} height={50} overflow="hidden">
+                                    <img
+                                        src={item.url}
+                                        width="100%"
+                                        height="100%"
+                                        style={{ objectFit: 'cover' }}
+                                        alt=""
+                                    />
+                                </Box>
                             </Grid>
                             <Grid item xs={5}>
                                 <TblBodyTypo>{reduceHexAddress(item.nftIdentity, 4)}</TblBodyTypo>
@@ -178,7 +235,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 onClick={() => {
                     setDialogState({
                         ...dialogState,
-                        crtBlindTokenIds: selectedTokenIds.join(';')
+                        crtBlindTokenIds: selectedTokenIds.join(';'),
                     });
                     onClose();
                 }}
