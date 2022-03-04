@@ -61,8 +61,8 @@ const testItemsList: Array<TypeBlindBoxSelectItem> = [
 const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    // const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
-    const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>(testItemsList);
+    const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
+    // const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>(testItemsList);
     const [keyWord, setKeyWord] = useState<string>('');
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
@@ -117,7 +117,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     };
 
     useEffect(() => {
-        // getFetchData();
+        getFetchData();
     }, [keyWord]);
     // -------------- Fetch Data -------------- //
 
