@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext } from 'react';
 
 export interface SignInState {
     signInDlgOpened: boolean;
+    downloadEssentialsDlgOpened: boolean;
     isLoggedIn: boolean;
     loginType: string;
     walletAccounts: string[];
@@ -20,6 +21,7 @@ export interface SignInState {
 
 const defaultState: SignInState = {
     signInDlgOpened: false,
+    downloadEssentialsDlgOpened: false,
     isLoggedIn:
         document.cookie
             .split('; ')
