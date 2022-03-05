@@ -117,3 +117,11 @@ export const uploadUserProfile = (
                 reject(error);
             });
     });
+
+export const url2FileObject = async (imgUrl: string) => {
+    const response = await fetch(imgUrl);
+    // here image is url/location of image
+    const blob = await response.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+    return file;
+};

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
@@ -9,10 +9,9 @@ import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
-import { uploadUserProfile } from 'src/services/fetch';
+import { uploadUserProfile, url2FileObject } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 import { useCookies } from 'react-cookie';
-import { UserTokenType } from 'src/types/auth-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -33,9 +32,12 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     });
     const [userName, setUserName] = useState<string>(signInDlgState.userName);
     const [userDescription, setUserDescription] = useState<string>(signInDlgState.userDescription);
+    const [avatarChanged, setAvatarChanged] = useState<boolean>(false);
+    const [coverImageChanged, setCoverImageChanged] = useState<boolean>(false);
 
     const handleSelectAvatar = (e: any) => {
         if (e.target.files.length) {
+            if (avatarChanged === false) setAvatarChanged(true);
             setUserAvatarURL({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0],
@@ -45,6 +47,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleChangeCoverImage = (e: any) => {
         if (e.target.files.length) {
+            if (coverImageChanged === false) setCoverImageChanged(true);
             setUserCoverImageURL({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0],
@@ -56,13 +59,13 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         setOnProgress(true);
         let urlAvatar: string = '';
         let urlCoverImage: string = '';
-        uploadImage2Ipfs(userAvatarURL.raw)
+        uploadImage2Ipfs(avatarChanged ? userAvatarURL.raw : undefined)
             .then((added: any) => {
-                urlAvatar = `meteast:image:${added.path}`;
-                return uploadImage2Ipfs(userCoverImageURL.raw);
+                urlAvatar = avatarChanged ? `meteast:image:${added.path}` : signInDlgState.userAvatar;
+                return uploadImage2Ipfs(coverImageChanged ? userCoverImageURL.raw : undefined);
             })
             .then((added: any) => {
-                urlCoverImage = `meteast:image:${added.path}`;
+                urlCoverImage = coverImageChanged ? `meteast:image:${added.path}` : signInDlgState.userCoverImage;
                 return uploadUserProfile(
                     signInDlgState.token,
                     signInDlgState.userDid,

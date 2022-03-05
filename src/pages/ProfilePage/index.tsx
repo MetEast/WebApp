@@ -468,6 +468,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
 
+    // const [coverImg, setCoverImg] = useState<string>(signInDlgState.userCoverImage);
+
+    // useEffect(() => {
+    //     setCoverImg(signInDlgState.userCoverImage)
+    // }, [signInDlgState]);
     return (
         <>
             <Box
