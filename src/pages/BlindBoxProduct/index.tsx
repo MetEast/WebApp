@@ -216,7 +216,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     </Stack>
                     <ELAPrice price_ela={blindBoxDetail.price_ela} price_usd={blindBoxDetail.price_usd} marginTop={3} />
                     {signInDlgState.walletAccounts !== [] &&
-                        blindBoxDetail.holder === signInDlgState.walletAccounts[0] &&
+                        blindBoxDetail.holder !== signInDlgState.walletAccounts[0] &&
                         blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
                         blindBoxDetail.state === 'online' && (
                             <PrimaryButton
