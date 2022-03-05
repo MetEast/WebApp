@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/profile/ConnectDID';
+import DownloadEssentials from 'src/components/SignIn/DownloadEssentials';
 import jwtDecode from 'jwt-decode';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import {
@@ -490,25 +491,35 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     // };
 
     return (
-        <ModalDialog
-            open={signInDlgState.signInDlgOpened}
-            onClose={() => {
-                setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
-            }}
-        >
-            <ConnectDID
-                onConnect={async (wallet: string) => {
-                    if (wallet === 'EE') {
-                        if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
-                            await signOutWithEssentialsWithoutRefresh();
-                            await signInWithEssentials();
-                        } else {
-                            await signInWithEssentials();
-                        }
-                    } else signInWithWallet(wallet);
+        <>
+            <ModalDialog
+                open={signInDlgState.signInDlgOpened}
+                onClose={() => {
+                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
                 }}
-            />
-        </ModalDialog>
+            >
+                <ConnectDID
+                    onConnect={async (wallet: string) => {
+                        if (wallet === 'EE') {
+                            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
+                                await signOutWithEssentialsWithoutRefresh();
+                                await signInWithEssentials();
+                            } else {
+                                await signInWithEssentials();
+                            }
+                        } else signInWithWallet(wallet);
+                    }}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={signInDlgState.downloadEssentialsDlgOpened}
+                onClose={() => {
+                    setSignInDlgState({ ...signInDlgState, downloadEssentialsDlgOpened: false });
+                }}
+            >
+                <DownloadEssentials />
+            </ModalDialog>
+        </>
     );
 };
 
