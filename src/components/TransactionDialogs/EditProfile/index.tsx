@@ -12,6 +12,7 @@ import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { uploadUserProfile } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 import { useCookies } from 'react-cookie';
+import { UserTokenType } from 'src/types/auth-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -68,23 +69,24 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     urlCoverImage,
                 );
             })
-            .then((success) => {
-                if (!success)
-                    enqueueSnackbar('Error!', {
-                        variant: 'warning',
-                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                    });
-                else {
+            .then((token: any) => {
+                if (token) {
                     alert('change profile info');
                     setSignInDlgState({
                         ...signInDlgState,
-                        token: 'token',
+                        token: token,
                         userName: userName,
                         userDescription: userDescription,
                         userAvatar: urlAvatar,
                         userCoverImage: urlCoverImage,
                     });
-                    setCookies('METEAST_TOKEN', 'token', { path: '/', sameSite: 'none', secure: true });
+                    setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                }
+                else {
+                    enqueueSnackbar('Error!', {
+                        variant: 'warning',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
                 }
                 setOnProgress(false);
                 onClose();

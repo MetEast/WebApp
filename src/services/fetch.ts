@@ -108,14 +108,12 @@ export const uploadUserProfile = (
             .then((response) => response.json())
             .then((data) => {
                 if (data.code === 200) {
-                    resolve(true);
+                    resolve(data.token);
                 } else {
-                    console.log(data);
-                    reject(false);
+                    reject(data);
                 }
             })
             .catch((error) => {
-                console.log(error);
-                reject(false);
+                reject(error);
             });
     });
