@@ -26,7 +26,6 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import { getImageFromAsset, getTime, reduceHexAddress, getUTCTime, selectFromFavourites } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
@@ -48,8 +47,6 @@ import Container from 'src/components/Container';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
     const params = useParams();
     const defaultValue: TypeProduct = {
@@ -149,9 +146,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
+        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
         getLatestTransaction();
     };
 
@@ -300,9 +295,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         if (signInDlgState.isLoggedIn && tokenId) {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: tokenCookies.METEAST_TOKEN,
+                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: didCookies.METEAST_DID,
+                did: signInDlgState.userDid,
             };
             fetch(reqUrl, {
                 method: 'POST',

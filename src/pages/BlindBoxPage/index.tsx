@@ -16,7 +16,6 @@ import {
 } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { getTime } from 'src/services/common';
 import { getELA2USD } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
@@ -24,7 +23,6 @@ import Container from 'src/components/Container';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
@@ -148,7 +146,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
             blindboxItem.views = itemObject.views;
             blindboxItem.isLike = signInDlgState.isLoggedIn
                 ? itemObject.list_likes.findIndex(
-                      (value: TypeBlindListLikes) => value.did === `did:elastos:${didCookies.METEAST_DID}`,
+                      (value: TypeBlindListLikes) => value.did === `did:elastos:${signInDlgState.userDid}`,
                   ) === -1
                     ? false
                     : true

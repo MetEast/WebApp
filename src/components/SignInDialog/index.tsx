@@ -38,7 +38,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState] = useDialogContext();
     const [linkCookies, setLinkCookie] = useCookies(['METEAST_LINK']);
-    const [didCookies, setDidCookie] = useCookies(['METEAST_DID']);
     const [tokenCookies, setTokenCookie] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     // for signInContext
@@ -95,7 +94,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         const token = data.token;
                         setLinkCookie('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                        setDidCookie('METEAST_DID', retAddress, { path: '/', sameSite: 'none', secure: true });
                         const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with MM: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
@@ -104,11 +102,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             _state.loginType = '2';
                             _state.signInDlgOpened = false;
                             _state.walletAccounts = [retAddress];
+                            _state.token = token;
                             _state.userDid = user.did;
                             if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
-                            if (user.description !== '' && user.description !== undefined) _state.userDescription = user.description;
+                            if (user.description !== '' && user.description !== undefined)
+                                _state.userDescription = user.description;
                             if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
-                            if (user.coverImage !== '' && user.coverImage !== undefined) _state.userCoverImage = user.coverImage;
+                            if (user.coverImage !== '' && user.coverImage !== undefined)
+                                _state.userCoverImage = user.coverImage;
                             return _state;
                         });
                         enqueueSnackbar('Login succeed.', {
@@ -143,7 +144,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         if (activatingConnector !== null) activatingConnector.deactivate();
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
         setActivatingConnector(null);
         window.location.reload();
     };
@@ -152,12 +152,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         if (activatingConnector !== null) activatingConnector.deactivate();
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
         setActivatingConnector(null);
     };
 
     // ------------------------------ EE Connection ------------------------------ //
     useEffect(() => {
+        // EE
         if (isInAppBrowser()) {
             _setSignInState((prevState: SignInState) => {
                 const _state = { ...prevState };
@@ -204,7 +204,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 console.error(code, reason);
             });
         }
-
+        // MM
         if (linkType === undefined) {
             if (active) {
                 // alert('new sign in');
@@ -267,6 +267,41 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         }
     }, [walletConnectProvider, chainId, account, active, library]);
 
+    // signInDlgContext track
+    useEffect(() => {
+        const user: UserTokenType =
+            tokenCookies.METEAST_TOKEN === undefined
+                ? { did: '', name: '', description: '', avatar: '', coverImage: '', exp: 0, iat: 0 }
+                : jwtDecode(tokenCookies.METEAST_TOKEN);
+        const arrDid = user.did.split(':');
+        const did = arrDid.length === 3 ? arrDid[2] : user.did;
+        getDidUri(did, '', user.name).then((didUri: string) => {
+            setSignInDlgState({
+                ..._signInState,
+                token : tokenCookies.METEAST_TOKEN,
+                didUri: didUri,
+                userDid: did,
+                userName: user.name,
+                userDescription: user.description,
+                userAvatar: user.avatar,
+                userCoverImage: user.coverImage,
+            });
+        });
+    }, [_signInState]);
+
+    // listen for disconnect
+    useEffect(() => {
+        if (signInDlgState.isLoggedIn) {
+            if (signInDlgState.signOut) {
+                if (signInDlgState.loginType === '1') signOutWithEssentials();
+                else if (signInDlgState.loginType === '2') signOutWithWallet();
+            } else if (signInDlgState.disconnectWallet) {
+                if (signInDlgState.loginType === '1') disconnectEssentials();
+                else if (signInDlgState.loginType === '2') disconnectWallet();
+            }
+        }
+    }, [signInDlgState]);
+
     // update wallet balance after every transactions
     useEffect(() => {
         if (linkType === '1') {
@@ -300,30 +335,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         dialogState.cancelSaleDlgStep,
         dialogState.buyBlindBoxDlgStep,
     ]);
-
-    // signInDlgContext track
-    useEffect(() => {
-        const userInfo: UserTokenType =
-            tokenCookies.METEAST_TOKEN === undefined
-                ? { did: '', name: '', description: '', avatar: '', coverImage: '', exp: 0, iat: 0 }
-                : jwtDecode(tokenCookies.METEAST_TOKEN);
-        getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri: string) => {
-            setSignInDlgState({ ..._signInState, didUri: didUri });
-        });
-    }, [_signInState]);
-
-    // listen for disconnect
-    useEffect(() => {
-        if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.signOut) {
-                if (signInDlgState.loginType === '1') signOutWithEssentials();
-                else if (signInDlgState.loginType === '2') signOutWithWallet();
-            } else if (signInDlgState.disconnectWallet) {
-                if (signInDlgState.loginType === '1') disconnectEssentials();
-                else if (signInDlgState.loginType === '2') disconnectWallet();
-            }
-        }
-    }, [signInDlgState]);
 
     useEffect(() => {
         console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
@@ -383,18 +394,19 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         linkType = '1';
                         setLinkCookie('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                        setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
                         const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with EE: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
                             const _state = { ...prevState };
                             _state.isLoggedIn = true;
                             _state.loginType = '1';
-                            _state.userDid = user.did;
+                            _state.userDid = did;
                             if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
-                            if (user.description !== '' && user.description !== undefined) _state.userDescription = user.description;
+                            if (user.description !== '' && user.description !== undefined)
+                                _state.userDescription = user.description;
                             if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
-                            if (user.coverImage !== '' && user.coverImage !== undefined) _state.userCoverImage = user.coverImage;
+                            if (user.coverImage !== '' && user.coverImage !== undefined)
+                                _state.userCoverImage = user.coverImage;
                             _state.signInDlgOpened = false;
                             if (isInAppBrowser()) {
                                 const inAppProvider: any = window.elastos.getWeb3Provider();
@@ -443,7 +455,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
         try {
             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
                 await essentialsConnector.getWalletConnectProvider().disconnect();
@@ -458,7 +469,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         setSignInDlgState({ ...signInDlgState, isLoggedIn: false, loginType: '', signOut: false });
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_DID=; Path=/; Expires=${new Date().toUTCString()};`;
         try {
             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
                 await essentialsConnector.getWalletConnectProvider().disconnect();
@@ -485,7 +495,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     // const signOutWithEssentials = async () => {
-    //     removeDidCookie('METEAST_DID');
     //     removeTokenCookie('METEAST_TOKEN');
     //     try {
     //         setSignInDlgState({ ...signInDlgState, isLoggedIn: false });

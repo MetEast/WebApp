@@ -6,9 +6,6 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { useCookies } from 'react-cookie';
-import jwtDecode from 'jwt-decode';
-import { UserTokenType } from 'src/types/auth-types';
 import { useSnackbar } from 'notistack';
 import { uploadDidUri2Ipfs, uploadImage2Ipfs, uploadMetaData2Ipfs } from 'src/services/ipfs';
 import Web3 from 'web3';
@@ -25,24 +22,9 @@ export interface ComponentProps {}
 const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
-    const userInfo: UserTokenType =
-        tokenCookies.METEAST_TOKEN === undefined
-            ? {
-                  did: '',
-                  name: '',
-                  description: '',
-                  avatar: '',
-                  coverImage: '',
-                  exp: 0,
-                  iat: 0,
-              }
-            : jwtDecode(tokenCookies.METEAST_TOKEN);
-    const { did, name, description } = userInfo;
-
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -140,9 +122,9 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     setDialogState({ ...dialogState, mintProgress: 10 });
                     return uploadMetaData2Ipfs(
                         added,
-                        did,
-                        name,
-                        description,
+                        signInDlgState.userDid,
+                        signInDlgState.userName,
+                        signInDlgState.userDescription,
                         dialogState.mintTitle,
                         dialogState.mintIntroduction,
                         dialogState.mintCategory.value,
@@ -152,7 +134,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
                     setDialogState({ ...dialogState, mintProgress: 30 });
-                    return uploadDidUri2Ipfs(did, name, description);
+                    return uploadDidUri2Ipfs(signInDlgState.userDid, signInDlgState.userName, signInDlgState.userDescription);
                 })
                 .then((didRecv: any) => {
                     // didUri

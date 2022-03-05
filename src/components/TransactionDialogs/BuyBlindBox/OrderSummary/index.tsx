@@ -10,7 +10,6 @@ import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'sr
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
@@ -22,7 +21,6 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
 
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
@@ -72,7 +70,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                 //
                 let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
                 const reqBody = {
-                    token: tokenCookies.METEAST_TOKEN,
+                    token: signInDlgState.token,
                     blindBoxId: dialogState.buyBlindBoxId,
                     tokenId: dialogState.buyBlindTokenId,
                 };

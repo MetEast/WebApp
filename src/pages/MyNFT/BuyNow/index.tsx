@@ -33,7 +33,6 @@ import {
     TypeNFTHisotry,
 } from 'src/types/product-types';
 import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
-import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
@@ -52,7 +51,6 @@ import Container from 'src/components/Container';
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
     const [dialogState, setDialogState] = useDialogContext();
 
     const defaultValue: TypeProduct = {
@@ -96,7 +94,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
-    const burnAddress = '0x0000000000000000000000000000000000000000';
 
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
@@ -154,9 +151,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
+        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
     };
 
     useEffect(() => {

@@ -14,7 +14,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
@@ -27,8 +26,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const [onProgress, setOnProgress] = useState<boolean>(false);
 
@@ -40,8 +37,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const uploadBlindBoxInfo = (imgUri: string) =>
         new Promise((resolve, reject) => {
             const formData = new FormData();
-            formData.append('token', tokenCookies.METEAST_TOKEN);
-            formData.append('did', didCookies.METEAST_DID);
+            formData.append('token', signInDlgState.token);
+            formData.append('did', signInDlgState.userDid);
             formData.append('name', dialogState.crtBlindTitle);
             formData.append('description', dialogState.crtBlindDescription);
             formData.append('asset', imgUri);

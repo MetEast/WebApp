@@ -11,7 +11,6 @@ import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
@@ -31,10 +30,8 @@ import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
-    const params = useParams(); // params.id
+    const params = useParams();
     const [signInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
     const defaultValue: TypeProduct = {
         tokenId: '',
@@ -98,7 +95,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             blind.holder = itemObject.authorName; // no data ------------------------------------
             blind.isLike = signInDlgState.isLoggedIn
                 ? itemObject.list_likes.findIndex(
-                      (value: TypeBlindListLikes) => value.did === `did:elastos:${didCookies.METEAST_DID}`,
+                      (value: TypeBlindListLikes) => value.did === `did:elastos:${signInDlgState.userDid}`,
                   ) === -1
                     ? false
                     : true
@@ -155,9 +152,9 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         if (signInDlgState.isLoggedIn && tokenId) {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: tokenCookies.METEAST_TOKEN,
+                token: signInDlgState.token,
                 blindBoxIndex: tokenId,
-                did: didCookies.METEAST_DID,
+                did: signInDlgState.userDid,
             };
             fetch(reqUrl, {
                 method: 'POST',

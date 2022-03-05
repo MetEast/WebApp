@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
-import { Typography, Grid, Stack, Box, Skeleton } from '@mui/material';
+import { Typography, Stack, Box, Skeleton } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumSingleNFTType, enumBlindBoxNFTType } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
@@ -30,8 +29,6 @@ const NFTPreview: React.FC<ComponentProps> = ({
 }): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
 
     useEffect(() => {
@@ -59,14 +56,14 @@ const NFTPreview: React.FC<ComponentProps> = ({
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = isBlindBox
                 ? {
-                      token: tokenCookies.METEAST_TOKEN,
+                      token: signInDlgState.token,
                       blindBoxIndex: product.tokenId,
-                      did: didCookies.METEAST_DID,
+                      did: signInDlgState.userDid,
                   }
                 : {
-                      token: tokenCookies.METEAST_TOKEN,
-                      tokenId: product.tokenId,
-                      did: didCookies.METEAST_DID,
+                    token: signInDlgState.token,
+                    tokenId: product.tokenId,
+                    did: signInDlgState.userDid,
                   };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');

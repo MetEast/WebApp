@@ -8,9 +8,6 @@ import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
 import { enumBadgeType, TypeYourEarning, TypeYourEarningFetch } from 'src/types/product-types';
-import { useCookies } from 'react-cookie';
-import { UserTokenType } from 'src/types/auth-types';
-import jwtDecode from 'jwt-decode';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
@@ -23,26 +20,12 @@ export interface ComponentProps {
 
 const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
-    const userInfo: UserTokenType =
-        tokenCookies.METEAST_TOKEN === undefined
-            ? {
-                  did: '',
-                  name: '',
-                  description: '',
-                  avatar: '',
-                  coverImage: '',
-                  exp: 0,
-                  iat: 0,
-              }
-            : jwtDecode(tokenCookies.METEAST_TOKEN);
     const defaultEarningValue: TypeYourEarning = {
         avatar: '',
         title: '',
@@ -180,10 +163,10 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     {signInDlgState.isLoggedIn && (
                         <>
                             <Typography fontSize={18} fontWeight={700} marginTop={3}>
-                                {userInfo.name}
+                                {signInDlgState.userName}
                             </Typography>
                             <Stack direction="row" spacing={0.5}>
-                                <CopyToClipboard text={userInfo.did} onCopy={showSnackBar}>
+                                <CopyToClipboard text={`did:elastos:${signInDlgState.userDid}`} onCopy={showSnackBar}>
                                     <CopyToClipboardButton>
                                         <Icon
                                             icon="ph:copy"
@@ -193,7 +176,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                     </CopyToClipboardButton>
                                 </CopyToClipboard>
                                 <Typography fontSize={14} fontWeight={400}>
-                                    {`did:elastos:${reduceHexAddress(didCookies.METEAST_DID, 7)}`}
+                                    {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
                                 </Typography>
                             </Stack>
                         </>

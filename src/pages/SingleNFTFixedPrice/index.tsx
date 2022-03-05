@@ -30,7 +30,6 @@ import {
 import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { useCookies } from 'react-cookie';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
@@ -49,8 +48,6 @@ import Container from 'src/components/Container';
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
     const defaultValue: TypeProduct = {
         tokenId: '',
@@ -137,9 +134,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        const ela_usd_rate = await getELA2USD();
-        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
+        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
     };
 
     useEffect(() => {
@@ -254,9 +249,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         if (signInDlgState.isLoggedIn && tokenId) {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: tokenCookies.METEAST_TOKEN,
+                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: didCookies.METEAST_DID,
+                did: signInDlgState.userDid,
             };
             fetch(reqUrl, {
                 method: 'POST',

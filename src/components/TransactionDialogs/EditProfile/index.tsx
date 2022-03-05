@@ -4,9 +4,6 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
-import jwtDecode from 'jwt-decode';
-import { UserTokenType } from 'src/types/auth-types';
 import { getImageFromAsset } from 'src/services/common';
 import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
 import CustomTextField from 'src/components/TextField';
@@ -20,30 +17,16 @@ export interface ComponentProps {
 }
 
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const [signInDlgState] = useSignInContext();
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
-    const userInfo: UserTokenType =
-        tokenCookies.METEAST_TOKEN === undefined
-            ? {
-                  did: '',
-                  name: '',
-                  description: '',
-                  avatar: '',
-                  coverImage: '',
-                  exp: 0,
-                  iat: 0,
-              }
-            : jwtDecode(tokenCookies.METEAST_TOKEN);
     const [userAvatarURL, setUserAvatarURL] = useState<TypeImageFile>({
-        preview: getImageFromAsset(userInfo.avatar),
+        preview: getImageFromAsset(signInDlgState.userAvatar),
         raw: new File([''], ''),
     });
     const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({ preview: '', raw: new File([''], '') });
-    const [userName, setUserName] = useState<string>(userInfo.name);
-    const [userDescription, setUserDescription] = useState<string>(userInfo.description);
+    const [userName, setUserName] = useState<string>(signInDlgState.userName);
+    const [userDescription, setUserDescription] = useState<string>(signInDlgState.userDescription);
 
     const handleSelectAvatar = (e: any) => {
         if (e.target.files.length) {
@@ -73,8 +56,8 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .then((added: any) => {
                 return uploadUserProfile(
-                    tokenCookies.METEAST_TOKEN,
-                    didCookies.METEAST_DID,
+                    signInDlgState.token,
+                    signInDlgState.userDid,
                     userName,
                     userDescription,
                     avatarUrl,

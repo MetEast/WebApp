@@ -7,14 +7,12 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NFTPreview from 'src/components/NFTPreview';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { selectFromFavourites, getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import Container from 'src/components/Container';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
     const adBanners = [
         '/assets/images/banners/banner1.png',
         '/assets/images/banners/banner2.png',
@@ -135,7 +133,7 @@ const HomePage: React.FC = (): JSX.Element => {
 
     const getFetchData = async () => {
         const ela_usd_rate = await getELA2USD();
-        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
+        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
         getNewProducts(ela_usd_rate, favouritesList);
         getPopularCollection(ela_usd_rate, favouritesList);
     };

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Container, LikeBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { TypeProduct } from 'src/types/product-types';
 import { Box, Skeleton } from '@mui/material';
 
@@ -13,8 +12,6 @@ export interface ComponentProps {
 
 const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState(product.isLike);
 
     useEffect(() => {
@@ -27,9 +24,9 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = {
-                token: tokenCookies.METEAST_TOKEN,
+                token: signInDlgState.token,
                 tokenId: product.tokenId,
-                did: didCookies.METEAST_DID,
+                did: signInDlgState.userDid,
             };
             // change state first
             updateLikes(likeState ? 'dec' : 'inc');

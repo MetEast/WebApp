@@ -9,14 +9,12 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import Container from 'src/components/Container';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
@@ -139,9 +137,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getSearchResult(ela_usd_rate, favouritesList);
+        getSearchResult(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
     };
 
     useEffect(() => {

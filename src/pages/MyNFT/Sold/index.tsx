@@ -34,7 +34,6 @@ import {
 import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { useCookies } from 'react-cookie';
 import { TypeSelectItem } from 'src/types/select-types';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
@@ -43,7 +42,6 @@ import Container from 'src/components/Container';
 const MyNFTSold: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [signInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
     const [dialogState, setDialogState] = useDialogContext();
 
     const defaultValue: TypeProduct = {
@@ -135,9 +133,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
+        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
     };
 
     useEffect(() => {

@@ -22,11 +22,8 @@ import {
     TypeYourEarningFetch,
 } from 'src/types/product-types';
 import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
-import { useCookies } from 'react-cookie';
 import { selectFromFavourites } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList, getTotalEarned, getTodayEarned, FETCH_CONFIG_JSON } from 'src/services/fetch';
-import jwtDecode from 'jwt-decode';
-import { UserTokenType } from 'src/types/auth-types';
 import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
@@ -40,8 +37,6 @@ import Container from 'src/components/Container';
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
@@ -97,18 +92,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         'getFavoritesCollectible',
     ];
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
-    let userInfo: UserTokenType =
-        tokenCookies.METEAST_TOKEN === undefined
-            ? {
-                  did: '',
-                  name: '',
-                  description: '',
-                  avatar: '',
-                  coverImage: '',
-                  exp: 0,
-                  iat: 0,
-              }
-            : jwtDecode(tokenCookies.METEAST_TOKEN);
 
     // -------------- Fetch Data -------------- //
     const setLoadingState = (id: number, state: boolean) => {
@@ -199,7 +182,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             .forEach((_, i: number) => {
                 const fetchUrl =
                     `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/${apiNames[i]}?` +
-                    (i === 5 ? `did=${didCookies.METEAST_DID}` : `selfAddr=${signInDlgState.walletAccounts[0]}`) +
+                    (i === 5 ? `did=${signInDlgState.userDid}` : `selfAddr=${signInDlgState.walletAccounts[0]}`) +
                     addSortOptions();
                 setLoadingState(i, true);
                 fetch(fetchUrl, FETCH_CONFIG_JSON).then((response) =>
@@ -281,9 +264,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const fetchAllData = async () => {
-        const ELA2USD = await getELA2USD();
-        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getAllNftLists(ELA2USD, favouritesList);
+        getAllNftLists(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
     };
 
     useEffect(() => {
@@ -298,7 +279,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     ) => {
         const fetchUrl =
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/${apiNames[nTabId]}?` +
-            (nTabId === 5 ? `did=${didCookies.METEAST_DID}` : `selfAddr=${signInDlgState.walletAccounts[0]}`) +
+            (nTabId === 5 ? `did=${signInDlgState.userDid}` : `selfAddr=${signInDlgState.walletAccounts[0]}`) +
             addSortOptions();
         setLoadingState(nTabId, true);
         fetch(fetchUrl, FETCH_CONFIG_JSON).then((response) =>
@@ -374,9 +355,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const fetchTabData = async () => {
-        const ELA2USD = await getELA2USD();
-        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getTabNftLists(ELA2USD, favouritesList, getSelectedTabIndex());
+        getTabNftLists(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid), getSelectedTabIndex());
     };
 
     useEffect(() => {
@@ -477,27 +456,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) setReload(!reload);
     }, [nftGalleryFilterBtnSelected]);
 
-    const [userAvatarURL, setUserAvatarURL] = useState<string>(getImageFromAsset(userInfo.avatar));
-
-    useEffect(() => {
-        if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.loginType === '1') {
-                userInfo =
-                    tokenCookies.METEAST_TOKEN === undefined
-                        ? {
-                              did: '',
-                              name: '',
-                              description: '',
-                              avatar: '',
-                              coverImage: '',
-                              exp: 0,
-                              iat: 0,
-                          }
-                        : jwtDecode(tokenCookies.METEAST_TOKEN);
-                setUserAvatarURL(userInfo.avatar);
-            }
-        }
-    }, [signInDlgState]);
+    const [userAvatarURL, setUserAvatarURL] = useState<string>(getImageFromAsset(signInDlgState.userAvatar));
 
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -508,7 +467,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 onClick={() => {}}
                 sx={{ height: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}
             >
-                {userInfo.avatar !== '' && <img src={userInfo.avatar} alt="" style={{ minWidth: '100%' }} />}
+                {signInDlgState.userAvatar !== '' && <img src={signInDlgState.userAvatar} alt="" style={{ minWidth: '100%' }} />}
             </Box>
             <Container sx={{ overflow: 'visible' }}>
                 <Stack alignItems="center">
@@ -584,9 +543,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     <Stack alignItems="center" marginTop={{ sm: -29, md: -7 }}>
                         <Stack alignItems="center">
                             <Typography fontSize={{ xs: 32, sm: 56 }} fontWeight={700}>
-                                {userInfo.name === ''
+                                {signInDlgState.userName === ''
                                     ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
-                                    : userInfo.name}
+                                    : signInDlgState.userName}
                             </Typography>
                             <SecondaryButton
                                 sx={{
@@ -614,7 +573,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             textAlign="center"
                             marginTop={1}
                         >
-                            {userInfo.description}
+                            {signInDlgState.userDescription}
                         </Typography>
                         <Stack direction="row" alignItems="center" spacing={2} marginTop={3.5}>
                             <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'flex', sm: 'none' } }}>

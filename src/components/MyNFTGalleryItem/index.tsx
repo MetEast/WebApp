@@ -9,7 +9,6 @@ import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -21,8 +20,6 @@ export interface ComponentProps {
 const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading, updateLikes }): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [likeState, setLikeState] = useState<boolean>(product.isLike);
 
     const changeLikeState = (event: React.MouseEvent) => {
@@ -32,9 +29,9 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = {
-                token: tokenCookies.METEAST_TOKEN,
+                token: signInDlgState.token,
                 tokenId: product.tokenId,
-                did: didCookies.METEAST_DID,
+                did: signInDlgState.userDid,
             };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
