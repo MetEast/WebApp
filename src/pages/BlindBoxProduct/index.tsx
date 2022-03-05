@@ -230,8 +230,6 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                         buyBlindPriceEla: blindBoxDetail.price_ela,
                                         buyBlindPriceUsd: blindBoxDetail.price_usd,
                                         buyBlindAmount: 1,
-                                        // buyBlindCreator: blindBoxDetail.author,
-                                        // buyBlindOrderId: blindBoxDetail.orderId || '',
                                         buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
                                     });
                                 }}

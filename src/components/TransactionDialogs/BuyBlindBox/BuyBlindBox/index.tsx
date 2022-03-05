@@ -39,7 +39,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
 
     const selectFromBlindBox = async () => {
         const resNFTList = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/api/v1/selectBlindBoxToken?id=${dialogState.buyBlindBoxId}`,
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/selectBlindBoxToken?id=${dialogState.buyBlindBoxId}&count=${amount}`,
             FETCH_CONFIG_JSON
         );
         const dataNFTList = await resNFTList.json();
@@ -58,31 +58,6 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             product.orderId = itemObject.orderId;
             product.image = getImageFromAsset(itemObject.asset);
             product.tokenId = itemObject.tokenId;
-            // product.tokenId = itemObject.tokenId;
-            // product.name = itemObject.name;
-            // product.image = getImageFromAsset(itemObject.asset);
-            // product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            // product.likes = itemObject.likes;
-            // product.views = itemObject.views;
-            // product.isLike =
-            //     favouritesList.findIndex((value: TypeFavouritesFetch) =>
-            //         selectFromFavourites(value, itemObject.tokenId),
-            //     ) === -1
-            //         ? false
-            //         : true;
-            // product.description = itemObject.description;
-            // product.author = itemObject.authorName || ' ';
-            // product.authorDescription = itemObject.authorDescription || ' ';
-            // product.authorImg = product.image; // -- no proper value
-            // product.authorAddress = itemObject.royaltyOwner;
-            // product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
-            // product.orderId = itemObject.orderId;
-            // product.holder = itemObject.holder;
-            // product.tokenIdHex = itemObject.tokenIdHex;
-            // product.royalties = parseInt(itemObject.royalties) / 1e4;
-            // product.category = itemObject.category;
-            // let createTime = getUTCTime(itemObject.createTime);
-            // product.createTime = createTime.date + '' + createTime.time;
         }
         setDialogState({
             ...dialogState,
