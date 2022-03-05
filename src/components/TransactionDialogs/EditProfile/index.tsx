@@ -24,10 +24,13 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [userAvatarURL, setUserAvatarURL] = useState<TypeImageFile>({
-        preview: getImageFromAsset(signInDlgState.userAvatar),
+        preview: signInDlgState.userAvatar === '' ? '' : getImageFromAsset(signInDlgState.userAvatar),
         raw: new File([''], ''),
     });
-    const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({ preview: '', raw: new File([''], '') });
+    const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({
+        preview: signInDlgState.userCoverImage === '' ? '' : getImageFromAsset(signInDlgState.userCoverImage),
+        raw: new File([''], ''),
+    });
     const [userName, setUserName] = useState<string>(signInDlgState.userName);
     const [userDescription, setUserDescription] = useState<string>(signInDlgState.userDescription);
 
@@ -71,7 +74,6 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .then((token: any) => {
                 if (token) {
-                    alert('change profile info');
                     setSignInDlgState({
                         ...signInDlgState,
                         token: token,
@@ -81,8 +83,11 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         userCoverImage: urlCoverImage,
                     });
                     setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                }
-                else {
+                    enqueueSnackbar('Saved!', {
+                        variant: 'success',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                } else {
                     enqueueSnackbar('Error!', {
                         variant: 'warning',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },

@@ -33,6 +33,7 @@ import UserAvatarBox from 'src/components/profile/UserAvatarBox';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from 'src/components/Container';
+import { borderRadius } from '@mui/system';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -265,7 +266,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const fetchAllData = async () => {
-        getAllNftLists(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
+        getAllNftLists(
+            await getELA2USD(),
+            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
+        );
     };
 
     useEffect(() => {
@@ -356,7 +360,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const fetchTabData = async () => {
-        getTabNftLists(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid), getSelectedTabIndex());
+        getTabNftLists(
+            await getELA2USD(),
+            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
+            getSelectedTabIndex(),
+        );
     };
 
     useEffect(() => {
@@ -457,8 +465,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) setReload(!reload);
     }, [nftGalleryFilterBtnSelected]);
 
-    const [userAvatarURL, setUserAvatarURL] = useState<string>(getImageFromAsset(signInDlgState.userAvatar));
-
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -466,15 +472,24 @@ const ProfilePage: React.FC = (): JSX.Element => {
         <>
             <Box
                 onClick={() => {}}
-                sx={{ height: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}
+                sx={{ height: '254px', maxHeight: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}
             >
-                {signInDlgState.userAvatar !== '' && <img src={signInDlgState.userAvatar} alt="" style={{ minWidth: '100%' }} />}
+                {signInDlgState.userCoverImage !== '' && (
+                    <img
+                        src={getImageFromAsset(signInDlgState.userCoverImage)}
+                        alt=""
+                        style={{ minWidth: '100%', maxHeight: '254px' }}
+                    />
+                )}
             </Box>
             <Container sx={{ overflow: 'visible' }}>
                 <Stack alignItems="center">
                     <ProfileImageWrapper>
-                        {userAvatarURL !== '' ? (
-                            <ProfileImage src={userAvatarURL} />
+                        {signInDlgState.userAvatar !== '' ? (
+                            <ProfileImage
+                                src={getImageFromAsset(signInDlgState.userAvatar)}
+                                style={{ borderRadius: '50%', width: 'inherit', height: 'inherit' }}
+                            />
                         ) : (
                             <Icon icon="ph:user" fontSize={80} color="#1890FF" />
                         )}
