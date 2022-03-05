@@ -37,8 +37,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState] = useDialogContext();
-    const [linkCookies, setLinkCookie] = useCookies(['METEAST_LINK']);
-    const [tokenCookies, setTokenCookie] = useCookies(['METEAST_TOKEN']);
+    const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     // for signInContext
     const { connector, activate, deactivate, active, error, library, chainId, account } = useWeb3React<Web3Provider>();
@@ -51,7 +50,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     // );
 
     const [_signInState, _setSignInState] = useState<SignInState>(signInDlgState);
-    let linkType = linkCookies.METEAST_LINK;
+    let linkType = cookies.METEAST_LINK;
 
     // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
@@ -84,16 +83,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((data) => {
                     if (data.code === 200) {
                         if (currentConnector === injected) {
-                            setLinkCookie('METEAST_LINK', '2');
                             linkType = 2;
                         } else if (currentConnector === walletconnect) {
-                            setLinkCookie('METEAST_LINK', '3');
                             linkType = 3;
                         }
                         setActivatingConnector(currentConnector);
                         const token = data.token;
-                        setLinkCookie('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
-                        setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                        setCookies('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
+                        setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with MM: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
@@ -270,15 +267,15 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     // signInDlgContext track
     useEffect(() => {
         const user: UserTokenType =
-            tokenCookies.METEAST_TOKEN === undefined
+            cookies.METEAST_TOKEN === undefined
                 ? { did: '', name: '', description: '', avatar: '', coverImage: '', exp: 0, iat: 0 }
-                : jwtDecode(tokenCookies.METEAST_TOKEN);
+                : jwtDecode(cookies.METEAST_TOKEN);
         const arrDid = user.did.split(':');
         const did = arrDid.length === 3 ? arrDid[2] : user.did;
         getDidUri(did, '', user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
-                token : tokenCookies.METEAST_TOKEN,
+                token : cookies.METEAST_TOKEN,
                 didUri: didUri,
                 userDid: did,
                 userName: user.name,
@@ -337,7 +334,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     ]);
 
     useEffect(() => {
-        console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
+        console.log('--------accounts: ', signInDlgState);
     }, [signInDlgState]);
 
     if (linkType === '1') initConnectivitySDK();
@@ -392,8 +389,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     if (data.code === 200) {
                         const token = data.token;
                         linkType = '1';
-                        setLinkCookie('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
-                        setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                        setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
+                        setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with EE: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {

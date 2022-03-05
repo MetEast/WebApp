@@ -11,13 +11,15 @@ import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { uploadUserProfile } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
+import { useCookies } from 'react-cookie';
 
 export interface ComponentProps {
     onClose: () => void;
 }
 
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [cookies, setCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [userAvatarURL, setUserAvatarURL] = useState<TypeImageFile>({
@@ -48,20 +50,22 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleSubmit = async () => {
         setOnProgress(true);
-        let avatarUrl: string = '';
+        let urlAvatar: string = '';
+        let urlCoverImage: string = '';
         uploadImage2Ipfs(userAvatarURL.raw)
             .then((added: any) => {
-                avatarUrl = `meteast:image:${added.path}`;
+                urlAvatar = `meteast:image:${added.path}`;
                 return uploadImage2Ipfs(userCoverImageURL.raw);
             })
             .then((added: any) => {
+                urlCoverImage = `meteast:image:${added.path}`;
                 return uploadUserProfile(
                     signInDlgState.token,
                     signInDlgState.userDid,
                     userName,
                     userDescription,
-                    avatarUrl,
-                    `meteast:image:${added.path}`,
+                    urlAvatar,
+                    urlCoverImage,
                 );
             })
             .then((success) => {
@@ -71,7 +75,16 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 else {
-                    alert('change');
+                    alert('change profile info');
+                    setSignInDlgState({
+                        ...signInDlgState,
+                        token: 'token',
+                        userName: userName,
+                        userDescription: userDescription,
+                        userAvatar: urlAvatar,
+                        userCoverImage: urlCoverImage,
+                    });
+                    setCookies('METEAST_TOKEN', 'token', { path: '/', sameSite: 'none', secure: true });
                 }
                 setOnProgress(false);
                 onClose();
