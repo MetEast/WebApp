@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
-import ConnectDID from 'src/components/profile/ConnectDID';
+import ConnectDID from 'src/components/SignIn/ConnectDID';
 import DownloadEssentials from 'src/components/SignIn/DownloadEssentials';
 import jwtDecode from 'jwt-decode';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
