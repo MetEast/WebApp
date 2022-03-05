@@ -245,6 +245,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
                             else if (i === 4) product.type = enumMyNFTType.Sold;
                             product.likes = itemObject.likes;
+                            product.views = itemObject.views;
                             product.status = itemObject.status;
                             product.isLike =
                                 i === 5

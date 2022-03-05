@@ -236,6 +236,43 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         setProductDetail(prodDetail);
     };
 
+    const updateProductViews = (tokenId: string) => {
+        if (signInDlgState.isLoggedIn && tokenId) {
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        setProductDetail((prevState: TypeProduct) => {
+                            const prodDetail: TypeProduct = { ...prevState };
+                            prodDetail.views += 1;
+                            return prodDetail;
+                        });
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    useEffect(() => {
+        updateProductViews(productDetail.tokenId);
+    }, [productDetail.tokenId]);
+
     return (
         <Container>
             <ProductPageHeader />
