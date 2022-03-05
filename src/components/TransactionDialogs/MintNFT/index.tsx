@@ -51,18 +51,6 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 {dialogState.createNFTDlgStep === 4 && <CheckSaleDetails />}
                 {dialogState.createNFTDlgStep === 5 && <ArtworkIsNowForSale />}
             </ModalDialog>
-            {/* <ModalDialog
-                open={dialogState.errorMessageDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, errorMessageDlgOpened: false });
-                }}
-            >
-                <ErrorMessage
-                    onClose={() => {
-                        setDialogState({ ...dialogState, errorMessageDlgOpened: false });
-                    }}
-                />
-            </ModalDialog> */}
         </>
     );
 };

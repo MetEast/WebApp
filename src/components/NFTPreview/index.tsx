@@ -17,6 +17,7 @@ export interface ComponentProps {
     index: number;
     updateLikes: (index: number, type: string) => void;
     productViewMode?: 'grid1' | 'grid2';
+    isBlindBox?: boolean;
 }
 
 const NFTPreview: React.FC<ComponentProps> = ({
@@ -25,6 +26,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
     index,
     updateLikes,
     productViewMode,
+    isBlindBox,
 }): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -55,11 +57,17 @@ const NFTPreview: React.FC<ComponentProps> = ({
         if (signInDlgState.isLoggedIn) {
             let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
             reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
-            const reqBody = {
-                token: tokenCookies.METEAST_TOKEN,
-                tokenId: product.tokenId,
-                did: didCookies.METEAST_DID,
-            };
+            const reqBody = isBlindBox
+                ? {
+                      token: tokenCookies.METEAST_TOKEN,
+                      blindBoxIndex: product.tokenId,
+                      did: didCookies.METEAST_DID,
+                  }
+                : {
+                      token: tokenCookies.METEAST_TOKEN,
+                      tokenId: product.tokenId,
+                      did: didCookies.METEAST_DID,
+                  };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
             setLikeState(!likeState);

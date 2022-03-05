@@ -1,28 +1,9 @@
-import { useCallback } from "react";
-// const [elaPrice, setElaPrice] = useState<number>(0);
-// export const getELA2USD = useCallback(async () => {
-//     try {
-//         const resElaUsdRate = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 Accept: 'application/json',
-//             },
-//         });
-//         const dataElaUsdRate = await resElaUsdRate.json();
-
-//         if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
-//         return NaN;
-//     } catch (error) {
-//         return NaN;
-//     }
-// }, []);
-
 export const FETCH_CONFIG_JSON = {
     headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-    }
-}
+    },
+};
 
 export const getELA2USD = async () => {
     try {
@@ -98,3 +79,43 @@ export const getTodayEarned = async (address: string) => {
         return 0;
     }
 };
+
+export const uploadUserProfile = (
+    token: string,
+    did: string,
+    name: string,
+    description: string,
+    _urlAvatar: string,
+    _urlCoverImage: string,
+) =>
+    new Promise((resolve, reject) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
+        const reqBody = {
+            token: token,
+            did: did,
+            name: name,
+            description: description,
+            avatar: _urlAvatar,
+            coverImage: _urlCoverImage,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    console.log(data);
+                    reject(false);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(false);
+            });
+    });

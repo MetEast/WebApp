@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext } from 'react';
 import { TypeSelectItem } from 'src/types/select-types';
 
 interface State {
+    // manage profile
+    manageProfileDlgOpened: boolean;
     // mint nft
     createNFTDlgOpened: boolean;
     createNFTDlgStep: number;
@@ -81,18 +83,15 @@ interface State {
     createBlindBoxDlgStep: number;
     crtBlindTitle: string;
     crtBlindDescription: string;
-    crtBlindAuthorDescription: string;
     crtBlindImage?: File;
     crtBlindTokenIds: string;
+    crtBlindTokenNames: string;
     crtBlindStatus: 'offline' | 'online';
     crtBlindQuantity: number;
     crtBlindPrice: number;
     crtBlindSaleBegin: string;
     crtBlindSaleEnd: string;
-    crtBlindLikes: number;
-    crtBlindViews: number;
     crtBlindPurchases: number;
-    crtBlindSort: TypeSelectItem;
     crtBlindTxFee: number;
     crtBlindTxHash: string;
     // buy blind box
@@ -118,6 +117,8 @@ interface State {
 }
 
 const defaultState: State = {
+    // manage profile
+    manageProfileDlgOpened: false,
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
@@ -196,17 +197,14 @@ const defaultState: State = {
     createBlindBoxDlgStep: 0,
     crtBlindTitle: '',
     crtBlindDescription: '',
-    crtBlindAuthorDescription: '',
     crtBlindTokenIds: '',
+    crtBlindTokenNames: '',
     crtBlindStatus: 'offline',
     crtBlindQuantity: 0,
     crtBlindPrice: 0,
     crtBlindSaleBegin: '',
     crtBlindSaleEnd: '',
-    crtBlindLikes: 0,
-    crtBlindViews: 0,
     crtBlindPurchases: 0,
-    crtBlindSort: { label: '', value: '' },
     crtBlindTxFee: 0,
     crtBlindTxHash: '',
     // buy blind box

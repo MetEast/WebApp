@@ -15,6 +15,7 @@ export interface ComponentProps {
     number?: boolean;
     error?: boolean;
     errorText?: string;
+    limit?: number;
     sx?: SxProps;
     changeHandler?: (value: string) => void;
 }
@@ -32,6 +33,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
     number = false,
     error = false,
     errorText = '',
+    limit,
     sx,
     changeHandler = () => {},
 }): JSX.Element => {
@@ -39,7 +41,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
     const [invalid, setInvalid] = useState<boolean>(true);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+        const value = limit ? event.target.value.slice(0, limit) : event.target.value;
         setText(value);
         changeHandler(value);
 

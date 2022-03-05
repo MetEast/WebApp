@@ -417,6 +417,24 @@ export const METEAST_MARKET_CONTRACT_ABI = [
   {
     "inputs": [
       {
+        "internalType": "uint256[]",
+        "name": "_orderIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "string",
+        "name": "_didUri",
+        "type": "string"
+      }
+    ],
+    "name": "buyOrderBatch",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_orderId",
         "type": "uint256"

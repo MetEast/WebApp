@@ -9,7 +9,6 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
-import { useSnackbar } from 'notistack';
 import Select from 'src/components/Select';
 import { useStyles, SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
@@ -27,14 +26,11 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [titleError, setTitleError] = useState(false);
     const [introduction, setIntroduction] = useState<string>('');
     const [introductionError, setIntroductionError] = useState(false);
-    // const [author, setAuthor] = useState<string>('');
-    // const [authorError, setAutorError] = useState(false);
     const [mintFile, setMintFile] = useState<File>();
     const [mintFileError, setMintFileError] = useState(false);
     const [stateFile, setStateFile] = useState(null);
     const [royalties, setRoyalties] = useState<number>(10);
     const [royaltiesError, setRoyaltiesError] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
 
     const handleFileChange = (files: Array<File>) => {
         handleDropSingleFile(files);
@@ -136,8 +132,6 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 sx={{
                                     width: '100%',
                                     height: { xs: '240px', sm: '100%' },
-                                    // justifyContent: 'center',
-                                    // alignItems: 'center',
                                     marginTop: '1rem',
                                     borderRadius: '8px',
                                     background: '#E8F4FF',
@@ -150,15 +144,6 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 </Typography>
                             )}
                         </Stack>
-                        {/* <CustomTextField
-                            title="About the author"
-                            placeholder="Enter author introduction"
-                            multiline
-                            rows={3}
-                            error={authorError}
-                            errorText="Author can not be empty."
-                            changeHandler={(value: string) => setAuthor(value)}
-                        /> */}
                     </Grid>
                 </Grid>
             </Box>
@@ -173,7 +158,6 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             setDialogState({
                                 ...dialogState,
                                 mintTitle: '',
-                                // mintAuthor: '',
                                 mintIntroduction: '',
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
@@ -191,7 +175,6 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             if (
                                 title !== '' &&
                                 introduction !== '' &&
-                                // author !== '' &&
                                 category !== undefined &&
                                 category.label !== '' &&
                                 category.value !== '' &&
@@ -204,7 +187,6 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 setDialogState({
                                     ...dialogState,
                                     mintTitle: title,
-                                    // mintAuthor: author,
                                     mintIntroduction: introduction,
                                     mintCategory: category || { label: '', value: '' },
                                     mintFile: mintFile,
@@ -215,14 +197,9 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             } else {
                                 setTitleError(title === '');
                                 setIntroductionError(introduction === '');
-                                // setAutorError(author === '');
                                 setRoyaltiesError(royalties <= 0 || royalties >= 100);
                                 setCategoryError(category === undefined);
                                 setMintFileError(mintFile === undefined);
-                                enqueueSnackbar('Form validation failed!', {
-                                    variant: 'warning',
-                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                });
                             }
                         }}
                     >

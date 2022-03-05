@@ -48,7 +48,7 @@ import ModalDialog from 'src/components/ModalDialog';
 // import ReceivedBids from 'src/components/profile/ReceivedBids';
 // import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 // import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
-import ManageProfile from 'src/components/profile/ManageProfile';
+import ManageProfile from 'src/components/ManageProfile/ManageProfile';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -59,7 +59,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
-    const [manageProfileDlgOpen, setManageProfileDlgOpen] = React.useState<boolean>(false);
     const [testdlgOpen, setTestdlgOpen] = React.useState<boolean>(false);
     const testDlgShow = false;
 
@@ -111,19 +110,12 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:user" fontSize={20} color="black" />
             </IconButton>
-            {/* <IconButton
-                onClick={() => {
-                    setSignInDlgState({ ...signInDlgState, signOut: true });
-                }}
-            >
-                <Icon icon="ph:sign-out" fontSize={20} color="black" />
-            </IconButton> */}
             {isProfilePage ? (
                 <PrimaryButton
                     size="small"
                     sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
                     onClick={() => {
-                        setManageProfileDlgOpen(true);
+                        setDialogState({ ...dialogState, manageProfileDlgOpened: true });
                     }}
                 >
                     <Icon icon="ci:settings-future" fontSize={20} color="white" style={{ marginBottom: 1 }} />
@@ -151,21 +143,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                             </Typography>
                         )}
                     </PrimaryButton>
-                    {/* <PrimaryButton
-                        size="small"
-                        sx={{ paddingX: 2 }}
-                        onClick={() => {
-                            navigate('/admin/nfts');
-                        }}
-                    >
-                        {mobile ? 'admin' : 'admin area'}
-                        <Icon
-                            icon="ph:arrow-square-out"
-                            fontSize={20}
-                            color="white"
-                            style={{ marginLeft: 4, marginBottom: 4 }}
-                        />
-                    </PrimaryButton> */}
                     <PrimaryButton
                         size="small"
                         sx={{ minWidth: 40, background: '#A453D6', '&:hover': { background: '#A463D6' } }}
@@ -240,18 +217,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     </Stack>
                 )}
             </Stack>
-            <ModalDialog
-                open={manageProfileDlgOpen}
-                onClose={() => {
-                    setManageProfileDlgOpen(false);
-                }}
-            >
-                <ManageProfile
-                    onClose={() => {
-                        setManageProfileDlgOpen(false);
-                    }}
-                />
-            </ModalDialog>
             {testDlgShow && (
                 <ModalDialog
                     open={testdlgOpen}

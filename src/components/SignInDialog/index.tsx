@@ -55,7 +55,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
-        let currentConnector = null;
+        let currentConnector: any = null;
         if (wallet === 'MM') {
             currentConnector = injected;
             await activate(currentConnector);
@@ -66,23 +66,70 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         }
         const retAddress = await currentConnector?.getAccount();
         if (retAddress !== undefined && retAddress !== null) {
-            console.log('loged in');
-            if (currentConnector === injected) {
-                setLinkCookie('METEAST_LINK', '2');
-                linkType = 2;
-            } else if (currentConnector === walletconnect) {
-                setLinkCookie('METEAST_LINK', '3');
-                linkType = 3;
-            }
-            setActivatingConnector(currentConnector);
-            _setSignInState((prevState: SignInState) => {
-                const _state = { ...prevState };
-                _state.isLoggedIn = true;
-                _state.loginType = '2';
-                _state.signInDlgOpened = false;
-                _state.walletAccounts = [retAddress];
-                return _state;
-            });
+            const reqBody = {
+                isMetaMask: 1,
+                did: retAddress,
+                name: '',
+                avatar: '',
+                description: '',
+            };
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (currentConnector === injected) {
+                            setLinkCookie('METEAST_LINK', '2');
+                            linkType = 2;
+                        } else if (currentConnector === walletconnect) {
+                            setLinkCookie('METEAST_LINK', '3');
+                            linkType = 3;
+                        }
+                        setActivatingConnector(currentConnector);
+                        const token = data.token;
+                        setLinkCookie('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
+                        setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                        setDidCookie('METEAST_DID', retAddress, { path: '/', sameSite: 'none', secure: true });
+                        const user = jwtDecode(token);
+                        console.log('Sign in with MM: setting user to:', user);
+                        _setSignInState((prevState: SignInState) => {
+                            const _state = { ...prevState };
+                            _state.isLoggedIn = true;
+                            _state.loginType = '2';
+                            _state.signInDlgOpened = false;
+                            _state.walletAccounts = [retAddress];
+                            return _state;
+                        });
+                        enqueueSnackbar('Login succeed.', {
+                            variant: 'success',
+                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                        });
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    enqueueSnackbar(
+                        `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
+                        { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                    );
+                    try {
+                        currentConnector
+                            .deactivate()
+                            .then((res: any) => {})
+                            .catch((e: any) => {
+                                console.log(e);
+                            });
+                    } catch (e) {
+                        console.error('Error while trying to disconnect wallet connect session', e);
+                    }
+                });
         }
     };
 
@@ -252,7 +299,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         const userInfo: UserTokenType =
             tokenCookies.METEAST_TOKEN === undefined
-                ? { did: '', name: '', description: '', avatar: '', email: '', exp: 0, iat: 0, type: '', canManageAdmins: false }
+                ? { did: '', name: '', description: '', avatar: '', exp: 0, iat: 0 }
                 : jwtDecode(tokenCookies.METEAST_TOKEN);
         getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri: string) => {
             setSignInDlgState({ ..._signInState, didUri: didUri });
@@ -267,16 +314,16 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 else if (signInDlgState.loginType === '2') signOutWithWallet();
             } else if (signInDlgState.disconnectWallet) {
                 if (signInDlgState.loginType === '1') disconnectEssentials();
-                else if (signInDlgState.loginType === '2') signOutWithWallet();
+                else if (signInDlgState.loginType === '2') disconnectWallet();
             }
         }
-    }, [signInDlgState.signOut, signInDlgState.disconnectWallet]);
+    }, [signInDlgState]);
 
-    // useEffect(() => {
-    //     console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
-    //     // alert(signInDlgState.walletAccounts);
-    //     // alert(signInDlgState.walletBalance);
-    // }, [signInDlgState]);
+    useEffect(() => {
+        console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
+        // alert(signInDlgState.walletAccounts);
+        // alert(signInDlgState.walletBalance);
+    }, [signInDlgState]);
 
     if (linkType === '1') initConnectivitySDK();
 
@@ -306,11 +353,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     DID.simpleIdClaim('Your avatar', 'avatar', false),
                 ],
             });
-            // _setSignInState((prevState: SignInState) => {
-            //     const _state = { ...prevState };
-            //     _state.signInDlgOpened = true;
-            //     return _state;
-            // });
         } catch (e) {
             console.warn('Error while getting credentials', e);
             try {
@@ -339,7 +381,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
                         const user = jwtDecode(token);
-                        console.log('Sign in: setting user to:', user);
+                        console.log('Sign in with EE: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
                             const _state = { ...prevState };
                             _state.isLoggedIn = true;

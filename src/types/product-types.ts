@@ -186,10 +186,17 @@ export type TypeProductFetch = {
     saleEnd: string;
     sort: string;
     state: string;
+    list_likes: Array<TypeBlindListLikes>;
 };
 
 export type TypeFavouritesFetch = {
     tokenId: string;
+};
+
+export type TypeBlindListLikes = {
+    did: string;
+    isTokenId: number;
+    tokenId: number;
 };
 
 export type TypeLikesFetchItem = {
@@ -210,7 +217,9 @@ export type TypeVeiwsLikesFetch = {
 export type TypeNFTTransactionFetch = {
     blockNumber: number;
     from: string;
+    fromName: string;
     to: string;
+    toName: string;
     price: string;
     gasFee: number;
     name: string;
