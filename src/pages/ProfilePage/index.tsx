@@ -104,6 +104,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
+                  coverImage: '',
                   exp: 0,
                   iat: 0,
               }
@@ -488,6 +489,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                               name: '',
                               description: '',
                               avatar: '',
+                              coverImage: '',
                               exp: 0,
                               iat: 0,
                           }

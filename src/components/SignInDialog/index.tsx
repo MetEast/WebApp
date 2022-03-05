@@ -95,7 +95,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         setLinkCookie('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         setDidCookie('METEAST_DID', retAddress, { path: '/', sameSite: 'none', secure: true });
-                        const user = jwtDecode(token);
+                        const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with MM: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
                             const _state = { ...prevState };
@@ -103,6 +103,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             _state.loginType = '2';
                             _state.signInDlgOpened = false;
                             _state.walletAccounts = [retAddress];
+                            _state.userDid = user.did;
+                            if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
+                            if (user.description !== '' && user.description !== undefined) _state.userDescription = user.description;
+                            if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
+                            if (user.coverImage !== '' && user.coverImage !== undefined) _state.userCoverImage = user.coverImage;
                             return _state;
                         });
                         enqueueSnackbar('Login succeed.', {
@@ -299,7 +304,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         const userInfo: UserTokenType =
             tokenCookies.METEAST_TOKEN === undefined
-                ? { did: '', name: '', description: '', avatar: '', exp: 0, iat: 0 }
+                ? { did: '', name: '', description: '', avatar: '', coverImage: '', exp: 0, iat: 0 }
                 : jwtDecode(tokenCookies.METEAST_TOKEN);
         getDidUri(didCookies.METEAST_DID, '', userInfo.name).then((didUri: string) => {
             setSignInDlgState({ ..._signInState, didUri: didUri });
@@ -321,8 +326,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     useEffect(() => {
         console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
-        // alert(signInDlgState.walletAccounts);
-        // alert(signInDlgState.walletBalance);
     }, [signInDlgState]);
 
     if (linkType === '1') initConnectivitySDK();
@@ -380,12 +383,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         setLinkCookie('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
                         setTokenCookie('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         setDidCookie('METEAST_DID', did, { path: '/', sameSite: 'none', secure: true });
-                        const user = jwtDecode(token);
+                        const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with EE: setting user to:', user);
                         _setSignInState((prevState: SignInState) => {
                             const _state = { ...prevState };
                             _state.isLoggedIn = true;
                             _state.loginType = '1';
+                            _state.userDid = user.did;
+                            if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
+                            if (user.description !== '' && user.description !== undefined) _state.userDescription = user.description;
+                            if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
+                            if (user.coverImage !== '' && user.coverImage !== undefined) _state.userCoverImage = user.coverImage;
                             _state.signInDlgOpened = false;
                             if (isInAppBrowser()) {
                                 const inAppProvider: any = window.elastos.getWeb3Provider();

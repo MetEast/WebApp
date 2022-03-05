@@ -38,6 +38,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
+                  coverImage: '',
                   exp: 0,
                   iat: 0,
               }

@@ -32,6 +32,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
+                  coverImage: '',
                   exp: 0,
                   iat: 0,
               }
@@ -77,7 +78,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     userName,
                     userDescription,
                     avatarUrl,
-                    added.path,
+                    `meteast:image:${added.path}`,
                 );
             })
             .then((success) => {
@@ -86,7 +87,11 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         variant: 'warning',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                else {
+                    alert('change');
+                }
                 setOnProgress(false);
+                onClose();
             })
             .catch((error) => {
                 enqueueSnackbar('Error!', {
@@ -94,6 +99,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setOnProgress(false);
+                onClose();
             });
     };
 
@@ -147,6 +153,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     placeholder="Enter your name"
                     height={56}
                     sx={{ marginTop: 2.5 }}
+                    inputValue={userName}
                     changeHandler={(value: string) => setUserName(value)}
                 />
                 <CustomTextField
@@ -155,6 +162,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     multiline
                     rows={5}
                     limit={140}
+                    inputValue={userDescription}
                     changeHandler={(value: string) => setUserDescription(value)}
                 />
                 <Stack spacing={1}>

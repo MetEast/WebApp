@@ -36,6 +36,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                   name: '',
                   description: '',
                   avatar: '',
+                  coverImage: '',
                   exp: 0,
                   iat: 0,
               }
