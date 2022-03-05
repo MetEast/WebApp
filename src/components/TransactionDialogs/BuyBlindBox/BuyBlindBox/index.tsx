@@ -8,6 +8,7 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeProduct, TypeProductFetch, enumSingleNFTType } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
+import { FETCH_CONFIG_JSON } from 'src/services/fetch';
 
 export interface ComponentProps {}
 
@@ -39,24 +40,14 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const selectFromBlindBox = async () => {
         const resNFTList = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/api/v1/selectBlindBoxToken?id=${dialogState.buyBlindBoxId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
+            FETCH_CONFIG_JSON
         );
         const dataNFTList = await resNFTList.json();
         const tokenId = dataNFTList.data.result;
         console.log(tokenId);
         const resProductDetail = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
+            FETCH_CONFIG_JSON
         );
         const dataProductDetail = await resProductDetail.json();
         const productDetail = dataProductDetail.data;
