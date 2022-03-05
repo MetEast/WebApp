@@ -320,7 +320,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     }, [signInDlgState]);
 
     useEffect(() => {
-        console.log('--------accounts: ', signInDlgState, jwtDecode(tokenCookies.METEAST_TOKEN));
+        console.log('--------accounts: ', signInDlgState, tokenCookies.METEAST_TOKEN);
         // alert(signInDlgState.walletAccounts);
         // alert(signInDlgState.walletBalance);
     }, [signInDlgState]);

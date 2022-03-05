@@ -116,6 +116,30 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
         }
     };
 
+    const handleSelectChange = (index: number) => {
+        let checkState: Array<boolean> = [...itemChecked];
+        let selTokenIds: Array<string> = [...selectedTokenIds];
+        checkState[index] = !itemChecked[index];
+        if (!itemChecked[index]) {
+            selTokenIds.push(itemList[index].tokenId);
+        } else {
+            const id = selTokenIds.indexOf(itemList[index].tokenId);
+            selTokenIds.splice(id, 1);
+        }
+        setItemChecked(checkState);
+        setSelectedTokenIds(selTokenIds);
+
+        if (selTokenIds.length === itemList.length) {
+            // all selected
+            setIndeterminateChecked(false);
+            setAllChecked(true);
+        } else {
+            if (selTokenIds.length === 0) setIndeterminateChecked(false);
+            else setIndeterminateChecked(true);
+            setAllChecked(false);
+        }
+    };
+
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -151,7 +175,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
             </Stack>
             {matchDownMd && (
                 <Typography fontSize={22} fontWeight={400} color="#4C4C4C">
-                    {itemList.length} Nft Selected
+                    {selectedTokenIds.length} Nft Selected
                 </Typography>
             )}
             <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
@@ -160,7 +184,10 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                         {itemList.map((item, index) => (
                             <Grid item xs={6}>
                                 <Stack width="100%" spacing={1}>
-                                    <ImageBox selected={true}>
+                                    <ImageBox
+                                        selected={itemChecked[index] === undefined ? false : itemChecked[index]}
+                                        onClick={() => handleSelectChange(index)}
+                                    >
                                         <Box className="image_box">
                                             <img src={item.url} alt="" />
                                         </Box>
@@ -243,7 +270,9 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 )}
             </Box>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth onClick={onClose}>Back</SecondaryButton>
+                <SecondaryButton fullWidth onClick={onClose}>
+                    Back
+                </SecondaryButton>
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
