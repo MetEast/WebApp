@@ -6,12 +6,13 @@ import {
     TypeBlindListLikes,
     TypeNFTTransaction,
     TypeNFTTransactionFetch,
+    TypeSingleNFTBid,
+    TypeSingleNFTBidFetch,
     enumTransactionType,
     enumBlindBoxNFTType,
-
 } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
-import { blankNFTItem, blankNFTTxs, blankBBItem } from 'src/constants/init-constants';
+import { blankNFTItem, blankNFTTxs, blankNFTBid, blankBBItem } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 
@@ -186,8 +187,12 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
     return _arrBBList;
 };
 
-// SingleNFTFixedPrice
-export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
+// SingleNFTFixedPrice & SingleNFTAuction
+export const getNFTItem = async (
+    tokenId: string | undefined,
+    ELA2USD: number,
+    likeList: Array<TypeFavouritesFetch>,
+) => {
     const resNFTItem = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
@@ -214,14 +219,23 @@ export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number, l
         _NFTItem.authorDescription = itemObject.authorDescription || ' ';
         _NFTItem.authorImg = _NFTItem.image; // -- no proper value
         _NFTItem.authorAddress = itemObject.royaltyOwner;
+        _NFTItem.holder = itemObject.holder;
         _NFTItem.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
         _NFTItem.orderId = itemObject.orderId;
-        _NFTItem.holder = itemObject.holder;
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _NFTItem.category = itemObject.category;
         const createTime = getUTCTime(itemObject.createTime);
         _NFTItem.createTime = createTime.date + '' + createTime.time;
+        _NFTItem.status = itemObject.status;
+        if (itemObject.endTime) {
+            const endTime = getTime(itemObject.endTime); // no proper value
+            _NFTItem.endTime = endTime.date + ' ' + endTime.time;
+        } else {
+            _NFTItem.endTime = ' ';
+        }
+        _NFTItem.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+        _NFTItem.isBlindbox = itemObject.isBlindbox;
     }
     return _NFTItem;
 };
@@ -283,6 +297,49 @@ export const getNFTLatestTxs = async (tokenId: string | undefined, pageNum: numb
         _NFTTxList.push(_NFTTx);
     }
     return _NFTTxList;
+};
+
+export const getNFTLatestBids = async (
+    tokenId: string | undefined,
+    userAddress: string,
+    pageNum: number,
+    pageSize: number,
+) => {
+    const resNFTBids = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${tokenId}&address=${userAddress}&pageNum=${pageNum}&$pageSize=${pageSize}&timeOrder=-1`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNFTBids = await resNFTBids.json();
+    const arrNFTBids = jsonNFTBids.data;
+
+    let _otherNFTBidList: Array<TypeSingleNFTBid> = [];
+    if (arrNFTBids !== undefined && arrNFTBids.others !== undefined) {
+        for (let i = 0; i < arrNFTBids.others.length; i++) {
+            const itemObject: TypeSingleNFTBidFetch = arrNFTBids.others[i];
+            const _otherNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
+            _otherNFTBid.user = itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
+            _otherNFTBid.price = parseFloat(itemObject.price) / 1e18;
+            _otherNFTBid.orderId = itemObject.orderId;
+            const timestamp = getTime(itemObject.timestamp);
+            _otherNFTBid.time = timestamp.date + ' ' + timestamp.time;
+            _otherNFTBidList.push(_otherNFTBid);
+        }
+    }
+
+    let _myNFTBidList: Array<TypeSingleNFTBid> = [];
+    if (arrNFTBids !== undefined && arrNFTBids.yours !== undefined) {
+        for (let i = 0; i < arrNFTBids.yours.length; i++) {
+            const itemObject: TypeSingleNFTBidFetch = arrNFTBids.yours[i];
+            const _myNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
+            _myNFTBid.user = itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
+            _myNFTBid.price = parseFloat(itemObject.price) / 1e18;
+            _myNFTBid.orderId = itemObject.orderId;
+            const timestamp = getTime(itemObject.timestamp);
+            _myNFTBid.time = timestamp.date + ' ' + timestamp.time;
+            _myNFTBidList.push(_myNFTBid);
+        }
+    }
+    return { mine: _myNFTBidList, others: _otherNFTBidList };
 };
 
 export const getTotalEarned = async (address: string) => {

@@ -97,6 +97,7 @@ export type TypeProduct = {
     maxPurchases?: number;
     maxQuantity?: number;
     did?: string;
+    isBlindbox?: boolean;
 };
 
 export type TypeNFTTransaction = {
@@ -196,6 +197,7 @@ export type TypeProductFetch = {
     tokenIds: string[];
     createdName: string;
     createdAddress: string;
+    isBlindbox: boolean;
 };
 
 export type TypeFavouritesFetch = {
@@ -258,6 +260,8 @@ export type TypeSingleNFTBidFetch = {
     id: string;
     sellerAddr: string;
     buyerAddr: string;
+    buyerName: string;
+    sellerName: string;
     royaltyFee: string;
     tokenId: string;
     price: string;
