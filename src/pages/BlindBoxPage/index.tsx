@@ -10,7 +10,6 @@ import { TypeSelectItem } from 'src/types/select-types';
 import {
     TypeProduct,
     TypeProductFetch,
-    enumSingleNFTType,
     enumBlindBoxNFTType,
     TypeBlindListLikes
 } from 'src/types/product-types';
@@ -20,6 +19,7 @@ import { getTime } from 'src/services/common';
 import { getELA2USD } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
+import { blankBBItem } from 'src/constants/init-constants';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -28,34 +28,12 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-        sold: 0,
-        instock: 0,
-    };
+    
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([
-        defaultValue,
-        defaultValue,
-        defaultValue,
-        defaultValue,
+        blankBBItem,
+        blankBBItem,
+        blankBBItem,
+        blankBBItem,
     ]);
 
     const adBanners = [
@@ -125,7 +103,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         let _blindBoxList: Array<TypeProduct> = [];
         for (let i = 0; i < arrBlindBoxList.length; i++) {
             let itemObject: TypeProductFetch = arrBlindBoxList[i];
-            let blindboxItem: TypeProduct = { ...defaultValue };
+            let blindboxItem: TypeProduct = { ...blankBBItem };
             blindboxItem.tokenId = itemObject.blindBoxIndex.toString();
             blindboxItem.name = itemObject.name;
             blindboxItem.image = getImageFromAsset(itemObject.asset);

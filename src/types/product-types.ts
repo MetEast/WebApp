@@ -194,6 +194,8 @@ export type TypeProductFetch = {
     did: string;
     sold_tokenIds: string[];
     tokenIds: string[];
+    createdName: string;
+    createdAddress: string;
 };
 
 export type TypeFavouritesFetch = {

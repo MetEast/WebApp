@@ -26,7 +26,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
-    const defaultEarningValue: TypeYourEarning = {
+    const blankMyEarningValue: TypeYourEarning = {
         avatar: '',
         title: '',
         time: '',
@@ -57,7 +57,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         const _myEarningList: any = [];
         for (let i = 0; i < arrEarnedResult.length; i++) {
             const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
-            let _earning: TypeYourEarning = { ...defaultEarningValue };
+            let _earning: TypeYourEarning = { ...blankMyEarningValue };
             _earning.title = itemObject.name;
             _earning.avatar = getImageFromAsset(itemObject.thumbnail);
             _earning.price = itemObject.iEarned / 1e18;

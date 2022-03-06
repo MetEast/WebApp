@@ -6,7 +6,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, enumSingleNFTType, TypeBlindBoxCandidate } from 'src/types/product-types';
+import { TypeBlindBoxCandidate } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { FETCH_CONFIG_JSON } from 'src/services/fetch';
 
@@ -87,7 +87,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     />
                     <IconBtn
                         onClick={() => {
-                            setAmount(amount + 1);
+                            dialogState.buyBlindLeftAmount > amount && setAmount(amount + 1);
                         }}
                     >
                         <Icon icon="ph:plus" color="#1890FF" />

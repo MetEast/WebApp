@@ -44,41 +44,13 @@ import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale'
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
+import { blankNFTItem, blankNFTTxs } from 'src/constants/init-constants';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-    };
-    const defaultTransactionValue: TypeNFTTransaction = {
-        type: enumTransactionType.Bid,
-        user: '',
-        price: 0,
-        time: '',
-        txHash: '',
-    };
-
-    const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
@@ -153,7 +125,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event === 'Transfer') continue;
-            var _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
+            var _transaction: TypeNFTTransaction = { ...blankNFTTxs };
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;

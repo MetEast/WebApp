@@ -34,6 +34,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from 'src/components/Container';
 import { borderRadius } from '@mui/system';
+import { blankMyEarning, blankMyNFTItem } from 'src/constants/init-constants';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -48,41 +49,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
     );
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
-
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumMyNFTType.Created,
-        isLike: false,
-    };
-    const defaultEarningValue: TypeYourEarning = {
-        avatar: '',
-        title: '',
-        time: '',
-        price: 0,
-        badge: enumBadgeType.Other,
-    };
     const [reload, setReload] = useState<boolean>(false);
 
     const [toatlEarned, setTotalEarned] = useState<number>(0);
     const [todayEarned, setTodayEarned] = useState<number>(0);
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
-    const [myNFTList, setMyNFTList] = useState<Array<Array<TypeProduct>>>(Array(6).fill(Array(4).fill(defaultValue)));
+    const [myNFTList, setMyNFTList] = useState<Array<Array<TypeProduct>>>(Array(6).fill(Array(4).fill(blankMyNFTItem)));
     const [isLoadingAssets, setIsLoadingAssets] = useState<Array<boolean>>(Array(6).fill(true));
     const apiNames = [
         'getAllCollectibleByAddress',
@@ -193,7 +165,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         let _myNftList: any = [];
                         for (let j = 0; j < arrSearchResult.length; j++) {
                             const itemObject: TypeProductFetch = arrSearchResult[j];
-                            let product: TypeProduct = { ...defaultValue };
+                            let product: TypeProduct = { ...blankMyNFTItem };
                             product.tokenId = itemObject.tokenId;
                             product.name = itemObject.name;
                             product.image = getImageFromAsset(itemObject.asset);
@@ -294,7 +266,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 let _myNftList: any = [];
                 for (let j = 0; j < arrSearchResult.length; j++) {
                     const itemObject: TypeProductFetch = arrSearchResult[j];
-                    let product: TypeProduct = { ...defaultValue };
+                    let product: TypeProduct = { ...blankMyNFTItem };
                     product.tokenId = itemObject.tokenId;
                     product.name = itemObject.name;
                     product.image = getImageFromAsset(itemObject.asset);
@@ -391,7 +363,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         let _myEarningList: any = [];
         for (let i = 0; i < arrEarnedResult.length; i++) {
             const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
-            let _earning: TypeYourEarning = { ...defaultEarningValue };
+            let _earning: TypeYourEarning = { ...blankMyEarning };
             // _earning.tokenId = itemObject.tokenId;
             _earning.title = itemObject.name;
             _earning.avatar = getImageFromAsset(itemObject.thumbnail);

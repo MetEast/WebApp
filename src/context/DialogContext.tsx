@@ -108,6 +108,7 @@ interface State {
     buyBlindTxFee: number;
     buyBlindTxHash: string;
     buyBlindCreator: string;
+    buyBlindLeftAmount: number;
     // error msg
     errorMessageDlgOpened: boolean;
     // all transactions
@@ -221,6 +222,7 @@ const defaultState: State = {
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',
+    buyBlindLeftAmount: 0,
     // error msg
     errorMessageDlgOpened: false,
     // all transactions

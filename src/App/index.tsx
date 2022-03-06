@@ -8,7 +8,6 @@ import { DialogContextProvider } from 'src/context/DialogContext';
 // import Web3 from 'web3'
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import { ConnectivityContextProvider } from 'src/context/ConnectivityContext';
 import { SnackbarProvider } from 'notistack';
 import { CookiesProvider } from 'react-cookie';
 import { SignInContextProvider } from 'src/context/SignInContext';
@@ -63,11 +62,9 @@ const App: React.FC = (): JSX.Element => {
                     <SignInContextProvider>
                         <DialogContextProvider>
                             <SnackbarProvider maxSnack={1}>
-                                <ConnectivityContextProvider>
-                                    <CookiesProvider>
-                                        <AppRouter />
-                                    </CookiesProvider>
-                                </ConnectivityContextProvider>
+                                <CookiesProvider>
+                                    <AppRouter />
+                                </CookiesProvider>
                             </SnackbarProvider>
                         </DialogContextProvider>
                     </SignInContextProvider>

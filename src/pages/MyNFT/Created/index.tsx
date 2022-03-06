@@ -32,42 +32,13 @@ import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
+import { blankNFTItem, blankMyNFTHistory } from 'src/constants/init-constants';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-    };
-    const defaultProdTransHisotryValue: TypeNFTHisotry = {
-        type: '',
-        user: '',
-        price: 0,
-        time: '',
-        saleType: enumTransactionType.ForSale,
-        txHash: '',
-    };
-
-    const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
@@ -83,7 +54,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         );
         const dataProductDetail = await resProductDetail.json();
         const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
+        var product: TypeProduct = { ...blankNFTItem };
 
         if (prodDetail !== undefined) {
             const itemObject: TypeProductFetch = prodDetail;
@@ -138,7 +109,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event !== 'Mint') continue;
-            let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+            let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
             _prodTrans.type = 'Created';
             _prodTrans.price = parseInt(itemObject.price) / 1e18;
             _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data

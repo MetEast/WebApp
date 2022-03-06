@@ -12,6 +12,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { selectFromFavourites } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import Container from 'src/components/Container';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -20,32 +21,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-    };
+    
     const [productList, setProductList] = useState<Array<TypeProduct>>([
-        defaultValue,
-        defaultValue,
-        defaultValue,
-        defaultValue,
+        blankNFTItem,
+        blankNFTItem,
+        blankNFTItem,
+        blankNFTItem,
     ]);
     const adBanners = [
         '/assets/images/banners/banner1.png',
@@ -114,7 +95,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         let _newProductList: any = [];
         for (let i = 0; i < arrSearchResult.length; i++) {
             let itemObject: TypeProductFetch = arrSearchResult[i];
-            var product: TypeProduct = { ...defaultValue };
+            var product: TypeProduct = { ...blankNFTItem };
             product.tokenId = itemObject.tokenId;
             product.name = itemObject.name;
             product.image = getImageFromAsset(itemObject.asset);

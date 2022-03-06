@@ -43,50 +43,13 @@ import { TypeSelectItem } from 'src/types/select-types';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
+import { blankNFTItem, blankMyNFTHistory, blankNFTTxs } from 'src/constants/init-constants';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-    };
-    const defaultTransactionValue: TypeNFTTransaction = {
-        type: enumTransactionType.Bid,
-        user: '',
-        price: 0,
-        time: '',
-        txHash: '',
-    };
-    const defaultProdTransHisotryValue: TypeNFTHisotry = {
-        type: '',
-        user: '',
-        price: 0,
-        time: '',
-        saleType: enumTransactionType.ForSale,
-        txHash: '',
-    };
-
-    const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
@@ -107,7 +70,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         );
         const dataProductDetail = await resProductDetail.json();
         const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
+        var product: TypeProduct = { ...blankNFTItem };
 
         if (prodDetail !== undefined) {
             const itemObject: TypeProductFetch = prodDetail;
@@ -165,7 +128,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event === 'Transfer') continue;
-            let _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
+            let _transaction: TypeNFTTransaction = { ...blankNFTTxs };
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
@@ -210,7 +173,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
             _latestTransList.push(_transaction);
 
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
-                let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+                let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
                 _prodTrans.type =
                     itemObject.event === 'Mint'
                         ? 'Created'

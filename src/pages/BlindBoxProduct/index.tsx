@@ -28,35 +28,14 @@ import { getELA2USD } from 'src/services/fetch';
 import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
+import { blankBBItem } from 'src/constants/init-constants';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumBlindBoxNFTType.ComingSoon,
-        isLike: false,
-        sold: 0,
-        instock: 0,
-    };
-    const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(defaultValue);
+
+    const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -74,7 +53,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         );
         const dataBlindBoxDetail = await resBlindBoxDetail.json();
         const blindDetail = dataBlindBoxDetail.data.result;
-        var blind: TypeProduct = { ...defaultValue };
+        var blind: TypeProduct = { ...blankBBItem };
 
         if (blindDetail !== undefined) {
             const itemObject: TypeProductFetch = blindDetail;
@@ -92,8 +71,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     : enumBlindBoxNFTType.SaleEnded;
             blind.likes = itemObject.likes;
             blind.views = itemObject.views;
-            blind.author = itemObject.authorName; // no data ------------------------------------
-            blind.royaltyOwner = itemObject.royaltyOwner;
+            blind.author = itemObject.createdName;
+            blind.royaltyOwner = itemObject.createdAddress;
             blind.isLike = signInDlgState.isLoggedIn
                 ? itemObject.list_likes.findIndex(
                       (value: TypeBlindListLikes) => value.did === `did:elastos:${signInDlgState.userDid}`,
@@ -232,7 +211,15 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                         buyBlindPriceUsd: blindBoxDetail.price_usd,
                                         buyBlindAmount: 1,
                                         buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                        buyBlindCreator: blindBoxDetail.author === '' ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4) : blindBoxDetail.author,
+                                        buyBlindCreator:
+                                            blindBoxDetail.author === ''
+                                                ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                : blindBoxDetail.author,
+                                        buyBlindLeftAmount:
+                                            blindBoxDetail.maxPurchases !== undefined &&
+                                            blindBoxDetail.sold !== undefined
+                                                ? blindBoxDetail.maxPurchases - blindBoxDetail.sold
+                                                : 0,
                                     });
                                 }}
                             >
