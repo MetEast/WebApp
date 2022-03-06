@@ -2,14 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import {
-    enumBadgeType,
-    enumSingleNFTType,
-    TypeProductFetch,
-    TypeNFTTransactionFetch,
-    enumTransactionType,
-    TypeFavouritesFetch,
-} from 'src/types/product-types';
+import { enumBadgeType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -19,15 +12,8 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
-import {
-    getImageFromAsset,
-    getMintCategory,
-    getTime,
-    getUTCTime,
-    reduceHexAddress,
-    selectFromFavourites,
-} from 'src/services/common';
-import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList, getNFTItem } from 'src/services/fetch';
+import { getMintCategory } from 'src/services/common';
+import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
@@ -44,7 +30,7 @@ import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale'
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankNFTTxs } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -64,7 +50,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _NFTItem = await getNFTItem(`tokenId=${params.id}`, ELA2USD, likeList);
+            const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
                 setProductDetail(_NFTItem);
             }
@@ -75,100 +61,48 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid]);
 
-    // -------------- Fetch Data -------------- //
-    
-    const getLatestTransaction = async () => {
-        const resLatestTransaction = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-            FETCH_CONFIG_JSON,
-        );
-        const dataLatestTransaction = await resLatestTransaction.json();
-        const arrLatestTransaction = dataLatestTransaction.data;
-
-        let _latestTransList: any = [];
-        for (let i = 0; i < arrLatestTransaction.length; i++) {
-            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
-            if (itemObject.event === 'Transfer') continue;
-            var _transaction: TypeNFTTransaction = { ...blankNFTTxs };
-            switch (itemObject.event) {
-                case 'Mint':
-                    _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                case 'CreateOrderForSale':
-                    _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'CreateOrderForAuction':
-                    _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'BidOrder':
-                    _transaction.type = enumTransactionType.Bid;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                case 'ChangeOrderPrice':
-                    _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'CancelOrder':
-                    _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'BuyOrder':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                // case 'Transfer':
-                //     _transaction.type = enumTransactionType.Transfer;
-                //     break;
-                case 'SettleBidOrder':
-                    _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _NFTTxs = await getNFTLatestTxs(params.id, 1, 5);
+            if (!unmounted) {
+                setTransactionsList(_NFTTxs);
             }
-            _transaction.price = parseInt(itemObject.price) / 1e18;
-            _transaction.txHash = itemObject.tHash;
-            let timestamp = getTime(itemObject.timestamp.toString());
-            _transaction.time = timestamp.date + ' ' + timestamp.time;
-            _latestTransList.push(_transaction);
-        }
-        setTransactionsList(_latestTransList);
-    };
-
-    useEffect(() => {
-        getLatestTransaction();
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
     }, [transactionSortBy]);
-
-    const setBuyNowTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, buyNowTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
+    // -------------- Fetch Data -------------- //
+    // buy now tx fee
     useEffect(() => {
+        const setBuyNowTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, buyNowTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setBuyNowTxFee();
     }, [dialogState.buyNowDlgStep]);
 
     // change price tx fee
-    const setChangePriceTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setChangePriceTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setChangePriceTxFee();
     }, [dialogState.changePriceDlgStep]);
 
     // cancel sale tx fee
-    const setCancelSaleTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setCancelSaleTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setCancelSaleTxFee();
     }, [dialogState.cancelSaleDlgStep]);
 
+    // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
         setProductDetail((prevState: TypeProduct) => {
             const prodDetail: TypeProduct = { ...prevState };
@@ -181,41 +115,46 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         });
     };
 
-    const updateProductViews = (tokenId: string) => {
-        if (signInDlgState.isLoggedIn && tokenId) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = {
-                token: signInDlgState.token,
-                tokenId: tokenId,
-                did: signInDlgState.userDid,
-            };
-            fetch(reqUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reqBody),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        setProductDetail((prevState: TypeProduct) => {
-                            const prodDetail: TypeProduct = { ...prevState };
-                            prodDetail.views += 1;
-                            return prodDetail;
-                        });
-                    } else {
-                        console.log(data);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
     useEffect(() => {
+        let unmounted = false;
+        const updateProductViews = (tokenId: string) => {
+            if (signInDlgState.isLoggedIn && tokenId) {
+                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+                const reqBody = {
+                    token: signInDlgState.token,
+                    tokenId: tokenId,
+                    did: signInDlgState.userDid,
+                };
+                fetch(reqUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reqBody),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.code === 200) {
+                            if (!unmounted) {
+                                setProductDetail((prevState: TypeProduct) => {
+                                    const prodDetail: TypeProduct = { ...prevState };
+                                    prodDetail.views += 1;
+                                    return prodDetail;
+                                });
+                            }
+                        } else {
+                            console.log(data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        };
         updateProductViews(productDetail.tokenId);
+        return () => {
+            unmounted = true;
+        };
     }, [productDetail.tokenId]);
 
     return (

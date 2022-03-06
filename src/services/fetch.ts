@@ -3,11 +3,15 @@ import {
     enumSingleNFTType,
     TypeProductFetch,
     TypeFavouritesFetch,
-    enumBlindBoxNFTType,
     TypeBlindListLikes,
+    TypeNFTTransaction,
+    TypeNFTTransactionFetch,
+    enumTransactionType,
+    enumBlindBoxNFTType,
+
 } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
-import { blankNFTItem, blankBBItem } from 'src/constants/init-constants';
+import { blankNFTItem, blankNFTTxs, blankBBItem } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 
@@ -183,9 +187,9 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
 };
 
 // SingleNFTFixedPrice
-export const getNFTItem = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
+export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTItem = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?${fetchParams}`,
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTItem = await resNFTItem.json();
@@ -220,6 +224,65 @@ export const getNFTItem = async (fetchParams: string, ELA2USD: number, likeList:
         _NFTItem.createTime = createTime.date + '' + createTime.time;
     }
     return _NFTItem;
+};
+
+export const getNFTLatestTxs = async (tokenId: string | undefined, pageNum: number, pageSize: number) => {
+    const resNFTTxs = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&$pageSize=${pageSize}&timeOrder=-1`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNFTTxs = await resNFTTxs.json();
+    const arrNFTTxs = jsonNFTTxs.data;
+
+    let _NFTTxList: Array<TypeNFTTransaction> = [];
+    for (let i = 0; i < arrNFTTxs.length; i++) {
+        const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
+        if (itemObject.event === 'Transfer') continue;
+        const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
+        switch (itemObject.event) {
+            case 'Mint':
+                _NFTTx.type = enumTransactionType.CreatedBy;
+                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                break;
+            case 'CreateOrderForSale':
+                _NFTTx.type = enumTransactionType.ForSale;
+                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                break;
+            case 'CreateOrderForAuction':
+                _NFTTx.type = enumTransactionType.OnAuction;
+                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                break;
+            case 'BidOrder':
+                _NFTTx.type = enumTransactionType.Bid;
+                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                break;
+            case 'ChangeOrderPrice':
+                _NFTTx.type = enumTransactionType.PriceChanged;
+                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                break;
+            case 'CancelOrder':
+                _NFTTx.type = enumTransactionType.SaleCanceled;
+                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                break;
+            case 'BuyOrder':
+                _NFTTx.type = enumTransactionType.SoldTo;
+                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                break;
+            // case 'Transfer':
+            //     _NFTTx.type = enumTransactionType.Transfer;
+            //     break;
+            case 'SettleBidOrder':
+                _NFTTx.type = enumTransactionType.SettleBidOrder;
+                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                break;
+        }
+        _NFTTx.price = parseInt(itemObject.price) / 1e18;
+        _NFTTx.txHash = itemObject.tHash;
+        const timestamp = getTime(itemObject.timestamp.toString());
+        _NFTTx.time = timestamp.date + ' ' + timestamp.time;
+        _NFTTxList.push(_NFTTx);
+    }
+    return _NFTTxList;
 };
 
 export const getTotalEarned = async (address: string) => {
