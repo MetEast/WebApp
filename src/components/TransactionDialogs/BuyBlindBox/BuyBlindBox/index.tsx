@@ -14,7 +14,7 @@ export interface ComponentProps {}
 
 const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-    const [amount, setAmount] = useState<number>(1);
+    const [amount, setAmount] = useState<number>(dialogState.buyBlindLeftAmount < 1 ? 0 : 1);
 
     const selectFromBlindBox = async () => {
         const resNFTList = await fetch(
