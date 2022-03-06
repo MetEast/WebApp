@@ -1,7 +1,14 @@
-import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
+import {
+    TypeProduct,
+    enumSingleNFTType,
+    TypeProductFetch,
+    TypeFavouritesFetch,
+    enumBlindBoxNFTType,
+    TypeBlindListLikes,
+} from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
-import { blankNFTItem } from 'src/constants/init-constants';
+import { getImageFromAsset, reduceHexAddress, getTime } from 'src/services/common';
+import { blankNFTItem, blankBBItem } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 
@@ -75,7 +82,12 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
 };
 
 // Product Page
-export const getSearchParams = (keyWord: string, sortBy: TypeSelectItem | undefined, filterRange: TypeFilterRange, filters: Array<enumFilterOption>) => {
+export const getSearchParams = (
+    keyWord: string,
+    sortBy: TypeSelectItem | undefined,
+    filterRange: TypeFilterRange,
+    filters: Array<enumFilterOption>,
+) => {
     let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
     if (sortBy !== undefined) {
         switch (sortBy.value) {
@@ -121,6 +133,56 @@ export const getSearchParams = (keyWord: string, sortBy: TypeSelectItem | undefi
         searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
     }
     return searchParams;
+};
+
+// Blind Box Page
+export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginState: boolean, did: string) => {
+    const resBBList = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/SearchBlindBox?${fetchParams}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonBBList = await resBBList.json();
+    const arrBBList = jsonBBList.data === undefined ? [] : jsonBBList.data.result;
+
+    let _arrBBList: Array<TypeProduct> = [];
+    for (let i = 0; i < arrBBList.length; i++) {
+        const itemObject: TypeProductFetch = arrBBList[i];
+        let _BBItem: TypeProduct = { ...blankBBItem };
+        _BBItem.tokenId = itemObject.blindBoxIndex.toString();
+        _BBItem.name = itemObject.name;
+        _BBItem.image = getImageFromAsset(itemObject.asset);
+        _BBItem.price_ela = parseInt(itemObject.blindPrice);
+        _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
+        // blindboxItem.author = itemObject.authorName || ' ';
+        let curTimestamp = new Date().getTime() / 1000;
+        _BBItem.type =
+            itemObject.instock === itemObject.sold
+                ? enumBlindBoxNFTType.SoldOut
+                : parseInt(itemObject.saleBegin) > curTimestamp
+                ? enumBlindBoxNFTType.ComingSoon
+                : parseInt(itemObject.saleEnd) >= curTimestamp
+                ? enumBlindBoxNFTType.SaleEnds
+                : enumBlindBoxNFTType.SaleEnded;
+        _BBItem.likes = itemObject.likes;
+        _BBItem.views = itemObject.views;
+        _BBItem.isLike = loginState
+            ? itemObject.list_likes.findIndex(
+                  (value: TypeBlindListLikes) => value.did === `did:elastos:${did}`,
+              ) === -1
+                ? false
+                : true
+            : false;
+        _BBItem.sold = itemObject.sold || 0;
+        _BBItem.instock = itemObject.instock || 0;
+        if (itemObject.saleEnd) {
+            const endTime = getTime(itemObject.saleEnd); // no proper value
+            _BBItem.endTime = endTime.date + ' ' + endTime.time;
+        } else {
+            _BBItem.endTime = '';
+        }
+        _arrBBList.push(_BBItem);
+    }
+    return _arrBBList;
 };
 
 export const getTotalEarned = async (address: string) => {

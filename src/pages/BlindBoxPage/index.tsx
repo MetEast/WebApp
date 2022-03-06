@@ -16,7 +16,7 @@ import {
 import { getImageFromAsset } from 'src/services/common';
 import { useSignInContext } from 'src/context/SignInContext';
 import { getTime } from 'src/services/common';
-import { getELA2USD } from 'src/services/fetch';
+import { getELA2USD, getSearchParams, getBBItemList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -43,112 +43,21 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     ];
 
     // -------------- Fetch Data -------------- //
-    const getBlindBoxList = async (tokenPriceRate: number) => {
-        let reqUrl = `${
-            process.env.REACT_APP_BACKEND_URL
-        }/api/v1/SearchBlindBox?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
-        if (sortBy !== undefined) {
-            switch (sortBy.value) {
-                case 'low_to_high':
-                    reqUrl += `&orderType=price_l_to_h`;
-                    break;
-                case 'high_to_low':
-                    reqUrl += `&orderType=price_h_to_l`;
-                    break;
-                case 'most_viewed':
-                    reqUrl += `&orderType=mostviewed`;
-                    break;
-                case 'most_liked':
-                    reqUrl += `&orderType=mostliked`;
-                    break;
-                case 'most_recent':
-                    reqUrl += `&orderType=mostrecent`;
-                    break;
-                case 'oldest':
-                    reqUrl += `&orderType=oldest`;
-                    break;
-                case 'ending_soon':
-                    reqUrl += `&orderType=endingsoon`;
-                    break;
-                default:
-                    reqUrl += `&orderType=mostrecent`;
-                    break;
-            }
-        }
-        if (filterRange.min !== undefined) {
-            reqUrl += `&filter_min_price=${filterRange.min}`;
-        }
-        if (filterRange.max !== undefined) {
-            reqUrl += `&filter_max_price=${filterRange.max}`;
-        }
-        if (filters.length !== 0) {
-            let filterStatus: string = '';
-            filters.forEach((item) => {
-                if (item === 0) filterStatus += 'ON AUCTION,';
-                else if (item === 1) filterStatus += 'BUY NOW,';
-                else if (item === 2) filterStatus += 'HAS BID,';
-            });
-            reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
-        }
-
-        const resBlindBoxList = await fetch(reqUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        });
-        const dataBlindBoxList = await resBlindBoxList.json();
-        const arrBlindBoxList = dataBlindBoxList.data === undefined ? [] : dataBlindBoxList.data.result;
-
-        let _blindBoxList: Array<TypeProduct> = [];
-        for (let i = 0; i < arrBlindBoxList.length; i++) {
-            let itemObject: TypeProductFetch = arrBlindBoxList[i];
-            let blindboxItem: TypeProduct = { ...blankBBItem };
-            blindboxItem.tokenId = itemObject.blindBoxIndex.toString();
-            blindboxItem.name = itemObject.name;
-            blindboxItem.image = getImageFromAsset(itemObject.asset);
-            blindboxItem.price_ela = parseInt(itemObject.blindPrice);
-            blindboxItem.price_usd = blindboxItem.price_ela * tokenPriceRate;
-            // blindboxItem.author = itemObject.authorName || ' ';
-            let curTimestamp = new Date().getTime() / 1000;
-            blindboxItem.type =
-                itemObject.instock === itemObject.sold
-                    ? enumBlindBoxNFTType.SoldOut
-                    : parseInt(itemObject.saleBegin) > curTimestamp
-                    ? enumBlindBoxNFTType.ComingSoon
-                    : parseInt(itemObject.saleEnd) >= curTimestamp
-                    ? enumBlindBoxNFTType.SaleEnds
-                    : enumBlindBoxNFTType.SaleEnded;
-
-            blindboxItem.likes = itemObject.likes;
-            blindboxItem.views = itemObject.views;
-            blindboxItem.isLike = signInDlgState.isLoggedIn
-                ? itemObject.list_likes.findIndex(
-                      (value: TypeBlindListLikes) => value.did === `did:elastos:${signInDlgState.userDid}`,
-                  ) === -1
-                    ? false
-                    : true
-                : false;
-            blindboxItem.sold = itemObject.sold || 0;
-            blindboxItem.instock = itemObject.instock || 0;
-            if (itemObject.saleEnd) {
-                let endTime = getTime(itemObject.saleEnd); // no proper value
-                blindboxItem.endTime = endTime.date + ' ' + endTime.time;
-            } else {
-                blindboxItem.endTime = '';
-            }
-            _blindBoxList.push(blindboxItem);
-        }
-        setBlindBoxList(_blindBoxList);
-    };
-
-    const getFetchData = async () => {
-        getBlindBoxList(await getELA2USD());
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
+            const _searchedBBList = await getBBItemList(searchParams, ELA2USD, signInDlgState.isLoggedIn, signInDlgState.userDid);
+            if (!unmounted) {
+                setBlindBoxList(_searchedBBList);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord]); //, productViewMode
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //
