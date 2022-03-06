@@ -11,6 +11,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { getELA2USD, getMyFavouritesList, getNFTItemList, getSearchParams } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
+import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -53,6 +54,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
+        setProductList([blankNFTItem, blankNFTItem, blankNFTItem, blankNFTItem]);
     };
 
     const handleChangeSortBy = (value: string) => {
@@ -110,29 +112,28 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     setProductViewMode={setProductViewMode}
                     marginTop={5}
                 />
-                {productList.length === 0 && (
-                    <Stack justifyContent="center" alignItems="center" minHeight="50vh">
-                        <img src="/assets/images/loading.gif" alt="" />
-                    </Stack>
+                {productList.length === 0 ? (
+                    <LooksEmptyBox sx={{ marginTop: 2 }} />
+                ) : (
+                    <Grid container mt={2} spacing={4}>
+                        {productList.map((item, index) => (
+                            <Grid
+                                item
+                                xs={productViewMode === 'grid1' ? 12 : 6}
+                                md={productViewMode === 'grid1' ? 6 : 3}
+                                key={`explore-product-${index}`}
+                            >
+                                <NFTPreview
+                                    product={item}
+                                    productType={1}
+                                    index={index}
+                                    productViewMode={productViewMode}
+                                    updateLikes={updateProductLikes}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
                 )}
-                <Grid container mt={2} spacing={4}>
-                    {productList.map((item, index) => (
-                        <Grid
-                            item
-                            xs={productViewMode === 'grid1' ? 12 : 6}
-                            md={productViewMode === 'grid1' ? 6 : 3}
-                            key={`explore-product-${index}`}
-                        >
-                            <NFTPreview
-                                product={item}
-                                productType={1}
-                                index={index}
-                                updateLikes={updateProductLikes}
-                                productViewMode={productViewMode}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
             </Container>
         </Box>
     );

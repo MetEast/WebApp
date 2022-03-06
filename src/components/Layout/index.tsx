@@ -35,7 +35,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     <TopNavbar />
                 </Container>
             </Box>
-            <Box paddingTop={{ xs: 4, sm: 12 }} paddingBottom={{ xs: 9, sm: 2 }}>
+            <Box paddingTop={{ xs: 0, sm: 12 }} paddingBottom={{ xs: 9, sm: 2 }}>
                 {children}
                 <Container>
                     <Footer marginTop={5} />

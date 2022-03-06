@@ -384,6 +384,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
+        setMyNFTList(Array(6).fill(Array(4).fill(blankMyNFTItem)));
     };
 
     const handleChangeSortBy = (value: string) => {
@@ -656,6 +657,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             <MyNFTGalleryItem
                                 product={item}
                                 index={index}
+                                productViewMode={productViewMode}
                                 updateLikes={updateProductLikes}
                                 isLoading={isLoadingAssets[getSelectedTabIndex()]}
                             />

@@ -14,10 +14,17 @@ export interface ComponentProps {
     product: TypeProduct;
     index: number;
     isLoading: boolean;
+    productViewMode?: 'grid1' | 'grid2';
     updateLikes: (index: number, type: string) => void;
 }
 
-const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading, updateLikes }): JSX.Element => {
+const MyNFTGalleryItem: React.FC<ComponentProps> = ({
+    product,
+    index,
+    isLoading,
+    productViewMode,
+    updateLikes,
+}): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [likeState, setLikeState] = useState<boolean>(product.isLike);
@@ -63,7 +70,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
     useEffect(() => {
         setLikeState(product.isLike);
     }, [product]);
-    
+
     const getUrl = () => {
         if (product.type === enumMyNFTType.BuyNow) return `/mynft/buynow/${product.tokenId}`;
         else if (product.type === enumMyNFTType.OnAuction) return `/mynft/auction/${product.tokenId}`;
@@ -118,7 +125,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({ product, index, isLoading,
                             <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 32 }}>
                                 {product.name}
                             </Typography>
-                            <Box display={{ xs: 'none', md: 'block' }}>
+                            <Box display={{ xs: productViewMode === 'grid1' ? 'block' : 'none', md: 'block' }}>
                                 <ProductSnippets
                                     nickname={product.author}
                                     likes={product.likes}

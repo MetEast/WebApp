@@ -80,7 +80,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     ? false
                     : true;
             product.description = itemObject.description;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+            product.author =
+                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.authorDescription = itemObject.authorDescription || ' ';
             product.authorImg = product.image;
             product.authorAddress = itemObject.royaltyOwner;
@@ -120,38 +121,46 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'BidOrder':
                     _transaction.type = enumTransactionType.Bid;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 case 'ChangeOrderPrice':
                     _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 // case 'Transfer':
                 //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
                 case 'SettleBidOrder':
                     _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
             }
             _transaction.price = parseInt(itemObject.price) / 1e18;
@@ -169,7 +178,10 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                         ? 'Bought From'
                         : 'Sold To';
                 _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(_prodTrans.type === 'Bought From' ? itemObject.from : itemObject.to, 4); // no proper data
+                _prodTrans.user = reduceHexAddress(
+                    _prodTrans.type === 'Bought From' ? itemObject.from : itemObject.to,
+                    4,
+                ); // no proper data
                 let prodTransTimestamp = getTime(itemObject.timestamp.toString());
                 _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
                 if (itemObject.event === 'BuyOrder')
@@ -184,7 +196,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         setTransactionsList(_latestTransList);
         setProdTransHistory(_prodTransHistory);
     };
-    
+
     useEffect(() => {
         getLatestTransaction();
     }, [transactionSortBy]);
@@ -237,7 +249,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId]);
 
     return (
-        <Container>
+        <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>

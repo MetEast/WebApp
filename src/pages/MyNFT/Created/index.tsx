@@ -180,7 +180,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId]);
 
     return (
-        <Container>
+        <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>

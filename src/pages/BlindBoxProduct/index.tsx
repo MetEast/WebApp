@@ -165,7 +165,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     }, [blindBoxDetail.tokenId]);
 
     return (
-        <Container>
+        <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>

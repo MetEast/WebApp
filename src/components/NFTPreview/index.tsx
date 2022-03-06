@@ -137,7 +137,12 @@ const NFTPreview: React.FC<ComponentProps> = ({
                             <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
                                 {product.name}
                             </Typography>
-                            <Box display={{ xs: 'none', md: 'block' }}>
+                            <Box
+                                display={{
+                                    xs: productType === 0 ? 'none' : productViewMode === 'grid1' ? 'block' : 'none',
+                                    md: 'block',
+                                }}
+                            >
                                 {productType === 0 && (
                                     <ProductSnippets
                                         nickname={product.author}
