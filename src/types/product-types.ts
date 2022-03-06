@@ -141,6 +141,12 @@ export type TypeBlindBoxSelectItem = {
     url: string;
 };
 
+export type TypeBlindBoxCandidate = {
+    tokenId: string;
+    orderId: string;
+    asset: string;
+};
+
 // ---
 export type TypeProductFetch = {
     blockNumber: number;

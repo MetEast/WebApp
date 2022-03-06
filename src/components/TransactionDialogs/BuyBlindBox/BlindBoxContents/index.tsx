@@ -2,15 +2,13 @@ import React, {useState} from 'react';
 import { Stack, Typography, Box } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
-import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
-    const [dialogState, setDialogState] = useDialogContext();
+    const [dialogState] = useDialogContext();
     const [imgIndex, setImgIndex] = useState<number>(1);
-    const [selImg, setSelImg] = useState<string>(dialogState.buyBlindImage);
 
     return (
         <Stack spacing={3} width={320}>
@@ -20,7 +18,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <PageNumberTypo>{imgIndex} of {dialogState.buyBlindAmount}</PageNumberTypo>
                 <Box borderRadius={4} overflow="hidden">
-                    <img src={selImg} alt="" />
+                    <img src={dialogState.buyBlindImages[imgIndex - 1]} alt="" />
                 </Box>
                 <Typography fontSize={18} fontWeight={700} marginTop={2}>
                     {dialogState.buyBlindName}

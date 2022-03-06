@@ -25,7 +25,7 @@ import {
     TypeBlindListLikes,
 } from 'src/types/product-types';
 import { getELA2USD } from 'src/services/fetch';
-import { getImageFromAsset, getTime } from 'src/services/common';
+import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 
@@ -92,7 +92,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     : enumBlindBoxNFTType.SaleEnded;
             blind.likes = itemObject.likes;
             blind.views = itemObject.views;
-            blind.holder = itemObject.authorName; // no data ------------------------------------
+            blind.author = itemObject.authorName; // no data ------------------------------------
+            blind.royaltyOwner = itemObject.royaltyOwner;
             blind.isLike = signInDlgState.isLoggedIn
                 ? itemObject.list_likes.findIndex(
                       (value: TypeBlindListLikes) => value.did === `did:elastos:${signInDlgState.userDid}`,
@@ -231,6 +232,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                         buyBlindPriceUsd: blindBoxDetail.price_usd,
                                         buyBlindAmount: 1,
                                         buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                        buyBlindCreator: blindBoxDetail.author === '' ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4) : blindBoxDetail.author,
                                     });
                                 }}
                             >

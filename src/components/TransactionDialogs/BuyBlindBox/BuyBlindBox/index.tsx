@@ -6,7 +6,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, TypeProductFetch, enumSingleNFTType } from 'src/types/product-types';
+import { TypeProduct, enumSingleNFTType, TypeBlindBoxCandidate } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { FETCH_CONFIG_JSON } from 'src/services/fetch';
 
@@ -15,58 +15,30 @@ export interface ComponentProps {}
 const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [amount, setAmount] = useState<number>(1);
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-    };
 
     const selectFromBlindBox = async () => {
         const resNFTList = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/api/v1/selectBlindBoxToken?id=${dialogState.buyBlindBoxId}&count=${amount}`,
-            FETCH_CONFIG_JSON
+            FETCH_CONFIG_JSON,
         );
         const dataNFTList = await resNFTList.json();
-        const tokenId = dataNFTList.data.result;
-        console.log(tokenId);
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
-            FETCH_CONFIG_JSON
-        );
-        const dataProductDetail = await resProductDetail.json();
-        const productDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
-
-        if (productDetail !== undefined) {
-            const itemObject: TypeProductFetch = productDetail;
-            product.orderId = itemObject.orderId;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.tokenId = itemObject.tokenId;
-        }
+        const selectedTokens: Array<TypeBlindBoxCandidate> = dataNFTList.data.result;
+        let arrOrderIds: string[] = [];
+        let arrTokenIds: string[] = [];
+        let arrAssets: string[] = [];
+        selectedTokens.forEach((item: TypeBlindBoxCandidate) => {
+            arrOrderIds.push(item.orderId);
+            arrTokenIds.push(item.tokenId);
+            arrAssets.push(getImageFromAsset(item.asset));
+        });
         setDialogState({
             ...dialogState,
             buyBlindBoxDlgStep: 1,
             buyBlindBoxDlgOpened: true,
             buyBlindAmount: amount,
-            buyBlindOrderId: product.orderId || '',
-            buyBlindImage: product.image,
-            buyBlindTokenId: product.tokenId
+            buyBlindOrderIds: arrOrderIds,
+            buyBlindImages: arrAssets,
+            buyBlindTokenIds: arrTokenIds,
         });
     };
     return (
