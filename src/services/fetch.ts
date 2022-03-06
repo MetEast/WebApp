@@ -6,8 +6,7 @@ import {
     enumBlindBoxNFTType,
     TypeBlindListLikes,
 } from 'src/types/product-types';
-import { useSignInContext } from 'src/context/SignInContext';
-import { getImageFromAsset, reduceHexAddress, getTime } from 'src/services/common';
+import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
 import { blankNFTItem, blankBBItem } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -166,9 +165,7 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
         _BBItem.isLike = loginState
-            ? itemObject.list_likes.findIndex(
-                  (value: TypeBlindListLikes) => value.did === `did:elastos:${did}`,
-              ) === -1
+            ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === `did:elastos:${did}`) === -1
                 ? false
                 : true
             : false;
@@ -183,6 +180,46 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         _arrBBList.push(_BBItem);
     }
     return _arrBBList;
+};
+
+// SingleNFTFixedPrice
+export const getNFTItem = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
+    const resNFTItem = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?${fetchParams}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNFTItem = await resNFTItem.json();
+    const itemObject: TypeProductFetch = jsonNFTItem.data;
+    const _NFTItem: TypeProduct = { ...blankNFTItem };
+    if (itemObject !== undefined) {
+        _NFTItem.tokenId = itemObject.tokenId;
+        _NFTItem.name = itemObject.name;
+        _NFTItem.image = getImageFromAsset(itemObject.asset);
+        _NFTItem.price_ela = itemObject.price / 1e18;
+        _NFTItem.price_usd = _NFTItem.price_ela * ELA2USD;
+        _NFTItem.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+        _NFTItem.likes = itemObject.likes;
+        _NFTItem.views = itemObject.views;
+        _NFTItem.isLike =
+            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+                ? false
+                : true;
+        _NFTItem.description = itemObject.description;
+        _NFTItem.author =
+            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _NFTItem.authorDescription = itemObject.authorDescription || ' ';
+        _NFTItem.authorImg = _NFTItem.image; // -- no proper value
+        _NFTItem.authorAddress = itemObject.royaltyOwner;
+        _NFTItem.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
+        _NFTItem.orderId = itemObject.orderId;
+        _NFTItem.holder = itemObject.holder;
+        _NFTItem.tokenIdHex = itemObject.tokenIdHex;
+        _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
+        _NFTItem.category = itemObject.category;
+        const createTime = getUTCTime(itemObject.createTime);
+        _NFTItem.createTime = createTime.date + '' + createTime.time;
+    }
+    return _NFTItem;
 };
 
 export const getTotalEarned = async (address: string) => {

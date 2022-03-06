@@ -7,15 +7,8 @@ import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
 import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
-import {
-    TypeProduct,
-    TypeProductFetch,
-    enumBlindBoxNFTType,
-    TypeBlindListLikes
-} from 'src/types/product-types';
-import { getImageFromAsset } from 'src/services/common';
+import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { getTime } from 'src/services/common';
 import { getELA2USD, getSearchParams, getBBItemList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
@@ -28,7 +21,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-    
+
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([
         blankBBItem,
         blankBBItem,
@@ -48,7 +41,12 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
-            const _searchedBBList = await getBBItemList(searchParams, ELA2USD, signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _searchedBBList = await getBBItemList(
+                searchParams,
+                ELA2USD,
+                signInDlgState.isLoggedIn,
+                signInDlgState.userDid,
+            );
             if (!unmounted) {
                 setBlindBoxList(_searchedBBList);
             }
@@ -87,13 +85,13 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
 
     // -------------- Views -------------- //
     const updateBlindBoxLikes = (id: number, type: string) => {
-        let prodList: Array<TypeProduct> = [...blindBoxList];
+        let bbList: Array<TypeProduct> = [...blindBoxList];
         if (type === 'inc') {
-            prodList[id].likes += 1;
+            bbList[id].likes += 1;
         } else if (type === 'dec') {
-            prodList[id].likes -= 1;
+            bbList[id].likes -= 1;
         }
-        setBlindBoxList(prodList);
+        setBlindBoxList(bbList);
     };
 
     return (

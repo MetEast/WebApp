@@ -27,7 +27,7 @@ import {
     reduceHexAddress,
     selectFromFavourites,
 } from 'src/services/common';
-import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList, getNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
@@ -58,61 +58,25 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
-    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataProductDetail = await resProductDetail.json();
-        const itemObject: TypeProductFetch = dataProductDetail.data;
-
-        if (itemObject !== undefined) {
-            const product: TypeProduct = { ...productDetail };
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            product.description = itemObject.description;
-            product.author =
-                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.authorDescription = itemObject.authorDescription || ' ';
-            product.authorImg = product.image; // -- no proper value
-            product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
-            product.orderId = itemObject.orderId;
-            product.holder = itemObject.holder;
-            product.tokenIdHex = itemObject.tokenIdHex;
-            product.royalties = parseInt(itemObject.royalties) / 1e4;
-            product.category = itemObject.category;
-            const createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + '' + createTime.time;
-            setProductDetail(product);
-        }
-    };
-
-    const getFetchData = async () => {
-        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
-    };
-
+    // -------------- Fetch Data -------------- //
     useEffect(() => {
-        getFetchData();
-    }, []);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _NFTItem = await getNFTItem(`tokenId=${params.id}`, ELA2USD, likeList);
+            if (!unmounted) {
+                setProductDetail(_NFTItem);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid]);
 
+    // -------------- Fetch Data -------------- //
+    
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,

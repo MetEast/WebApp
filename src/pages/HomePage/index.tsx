@@ -13,11 +13,6 @@ import { blankNFTItem } from 'src/constants/init-constants';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
     const [productList, setProductList] = useState<Array<TypeProduct>>([
         blankNFTItem,
         blankNFTItem,
@@ -32,6 +27,11 @@ const HomePage: React.FC = (): JSX.Element => {
         blankNFTItem,
         blankNFTItem,
     ]);
+    const adBanners = [
+        '/assets/images/banners/banner1.png',
+        '/assets/images/banners/banner2.png',
+        '/assets/images/banners/banner3.png',
+    ];
 
     useEffect(() => {
         let unmounted = false;
