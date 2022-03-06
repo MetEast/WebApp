@@ -12,7 +12,7 @@ import {
     TypeProductFetch,
     enumSingleNFTType,
     enumBlindBoxNFTType,
-    TypeBlindListLikes
+    TypeBlindListLikes,
 } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -252,6 +252,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                                 product={item}
                                 productType={2}
                                 index={index}
+                                productViewMode={productViewMode}
                                 updateLikes={updateBlindBoxLikes}
                                 isBlindBox={true}
                             />

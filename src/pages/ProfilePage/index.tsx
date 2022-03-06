@@ -502,10 +502,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     return (
         <>
-            <Box
-                onClick={() => {}}
-                sx={{ height: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}
-            >
+            <Box onClick={() => {}} sx={{ height: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}>
                 {userInfo.avatar !== '' && <img src={userInfo.avatar} alt="" style={{ minWidth: '100%' }} />}
             </Box>
             <Container sx={{ overflow: 'visible' }}>
@@ -707,6 +704,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             <MyNFTGalleryItem
                                 product={item}
                                 index={index}
+                                productViewMode={productViewMode}
                                 updateLikes={updateProductLikes}
                                 isLoading={isLoadingAssets[getSelectedTabIndex()]}
                             />
