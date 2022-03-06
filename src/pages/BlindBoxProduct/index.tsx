@@ -112,9 +112,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             }
             blind.state = itemObject.state;
             blind.maxPurchases = parseInt(itemObject.maxPurchases);
-            blind.maxLikes = parseInt(itemObject.maxLikes);
-            blind.maxViews = parseInt(itemObject.maxViews);
             blind.maxQuantity = parseInt(itemObject.maxQuantity);
+            blind.did = itemObject.did;
         }
         setBlindBoxDetail(blind);
     };
@@ -218,7 +217,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     {signInDlgState.walletAccounts !== [] &&
                         blindBoxDetail.holder !== signInDlgState.walletAccounts[0] &&
                         blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                        blindBoxDetail.state === 'online' && (
+                        blindBoxDetail.state === 'online' &&
+                        signInDlgState.userDid !== blindBoxDetail.did && (
                             <PrimaryButton
                                 sx={{ marginTop: 3, width: '100%' }}
                                 onClick={() => {

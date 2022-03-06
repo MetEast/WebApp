@@ -131,15 +131,15 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     ) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
-        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
-        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log('Gas price:', gasPrice);
 
         console.log('Sending transaction with account address:', accounts[0]);
-        let transactionParams = {
+        const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,

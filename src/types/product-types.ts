@@ -81,7 +81,6 @@ export type TypeProduct = {
     sold?: number;
     instock?: number;
     orderId?: string;
-
     blockNumber?: number;
     tokenIndex?: string;
     quantity?: number;
@@ -96,9 +95,8 @@ export type TypeProduct = {
     isExpired?: boolean;
     state?: string;
     maxPurchases?: number;
-    maxViews?: number;
-    maxLikes?: number;
     maxQuantity?: number;
+    did?: string;
 };
 
 export type TypeNFTTransaction = {
@@ -178,7 +176,6 @@ export type TypeProductFetch = {
     //
     blindBoxIndex: number;
     blindPrice: string;
-    maxLikes: string;
     maxPurchases: string;
     maxQuantity: string;
     maxViews: string;
@@ -187,6 +184,10 @@ export type TypeProductFetch = {
     sort: string;
     state: string;
     list_likes: Array<TypeBlindListLikes>;
+    list_views: Array<TypeBlindListLikes>;
+    did: string;
+    sold_tokenIds: string[];
+    tokenIds: string[];
 };
 
 export type TypeFavouritesFetch = {
