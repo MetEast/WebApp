@@ -42,52 +42,7 @@ const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList, changeHandler}
         setSortby(item);
         changeHandler(item);
     };
-
-    // const getLatestBid = async () => {
-    //     const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
-    //     const resLatestBid = await fetch(
-    //         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
-    //         {
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Accept: 'application/json',
-    //             },
-    //         },
-    //     );
-    //     const dataLatestBid = await resLatestBid.json();
-    //     const arrLatestBid = dataLatestBid.data;
-
-    //     let _latestBidsList: any = [];
-    //     for (let i = 0; i < arrLatestBid.others.length; i++) {
-    //         let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-    //         let _bid: TypeSingleNFTBid = { ...defaultBidValue };
-    //         _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-    //         _bid.price = parseFloat(itemObject.price) / 1e18;
-    //         _bid.orderId = itemObject.orderId;
-    //         let timestamp = getTime(itemObject.timestamp);
-    //         _bid.time = timestamp.date + ' ' + timestamp.time;
-    //         _latestBidsList.push(_bid);
-    //     }
-    //     setBidsList(_latestBidsList);
-
-    //     let _myLatestBidsList: any = [];
-    //     for (let i = 0; i < arrLatestBid.yours.length; i++) {
-    //         let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
-    //         let _bid: TypeSingleNFTBid = { ...defaultBidValue };
-    //         _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-    //         _bid.price = parseFloat(itemObject.price) / 1e18;
-    //         _bid.orderId = itemObject.orderId;
-    //         let timestamp = getTime(itemObject.timestamp);
-    //         _bid.time = timestamp.date + ' ' + timestamp.time;
-    //         _myLatestBidsList.push(_bid);
-    //     }
-    //     setMyBidsList(_myLatestBidsList);
-    // };
-
-    // useEffect(() => {
-    //     getLatestBid();
-    // }, [sortby]);
-
+    
     return (
         <Stack spacing={5} width={520}>
             <Stack direction="row" justifyContent="space-between">

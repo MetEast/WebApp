@@ -44,7 +44,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankNFTTxs } from 'src/constants/init-constants';
+import { blankNFTBid, blankNFTItem, blankNFTTxs } from 'src/constants/init-constants';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -127,7 +127,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
 
     // bid
     const getLatestBid = async () => {
-        const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
         const resLatestBid = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
             {
@@ -143,7 +142,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         let _latestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.others.length; i++) {
             let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            let _bid: TypeSingleNFTBid = { ...blankNFTBid };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
             _bid.orderId = itemObject.orderId;
@@ -156,7 +155,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         let _myLatestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.yours.length; i++) {
             let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
-            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            let _bid: TypeSingleNFTBid = { ...blankNFTBid };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
             _bid.orderId = itemObject.orderId;
