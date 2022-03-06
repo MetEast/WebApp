@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
@@ -9,7 +9,7 @@ import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
-import { uploadUserProfile, url2FileObject } from 'src/services/fetch';
+import { uploadUserProfile } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 import { useCookies } from 'react-cookie';
 

@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
-import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
+import { TypeProduct } from 'src/types/product-types';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NFTPreview from 'src/components/NFTPreview';
 import { useSignInContext } from 'src/context/SignInContext';
-import { selectFromFavourites, getImageFromAsset, reduceHexAddress } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList, getNFTItemList } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 
@@ -34,102 +33,32 @@ const HomePage: React.FC = (): JSX.Element => {
         blankNFTItem,
     ]);
 
-    const getNewProducts = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resNewProduct = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=10`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataNewProduct = await resNewProduct.json();
-        const arrNewProduct = dataNewProduct.data === undefined ? [] : dataNewProduct.data.result;
-
-        let _newProductList: any = [];
-        for (let i = 0; i < arrNewProduct.length; i++) {
-            let itemObject: TypeProductFetch = arrNewProduct[i];
-            var product: TypeProduct = { ...blankNFTItem };
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.status = itemObject.status;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            _newProductList.push(product);
-        }
-        setProductList(_newProductList);
-    };
-
-    const getPopularCollection = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resPopularCollection = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=10&orderType=mostliked`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-
-        const dataPopularCollection = await resPopularCollection.json();
-        const arrPopularCollection = dataPopularCollection.data === undefined ? [] : dataPopularCollection.data.result;
-
-        let _popularCollectionList: any = [];
-        for (let i = 0; i < arrPopularCollection.length; i++) {
-            const itemObject = arrPopularCollection[i];
-            var product: TypeProduct = { ...blankNFTItem };
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.status = itemObject.status;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            _popularCollectionList.push(product);
-        }
-        setCollectionList(_popularCollectionList);
-    };
-
-    const getFetchData = async () => {
-        const ela_usd_rate = await getELA2USD();
-        const favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-        getNewProducts(ela_usd_rate, favouritesList);
-        getPopularCollection(ela_usd_rate, favouritesList);
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, [signInDlgState.isLoggedIn]);
-
-    const selectByTokenId = (value: TypeProduct, tokenId: string) => {
-        return value.tokenId === tokenId;
-    };
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _newNFTList = await getNFTItemList('pageNum=1&pageSize=10', ELA2USD, likeList);
+            const _popularNFTList = await getNFTItemList(
+                'pageNum=1&pageSize=10&orderType=mostliked',
+                ELA2USD,
+                likeList,
+            );
+            if (!unmounted) {
+                setProductList(_newNFTList);
+                setCollectionList(_popularNFTList);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid]);
 
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
         let colList: Array<TypeProduct> = [...collectionList];
-        const colId = collectionList.findIndex((value: TypeProduct) => selectByTokenId(value, productList[id].tokenId));
+        const colId = collectionList.findIndex((value: TypeProduct) => value.tokenId === productList[id].tokenId);
         if (type === 'inc') {
             prodList[id].likes += 1;
             if (colId !== -1) {
@@ -150,9 +79,7 @@ const HomePage: React.FC = (): JSX.Element => {
     const updateCollectionLikes = (id: number, type: string) => {
         let colList: Array<TypeProduct> = [...collectionList];
         let prodList: Array<TypeProduct> = [...productList];
-        const prodId = productList.findIndex((value: TypeProduct) =>
-            selectByTokenId(value, collectionList[id].tokenId),
-        );
+        const prodId = productList.findIndex((value: TypeProduct) => value.tokenId === collectionList[id].tokenId);
         if (type === 'inc') {
             colList[id].likes += 1;
             if (prodId !== -1) {

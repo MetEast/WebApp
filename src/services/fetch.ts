@@ -1,3 +1,8 @@
+import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
+import { useSignInContext } from 'src/context/SignInContext';
+import { selectFromFavourites, getImageFromAsset, reduceHexAddress } from 'src/services/common';
+import { blankNFTItem } from 'src/constants/init-constants';
+
 export const FETCH_CONFIG_JSON = {
     headers: {
         'Content-Type': 'application/json',
@@ -24,6 +29,7 @@ export const getELA2USD = async () => {
 
 export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     if (loginState) {
+        console.log(did, '------------------')
         try {
             const resFavouriteList = await fetch(
                 `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
@@ -40,6 +46,38 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
             return [];
         }
     } else return [];
+};
+
+export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
+    const resNFTList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNFTList = await resNFTList.json();
+    const arrNFTList = jsonNFTList.data === undefined ? [] : jsonNFTList.data.result;
+
+    let _arrNFTList: Array<TypeProduct> = [];
+    for (let i = 0; i < arrNFTList.length; i++) {
+        const itemObject: TypeProductFetch = arrNFTList[i];
+        let _NFT: TypeProduct = { ...blankNFTItem };
+        _NFT.tokenId = itemObject.tokenId;
+        _NFT.name = itemObject.name;
+        _NFT.image = getImageFromAsset(itemObject.asset);
+        _NFT.price_ela = itemObject.price / 1e18;
+        _NFT.price_usd = _NFT.price_ela * ELA2USD;
+        _NFT.author =
+            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _NFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+        _NFT.likes = itemObject.likes;
+        _NFT.views = itemObject.views;
+        _NFT.status = itemObject.status;
+        _NFT.isLike =
+            likeList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1
+                ? false
+                : true;
+        _arrNFTList.push(_NFT);
+    }
+    return _arrNFTList;
 };
 
 export const getTotalEarned = async (address: string) => {
@@ -117,11 +155,3 @@ export const uploadUserProfile = (
                 reject(error);
             });
     });
-
-export const url2FileObject = async (imgUrl: string) => {
-    const response = await fetch(imgUrl);
-    // here image is url/location of image
-    const blob = await response.blob();
-    const file = new File([blob], 'image.jpg', { type: blob.type });
-    return file;
-};
