@@ -41,10 +41,8 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     };
 
     const getPersonalData = async () => {
-        let _totalEarned = await getTotalEarned(signInDlgState.walletAccounts[0]);
-        let _todayEarned = await getTodayEarned(signInDlgState.walletAccounts[0]);
-        setTotalEarned(_totalEarned);
-        setTodayEarned(_todayEarned);
+        setTotalEarned(await getTotalEarned(signInDlgState.walletAccounts[0]));
+        setTodayEarned(await getTodayEarned(signInDlgState.walletAccounts[0]));
         getEarningList();
     };
 
@@ -56,7 +54,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         const dataEarnedResult = await resEarnedResult.json();
         const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
 
-        let _myEarningList: any = [];
+        const _myEarningList: any = [];
         for (let i = 0; i < arrEarnedResult.length; i++) {
             const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
             let _earning: TypeYourEarning = { ...defaultEarningValue };
@@ -153,7 +151,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
                             onClick={() => {
                                 signInDlgState.isLoggedIn
-                                    ? setSignInDlgState({ ...signInDlgState, disconnectWallet: true })
+                                    ? setSignInDlgState({ ...signInDlgState, signOut: true })
                                     : setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                             }}
                         >
