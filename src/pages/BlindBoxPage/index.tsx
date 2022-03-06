@@ -178,6 +178,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
+        setBlindBoxList([defaultValue, defaultValue, defaultValue, defaultValue]);
     };
 
     const handleChangeSortBy = (value: string) => {
@@ -235,30 +236,31 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                     setProductViewMode={setProductViewMode}
                     marginTop={5}
                 />
-                {blindBoxList.length === 0 && (
+                {blindBoxList.length === 0 ? (
                     <Stack mt={6}>
                         <LooksEmptyBox />
                     </Stack>
+                ) : (
+                    <Grid container mt={2} spacing={4}>
+                        {blindBoxList.map((item, index) => (
+                            <Grid
+                                item
+                                xs={productViewMode === 'grid1' ? 12 : 6}
+                                md={productViewMode === 'grid1' ? 6 : 3}
+                                key={`explore-product-${index}`}
+                            >
+                                <NFTPreview
+                                    product={item}
+                                    productType={2}
+                                    index={index}
+                                    productViewMode={productViewMode}
+                                    updateLikes={updateBlindBoxLikes}
+                                    isBlindBox={true}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
                 )}
-                <Grid container mt={2} spacing={4}>
-                    {blindBoxList.map((item, index) => (
-                        <Grid
-                            item
-                            xs={productViewMode === 'grid1' ? 12 : 6}
-                            md={productViewMode === 'grid1' ? 6 : 3}
-                            key={`explore-product-${index}`}
-                        >
-                            <NFTPreview
-                                product={item}
-                                productType={2}
-                                index={index}
-                                productViewMode={productViewMode}
-                                updateLikes={updateBlindBoxLikes}
-                                isBlindBox={true}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
             </Container>
         </Box>
     );

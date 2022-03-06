@@ -1,10 +1,13 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { PrimaryButton } from 'src/components/Buttons/styles';
+import { SxProps } from '@mui/system';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    sx?: SxProps;
+}
 
-const LooksEmptyBox: React.FC<ComponentProps> = (): JSX.Element => {
+const LooksEmptyBox: React.FC<ComponentProps> = ({ sx }): JSX.Element => {
     return (
         <Stack
             justifyContent="center"
@@ -13,7 +16,7 @@ const LooksEmptyBox: React.FC<ComponentProps> = (): JSX.Element => {
             paddingTop={4}
             paddingBottom={6}
             borderRadius={5}
-            sx={{ background: '#E8F4FF' }}
+            sx={{ background: '#E8F4FF', ...sx }}
         >
             <Typography fontSize={32} fontWeight={700}>
                 Looks Empty Here

@@ -423,6 +423,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
+        setMyNFTList(Array(6).fill(Array(4).fill(defaultValue)));
     };
 
     const handleChangeSortBy = (value: string) => {
