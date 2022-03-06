@@ -33,6 +33,7 @@ const HomePage: React.FC = (): JSX.Element => {
         '/assets/images/banners/banner3.png',
     ];
 
+    // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
@@ -54,7 +55,9 @@ const HomePage: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid]);
+    // -------------- Fetch Data -------------- //
 
+    // -------------- Likes -------------- //
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
         let colList: Array<TypeProduct> = [...collectionList];
@@ -75,7 +78,7 @@ const HomePage: React.FC = (): JSX.Element => {
         setProductList(prodList);
         setCollectionList(colList);
     };
-
+    
     const updateCollectionLikes = (id: number, type: string) => {
         let colList: Array<TypeProduct> = [...collectionList];
         let prodList: Array<TypeProduct> = [...productList];

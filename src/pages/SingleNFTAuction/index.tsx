@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
-import {
-    enumBadgeType,
-    enumSingleNFTType,
-    enumTransactionType,
-    TypeProduct,
-    TypeProductFetch,
-    TypeNFTTransactionFetch,
-    TypeNFTTransaction,
-    TypeFavouritesFetch,
-    TypeSingleNFTBid,
-    TypeSingleNFTBidFetch,
-} from 'src/types/product-types';
+import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -23,7 +12,6 @@ import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { getImageFromAsset, getTime, reduceHexAddress, getUTCTime, selectFromFavourites } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestBids, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -44,25 +32,24 @@ import { TypeSelectItem } from 'src/types/select-types';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
-import { blankNFTBid, blankNFTItem, blankNFTTxs } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const params = useParams();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
-
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
-
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
+    // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
@@ -98,7 +85,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
-                setMyBidsList(_NFTBids.mine)
+                setMyBidsList(_NFTBids.mine);
                 setBidsList(_NFTBids.others);
             }
         };
@@ -107,61 +94,17 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [bidSortBy, signInDlgState.walletAccounts]);
-
-    // // bid
-    // const getLatestBid = async () => {
-    //     const resLatestBid = await fetch(
-    //         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
-    //         {
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Accept: 'application/json',
-    //             },
-    //         },
-    //     );
-    //     const dataLatestBid = await resLatestBid.json();
-    //     const arrLatestBid = dataLatestBid.data;
-
-    //     let _latestBidsList: any = [];
-    //     for (let i = 0; i < arrLatestBid.others.length; i++) {
-    //         let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-    //         let _bid: TypeSingleNFTBid = { ...blankNFTBid };
-    //         _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-    //         _bid.price = parseFloat(itemObject.price) / 1e18;
-    //         _bid.orderId = itemObject.orderId;
-    //         let timestamp = getTime(itemObject.timestamp);
-    //         _bid.time = timestamp.date + ' ' + timestamp.time;
-    //         _latestBidsList.push(_bid);
-    //     }
-    //     setBidsList(_latestBidsList);
-
-    //     let _myLatestBidsList: any = [];
-    //     for (let i = 0; i < arrLatestBid.yours.length; i++) {
-    //         let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
-    //         let _bid: TypeSingleNFTBid = { ...blankNFTBid };
-    //         _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-    //         _bid.price = parseFloat(itemObject.price) / 1e18;
-    //         _bid.orderId = itemObject.orderId;
-    //         let timestamp = getTime(itemObject.timestamp);
-    //         _bid.time = timestamp.date + ' ' + timestamp.time;
-    //         _myLatestBidsList.push(_bid);
-    //     }
-    //     setMyBidsList(_myLatestBidsList);
-    // };
-
-    // useEffect(() => {
-    //     getLatestBid();
-    // }, [bidSortBy]);
-
-    const setPlaceBidTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, placeBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
+    // -------------- Fetch Data -------------- //
 
     useEffect(() => {
+        const setPlaceBidTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, placeBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setPlaceBidTxFee();
     }, [dialogState.placeBidDlgStep]);
 
+    // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
         setProductDetail((prevState: TypeProduct) => {
             const prodDetail: TypeProduct = { ...prevState };
@@ -174,43 +117,48 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         });
     };
 
-    const updateProductViews = (tokenId: string) => {
-        if (signInDlgState.isLoggedIn && tokenId) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = {
-                token: signInDlgState.token,
-                tokenId: tokenId,
-                did: signInDlgState.userDid,
-            };
-            fetch(reqUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reqBody),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        setProductDetail((prevState: TypeProduct) => {
-                            const prodDetail: TypeProduct = { ...prevState };
-                            prodDetail.views += 1;
-                            return prodDetail;
-                        });
-                    } else {
-                        console.log(data);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
     useEffect(() => {
+        let unmounted = false;
+        const updateProductViews = (tokenId: string) => {
+            if (signInDlgState.isLoggedIn && tokenId) {
+                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+                const reqBody = {
+                    token: signInDlgState.token,
+                    tokenId: tokenId,
+                    did: signInDlgState.userDid,
+                };
+                fetch(reqUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reqBody),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.code === 200) {
+                            if (!unmounted) {
+                                setProductDetail((prevState: TypeProduct) => {
+                                    const prodDetail: TypeProduct = { ...prevState };
+                                    prodDetail.views += 1;
+                                    return prodDetail;
+                                });
+                            }
+                        } else {
+                            console.log(data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        };
         updateProductViews(productDetail.tokenId);
+        return () => {
+            unmounted = true;
+        };
     }, [productDetail.tokenId]);
-    
+
     return (
         <Container>
             <ProductPageHeader />
@@ -252,27 +200,29 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    {signInDlgState.walletAccounts !== [] && productDetail.holder !== signInDlgState.walletAccounts[0] && !productDetail.isExpired && (
-                        <PrimaryButton
-                            sx={{ marginTop: 3, width: '100%' }}
-                            onClick={() => {
-                                if (signInDlgState.isLoggedIn) {
-                                    setDialogState({
-                                        ...dialogState,
-                                        placeBidDlgOpened: true,
-                                        placeBidDlgStep: 0,
-                                        placeBidName: productDetail.name,
-                                        placeBidOrderId: productDetail.orderId || '',
-                                        placeBidMinLimit: productDetail.price_ela,
-                                    });
-                                } else {
-                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                }
-                            }}
-                        >
-                            Place Bid
-                        </PrimaryButton>
-                    )}
+                    {signInDlgState.walletAccounts !== [] &&
+                        productDetail.holder !== signInDlgState.walletAccounts[0] &&
+                        !productDetail.isExpired && (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            placeBidDlgOpened: true,
+                                            placeBidDlgStep: 0,
+                                            placeBidName: productDetail.name,
+                                            placeBidOrderId: productDetail.orderId || '',
+                                            placeBidMinLimit: productDetail.price_ela,
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Place Bid
+                            </PrimaryButton>
+                        )}
                     {signInDlgState.walletAccounts !== [] &&
                         productDetail.holder === signInDlgState.walletAccounts[0] &&
                         bidsList.length === 0 && (

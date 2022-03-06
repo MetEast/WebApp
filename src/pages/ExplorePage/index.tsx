@@ -19,7 +19,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-
     const [productList, setProductList] = useState<Array<TypeProduct>>([
         blankNFTItem,
         blankNFTItem,

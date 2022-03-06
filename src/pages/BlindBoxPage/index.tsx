@@ -21,14 +21,12 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([
         blankBBItem,
         blankBBItem,
         blankBBItem,
         blankBBItem,
     ]);
-
     const adBanners = [
         '/assets/images/banners/banner1.png',
         '/assets/images/banners/banner2.png',
