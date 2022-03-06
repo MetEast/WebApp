@@ -66,7 +66,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                             &nbsp;&nbsp;Share on Facebook
                         </FacebookShareButton> */}
                         <Link
-                            href={`https://s.meteast.io/aWz73?u=${window.location.href}`}
+                            href={`https://s.meteast.io/eluGI?u=${window.location.href}`}
                             target="_blank"
                             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black' }}
                         >
@@ -83,7 +83,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                             &nbsp;&nbsp;Share on Twitter
                         </TwitterShareButton> */}
                         <Link
-                            href={`https://s.meteast.io/VqYqq?url=${window.location.href}`}
+                            href={`https://s.meteast.io/gguQ3?url=${window.location.href}`}
                             target="_blank"
                             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black' }}
                         >
