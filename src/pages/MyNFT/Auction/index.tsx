@@ -190,38 +190,46 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'BidOrder':
                     _transaction.type = enumTransactionType.Bid;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 case 'ChangeOrderPrice':
                     _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 // case 'Transfer':
                 //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
                 case 'SettleBidOrder':
                     _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
             }
             _transaction.price = parseInt(itemObject.price) / 1e18;
@@ -348,7 +356,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     };
 
     return (
-        <Container>
+        <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item xs={6}>

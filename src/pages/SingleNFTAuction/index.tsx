@@ -114,7 +114,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             product.image = getImageFromAsset(itemObject.asset);
             product.price_ela = itemObject.price / 1e18;
             product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+            product.author =
+                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
             product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
             product.likes = itemObject.likes;
             product.views = itemObject.views;
@@ -228,38 +229,46 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 case 'CreateOrderForSale':
                     _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'CreateOrderForAuction':
                     _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'BidOrder':
                     _transaction.type = enumTransactionType.Bid;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 case 'ChangeOrderPrice':
                     _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'CancelOrder':
                     _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                    _transaction.user =
+                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
                     break;
                 case 'BuyOrder':
                     _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
                 // case 'Transfer':
                 //     _transaction.type = enumTransactionType.Transfer;
                 //     break;
                 case 'SettleBidOrder':
                     _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                    _transaction.user =
+                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
                     break;
             }
             _transaction.price = parseInt(itemObject.price) / 1e18;
@@ -332,9 +341,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     useEffect(() => {
         updateProductViews(productDetail.tokenId);
     }, [productDetail.tokenId]);
-    
+
     return (
-        <Container>
+        <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
             <Grid container marginTop={6} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -374,27 +383,29 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         detail_page={true}
                         marginTop={3}
                     />
-                    {signInDlgState.walletAccounts !== [] && productDetail.holder !== signInDlgState.walletAccounts[0] && !productDetail.isExpired && (
-                        <PrimaryButton
-                            sx={{ marginTop: 3, width: '100%' }}
-                            onClick={() => {
-                                if (signInDlgState.isLoggedIn) {
-                                    setDialogState({
-                                        ...dialogState,
-                                        placeBidDlgOpened: true,
-                                        placeBidDlgStep: 0,
-                                        placeBidName: productDetail.name,
-                                        placeBidOrderId: productDetail.orderId || '',
-                                        placeBidMinLimit: productDetail.price_ela,
-                                    });
-                                } else {
-                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                }
-                            }}
-                        >
-                            Place Bid
-                        </PrimaryButton>
-                    )}
+                    {signInDlgState.walletAccounts !== [] &&
+                        productDetail.holder !== signInDlgState.walletAccounts[0] &&
+                        !productDetail.isExpired && (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            placeBidDlgOpened: true,
+                                            placeBidDlgStep: 0,
+                                            placeBidName: productDetail.name,
+                                            placeBidOrderId: productDetail.orderId || '',
+                                            placeBidMinLimit: productDetail.price_ela,
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Place Bid
+                            </PrimaryButton>
+                        )}
                     {signInDlgState.walletAccounts !== [] &&
                         productDetail.holder === signInDlgState.walletAccounts[0] &&
                         bidsList.length === 0 && (
