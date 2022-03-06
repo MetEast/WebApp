@@ -1,7 +1,9 @@
 import { TypeProduct, enumSingleNFTType, TypeProductFetch, TypeFavouritesFetch } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { selectFromFavourites, getImageFromAsset, reduceHexAddress } from 'src/services/common';
+import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import { blankNFTItem } from 'src/constants/init-constants';
+import { TypeSelectItem } from 'src/types/select-types';
+import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 
 export const FETCH_CONFIG_JSON = {
     headers: {
@@ -12,14 +14,11 @@ export const FETCH_CONFIG_JSON = {
 
 export const getELA2USD = async () => {
     try {
-        const resElaUsdRate = await fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        });
+        const resElaUsdRate = await fetch(
+            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`,
+            FETCH_CONFIG_JSON,
+        );
         const dataElaUsdRate = await resElaUsdRate.json();
-
         if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
         return 0;
     } catch (error) {
@@ -29,16 +28,10 @@ export const getELA2USD = async () => {
 
 export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     if (loginState) {
-        console.log(did, '------------------')
         try {
             const resFavouriteList = await fetch(
                 `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                    },
-                },
+                FETCH_CONFIG_JSON,
             );
             const dataFavouriteList = await resFavouriteList.json();
             return dataFavouriteList.data.result;
@@ -48,6 +41,7 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     } else return [];
 };
 
+// Home Page & Product Page
 export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
@@ -72,12 +66,61 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
         _NFT.views = itemObject.views;
         _NFT.status = itemObject.status;
         _NFT.isLike =
-            likeList.findIndex((value: TypeFavouritesFetch) => selectFromFavourites(value, itemObject.tokenId)) === -1
+            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
                 ? false
                 : true;
         _arrNFTList.push(_NFT);
     }
     return _arrNFTList;
+};
+
+// Product Page
+export const getSearchParams = (keyWord: string, sortBy: TypeSelectItem | undefined, filterRange: TypeFilterRange, filters: Array<enumFilterOption>) => {
+    let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+    if (sortBy !== undefined) {
+        switch (sortBy.value) {
+            case 'low_to_high':
+                searchParams += `&orderType=price_l_to_h`;
+                break;
+            case 'high_to_low':
+                searchParams += `&orderType=price_h_to_l`;
+                break;
+            case 'most_viewed':
+                searchParams += `&orderType=mostviewed`;
+                break;
+            case 'most_liked':
+                searchParams += `&orderType=mostliked`;
+                break;
+            case 'most_recent':
+                searchParams += `&orderType=mostrecent`;
+                break;
+            case 'oldest':
+                searchParams += `&orderType=oldest`;
+                break;
+            case 'ending_soon':
+                searchParams += `&orderType=endingsoon`;
+                break;
+            default:
+                searchParams += `&orderType=mostrecent`;
+                break;
+        }
+    }
+    if (filterRange.min !== undefined) {
+        searchParams += `&filter_min_price=${filterRange.min}`;
+    }
+    if (filterRange.max !== undefined) {
+        searchParams += `&filter_max_price=${filterRange.max}`;
+    }
+    if (filters.length !== 0) {
+        let filterStatus: string = '';
+        filters.forEach((item) => {
+            if (item === 0) filterStatus += 'ON AUCTION,';
+            else if (item === 1) filterStatus += 'BUY NOW,';
+            else if (item === 2) filterStatus += 'HAS BID,';
+        });
+        searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
+    }
+    return searchParams;
 };
 
 export const getTotalEarned = async (address: string) => {

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper-bundle.css';
-import { TypeProduct } from 'src/types/product-types';
+import Container from 'src/components/Container';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NFTPreview from 'src/components/NFTPreview';
+import 'swiper/swiper-bundle.css';
 import { useSignInContext } from 'src/context/SignInContext';
+import { TypeProduct } from 'src/types/product-types';
 import { getELA2USD, getMyFavouritesList, getNFTItemList } from 'src/services/fetch';
-import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 
 const HomePage: React.FC = (): JSX.Element => {

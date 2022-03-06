@@ -6,22 +6,20 @@ import OptionsBar from 'src/components/OptionsBar';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
-import { TypeProduct, TypeProductFetch, enumSingleNFTType, TypeFavouritesFetch } from 'src/types/product-types';
-import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
+import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { selectFromFavourites } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList, getNFTItemList, getSearchParams } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
-    const [sortBy, setSortBy] = useState<TypeSelectItem>();
+    const [sortBy, setSortBy] = useState<TypeSelectItem | undefined>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
-    
+
     const [productList, setProductList] = useState<Array<TypeProduct>>([
         blankNFTItem,
         blankNFTItem,
@@ -35,95 +33,22 @@ const ExplorePage: React.FC = (): JSX.Element => {
     ];
 
     // -------------- Fetch Data -------------- //
-    const getSearchResult = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        var reqUrl = `${
-            process.env.REACT_APP_SERVICE_URL
-        }/sticker/api/v1/listMarketTokens?pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
-
-        if (sortBy !== undefined) {
-            switch (sortBy.value) {
-                case 'low_to_high':
-                    reqUrl += `&orderType=price_l_to_h`;
-                    break;
-                case 'high_to_low':
-                    reqUrl += `&orderType=price_h_to_l`;
-                    break;
-                case 'most_viewed':
-                    reqUrl += `&orderType=mostviewed`;
-                    break;
-                case 'most_liked':
-                    reqUrl += `&orderType=mostliked`;
-                    break;
-                case 'most_recent':
-                    reqUrl += `&orderType=mostrecent`;
-                    break;
-                case 'oldest':
-                    reqUrl += `&orderType=oldest`;
-                    break;
-                case 'ending_soon':
-                    reqUrl += `&orderType=endingsoon`;
-                    break;
-                default:
-                    reqUrl += `&orderType=mostrecent`;
-                    break;
-            }
-        }
-        if (filterRange.min !== undefined) {
-            reqUrl += `&filter_min_price=${filterRange.min}`;
-        }
-        if (filterRange.max !== undefined) {
-            reqUrl += `&filter_max_price=${filterRange.max}`;
-        }
-        if (filters.length !== 0) {
-            let filterStatus: string = '';
-            filters.forEach((item) => {
-                if (item === 0) filterStatus += 'ON AUCTION,';
-                else if (item === 1) filterStatus += 'BUY NOW,';
-                else if (item === 2) filterStatus += 'HAS BID,';
-            });
-            reqUrl += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
-        }
-        const resSearchResult = await fetch(reqUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        });
-        const dataSearchResult = await resSearchResult.json();
-        const arrSearchResult = dataSearchResult.data === undefined ? [] : dataSearchResult.data.result;
-
-        let _newProductList: any = [];
-        for (let i = 0; i < arrSearchResult.length; i++) {
-            let itemObject: TypeProductFetch = arrSearchResult[i];
-            var product: TypeProduct = { ...blankNFTItem };
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.author = itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.status = itemObject.status;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            _newProductList.push(product);
-        }
-        setProductList(_newProductList);
-    };
-
-    const getFetchData = async () => {
-        getSearchResult(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, [sortBy, filters, filterRange, keyWord, productViewMode, signInDlgState.isLoggedIn]);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
+            const _searchedNFTList = await getNFTItemList(searchParams, ELA2USD, likeList);
+            if (!unmounted) {
+                setProductList(_searchedNFTList);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord]); //, productViewMode
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //
@@ -151,7 +76,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     };
     // -------------- Option Bar -------------- //
 
-    // -------------- Views -------------- //
+    // -------------- Likes -------------- //
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
         if (type === 'inc') {
