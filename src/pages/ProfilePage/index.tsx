@@ -607,9 +607,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     <Grid item xs={12} md={9} order={{ xs: 2, md: 1 }}>
                         <Stack
                             direction="row"
-                            flexWrap={{ xs: 'wrap', md: 'nowrap' }}
-                            justifyContent={{ xs: 'center', md: 'flex-end' }}
-                            spacing={2}
+                            justifyContent={{ xs: 'auto', md: 'flex-end' }}
+                            spacing={0.5}
+                            paddingBottom={{ xs: 1, sm: 0 }}
+                            sx={{ overflowY: 'hidden', overflowX: 'auto' }}
                         >
                             {nftGalleryFilterButtonsList.map((items, index) => (
                                 <FilterButton
