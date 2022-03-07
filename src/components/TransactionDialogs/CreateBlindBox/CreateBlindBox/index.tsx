@@ -48,16 +48,16 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     }, []);
 
     useEffect(() => {
-        const tokenIds: string[] = dialogState.crtBlindTokenIds.split(';').filter((item: string) => item.length > 0); 
+        const tokenIds: string[] = dialogState.crtBlindTokenIds.split(';').filter((item: string) => item.length > 0);
         setBlindboxQuantity(tokenIds.length);
     }, [dialogState.crtBlindTokenIds]);
-    
+
     return (
         <>
             <Stack
                 spacing={5}
                 minWidth={{ xs: 360, sm: 580, md: 700 }}
-                maxHeight={'70vh'}
+                maxHeight={{ xs: 'auto', md: '70vh' }}
                 sx={{ overflowY: 'auto', overflowX: 'hidden' }}
                 className={classes.container}
             >

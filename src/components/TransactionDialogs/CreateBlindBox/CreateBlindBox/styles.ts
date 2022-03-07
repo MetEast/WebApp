@@ -3,11 +3,12 @@ import { styled, Button, TextField } from '@mui/material';
 
 export const useStyles = makeStyles((theme: any) => ({
     container: {
+        marginRight: -32,
         '&::-webkit-scrollbar': {
-            width: 36,
+            width: 32,
         },
         '&::-webkit-scrollbar-thumb': {
-            border: '14px solid rgba(0, 0, 0, 0)',
+            border: '12px solid rgba(0, 0, 0, 0)',
             backgroundClip: 'padding-box',
             borderRadius: '9999px',
             backgroundColor: '#AAAAAA',
