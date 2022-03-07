@@ -81,7 +81,6 @@ export type TypeProduct = {
     sold?: number;
     instock?: number;
     orderId?: string;
-
     blockNumber?: number;
     tokenIndex?: string;
     quantity?: number;
@@ -96,9 +95,9 @@ export type TypeProduct = {
     isExpired?: boolean;
     state?: string;
     maxPurchases?: number;
-    maxViews?: number;
-    maxLikes?: number;
     maxQuantity?: number;
+    did?: string;
+    isBlindbox?: boolean;
 };
 
 export type TypeNFTTransaction = {
@@ -143,6 +142,12 @@ export type TypeBlindBoxSelectItem = {
     url: string;
 };
 
+export type TypeBlindBoxCandidate = {
+    tokenId: string;
+    orderId: string;
+    asset: string;
+};
+
 // ---
 export type TypeProductFetch = {
     blockNumber: number;
@@ -178,7 +183,6 @@ export type TypeProductFetch = {
     //
     blindBoxIndex: number;
     blindPrice: string;
-    maxLikes: string;
     maxPurchases: string;
     maxQuantity: string;
     maxViews: string;
@@ -187,6 +191,13 @@ export type TypeProductFetch = {
     sort: string;
     state: string;
     list_likes: Array<TypeBlindListLikes>;
+    list_views: Array<TypeBlindListLikes>;
+    did: string;
+    sold_tokenIds: string[];
+    tokenIds: string[];
+    createdName: string;
+    createdAddress: string;
+    isBlindbox: boolean;
 };
 
 export type TypeFavouritesFetch = {
@@ -249,6 +260,8 @@ export type TypeSingleNFTBidFetch = {
     id: string;
     sellerAddr: string;
     buyerAddr: string;
+    buyerName: string;
+    sellerName: string;
     royaltyFee: string;
     tokenId: string;
     price: string;

@@ -10,6 +10,7 @@ import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
+import { blankBBCandidate } from 'src/constants/init-constants';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -24,15 +25,6 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
     const [indeterminateChecked, setIndeterminateChecked] = useState<boolean>(false);
     const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>([]);
-
-    const defaultValue: TypeBlindBoxSelectItem = {
-        id: 0,
-        tokenId: '',
-        nftIdentity: '',
-        projectTitle: '',
-        projectType: '',
-        url: '',
-    };
 
     let allTokenIds: Array<string> = [];
     for (let i = 0; i < itemList.length; i++) allTokenIds.push(itemList[i].tokenId);
@@ -56,7 +48,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
         let _itemChecked: Array<boolean> = [];
         for (let i = 0; i < arrBlindBoxItem.length; i++) {
             let itemObject: TypeProductFetch = arrBlindBoxItem[i];
-            let item: TypeBlindBoxSelectItem = { ...defaultValue };
+            let item: TypeBlindBoxSelectItem = { ...blankBBCandidate };
             item.id = i + 1;
             item.tokenId = itemObject.tokenId;
             item.nftIdentity = itemObject.tokenIdHex;

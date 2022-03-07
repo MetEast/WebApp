@@ -11,7 +11,6 @@ import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
@@ -26,40 +25,17 @@ import {
     TypeBlindListLikes,
 } from 'src/types/product-types';
 import { getELA2USD } from 'src/services/fetch';
-import { getImageFromAsset, getTime } from 'src/services/common';
+import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
+import { blankBBItem } from 'src/constants/init-constants';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
-    const params = useParams(); // params.id
+    const params = useParams();
     const [signInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [dialogState, setDialogState] = useDialogContext();
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumBlindBoxNFTType.ComingSoon,
-        isLike: false,
-        sold: 0,
-        instock: 0,
-    };
-    const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(defaultValue);
+
+    const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -67,7 +43,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
 
     const getBlindBoxDetail = async (tokenPriceRate: number) => {
         const resBlindBoxDetail = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxIndex=${params.id}`,
+            `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxId=${params.id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,7 +53,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         );
         const dataBlindBoxDetail = await resBlindBoxDetail.json();
         const blindDetail = dataBlindBoxDetail.data.result;
-        var blind: TypeProduct = { ...defaultValue };
+        var blind: TypeProduct = { ...blankBBItem };
 
         if (blindDetail !== undefined) {
             const itemObject: TypeProductFetch = blindDetail;
@@ -95,10 +71,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     : enumBlindBoxNFTType.SaleEnded;
             blind.likes = itemObject.likes;
             blind.views = itemObject.views;
-            blind.holder = itemObject.authorName; // no data ------------------------------------
+            blind.author = itemObject.createdName;
+            blind.royaltyOwner = itemObject.createdAddress;
             blind.isLike = signInDlgState.isLoggedIn
                 ? itemObject.list_likes.findIndex(
-                      (value: TypeBlindListLikes) => value.did === `did:elastos:${didCookies.METEAST_DID}`,
+                      (value: TypeBlindListLikes) => value.did === `did:elastos:${signInDlgState.userDid}`,
                   ) === -1
                     ? false
                     : true
@@ -115,9 +92,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             }
             blind.state = itemObject.state;
             blind.maxPurchases = parseInt(itemObject.maxPurchases);
-            blind.maxLikes = parseInt(itemObject.maxLikes);
-            blind.maxViews = parseInt(itemObject.maxViews);
             blind.maxQuantity = parseInt(itemObject.maxQuantity);
+            blind.did = itemObject.did;
         }
         setBlindBoxDetail(blind);
     };
@@ -155,9 +131,9 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         if (signInDlgState.isLoggedIn && tokenId) {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: tokenCookies.METEAST_TOKEN,
+                token: signInDlgState.token,
                 blindBoxIndex: tokenId,
-                did: didCookies.METEAST_DID,
+                did: signInDlgState.userDid,
             };
             fetch(reqUrl, {
                 method: 'POST',
@@ -219,9 +195,10 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     </Stack>
                     <ELAPrice price_ela={blindBoxDetail.price_ela} price_usd={blindBoxDetail.price_usd} marginTop={3} />
                     {signInDlgState.walletAccounts !== [] &&
-                        blindBoxDetail.holder === signInDlgState.walletAccounts[0] &&
+                        blindBoxDetail.holder !== signInDlgState.walletAccounts[0] &&
                         blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                        blindBoxDetail.state === 'online' && (
+                        blindBoxDetail.state === 'online' &&
+                        signInDlgState.userDid !== blindBoxDetail.did && (
                             <PrimaryButton
                                 sx={{ marginTop: 3, width: '100%' }}
                                 onClick={() => {
@@ -233,9 +210,16 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                         buyBlindPriceEla: blindBoxDetail.price_ela,
                                         buyBlindPriceUsd: blindBoxDetail.price_usd,
                                         buyBlindAmount: 1,
-                                        // buyBlindCreator: blindBoxDetail.author,
-                                        // buyBlindOrderId: blindBoxDetail.orderId || '',
                                         buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                        buyBlindCreator:
+                                            blindBoxDetail.author === ''
+                                                ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                : blindBoxDetail.author,
+                                        buyBlindLeftAmount:
+                                            blindBoxDetail.maxPurchases !== undefined &&
+                                            blindBoxDetail.sold !== undefined
+                                                ? blindBoxDetail.maxPurchases - blindBoxDetail.sold
+                                                : 0,
                                     });
                                 }}
                             >

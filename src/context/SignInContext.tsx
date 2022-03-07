@@ -11,6 +11,13 @@ export interface SignInState {
     didUri: string;
     signOut: boolean;
     disconnectWallet: boolean;
+    // user info
+    token: string;
+    userDid: string;
+    userName: string;
+    userDescription: string;
+    userAvatar: string;
+    userCoverImage: string;
 }
 
 const defaultState: SignInState = {
@@ -34,6 +41,13 @@ const defaultState: SignInState = {
     didUri: '',
     signOut: false,
     disconnectWallet: false,
+    // user info
+    token: '',
+    userDid: '',
+    userName: '',
+    userDescription: '',
+    userAvatar: '',
+    userCoverImage: '',
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

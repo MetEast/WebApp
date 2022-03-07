@@ -29,7 +29,6 @@ import {
     TypeNFTHisotry,
 } from 'src/types/product-types';
 import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
-import { useCookies } from 'react-cookie';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Web3 from 'web3';
@@ -49,51 +48,13 @@ import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
+import { blankNFTItem, blankNFTBid, blankMyNFTHistory, blankNFTTxs } from 'src/constants/init-constants';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
-    const params = useParams(); // params.id
+    const params = useParams();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
     const [dialogState, setDialogState] = useDialogContext();
-
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-    };
-    const defaultTransactionValue: TypeNFTTransaction = {
-        type: enumTransactionType.Bid,
-        user: '',
-        price: 0,
-        time: '',
-        txHash: '',
-    };
-    const defaultProdTransHisotryValue: TypeNFTHisotry = {
-        type: '',
-        user: '',
-        price: 0,
-        time: '',
-        saleType: enumTransactionType.ForSale,
-        txHash: '',
-    };
-
-    const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
@@ -119,7 +80,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         );
         const dataProductDetail = await resProductDetail.json();
         const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
+        var product: TypeProduct = { ...blankNFTItem };
 
         if (prodDetail !== undefined) {
             const itemObject: TypeProductFetch = prodDetail;
@@ -164,9 +125,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
+        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
     };
 
     useEffect(() => {
@@ -186,7 +145,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event === 'Transfer') continue;
-            let _transaction: TypeNFTTransaction = { ...defaultTransactionValue };
+            let _transaction: TypeNFTTransaction = { ...blankNFTTxs };
             switch (itemObject.event) {
                 case 'Mint':
                     _transaction.type = enumTransactionType.CreatedBy;
@@ -239,7 +198,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             _latestTransList.push(_transaction);
 
             if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
-                let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+                let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
                 _prodTrans.type =
                     itemObject.event === 'Mint'
                         ? 'Created'
@@ -271,7 +230,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     }, [transactionSortBy]);
 
     const getLatestBid = async () => {
-        const defaultBidValue: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
         const resLatestBid = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
             {
@@ -287,7 +245,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         let _latestBidsList: any = [];
         for (let i = 0; i < arrLatestBid.others.length; i++) {
             let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-            let _bid: TypeSingleNFTBid = { ...defaultBidValue };
+            let _bid: TypeSingleNFTBid = { ...blankNFTBid };
             _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
             _bid.price = parseFloat(itemObject.price) / 1e18;
             _bid.orderId = itemObject.orderId;
@@ -354,6 +312,43 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         }
         setProductDetail(prodDetail);
     };
+
+    const updateProductViews = (tokenId: string) => {
+        if (signInDlgState.isLoggedIn && tokenId) {
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        setProductDetail((prevState: TypeProduct) => {
+                            const prodDetail: TypeProduct = { ...prevState };
+                            prodDetail.views += 1;
+                            return prodDetail;
+                        });
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    useEffect(() => {
+        updateProductViews(productDetail.tokenId);
+    }, [productDetail.tokenId]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

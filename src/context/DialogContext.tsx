@@ -102,12 +102,13 @@ interface State {
     buyBlindPriceEla: number;
     buyBlindPriceUsd: number;
     buyBlindAmount: number;
-    buyBlindOrderId: string;
-    buyBlindTokenId: string;
-    buyBlindImage: string;
+    buyBlindOrderIds: string[];
+    buyBlindTokenIds: string[];
+    buyBlindImages: string[];
     buyBlindTxFee: number;
     buyBlindTxHash: string;
     buyBlindCreator: string;
+    buyBlindLeftAmount: number;
     // error msg
     errorMessageDlgOpened: boolean;
     // all transactions
@@ -215,12 +216,13 @@ const defaultState: State = {
     buyBlindPriceEla: 0,
     buyBlindPriceUsd: 0,
     buyBlindAmount: 0,
-    buyBlindOrderId: '',
-    buyBlindTokenId: '',
-    buyBlindImage: '',
+    buyBlindOrderIds: [],
+    buyBlindTokenIds: [],
+    buyBlindImages: [],
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',
+    buyBlindLeftAmount: 0,
     // error msg
     errorMessageDlgOpened: false,
     // all transactions

@@ -10,7 +10,6 @@ import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'sr
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
@@ -22,15 +21,15 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
+    const [onProgress, setOnProgress] = useState<boolean>(false);
 
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
-    const callBuyOrder = async (_orderId: string, _didUri: string, _price: string) => {
+    const callBuyOrderBatch = async (_orderIds: string[], _didUri: string, _price: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
         let contractAbi = METEAST_MARKET_CONTRACT_ABI;
@@ -55,7 +54,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true });
         }, 120000);
         marketContract.methods
-            .buyOrder(_orderId, _didUri)
+            .buyOrderBatch(_orderIds, _didUri)
             .send(transactionParams)
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
@@ -69,36 +68,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                //
-                let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
-                const reqBody = {
-                    token: tokenCookies.METEAST_TOKEN,
-                    blindBoxId: dialogState.buyBlindBoxId,
-                    tokenId: dialogState.buyBlindTokenId,
-                };
-                fetch(reqUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reqBody),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            setDialogState({
-                                ...dialogState,
-                                buyBlindBoxDlgOpened: true,
-                                buyBlindBoxDlgStep: 2,
-                                buyBlindTxHash: txHash,
-                            });
-                        } else {
-                            console.log(data);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                sendSoldBlindBoxTokenIds(txHash);
             })
             .on('error', (error: any, receipt: any) => {
                 console.error('error', error);
@@ -112,11 +82,45 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             });
     };
 
+    const sendSoldBlindBoxTokenIds = (txHash: string) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
+        const reqBody = {
+            token: signInDlgState.token,
+            blindBoxId: dialogState.buyBlindBoxId,
+            tokenIds: dialogState.buyBlindTokenIds,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    setOnProgress(false);
+                    setDialogState({
+                        ...dialogState,
+                        buyBlindBoxDlgOpened: true,
+                        buyBlindBoxDlgStep: 2,
+                        buyBlindTxHash: txHash,
+                    });
+                } else {
+                    console.log(data);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     const handleBuyBlindBox = async () => {
-        await callBuyOrder(
-            dialogState.buyBlindOrderId,
+        setOnProgress(true);
+        await callBuyOrderBatch(
+            dialogState.buyBlindOrderIds,
             signInDlgState.didUri,
-            BigInt(dialogState.buyBlindPriceEla * 1e18).toString(),
+            BigInt(dialogState.buyBlindPriceEla * 1e18 * dialogState.buyBlindOrderIds.length).toString(),
         );
     };
 
@@ -188,7 +192,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                         >
                             Back
                         </SecondaryButton>
-                        <PrimaryButton fullWidth onClick={handleBuyBlindBox}>
+                        <PrimaryButton fullWidth disabled={onProgress} onClick={handleBuyBlindBox}>
                             Confirm
                         </PrimaryButton>
                     </Stack>

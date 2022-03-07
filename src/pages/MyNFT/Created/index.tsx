@@ -30,47 +30,15 @@ import {
 } from 'src/types/product-types';
 import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
 import { useDialogContext } from 'src/context/DialogContext';
-// import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import Container from 'src/components/Container';
+import { blankNFTItem, blankMyNFTHistory } from 'src/constants/init-constants';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
-    const params = useParams(); // params.id
+    const params = useParams();
     const [signInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
     const [dialogState, setDialogState] = useDialogContext();
-    const defaultValue: TypeProduct = {
-        tokenId: '',
-        name: '',
-        image: '',
-        price_ela: 0,
-        price_usd: 0,
-        likes: 0,
-        views: 0,
-        author: '',
-        authorDescription: '',
-        authorImg: '',
-        authorAddress: '',
-        description: '',
-        tokenIdHex: '',
-        royalties: 0,
-        createTime: '',
-        holderName: '',
-        holder: '',
-        type: enumSingleNFTType.BuyNow,
-        isLike: false,
-    };
-    const defaultProdTransHisotryValue: TypeNFTHisotry = {
-        type: '',
-        user: '',
-        price: 0,
-        time: '',
-        saleType: enumTransactionType.ForSale,
-        txHash: '',
-    };
-
-    const [productDetail, setProductDetail] = useState<TypeProduct>(defaultValue);
+    const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
@@ -86,7 +54,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         );
         const dataProductDetail = await resProductDetail.json();
         const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...defaultValue };
+        var product: TypeProduct = { ...blankNFTItem };
 
         if (prodDetail !== undefined) {
             const itemObject: TypeProductFetch = prodDetail;
@@ -141,7 +109,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         for (let i = 0; i < arrLatestTransaction.length; i++) {
             let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
             if (itemObject.event !== 'Mint') continue;
-            let _prodTrans: TypeNFTHisotry = { ...defaultProdTransHisotryValue };
+            let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
             _prodTrans.type = 'Created';
             _prodTrans.price = parseInt(itemObject.price) / 1e18;
             _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
@@ -154,9 +122,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        let ela_usd_rate = await getELA2USD();
-        let favouritesList = await getMyFavouritesList(signInDlgState.isLoggedIn, didCookies.METEAST_DID);
-        getProductDetail(ela_usd_rate, favouritesList);
+        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
         getLatestTransaction();
     };
 
@@ -175,6 +141,43 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             return prodDetail;
         });
     };
+
+    const updateProductViews = (tokenId: string) => {
+        if (signInDlgState.isLoggedIn && tokenId) {
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        setProductDetail((prevState: TypeProduct) => {
+                            const prodDetail: TypeProduct = { ...prevState };
+                            prodDetail.views += 1;
+                            return prodDetail;
+                        });
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    useEffect(() => {
+        updateProductViews(productDetail.tokenId);
+    }, [productDetail.tokenId]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -236,7 +239,6 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     <Stack spacing={10}></Stack>
                 </Grid>
             </Grid>
-            {/* <MintNFTDlgContainer /> */}
         </Container>
     );
 };

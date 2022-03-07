@@ -4,9 +4,6 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useCookies } from 'react-cookie';
-import jwtDecode from 'jwt-decode';
-import { UserTokenType } from 'src/types/auth-types';
 import { getImageFromAsset } from 'src/services/common';
 import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
 import CustomTextField from 'src/components/TextField';
@@ -14,6 +11,7 @@ import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { uploadUserProfile } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
+import { useCookies } from 'react-cookie';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -21,31 +19,25 @@ export interface ComponentProps {
 
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
+    const [cookies, setCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
-    const userInfo: UserTokenType =
-        tokenCookies.METEAST_TOKEN === undefined
-            ? {
-                  did: '',
-                  name: '',
-                  description: '',
-                  avatar: '',
-                  exp: 0,
-                  iat: 0,
-              }
-            : jwtDecode(tokenCookies.METEAST_TOKEN);
     const [userAvatarURL, setUserAvatarURL] = useState<TypeImageFile>({
-        preview: getImageFromAsset(userInfo.avatar),
+        preview: signInDlgState.userAvatar === '' ? '' : getImageFromAsset(signInDlgState.userAvatar),
         raw: new File([''], ''),
     });
-    const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({ preview: '', raw: new File([''], '') });
-    const [userName, setUserName] = useState<string>(userInfo.name);
-    const [userDescription, setUserDescription] = useState<string>(userInfo.description);
+    const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({
+        preview: signInDlgState.userCoverImage === '' ? '' : getImageFromAsset(signInDlgState.userCoverImage),
+        raw: new File([''], ''),
+    });
+    const [userName, setUserName] = useState<string>(signInDlgState.userName);
+    const [userDescription, setUserDescription] = useState<string>(signInDlgState.userDescription);
+    const [avatarChanged, setAvatarChanged] = useState<boolean>(false);
+    const [coverImageChanged, setCoverImageChanged] = useState<boolean>(false);
 
     const handleSelectAvatar = (e: any) => {
         if (e.target.files.length) {
+            if (avatarChanged === false) setAvatarChanged(true);
             setUserAvatarURL({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0],
@@ -55,6 +47,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleChangeCoverImage = (e: any) => {
         if (e.target.files.length) {
+            if (coverImageChanged === false) setCoverImageChanged(true);
             setUserCoverImageURL({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0],
@@ -64,29 +57,47 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleSubmit = async () => {
         setOnProgress(true);
-        let avatarUrl: string = '';
-        uploadImage2Ipfs(userAvatarURL.raw)
+        let urlAvatar: string = '';
+        let urlCoverImage: string = '';
+        uploadImage2Ipfs(avatarChanged ? userAvatarURL.raw : undefined)
             .then((added: any) => {
-                avatarUrl = `meteast:image:${added.path}`;
-                return uploadImage2Ipfs(userCoverImageURL.raw);
+                urlAvatar = avatarChanged ? `meteast:image:${added.path}` : signInDlgState.userAvatar;
+                return uploadImage2Ipfs(coverImageChanged ? userCoverImageURL.raw : undefined);
             })
             .then((added: any) => {
+                urlCoverImage = coverImageChanged ? `meteast:image:${added.path}` : signInDlgState.userCoverImage;
                 return uploadUserProfile(
-                    tokenCookies.METEAST_TOKEN,
-                    didCookies.METEAST_DID,
+                    signInDlgState.token,
+                    `did:elastos:${signInDlgState.userDid}`,
                     userName,
                     userDescription,
-                    avatarUrl,
-                    added.path,
+                    urlAvatar,
+                    urlCoverImage,
                 );
             })
-            .then((success) => {
-                if (!success)
+            .then((token: any) => {
+                if (token) {
+                    setSignInDlgState({
+                        ...signInDlgState,
+                        token: token,
+                        userName: userName,
+                        userDescription: userDescription,
+                        userAvatar: urlAvatar,
+                        userCoverImage: urlCoverImage,
+                    });
+                    setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                    enqueueSnackbar('Saved!', {
+                        variant: 'success',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                } else {
                     enqueueSnackbar('Error!', {
                         variant: 'warning',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                }
                 setOnProgress(false);
+                onClose();
             })
             .catch((error) => {
                 enqueueSnackbar('Error!', {
@@ -94,6 +105,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setOnProgress(false);
+                onClose();
             });
     };
 
@@ -147,6 +159,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     placeholder="Enter your name"
                     height={56}
                     sx={{ marginTop: 2.5 }}
+                    inputValue={userName}
                     changeHandler={(value: string) => setUserName(value)}
                 />
                 <CustomTextField
@@ -155,6 +168,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     multiline
                     rows={5}
                     limit={140}
+                    inputValue={userDescription}
                     changeHandler={(value: string) => setUserDescription(value)}
                 />
                 <Stack spacing={1}>

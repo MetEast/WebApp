@@ -7,7 +7,6 @@ import ModalDialog from 'src/components/ModalDialog';
 import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
-import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 import { isInAppBrowser } from 'src/services/wallet';
 
 export interface ComponentProps {}
@@ -39,16 +38,6 @@ const CreateBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
                 {dialogState.createBlindBoxDlgStep === 0 && <CreateBlindBox />}
                 {dialogState.createBlindBoxDlgStep === 1 && <CheckBlindBoxDetails />}
                 {dialogState.createBlindBoxDlgStep === 2 && <BlindBoxCreateSuccess />}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.errorMessageDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, errorMessageDlgOpened: false });
-                }}
-            >
-                <ErrorMessage onClose={() => {
-                    setDialogState({ ...dialogState, errorMessageDlgOpened: false });
-                }} />
             </ModalDialog>
         </>
     );

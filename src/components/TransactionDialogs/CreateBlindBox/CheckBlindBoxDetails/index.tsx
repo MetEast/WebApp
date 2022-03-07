@@ -14,7 +14,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
@@ -27,8 +26,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [didCookies] = useCookies(['METEAST_DID']);
-    const [tokenCookies] = useCookies(['METEAST_TOKEN']);
     const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const [onProgress, setOnProgress] = useState<boolean>(false);
 
@@ -40,8 +37,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const uploadBlindBoxInfo = (imgUri: string) =>
         new Promise((resolve, reject) => {
             const formData = new FormData();
-            formData.append('token', tokenCookies.METEAST_TOKEN);
-            formData.append('did', didCookies.METEAST_DID);
+            formData.append('token', signInDlgState.token);
+            formData.append('did', signInDlgState.userDid);
             formData.append('name', dialogState.crtBlindTitle);
             formData.append('description', dialogState.crtBlindDescription);
             formData.append('asset', imgUri);
@@ -134,15 +131,15 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     ) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
-        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
-        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
         console.log('Gas price:', gasPrice);
 
         console.log('Sending transaction with account address:', accounts[0]);
-        let transactionParams = {
+        const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
