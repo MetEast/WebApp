@@ -10,7 +10,6 @@ import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getMintCategory } from 'src/services/common';
 import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs } from 'src/services/fetch';
@@ -31,6 +30,9 @@ import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/Canc
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
+import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
+import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
+import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -255,20 +257,22 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>
                 <Grid item md={4} xs={12}>
-                    <SingleNFTMoreInfo
-                        author={productDetail.author}
-                        authorDescription={productDetail.authorDescription}
-                        authorImg={productDetail.authorImg}
-                        authorAddress={productDetail.authorAddress}
-                        description={productDetail.description}
-                        detailTokenIdHex={productDetail.tokenIdHex}
-                        detailOwnerName={productDetail.holderName}
-                        detailOwnerAddress={productDetail.holder}
-                        detailRoyalties={productDetail.royalties}
-                        detailCreateTime={productDetail.createTime}
-                        marginTop={5}
-                        vertically={true}
-                    />
+                    <Stack spacing={5}>
+                        <ProjectDescription description={productDetail.description} />
+                        <AboutAuthor
+                            name={productDetail.author}
+                            description={productDetail.authorDescription}
+                            img={productDetail.authorImg}
+                            address={productDetail.authorAddress}
+                        />
+                        <ChainDetails
+                            tokenId={productDetail.tokenIdHex}
+                            ownerName={productDetail.holderName}
+                            ownerAddress={productDetail.holder}
+                            royalties={productDetail.royalties}
+                            createTime={productDetail.createTime}
+                        />
+                    </Stack>
                 </Grid>
                 <Grid item md={8} xs={12}>
                     <PriceHistoryView />
