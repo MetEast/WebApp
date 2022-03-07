@@ -26,7 +26,7 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
 
     return (
         <Box>
-            <Stack direction="row" alignItems="center" spacing={2} marginTop={5}>
+            <Stack direction="row" alignItems="center" spacing={2}>
                 <Typography fontSize={22} fontWeight={700}>
                     Latest transactions
                 </Typography>

@@ -275,8 +275,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <PriceHistoryView />
-                    <NFTTransactionTable transactionsList={transactionsList} />
+                    <Stack spacing={10}>
+                        <PriceHistoryView />
+                        <NFTTransactionTable transactionsList={transactionsList} />
+                    </Stack>
                 </Grid>
             </Grid>
             <ModalDialog

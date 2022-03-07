@@ -135,7 +135,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
 
     return (
         <Stack spacing={2}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={5} zIndex={10}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" zIndex={10}>
                 <Typography fontSize={22} fontWeight={700}>
                     Price History
                 </Typography>

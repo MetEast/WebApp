@@ -288,13 +288,15 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     </Stack>
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <SingleNFTBidsTable
-                        isLoggedIn={signInDlgState.isLoggedIn}
-                        myBidsList={myBidsList}
-                        bidsList={bidsList}
-                    />
-                    <PriceHistoryView />
-                    <NFTTransactionTable transactionsList={transactionsList} />
+                    <Stack spacing={10}>
+                        <SingleNFTBidsTable
+                            isLoggedIn={signInDlgState.isLoggedIn}
+                            myBidsList={myBidsList}
+                            bidsList={bidsList}
+                        />
+                        <PriceHistoryView />
+                        <NFTTransactionTable transactionsList={transactionsList} />
+                    </Stack>
                 </Grid>
             </Grid>
             <ModalDialog
