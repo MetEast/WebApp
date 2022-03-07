@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, Box, Grid } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -77,7 +77,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         <>
             <Stack
                 spacing={5}
-                width={{ xs: '100%', sm: 470 }}
+                width={{ xs: '100%', md: 470 }}
                 paddingY={{ xs: 4, sm: 0 }}
                 sx={{ overflowY: 'auto', overflowX: 'hidden' }}
             >
@@ -134,20 +134,49 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         Edit Profile
                     </SecondaryButton>
                 </Stack>
-                <Stack padding={3} borderRadius={6} sx={{ background: '#F0F1F2' }}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:user" fontSize={20} color="black" />
-                            <Typography
-                                fontSize={14}
-                                fontWeight={700}
-                                color="black"
-                                sx={{ textTransform: 'uppercase' }}
-                            >
-                                Identity
-                            </Typography>
-                        </Stack>
+                <Grid container padding={3} borderRadius={6} rowGap={4} sx={{ background: '#F0F1F2' }}>
+                    <Grid item xs={12} md={9} order={0}>
+                        {signInDlgState.isLoggedIn && (
+                            <>
+                                {signInDlgState.userName && (
+                                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                                        <Icon icon="ph:user" fontSize={20} color="black" />
+                                        <Typography fontSize={18} fontWeight={700}>
+                                            {signInDlgState.userName}
+                                        </Typography>
+                                    </Stack>
+                                )}
+                                <Stack direction="row" spacing={0.5}>
+                                    <CopyToClipboard
+                                        text={`did:elastos:${signInDlgState.userDid}`}
+                                        onCopy={showSnackBar}
+                                    >
+                                        <CopyToClipboardButton>
+                                            <Icon
+                                                icon="ph:copy"
+                                                color="#1890FF"
+                                                style={{ marginTop: '1px', cursor: 'pointer' }}
+                                            />
+                                        </CopyToClipboardButton>
+                                    </CopyToClipboard>
+                                    <Typography fontSize={14} fontWeight={400}>
+                                        {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
+                                    </Typography>
+                                </Stack>
+                            </>
+                        )}
+                    </Grid>
+                    <Grid
+                        item
+                        xs={12}
+                        md={3}
+                        display={{ md: 'flex' }}
+                        flexDirection="row"
+                        justifyContent="flex-end"
+                        order={{ xs: 2, md: 1 }}
+                    >
                         <PrimaryButton
+                            fullWidth
                             sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
                             onClick={() => {
                                 signInDlgState.isLoggedIn
@@ -157,68 +186,30 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         >
                             {signInDlgState.isLoggedIn ? 'sign out' : 'sign in'}
                         </PrimaryButton>
-                    </Stack>
-                    {signInDlgState.isLoggedIn && (
-                        <>
-                            <Typography fontSize={18} fontWeight={700} marginTop={3}>
-                                {signInDlgState.userName}
-                            </Typography>
-                            <Stack direction="row" spacing={0.5}>
-                                <CopyToClipboard text={`did:elastos:${signInDlgState.userDid}`} onCopy={showSnackBar}>
-                                    <CopyToClipboardButton>
-                                        <Icon
-                                            icon="ph:copy"
-                                            color="#1890FF"
-                                            style={{ marginTop: '1px', cursor: 'pointer' }}
-                                        />
-                                    </CopyToClipboardButton>
-                                </CopyToClipboard>
-                                <Typography fontSize={14} fontWeight={400}>
-                                    {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
-                                </Typography>
-                            </Stack>
-                        </>
-                    )}
-                </Stack>
-                <Stack padding={3} borderRadius={6} sx={{ background: '#F0F1F2' }}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Icon icon="ph:wallet" fontSize={20} color="black" />
-                            <Typography
-                                fontSize={14}
-                                fontWeight={700}
-                                color="black"
-                                sx={{ textTransform: 'uppercase' }}
-                            >
-                                Wallet
+                    </Grid>
+                    <Grid item xs={12} order={{ xs: 1, md: 2 }}>
+                        <Stack direction="row" alignItems="center" spacing={0.25}>
+                            <Icon icon="ph:wallet" fontSize={20} color="black" style={{ marginBottom: '2px' }} />
+                            <Typography fontSize={18} fontWeight={700}>
+                                {signInDlgState.walletBalance} ELA
                             </Typography>
                         </Stack>
-                        <PrimaryButton
-                            sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
-                            onClick={() => {
-                                setSignInDlgState({ ...signInDlgState, disconnectWallet: true });
-                            }}
-                        >
-                            Disconnect
-                        </PrimaryButton>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" spacing={0.25} marginTop={3}>
-                        <img src="/assets/icons/elatos-ela.svg" alt="" style={{ marginBottom: '2px' }} />
-                        <Typography fontSize={18} fontWeight={700}>
-                            {signInDlgState.walletBalance} ELA
-                        </Typography>
-                    </Stack>
-                    <Stack direction="row" spacing={0.5}>
-                        <CopyToClipboard text={signInDlgState.walletAccounts[0]} onCopy={showSnackBar}>
-                            <CopyToClipboardButton>
-                                <Icon icon="ph:copy" color="#1890FF" style={{ marginTop: '1px', cursor: 'pointer' }} />
-                            </CopyToClipboardButton>
-                        </CopyToClipboard>
-                        <Typography fontSize={14} fontWeight={400}>
-                            {reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
-                        </Typography>
-                    </Stack>
-                </Stack>
+                        <Stack direction="row" spacing={0.5}>
+                            <CopyToClipboard text={signInDlgState.walletAccounts[0]} onCopy={showSnackBar}>
+                                <CopyToClipboardButton>
+                                    <Icon
+                                        icon="ph:copy"
+                                        color="#1890FF"
+                                        style={{ marginTop: '1px', cursor: 'pointer' }}
+                                    />
+                                </CopyToClipboardButton>
+                            </CopyToClipboard>
+                            <Typography fontSize={14} fontWeight={400}>
+                                {reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
+                            </Typography>
+                        </Stack>
+                    </Grid>
+                </Grid>
                 <SecondaryButton fullWidth onClick={onClose}>
                     Close
                 </SecondaryButton>
