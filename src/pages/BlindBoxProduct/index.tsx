@@ -29,6 +29,8 @@ import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/commo
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
+import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
+import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -228,9 +230,19 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         )}
                 </Grid>
             </Grid>
-            <Box marginTop={5}>
-                <img src="" alt="Blind Box Introduction"></img>
-            </Box>
+            <Grid container marginTop={5} columnSpacing={10}>
+                <Grid item xs={12} md={6}>
+                    <Stack spacing={5}>
+                        <ProjectDescription description="Project Description. Control can sometimes be an illusion. But sometimes you need illusions to gain control. Fantasy is an easy way to give meaning to the world. To cloak our harsh reality with escapist comfort" />
+                        <AboutAuthor
+                            name="Luke Mac Quayle"
+                            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim"
+                            img="/assets/images/avatar-template.png"
+                            address="0x3e9b...FA4b7"
+                        />
+                    </Stack>
+                </Grid>
+            </Grid>
             <ModalDialog
                 open={dialogState.buyBlindBoxDlgOpened}
                 onClose={() => {

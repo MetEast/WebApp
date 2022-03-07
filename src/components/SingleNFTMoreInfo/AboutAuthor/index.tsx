@@ -31,7 +31,13 @@ const AboutAuthor: React.FC<ComponentProps> = ({ name, description, img, address
                 <Grid container columnSpacing={1} rowGap={5}>
                     <Grid item>
                         {img ? (
-                            <img src={img} width={40} height={40} style={{ borderRadius: '9999px' }} alt="" />
+                            <img
+                                src={img}
+                                width={40}
+                                height={40}
+                                style={{ borderRadius: '9999px', objectFit: 'cover' }}
+                                alt=""
+                            />
                         ) : (
                             <Skeleton
                                 variant="rectangular"
