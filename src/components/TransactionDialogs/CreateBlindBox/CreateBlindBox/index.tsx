@@ -22,21 +22,33 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const classes = useStyles();
 
     const [blindboxTitle, setBlindboxTitle] = useState<string>('');
+    const [blindboxTitleError, setBlindboxTitleError] = useState(false);
     const [blindboxDescription, setBlindboxDescription] = useState<string>('');
+    const [blindboxDescriptionError, setBlindboxDescriptionError] = useState(false);
     const [blindboxImage, setBlindboxImage] = useState<File>();
+    const [blindboxImageError, setBlindboxImageError] = useState(false);
+
     const [stateFile, setStateFile] = useState(null);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [blindboxQuantity, setBlindboxQuantity] = useState<number>(0);
     const [blindboxPrice, setBlindboxPrice] = useState<number>(0);
+    const [blindboxPriceError, setBlindBoxPriceError] = useState(false);
     const [blindboxPurchases, setBlindboxPurchases] = useState<number>(0);
+    const [blindboxPurchasesError, setBlindboxPurchasesError] = useState(false);
     const [saleBegins, setSaleBegins] = React.useState<string>('');
+    const [saleBeginsError, setSaleBeginsError] = useState(false);
     const [saleEnds, setSaleEnds] = useState<string>('');
+    const [saleEndsError, setSaleEndsError] = useState(false);
+
+    // const [sort, setSort] = useState<TypeSelectItem>();
+    // const [sortSelectOpen, setSortSelectOpen] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
     const handleFileChange = (files: Array<File>) => {
         handleDropSingleFile(files);
         if (files !== null && files.length > 0) {
             setBlindboxImage(files[0]);
+            setBlindboxImageError(false);
         }
     };
 
@@ -71,11 +83,15 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             <CustomTextField
                                 title="Blind Box Title"
                                 placeholder="Enter Blind Box Title"
+                                error={blindboxTitleError}
+                                errorText="Blind Box Title can not be empty."
                                 changeHandler={(value: string) => setBlindboxTitle(value)}
                             />
                             <CustomTextField
                                 title="Blind Box Description"
                                 placeholder="Is WYSIWYG is needed here?"
+                                error={blindboxDescriptionError}
+                                errorText="Blind Box Description can not be empty."
                                 multiline
                                 rows={3}
                                 changeHandler={(value: string) => setBlindboxDescription(value)}
@@ -96,6 +112,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         cursor: 'pointer',
                                     }}
                                 />
+                                {blindboxImageError && (
+                                    <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                        Source file should be selected.
+                                    </Typography>
+                                )}
                             </Stack>
                         </Grid>
                         <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={2}>
@@ -118,8 +139,12 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 <CustomTextField
                                     title="Max Num of Purchases"
                                     placeholder="es. 1000"
+                                    error={blindboxPurchasesError}
+                                    errorText="Max number of Purchases cannot be empty"
                                     number={true}
-                                    changeHandler={(value: string) => setBlindboxPurchases(parseInt(value))}
+                                    changeHandler={(value: string) =>
+                                        setBlindboxPurchases(parseInt(value === '' ? '0' : value))
+                                    }
                                 />
                             </Stack>
                             <Stack spacing={1}>
@@ -152,6 +177,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 </Stack>
                             </Stack>
                             <ELAPriceInput title="Price" handleChange={setBlindboxPrice} />
+                            {blindboxPriceError && (
+                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                    Invalid Price
+                                </Typography>
+                            )}
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Sale Begins
@@ -163,6 +193,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         setSaleBegins(event.target.value);
                                     }}
                                 ></DateTimeInput>
+                                {saleBeginsError && (
+                                    <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                        Invalid Date Format
+                                    </Typography>
+                                )}
                             </Stack>
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
@@ -175,6 +210,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         setSaleEnds(event.target.value);
                                     }}
                                 ></DateTimeInput>
+                                {saleEndsError && (
+                                    <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                        Invalid Date Format
+                                    </Typography>
+                                )}
                             </Stack>
                         </Grid>
                     </Grid>
@@ -220,6 +260,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         crtBlindPurchases: blindboxPurchases,
                                     });
                                 } else {
+                                    setBlindboxTitleError(blindboxTitle === '');
+                                    setBlindboxDescriptionError(blindboxDescription === '');
+                                    setBlindboxPurchasesError(blindboxPurchases === 0);
+                                    setSaleBeginsError(isNaN(Date.parse(saleBegins)));
+                                    setSaleEndsError(isNaN(Date.parse(saleEnds)));
+                                    setBlindboxImageError(blindboxImage === undefined);
+                                    setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
                                     enqueueSnackbar('Form validation failed!', {
                                         variant: 'warning',
                                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
