@@ -14,35 +14,27 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
     TypeProduct,
-    TypeProductFetch,
-    enumMyNFTType,
-    TypeFavouritesFetch,
-    enumBadgeType,
     TypeYourEarning,
-    TypeYourEarningFetch,
 } from 'src/types/product-types';
-import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
-import { selectFromFavourites } from 'src/services/common';
+import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import {
     getELA2USD,
     getMyFavouritesList,
     getSearchParams,
     getMyNFTItemList,
-    getTotalEarned,
-    getTodayEarned,
-    FETCH_CONFIG_JSON,
+    getMyTodayEarned,
+    getMyTotalEarned,
+    getMyEarnedList,
 } from 'src/services/fetch';
 import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
-import UserAvatarBox from 'src/components/profile/UserAvatarBox';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from 'src/components/Container';
-import { borderRadius } from '@mui/system';
-import { blankMyEarning, blankMyNFTItem } from 'src/constants/init-constants';
+import { blankMyNFTItem } from 'src/constants/init-constants';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -186,39 +178,23 @@ const ProfilePage: React.FC = (): JSX.Element => {
     ]); //, productViewMode
 
     //-------------- today earned, totoal earned, earned list -------------- //
-    const fetchPersonalData = async () => {
-        setTotalEarned(await getTotalEarned(signInDlgState.walletAccounts[0]));
-        setTodayEarned(await getTodayEarned(signInDlgState.walletAccounts[0]));
-        getEarningList();
-    };
-
-    const getEarningList = async () => {
-        const resEarnedResult = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`,
-            FETCH_CONFIG_JSON,
-        );
-        const dataEarnedResult = await resEarnedResult.json();
-        const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
-
-        let _myEarningList: any = [];
-        for (let i = 0; i < arrEarnedResult.length; i++) {
-            const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
-            let _earning: TypeYourEarning = { ...blankMyEarning };
-            // _earning.tokenId = itemObject.tokenId;
-            _earning.title = itemObject.name;
-            _earning.avatar = getImageFromAsset(itemObject.thumbnail);
-            _earning.price = itemObject.iEarned / 1e18;
-            let timestamp = getTime(itemObject.updateTime);
-            _earning.time = timestamp.date + ' ' + timestamp.time;
-            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
-            _myEarningList.push(_earning);
-        }
-        setEarningList(_myEarningList);
-    };
-
     useEffect(() => {
-        if (signInDlgState.walletAccounts.length) fetchPersonalData();
-    }, [signInDlgState]);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _totalEarned = await getMyTotalEarned(signInDlgState.walletAccounts[0]);
+            const _todayEarned = await getMyTodayEarned(signInDlgState.walletAccounts[0]);
+            const _myEarnedList = await getMyEarnedList(signInDlgState.walletAccounts[0]);
+            if (!unmounted) {
+                setTotalEarned(_totalEarned);
+                setTodayEarned(_todayEarned);
+                setEarningList(_myEarnedList);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //

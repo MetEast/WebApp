@@ -8,12 +8,15 @@ import {
     TypeNFTTransactionFetch,
     TypeSingleNFTBid,
     TypeSingleNFTBidFetch,
+    TypeYourEarning,
+    TypeYourEarningFetch,
     enumTransactionType,
     enumBlindBoxNFTType,
     enumMyNFTType,
+    enumBadgeType,
 } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
-import { blankNFTItem, blankNFTTxs, blankNFTBid, blankMyNFTItem, blankBBItem } from 'src/constants/init-constants';
+import { blankNFTItem, blankNFTTxs, blankNFTBid, blankBBItem, blankMyNFTItem, blankMyEarning } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import jwt from 'jsonwebtoken';
@@ -432,7 +435,7 @@ export const getMyNFTItemList = async (
 
 // MyNFT Created
 
-export const getTotalEarned = async (address: string) => {
+export const getMyTotalEarned = async (address: string) => {
     try {
         const resTotalEarnedResult = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedByWalletAddress?address=${address}`,
@@ -443,16 +446,16 @@ export const getTotalEarned = async (address: string) => {
                 },
             },
         );
-        const dataTotalEarnedResult = await resTotalEarnedResult.json();
-        if (dataTotalEarnedResult && dataTotalEarnedResult.data)
-            return parseFloat(dataTotalEarnedResult.data).toFixed(2);
+        const jsonTotalEarnedResult = await resTotalEarnedResult.json();
+        if (jsonTotalEarnedResult && jsonTotalEarnedResult.data)
+            return parseFloat(jsonTotalEarnedResult.data).toFixed(2);
         return '0';
     } catch (error) {
         return '0';
     }
 };
 
-export const getTodayEarned = async (address: string) => {
+export const getMyTodayEarned = async (address: string) => {
     try {
         const resTodayEarnedResult = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTodayEarnedByWalletAddress?address=${address}`,
@@ -463,13 +466,37 @@ export const getTodayEarned = async (address: string) => {
                 },
             },
         );
-        const dataTodayEarnedResult = await resTodayEarnedResult.json();
-        if (dataTodayEarnedResult && dataTodayEarnedResult.data)
-            return parseFloat(dataTodayEarnedResult.data).toFixed(2);
+        const jsonTodayEarnedResult = await resTodayEarnedResult.json();
+        if (jsonTodayEarnedResult && jsonTodayEarnedResult.data)
+            return parseFloat(jsonTodayEarnedResult.data).toFixed(2);
         return '0';
     } catch (error) {
         return '0';
     }
+};
+
+export const getMyEarnedList = async (address: string) => {
+    const resEarnedList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${address}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonEarnedList = await resEarnedList.json();
+    const arrEarnedList = jsonEarnedList === undefined ? [] : jsonEarnedList.data;
+
+    const _myEarningList: Array<TypeYourEarning> = [];
+    for (let i = 0; i < arrEarnedList.length; i++) {
+        const itemObject: TypeYourEarningFetch = arrEarnedList[i];
+        const _myEarning: TypeYourEarning = { ...blankMyEarning };
+        // _earning.tokenId = itemObject.tokenId;
+        _myEarning.title = itemObject.name;
+        _myEarning.avatar = getImageFromAsset(itemObject.thumbnail);
+        _myEarning.price = itemObject.iEarned / 1e18;
+        const timestamp = getTime(itemObject.updateTime);
+        _myEarning.time = timestamp.date + ' ' + timestamp.time;
+        _myEarning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
+        _myEarningList.push(_myEarning);
+    }
+    return _myEarningList;
 };
 
 export const uploadUserProfile = (
