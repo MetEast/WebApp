@@ -92,10 +92,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 return 5;
         }
     };
-    //-------------- get all nft list -------------- //
+    //-------------- get My NFT List -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const getFetchAll = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
@@ -120,28 +120,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     }
                 });
         };
-        if (signInDlgState.isLoggedIn && firstLoading) getFetchData().catch(console.error);
-
-        return () => {
-            unmounted = true;
-        };
-    }, [
-        signInDlgState.isLoggedIn,
-        signInDlgState.walletAccounts,
-        signInDlgState.userDid,
-        sortBy,
-        filters,
-        filterRange,
-        keyWord,
-        nftGalleryFilterBtnSelected,
-        reload,
-    ]); //, productViewMode
-
-    //-------------- get tab nft list -------------- //
-    useEffect(() => {
-        let unmounted = false;
-        const nTabId = getSelectedTabIndex();
-        const getFetchData = async () => {
+        const getFetchTab = async () => {
+            const nTabId = getSelectedTabIndex();
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             if (!unmounted) {
@@ -161,7 +141,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 setLoadingState(nTabId, false);
             }
         };
-        if (signInDlgState.isLoggedIn && !firstLoading) getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) {
+            if (firstLoading) getFetchAll().catch(console.error);
+            else getFetchTab().catch(console.error);
+        }
         return () => {
             unmounted = true;
         };
