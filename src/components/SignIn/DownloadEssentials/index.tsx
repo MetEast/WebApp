@@ -7,6 +7,9 @@ import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {}
 
+const GooglePlayLink = 'https://play.google.com/store/apps/details?id=org.elastos.essentials.app&hl=en_US&gl=US';
+const AppStoreLink = 'https://apps.apple.com/us/app/elastos-essentials/id1568931743';
+
 const DownloadEssentials: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
 
@@ -16,11 +19,23 @@ const DownloadEssentials: React.FC<ComponentProps> = (): JSX.Element => {
             <Typography width="80%" fontSize={16} fontWeight={400} textAlign="center" marginTop={1}>
                 Web3.0 super wallet with Decentralized Identifier (DID)
             </Typography>
-            <PrimaryButton fullWidth sx={{ marginTop: 4 }}>
+            <PrimaryButton
+                fullWidth
+                sx={{ marginTop: 4 }}
+                onClick={() => {
+                    window.open(GooglePlayLink, '_blank');
+                }}
+            >
                 <img src="/assets/icons/googleplay.svg" alt="" style={{ marginRight: 8 }} />
                 GOOGLE PLAY
             </PrimaryButton>
-            <SecondaryButton fullWidth sx={{ marginTop: 2 }}>
+            <SecondaryButton
+                fullWidth
+                sx={{ marginTop: 2 }}
+                onClick={() => {
+                    window.open(AppStoreLink, '_blank');
+                }}
+            >
                 <img src="/assets/icons/appstore.svg" alt="" style={{ marginRight: 8 }} />
                 APP STORE
             </SecondaryButton>
