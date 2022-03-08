@@ -23,8 +23,8 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
-    const [toatlEarned, setTotalEarned] = useState<number>(0);
-    const [todayEarned, setTodayEarned] = useState<number>(0);
+    const [toatlEarned, setTotalEarned] = useState<string>('0');
+    const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
     const blankMyEarningValue: TypeYourEarning = {
         avatar: '',
@@ -87,7 +87,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 <Stack direction="row" justifyContent="space-between" display={{ xs: 'flex', md: 'none' }}>
                     <Stack>
                         <Typography fontSize={20} fontWeight={900}>
-                            {toatlEarned.toFixed(2)} ELA
+                            {toatlEarned} ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Total Earned
@@ -95,7 +95,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     </Stack>
                     <Stack alignItems="flex-end">
                         <Typography fontSize={20} fontWeight={900}>
-                            {todayEarned.toFixed(2)} ELA
+                            {todayEarned} ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Earned Today

@@ -51,8 +51,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
     const [reload, setReload] = useState<boolean>(false);
 
-    const [toatlEarned, setTotalEarned] = useState<number>(0);
-    const [todayEarned, setTodayEarned] = useState<number>(0);
+    const [toatlEarned, setTotalEarned] = useState<string>('0');
+    const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
     const [myNFTList, setMyNFTList] = useState<Array<Array<TypeProduct>>>(Array(6).fill(Array(4).fill(blankMyNFTItem)));
     const [isLoadingAssets, setIsLoadingAssets] = useState<Array<boolean>>(Array(6).fill(true));
@@ -345,10 +345,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     //-------------- today earned, totoal earned, earned list -------------- //
     const fetchPersonalData = async () => {
-        let _totalEarned = await getTotalEarned(signInDlgState.walletAccounts[0]);
-        let _todayEarned = await getTodayEarned(signInDlgState.walletAccounts[0]);
-        setTotalEarned(_totalEarned);
-        setTodayEarned(_todayEarned);
+        setTotalEarned(await getTotalEarned(signInDlgState.walletAccounts[0]));
+        setTodayEarned(await getTodayEarned(signInDlgState.walletAccounts[0]));
         getEarningList();
     };
 

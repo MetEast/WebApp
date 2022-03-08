@@ -356,10 +356,10 @@ export const getTotalEarned = async (address: string) => {
             },
         );
         const dataTotalEarnedResult = await resTotalEarnedResult.json();
-        if (dataTotalEarnedResult && dataTotalEarnedResult.data) return parseFloat(dataTotalEarnedResult.data);
-        return 0;
+        if (dataTotalEarnedResult && dataTotalEarnedResult.data) return parseFloat(dataTotalEarnedResult.data).toFixed(2);
+        return '0';
     } catch (error) {
-        return 0;
+        return '0';
     }
 };
 
@@ -375,10 +375,10 @@ export const getTodayEarned = async (address: string) => {
             },
         );
         const dataTodayEarnedResult = await resTodayEarnedResult.json();
-        if (dataTodayEarnedResult && dataTodayEarnedResult.data) return parseFloat(dataTodayEarnedResult.data);
-        return 0;
+        if (dataTodayEarnedResult && dataTodayEarnedResult.data) return parseFloat(dataTodayEarnedResult.data).toFixed(2);
+        return '0';
     } catch (error) {
-        return 0;
+        return '0';
     }
 };
 
