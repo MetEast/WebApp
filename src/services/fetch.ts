@@ -15,6 +15,7 @@ import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/se
 import { blankNFTItem, blankNFTTxs, blankNFTBid, blankBBItem } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import jwt from 'jsonwebtoken';
 
 export const FETCH_CONFIG_JSON = {
     headers: {
@@ -392,13 +393,17 @@ export const uploadUserProfile = (
 ) =>
     new Promise((resolve, reject) => {
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
-        const reqBody = {
-            token: token,
+        const jsonProfile = {
             did: did,
             name: name,
             description: description,
             avatar: _urlAvatar,
             coverImage: _urlCoverImage,
+        };
+        const signedProfile = jwt.sign(jsonProfile, 'config.Auth.jwtSecret', { expiresIn: 60 * 60 * 24 * 7 })
+        const reqBody = {
+            token: token,
+            profile: signedProfile,
         };
         fetch(reqUrl, {
             method: 'POST',
