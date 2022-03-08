@@ -24,7 +24,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
     const [indeterminateChecked, setIndeterminateChecked] = useState<boolean>(false);
-    const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>([]);
+    const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>(dialogState.crtBlindTokenIds.split(';').filter((value: string) => value.length > 0));
 
     let allTokenIds: Array<string> = [];
     for (let i = 0; i < itemList.length; i++) allTokenIds.push(itemList[i].tokenId);
@@ -56,7 +56,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
             item.projectType = itemObject.category;
             item.url = getImageFromAsset(itemObject.asset);
             _itemList.push(item);
-            _itemChecked.push(false);
+            _itemChecked.push(selectedTokenIds.includes(item.tokenId));
         }
         setItemList(_itemList);
         setItemChecked(_itemChecked);
@@ -281,6 +281,8 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                             crtBlindTokenIds: selectedTokenIds.join(';'),
                             crtBlindTokenNames: selectedTokenNames.join(';'),
                         });
+                        console.log(selectedTokenIds);
+                        console.log(selectedTokenNames)
                         onClose();
                     }}
                 >

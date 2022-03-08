@@ -342,6 +342,8 @@ export const getNFTLatestBids = async (
     return { mine: _myNFTBidList, others: _otherNFTBidList };
 };
 
+// MyNFT Created
+
 export const getTotalEarned = async (address: string) => {
     try {
         const resTotalEarnedResult = await fetch(
