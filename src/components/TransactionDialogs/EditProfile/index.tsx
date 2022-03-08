@@ -236,7 +236,6 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     fullWidth
                     disabled={onProgress}
                     onClick={() => {
-                        console.log(userCoverImageURL);
                         handleSubmit();
                     }}
                 >
