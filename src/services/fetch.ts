@@ -10,12 +10,22 @@ import {
     TypeSingleNFTBidFetch,
     enumTransactionType,
     enumBlindBoxNFTType,
+    enumMyNFTType,
 } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
-import { blankNFTItem, blankNFTTxs, blankNFTBid, blankBBItem } from 'src/constants/init-constants';
+import { blankNFTItem, blankNFTTxs, blankNFTBid, blankMyNFTItem, blankBBItem } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import jwt from 'jsonwebtoken';
+
+const fetchMyNFTAPIs = [
+    'getAllCollectibleByAddress',
+    'getOwnCollectible',
+    'getSelfCreateNotSoldCollectible',
+    'getForSaleCollectible',
+    'getSoldCollectibles',
+    'getFavoritesCollectible',
+];
 
 export const FETCH_CONFIG_JSON = {
     headers: {
@@ -62,10 +72,10 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
     const jsonNFTList = await resNFTList.json();
     const arrNFTList = jsonNFTList.data === undefined ? [] : jsonNFTList.data.result;
 
-    let _arrNFTList: Array<TypeProduct> = [];
+    const _arrNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrNFTList[i];
-        let _NFT: TypeProduct = { ...blankNFTItem };
+        const _NFT: TypeProduct = { ...blankNFTItem };
         _NFT.tokenId = itemObject.tokenId;
         _NFT.name = itemObject.name;
         _NFT.image = getImageFromAsset(itemObject.asset);
@@ -149,17 +159,17 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
     const jsonBBList = await resBBList.json();
     const arrBBList = jsonBBList.data === undefined ? [] : jsonBBList.data.result;
 
-    let _arrBBList: Array<TypeProduct> = [];
+    const _arrBBList: Array<TypeProduct> = [];
     for (let i = 0; i < arrBBList.length; i++) {
         const itemObject: TypeProductFetch = arrBBList[i];
-        let _BBItem: TypeProduct = { ...blankBBItem };
+        const _BBItem: TypeProduct = { ...blankBBItem };
         _BBItem.tokenId = itemObject.blindBoxIndex.toString();
         _BBItem.name = itemObject.name;
         _BBItem.image = getImageFromAsset(itemObject.asset);
         _BBItem.price_ela = parseInt(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
         // blindboxItem.author = itemObject.authorName || ' ';
-        let curTimestamp = new Date().getTime() / 1000;
+        const curTimestamp = new Date().getTime() / 1000;
         _BBItem.type =
             itemObject.instock === itemObject.sold
                 ? enumBlindBoxNFTType.SoldOut
@@ -170,7 +180,8 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
                 : enumBlindBoxNFTType.SaleEnded;
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
-        _BBItem.author = itemObject.createdName === '' ? reduceHexAddress(itemObject.createdAddress, 4) : itemObject.createdName;
+        _BBItem.author =
+            itemObject.createdName === '' ? reduceHexAddress(itemObject.createdAddress, 4) : itemObject.createdName;
         _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.isLike = loginState
             ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === `did:elastos:${did}`) === -1
@@ -251,7 +262,7 @@ export const getNFTLatestTxs = async (tokenId: string | undefined, pageNum: numb
     const jsonNFTTxs = await resNFTTxs.json();
     const arrNFTTxs = jsonNFTTxs.data;
 
-    let _NFTTxList: Array<TypeNFTTransaction> = [];
+    const _NFTTxList: Array<TypeNFTTransaction> = [];
     for (let i = 0; i < arrNFTTxs.length; i++) {
         const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
         if (itemObject.event === 'Transfer') continue;
@@ -315,7 +326,7 @@ export const getNFTLatestBids = async (
     const jsonNFTBids = await resNFTBids.json();
     const arrNFTBids = jsonNFTBids.data;
 
-    let _otherNFTBidList: Array<TypeSingleNFTBid> = [];
+    const _otherNFTBidList: Array<TypeSingleNFTBid> = [];
     if (arrNFTBids !== undefined && arrNFTBids.others !== undefined) {
         for (let i = 0; i < arrNFTBids.others.length; i++) {
             const itemObject: TypeSingleNFTBidFetch = arrNFTBids.others[i];
@@ -330,7 +341,7 @@ export const getNFTLatestBids = async (
         }
     }
 
-    let _myNFTBidList: Array<TypeSingleNFTBid> = [];
+    const _myNFTBidList: Array<TypeSingleNFTBid> = [];
     if (arrNFTBids !== undefined && arrNFTBids.yours !== undefined) {
         for (let i = 0; i < arrNFTBids.yours.length; i++) {
             const itemObject: TypeSingleNFTBidFetch = arrNFTBids.yours[i];
@@ -345,6 +356,78 @@ export const getNFTLatestBids = async (
         }
     }
     return { mine: _myNFTBidList, others: _otherNFTBidList };
+};
+
+// Profile Page
+export const getMyNFTItemList = async (
+    fetchParams: string,
+    ELA2USD: number,
+    likeList: Array<TypeFavouritesFetch>,
+    nTabId: number,
+    walletAddress: string,
+    userDid: string,
+) => {
+    const fetchUrl =
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/${fetchMyNFTAPIs[nTabId]}?` +
+        (nTabId === 5 ? `did=${userDid}` : `selfAddr=${walletAddress}`) +
+        `&${fetchParams}`;
+    const resMyNFTList = await fetch(fetchUrl, FETCH_CONFIG_JSON);
+    const jsonMyNFTList = await resMyNFTList.json();
+    const arrMyNFTList = jsonMyNFTList.data === undefined ? [] : jsonMyNFTList.data.result;
+
+    const _arrMyNFTList: Array<TypeProduct> = [];
+    for (let i = 0; i < arrMyNFTList.length; i++) {
+        const itemObject: TypeProductFetch = arrMyNFTList[i];
+        const _myNFT: TypeProduct = { ...blankMyNFTItem };
+        _myNFT.tokenId = itemObject.tokenId;
+        _myNFT.name = itemObject.name;
+        _myNFT.image = getImageFromAsset(itemObject.asset);
+        _myNFT.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
+        _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
+        _myNFT.author =
+            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        if (nTabId === 0 || nTabId === 5) {
+            // all = owned + sold
+            if (itemObject.status === 'NEW') {
+                // not on market
+                if (itemObject.holder === itemObject.royaltyOwner) _myNFT.type = enumMyNFTType.Created;
+                else if (itemObject.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
+                else if (itemObject.royaltyOwner !== walletAddress) _myNFT.type = enumMyNFTType.Purchased;
+            } else {
+                if (itemObject.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
+                else if (itemObject.royaltyOwner !== walletAddress) _myNFT.type = enumMyNFTType.Purchased;
+                else _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            }
+        } else if (nTabId === 1) {
+            // owned = purchased + created + for sale
+            if (itemObject.status === 'NEW') {
+                // not on market
+                if (itemObject.holder === itemObject.royaltyOwner) _myNFT.type = enumMyNFTType.Created;
+                else _myNFT.type = enumMyNFTType.Purchased;
+            } else {
+                _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            }
+        } else if (nTabId === 2) {
+            if (itemObject.status === 'NEW') {
+                // not on market
+                _myNFT.type = enumMyNFTType.Created;
+            } else {
+                _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            }
+        } else if (nTabId === 3)
+            _myNFT.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+        else if (nTabId === 4) _myNFT.type = enumMyNFTType.Sold;
+        _myNFT.likes = itemObject.likes;
+        _myNFT.status = itemObject.status;
+        _myNFT.isLike =
+            nTabId === 5
+                ? true
+                : likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+                ? false
+                : true;
+        _arrMyNFTList.push(_myNFT);
+    }
+    return _arrMyNFTList;
 };
 
 // MyNFT Created
