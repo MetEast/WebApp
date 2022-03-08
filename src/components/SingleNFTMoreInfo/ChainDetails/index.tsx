@@ -30,7 +30,7 @@ const ChainDetails: React.FC<ComponentProps> = ({
     };
     return (
         <Box>
-            <Typography fontSize={22} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+            <Typography fontSize={{ xs: 18, md: 22 }} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
                 Details
             </Typography>
             <Grid

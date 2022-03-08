@@ -24,7 +24,7 @@ const AboutAuthor: React.FC<ComponentProps> = ({ name, description, img, address
 
     return (
         <Stack spacing={1}>
-            <Typography fontSize={{ sm: 22, xs: 18 }} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+            <Typography fontSize={{ xs: 18, md: 22 }} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
                 Created By
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1}>
