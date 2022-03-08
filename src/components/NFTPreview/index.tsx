@@ -61,9 +61,9 @@ const NFTPreview: React.FC<ComponentProps> = ({
                       did: signInDlgState.userDid,
                   }
                 : {
-                    token: signInDlgState.token,
-                    tokenId: product.tokenId,
-                    did: signInDlgState.userDid,
+                      token: signInDlgState.token,
+                      tokenId: product.tokenId,
+                      did: signInDlgState.userDid,
                   };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
@@ -158,7 +158,12 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                     />
                                 )}
                                 {productType === 2 && (
-                                    <ProductSnippets sold={product.sold} likes={product.likes} views={product.views} />
+                                    <ProductSnippets
+                                        nickname={product.author}
+                                        sold={product.sold}
+                                        likes={product.likes}
+                                        views={product.views}
+                                    />
                                 )}
                             </Box>
                         </Box>
