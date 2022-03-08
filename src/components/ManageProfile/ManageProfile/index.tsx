@@ -11,7 +11,7 @@ import { enumBadgeType, TypeYourEarning, TypeYourEarningFetch } from 'src/types/
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
-import { getTotalEarned, getTodayEarned, FETCH_CONFIG_JSON } from 'src/services/fetch';
+import { getMyTotalEarned, getMyTodayEarned, FETCH_CONFIG_JSON } from 'src/services/fetch';
 import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
 
 export interface ComponentProps {
@@ -41,8 +41,8 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     };
 
     const getPersonalData = async () => {
-        setTotalEarned(await getTotalEarned(signInDlgState.walletAccounts[0]));
-        setTodayEarned(await getTodayEarned(signInDlgState.walletAccounts[0]));
+        setTotalEarned(await getMyTotalEarned(signInDlgState.walletAccounts[0]));
+        setTodayEarned(await getMyTodayEarned(signInDlgState.walletAccounts[0]));
         getEarningList();
     };
 
