@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Grid, Stack, Typography, Button } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
-import { Container, StatusButton } from './styles';
+import { Container, StatusButton, SelectBtn } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { filterStatusButtons } from 'src/types/filter-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
+import Select from 'src/components/Select';
+import { TypeSelectItem } from 'src/types/select-types';
+import { mintNFTCategoryOptions } from 'src/constants/select-constants';
 
 interface ComponentProps {
     changeHandler: (status: number, minPrice: string, maxPrice: string, opened: boolean) => void;
@@ -22,8 +25,11 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const [category, setCategory] = useState<TypeSelectItem>();
+    const [categorySelectOpen, setCategorySelectOpen] = useState(false);
+
     return (
-        <Container>
+        <Container sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
             <Typography fontSize={32} fontWeight={700} sx={{ textTransform: 'none' }}>
                 Filters
             </Typography>
@@ -44,6 +50,27 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     </Grid>
                 </>
             )}
+            <Stack spacing={0.5} marginTop={1}>
+                <Typography fontSize={16} fontWeight={700}>
+                    CATEGORY
+                </Typography>
+                <Select
+                    titlebox={
+                        <SelectBtn fullWidth isopen={categorySelectOpen ? 1 : 0}>
+                            {category ? category.label : 'Select'}
+                            <Icon icon="ph:caret-down" className="arrow-icon" />
+                        </SelectBtn>
+                    }
+                    selectedItem={category}
+                    options={mintNFTCategoryOptions}
+                    isOpen={categorySelectOpen ? 1 : 0}
+                    handleClick={(value: string) => {
+                        const item = mintNFTCategoryOptions.find((option) => option.value === value);
+                        setCategory(item);
+                    }}
+                    setIsOpen={setCategorySelectOpen}
+                />
+            </Stack>
             <Typography fontSize={16} fontWeight={700} marginTop={2} sx={{ textTransform: 'uppercase' }}>
                 price Range
             </Typography>
@@ -51,6 +78,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                 <CustomTextField
                     placeholder="Min"
                     number={true}
+                    sx={{ width: '100%' }}
                     changeHandler={(value: string) => setMinPrice(value)}
                 />
                 <Typography fontSize={14} fontWeight={400}>
@@ -59,6 +87,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                 <CustomTextField
                     placeholder="Max"
                     number={true}
+                    sx={{ width: '100%' }}
                     changeHandler={(value: string) => setMaxPrice(value)}
                 />
             </Stack>

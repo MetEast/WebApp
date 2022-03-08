@@ -24,14 +24,20 @@ const AboutAuthor: React.FC<ComponentProps> = ({ name, description, img, address
 
     return (
         <Stack spacing={1}>
-            <Typography fontSize={{ sm: 22, xs: 18 }} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+            <Typography fontSize={{ xs: 18, md: 22 }} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
                 Created By
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1}>
                 <Grid container columnSpacing={1} rowGap={5}>
                     <Grid item>
                         {img ? (
-                            <img src={img} width={40} height={40} style={{ borderRadius: '9999px' }} alt="" />
+                            <img
+                                src={img}
+                                width={40}
+                                height={40}
+                                style={{ borderRadius: '9999px', objectFit: 'cover' }}
+                                alt=""
+                            />
                         ) : (
                             <Skeleton
                                 variant="rectangular"

@@ -66,8 +66,8 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                     onlyShowDownSm ? { xs: 'block', sm: 'block', md: 'none' } : { xs: 'none', sm: 'none', md: 'block' }
                 }
             >
-                <Stack direction="column" alignItems="left" justifyContent="space-between" marginTop={1}>
-                    <Stack direction="row" alignItems="center" spacing={2} marginTop={5}>
+                <Stack direction="column" alignItems="left" justifyContent="space-between">
+                    <Stack direction="row" alignItems="center" spacing={2}>
                         <Typography fontSize={22} fontWeight={700}>
                             Latest Bids
                         </Typography>
@@ -87,18 +87,12 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                             <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
                                 {myBidsList.map((item, index) => (
                                     <Grid container item key={index}>
-                                        <Grid
-                                            item
-                                            xs={6}
-                                        >
+                                        <Grid item xs={6}>
                                             <Typography fontSize={12} fontWeight={500}>
                                                 {item.time}
                                             </Typography>
                                         </Grid>
-                                        <Grid
-                                            item
-                                            xs={6}
-                                        >
+                                        <Grid item xs={6}>
                                             <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
                                         </Grid>
                                     </Grid>

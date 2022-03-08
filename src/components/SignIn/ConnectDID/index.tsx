@@ -4,6 +4,7 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Typography, Stack, Button } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { useSignInContext } from 'src/context/SignInContext';
+import { Icon } from '@iconify/react';
 
 export interface ComponentProps {
     onConnect: (wallet: string) => void;
@@ -23,7 +24,22 @@ const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
 
     return (
         <Stack alignItems="center" width={360}>
-            <DialogTitleTypo>Let's Get Started</DialogTitleTypo>
+            <SecondaryButton
+                size="small"
+                onClick={() => {
+                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
+                }}
+                sx={{ width: 105, alignSelf: 'flex-start', display: { xs: 'flex', md: 'none' } }}
+            >
+                <Icon
+                    icon="ph:caret-left-bold"
+                    fontSize={20}
+                    color="#1890FF"
+                    style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
+                />
+                Back
+            </SecondaryButton>
+            <DialogTitleTypo marginTop={4}>Let's Get Started</DialogTitleTypo>
             <Typography fontSize={16} fontWeight={400} textAlign="center" marginTop={1}>
                 Please connect your wallet
             </Typography>

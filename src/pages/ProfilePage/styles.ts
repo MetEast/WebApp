@@ -17,15 +17,20 @@ export const FilterItemTypography = styled(Typography)`
 `;
 
 export const FilterButton = styled(Button)<{ selected: boolean }>`
+    flex-shrink: 0;
+    height: 36px;
     padding: 0 16px;
     border-radius: 12px;
     font-size: 14px;
     font-weight: 700;
     background: ${({ selected }) => (selected ? '#e8f4ff' : 'white')};
     color: ${({ selected }) => (selected ? '#1890ff' : 'black')};
+    :focus {
+        background: #e8f4ff;
+    }
     p {
-        margin: 8px 0 8px 8px;
-        padding: 4px 12px;
+        margin-left: 8px;
+        padding: 2px 8px;
         border-radius: 8px;
         background: ${({ selected }) => (selected ? '#1890FF' : '#E8F4FF')};
         color: ${({ selected }) => (selected ? 'white' : '#1890FF')};

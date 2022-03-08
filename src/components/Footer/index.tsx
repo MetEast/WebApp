@@ -38,17 +38,29 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 alignItems="center"
                 rowGap={3}
             >
-                <Stack direction="row" alignItems="center" spacing={0.5} position="relative">
-                    <Typography fontSize={12} fontWeight={500}>
-                        Powered by
+                <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={1} position="relative">
+                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <Typography fontSize={12} fontWeight={500}>
+                            Powered by
+                        </Typography>
+                        <img src="/assets/icons/elatos-ela.svg" alt="" />
+                        <Typography fontSize={12} fontWeight={500}>
+                            Elastos
+                        </Typography>
+                    </Stack>
+                    <Typography
+                        sx={{
+                            fontSize: 12,
+                            fontWeight: 500,
+                            color: '#1890FF',
+                            paddingX: 1,
+                            paddingY: 0.5,
+                            borderRadius: 2,
+                            background: '#E8F4FF',
+                        }}
+                    >
+                        v1 - {generatedGitInfo.gitCommitHash}
                     </Typography>
-                    <img src="/assets/icons/elatos-ela.svg" alt="" />
-                    <Typography fontSize={12} fontWeight={500}>
-                        Elastos
-                    </Typography>
-                    <Box position="absolute" right="-120px" paddingX={0.5} sx={{ background: '#EEEEEE' }}>
-                        <Typography>v1 - {generatedGitInfo.gitCommitHash}</Typography>
-                    </Box>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={1} columnGap={2}>
                     <Button sx={{ fontSize: 16, fontWeight: 700, color: '#1890FF' }}>Docs</Button>

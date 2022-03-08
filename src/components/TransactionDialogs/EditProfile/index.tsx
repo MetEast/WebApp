@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
 import { getImageFromAsset } from 'src/services/common';
-import { ProfileImageWrapper, ProfileImage, BannerBox } from './styles';
+import { ProfileImageWrapper, ProfileImage, BannerBox, useStyles } from './styles';
 import CustomTextField from 'src/components/TextField';
 import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
@@ -34,6 +34,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [userDescription, setUserDescription] = useState<string>(signInDlgState.userDescription);
     const [avatarChanged, setAvatarChanged] = useState<boolean>(false);
     const [coverImageChanged, setCoverImageChanged] = useState<boolean>(false);
+    const classes = useStyles();
 
     const handleSelectAvatar = (e: any) => {
         if (e.target.files.length) {
@@ -112,9 +113,12 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     return (
         <Stack
             spacing={4}
-            width={{ md: 600 }}
+            width="100%"
+            minWidth={{ xs: 360, sm: 520, md: 600 }}
+            maxHeight={{ xs: 'auto', md: '70vh' }}
             paddingY={{ xs: 4, sm: 0 }}
             sx={{ overflowY: 'auto', overflowX: 'hidden' }}
+            className={classes.container}
         >
             <SecondaryButton
                 size="small"
@@ -132,7 +136,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Edit Profile</DialogTitleTypo>
             </Stack>
-            <Stack spacing={2}>
+            <Stack width="100%" spacing={2}>
                 <ProfileImageWrapper onClick={() => {}}>
                     {userAvatarURL.preview !== '' ? (
                         <ProfileImage src={userAvatarURL.preview} />

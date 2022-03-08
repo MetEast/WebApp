@@ -8,7 +8,6 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton, PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
-import SingleNFTMoreInfo from 'src/components/SingleNFTMoreInfo';
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
@@ -33,6 +32,9 @@ import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
+import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
+import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
+import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -268,31 +270,33 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             </Grid>
             <Grid container marginTop={5} columnSpacing={10}>
                 <Grid item md={4} xs={12}>
-                    <SingleNFTMoreInfo
-                        author={productDetail.author}
-                        authorDescription={productDetail.authorDescription}
-                        authorImg={productDetail.authorImg}
-                        authorAddress={productDetail.authorAddress}
-                        description={productDetail.description}
-                        detailTokenIdHex={productDetail.tokenIdHex}
-                        detailOwnerName={productDetail.holderName}
-                        detailOwnerAddress={productDetail.holder}
-                        detailRoyalties={productDetail.royalties}
-                        detailCreateTime={productDetail.createTime}
-                        isLoggedIn={signInDlgState.isLoggedIn}
-                        myBidsList={myBidsList}
-                        marginTop={5}
-                        vertically={true}
-                    />
+                    <Stack spacing={5}>
+                        <ProjectDescription description={productDetail.description} />
+                        <AboutAuthor
+                            name={productDetail.author}
+                            description={productDetail.authorDescription}
+                            img={productDetail.authorImg}
+                            address={productDetail.authorAddress}
+                        />
+                        <ChainDetails
+                            tokenId={productDetail.tokenIdHex}
+                            ownerName={productDetail.holderName}
+                            ownerAddress={productDetail.holder}
+                            royalties={productDetail.royalties}
+                            createTime={productDetail.createTime}
+                        />
+                    </Stack>
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <SingleNFTBidsTable
-                        isLoggedIn={signInDlgState.isLoggedIn}
-                        myBidsList={myBidsList}
-                        bidsList={bidsList}
-                    />
-                    <PriceHistoryView />
-                    <NFTTransactionTable transactionsList={transactionsList} />
+                    <Stack spacing={10}>
+                        <SingleNFTBidsTable
+                            isLoggedIn={signInDlgState.isLoggedIn}
+                            myBidsList={myBidsList}
+                            bidsList={bidsList}
+                        />
+                        <PriceHistoryView />
+                        <NFTTransactionTable transactionsList={transactionsList} />
+                    </Stack>
                 </Grid>
             </Grid>
             <ModalDialog
