@@ -31,7 +31,6 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
 
     // -------------- Fetch Data -------------- //
     const getBlindBoxItemList = async () => {
-        console.log('===========', signInDlgState.walletAccounts[0]);
         const resBlindBoxItem = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${signInDlgState.walletAccounts[0]}&keyword=${keyWord}`,
             {
@@ -269,7 +268,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                     fullWidth
                     onClick={() => {
                         let selectedTokenNames: Array<string> = [];
-                        selectedTokenIds.forEach((item: string, index: number) => {
+                        selectedTokenIds.forEach((item: string) => {
                             selectedTokenNames.push(
                                 itemList[itemList.findIndex((value: TypeBlindBoxSelectItem) => value.tokenId === item)]
                                     .projectTitle,
@@ -281,8 +280,6 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                             crtBlindTokenIds: selectedTokenIds.join(';'),
                             crtBlindTokenNames: selectedTokenNames.join(';'),
                         });
-                        console.log(selectedTokenIds);
-                        console.log(selectedTokenNames)
                         onClose();
                     }}
                 >

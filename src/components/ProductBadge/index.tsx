@@ -123,7 +123,9 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
         },
     };
 
-    return (
+    return badgeType === enumBadgeType.SaleEnds ? (
+        <></>
+    ) : (
         <Container
             direction="row"
             alignItems="center"
