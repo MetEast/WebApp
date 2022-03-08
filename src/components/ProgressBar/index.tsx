@@ -15,7 +15,6 @@ const useStyles = makeStyles({
         maxWidth: 'unset',
         padding: 0,
         zIndex: 100000,
-        // opacity: isFinished ? 0 : 1,
         pointerEvents: 'none',
         transition: `opacity 100ms linear`,
     }),
@@ -34,15 +33,15 @@ const BorderProgressBar = styled(LinearProgress)(({ theme }) => ({
 }));
 
 interface ProgressBarProps {
-  isFinished: boolean;
-  progress: number;
+    isFinished: boolean;
+    progress: number;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ isFinished, progress }) => {
     const classes = useStyles({ isFinished });
 
     return (
-        <Container classes={{ root: classes.container }}>
+        <Container classes={{ root: classes.container }} sx={{ opacity: isFinished ? 0 : 1 }}>
             <BorderProgressBar value={progress} variant="determinate" />
         </Container>
     );

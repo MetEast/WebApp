@@ -41,7 +41,7 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.createNFTDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, createNFTDlgOpened: false });
+                    setDialogState({ ...dialogState, createNFTDlgOpened: false, mintProgress: 0 });
                 }}
             >
                 {dialogState.createNFTDlgStep === 0 && <MintNFT />}
