@@ -176,6 +176,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         {blindBoxDetail.name}
                     </Typography>
                     <ProductSnippets
+                        nickname={blindBoxDetail.author === '' ? blindBoxDetail.royaltyOwner : blindBoxDetail.author}
                         sold={blindBoxDetail.sold}
                         instock={blindBoxDetail.instock}
                         likes={blindBoxDetail.likes}
