@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Stack, Grid, Typography } from '@mui/material';
+import { Stack, Grid, Box, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -108,7 +108,10 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        getProductDetail(await getELA2USD(), await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid));
+        getProductDetail(
+            await getELA2USD(),
+            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
+        );
     };
 
     useEffect(() => {
@@ -271,11 +274,11 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
-            <Grid container marginTop={5} columnSpacing={5}>
-                <Grid item xs={6}>
+            <Grid container marginTop={5} columnSpacing={5} rowGap={1}>
+                <Grid item xs={12} md={6}>
                     <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                     <Typography fontSize={56} fontWeight={700}>
                         {productDetail.name}
                     </Typography>
@@ -304,27 +307,35 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     </PrimaryButton>
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={10}>
-                <Grid item xs={4}>
+            <Grid container marginTop={5} columnSpacing={10} rowGap={5}>
+                <Grid item xs={12} md={4}>
                     <Stack spacing={5}>
                         <ProductTransHistory historyList={prodTransHistory} />
                         <ProjectDescription description={productDetail.description} />
-                        <AboutAuthor
-                            name={productDetail.author}
-                            description={productDetail.authorDescription}
-                            img={productDetail.authorImg}
-                            address={productDetail.authorAddress}
-                        />
-                        <ChainDetails
-                            tokenId={productDetail.tokenIdHex}
-                            ownerName={productDetail.holderName}
-                            ownerAddress={productDetail.holder}
-                            royalties={productDetail.royalties}
-                            createTime={productDetail.createTime}
-                        />
+                        <Box>
+                            <Grid container columnSpacing={10} rowGap={5}>
+                                <Grid item xs={12} sm={6} md={12}>
+                                    <AboutAuthor
+                                        name={productDetail.author}
+                                        description={productDetail.authorDescription}
+                                        img={productDetail.authorImg}
+                                        address={productDetail.authorAddress}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={12}>
+                                    <ChainDetails
+                                        tokenId={productDetail.tokenIdHex}
+                                        ownerName={productDetail.holderName}
+                                        ownerAddress={productDetail.holder}
+                                        royalties={productDetail.royalties}
+                                        createTime={productDetail.createTime}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Box>
                     </Stack>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={12} md={8}>
                     <Stack spacing={10}>
                         <PriceHistoryView />
                         <NFTTransactionTable transactionsList={transactionsList} />
