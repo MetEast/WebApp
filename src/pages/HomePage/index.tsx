@@ -78,7 +78,7 @@ const HomePage: React.FC = (): JSX.Element => {
         setProductList(prodList);
         setCollectionList(colList);
     };
-    
+
     const updateCollectionLikes = (id: number, type: string) => {
         let colList: Array<TypeProduct> = [...collectionList];
         let prodList: Array<TypeProduct> = [...productList];
@@ -143,7 +143,7 @@ const HomePage: React.FC = (): JSX.Element => {
                         ))}
                     </Swiper>
                 </Box>
-                <Box mt={8}>
+                <Box mt={{ xs: 4, md: 8 }}>
                     <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
                         Popular Collections
                     </Typography>
