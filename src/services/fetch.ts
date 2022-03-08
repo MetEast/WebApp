@@ -399,26 +399,26 @@ export const uploadUserProfile = (
 ) =>
     new Promise((resolve, reject) => {
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
-        // const jsonProfile = {
-        //     did: did,
-        //     name: name,
-        //     description: description,
-        //     avatar: _urlAvatar,
-        //     coverImage: _urlCoverImage,
-        // };
-        // const signedProfile = jwt.sign(jsonProfile, 'config.Auth.jwtSecret', { expiresIn: 60 * 60 * 24 * 7 });
-        // const reqBody = {
-        //     token: token,
-        //     profile: signedProfile,
-        // };
-        const reqBody = {
-            token: token,
+        const jsonProfile = {
             did: did,
             name: name,
             description: description,
             avatar: _urlAvatar,
             coverImage: _urlCoverImage,
         };
+        const signedProfile = jwt.sign(jsonProfile, 'config.Auth.jwtSecret', { expiresIn: 60 * 60 * 24 * 7 });
+        const reqBody = {
+            token: token,
+            profile: signedProfile,
+        };
+        // const reqBody = {
+        //     token: token,
+        //     did: did,
+        //     name: name,
+        //     description: description,
+        //     avatar: _urlAvatar,
+        //     coverImage: _urlCoverImage,
+        // };
         fetch(reqUrl, {
             method: 'POST',
             headers: {
