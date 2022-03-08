@@ -170,6 +170,8 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
                 : enumBlindBoxNFTType.SaleEnded;
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
+        _BBItem.author = itemObject.createdName === '' ? reduceHexAddress(itemObject.createdAddress, 4) : itemObject.createdName;
+        _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.isLike = loginState
             ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === `did:elastos:${did}`) === -1
                 ? false
@@ -318,7 +320,8 @@ export const getNFTLatestBids = async (
         for (let i = 0; i < arrNFTBids.others.length; i++) {
             const itemObject: TypeSingleNFTBidFetch = arrNFTBids.others[i];
             const _otherNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
-            _otherNFTBid.user = itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
+            _otherNFTBid.user =
+                itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
             _otherNFTBid.price = parseFloat(itemObject.price) / 1e18;
             _otherNFTBid.orderId = itemObject.orderId;
             const timestamp = getTime(itemObject.timestamp);
@@ -332,7 +335,8 @@ export const getNFTLatestBids = async (
         for (let i = 0; i < arrNFTBids.yours.length; i++) {
             const itemObject: TypeSingleNFTBidFetch = arrNFTBids.yours[i];
             const _myNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
-            _myNFTBid.user = itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
+            _myNFTBid.user =
+                itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
             _myNFTBid.price = parseFloat(itemObject.price) / 1e18;
             _myNFTBid.orderId = itemObject.orderId;
             const timestamp = getTime(itemObject.timestamp);
@@ -357,7 +361,8 @@ export const getTotalEarned = async (address: string) => {
             },
         );
         const dataTotalEarnedResult = await resTotalEarnedResult.json();
-        if (dataTotalEarnedResult && dataTotalEarnedResult.data) return parseFloat(dataTotalEarnedResult.data).toFixed(2);
+        if (dataTotalEarnedResult && dataTotalEarnedResult.data)
+            return parseFloat(dataTotalEarnedResult.data).toFixed(2);
         return '0';
     } catch (error) {
         return '0';
@@ -376,7 +381,8 @@ export const getTodayEarned = async (address: string) => {
             },
         );
         const dataTodayEarnedResult = await resTodayEarnedResult.json();
-        if (dataTodayEarnedResult && dataTodayEarnedResult.data) return parseFloat(dataTodayEarnedResult.data).toFixed(2);
+        if (dataTodayEarnedResult && dataTodayEarnedResult.data)
+            return parseFloat(dataTodayEarnedResult.data).toFixed(2);
         return '0';
     } catch (error) {
         return '0';
@@ -400,7 +406,7 @@ export const uploadUserProfile = (
             avatar: _urlAvatar,
             coverImage: _urlCoverImage,
         };
-        const signedProfile = jwt.sign(jsonProfile, 'config.Auth.jwtSecret', { expiresIn: 60 * 60 * 24 * 7 })
+        const signedProfile = jwt.sign(jsonProfile, 'config.Auth.jwtSecret', { expiresIn: 60 * 60 * 24 * 7 });
         const reqBody = {
             token: token,
             profile: signedProfile,
