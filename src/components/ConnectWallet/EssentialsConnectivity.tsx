@@ -23,7 +23,7 @@ export const initConnectivitySDK = async () => {
 
     connectivity.registerConnector(essentialsConnector).then(() => {
         connectivityInitialized = true;
-        const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
+        // const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
 
         // console.log('essentialsConnector', essentialsConnector);
         // console.log('Wallet connect provider', walletConnectProvider);

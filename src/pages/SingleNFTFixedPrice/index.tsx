@@ -61,7 +61,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
     useEffect(() => {
         let unmounted = false;
@@ -75,7 +75,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy]);
+    }, [transactionSortBy, params.id]);
     // -------------- Fetch Data -------------- //
     // buy now tx fee
     useEffect(() => {
