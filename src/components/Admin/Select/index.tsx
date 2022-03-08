@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SelectBtn, ListItemsWrapper, ListItemsStack, ItemButton } from './styles';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { TypeSelectItem } from 'src/types/select-types';
 
