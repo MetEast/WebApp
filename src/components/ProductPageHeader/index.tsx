@@ -1,11 +1,10 @@
 import React from 'react';
-import { Stack, Box, Menu, MenuItem, Link } from '@mui/material';
+import { Stack, Box, Menu, MenuItem } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { IconBtn } from './styles';
 import { useNavigate } from 'react-router-dom';
-import { FacebookIcon, TwitterIcon } from 'react-share';
-// import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share';
+import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 // import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
@@ -58,38 +57,38 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                     <MenuItem onClick={handleCloseSharePopup}>
-                        {/* <FacebookShareButton
+                        <FacebookShareButton
                             url={window.location.href}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
                             <FacebookIcon size={32} round />
                             &nbsp;&nbsp;Share on Facebook
-                        </FacebookShareButton> */}
-                        <Link
+                        </FacebookShareButton>
+                        {/* <Link
                             href={`https://s.meteast.io/eluGI?u=${window.location.href}`}
                             target="_blank"
                             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black' }}
                         >
                             <FacebookIcon size={32} round />
                             &nbsp;&nbsp;Share on Facebook
-                        </Link>
+                        </Link> */}
                     </MenuItem>
                     <MenuItem onClick={handleCloseSharePopup}>
-                        {/* <TwitterShareButton
+                        <TwitterShareButton
                             url={window.location.href}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
                             <TwitterIcon size={32} round />
                             &nbsp;&nbsp;Share on Twitter
-                        </TwitterShareButton> */}
-                        <Link
+                        </TwitterShareButton>
+                        {/* <Link
                             href={`https://s.meteast.io/gguQ3?url=${window.location.href}`}
                             target="_blank"
                             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black' }}
                         >
                             <TwitterIcon size={32} round />
                             &nbsp;&nbsp;Share on Twitter
-                        </Link>
+                        </Link> */}
                     </MenuItem>
                 </Menu>
                 <Box
