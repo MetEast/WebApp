@@ -44,7 +44,6 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
                             // change state first
                             updateLikes(likeState ? 'dec' : 'inc');
                             setLikeState(!likeState);
-                            //
                         }
                     } else {
                         console.log(data);

@@ -92,8 +92,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (!unmounted) {
-                        if (data.code === 200) {
+                    if (data.code === 200) {
+                        if (!unmounted) {
                             if (currentConnector === injected) {
                                 linkType = 2;
                             } else if (currentConnector === walletconnect) {
@@ -122,9 +122,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 return _state;
                             });
                             showSucceedSnackBar();
-                        } else {
-                            console.log(data);
                         }
+                    } else {
+                        console.log(data);
                     }
                 })
                 .catch((error) => {
@@ -146,6 +146,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         }
                     }
                 });
+            return () => {
+                unmounted = true;
+            };
         }
     };
 
@@ -386,8 +389,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (!unmounted) {
-                        if (data.code === 200) {
+                    if (data.code === 200) {
+                        if (!unmounted) {
                             const token = data.token;
                             linkType = '1';
                             setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
@@ -420,31 +423,32 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 return _state;
                             });
                             showSucceedSnackBar();
-                        } else {
-                            console.log(data);
                         }
+                    } else {
+                        console.log(data);
                     }
                 })
                 .catch((error) => {
-                    if (!unmounted) {
-                        console.log(error);
-                        enqueueSnackbar(
-                            `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
-                            { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
-                        );
-                        try {
-                            essentialsConnector
-                                .getWalletConnectProvider()
-                                .disconnect()
-                                .then((res) => {})
-                                .catch((e) => {
-                                    console.log(e);
-                                });
-                        } catch (e) {
-                            console.error('Error while trying to disconnect wallet connect session', e);
-                        }
+                    console.log(error);
+                    enqueueSnackbar(
+                        `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
+                        { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                    );
+                    try {
+                        essentialsConnector
+                            .getWalletConnectProvider()
+                            .disconnect()
+                            .then((res) => {})
+                            .catch((e) => {
+                                console.log(e);
+                            });
+                    } catch (e) {
+                        console.error('Error while trying to disconnect wallet connect session', e);
                     }
                 });
+            return () => {
+                unmounted = true;
+            };
         }
     };
 

@@ -52,8 +52,9 @@ const NFTPreview: React.FC<ComponentProps> = ({
         event.preventDefault(); //
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
-            reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
+            let unmounted = false;
+            const reqUrl =
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/` + likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = isBlindBox
                 ? {
                       token: signInDlgState.token,
@@ -65,10 +66,6 @@ const NFTPreview: React.FC<ComponentProps> = ({
                       tokenId: product.tokenId,
                       did: signInDlgState.userDid,
                   };
-            // change state first
-            updateLikes(index, likeState ? 'dec' : 'inc');
-            setLikeState(!likeState);
-            //
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
@@ -79,7 +76,11 @@ const NFTPreview: React.FC<ComponentProps> = ({
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        console.log(product.tokenId, ' change like status succeed');
+                        if (!unmounted) {
+                            // change state first
+                            updateLikes(index, likeState ? 'dec' : 'inc');
+                            setLikeState(!likeState);
+                        }
                     } else {
                         console.log(data);
                     }
@@ -87,6 +88,9 @@ const NFTPreview: React.FC<ComponentProps> = ({
                 .catch((error) => {
                     console.log(error);
                 });
+            return () => {
+                unmounted = true;
+            };
         } else {
             setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
         }
