@@ -521,14 +521,6 @@ export const uploadUserProfile = (
             token: token,
             profile: signedProfile,
         };
-        // const reqBody = {
-        //     token: token,
-        //     did: did,
-        //     name: name,
-        //     description: description,
-        //     avatar: _urlAvatar,
-        //     coverImage: _urlCoverImage,
-        // };
         fetch(reqUrl, {
             method: 'POST',
             headers: {

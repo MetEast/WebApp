@@ -12,10 +12,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, NotificationTypo } from './styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import {
-    TypeProduct,
-    TypeYourEarning,
-} from 'src/types/product-types';
+import { TypeProduct, TypeYourEarning } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
 import {
     getELA2USD,
@@ -35,8 +32,10 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from 'src/components/Container';
 import { blankMyNFTItem } from 'src/constants/init-constants';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage: React.FC = (): JSX.Element => {
+    const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
@@ -144,10 +143,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
         if (signInDlgState.isLoggedIn) {
             if (firstLoading) getFetchAll().catch(console.error);
             else getFetchTab().catch(console.error);
+        } else {
+            navigate('/');
         }
-        return () => {
-            unmounted = true;
-        };
+            return () => {
+                unmounted = true;
+            };
     }, [
         signInDlgState.isLoggedIn,
         signInDlgState.walletAccounts,

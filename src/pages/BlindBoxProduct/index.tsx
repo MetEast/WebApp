@@ -234,12 +234,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             <Grid container marginTop={5} columnSpacing={10}>
                 <Grid item xs={12} md={6}>
                     <Stack spacing={5}>
-                        <ProjectDescription description="Project Description. Control can sometimes be an illusion. But sometimes you need illusions to gain control. Fantasy is an easy way to give meaning to the world. To cloak our harsh reality with escapist comfort" />
+                        <ProjectDescription description={blindBoxDetail.description} />
                         <AboutAuthor
-                            name="Luke Mac Quayle"
-                            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim"
-                            img="/assets/images/avatar-template.png"
-                            address="0x3e9b...FA4b7"
+                            name={blindBoxDetail.author}
+                            description={blindBoxDetail.authorDescription}
+                            img={blindBoxDetail.image}
+                            address={reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)}
                         />
                     </Stack>
                 </Grid>
