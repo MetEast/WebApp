@@ -396,10 +396,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.author = itemObject.createdName;
         _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.isLike =
-            itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === `did:elastos:${userDid}`) ===
-            -1
-                ? false
-                : true;
+            itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
         _BBItem.description = itemObject.description;
         _BBItem.authorDescription = itemObject.authorDescription || ' ';
         _BBItem.instock = itemObject.instock || 0;
