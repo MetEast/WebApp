@@ -31,7 +31,7 @@ import {
     TypeNFTTransactionFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
-import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeSelectItem } from 'src/types/select-types';
@@ -49,63 +49,21 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
 
-    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...blankNFTItem };
-
-        if (prodDetail !== undefined) {
-            const itemObject: TypeProductFetch = prodDetail;
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.status === 'NEW' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            product.description = itemObject.description;
-            product.author =
-                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.authorDescription = itemObject.authorDescription || ' ';
-            product.authorImg = product.image;
-            product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
-            product.holder = itemObject.holder;
-            product.tokenIdHex = itemObject.tokenIdHex;
-            product.royalties = parseInt(itemObject.royalties) / 1e4;
-            product.category = itemObject.category;
-            let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + '' + createTime.time;
-        }
-        setProductDetail(product);
-    };
-
-    const getFetchData = async () => {
-        getProductDetail(
-            await getELA2USD(),
-            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
-        );
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            if (!unmounted) {
+                setProductDetail(_MyNFTItem);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(

@@ -13,26 +13,9 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
-import {
-    getImageFromAsset,
-    getMintCategory,
-    getTime,
-    getUTCTime,
-    reduceHexAddress,
-    selectFromFavourites,
-} from 'src/services/common';
-import {
-    enumBadgeType,
-    enumSingleNFTType,
-    TypeProduct,
-    TypeProductFetch,
-    enumTransactionType,
-    TypeNFTTransactionFetch,
-    TypeFavouritesFetch,
-    TypeNFTTransaction,
-    TypeNFTHisotry,
-} from 'src/types/product-types';
-import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
+import { getMintCategory } from 'src/services/common';
+import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
+import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
@@ -47,7 +30,7 @@ import AllTransactions from 'src/components/profile/AllTransactions';
 import { isInAppBrowser } from 'src/services/wallet';
 import { TypeSelectItem } from 'src/types/select-types';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankNFTTxs, blankMyNFTHistory } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -63,66 +46,21 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
-    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...blankNFTItem };
-
-        if (prodDetail !== undefined) {
-            const itemObject: TypeProductFetch = prodDetail;
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            product.description = itemObject.description;
-            product.author =
-                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.authorDescription = itemObject.authorDescription || ' ';
-            product.authorImg = product.image; // -- no proper value
-            product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
-            product.holder = itemObject.holder;
-            product.tokenIdHex = itemObject.tokenIdHex;
-            product.category = itemObject.category;
-            product.holder = itemObject.holder;
-            product.orderId = itemObject.orderId;
-            product.royalties = parseInt(itemObject.royalties) / 1e4;
-            let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + '' + createTime.time;
-            product.status = itemObject.status;
-        }
-        setProductDetail(product);
-    };
-
-    const getFetchData = async () => {
-        getProductDetail(
-            await getELA2USD(),
-            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
-        );
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            if (!unmounted) {
+                setProductDetail(_MyNFTItem);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
     useEffect(() => {
         let unmounted = false;

@@ -28,7 +28,7 @@ import {
     TypeSingleNFTBidFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
-import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { getMyNFTItem, getELA2USD, getMyFavouritesList, FETCH_CONFIG_JSON } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Web3 from 'web3';
@@ -68,72 +68,21 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
-    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...blankNFTItem };
-
-        if (prodDetail !== undefined) {
-            const itemObject: TypeProductFetch = prodDetail;
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            product.description = itemObject.description;
-            product.author =
-                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.authorDescription = itemObject.authorDescription || ' ';
-            product.authorImg = product.image; // -- no proper value
-            product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
-            product.holder = itemObject.holder;
-            product.tokenIdHex = itemObject.tokenIdHex;
-            product.category = itemObject.category;
-            product.royalties = parseInt(itemObject.royalties) / 1e4;
-            product.orderId = itemObject.orderId;
-            product.status = itemObject.status;
-            let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + '' + createTime.time;
-            if (itemObject.endTime) {
-                let endTime = getTime(itemObject.endTime); // no proper value
-                product.endTime = endTime.date + ' ' + endTime.time;
-            } else {
-                product.endTime = '';
-            }
-            product.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-        }
-        setProductDetail(product);
-    };
-
-    const getFetchData = async () => {
-        getProductDetail(
-            await getELA2USD(),
-            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
-        );
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            if (!unmounted) {
+                setProductDetail(_MyNFTItem);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
