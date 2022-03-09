@@ -123,7 +123,13 @@ const HomePage: React.FC = (): JSX.Element => {
             </Box>
             <Container>
                 <Box mt={4}>
-                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                    <Typography
+                        fontSize={{ xs: 26, sm: 28, md: 32 }}
+                        fontWeight={700}
+                        lineHeight={1.1}
+                        marginBottom={1}
+                        marginLeft={{ xs: 3, sm: 0 }}
+                    >
                         New Products
                     </Typography>
                     <Swiper
@@ -144,7 +150,13 @@ const HomePage: React.FC = (): JSX.Element => {
                     </Swiper>
                 </Box>
                 <Box mt={{ xs: 4, md: 8 }}>
-                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                    <Typography
+                        fontSize={{ xs: 26, sm: 28, md: 32 }}
+                        fontWeight={700}
+                        lineHeight={1.1}
+                        marginBottom={1}
+                        marginLeft={{ xs: 3, sm: 0 }}
+                    >
                         Popular Collections
                     </Typography>
                     <Swiper
