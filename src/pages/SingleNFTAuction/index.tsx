@@ -71,9 +71,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, 1, 5);
+            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs);
+                setTransactionsList(_NFTTxs.txs);
             }
         };
         getFetchData().catch(console.error);

@@ -10,6 +10,7 @@ import {
     TypeSingleNFTBidFetch,
     TypeYourEarning,
     TypeYourEarningFetch,
+    TypeNFTHisotry,
     enumTransactionType,
     enumBlindBoxNFTType,
     enumMyNFTType,
@@ -23,6 +24,7 @@ import {
     blankBBItem,
     blankMyNFTItem,
     blankMyEarning,
+    blankMyNFTHistory,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -264,7 +266,31 @@ export const getNFTItem = async (
     return _NFTItem;
 };
 
-export const getNFTLatestTxs = async (tokenId: string | undefined, pageNum: number, pageSize: number) => {
+// export const getLatestTransaction = async () => {
+//     const resLatestTransaction = await fetch(
+//         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
+//         FETCH_CONFIG_JSON,
+//     );
+//     const dataLatestTransaction = await resLatestTransaction.json();
+//     const arrLatestTransaction = dataLatestTransaction.data;
+
+//     let _prodTransHistory: Array<TypeNFTHisotry> = [];
+//     for (let i = 0; i < arrLatestTransaction.length; i++) {
+//         let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
+//         if (itemObject.event !== 'Mint') continue;
+//         let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
+//         _prodTrans.type = 'Created';
+//         _prodTrans.price = parseInt(itemObject.price) / 1e18;
+//         _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
+//         let timestamp = getTime(itemObject.timestamp.toString());
+//         _prodTrans.time = timestamp.date + ' ' + timestamp.time;
+//         _prodTrans.txHash = itemObject.tHash;
+//         _prodTransHistory.push(_prodTrans);
+//     }
+//     setProdTransHistory(_prodTransHistory);
+// };
+
+export const getNFTLatestTxs = async (tokenId: string | undefined, address: string, pageNum: number, pageSize: number) => {
     const resNFTTxs = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&$pageSize=${pageSize}&timeOrder=-1`,
         FETCH_CONFIG_JSON,
@@ -273,6 +299,7 @@ export const getNFTLatestTxs = async (tokenId: string | undefined, pageNum: numb
     const arrNFTTxs = jsonNFTTxs.data;
 
     const _NFTTxList: Array<TypeNFTTransaction> = [];
+    const _NFTTxHistoryList: Array<TypeNFTHisotry> = [];
     for (let i = 0; i < arrNFTTxs.length; i++) {
         const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
         if (itemObject.event === 'Transfer') continue;
@@ -319,8 +346,32 @@ export const getNFTLatestTxs = async (tokenId: string | undefined, pageNum: numb
         const timestamp = getTime(itemObject.timestamp.toString());
         _NFTTx.time = timestamp.date + ' ' + timestamp.time;
         _NFTTxList.push(_NFTTx);
+        //
+        if (address !== '' && (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder')) {
+            const _NFTTxHistory: TypeNFTHisotry = { ...blankMyNFTHistory };
+            _NFTTxHistory.type =
+                itemObject.event === 'Mint'
+                    ? 'Created'
+                    : itemObject.to === address
+                    ? 'Bought From'
+                    : 'Sold To';
+            _NFTTxHistory.price = parseInt(itemObject.price) / 1e18;
+            _NFTTxHistory.user = reduceHexAddress(
+                _NFTTxHistory.type === 'Bought From' ? itemObject.from : itemObject.to,
+                4,
+            ); // no proper data
+            let prodTransTimestamp = getTime(itemObject.timestamp.toString());
+            _NFTTxHistory.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
+            if (itemObject.event === 'BuyOrder')
+                _NFTTxHistory.saleType =
+                    arrNFTTxs[i + 2].event === 'CreateOrderForSale'
+                        ? enumTransactionType.ForSale
+                        : enumTransactionType.OnAuction;
+            _NFTTxHistory.txHash = itemObject.tHash;
+            _NFTTxHistoryList.push(_NFTTxHistory);
+        }
     }
-    return _NFTTxList;
+    return {txs: _NFTTxList, history: _NFTTxHistoryList};
 };
 
 export const getNFTLatestBids = async (
@@ -487,8 +538,6 @@ export const getMyNFTItemList = async (
     return _arrMyNFTList;
 };
 
-// MyNFT Created
-
 export const getMyTotalEarned = async (address: string) => {
     try {
         const resTotalEarnedResult = await fetch(
@@ -551,6 +600,53 @@ export const getMyEarnedList = async (address: string) => {
         _myEarningList.push(_myEarning);
     }
     return _myEarningList;
+};
+
+// MyNFT Created
+export const getMyCreatedNFT = async (
+    tokenId: string | undefined,
+    ELA2USD: number,
+    likeList: Array<TypeFavouritesFetch>,
+) => {
+    const resMyCreatedNFT = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonMyCreatedNFT = await resMyCreatedNFT.json();
+    const itemObject: TypeProductFetch = jsonMyCreatedNFT.data;
+    const _MyCreatedNFT: TypeProduct = { ...blankNFTItem };
+
+    if (itemObject !== undefined) {
+        _MyCreatedNFT.tokenId = itemObject.tokenId;
+        _MyCreatedNFT.name = itemObject.name;
+        _MyCreatedNFT.image = getImageFromAsset(itemObject.asset);
+        _MyCreatedNFT.price_ela = itemObject.price / 1e18;
+        _MyCreatedNFT.price_usd = _MyCreatedNFT.price_ela * ELA2USD;
+        // _MyCreatedNFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+        _MyCreatedNFT.likes = itemObject.likes;
+        _MyCreatedNFT.views = itemObject.views;
+        _MyCreatedNFT.isLike =
+            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+                ? false
+                : true;
+        _MyCreatedNFT.description = itemObject.description;
+        _MyCreatedNFT.author =
+            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _MyCreatedNFT.authorDescription = itemObject.authorDescription || ' ';
+        _MyCreatedNFT.authorImg = _MyCreatedNFT.image; // -- no proper value
+        _MyCreatedNFT.authorAddress = itemObject.royaltyOwner;
+        _MyCreatedNFT.holderName =
+            itemObject.holderName === '' || itemObject.holder === itemObject.royaltyOwner
+                ? itemObject.authorName
+                : itemObject.holderName;
+        _MyCreatedNFT.holder = itemObject.holder;
+        _MyCreatedNFT.tokenIdHex = itemObject.tokenIdHex;
+        _MyCreatedNFT.royalties = parseInt(itemObject.royalties) / 1e4;
+        _MyCreatedNFT.category = itemObject.category;
+        const createTime = getUTCTime(itemObject.createTime);
+        _MyCreatedNFT.createTime = createTime.date + '' + createTime.time;
+    }
+    return _MyCreatedNFT;
 };
 
 export const uploadUserProfile = (
