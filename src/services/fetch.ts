@@ -447,10 +447,10 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.views = itemObject.views;
         _BBItem.author = itemObject.createdName;
         _BBItem.royaltyOwner = itemObject.createdAddress;
+        _BBItem.authorDescription = itemObject.createdDescription;
         _BBItem.isLike =
             itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
         _BBItem.description = itemObject.description;
-        _BBItem.authorDescription = itemObject.authorDescription || ' ';
         _BBItem.instock = itemObject.instock || 0;
         _BBItem.sold = itemObject.sold || 0;
         if (itemObject.saleEnd) {
