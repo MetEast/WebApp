@@ -358,7 +358,13 @@ export const getNFTLatestTxs = async (
                 itemObject.event === 'Mint' ? 'Created' : itemObject.to === address ? 'Bought From' : 'Sold To';
             _NFTTxHistory.price = parseInt(itemObject.price) / 1e18;
             _NFTTxHistory.user = reduceHexAddress(
-                _NFTTxHistory.type === 'Bought From' ? itemObject.from : itemObject.to,
+                _NFTTxHistory.type === 'Bought From'
+                    ? itemObject.fromName === ''
+                        ? itemObject.from
+                        : itemObject.fromName
+                    : itemObject.toName === ''
+                    ? itemObject.to
+                    : itemObject.toName,
                 4,
             ); // no proper data
             const prodTransTimestamp = getTime(itemObject.timestamp.toString());
