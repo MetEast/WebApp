@@ -31,11 +31,11 @@ export const ImageBox = styled(Box)<{ selected: boolean }>`
         position: absolute;
         top: 8px;
         left: 8px;
-        display: grid;
         place-content: center;
         width: 24px;
         height: 24px;
         border-radius: 50%;
+        display: ${({ selected }) => (selected ? 'grid' : 'none')};
         border: ${({ selected }) => (selected ? '1px solid transparent' : '1px solid white')};
         background: ${({ selected }) => (selected ? '#E8F4FF' : '#90909080')};
     },
