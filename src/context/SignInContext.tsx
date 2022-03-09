@@ -10,7 +10,6 @@ export interface SignInState {
     chainId: number;
     didUri: string;
     signOut: boolean;
-    disconnectWallet: boolean;
     // user info
     token: string;
     userDid: string;
@@ -40,7 +39,6 @@ const defaultState: SignInState = {
     chainId: 0,
     didUri: '',
     signOut: false,
-    disconnectWallet: false,
     // user info
     token: '',
     userDid: '',

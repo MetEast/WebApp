@@ -150,13 +150,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         window.location.reload();
     };
 
-    const disconnectWallet = async () => {
-        if (activatingConnector !== null) activatingConnector.deactivate();
-        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        setActivatingConnector(null);
-    };
-
     // ------------------------------ EE Connection ------------------------------ //
     useEffect(() => {
         // EE
@@ -293,14 +286,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // listen for disconnect
     useEffect(() => {
-        if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.signOut) {
-                if (signInDlgState.loginType === '1') signOutWithEssentials();
-                else if (signInDlgState.loginType === '2') signOutWithWallet();
-            } else if (signInDlgState.disconnectWallet) {
-                if (signInDlgState.loginType === '1') disconnectEssentials();
-                else if (signInDlgState.loginType === '2') disconnectWallet();
-            }
+        if (signInDlgState.isLoggedIn && signInDlgState.signOut) {
+            if (signInDlgState.loginType === '1') signOutWithEssentials();
+            else if (signInDlgState.loginType === '2') signOutWithWallet();
         }
     }, [signInDlgState]);
 
@@ -486,18 +474,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             navigate('/');
         }
         window.location.reload();
-    };
-
-    const disconnectEssentials = async () => {
-        console.log('Disconnect wallet.');
-        setSignInDlgState({ ...signInDlgState, isLoggedIn: false, disconnectWallet: false });
-        try {
-            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
-                await essentialsConnector.disconnectWalletConnect();
-            }
-        } catch (e) {
-            console.log(e);
-        }
     };
 
     // const signOutWithEssentials = async () => {
