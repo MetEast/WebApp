@@ -112,6 +112,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 return _state;
                             });
                             enqueueSnackbar('Login succeed.', {
+                                autoHideDuration: 5000,
                                 variant: 'success',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
