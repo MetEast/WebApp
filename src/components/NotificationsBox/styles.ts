@@ -9,7 +9,7 @@ export const Container = styled(Stack)`
     background: white;
     ${(props) => props.theme.breakpoints.down('sm')} {
         width: 100%;
+        height: 100%;
         border-radius: 0;
-        justify-content: center;
     }
 `;

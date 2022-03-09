@@ -50,6 +50,7 @@ import NotificationsBox from 'src/components/NotificationsBox';
 // import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 // import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import ManageProfile from 'src/components/ManageProfile/ManageProfile';
+import { dummyNotificationList } from 'src/constants/dummyData';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -107,7 +108,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 </BaseButton>
                 <NotificationTypo>2</NotificationTypo>
                 <NotificationsBoxContainer show={showNotificationsBox}>
-                    <NotificationsBox onClose={() => setShowNotificationsBox(false)} />
+                    <NotificationsBox
+                        notificationsList={dummyNotificationList}
+                        onClose={() => setShowNotificationsBox(false)}
+                    />
                 </NotificationsBoxContainer>
             </Box>
             <ProfileButton
