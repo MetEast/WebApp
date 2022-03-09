@@ -14,18 +14,11 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import NFTBidTable from 'src/components/NFTBidTable';
-import { getImageFromAsset, getUTCTime, getTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
 import {
     enumBadgeType,
-    enumSingleNFTType,
-    enumTransactionType,
     TypeProduct,
-    TypeProductFetch,
-    TypeNFTTransactionFetch,
     TypeNFTTransaction,
-    TypeFavouritesFetch,
     TypeSingleNFTBid,
-    TypeSingleNFTBidFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
 import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTLatestBids } from 'src/services/fetch';
@@ -48,7 +41,7 @@ import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankNFTBid, blankMyNFTHistory, blankNFTTxs } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();

@@ -13,25 +13,8 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
-import {
-    getImageFromAsset,
-    getMintCategory,
-    getTime,
-    getUTCTime,
-    reduceHexAddress,
-    selectFromFavourites,
-} from 'src/services/common';
-import {
-    enumBadgeType,
-    enumSingleNFTType,
-    TypeProduct,
-    TypeProductFetch,
-    enumTransactionType,
-    TypeNFTTransactionFetch,
-    TypeFavouritesFetch,
-    TypeNFTTransaction,
-    TypeNFTHisotry,
-} from 'src/types/product-types';
+import { getMintCategory } from 'src/services/common';
+import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
 import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -43,7 +26,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankMyNFTHistory, blankNFTTxs } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
