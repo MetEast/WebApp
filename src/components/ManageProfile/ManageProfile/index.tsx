@@ -124,23 +124,25 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         </Typography>
                                     </Stack>
                                 )}
-                                <Stack direction="row" spacing={0.5}>
-                                    <CopyToClipboard
-                                        text={`did:elastos:${signInDlgState.userDid}`}
-                                        onCopy={showSnackBar}
-                                    >
-                                        <CopyToClipboardButton>
-                                            <Icon
-                                                icon="ph:copy"
-                                                color="#1890FF"
-                                                style={{ marginTop: '1px', cursor: 'pointer' }}
-                                            />
-                                        </CopyToClipboardButton>
-                                    </CopyToClipboard>
-                                    <Typography fontSize={14} fontWeight={400}>
-                                        {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
-                                    </Typography>
-                                </Stack>
+                                {signInDlgState.loginType === '1' && (
+                                    <Stack direction="row" spacing={0.5}>
+                                        <CopyToClipboard
+                                            text={`did:elastos:${signInDlgState.userDid}`}
+                                            onCopy={showSnackBar}
+                                        >
+                                            <CopyToClipboardButton>
+                                                <Icon
+                                                    icon="ph:copy"
+                                                    color="#1890FF"
+                                                    style={{ marginTop: '1px', cursor: 'pointer' }}
+                                                />
+                                            </CopyToClipboardButton>
+                                        </CopyToClipboard>
+                                        <Typography fontSize={14} fontWeight={400}>
+                                            {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
+                                        </Typography>
+                                    </Stack>
+                                )}
                             </>
                         )}
                     </Grid>
