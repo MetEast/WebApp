@@ -10,25 +10,9 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import {
-    getImageFromAsset,
-    getMintCategory,
-    getUTCTime,
-    getTime,
-    selectFromFavourites,
-    reduceHexAddress,
-} from 'src/services/common';
-import {
-    enumBadgeType,
-    enumSingleNFTType,
-    enumTransactionType,
-    TypeProduct,
-    TypeProductFetch,
-    TypeFavouritesFetch,
-    TypeNFTHisotry,
-    TypeNFTTransactionFetch,
-} from 'src/types/product-types';
-import { getELA2USD, getMyCreatedNFT, getMyFavouritesList } from 'src/services/fetch';
+import { getMintCategory, getTime, reduceHexAddress } from 'src/services/common';
+import { enumBadgeType, TypeProduct, TypeNFTHisotry, TypeNFTTransactionFetch } from 'src/types/product-types';
+import { getELA2USD, getMyNFTItem, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -47,9 +31,9 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _MyCreatedNFTItem = await getMyCreatedNFT(params.id, ELA2USD, likeList);
+            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
-                setProductDetail(_MyCreatedNFTItem);
+                setProductDetail(_MyNFTItem);
             }
         };
         getFetchData().catch(console.error);
