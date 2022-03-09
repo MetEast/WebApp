@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Typography, Stack, IconButton, Link, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Stack, Link, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
 import PageButton from './PageButton';
@@ -7,9 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { PrimaryButton } from 'src/components/Buttons/styles';
-import { NotificationTypo, ProfileButton } from './styles';
+import { BaseButton, PrimaryButton } from 'src/components/Buttons/styles';
+import { NotificationTypo, ProfileButton, NotificationsBoxContainer } from './styles';
 import ModalDialog from 'src/components/ModalDialog';
+import NotificationsBox from 'src/components/NotificationsBox';
 
 // dialogs for test
 // import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
@@ -59,7 +60,8 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
-    const [testdlgOpen, setTestdlgOpen] = React.useState<boolean>(false);
+    const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
+    const [testdlgOpen, setTestdlgOpen] = useState<boolean>(false);
     const testDlgShow = false;
 
     const isProfilePage = location.pathname === '/profile';
@@ -95,14 +97,19 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
 
     const menuButtons = signInDlgState.isLoggedIn ? (
         <>
-            {!mobile && (
-                <Box position="relative">
-                    <IconButton>
-                        <Icon icon="ph:chat-circle" fontSize={20} color="black" />
-                    </IconButton>
-                    <NotificationTypo>2</NotificationTypo>
-                </Box>
-            )}
+            <Box position="relative">
+                <BaseButton
+                    size="small"
+                    sx={{ minWidth: 40 }}
+                    onClick={() => setShowNotificationsBox(!showNotificationsBox)}
+                >
+                    <Icon icon="ph:chat-circle" fontSize={20} color="black" />
+                </BaseButton>
+                <NotificationTypo>2</NotificationTypo>
+                <NotificationsBoxContainer show={showNotificationsBox}>
+                    <NotificationsBox />
+                </NotificationsBoxContainer>
+            </Box>
             <ProfileButton
                 size="small"
                 selected={isProfilePage}
