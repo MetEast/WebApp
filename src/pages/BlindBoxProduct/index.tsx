@@ -48,7 +48,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
-            const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
+            const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.loginType === '1' ? `did:elastos:${signInDlgState.userDid}` : signInDlgState.userDid);
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
             }
@@ -79,41 +79,46 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         });
     };
 
-    const updateBlindBoxViews = (tokenId: string) => {
-        if (signInDlgState.isLoggedIn && tokenId) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = {
-                token: signInDlgState.token,
-                blindBoxIndex: tokenId,
-                did: signInDlgState.userDid,
-            };
-            fetch(reqUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reqBody),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        setBlindBoxDetail((prevState: TypeProduct) => {
-                            const blindDetail: TypeProduct = { ...prevState };
-                            blindDetail.views += 1;
-                            return blindDetail;
-                        });
-                    } else {
-                        console.log(data);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
     useEffect(() => {
+        let unmounted = false;
+        const updateBlindBoxViews = (tokenId: string) => {
+            if (signInDlgState.isLoggedIn && tokenId) {
+                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+                const reqBody = {
+                    token: signInDlgState.token,
+                    blindBoxIndex: tokenId,
+                    did: signInDlgState.userDid,
+                };
+                fetch(reqUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reqBody),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.code === 200) {
+                            if (!unmounted) {
+                                setBlindBoxDetail((prevState: TypeProduct) => {
+                                    const blindDetail: TypeProduct = { ...prevState };
+                                    blindDetail.views += 1;
+                                    return blindDetail;
+                                });
+                            }
+                        } else {
+                            console.log(data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        };
         updateBlindBoxViews(blindBoxDetail.tokenId);
+        return () => {
+            unmounted = true;
+        };
     }, [blindBoxDetail.tokenId]);
 
     return (
