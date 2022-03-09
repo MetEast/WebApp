@@ -10,13 +10,13 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import { getMintCategory, getTime, reduceHexAddress } from 'src/services/common';
-import { enumBadgeType, TypeProduct, TypeNFTHisotry, TypeNFTTransactionFetch } from 'src/types/product-types';
-import { getELA2USD, getMyNFTItem, getMyFavouritesList, FETCH_CONFIG_JSON } from 'src/services/fetch';
+import { getMintCategory } from 'src/services/common';
+import { enumBadgeType, TypeProduct, TypeNFTHisotry } from 'src/types/product-types';
+import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankMyNFTHistory } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -24,7 +24,6 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
-    const burnAddress = '0x0000000000000000000000000000000000000000';
 
     useEffect(() => {
         let unmounted = false;
@@ -42,37 +41,19 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
-    const getLatestTransaction = async () => {
-        const resLatestTransaction = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-            FETCH_CONFIG_JSON
-        );
-        const dataLatestTransaction = await resLatestTransaction.json();
-        const arrLatestTransaction = dataLatestTransaction.data;
-
-        let _prodTransHistory: Array<TypeNFTHisotry> = [];
-        for (let i = 0; i < arrLatestTransaction.length; i++) {
-            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
-            if (itemObject.event !== 'Mint') continue;
-            let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
-            _prodTrans.type = 'Created';
-            _prodTrans.price = parseInt(itemObject.price) / 1e18;
-            _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
-            let timestamp = getTime(itemObject.timestamp.toString());
-            _prodTrans.time = timestamp.date + ' ' + timestamp.time;
-            _prodTrans.txHash = itemObject.tHash;
-            _prodTransHistory.push(_prodTrans);
-        }
-        setProdTransHistory(_prodTransHistory);
-    };
-
-    const getFetchData = async () => {
-        getLatestTransaction();
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, []);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
+            if (!unmounted) {
+                setProdTransHistory(_NFTTxs.history);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [params.id, signInDlgState.walletAccounts]);
 
     const updateProductLikes = (type: string) => {
         setProductDetail((prevState: TypeProduct) => {

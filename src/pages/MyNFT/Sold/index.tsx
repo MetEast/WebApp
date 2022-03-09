@@ -12,25 +12,8 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import {
-    getImageFromAsset,
-    getUTCTime,
-    selectFromFavourites,
-    reduceHexAddress,
-    getTime,
-    getMintCategory,
-} from 'src/services/common';
-import {
-    enumBadgeType,
-    enumSingleNFTType,
-    TypeProduct,
-    TypeProductFetch,
-    enumTransactionType,
-    TypeFavouritesFetch,
-    TypeNFTTransaction,
-    TypeNFTTransactionFetch,
-    TypeNFTHisotry,
-} from 'src/types/product-types';
+import { getMintCategory } from 'src/services/common';
+import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
 import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -38,7 +21,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankMyNFTHistory, blankNFTTxs } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const MyNFTSold: React.FC = (): JSX.Element => {
     const params = useParams(); // params.id
@@ -79,7 +62,6 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
-
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -131,7 +113,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId, signInDlgState.token, signInDlgState.userDid]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

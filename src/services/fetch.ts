@@ -266,10 +266,10 @@ export const getNFTItem = async (
     return _NFTItem;
 };
 
-// export const getLatestTransaction = async () => {
+// const getLatestTransaction = async () => {
 //     const resLatestTransaction = await fetch(
 //         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-//         FETCH_CONFIG_JSON,
+//         FETCH_CONFIG_JSON
 //     );
 //     const dataLatestTransaction = await resLatestTransaction.json();
 //     const arrLatestTransaction = dataLatestTransaction.data;
