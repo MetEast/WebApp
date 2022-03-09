@@ -12,7 +12,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import { getMintCategory, getTime, reduceHexAddress } from 'src/services/common';
 import { enumBadgeType, TypeProduct, TypeNFTHisotry, TypeNFTTransactionFetch } from 'src/types/product-types';
-import { getELA2USD, getMyNFTItem, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyNFTItem, getMyFavouritesList, FETCH_CONFIG_JSON } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -45,12 +45,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
+            FETCH_CONFIG_JSON
         );
         const dataLatestTransaction = await resLatestTransaction.json();
         const arrLatestTransaction = dataLatestTransaction.data;

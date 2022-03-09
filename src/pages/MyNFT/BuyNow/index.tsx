@@ -78,22 +78,20 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
 
     // change price tx fee
-    const setChangePriceTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setChangePriceTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setChangePriceTxFee();
     }, [dialogState.changePriceDlgStep]);
 
     // cancel sale tx fee
-    const setCancelSaleTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setCancelSaleTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setCancelSaleTxFee();
     }, [dialogState.cancelSaleDlgStep]);
 
