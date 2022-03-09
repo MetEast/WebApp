@@ -21,7 +21,6 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            let unmounted = false;
             const reqUrl =
                 `${process.env.REACT_APP_BACKEND_URL}/api/v1/` + likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = {
@@ -29,6 +28,9 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
                 tokenId: product.tokenId,
                 did: signInDlgState.userDid,
             };
+            // change state first
+            updateLikes(likeState ? 'dec' : 'inc');
+            setLikeState(!likeState);
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
@@ -40,11 +42,6 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
                 .then((data) => {
                     if (data.code === 200) {
                         console.log('succeed');
-                        if (!unmounted) {
-                            // change state first
-                            updateLikes(likeState ? 'dec' : 'inc');
-                            setLikeState(!likeState);
-                        }
                     } else {
                         console.log(data);
                     }
@@ -52,9 +49,6 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
                 .catch((error) => {
                     console.log(error);
                 });
-            return () => {
-                unmounted = true;
-            };
         } else {
             setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
         }
