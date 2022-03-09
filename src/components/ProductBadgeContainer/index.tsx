@@ -4,6 +4,8 @@ import { enumBlindBoxNFTType, enumSingleNFTType, enumMyNFTType, enumBadgeType } 
 import ProductBadge from 'src/components/ProductBadge';
 import { SpacingProps } from '@mui/system';
 import { Grid } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ProductBadgeContainerProps extends SpacingProps {
     nfttype: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
@@ -17,6 +19,9 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     isReservedAuction,
     ...otherProps
 }): JSX.Element => {
+    const theme = useTheme();
+    const matchUpXl = useMediaQuery(theme.breakpoints.up('xl'));
+
     const badgeComingSoon = <ProductBadge badgeType={enumBadgeType.ComingSoon} content={content} />;
     const badgeSaleEnds = <ProductBadge badgeType={enumBadgeType.SaleEnds} content={content} />;
     const badgeSaleEnded = <ProductBadge badgeType={enumBadgeType.SaleEnded} />;
@@ -24,12 +29,14 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     const badgeBuyNow = <ProductBadge badgeType={enumBadgeType.BuyNow} />;
     const badgeOnAuction = (
         <Grid container spacing={1}>
-            <Grid item >
+            <Grid item>
                 <ProductBadge badgeType={enumBadgeType.OnAuction} />
             </Grid>
-            {!isReservedAuction && <Grid item>
-                <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-            </Grid>}
+            {matchUpXl && !isReservedAuction && (
+                <Grid item>
+                    <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
+                </Grid>
+            )}
         </Grid>
     );
     const badgeCreated = <ProductBadge badgeType={enumBadgeType.Created} />;
@@ -69,10 +76,10 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
         },
         [enumMyNFTType.Purchased]: {
             element: badgePurchased,
-        }
+        },
     };
     return (
-        <Container direction={"row"} alignItems="left" spacing={1} {...otherProps}>
+        <Container direction={'row'} alignItems="left" spacing={1} {...otherProps}>
             {child[nfttype].element}
         </Container>
     );
