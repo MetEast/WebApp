@@ -38,7 +38,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
-    const { enqueueSnackbar } = useSnackbar();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     // for signInContext
     const { connector, activate, deactivate, active, error, library, chainId, account } = useWeb3React<Web3Provider>();
     const [activatingConnector, setActivatingConnector] = useState<InjectedConnector | WalletConnectConnector | null>(
@@ -52,6 +52,16 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [_signInState, _setSignInState] = useState<SignInState>(signInDlgState);
     let linkType = cookies.METEAST_LINK;
 
+    const showSucceedSnackBar = () => {
+        const loginSucceed = enqueueSnackbar('Login succeed.', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+        });
+        const timer = setTimeout(() => {
+            closeSnackbar(loginSucceed);
+            clearTimeout(timer);
+        }, 5000);
+    };
     // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
         let currentConnector: any = null;
@@ -111,11 +121,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                     _state.userCoverImage = user.coverImage;
                                 return _state;
                             });
-                            enqueueSnackbar('Login succeed.', {
-                                autoHideDuration: 5000,
-                                variant: 'success',
-                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                            });
+                            showSucceedSnackBar();
                         } else {
                             console.log(data);
                         }
@@ -413,10 +419,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 }
                                 return _state;
                             });
-                            enqueueSnackbar('Login succeed.', {
-                                variant: 'success',
-                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                            });
+                            showSucceedSnackBar();
                         } else {
                             console.log(data);
                         }
