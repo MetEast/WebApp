@@ -24,6 +24,8 @@ import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale'
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
+import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
+import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -97,7 +99,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         };
     }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
     // -------------- Fetch Data -------------- //
-
+    
+    // place bid tx Fee
     useEffect(() => {
         const setPlaceBidTxFee = async () => {
             const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
@@ -105,6 +108,15 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         };
         setPlaceBidTxFee();
     }, [dialogState.placeBidDlgStep]);
+    
+    // accept bid tx Fee
+    useEffect(() => {
+        const setAcceptBidTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
+        setAcceptBidTxFee();
+    }, [dialogState.acceptBidDlgStep]);
 
     // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
@@ -204,70 +216,66 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     />
                     {signInDlgState.walletAccounts.length !== 0 && (
                         <>
-                            {signInDlgState.walletAccounts.length !== 0 &&
-                                productDetail.holder !== signInDlgState.walletAccounts[0] &&
-                                !productDetail.isExpired && (
-                                    <PrimaryButton
-                                        sx={{ marginTop: 3, width: '100%' }}
+                            {productDetail.holder !== signInDlgState.walletAccounts[0] && !productDetail.isExpired && (
+                                <PrimaryButton
+                                    sx={{ marginTop: 3, width: '100%' }}
+                                    onClick={() => {
+                                        if (signInDlgState.isLoggedIn) {
+                                            setDialogState({
+                                                ...dialogState,
+                                                placeBidDlgOpened: true,
+                                                placeBidDlgStep: 0,
+                                                placeBidName: productDetail.name,
+                                                placeBidOrderId: productDetail.orderId || '',
+                                                placeBidMinLimit: productDetail.price_ela,
+                                            });
+                                        } else {
+                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                        }
+                                    }}
+                                >
+                                    Place Bid
+                                </PrimaryButton>
+                            )}
+                            {productDetail.holder === signInDlgState.walletAccounts[0] && bidsList.length === 0 && (
+                                <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                    <PinkButton
+                                        sx={{ width: '100%', height: 40 }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
                                                 setDialogState({
                                                     ...dialogState,
-                                                    placeBidDlgOpened: true,
-                                                    placeBidDlgStep: 0,
-                                                    placeBidName: productDetail.name,
-                                                    placeBidOrderId: productDetail.orderId || '',
-                                                    placeBidMinLimit: productDetail.price_ela,
+                                                    cancelSaleDlgOpened: true,
+                                                    cancelSaleDlgStep: 0,
+                                                    cancelSaleOrderId: productDetail.orderId || '',
                                                 });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                             }
                                         }}
                                     >
-                                        Place Bid
-                                    </PrimaryButton>
-                                )}
-                            {signInDlgState.walletAccounts.length !== 0 &&
-                                productDetail.holder === signInDlgState.walletAccounts[0] &&
-                                bidsList.length === 0 && (
-                                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                        <PinkButton
-                                            sx={{ width: '100%', height: 40 }}
-                                            onClick={() => {
-                                                if (signInDlgState.isLoggedIn) {
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        cancelSaleDlgOpened: true,
-                                                        cancelSaleDlgStep: 0,
-                                                        cancelSaleOrderId: productDetail.orderId || '',
-                                                    });
-                                                } else {
-                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                                }
-                                            }}
-                                        >
-                                            Cancel Sale
-                                        </PinkButton>
-                                        <SecondaryButton
-                                            sx={{ width: '100%', height: 40 }}
-                                            onClick={() => {
-                                                if (signInDlgState.isLoggedIn) {
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        changePriceDlgOpened: true,
-                                                        changePriceDlgStep: 0,
-                                                        changePriceCurPrice: productDetail.price_ela,
-                                                        changePriceOrderId: productDetail.orderId || '',
-                                                    });
-                                                } else {
-                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                                }
-                                            }}
-                                        >
-                                            Change Price
-                                        </SecondaryButton>
-                                    </Stack>
-                                )}
+                                        Cancel Sale
+                                    </PinkButton>
+                                    <SecondaryButton
+                                        sx={{ width: '100%', height: 40 }}
+                                        onClick={() => {
+                                            if (signInDlgState.isLoggedIn) {
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    changePriceDlgOpened: true,
+                                                    changePriceDlgStep: 0,
+                                                    changePriceCurPrice: productDetail.price_ela,
+                                                    changePriceOrderId: productDetail.orderId || '',
+                                                });
+                                            } else {
+                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                            }
+                                        }}
+                                    >
+                                        Change Price
+                                    </SecondaryButton>
+                                </Stack>
+                            )}
                             {productDetail.isExpired && (
                                 <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                     <SecondaryButton
@@ -353,6 +361,15 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             >
                 {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
                 {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.acceptBidDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, acceptBidDlgOpened: false });
+                }}
+            >
+                {dialogState.acceptBidDlgStep === 0 && <AcceptBid />}
+                {dialogState.acceptBidDlgStep === 1 && <SaleSuccess />}
             </ModalDialog>
             <ModalDialog
                 open={dialogState.allBidDlgOpened}
