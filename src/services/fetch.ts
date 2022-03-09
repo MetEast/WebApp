@@ -519,7 +519,7 @@ export const uploadUserProfile = (
         const signedProfile = jwt.sign(jsonProfile, 'config.Auth.jwtSecret', { expiresIn: 60 * 60 * 24 * 7 });
         const reqBody = {
             token: token,
-            profile: signedProfile,
+            signedProfile: signedProfile,
         };
         fetch(reqUrl, {
             method: 'POST',
