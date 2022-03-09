@@ -16,7 +16,14 @@ import {
     enumBadgeType,
 } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
-import { blankNFTItem, blankNFTTxs, blankNFTBid, blankBBItem, blankMyNFTItem, blankMyEarning } from 'src/constants/init-constants';
+import {
+    blankNFTItem,
+    blankNFTTxs,
+    blankNFTBid,
+    blankBBItem,
+    blankMyNFTItem,
+    blankMyEarning,
+} from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import jwt from 'jsonwebtoken';
@@ -359,6 +366,56 @@ export const getNFTLatestBids = async (
         }
     }
     return { mine: _myNFTBidList, others: _otherNFTBidList };
+};
+
+// BlindBoxProduct Page
+export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number, userDid: string) => {
+    const resBBItem = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxId=${blindBoxId}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonBBItem = await resBBItem.json();
+    const itemObject: TypeProductFetch = jsonBBItem.data.result;
+    const _BBItem: TypeProduct = { ...blankBBItem };
+
+    if (itemObject !== undefined) {
+        _BBItem.tokenId = itemObject.blindBoxIndex.toString();
+        _BBItem.name = itemObject.name;
+        _BBItem.image = getImageFromAsset(itemObject.asset);
+        _BBItem.price_ela = parseInt(itemObject.blindPrice);
+        _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
+        const curTimestamp = new Date().getTime() / 1000;
+        _BBItem.type =
+            curTimestamp < parseInt(itemObject.saleBegin)
+                ? enumBlindBoxNFTType.ComingSoon
+                : curTimestamp <= parseInt(itemObject.saleEnd)
+                ? enumBlindBoxNFTType.SaleEnds
+                : enumBlindBoxNFTType.SaleEnded;
+        _BBItem.likes = itemObject.likes;
+        _BBItem.views = itemObject.views;
+        _BBItem.author = itemObject.createdName;
+        _BBItem.royaltyOwner = itemObject.createdAddress;
+        _BBItem.isLike =
+            itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === `did:elastos:${userDid}`) ===
+            -1
+                ? false
+                : true;
+        _BBItem.description = itemObject.description;
+        _BBItem.authorDescription = itemObject.authorDescription || ' ';
+        _BBItem.instock = itemObject.instock || 0;
+        _BBItem.sold = itemObject.sold || 0;
+        if (itemObject.saleEnd) {
+            const endTime = getTime(itemObject.saleEnd);
+            _BBItem.endTime = endTime.date + ' ' + endTime.time;
+        } else {
+            _BBItem.endTime = '';
+        }
+        _BBItem.state = itemObject.state;
+        _BBItem.maxPurchases = parseInt(itemObject.maxPurchases);
+        _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);
+        _BBItem.did = itemObject.did;
+    }
+    return _BBItem;
 };
 
 // Profile Page
