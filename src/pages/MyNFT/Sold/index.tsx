@@ -31,7 +31,7 @@ import {
     TypeNFTTransactionFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
-import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
+import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeSelectItem } from 'src/types/select-types';
@@ -65,102 +65,21 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
-    const getLatestTransaction = async () => {
-        const resLatestTransaction = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-            FETCH_CONFIG_JSON,
-        );
-        const dataLatestTransaction = await resLatestTransaction.json();
-        const arrLatestTransaction = dataLatestTransaction.data;
-
-        let _latestTransList: Array<TypeNFTTransaction> = [];
-        let _prodTransHistory: Array<TypeNFTHisotry> = [];
-        for (let i = 0; i < arrLatestTransaction.length; i++) {
-            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
-            if (itemObject.event === 'Transfer') continue;
-            let _transaction: TypeNFTTransaction = { ...blankNFTTxs };
-            switch (itemObject.event) {
-                case 'Mint':
-                    _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                case 'CreateOrderForSale':
-                    _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'CreateOrderForAuction':
-                    _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'BidOrder':
-                    _transaction.type = enumTransactionType.Bid;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                case 'ChangeOrderPrice':
-                    _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'CancelOrder':
-                    _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'BuyOrder':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                // case 'Transfer':
-                //     _transaction.type = enumTransactionType.Transfer;
-                //     break;
-                case 'SettleBidOrder':
-                    _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-            }
-            _transaction.price = parseInt(itemObject.price) / 1e18;
-            _transaction.txHash = itemObject.tHash;
-            let timestamp = getTime(itemObject.timestamp.toString());
-            _transaction.time = timestamp.date + ' ' + timestamp.time;
-            _latestTransList.push(_transaction);
-
-            if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
-                let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
-                _prodTrans.type =
-                    itemObject.event === 'Mint'
-                        ? 'Created'
-                        : itemObject.to === signInDlgState.walletAccounts[0]
-                        ? 'Bought From'
-                        : 'Sold To';
-                _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(
-                    _prodTrans.type === 'Bought From' ? itemObject.from : itemObject.to,
-                    4,
-                ); // no proper data
-                let prodTransTimestamp = getTime(itemObject.timestamp.toString());
-                _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                if (itemObject.event === 'BuyOrder')
-                    _prodTrans.saleType =
-                        arrLatestTransaction[i + 2].event === 'CreateOrderForSale'
-                            ? enumTransactionType.ForSale
-                            : enumTransactionType.OnAuction;
-                _prodTrans.txHash = itemObject.tHash;
-                _prodTransHistory.push(_prodTrans);
-            }
-        }
-        setTransactionsList(_latestTransList);
-        setProdTransHistory(_prodTransHistory);
-    };
-
     useEffect(() => {
-        getLatestTransaction();
-    }, [transactionSortBy]);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
+            if (!unmounted) {
+                setTransactionsList(_NFTTxs.txs);
+                setProdTransHistory(_NFTTxs.history);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
+
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
