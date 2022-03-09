@@ -8,7 +8,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { NotificationTypo } from './styles';
+import { NotificationTypo, ProfileButton } from './styles';
 import ModalDialog from 'src/components/ModalDialog';
 
 // dialogs for test
@@ -103,13 +103,15 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     <NotificationTypo>2</NotificationTypo>
                 </Box>
             )}
-            <IconButton
+            <ProfileButton
+                size="small"
+                selected={isProfilePage}
                 onClick={() => {
                     navigate('/profile');
                 }}
             >
-                <Icon icon="ph:user" fontSize={20} color="black" />
-            </IconButton>
+                <Icon icon="ph:user" fontSize={20} />
+            </ProfileButton>
             {isProfilePage ? (
                 <PrimaryButton
                     size="small"

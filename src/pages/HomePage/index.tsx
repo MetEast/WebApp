@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import Container from 'src/components/Container';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NFTPreview from 'src/components/NFTPreview';
@@ -10,6 +9,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
 import { getELA2USD, getMyFavouritesList, getNFTItemList } from 'src/services/fetch';
 import { blankNFTItem } from 'src/constants/init-constants';
+import { Container } from './styles';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -123,7 +123,13 @@ const HomePage: React.FC = (): JSX.Element => {
             </Box>
             <Container>
                 <Box mt={4}>
-                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                    <Typography
+                        fontSize={{ xs: 26, sm: 28, md: 32 }}
+                        fontWeight={700}
+                        lineHeight={1.1}
+                        marginBottom={1}
+                        marginLeft={{ xs: 3, sm: 0 }}
+                    >
                         New Products
                     </Typography>
                     <Swiper
@@ -144,7 +150,13 @@ const HomePage: React.FC = (): JSX.Element => {
                     </Swiper>
                 </Box>
                 <Box mt={{ xs: 4, md: 8 }}>
-                    <Typography fontSize={{ xs: 26, sm: 28, md: 32 }} fontWeight={700} lineHeight={1.1} mb={1}>
+                    <Typography
+                        fontSize={{ xs: 26, sm: 28, md: 32 }}
+                        fontWeight={700}
+                        lineHeight={1.1}
+                        marginBottom={1}
+                        marginLeft={{ xs: 3, sm: 0 }}
+                    >
                         Popular Collections
                     </Typography>
                     <Swiper
