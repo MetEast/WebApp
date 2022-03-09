@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Typography, Stack, IconButton } from '@mui/material';
 import Table from 'src/components/Admin/Table';
 import { AdminBlindBoxItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
@@ -6,9 +6,6 @@ import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useDialogContext } from 'src/context/DialogContext';
 
 const AdminBlindBoxes: React.FC = (): JSX.Element => {

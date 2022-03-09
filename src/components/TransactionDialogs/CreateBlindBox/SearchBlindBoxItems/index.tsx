@@ -5,13 +5,12 @@ import SearchField from 'src/components/SearchField';
 import { TblHeaderTypo, TblBodyTypo, ImageBox } from './styles';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeBlindBoxSelectItem, TypeProductFetch } from 'src/types/product-types';
-import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
+import { TypeBlindBoxSelectItem } from 'src/types/product-types';
+import { reduceHexAddress } from 'src/services/common';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
-import { blankBBCandidate } from 'src/constants/init-constants';
-import { FETCH_CONFIG_JSON, getBBCandiates } from 'src/services/fetch';
+import { getBBCandiates } from 'src/services/fetch';
 
 export interface ComponentProps {
     onClose: () => void;

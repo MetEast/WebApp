@@ -1,4 +1,4 @@
-import { styled, Button, Box, Dialog } from '@mui/material';
+import { styled, Button, Box } from '@mui/material';
 import { BaseButton } from 'src/components/Buttons/styles';
 
 export const FilterButton = styled(Button)`

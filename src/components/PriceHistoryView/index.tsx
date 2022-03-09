@@ -90,7 +90,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
-    const [chartOptions, setChartOptions] = useState(options);
+    const [chartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
     const [productPriceList, setProductPriceList] = useState<Array<TypePriceHistoryFetch>>([]);
     const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(

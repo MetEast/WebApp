@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Box, Button, Typography, Link } from '@mui/material';
+import { Stack, Button, Typography, Link } from '@mui/material';
 import { SpacingProps } from '@mui/system';
 import { SocialButton } from './styles';
 import { Icon } from '@iconify/react';

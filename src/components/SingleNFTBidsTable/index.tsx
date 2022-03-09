@@ -40,22 +40,20 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
     // update bid tx fee
-    const setUpdateBidTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, updateBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setUpdateBidTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, updateBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setUpdateBidTxFee();
     }, [dialogState.updateBidDlgStep]);
 
     // cancel bid tx fee
-    const setCancelBidTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, cancelBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setCancelBidTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, cancelBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setCancelBidTxFee();
     }, [dialogState.cancelBidDlgStep]);
 
