@@ -11,6 +11,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
 import { blankBBCandidate } from 'src/constants/init-constants';
+import { FETCH_CONFIG_JSON, getBBCandiates } from 'src/services/fetch';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -24,50 +25,30 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
     const [indeterminateChecked, setIndeterminateChecked] = useState<boolean>(false);
-    const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>(dialogState.crtBlindTokenIds.split(';').filter((value: string) => value.length > 0));
+    const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>(
+        dialogState.crtBlindTokenIds.split(';').filter((value: string) => value.length > 0),
+    );
 
     let allTokenIds: Array<string> = [];
     for (let i = 0; i < itemList.length; i++) allTokenIds.push(itemList[i].tokenId);
 
     // -------------- Fetch Data -------------- //
-    const getBlindBoxItemList = async () => {
-        const resBlindBoxItem = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${signInDlgState.walletAccounts[0]}&keyword=${keyWord}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataBlindBoxItem = await resBlindBoxItem.json();
-        const arrBlindBoxItem = dataBlindBoxItem.data === undefined ? [] : dataBlindBoxItem.data.result;
-
-        let _itemList: Array<TypeBlindBoxSelectItem> = [];
-        let _itemChecked: Array<boolean> = [];
-        for (let i = 0; i < arrBlindBoxItem.length; i++) {
-            let itemObject: TypeProductFetch = arrBlindBoxItem[i];
-            let item: TypeBlindBoxSelectItem = { ...blankBBCandidate };
-            item.id = i + 1;
-            item.tokenId = itemObject.tokenId;
-            item.nftIdentity = itemObject.tokenIdHex;
-            item.projectTitle = itemObject.name;
-            item.projectType = itemObject.category;
-            item.url = getImageFromAsset(itemObject.asset);
-            _itemList.push(item);
-            _itemChecked.push(selectedTokenIds.includes(item.tokenId));
-        }
-        setItemList(_itemList);
-        setItemChecked(_itemChecked);
-    };
-
-    const getFetchData = async () => {
-        getBlindBoxItemList();
-    };
-
     useEffect(() => {
-        getFetchData();
-    }, [keyWord]);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _BBCandidates = await getBBCandiates(signInDlgState.walletAccounts[0], keyWord, selectedTokenIds);
+            if (!unmounted) {
+                setItemList(_BBCandidates.candidates);
+                setItemChecked(_BBCandidates.itemChecked);
+                setAllChecked(_BBCandidates.allChecked);
+                setIndeterminateChecked(_BBCandidates.indeterminateChecked);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts, keyWord, selectedTokenIds]);
     // -------------- Fetch Data -------------- //
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {

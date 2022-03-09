@@ -33,8 +33,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         event.preventDefault();
         event.stopPropagation();
         if (signInDlgState.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
-            reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/` + likeState ? 'decTokenLikes' : 'incTokenLikes';
             const reqBody = {
                 token: signInDlgState.token,
                 tokenId: product.tokenId,

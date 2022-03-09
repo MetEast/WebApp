@@ -11,6 +11,7 @@ import {
     TypeYourEarning,
     TypeYourEarningFetch,
     TypeNFTHisotry,
+    TypeBlindBoxSelectItem,
     enumTransactionType,
     enumBlindBoxNFTType,
     enumMyNFTType,
@@ -25,6 +26,7 @@ import {
     blankMyNFTItem,
     blankMyEarning,
     blankMyNFTHistory,
+    blankBBCandidate,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -609,7 +611,7 @@ export const getMyEarnedList = async (address: string) => {
     return _myEarningList;
 };
 
-// MyNFT Created
+// MyNFT Page
 export const getMyNFTItem = async (
     tokenId: string | undefined,
     ELA2USD: number,
@@ -657,6 +659,37 @@ export const getMyNFTItem = async (
         _MyNFTItem.status = itemObject.status;
     }
     return _MyNFTItem;
+};
+
+// BB creation
+export const getBBCandiates = async (address: string, keyword: string, selectedTokenIds: Array<string>) => {
+    const resBBCandidateList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${address}&keyword=${keyword}`,
+        FETCH_CONFIG_JSON
+    );
+    const jsonBBCandidateList = await resBBCandidateList.json();
+    const arrBBCandidateList = jsonBBCandidateList.data === undefined ? [] : jsonBBCandidateList.data.result;
+
+    const _BBCandidateList: Array<TypeBlindBoxSelectItem> = [];
+    const _itemCheckedList: Array<boolean> = [];
+    let _allChecked: boolean = false;
+    let _indeterminateChecked: boolean = false;
+    for (let i = 0; i < arrBBCandidateList.length; i++) {
+        const itemObject: TypeProductFetch = arrBBCandidateList[i];
+        const _BBCandidate: TypeBlindBoxSelectItem = { ...blankBBCandidate };
+        _BBCandidate.id = i + 1;
+        _BBCandidate.tokenId = itemObject.tokenId;
+        _BBCandidate.nftIdentity = itemObject.tokenIdHex;
+        _BBCandidate.projectTitle = itemObject.name;
+        _BBCandidate.projectType = itemObject.category;
+        _BBCandidate.url = getImageFromAsset(itemObject.asset);
+        _BBCandidateList.push(_BBCandidate);
+        _itemCheckedList.push(selectedTokenIds.includes(_BBCandidate.tokenId));
+    }
+    if (selectedTokenIds.length === _BBCandidateList.length) _allChecked = true;
+    else if (selectedTokenIds.length > 0) _indeterminateChecked = true;
+
+    return {candidates: _BBCandidateList, allChecked: _allChecked, itemChecked: _itemCheckedList, indeterminateChecked: _indeterminateChecked};
 };
 
 export const uploadUserProfile = (

@@ -27,7 +27,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxDescriptionError, setBlindboxDescriptionError] = useState(false);
     const [blindboxImage, setBlindboxImage] = useState<File>();
     const [blindboxImageError, setBlindboxImageError] = useState(false);
-
+    
     const [stateFile, setStateFile] = useState(null);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [blindboxQuantity, setBlindboxQuantity] = useState<number>(0);
@@ -39,9 +39,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [saleBeginsError, setSaleBeginsError] = useState(false);
     const [saleEnds, setSaleEnds] = useState<string>('');
     const [saleEndsError, setSaleEndsError] = useState(false);
-
-    // const [sort, setSort] = useState<TypeSelectItem>();
-    // const [sortSelectOpen, setSortSelectOpen] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
     const handleFileChange = (files: Array<File>) => {
