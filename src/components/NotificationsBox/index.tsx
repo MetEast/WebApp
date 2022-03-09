@@ -5,9 +5,11 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import NotificationItem from './NotificationItem';
 import { dummyNotificationList } from 'src/constants/dummyData';
 
-interface ComponentProps {}
+interface ComponentProps {
+    onClose: () => void;
+}
 
-const NotificationsBox: React.FC<ComponentProps> = (): JSX.Element => {
+const NotificationsBox: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     return (
         <Container spacing={6} sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
             <Stack alignItems="flex-start" spacing={1.5}>
@@ -32,7 +34,9 @@ const NotificationsBox: React.FC<ComponentProps> = (): JSX.Element => {
                 ))}
             </Stack>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth>Close</SecondaryButton>
+                <SecondaryButton fullWidth onClick={onClose}>
+                    Close
+                </SecondaryButton>
                 <PrimaryButton fullWidth>Mark as read</PrimaryButton>
             </Stack>
         </Container>

@@ -107,7 +107,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 </BaseButton>
                 <NotificationTypo>2</NotificationTypo>
                 <NotificationsBoxContainer show={showNotificationsBox}>
-                    <NotificationsBox />
+                    <NotificationsBox onClose={() => setShowNotificationsBox(false)} />
                 </NotificationsBoxContainer>
             </Box>
             <ProfileButton
