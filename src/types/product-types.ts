@@ -197,6 +197,7 @@ export type TypeProductFetch = {
     tokenIds: string[];
     createdName: string;
     createdAddress: string;
+    createdDescription: string;
     isBlindbox: boolean;
 };
 

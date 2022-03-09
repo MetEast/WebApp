@@ -24,14 +24,13 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
     const [indeterminateChecked, setIndeterminateChecked] = useState<boolean>(false);
-    const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>([]);
+    const [selectedTokenIds, setSelectedTokenIds] = useState<Array<string>>(dialogState.crtBlindTokenIds.split(';').filter((value: string) => value.length > 0));
 
     let allTokenIds: Array<string> = [];
     for (let i = 0; i < itemList.length; i++) allTokenIds.push(itemList[i].tokenId);
 
     // -------------- Fetch Data -------------- //
     const getBlindBoxItemList = async () => {
-        console.log('===========', signInDlgState.walletAccounts[0]);
         const resBlindBoxItem = await fetch(
             `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${signInDlgState.walletAccounts[0]}&keyword=${keyWord}`,
             {
@@ -56,7 +55,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
             item.projectType = itemObject.category;
             item.url = getImageFromAsset(itemObject.asset);
             _itemList.push(item);
-            _itemChecked.push(false);
+            _itemChecked.push(selectedTokenIds.includes(item.tokenId));
         }
         setItemList(_itemList);
         setItemChecked(_itemChecked);
@@ -269,7 +268,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                     fullWidth
                     onClick={() => {
                         let selectedTokenNames: Array<string> = [];
-                        selectedTokenIds.forEach((item: string, index: number) => {
+                        selectedTokenIds.forEach((item: string) => {
                             selectedTokenNames.push(
                                 itemList[itemList.findIndex((value: TypeBlindBoxSelectItem) => value.tokenId === item)]
                                     .projectTitle,

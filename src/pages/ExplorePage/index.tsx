@@ -1,4 +1,4 @@
-import { Stack, Box, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import NFTPreview from 'src/components/NFTPreview';

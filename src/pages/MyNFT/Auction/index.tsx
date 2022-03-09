@@ -14,21 +14,14 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import NFTBidTable from 'src/components/NFTBidTable';
-import { getImageFromAsset, getUTCTime, getTime, reduceHexAddress, selectFromFavourites } from 'src/services/common';
 import {
     enumBadgeType,
-    enumSingleNFTType,
-    enumTransactionType,
     TypeProduct,
-    TypeProductFetch,
-    TypeNFTTransactionFetch,
     TypeNFTTransaction,
-    TypeFavouritesFetch,
     TypeSingleNFTBid,
-    TypeSingleNFTBidFetch,
     TypeNFTHisotry,
 } from 'src/types/product-types';
-import { FETCH_CONFIG_JSON, getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTLatestBids } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Web3 from 'web3';
@@ -48,7 +41,7 @@ import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankNFTBid, blankMyNFTHistory, blankNFTTxs } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -68,241 +61,75 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
 
-    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...blankNFTItem };
-
-        if (prodDetail !== undefined) {
-            const itemObject: TypeProductFetch = prodDetail;
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            product.description = itemObject.description;
-            product.author =
-                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.authorDescription = itemObject.authorDescription || ' ';
-            product.authorImg = product.image; // -- no proper value
-            product.authorAddress = itemObject.royaltyOwner;
-            product.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
-            product.holder = itemObject.holder;
-            product.tokenIdHex = itemObject.tokenIdHex;
-            product.category = itemObject.category;
-            product.royalties = parseInt(itemObject.royalties) / 1e4;
-            product.orderId = itemObject.orderId;
-            product.status = itemObject.status;
-            let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + '' + createTime.time;
-            if (itemObject.endTime) {
-                let endTime = getTime(itemObject.endTime); // no proper value
-                product.endTime = endTime.date + ' ' + endTime.time;
-            } else {
-                product.endTime = '';
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            if (!unmounted) {
+                setProductDetail(_MyNFTItem);
             }
-            product.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-        }
-        setProductDetail(product);
-    };
-
-    const getFetchData = async () => {
-        getProductDetail(
-            await getELA2USD(),
-            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
-        );
-    };
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
     useEffect(() => {
-        getFetchData();
-    }, []);
-
-    const getLatestTransaction = async () => {
-        const resLatestTransaction = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-            FETCH_CONFIG_JSON,
-        );
-        const dataLatestTransaction = await resLatestTransaction.json();
-        const arrLatestTransaction = dataLatestTransaction.data;
-
-        let _latestTransList: Array<TypeNFTTransaction> = [];
-        let _prodTransHistory: Array<TypeNFTHisotry> = [];
-        for (let i = 0; i < arrLatestTransaction.length; i++) {
-            let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
-            if (itemObject.event === 'Transfer') continue;
-            let _transaction: TypeNFTTransaction = { ...blankNFTTxs };
-            switch (itemObject.event) {
-                case 'Mint':
-                    _transaction.type = enumTransactionType.CreatedBy;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                case 'CreateOrderForSale':
-                    _transaction.type = enumTransactionType.ForSale;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'CreateOrderForAuction':
-                    _transaction.type = enumTransactionType.OnAuction;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'BidOrder':
-                    _transaction.type = enumTransactionType.Bid;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                case 'ChangeOrderPrice':
-                    _transaction.type = enumTransactionType.PriceChanged;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'CancelOrder':
-                    _transaction.type = enumTransactionType.SaleCanceled;
-                    _transaction.user =
-                        itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
-                    break;
-                case 'BuyOrder':
-                    _transaction.type = enumTransactionType.SoldTo;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
-                // case 'Transfer':
-                //     _transaction.type = enumTransactionType.Transfer;
-                //     break;
-                case 'SettleBidOrder':
-                    _transaction.type = enumTransactionType.SettleBidOrder;
-                    _transaction.user =
-                        itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
-                    break;
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
+            if (!unmounted) {
+                setTransactionsList(_NFTTxs.txs);
+                setProdTransHistory(_NFTTxs.history);
             }
-            _transaction.price = parseInt(itemObject.price) / 1e18;
-            _transaction.txHash = itemObject.tHash;
-            let timestamp = getTime(itemObject.timestamp.toString());
-            _transaction.time = timestamp.date + ' ' + timestamp.time;
-            _latestTransList.push(_transaction);
-
-            if (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder') {
-                let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
-                _prodTrans.type =
-                    itemObject.event === 'Mint'
-                        ? 'Created'
-                        : itemObject.to === signInDlgState.walletAccounts[0]
-                        ? 'Bought From'
-                        : 'Sold To';
-                _prodTrans.price = parseInt(itemObject.price) / 1e18;
-                _prodTrans.user = reduceHexAddress(
-                    _prodTrans.type === 'Bought From' ? itemObject.from : itemObject.to,
-                    4,
-                ); // no proper data
-                let prodTransTimestamp = getTime(itemObject.timestamp.toString());
-                _prodTrans.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-                if (itemObject.event === 'BuyOrder')
-                    _prodTrans.saleType =
-                        arrLatestTransaction[i + 2].event === 'CreateOrderForSale'
-                            ? enumTransactionType.ForSale
-                            : enumTransactionType.OnAuction;
-                _prodTrans.txHash = itemObject.tHash;
-                _prodTransHistory.push(_prodTrans);
-            }
-        }
-        setTransactionsList(_latestTransList);
-        setProdTransHistory(_prodTransHistory);
-    };
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
 
     useEffect(() => {
-        getLatestTransaction();
-    }, [transactionSortBy]);
-
-    const getLatestBid = async () => {
-        const resLatestBid = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${params.id}&address=${signInDlgState.walletAccounts[0]}&pageNum=1&pageSize=5`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataLatestBid = await resLatestBid.json();
-        const arrLatestBid = dataLatestBid.data;
-
-        let _latestBidsList: any = [];
-        for (let i = 0; i < arrLatestBid.others.length; i++) {
-            let itemObject: TypeSingleNFTBidFetch = arrLatestBid.others[i];
-            let _bid: TypeSingleNFTBid = { ...blankNFTBid };
-            _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-            _bid.price = parseFloat(itemObject.price) / 1e18;
-            _bid.orderId = itemObject.orderId;
-            let timestamp = getTime(itemObject.timestamp);
-            _bid.time = timestamp.date + ' ' + timestamp.time;
-            _latestBidsList.push(_bid);
-        }
-        setBidsList(_latestBidsList);
-
-        // let _myLatestBidsList: any = [];
-        // for (let i = 0; i < arrLatestBid.yours.length; i++) {
-        //     let itemObject: TypeSingleNFTBidFetch = arrLatestBid.yours[i];
-        //     let _bid: TypeSingleNFTBid = { ...defaultBidValue };
-        //     _bid.user = reduceHexAddress(itemObject.buyerAddr, 4); // no proper data username
-        //     _bid.price = parseFloat(itemObject.price) / 1e18;
-        //     _bid.orderId = itemObject.orderId;
-        //     let timestamp = getTime(itemObject.timestamp);
-        //     _bid.time = timestamp.date + ' ' + timestamp.time;
-        //     _myLatestBidsList.push(_bid);
-        // }
-        // setMyBidsList(_myLatestBidsList);
-    };
-
-    useEffect(() => {
-        getLatestBid();
-    }, [bidSortBy]);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 5);
+            if (!unmounted) {
+                setBidsList(_NFTBids.others);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
 
     // change price tx fee
-    const setChangePriceTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setChangePriceTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setChangePriceTxFee();
     }, [dialogState.changePriceDlgStep]);
 
     // cancel sale tx fee
-    const setCancelSaleTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setCancelSaleTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setCancelSaleTxFee();
     }, [dialogState.cancelSaleDlgStep]);
 
     // accept bid tx Fee
-    const setAcceptBidTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setAcceptBidTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setAcceptBidTxFee();
     }, [dialogState.acceptBidDlgStep]);
 
@@ -316,42 +143,47 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         setProductDetail(prodDetail);
     };
 
-    const updateProductViews = (tokenId: string) => {
-        if (signInDlgState.isLoggedIn && tokenId) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-            const reqBody = {
-                token: signInDlgState.token,
-                tokenId: tokenId,
-                did: signInDlgState.userDid,
-            };
-            fetch(reqUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reqBody),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        setProductDetail((prevState: TypeProduct) => {
-                            const prodDetail: TypeProduct = { ...prevState };
-                            prodDetail.views += 1;
-                            return prodDetail;
-                        });
-                    } else {
-                        console.log(data);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
     useEffect(() => {
+        let unmounted = false;
+        const updateProductViews = (tokenId: string) => {
+            if (signInDlgState.isLoggedIn && tokenId) {
+                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+                const reqBody = {
+                    token: signInDlgState.token,
+                    tokenId: tokenId,
+                    did: signInDlgState.userDid,
+                };
+                fetch(reqUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reqBody),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.code === 200) {
+                            if (!unmounted) {
+                                setProductDetail((prevState: TypeProduct) => {
+                                    const prodDetail: TypeProduct = { ...prevState };
+                                    prodDetail.views += 1;
+                                    return prodDetail;
+                                });
+                            }
+                        } else {
+                            console.log(data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        };
         updateProductViews(productDetail.tokenId);
-    }, [productDetail.tokenId]);
+        return () => {
+            unmounted = true;
+        };
+    }, [productDetail.tokenId, signInDlgState.token, signInDlgState.userDid]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

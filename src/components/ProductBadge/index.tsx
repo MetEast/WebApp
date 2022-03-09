@@ -127,6 +127,7 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
         <Container
             direction="row"
             alignItems="center"
+            display={badgeType === enumBadgeType.SaleEnds ? 'none' : 'flex'}
             spacing={1}
             sx={{ background: styles[badgeType].background, color: styles[badgeType].color }}
         >

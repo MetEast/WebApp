@@ -66,21 +66,21 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, 1, 5);
+            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs);
+                setTransactionsList(_NFTTxs.txs);
             }
         };
         getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy]);
+    }, [transactionSortBy, params.id]);
 
     useEffect(() => {
         let unmounted = false;
@@ -95,7 +95,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [bidSortBy, signInDlgState.walletAccounts]);
+    }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
     // -------------- Fetch Data -------------- //
 
     useEffect(() => {
@@ -159,7 +159,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

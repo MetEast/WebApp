@@ -69,7 +69,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 urlCoverImage = coverImageChanged ? `meteast:image:${added.path}` : signInDlgState.userCoverImage;
                 return uploadUserProfile(
                     signInDlgState.token,
-                    `did:elastos:${signInDlgState.userDid}`,
+                    signInDlgState.loginType === '1' ? `did:elastos:${signInDlgState.userDid}` : signInDlgState.userDid,
                     userName,
                     userDescription,
                     urlAvatar,
@@ -193,12 +193,13 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             <PinkButton
                                 size="small"
                                 sx={{ width: 120 }}
-                                onClick={() =>
+                                onClick={() => {
+                                    if (coverImageChanged === false) setCoverImageChanged(true);
                                     setUserCoverImageURL({
                                         preview: '',
                                         raw: new File([''], ''),
-                                    })
-                                }
+                                    });
+                                }}
                             >
                                 <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
                                 {`Delete`}
@@ -231,7 +232,13 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 <SecondaryButton fullWidth onClick={onClose} sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Close
                 </SecondaryButton>
-                <PrimaryButton fullWidth disabled={onProgress} onClick={handleSubmit}>
+                <PrimaryButton
+                    fullWidth
+                    disabled={onProgress}
+                    onClick={() => {
+                        handleSubmit();
+                    }}
+                >
                     CONFIRM
                 </PrimaryButton>
             </Stack>

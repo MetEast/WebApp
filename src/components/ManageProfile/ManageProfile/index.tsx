@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Typography, Box, Grid } from '@mui/material';
+import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -7,12 +7,12 @@ import { useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
 import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
 import EditProfile from 'src/components/TransactionDialogs/EditProfile';
-import { enumBadgeType, TypeYourEarning, TypeYourEarningFetch } from 'src/types/product-types';
+import { TypeYourEarning } from 'src/types/product-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
-import { getTotalEarned, getTodayEarned, FETCH_CONFIG_JSON } from 'src/services/fetch';
-import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
+import { getMyTotalEarned, getMyTodayEarned, getMyEarnedList } from 'src/services/fetch';
+import { reduceHexAddress } from 'src/services/common';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -23,16 +23,9 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
     const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
-    const [toatlEarned, setTotalEarned] = useState<number>(0);
-    const [todayEarned, setTodayEarned] = useState<number>(0);
+    const [toatlEarned, setTotalEarned] = useState<string>('0');
+    const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
-    const blankMyEarningValue: TypeYourEarning = {
-        avatar: '',
-        title: '',
-        time: '',
-        price: 0,
-        badge: enumBadgeType.Other,
-    };
     const showSnackBar = () => {
         enqueueSnackbar('Copied to Clipboard!', {
             variant: 'success',
@@ -40,38 +33,23 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         });
     };
 
-    const getPersonalData = async () => {
-        setTotalEarned(await getTotalEarned(signInDlgState.walletAccounts[0]));
-        setTodayEarned(await getTodayEarned(signInDlgState.walletAccounts[0]));
-        getEarningList();
-    };
-
-    const getEarningList = async () => {
-        const resEarnedResult = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${signInDlgState.walletAccounts[0]}`,
-            FETCH_CONFIG_JSON,
-        );
-        const dataEarnedResult = await resEarnedResult.json();
-        const arrEarnedResult = dataEarnedResult === undefined ? [] : dataEarnedResult.data;
-
-        const _myEarningList: any = [];
-        for (let i = 0; i < arrEarnedResult.length; i++) {
-            const itemObject: TypeYourEarningFetch = arrEarnedResult[i];
-            let _earning: TypeYourEarning = { ...blankMyEarningValue };
-            _earning.title = itemObject.name;
-            _earning.avatar = getImageFromAsset(itemObject.thumbnail);
-            _earning.price = itemObject.iEarned / 1e18;
-            let timestamp = getTime(itemObject.updateTime);
-            _earning.time = timestamp.date + ' ' + timestamp.time;
-            _earning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
-            _myEarningList.push(_earning);
-        }
-        setEarningList(_myEarningList);
-    };
-
     useEffect(() => {
-        if (signInDlgState.walletAccounts.length) getPersonalData();
-    }, [signInDlgState]);
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _totalEarned = await getMyTotalEarned(signInDlgState.walletAccounts[0]);
+            const _todayEarned = await getMyTodayEarned(signInDlgState.walletAccounts[0]);
+            const _myEarnedList = await getMyEarnedList(signInDlgState.walletAccounts[0]);
+            if (!unmounted) {
+                setTotalEarned(_totalEarned);
+                setTodayEarned(_todayEarned);
+                setEarningList(_myEarnedList);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
 
     return (
         <>
@@ -87,7 +65,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 <Stack direction="row" justifyContent="space-between" display={{ xs: 'flex', md: 'none' }}>
                     <Stack>
                         <Typography fontSize={20} fontWeight={900}>
-                            {toatlEarned.toFixed(2)} ELA
+                            {toatlEarned} ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Total Earned
@@ -95,7 +73,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     </Stack>
                     <Stack alignItems="flex-end">
                         <Typography fontSize={20} fontWeight={900}>
-                            {todayEarned.toFixed(2)} ELA
+                            {todayEarned} ELA
                         </Typography>
                         <Typography fontSize={16} fontWeight={400}>
                             Earned Today
@@ -146,23 +124,25 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         </Typography>
                                     </Stack>
                                 )}
-                                <Stack direction="row" spacing={0.5}>
-                                    <CopyToClipboard
-                                        text={`did:elastos:${signInDlgState.userDid}`}
-                                        onCopy={showSnackBar}
-                                    >
-                                        <CopyToClipboardButton>
-                                            <Icon
-                                                icon="ph:copy"
-                                                color="#1890FF"
-                                                style={{ marginTop: '1px', cursor: 'pointer' }}
-                                            />
-                                        </CopyToClipboardButton>
-                                    </CopyToClipboard>
-                                    <Typography fontSize={14} fontWeight={400}>
-                                        {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
-                                    </Typography>
-                                </Stack>
+                                {signInDlgState.loginType === '1' && (
+                                    <Stack direction="row" spacing={0.5}>
+                                        <CopyToClipboard
+                                            text={`did:elastos:${signInDlgState.userDid}`}
+                                            onCopy={showSnackBar}
+                                        >
+                                            <CopyToClipboardButton>
+                                                <Icon
+                                                    icon="ph:copy"
+                                                    color="#1890FF"
+                                                    style={{ marginTop: '1px', cursor: 'pointer' }}
+                                                />
+                                            </CopyToClipboardButton>
+                                        </CopyToClipboard>
+                                        <Typography fontSize={14} fontWeight={400}>
+                                            {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
+                                        </Typography>
+                                    </Stack>
+                                )}
                             </>
                         )}
                     </Grid>
