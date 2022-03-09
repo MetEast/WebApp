@@ -31,7 +31,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     display: { xs: 'none', sm: 'block' },
                 }}
             >
-                <Container>
+                <Container sx={{ overflow: 'visible' }}>
                     <TopNavbar />
                 </Container>
             </Box>
