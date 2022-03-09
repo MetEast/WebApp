@@ -17,29 +17,36 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [amount, setAmount] = useState<number>(dialogState.buyBlindLeftAmount < 1 ? 0 : 1);
 
     const selectFromBlindBox = async () => {
+        let unmounted = false;
         const resNFTList = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/api/v1/selectBlindBoxToken?id=${dialogState.buyBlindBoxId}&count=${amount}`,
             FETCH_CONFIG_JSON,
         );
         const dataNFTList = await resNFTList.json();
         const selectedTokens: Array<TypeBlindBoxCandidate> = dataNFTList.data.result;
-        let arrOrderIds: string[] = [];
-        let arrTokenIds: string[] = [];
-        let arrAssets: string[] = [];
+        
+        const arrOrderIds: string[] = [];
+        const arrTokenIds: string[] = [];
+        const arrAssets: string[] = [];
         selectedTokens.forEach((item: TypeBlindBoxCandidate) => {
             arrOrderIds.push(item.orderId);
             arrTokenIds.push(item.tokenId);
             arrAssets.push(getImageFromAsset(item.asset));
         });
-        setDialogState({
-            ...dialogState,
-            buyBlindBoxDlgStep: 1,
-            buyBlindBoxDlgOpened: true,
-            buyBlindAmount: amount,
-            buyBlindOrderIds: arrOrderIds,
-            buyBlindImages: arrAssets,
-            buyBlindTokenIds: arrTokenIds,
-        });
+        if (!unmounted) {
+            setDialogState({
+                ...dialogState,
+                buyBlindBoxDlgStep: 1,
+                buyBlindBoxDlgOpened: true,
+                buyBlindAmount: amount,
+                buyBlindOrderIds: arrOrderIds,
+                buyBlindImages: arrAssets,
+                buyBlindTokenIds: arrTokenIds,
+            });
+        }
+        return () => {
+            unmounted = true;
+        };
     };
     return (
         <Stack spacing={5} width={320}>

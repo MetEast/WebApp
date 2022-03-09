@@ -154,7 +154,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 {matchDownMd ? (
                     <Grid container columnSpacing={3.5} rowGap={2}>
                         {itemList.map((item, index) => (
-                            <Grid item xs={6}>
+                            <Grid item key={index} xs={6}>
                                 <Stack width="100%" spacing={1}>
                                     <ImageBox
                                         selected={itemChecked[index] === undefined ? false : itemChecked[index]}

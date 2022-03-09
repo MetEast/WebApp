@@ -83,6 +83,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const sendSoldBlindBoxTokenIds = (txHash: string) => {
+        let unmounted = false;
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
         const reqBody = {
             token: signInDlgState.token,
@@ -99,13 +100,15 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.code === 200) {
-                    setOnProgress(false);
-                    setDialogState({
-                        ...dialogState,
-                        buyBlindBoxDlgOpened: true,
-                        buyBlindBoxDlgStep: 2,
-                        buyBlindTxHash: txHash,
-                    });
+                    if (!unmounted) {
+                        setOnProgress(false);
+                        setDialogState({
+                            ...dialogState,
+                            buyBlindBoxDlgOpened: true,
+                            buyBlindBoxDlgStep: 2,
+                            buyBlindTxHash: txHash,
+                        });
+                    }
                 } else {
                     console.log(data);
                 }
@@ -113,6 +116,9 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             .catch((error) => {
                 console.log(error);
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     const handleBuyBlindBox = async () => {
