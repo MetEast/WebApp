@@ -39,6 +39,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             const formData = new FormData();
             formData.append('token', signInDlgState.token);
             formData.append('did', signInDlgState.userDid);
+            formData.append('address', signInDlgState.walletAccounts[0]);
             formData.append('name', dialogState.crtBlindTitle);
             formData.append('description', dialogState.crtBlindDescription);
             formData.append('asset', imgUri);

@@ -28,7 +28,7 @@ import {
     TypeNFTHisotry,
     TypeNFTTransactionFetch,
 } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList } from 'src/services/fetch';
+import { getELA2USD, getMyCreatedNFT, getMyFavouritesList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -42,55 +42,21 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const burnAddress = '0x0000000000000000000000000000000000000000';
 
-    const getProductDetail = async (tokenPriceRate: number, favouritesList: Array<TypeFavouritesFetch>) => {
-        const resProductDetail = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${params.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
-        const dataProductDetail = await resProductDetail.json();
-        const prodDetail = dataProductDetail.data;
-        var product: TypeProduct = { ...blankNFTItem };
-
-        if (prodDetail !== undefined) {
-            const itemObject: TypeProductFetch = prodDetail;
-            product.tokenId = itemObject.tokenId;
-            product.name = itemObject.name;
-            product.image = getImageFromAsset(itemObject.asset);
-            product.price_ela = itemObject.price / 1e18;
-            product.price_usd = product.price_ela * tokenPriceRate;
-            product.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            product.likes = itemObject.likes;
-            product.views = itemObject.views;
-            product.isLike =
-                favouritesList.findIndex((value: TypeFavouritesFetch) =>
-                    selectFromFavourites(value, itemObject.tokenId),
-                ) === -1
-                    ? false
-                    : true;
-            product.description = itemObject.description;
-            product.author =
-                itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-            product.authorDescription = itemObject.authorDescription || ' ';
-            product.authorImg = product.image; // -- no proper value
-            product.authorAddress = itemObject.royaltyOwner;
-            product.holderName =
-                itemObject.holderName === '' || itemObject.holder === itemObject.royaltyOwner
-                    ? itemObject.authorName
-                    : itemObject.holderName;
-            product.holder = itemObject.holder;
-            product.tokenIdHex = itemObject.tokenIdHex;
-            product.royalties = parseInt(itemObject.royalties) / 1e4;
-            product.category = itemObject.category;
-            let createTime = getUTCTime(itemObject.createTime);
-            product.createTime = createTime.date + '' + createTime.time;
-        }
-        setProductDetail(product);
-    };
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _MyCreatedNFTItem = await getMyCreatedNFT(params.id, ELA2USD, likeList);
+            if (!unmounted) {
+                setProductDetail(_MyCreatedNFTItem);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
     const getLatestTransaction = async () => {
         const resLatestTransaction = await fetch(
@@ -122,10 +88,6 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     };
 
     const getFetchData = async () => {
-        getProductDetail(
-            await getELA2USD(),
-            await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid),
-        );
         getLatestTransaction();
     };
 
@@ -202,7 +164,6 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                         <ProductBadge badgeType={enumBadgeType.Created} />
                         <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
-                    {/* <ELAPrice price_ela={199} price_usd={480} marginTop={3} /> */}
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
                         onClick={() => {
