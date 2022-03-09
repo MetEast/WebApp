@@ -500,6 +500,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             >
                 <ConnectDID
                     onConnect={async (wallet: string) => {
+                        _setSignInState({ ..._signInState, signInDlgOpened: true });
                         if (wallet === 'EE') {
                             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
                                 await signOutWithEssentialsWithoutRefresh();
