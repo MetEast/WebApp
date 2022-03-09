@@ -360,7 +360,7 @@ export const getNFTLatestTxs = async (tokenId: string | undefined, address: stri
                 _NFTTxHistory.type === 'Bought From' ? itemObject.from : itemObject.to,
                 4,
             ); // no proper data
-            let prodTransTimestamp = getTime(itemObject.timestamp.toString());
+            const prodTransTimestamp = getTime(itemObject.timestamp.toString());
             _NFTTxHistory.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
             if (itemObject.event === 'BuyOrder')
                 _NFTTxHistory.saleType =
