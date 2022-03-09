@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -45,6 +45,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
+    const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
@@ -71,7 +72,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 setProductDetail(_MyNFTItem);
             }
         };
-        getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        else navigate('/');
         return () => {
             unmounted = true;
         };
