@@ -21,18 +21,12 @@ import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
 import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
-import { isInAppBrowser } from 'src/services/wallet';
 import { TypeSelectItem } from 'src/types/select-types';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -43,14 +37,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
-
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
 
     useEffect(() => {
         let unmounted = false;
@@ -83,24 +69,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
-
-    // change price tx fee
-    useEffect(() => {
-        const setChangePriceTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setChangePriceTxFee();
-    }, [dialogState.changePriceDlgStep]);
-
-    // cancel sale tx fee
-    useEffect(() => {
-        const setCancelSaleTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setCancelSaleTxFee();
-    }, [dialogState.cancelSaleDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };

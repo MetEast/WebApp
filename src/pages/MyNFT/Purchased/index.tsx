@@ -18,17 +18,11 @@ import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from '
 import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import { isInAppBrowser } from 'src/services/wallet';
 import { TypeSelectItem } from 'src/types/select-types';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -39,13 +33,6 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
     
     useEffect(() => {
         let unmounted = false;
@@ -78,14 +65,6 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
-
-    useEffect(() => {
-        const setSaleTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, sellTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setSaleTxFee();
-    }, [dialogState.createNFTDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };

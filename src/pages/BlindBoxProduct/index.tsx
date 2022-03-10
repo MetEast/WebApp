@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Stack, Grid, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -20,27 +17,16 @@ import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/Purch
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
 import { getBBItem, getELA2USD } from 'src/services/fetch';
 import { reduceHexAddress } from 'src/services/common';
-import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -57,14 +43,6 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
-
-    useEffect(() => {
-        const setBuyBlindBoxTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, buyBlindTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setBuyBlindBoxTxFee();
-    }, [dialogState.buyBlindBoxDlgStep]);
 
     const updateBlindBoxLikes = (type: string) => {
         setBlindBoxDetail((prevState: TypeProduct) => {

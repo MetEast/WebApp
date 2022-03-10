@@ -26,19 +26,13 @@ import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
 import { TypeSelectItem } from 'src/types/select-types';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
-import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -50,13 +44,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -104,25 +91,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         };
     }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
     // -------------- Fetch Data -------------- //
-
-    // place bid tx Fee
-    useEffect(() => {
-        const setPlaceBidTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, placeBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setPlaceBidTxFee();
-    }, [dialogState.placeBidDlgStep]);
-
-    // accept bid tx Fee
-    useEffect(() => {
-        const setAcceptBidTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setAcceptBidTxFee();
-    }, [dialogState.acceptBidDlgStep]);
-
     // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
         setProductDetail((prevState: TypeProduct) => {

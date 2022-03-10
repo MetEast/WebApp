@@ -24,9 +24,6 @@ import {
 import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTLatestBids } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
 import ModalDialog from 'src/components/ModalDialog';
 import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
 import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
@@ -39,11 +36,8 @@ import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
-import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -59,14 +53,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
 
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
-    
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
@@ -112,33 +98,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
-
-    // change price tx fee
-    useEffect(() => {
-        const setChangePriceTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setChangePriceTxFee();
-    }, [dialogState.changePriceDlgStep]);
-
-    // cancel sale tx fee
-    useEffect(() => {
-        const setCancelSaleTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setCancelSaleTxFee();
-    }, [dialogState.cancelSaleDlgStep]);
-
-    // accept bid tx Fee
-    useEffect(() => {
-        const setAcceptBidTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setAcceptBidTxFee();
-    }, [dialogState.acceptBidDlgStep]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
