@@ -441,7 +441,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         // const arrDid = user.did.split(':');
         // const did = arrDid.length === 3 ? arrDid[2] : user.did;
         getDidUri(user.did, '', user.name).then((didUri: string) => {
-            console.log('+++++++++++++++', user.did);
             setSignInDlgState({
                 ..._signInState,
                 token: cookies.METEAST_TOKEN,

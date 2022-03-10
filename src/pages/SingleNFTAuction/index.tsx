@@ -281,7 +281,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                     </SecondaryButton>
                                 </Stack>
                             )}
-                            {productDetail.isExpired && (
+                            {productDetail.isExpired && bidsList.length !== 0 && (
                                 <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                     <SecondaryButton
                                         sx={{ width: '100%', height: 40 }}
