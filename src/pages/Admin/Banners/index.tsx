@@ -4,8 +4,12 @@ import { AdminTableColumn, AdminBannersItemType } from 'src/types/admin-table-da
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
 import { PrimaryButton } from 'src/components/Buttons/styles';
+import ModalDialog from 'src/components/ModalDialog';
+import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
 
 const AdminBanners: React.FC = (): JSX.Element => {
+    const [createBannerDlgOpen, setCreateBannerDlgOpen] = useState<boolean>(false);
+
     const columns: AdminTableColumn[] = [
         {
             id: 'banner_id',
@@ -97,20 +101,35 @@ const AdminBanners: React.FC = (): JSX.Element => {
     const [tabledata, setTabledata] = useState(data);
 
     return (
-        <Stack height="100%" spacing={4}>
-            <Stack direction="row" alignItems="flex-end" columnGap={1}>
-                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon
-                        icon="ph:plus"
-                        fontSize={20}
-                        color="white"
-                        style={{ marginBottom: 2, marginRight: 4 }}
-                    />
-                    {`New Banner`}
-                </PrimaryButton>
+        <>
+            <Stack height="100%" spacing={4}>
+                <Stack direction="row" alignItems="flex-end" columnGap={1}>
+                    <PrimaryButton
+                        size="small"
+                        sx={{ paddingX: 3 }}
+                        onClick={() => {
+                            setCreateBannerDlgOpen(true);
+                        }}
+                    >
+                        <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
+                        {`New Banner`}
+                    </PrimaryButton>
+                </Stack>
+                <Table tabledata={tabledata} columns={columns} />
             </Stack>
-            <Table tabledata={tabledata} columns={columns} />
-        </Stack>
+            <ModalDialog
+                open={createBannerDlgOpen}
+                onClose={() => {
+                    setCreateBannerDlgOpen(false);
+                }}
+            >
+                <CreateBanner
+                    onClose={() => {
+                        setCreateBannerDlgOpen(false);
+                    }}
+                />
+            </ModalDialog>
+        </>
     );
 };
 
