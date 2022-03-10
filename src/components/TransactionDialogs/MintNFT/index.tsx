@@ -21,17 +21,16 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-    // update later
-    const setMintTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, mintTXFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-    const setSaleTxFee = async () => {
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, sellTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
 
     useEffect(() => {
+        const setMintTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, mintTXFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
+        const setSaleTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, sellTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setMintTxFee();
         setSaleTxFee();
     }, [dialogState.createNFTDlgStep]);
