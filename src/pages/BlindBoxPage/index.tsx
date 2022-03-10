@@ -20,7 +20,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
-    const [category, setCategory] = useState<TypeSelectItem>();
     const [keyWord, setKeyWord] = useState<string>('');
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([
         blankBBItem,
@@ -39,7 +38,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, undefined);
             const _searchedBBList = await getBBItemList(
                 searchParams,
                 ELA2USD,
@@ -54,7 +53,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord, category]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord]); //, productViewMode
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //
@@ -79,7 +78,6 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                 min: minPrice === '' ? undefined : parseFloat(minPrice),
                 max: maxPrice === '' ? undefined : parseFloat(maxPrice),
             });
-            setCategory(category);
         }
     };
     // -------------- Option Bar -------------- //

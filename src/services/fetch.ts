@@ -117,7 +117,7 @@ export const getSearchParams = (
     filterRange: TypeFilterRange,
     filters: Array<enumFilterOption>,
     category: TypeSelectItem | undefined,
-) => {
+) => {    
     let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
     if (sortBy !== undefined) {
         switch (sortBy.value) {
