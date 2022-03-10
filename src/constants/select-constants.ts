@@ -45,38 +45,47 @@ export const mintNFTCategoryOptions: Array<TypeSelectItem> = [
     {
         label: 'Original',
         value: 'Original',
+        icon: 'ph:fingerprint',
     },
     {
         label: 'Museum',
         value: 'Museum',
+        icon: 'ph:bank',
     },
     {
         label: 'Arts',
         value: 'Arts',
+        icon: 'ph:paint-brush',
     },
     {
         label: 'Sports',
         value: 'Sports',
+        icon: 'ph:football',
     },
     {
         label: 'Dimension',
         value: 'Dimension',
+        icon: 'ph:line-segments',
     },
     {
         label: 'Pets',
         value: 'Pets',
+        icon: 'ph:paw-print',
     },
     {
         label: 'Recreation',
         value: 'Recreation',
+        icon: 'ph:video-camera',
     },
     {
         label: 'Star',
         value: 'Star',
+        icon: 'ph:star',
     },
     {
         label: 'Other',
         value: 'Other',
+        icon: 'ph:leaf',
     },
 ];
 
