@@ -198,7 +198,7 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
             itemObject.createdName === '' ? reduceHexAddress(itemObject.createdAddress, 4) : itemObject.createdName;
         _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.isLike = loginState
-            ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === `did:elastos:${did}`) === -1
+            ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === did) === -1
                 ? false
                 : true
             : false;

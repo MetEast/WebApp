@@ -16,6 +16,9 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
     bidsList: Array<TypeSingleNFTBid>;
@@ -24,9 +27,17 @@ export interface ComponentProps {
 }
 
 const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHandler }): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [sortby, setSortby] = useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     const sortbyOptions: Array<TypeSelectItem> = [
         {
@@ -49,16 +60,11 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
     };
 
     // tx Fee
-    const setAcceptBidTxFee = async () => {
-        const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-            ? window.elastos.getWeb3Provider()
-            : essentialsConnector.getWalletConnectProvider();
-        const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-        const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-        setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-    };
-
     useEffect(() => {
+        const setAcceptBidTxFee = async () => {
+            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
+            setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
+        };
         setAcceptBidTxFee();
     }, [dialogState.acceptBidDlgStep]);
 

@@ -13,6 +13,9 @@ import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+import { useSignInContext } from 'src/context/SignInContext';
 
 interface ComponentProps {
     isLoggedIn: boolean;
@@ -27,6 +30,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
     bidsList,
     onlyShowDownSm = false,
 }): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
 
     const bidsTblColumns = [
@@ -37,7 +41,10 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     // update bid tx fee
     useEffect(() => {

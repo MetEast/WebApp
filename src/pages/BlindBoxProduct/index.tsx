@@ -25,6 +25,8 @@ import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -35,18 +37,17 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
-            const _BBItem = await getBBItem(
-                params.id,
-                ELA2USD,
-                signInDlgState.loginType === '1' ? `did:elastos:${signInDlgState.userDid}` : signInDlgState.userDid,
-            );
+            const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
             }

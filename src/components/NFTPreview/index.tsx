@@ -53,7 +53,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
             const reqUrl =
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/` + likeState ? 'decTokenLikes' : 'incTokenLikes';
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
             const reqBody = isBlindBox
                 ? {
                       token: signInDlgState.token,

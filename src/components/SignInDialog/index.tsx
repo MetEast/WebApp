@@ -219,11 +219,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                             const user: UserTokenType = jwtDecode(token);
                             console.log('Sign in with EE: setting user to:', user);
+                            console.log(did);
                             _setSignInState((prevState: SignInState) => {
                                 const _state = { ...prevState };
                                 _state.isLoggedIn = true;
                                 _state.loginType = '1';
-                                _state.userDid = did;
+                                _state.userDid = user.did;
                                 if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
                                 if (user.description !== '' && user.description !== undefined)
                                     _state.userDescription = user.description;
@@ -437,14 +438,15 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             cookies.METEAST_TOKEN === undefined
                 ? { did: '', name: '', description: '', avatar: '', coverImage: '', exp: 0, iat: 0 }
                 : jwtDecode(cookies.METEAST_TOKEN);
-        const arrDid = user.did.split(':');
-        const did = arrDid.length === 3 ? arrDid[2] : user.did;
-        getDidUri(did, '', user.name).then((didUri: string) => {
+        // const arrDid = user.did.split(':');
+        // const did = arrDid.length === 3 ? arrDid[2] : user.did;
+        getDidUri(user.did, '', user.name).then((didUri: string) => {
+            console.log('+++++++++++++++', user.did);
             setSignInDlgState({
                 ..._signInState,
                 token: cookies.METEAST_TOKEN,
                 didUri: didUri,
-                userDid: did,
+                userDid: user.did,
                 userName: user.name,
                 userDescription: user.description,
                 userAvatar: user.avatar,
@@ -497,9 +499,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    useEffect(() => {
+    // useEffect(() => {
         console.log('--------accounts: ', signInDlgState);
-    }, [signInDlgState]);
+    // }, [signInDlgState]);
 
     return (
         <>

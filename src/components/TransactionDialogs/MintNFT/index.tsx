@@ -12,16 +12,22 @@ import CheckSaleDetails from '../ListNFT/CheckSaleDetails';
 import ArtworkIsNowForSale from '../ListNFT/ArtworkIsNowForSale';
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {}
 
 const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-
+    const {library} = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
     useEffect(() => {
         const setMintTxFee = async () => {
             const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
@@ -56,9 +62,11 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     setDialogState({ ...dialogState, errorMessageDlgOpened: false });
                 }}
             >
-                <ErrorMessage onClose={() => {
-                    setDialogState({ ...dialogState, errorMessageDlgOpened: false });
-                }} />
+                <ErrorMessage
+                    onClose={() => {
+                        setDialogState({ ...dialogState, errorMessageDlgOpened: false });
+                    }}
+                />
             </ModalDialog>
         </>
     );

@@ -22,7 +22,7 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
             const reqUrl =
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/` + likeState ? 'decTokenLikes' : 'incTokenLikes';
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
             const reqBody = {
                 token: signInDlgState.token,
                 tokenId: product.tokenId,

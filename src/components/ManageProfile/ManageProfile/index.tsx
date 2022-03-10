@@ -127,7 +127,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 {signInDlgState.loginType === '1' && (
                                     <Stack direction="row" spacing={0.5}>
                                         <CopyToClipboard
-                                            text={`did:elastos:${signInDlgState.userDid}`}
+                                            text={signInDlgState.userDid}
                                             onCopy={showSnackBar}
                                         >
                                             <CopyToClipboardButton>

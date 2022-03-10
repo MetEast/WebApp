@@ -37,6 +37,8 @@ import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -51,7 +53,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -99,7 +104,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         };
     }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
     // -------------- Fetch Data -------------- //
-    
+
     // place bid tx Fee
     useEffect(() => {
         const setPlaceBidTxFee = async () => {
@@ -108,7 +113,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         };
         setPlaceBidTxFee();
     }, [dialogState.placeBidDlgStep]);
-    
+
     // accept bid tx Fee
     useEffect(() => {
         const setAcceptBidTxFee = async () => {

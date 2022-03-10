@@ -16,6 +16,8 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 
 export interface ComponentProps {}
 
@@ -28,7 +30,10 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     const callMintNFT = async (_tokenId: string, _tokenUri: string, _didUri: string, _royaltyFee: number) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -134,7 +139,11 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
                     setDialogState({ ...dialogState, mintProgress: 30 });
-                    return uploadDidUri2Ipfs(signInDlgState.userDid, signInDlgState.userName, signInDlgState.userDescription);
+                    return uploadDidUri2Ipfs(
+                        signInDlgState.userDid,
+                        signInDlgState.userName,
+                        signInDlgState.userDescription,
+                    );
                 })
                 .then((didRecv: any) => {
                     // didUri
