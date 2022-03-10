@@ -11,7 +11,6 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
 import { getBBCandiates } from 'src/services/fetch';
-import { testItemsList } from 'src/constants/dummyData';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -21,7 +20,6 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
-    // const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>(testItemsList);
     const [keyWord, setKeyWord] = useState<string>('');
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);

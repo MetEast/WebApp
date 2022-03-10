@@ -102,11 +102,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         const item = priceHistoryUnitSelectOptions.find((option) => option.value === value);
         setPriceHistoryUnit(item);
     };
-    const getPriceValue = (value: string) => {
-        // const nItem = productPriceList.findIndex((option) => option.onlyDate === value);
-        const nItem = productPriceList.findIndex((option) => option.onlyDate.startsWith(value));
-        return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
-    };
     const params = useParams();
 
     useEffect(() => {
@@ -125,9 +120,13 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [priceHistoryUnit]);
+    }, [priceHistoryUnit, params.id]);
 
     useEffect(() => {
+        const getPriceValue = (value: string) => {
+            const nItem = productPriceList.findIndex((option) => option.onlyDate.startsWith(value));
+            return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
+        };
         let _latestPriceList: Array<TypeChartAxis> = [];
         let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
         for (let i = 0; i < _dateList.length; i++) {

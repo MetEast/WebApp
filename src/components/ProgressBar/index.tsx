@@ -8,7 +8,7 @@ const useStyles = makeStyles({
     bar: {
         transitionDuration: `100ms`,
     },
-    container: ({}) => ({
+    container: () => ({
         position: 'fixed',
         top: 0,
         width: '100%',

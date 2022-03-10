@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';

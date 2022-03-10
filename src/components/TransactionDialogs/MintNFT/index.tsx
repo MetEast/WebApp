@@ -28,6 +28,7 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
+    
     useEffect(() => {
         const setMintTxFee = async () => {
             const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();

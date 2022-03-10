@@ -118,7 +118,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [blindBoxDetail.tokenId]);
+    }, [blindBoxDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

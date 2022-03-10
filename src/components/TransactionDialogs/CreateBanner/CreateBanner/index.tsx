@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-import { useStyles } from './styles';
+// import { useStyles } from './styles';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
@@ -11,7 +11,7 @@ export interface ComponentProps {
 }
 
 const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
-    const classes = useStyles();
+    // const classes = useStyles();
 
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>('home');

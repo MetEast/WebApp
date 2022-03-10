@@ -32,6 +32,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
+    
     const callSettleAuctionOrder = async (_orderId: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
