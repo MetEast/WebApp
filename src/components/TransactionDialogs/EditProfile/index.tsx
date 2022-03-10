@@ -86,6 +86,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         userAvatar: urlAvatar,
                         userCoverImage: urlCoverImage,
                     });
+                    console.log('previous cookies: ', cookies);
                     setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                     enqueueSnackbar('Saved!', {
                         variant: 'success',

@@ -35,9 +35,9 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
+    const walletConnectWeb3 = signInDlgState.isLoggedIn
+        ? new Web3(signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any))
+        : new Web3(Web3.givenProvider);
 
     const sortbyOptions: Array<TypeSelectItem> = [
         {
@@ -65,8 +65,8 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
             const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
             setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
         };
-        setAcceptBidTxFee();
-    }, [dialogState.acceptBidDlgStep]);
+        if(signInDlgState.isLoggedIn) setAcceptBidTxFee();
+    }, [signInDlgState.isLoggedIn, dialogState.acceptBidDlgStep]);
 
     return (
         <>

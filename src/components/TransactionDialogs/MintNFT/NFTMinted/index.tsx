@@ -36,7 +36,7 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintIntroduction: '',
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
-                                mintTXFee: 0,
+                                mintTxFee: 0,
                                 mintTxHash: "",
                                 mintTokenId: "",
                                 mintTokenUri: "",

@@ -162,7 +162,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
                                 mintRoyalties: 0,
-                                mintTXFee: 0,
+                                mintTxFee: 0,
                                 createNFTDlgOpened: false,
                             });
                         }}

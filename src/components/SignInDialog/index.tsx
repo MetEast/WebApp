@@ -21,6 +21,7 @@ import {
     resetWalletConnector,
     getWalletBalance,
     isInAppBrowser,
+    getChainGasPrice,
 } from 'src/services/wallet';
 import { UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -36,7 +37,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [dialogState] = useDialogContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const { activate, active, library, chainId, account } = useWeb3React<Web3Provider>();
@@ -464,6 +465,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // update wallet balance after every transactions
     useEffect(() => {
+        let gasPrice: string = '0';
         if (linkType === '1') {
             getEssentialsWalletBalance().then((balance: string) => {
                 _setSignInState((prevState: SignInState) => {
@@ -471,6 +473,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
                     return _state;
                 });
+            });
+            getChainGasPrice(new Web3(walletConnectProvider as any)).then((gasPriceUnit: string) => {
+                gasPrice = gasPriceUnit;
             });
         } else {
             _setSignInState((prevState: SignInState) => {
@@ -483,23 +488,49 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     });
                 return _state;
             });
+            if (library) {
+                getChainGasPrice(new Web3(library?.provider as any)).then((gasPriceUnit: string) => {
+                    gasPrice = gasPriceUnit;
+                });
+            }
+            else gasPrice = '0';
         }
+        const estimatedFee: number = (parseFloat(gasPrice) * 5000000) / 1e18;
+        console.log('---------', estimatedFee)
+        setDialogState({
+            ...dialogState,
+            mintTxFee: estimatedFee,
+            sellTxFee: estimatedFee,
+            buyNowTxFee: estimatedFee,
+            changePriceTxFee: estimatedFee,
+            cancelSaleTxFee: estimatedFee,
+            acceptBidTxFee: estimatedFee,
+            placeBidTxFee: estimatedFee,
+            updateBidTxFee: estimatedFee,
+            cancelBidTxFee: estimatedFee,
+            crtBlindTxFee: estimatedFee,
+            buyBlindTxFee: estimatedFee,
+        });
     }, [
+        signInDlgState.isLoggedIn,
+        signInDlgState.loginType,
+        library,
         dialogState.createNFTDlgStep,
         dialogState.buyNowDlgStep,
+        dialogState.changePriceDlgStep,
+        dialogState.cancelSaleDlgStep,
+        dialogState.acceptBidDlgStep,
         dialogState.placeBidDlgStep,
         dialogState.updateBidDlgStep,
         dialogState.cancelBidDlgStep,
-        dialogState.acceptBidDlgStep,
-        dialogState.changePriceDlgStep,
-        dialogState.cancelSaleDlgStep,
+        dialogState.createBlindBoxDlgStep,
         dialogState.buyBlindBoxDlgStep,
     ]);
 
     if (linkType === '1') initConnectivitySDK();
 
     // useEffect(() => {
-        console.log('--------accounts: ', signInDlgState);
+    console.log('--------accounts: ', signInDlgState);
     // }, [signInDlgState]);
 
     return (
