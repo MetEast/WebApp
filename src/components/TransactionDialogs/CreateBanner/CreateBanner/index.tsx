@@ -6,9 +6,11 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    onClose: () => void;
+}
 
-const CreateBanner: React.FC<ComponentProps> = (): JSX.Element => {
+const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const classes = useStyles();
 
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
@@ -56,7 +58,7 @@ const CreateBanner: React.FC<ComponentProps> = (): JSX.Element => {
                                 </SecondaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="URL" placeholder="Enter URL" changeHandler={(value) => {}}/>
+                        <CustomTextField title="URL" placeholder="Enter URL" changeHandler={(value) => {}} />
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
                         <Stack spacing={1}>
@@ -128,12 +130,14 @@ const CreateBanner: React.FC<ComponentProps> = (): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="Sort" placeholder="" changeHandler={(value) => {}} />
+                        <CustomTextField title="Sort" inputValue="10" placeholder="" changeHandler={(value) => {}} />
                     </Grid>
                 </Grid>
             </Box>
             <Stack width="100%" direction="row" spacing={2}>
-                <SecondaryButton fullWidth>Back</SecondaryButton>
+                <SecondaryButton fullWidth onClick={onClose}>
+                    Back
+                </SecondaryButton>
                 <PrimaryButton fullWidth>Confirm</PrimaryButton>
             </Stack>
         </Stack>
