@@ -465,7 +465,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // update wallet balance after every transactions
     useEffect(() => {
-        let gasPrice: string = '0';
         if (linkType === '1') {
             getEssentialsWalletBalance().then((balance: string) => {
                 _setSignInState((prevState: SignInState) => {
@@ -473,9 +472,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
                     return _state;
                 });
-            });
-            getChainGasPrice(new Web3(walletConnectProvider as any)).then((gasPriceUnit: string) => {
-                gasPrice = gasPriceUnit;
             });
         } else {
             _setSignInState((prevState: SignInState) => {
@@ -488,32 +484,30 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     });
                 return _state;
             });
-            if (library) {
-                getChainGasPrice(new Web3(library?.provider as any)).then((gasPriceUnit: string) => {
-                    gasPrice = gasPriceUnit;
-                });
-            }
-            else gasPrice = '0';
         }
-        const estimatedFee: number = (parseFloat(gasPrice) * 5000000) / 1e18;
-        console.log('---------', estimatedFee)
-        setDialogState({
-            ...dialogState,
-            mintTxFee: estimatedFee,
-            sellTxFee: estimatedFee,
-            buyNowTxFee: estimatedFee,
-            changePriceTxFee: estimatedFee,
-            cancelSaleTxFee: estimatedFee,
-            acceptBidTxFee: estimatedFee,
-            placeBidTxFee: estimatedFee,
-            updateBidTxFee: estimatedFee,
-            cancelBidTxFee: estimatedFee,
-            crtBlindTxFee: estimatedFee,
-            buyBlindTxFee: estimatedFee,
-        });
+
+        if (!(linkType === '2' && !library)) {
+            getChainGasPrice(
+                new Web3(linkType === '1' ? (walletConnectProvider as any) : (library?.provider as any)),
+            ).then((gasPriceUnit: string) => {
+                const estimatedFee: number = (parseFloat(gasPriceUnit) * 5000000) / 1e18;
+                setDialogState({
+                    ...dialogState,
+                    mintTxFee: estimatedFee,
+                    sellTxFee: estimatedFee,
+                    buyNowTxFee: estimatedFee,
+                    changePriceTxFee: estimatedFee,
+                    cancelSaleTxFee: estimatedFee,
+                    acceptBidTxFee: estimatedFee,
+                    placeBidTxFee: estimatedFee,
+                    updateBidTxFee: estimatedFee,
+                    cancelBidTxFee: estimatedFee,
+                    crtBlindTxFee: estimatedFee,
+                    buyBlindTxFee: estimatedFee,
+                });
+            });
+        }
     }, [
-        signInDlgState.isLoggedIn,
-        signInDlgState.loginType,
         library,
         dialogState.createNFTDlgStep,
         dialogState.buyNowDlgStep,
