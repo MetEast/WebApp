@@ -146,9 +146,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
         } else {
             navigate('/');
         }
-            return () => {
-                unmounted = true;
-            };
+        return () => {
+            unmounted = true;
+        };
     }, [
         signInDlgState.isLoggedIn,
         signInDlgState.walletAccounts,
@@ -365,7 +365,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             {signInDlgState.userDescription}
                         </Typography>
                         <Stack direction="row" alignItems="center" spacing={2} marginTop={3.5}>
-                            <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'flex', sm: 'none' } }}>
+                            <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'none', sm: 'none' } }}>
                                 <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                                 <NotificationTypo>2</NotificationTypo>
                             </SecondaryButton>
