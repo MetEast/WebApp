@@ -1,6 +1,6 @@
 import { EssentialsConnector } from '@elastosfoundation/essentials-connector-client-browser';
 import { connectivity } from '@elastosfoundation/elastos-connectivity-sdk-js';
-import WalletConnectProvider from '@walletconnect/web3-provider';
+// import WalletConnectProvider from '@walletconnect/web3-provider';
 import { IConnector } from '@elastosfoundation/elastos-connectivity-sdk-js/typings/interfaces/connectors';
 
 export const essentialsConnector = new EssentialsConnector();

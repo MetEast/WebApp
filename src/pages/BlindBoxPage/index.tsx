@@ -38,7 +38,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, undefined);
             const _searchedBBList = await getBBItemList(
                 searchParams,
                 ELA2USD,
@@ -67,7 +67,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, opened: boolean) => {
+    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
         if (opened) {
             let filters: Array<enumFilterOption> = [];
             if (status === 0) filters.push(enumFilterOption.buyNow);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { Container } from './styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -56,7 +56,7 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                     </Stack>
                     <Stack spacing={3} height="100%">
                         {notificationsList.map((item, index) => (
-                            <NotificationItem data={item} />
+                            <NotificationItem key={index} data={item} />
                         ))}
                     </Stack>
                     <Stack direction="row" spacing={2}>

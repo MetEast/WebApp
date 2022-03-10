@@ -19,6 +19,8 @@ import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 
 export interface ComponentProps {}
 
@@ -32,7 +34,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     const uploadBlindBoxInfo = (imgUri: string) =>
         new Promise((resolve, reject) => {
@@ -61,7 +66,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     if (response.data.code === 200) {
                         resolve(true);
                     } else resolve(false);
-                }).catch((e) => {
+                })
+                .catch((e) => {
                     reject(e);
                 });
         });
@@ -243,8 +249,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 ret += `${item}, `;
             });
             return ret.slice(0, ret.length - 2);
-        }
-        else return ret;
+        } else return ret;
     };
 
     const classes = useStyles();

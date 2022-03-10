@@ -13,7 +13,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { mintNFTCategoryOptions } from 'src/constants/select-constants';
 
 interface ComponentProps {
-    changeHandler: (status: number, minPrice: string, maxPrice: string, opened: boolean) => void;
+    changeHandler: (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => void;
 }
 
 const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element => {
@@ -98,6 +98,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     setStatus(-1);
                     setMinPrice('');
                     setMaxPrice('');
+                    setCategory(undefined);
                 }}
             >
                 Clear all
@@ -107,7 +108,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     size={matchDownSm ? 'small' : undefined}
                     fullWidth
                     onClick={() => {
-                        changeHandler(status, minPrice, maxPrice, false);
+                        changeHandler(status, minPrice, maxPrice, category, false);
                     }}
                 >
                     close
@@ -116,7 +117,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     size={matchDownSm ? 'small' : undefined}
                     fullWidth
                     onClick={() => {
-                        changeHandler(status, minPrice, maxPrice, true);
+                        changeHandler(status, minPrice, maxPrice, category, true);
                     }}
                 >
                     apply

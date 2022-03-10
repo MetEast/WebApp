@@ -98,7 +98,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         [],
     );
 
-    const [tabledata, setTabledata] = useState(data);
+    const [tabledata] = useState(data);
 
     return (
         <>

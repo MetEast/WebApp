@@ -69,7 +69,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 urlCoverImage = coverImageChanged ? `meteast:image:${added.path}` : signInDlgState.userCoverImage;
                 return uploadUserProfile(
                     signInDlgState.token,
-                    signInDlgState.loginType === '1' ? `did:elastos:${signInDlgState.userDid}` : signInDlgState.userDid,
+                    signInDlgState.userDid,
                     userName,
                     userDescription,
                     urlAvatar,

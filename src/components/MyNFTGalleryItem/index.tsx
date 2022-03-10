@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
-import { Stack, Box, Grid, Typography, Skeleton } from '@mui/material';
+import { Stack, Box, Typography, Skeleton } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
 import { Icon } from '@iconify/react';
 import { enumMyNFTType } from 'src/types/product-types';
@@ -33,8 +33,8 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         event.preventDefault();
         event.stopPropagation();
         if (signInDlgState.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
-            reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
+            const reqUrl =
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
             const reqBody = {
                 token: signInDlgState.token,
                 tokenId: product.tokenId,
@@ -43,7 +43,6 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
             setLikeState(!likeState);
-            //
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
@@ -54,7 +53,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-                        console.log('succeed');
+
                     } else {
                         console.log(data);
                     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -42,9 +42,12 @@ import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
+    const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
@@ -59,8 +62,11 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
-
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
+    
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
@@ -71,7 +77,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 setProductDetail(_MyNFTItem);
             }
         };
-        getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        else navigate('/');
         return () => {
             unmounted = true;
         };

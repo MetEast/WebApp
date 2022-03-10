@@ -11,6 +11,7 @@ import {
     TypeYourEarning,
     TypeYourEarningFetch,
     TypeNFTHisotry,
+    TypeBlindBoxSelectItem,
     enumTransactionType,
     enumBlindBoxNFTType,
     enumMyNFTType,
@@ -25,6 +26,7 @@ import {
     blankMyNFTItem,
     blankMyEarning,
     blankMyNFTHistory,
+    blankBBCandidate,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -114,7 +116,8 @@ export const getSearchParams = (
     sortBy: TypeSelectItem | undefined,
     filterRange: TypeFilterRange,
     filters: Array<enumFilterOption>,
-) => {
+    category: TypeSelectItem | undefined,
+) => {    
     let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
     if (sortBy !== undefined) {
         switch (sortBy.value) {
@@ -159,6 +162,9 @@ export const getSearchParams = (
         });
         searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
     }
+    if (category !== undefined) {
+        searchParams += `&category=${category.value}`;
+    }
     return searchParams;
 };
 
@@ -196,7 +202,7 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
             itemObject.createdName === '' ? reduceHexAddress(itemObject.createdAddress, 4) : itemObject.createdName;
         _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.isLike = loginState
-            ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === `did:elastos:${did}`) === -1
+            ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === did) === -1
                 ? false
                 : true
             : false;
@@ -609,7 +615,7 @@ export const getMyEarnedList = async (address: string) => {
     return _myEarningList;
 };
 
-// MyNFT Created
+// MyNFT Page
 export const getMyNFTItem = async (
     tokenId: string | undefined,
     ELA2USD: number,
@@ -657,6 +663,37 @@ export const getMyNFTItem = async (
         _MyNFTItem.status = itemObject.status;
     }
     return _MyNFTItem;
+};
+
+// BB creation
+export const getBBCandiates = async (address: string, keyword: string, selectedTokenIds: Array<string>) => {
+    const resBBCandidateList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${address}&keyword=${keyword}`,
+        FETCH_CONFIG_JSON
+    );
+    const jsonBBCandidateList = await resBBCandidateList.json();
+    const arrBBCandidateList = jsonBBCandidateList.data === undefined ? [] : jsonBBCandidateList.data.result;
+
+    const _BBCandidateList: Array<TypeBlindBoxSelectItem> = [];
+    const _itemCheckedList: Array<boolean> = [];
+    let _allChecked: boolean = false;
+    let _indeterminateChecked: boolean = false;
+    for (let i = 0; i < arrBBCandidateList.length; i++) {
+        const itemObject: TypeProductFetch = arrBBCandidateList[i];
+        const _BBCandidate: TypeBlindBoxSelectItem = { ...blankBBCandidate };
+        _BBCandidate.id = i + 1;
+        _BBCandidate.tokenId = itemObject.tokenId;
+        _BBCandidate.nftIdentity = itemObject.tokenIdHex;
+        _BBCandidate.projectTitle = itemObject.name;
+        _BBCandidate.projectType = itemObject.category;
+        _BBCandidate.url = getImageFromAsset(itemObject.asset);
+        _BBCandidateList.push(_BBCandidate);
+        _itemCheckedList.push(selectedTokenIds.includes(_BBCandidate.tokenId));
+    }
+    if (selectedTokenIds.length === _BBCandidateList.length) _allChecked = true;
+    else if (selectedTokenIds.length > 0) _indeterminateChecked = true;
+
+    return {candidates: _BBCandidateList, allChecked: _allChecked, itemChecked: _itemCheckedList, indeterminateChecked: _indeterminateChecked};
 };
 
 export const uploadUserProfile = (

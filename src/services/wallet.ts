@@ -77,12 +77,6 @@ export const getWalletBalance = async (library: any, account: string) => {
     if (!library) return '0';
     const walletConnectWeb3 = new Web3(library.provider as any);
     const balance = await walletConnectWeb3.eth.getBalance(account);
-    // const { data: balance } = useSWR(['getBalance', account, 'latest'], {
-    //   fetcher: fetcher(library),
-    // })
-    // if(!balance) {
-    //   return '0';
-    // }
     return balance;
 };
 

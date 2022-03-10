@@ -14,6 +14,8 @@ import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 
 export interface ComponentProps {}
 
@@ -27,7 +29,10 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
-    const walletConnectWeb3 = new Web3(walletConnectProvider as any);
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     const callBuyOrderBatch = async (_orderIds: string[], _didUri: string, _price: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -83,6 +88,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const sendSoldBlindBoxTokenIds = (txHash: string) => {
+        let unmounted = false;
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
         const reqBody = {
             token: signInDlgState.token,
@@ -99,13 +105,15 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.code === 200) {
-                    setOnProgress(false);
-                    setDialogState({
-                        ...dialogState,
-                        buyBlindBoxDlgOpened: true,
-                        buyBlindBoxDlgStep: 2,
-                        buyBlindTxHash: txHash,
-                    });
+                    if (!unmounted) {
+                        setOnProgress(false);
+                        setDialogState({
+                            ...dialogState,
+                            buyBlindBoxDlgOpened: true,
+                            buyBlindBoxDlgStep: 2,
+                            buyBlindTxHash: txHash,
+                        });
+                    }
                 } else {
                     console.log(data);
                 }
@@ -113,6 +121,9 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             .catch((error) => {
                 console.log(error);
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     const handleBuyBlindBox = async () => {

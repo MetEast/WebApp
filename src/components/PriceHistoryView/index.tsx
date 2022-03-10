@@ -90,7 +90,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         },
     ];
 
-    const [chartOptions, setChartOptions] = useState(options);
+    const [chartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
     const [productPriceList, setProductPriceList] = useState<Array<TypePriceHistoryFetch>>([]);
     const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(
@@ -110,15 +110,21 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const params = useParams();
 
     useEffect(() => {
+        let unmounted = false;
         fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`)
             .then((response) => {
                 response.json().then((jsonPriceList) => {
-                    setProductPriceList(jsonPriceList.data);
+                    if (!unmounted) {
+                        setProductPriceList(jsonPriceList.data);
+                    }
                 });
             })
             .catch((err) => {
                 console.log(err);
             });
+        return () => {
+            unmounted = true;
+        };
     }, [priceHistoryUnit]);
 
     useEffect(() => {

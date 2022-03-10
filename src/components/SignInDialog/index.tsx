@@ -38,9 +38,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
-    const { enqueueSnackbar } = useSnackbar();
-    // for signInContext
-    const { connector, activate, deactivate, active, error, library, chainId, account } = useWeb3React<Web3Provider>();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { activate, active, library, chainId, account } = useWeb3React<Web3Provider>();
     const [activatingConnector, setActivatingConnector] = useState<InjectedConnector | WalletConnectConnector | null>(
         null,
     );
@@ -51,6 +50,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const [_signInState, _setSignInState] = useState<SignInState>(signInDlgState);
     let linkType = cookies.METEAST_LINK;
+
+    const showSucceedSnackBar = () => {
+        const loginSucceed = enqueueSnackbar('Login succeed.', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+        });
+        const timer = setTimeout(() => {
+            closeSnackbar(loginSucceed);
+            clearTimeout(timer);
+        }, 5000);
+    };
 
     // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
@@ -82,8 +92,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (!unmounted) {
-                        if (data.code === 200) {
+                    if (data.code === 200) {
+                        if (!unmounted) {
                             if (currentConnector === injected) {
                                 linkType = 2;
                             } else if (currentConnector === walletconnect) {
@@ -111,14 +121,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                     _state.userCoverImage = user.coverImage;
                                 return _state;
                             });
-                            enqueueSnackbar('Login succeed.', {
-                                autoHideDuration: 5000,
-                                variant: 'success',
-                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                            });
-                        } else {
-                            console.log(data);
+                            showSucceedSnackBar();
                         }
+                    } else {
+                        console.log(data);
                     }
                 })
                 .catch((error) => {
@@ -140,6 +146,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         }
                     }
                 });
+            return () => {
+                unmounted = true;
+            };
         }
     };
 
@@ -148,12 +157,186 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
         setActivatingConnector(null);
+        if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
+            navigate('/');
+        }
         window.location.reload();
     };
 
     // ------------------------------ EE Connection ------------------------------ //
+    const signInWithEssentials = async () => {
+        initConnectivitySDK();
+        const didAccess = new DID.DIDAccess();
+        let presentation;
+        console.log('Trying to sign in using the connectivity SDK');
+        try {
+            // presentation = await didAccess.getCredentials({
+            //     claims: {
+            //         name: false,
+            //         avatar: {
+            //             required: false,
+            //             reason: 'For test',
+            //         },
+            //         description: {
+            //             required: false,
+            //             reason: 'For test',
+            //         },
+            //     },
+            // });
+            presentation = await didAccess.requestCredentials({
+                claims: [
+                    DID.simpleIdClaim('Your name', 'name', false),
+                    DID.simpleIdClaim('Your description', 'description', false),
+                ],
+            });
+        } catch (e) {
+            console.warn('Error while getting credentials', e);
+            try {
+                await essentialsConnector.getWalletConnectProvider().disconnect();
+            } catch (e) {
+                console.error('Error while trying to disconnect wallet connect session', e);
+            }
+            return;
+        }
+
+        if (presentation) {
+            let unmounted = false;
+            const did = presentation.getHolder().getMethodSpecificId() || '';
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(presentation.toJSON()),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (!unmounted) {
+                            const token = data.token;
+                            linkType = '1';
+                            setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
+                            setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                            const user: UserTokenType = jwtDecode(token);
+                            console.log('Sign in with EE: setting user to:', user);
+                            console.log(did);
+                            _setSignInState((prevState: SignInState) => {
+                                const _state = { ...prevState };
+                                _state.isLoggedIn = true;
+                                _state.loginType = '1';
+                                _state.userDid = user.did;
+                                if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
+                                if (user.description !== '' && user.description !== undefined)
+                                    _state.userDescription = user.description;
+                                if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
+                                if (user.coverImage !== '' && user.coverImage !== undefined)
+                                    _state.userCoverImage = user.coverImage;
+                                _state.signInDlgOpened = false;
+                                if (isInAppBrowser()) {
+                                    const inAppProvider: any = window.elastos.getWeb3Provider();
+                                    _state.walletAccounts = [inAppProvider.address];
+                                    const inAppWeb3 = new Web3(inAppProvider as any);
+                                    inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
+                                        _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                                    });
+                                    inAppWeb3.eth.getChainId().then((chainId: number) => {
+                                        _state.chainId = chainId;
+                                    });
+                                }
+                                return _state;
+                            });
+                            showSucceedSnackBar();
+                        }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    enqueueSnackbar(
+                        `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
+                        { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                    );
+                    try {
+                        essentialsConnector
+                            .getWalletConnectProvider()
+                            .disconnect()
+                            .then((res) => {})
+                            .catch((e) => {
+                                console.log(e);
+                            });
+                    } catch (e) {
+                        console.error('Error while trying to disconnect wallet connect session', e);
+                    }
+                });
+            return () => {
+                unmounted = true;
+            };
+        }
+    };
+
+    const signOutWithEssentialsWithoutRefresh = async () => {
+        console.log('Signing out user. Deleting session info, auth token');
+        setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
+        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
+        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        try {
+            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
+                await essentialsConnector.getWalletConnectProvider().disconnect();
+            if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
+                await window.elastos.getWeb3Provider().disconnect();
+        } catch (e) {
+            console.error('Error while disconnecting the wallet', e);
+        }
+    };
+
+    const signOutWithEssentials = async () => {
+        console.log('Signing out user. Deleting session info, auth token');
+        setSignInDlgState({ ...signInDlgState, isLoggedIn: false, loginType: '', signOut: false });
+        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
+        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        try {
+            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
+                await essentialsConnector.getWalletConnectProvider().disconnect();
+            if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
+                await window.elastos.getWeb3Provider().disconnect();
+        } catch (e) {
+            console.error('Error while disconnecting the wallet', e);
+        }
+        if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
+            navigate('/');
+        }
+        window.location.reload();
+    };
+
+    // ------------------------------ Event Listener ------------------------------ //
     useEffect(() => {
         // EE
+        const handleEEAccountsChanged = (accounts: string[]) => {
+            getEssentialsWalletBalance().then((balance: string) => {
+                _setSignInState((prevState: SignInState) => {
+                    const _state = { ...prevState };
+                    _state.walletAccounts = accounts;
+                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                    return _state;
+                });
+            });
+        };
+        const handleEEChainChanged = (chainId: number) => {
+            _setSignInState((prevState: SignInState) => {
+                const _state = { ...prevState };
+                _state.chainId = chainId;
+                return _state;
+            });
+        };
+        const handleEEDisconnect = (code: number, reason: string) => {
+            console.log('Disconnect code: ', code, ', reason: ', reason);
+            signOutWithEssentials();
+        };
+        const handleEEError = (code: number, reason: string) => {
+            console.error(code, reason);
+        };
+
         if (isInAppBrowser()) {
             _setSignInState((prevState: SignInState) => {
                 const _state = { ...prevState };
@@ -170,35 +353,13 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             });
         } else {
             // Subscribe to accounts change
-            walletConnectProvider.on('accountsChanged', (accounts: string[]) => {
-                getEssentialsWalletBalance().then((balance: string) => {
-                    _setSignInState((prevState: SignInState) => {
-                        const _state = { ...prevState };
-                        _state.walletAccounts = accounts;
-                        _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                        return _state;
-                    });
-                });
-            });
-
+            walletConnectProvider.on('accountsChanged', handleEEAccountsChanged);
             // Subscribe to chainId change
-            walletConnectProvider.on('chainChanged', (chainId: number) => {
-                _setSignInState((prevState: SignInState) => {
-                    const _state = { ...prevState };
-                    _state.chainId = chainId;
-                    return _state;
-                });
-            });
-
+            walletConnectProvider.on('chainChanged', handleEEChainChanged);
             // Subscribe to session disconnection
-            walletConnectProvider.on('disconnect', (code: number, reason: string) => {
-                signOutWithEssentials();
-            });
-
+            walletConnectProvider.on('disconnect', handleEEDisconnect);
             // Subscribe to session disconnection
-            walletConnectProvider.on('error', (code: number, reason: string) => {
-                console.error(code, reason);
-            });
+            walletConnectProvider.on('error', handleEEError);
         }
         // MM
         if (linkType === undefined) {
@@ -261,6 +422,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }
             }
         }
+        return () => {
+            if (walletConnectProvider.removeListener) {
+                walletConnectProvider.removeListener('accountsChanged', handleEEAccountsChanged);
+                walletConnectProvider.removeListener('chainChanged', handleEEChainChanged);
+                walletConnectProvider.removeListener('disconnect', handleEEDisconnect);
+                walletConnectProvider.removeListener('error', handleEEError);
+            }
+        };
     }, [walletConnectProvider, chainId, account, active, library]);
 
     // signInDlgContext track
@@ -269,14 +438,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             cookies.METEAST_TOKEN === undefined
                 ? { did: '', name: '', description: '', avatar: '', coverImage: '', exp: 0, iat: 0 }
                 : jwtDecode(cookies.METEAST_TOKEN);
-        const arrDid = user.did.split(':');
-        const did = arrDid.length === 3 ? arrDid[2] : user.did;
-        getDidUri(did, '', user.name).then((didUri: string) => {
+        // const arrDid = user.did.split(':');
+        // const did = arrDid.length === 3 ? arrDid[2] : user.did;
+        getDidUri(user.did, '', user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
                 token: cookies.METEAST_TOKEN,
                 didUri: didUri,
-                userDid: did,
+                userDid: user.did,
                 userName: user.name,
                 userDescription: user.description,
                 userAvatar: user.avatar,
@@ -289,7 +458,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         if (signInDlgState.isLoggedIn && signInDlgState.signOut) {
             if (signInDlgState.loginType === '1') signOutWithEssentials();
-            else if (signInDlgState.loginType === '2') signOutWithWallet();
+            else signOutWithWallet();
         }
     }, [signInDlgState]);
 
@@ -327,168 +496,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         dialogState.buyBlindBoxDlgStep,
     ]);
 
-    useEffect(() => {
-        console.log('--------accounts: ', signInDlgState);
-    }, [signInDlgState]);
-
     if (linkType === '1') initConnectivitySDK();
 
-    const signInWithEssentials = async () => {
-        initConnectivitySDK();
-        const didAccess = new DID.DIDAccess();
-        let presentation;
-        console.log('Trying to sign in using the connectivity SDK');
-        try {
-            // presentation = await didAccess.getCredentials({
-            //     claims: {
-            //         name: false,
-            //         avatar: {
-            //             required: false,
-            //             reason: 'For test',
-            //         },
-            //         description: {
-            //             required: false,
-            //             reason: 'For test',
-            //         },
-            //     },
-            // });
-            presentation = await didAccess.requestCredentials({
-                claims: [
-                    DID.simpleIdClaim('Your name', 'name', false),
-                    DID.simpleIdClaim('Your description', 'description', false),
-                ],
-            });
-        } catch (e) {
-            console.warn('Error while getting credentials', e);
-            try {
-                await essentialsConnector.getWalletConnectProvider().disconnect();
-            } catch (e) {
-                console.error('Error while trying to disconnect wallet connect session', e);
-            }
-            return;
-        }
-
-        if (presentation) {
-            let unmounted = false;
-            const did = presentation.getHolder().getMethodSpecificId() || '';
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(presentation.toJSON()),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (!unmounted) {
-                        if (data.code === 200) {
-                            const token = data.token;
-                            linkType = '1';
-                            setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
-                            setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                            const user: UserTokenType = jwtDecode(token);
-                            console.log('Sign in with EE: setting user to:', user);
-                            _setSignInState((prevState: SignInState) => {
-                                const _state = { ...prevState };
-                                _state.isLoggedIn = true;
-                                _state.loginType = '1';
-                                _state.userDid = did;
-                                if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
-                                if (user.description !== '' && user.description !== undefined)
-                                    _state.userDescription = user.description;
-                                if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
-                                if (user.coverImage !== '' && user.coverImage !== undefined)
-                                    _state.userCoverImage = user.coverImage;
-                                _state.signInDlgOpened = false;
-                                if (isInAppBrowser()) {
-                                    const inAppProvider: any = window.elastos.getWeb3Provider();
-                                    _state.walletAccounts = [inAppProvider.address];
-                                    const inAppWeb3 = new Web3(inAppProvider as any);
-                                    inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
-                                        _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                                    });
-                                    inAppWeb3.eth.getChainId().then((chainId: number) => {
-                                        _state.chainId = chainId;
-                                    });
-                                }
-                                return _state;
-                            });
-                            enqueueSnackbar('Login succeed.', {
-                                variant: 'success',
-                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                            });
-                        } else {
-                            console.log(data);
-                        }
-                    }
-                })
-                .catch((error) => {
-                    if (!unmounted) {
-                        console.log(error);
-                        enqueueSnackbar(
-                            `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
-                            { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
-                        );
-                        try {
-                            essentialsConnector
-                                .getWalletConnectProvider()
-                                .disconnect()
-                                .then((res) => {})
-                                .catch((e) => {
-                                    console.log(e);
-                                });
-                        } catch (e) {
-                            console.error('Error while trying to disconnect wallet connect session', e);
-                        }
-                    }
-                });
-        }
-    };
-
-    const signOutWithEssentialsWithoutRefresh = async () => {
-        console.log('Signing out user. Deleting session info, auth token');
-        setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
-        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        try {
-            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
-                await essentialsConnector.getWalletConnectProvider().disconnect();
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const signOutWithEssentials = async () => {
-        console.log('Signing out user. Deleting session info, auth token');
-        setSignInDlgState({ ...signInDlgState, isLoggedIn: false, loginType: '', signOut: false });
-        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        try {
-            if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
-                await essentialsConnector.getWalletConnectProvider().disconnect();
-            }
-        } catch (e) {
-            console.log(e);
-        }
-        if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
-            navigate('/');
-        }
-        window.location.reload();
-    };
-
-    // const signOutWithEssentials = async () => {
-    //     removeTokenCookie('METEAST_TOKEN');
-    //     try {
-    //         setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
-    //         if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
-    //             await essentialsConnector.disconnectWalletConnect();
-    //         if (isInAppBrowser() && (await window.elastos.getWeb3Provider().isConnected()))
-    //             await window.elastos.getWeb3Provider().disconnect();
-    //     } catch (error) {
-    //         console.error('Error while disconnecting the wallet', error);
-    //     }
-    // };
+    // useEffect(() => {
+        console.log('--------accounts: ', signInDlgState);
+    // }, [signInDlgState]);
 
     return (
         <>

@@ -21,8 +21,8 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            let reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/`;
-            reqUrl += likeState ? 'decTokenLikes' : 'incTokenLikes';
+            const reqUrl =
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
             const reqBody = {
                 token: signInDlgState.token,
                 tokenId: product.tokenId,
@@ -31,7 +31,6 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
             // change state first
             updateLikes(likeState ? 'dec' : 'inc');
             setLikeState(!likeState);
-            //
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {

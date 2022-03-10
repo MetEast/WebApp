@@ -3,10 +3,9 @@ import { Box, Stack, Grid, Typography } from '@mui/material';
 import { ViewAllBtn } from './styles';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+// import { useTheme } from '@mui/material/styles';
+// import useMediaQuery from '@mui/material/useMediaQuery';
 import { useDialogContext } from 'src/context/DialogContext';
-import { SecondaryButton } from 'src/components/Buttons/styles';
 
 interface ComponentProps {
     bidsList: Array<TypeSingleNFTBid>;
@@ -19,8 +18,8 @@ const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
         { value: 'Price', width: 4 },
         // { value: '', width: 1.5 },
     ];
-    const theme = useTheme();
-    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    // const theme = useTheme();
+    // const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
     const [dialogState, setDialogState] = useDialogContext();
 
     return (
