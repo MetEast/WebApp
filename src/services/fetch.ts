@@ -116,6 +116,7 @@ export const getSearchParams = (
     sortBy: TypeSelectItem | undefined,
     filterRange: TypeFilterRange,
     filters: Array<enumFilterOption>,
+    category: TypeSelectItem | undefined,
 ) => {
     let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
     if (sortBy !== undefined) {
@@ -160,6 +161,9 @@ export const getSearchParams = (
             else if (item === 2) filterStatus += 'HAS BID,';
         });
         searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
+    }
+    if (category !== undefined) {
+        searchParams += `&category=${category.value}`;
     }
     return searchParams;
 };

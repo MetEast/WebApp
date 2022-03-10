@@ -42,6 +42,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
+    const [category, setCategory] = useState<TypeSelectItem>();
     const [keyWord, setKeyWord] = useState<string>('');
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
         nftGalleryFilterBtnTypes.All,
@@ -97,7 +98,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         const getFetchAll = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
             Array(6)
                 .fill(0)
                 .forEach(async (_, i: number) => {
@@ -126,7 +127,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 setLoadingState(nTabId, true);
             }
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
             const _searchedMyNFTList = await getMyNFTItemList(
                 searchParams,
                 ELA2USD,
@@ -157,6 +158,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         filters,
         filterRange,
         keyWord,
+        category,
         nftGalleryFilterBtnSelected,
         reload,
     ]); //, productViewMode
@@ -192,7 +194,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handlerFilterChange = (status: number | undefined, minPrice: string, maxPrice: string, opened: boolean) => {
+    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
         if (opened) {
             let filters: Array<enumFilterOption> = [];
             if (status === 0) filters.push(enumFilterOption.buyNow);
@@ -203,6 +205,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 min: minPrice === '' ? undefined : parseFloat(minPrice),
                 max: maxPrice === '' ? undefined : parseFloat(maxPrice),
             });
+            setCategory(category);
         }
     };
 

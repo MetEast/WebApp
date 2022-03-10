@@ -19,6 +19,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [sortBy, setSortBy] = useState<TypeSelectItem | undefined>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
+    const [category, setCategory] = useState<TypeSelectItem>();
     const [keyWord, setKeyWord] = useState<string>('');
     const [productList, setProductList] = useState<Array<TypeProduct>>([
         blankNFTItem,
@@ -38,7 +39,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters);
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
             const _searchedNFTList = await getNFTItemList(searchParams, ELA2USD, likeList);
             if (!unmounted) {
                 setProductList(_searchedNFTList);
@@ -48,7 +49,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord, category]); //, productViewMode
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //
@@ -62,7 +63,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, opened: boolean) => {
+    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
         if (opened) {
             let filters: Array<enumFilterOption> = [];
             if (status === 0) filters.push(enumFilterOption.buyNow);
@@ -73,6 +74,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 min: minPrice === '' ? undefined : parseFloat(minPrice),
                 max: maxPrice === '' ? undefined : parseFloat(maxPrice),
             });
+            setCategory(category);
         }
     };
     // -------------- Option Bar -------------- //
