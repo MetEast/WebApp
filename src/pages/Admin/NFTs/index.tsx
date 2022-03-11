@@ -105,7 +105,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const data: AdminNFTItemType[] = useMemo(
         () =>
-            [...Array(278).keys()].map(
+            [...Array(800).keys()].map(
                 (item) =>
                     ({
                         id: item,
@@ -131,19 +131,19 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             value: 'online',
         },
         {
-            label: 'offline',
-            value: 'offline',
+            label: 'removed',
+            value: 'removed',
         },
     ];
 
     const saleTypeOptions: Array<TypeSelectItem> = [
         {
-            label: 'Sale Type 1',
-            value: 'Sale Type 1',
+            label: 'Buy now',
+            value: 'Buy now',
         },
         {
-            label: 'Sale Type 2',
-            value: 'Sale Type 2',
+            label: 'On auction',
+            value: 'On auction',
         },
     ];
 
@@ -167,63 +167,59 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     return (
         <Stack height="100%" spacing={4}>
-            <Stack direction="row" alignItems="flex-end" spacing={1}>
-                <CustomTextField title="NFT ID" placeholder="Enter ID" />
-                <CustomTextField title="NFT Title" placeholder="Enter Title" />
-                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon
-                        icon="ph:magnifying-glass"
-                        fontSize={20}
-                        color="white"
-                        style={{ marginBottom: 2, marginRight: 4 }}
-                    />
-                    {`Search`}
-                </PrimaryButton>
-                <Stack spacing={0.5}>
-                    <Typography fontSize={12} fontWeight={700}>
-                        NFT State
-                    </Typography>
-                    <Select
-                        titlebox={
-                            <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
-                                {nftState ? nftState.label : 'Select'}
-                                <Icon icon="ph:caret-down" className="arrow-icon" />
-                            </SelectBtn>
-                        }
-                        selectedItem={nftState}
-                        options={nftStateOptions}
-                        isOpen={nftStateSelectOpen ? 1 : 0}
-                        handleClick={handleNFTStateChange}
-                        setIsOpen={setNftStateSelectOpen}
-                        width={140}
-                    />
+            <Stack direction="row" alignItems="flex-end" spacing={8}>
+                <Stack direction="row" alignItems="flex-end" spacing={1}>
+                    <CustomTextField title="Search" placeholder="TokenID, NFT title, or Address" sx={{ width: 260 }} />
+                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                        <Icon
+                            icon="ph:magnifying-glass"
+                            fontSize={20}
+                            color="white"
+                            style={{ marginBottom: 2, marginRight: 4 }}
+                        />
+                        {`Search`}
+                    </PrimaryButton>
                 </Stack>
-                <Stack spacing={0.5}>
-                    <Typography fontSize={12} fontWeight={700}>
-                        Sale Type
-                    </Typography>
-                    <Select
-                        titlebox={
-                            <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
-                                {saleType ? saleType.label : 'Select'}
-                                <Icon icon="ph:caret-down" className="arrow-icon" />
-                            </SelectBtn>
-                        }
-                        selectedItem={saleType}
-                        options={saleTypeOptions}
-                        isOpen={saleTypeSelectOpen ? 1 : 0}
-                        handleClick={handleSaleTypeChange}
-                        setIsOpen={setSaleTypeSelectOpen}
-                        width={140}
-                    />
+                <Stack direction="row" alignItems="flex-end" spacing={1}>
+                    <Stack spacing={0.5}>
+                        <Typography fontSize={12} fontWeight={700}>
+                            NFT Status
+                        </Typography>
+                        <Select
+                            titlebox={
+                                <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
+                                    {nftState ? nftState.label : 'Select'}
+                                    <Icon icon="ph:caret-down" className="arrow-icon" />
+                                </SelectBtn>
+                            }
+                            selectedItem={nftState}
+                            options={nftStateOptions}
+                            isOpen={nftStateSelectOpen ? 1 : 0}
+                            handleClick={handleNFTStateChange}
+                            setIsOpen={setNftStateSelectOpen}
+                            width={140}
+                        />
+                    </Stack>
+                    <Stack spacing={0.5}>
+                        <Typography fontSize={12} fontWeight={700}>
+                            Sale Type
+                        </Typography>
+                        <Select
+                            titlebox={
+                                <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
+                                    {saleType ? saleType.label : 'Select'}
+                                    <Icon icon="ph:caret-down" className="arrow-icon" />
+                                </SelectBtn>
+                            }
+                            selectedItem={saleType}
+                            options={saleTypeOptions}
+                            isOpen={saleTypeSelectOpen ? 1 : 0}
+                            handleClick={handleSaleTypeChange}
+                            setIsOpen={setSaleTypeSelectOpen}
+                            width={140}
+                        />
+                    </Stack>
                 </Stack>
-                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
-                    {`New NFT`}
-                </PrimaryButton>
-                <IconButton sx={{ height: 40, borderRadius: 3, background: '#e8f4ff' }}>
-                    <Icon icon="ph:dots-three-vertical-bold" color="#1890FF" />
-                </IconButton>
             </Stack>
             <Table tabledata={tabledata} columns={columns} />
         </Stack>
