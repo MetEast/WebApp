@@ -1,19 +1,24 @@
 import React, { useState, useMemo } from 'react';
-import { Stack, Typography, IconButton } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { AdminTableColumn, AdminBannersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
-import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
+import CreateBanner from 'src/components/Admin/Dialogs/CreateBanner';
+import EditBanner from 'src/components/Admin/Dialogs/EditBanner';
+import DeleteBanner from 'src/components/Admin/Dialogs/DeleteBanner';
 
 const AdminBanners: React.FC = (): JSX.Element => {
-    const [createBannerDlgOpen, setCreateBannerDlgOpen] = useState<boolean>(false);
+    const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
+    const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
+    const [showDeleteBannerDlg, setShowDeleteBannerDlg] = useState<boolean>(false);
 
     const columns: AdminTableColumn[] = [
         {
             id: 'banner_id',
             label: 'Banner ID',
+            width: 100,
         },
         {
             id: 'image',
@@ -69,12 +74,12 @@ const AdminBanners: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#FDEEEE' }}>
-                        <Icon icon="ph:trash" color="#EB5757" />
-                    </IconButton>
-                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#E8F4FF' }}>
-                        <Icon icon="ph:pencil-simple" color="#1890FF" />
-                    </IconButton>
+                    <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }} onClick={onDeleteBanner}>
+                        <Icon icon="ph:trash" fontSize={20} color="#EB5757" />
+                    </PrimaryButton>
+                    <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }} onClick={onEditBanner}>
+                        <Icon icon="ph:pencil-simple" fontSize={20} color="#1890FF" />
+                    </PrimaryButton>
                 </Stack>
             ),
         },
@@ -86,7 +91,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 (item) =>
                     ({
                         id: item,
-                        banner_id: String(84560673 + item),
+                        banner_id: item + 1,
                         image: '/assets/images/explore/singlenft-template4.png',
                         url: 'https://meteast.io/banner',
                         sort: 10,
@@ -100,6 +105,16 @@ const AdminBanners: React.FC = (): JSX.Element => {
 
     const [tabledata] = useState(data);
 
+    const onEditBanner = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowEditBannerDlg(true);
+    };
+
+    const onDeleteBanner = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowDeleteBannerDlg(true);
+    };
+
     return (
         <>
             <Stack height="100%" spacing={4}>
@@ -108,7 +123,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                         size="small"
                         sx={{ paddingX: 3 }}
                         onClick={() => {
-                            setCreateBannerDlgOpen(true);
+                            setShowCreateBannerDlg(true);
                         }}
                     >
                         <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
@@ -118,14 +133,38 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 <Table tabledata={tabledata} columns={columns} />
             </Stack>
             <ModalDialog
-                open={createBannerDlgOpen}
+                open={showCreateBannerDlg}
                 onClose={() => {
-                    setCreateBannerDlgOpen(false);
+                    setShowCreateBannerDlg(false);
                 }}
             >
                 <CreateBanner
                     onClose={() => {
-                        setCreateBannerDlgOpen(false);
+                        setShowCreateBannerDlg(false);
+                    }}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={showEditBannerDlg}
+                onClose={() => {
+                    setShowEditBannerDlg(false);
+                }}
+            >
+                <EditBanner
+                    onClose={() => {
+                        setShowEditBannerDlg(false);
+                    }}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={showDeleteBannerDlg}
+                onClose={() => {
+                    setShowDeleteBannerDlg(false);
+                }}
+            >
+                <DeleteBanner
+                    onClose={() => {
+                        setShowDeleteBannerDlg(false);
                     }}
                 />
             </ModalDialog>

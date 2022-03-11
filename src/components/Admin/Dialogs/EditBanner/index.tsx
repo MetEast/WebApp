@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-// import { useStyles } from './styles';
-import { DialogTitleTypo } from '../../styles';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { useStyles } from './styles';
+import { DialogTitleTypo } from '../../../TransactionDialogs/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';
 
@@ -10,8 +10,8 @@ export interface ComponentProps {
     onClose: () => void;
 }
 
-const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
-    // const classes = useStyles();
+const EditBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+    const classes = useStyles();
 
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>('home');
@@ -25,7 +25,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             // className={classes.container}
         >
             <Stack alignItems="center">
-                <DialogTitleTypo>Create Banner</DialogTitleTypo>
+                <DialogTitleTypo>Edit Banner</DialogTitleTypo>
             </Stack>
             <Box>
                 <Grid container columnSpacing={4}>
@@ -40,28 +40,24 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 alt=""
                             />
                             <Stack direction="row" spacing={1}>
-                                <SecondaryButton
-                                    fullWidth
-                                    size="small"
-                                    sx={{ background: '#FDEEEE', color: '#EB5757' }}
-                                >
+                                <PrimaryButton btn_type="pink" fullWidth size="small">
                                     <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
                                     {`Delete`}
-                                </SecondaryButton>
-                                <SecondaryButton fullWidth size="small">
+                                </PrimaryButton>
+                                <PrimaryButton btn_type="secondary" fullWidth size="small">
                                     <Icon
                                         icon="ph:pencil-simple"
                                         fontSize={20}
                                         style={{ marginBottom: 4, marginRight: 4 }}
                                     />
                                     {`Edit`}
-                                </SecondaryButton>
+                                </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="URL" placeholder="Enter URL" changeHandler={(value) => {}} />
+                        <CustomTextField title="URL" placeholder="Enter Banner URL" changeHandler={(value) => {}} />
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
-                        <Stack spacing={1}>
+                        <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Location
                             </Typography>
@@ -69,10 +65,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    sx={{
-                                        background: location === 'home' ? 'auto' : '#E8F4FF',
-                                        color: location === 'home' ? 'auto' : '#1890FF',
-                                    }}
+                                    btn_type={location === 'home' ? 'primary' : 'secondary'}
                                     onClick={() => setLocation('home')}
                                 >
                                     Home
@@ -80,10 +73,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    sx={{
-                                        background: location === 'explore' ? 'auto' : '#E8F4FF',
-                                        color: location === 'explore' ? 'auto' : '#1890FF',
-                                    }}
+                                    btn_type={location === 'explore' ? 'primary' : 'secondary'}
                                     onClick={() => setLocation('explore')}
                                 >
                                     Explore
@@ -91,28 +81,22 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    sx={{
-                                        background: location === 'blindbox' ? 'auto' : '#E8F4FF',
-                                        color: location === 'blindbox' ? 'auto' : '#1890FF',
-                                    }}
+                                    btn_type={location === 'blindbox' ? 'primary' : 'secondary'}
                                     onClick={() => setLocation('blindbox')}
                                 >
                                     Blind Box
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <Stack spacing={1}>
+                        <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
-                                Status
+                                Banner Status
                             </Typography>
                             <Stack direction="row" spacing={1}>
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    sx={{
-                                        background: blindboxStatus === 'offline' ? 'auto' : '#E8F4FF',
-                                        color: blindboxStatus === 'offline' ? 'auto' : '#1890FF',
-                                    }}
+                                    btn_type={blindboxStatus === 'offline' ? 'primary' : 'secondary'}
                                     onClick={() => setBlindboxStatus('offline')}
                                 >
                                     Offline
@@ -120,10 +104,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    sx={{
-                                        background: blindboxStatus === 'online' ? 'auto' : '#E8F4FF',
-                                        color: blindboxStatus === 'online' ? 'auto' : '#1890FF',
-                                    }}
+                                    btn_type={blindboxStatus === 'online' ? 'primary' : 'secondary'}
                                     onClick={() => setBlindboxStatus('online')}
                                 >
                                     Online
@@ -135,13 +116,13 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 </Grid>
             </Box>
             <Stack width="100%" direction="row" spacing={2}>
-                <SecondaryButton fullWidth onClick={onClose}>
-                    Back
-                </SecondaryButton>
+                <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
+                    close
+                </PrimaryButton>
                 <PrimaryButton fullWidth>Confirm</PrimaryButton>
             </Stack>
         </Stack>
     );
 };
 
-export default CreateBanner;
+export default EditBanner;

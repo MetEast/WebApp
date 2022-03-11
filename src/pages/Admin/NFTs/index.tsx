@@ -2,34 +2,70 @@ import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { Typography, Stack, IconButton } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
 import { enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { TypeSelectItem } from 'src/types/select-types';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
+import ModalDialog from 'src/components/ModalDialog';
+import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
         {
-            id: 'rulenumber',
-            label: 'Rule Number',
-            width: 160,
+            id: 'token_id',
+            label: 'TOKEN ID',
         },
         {
-            id: 'nftid',
-            label: 'NFT ID',
-        },
-        {
-            id: 'nfttitle',
+            id: 'nft_title',
             label: 'NFT Title',
         },
         {
-            id: 'state',
-            label: 'State',
+            id: 'selling_price',
+            label: 'SELLING Price',
+            cell: (props) => <ELAPrice price_ela={props.value} price_ela_fontsize={14} />,
+            width: 160,
+        },
+        {
+            id: 'nft_owner',
+            label: 'NFT owner',
+        },
+        {
+            id: 'nft_creator',
+            label: 'NFT CREATOR',
+        },
+        {
+            id: 'created_date',
+            label: 'CRETED DATE',
+            width: 160,
+        },
+        {
+            id: 'listed_date',
+            label: 'LISTED DATE',
+            width: 160,
+        },
+        {
+            id: 'likes',
+            label: '# Likes',
+            width: 100,
+        },
+        {
+            id: 'views',
+            label: '# Views',
+            width: 100,
+        },
+        {
+            id: 'sale_type',
+            label: 'SALE TYPE',
+            cell: (props) => <ProductBadge badgeType={props.value} />,
+        },
+        {
+            id: 'status',
+            label: 'STATUS',
             cell: (props) => (
                 <Typography
                     display="inline-block"
@@ -38,95 +74,27 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     paddingX={1}
                     paddingY={0.5}
                     borderRadius={2}
-                    color="#1EA557"
-                    sx={{ background: '#C9F5DC' }}
+                    color={props.value === 'Online' ? '#1EA557' : '#EB5757'}
+                    sx={{ background: props.value === 'Online' ? '#C9F5DC' : '#FDEEEE' }}
                 >
                     {props.value}
                 </Typography>
             ),
         },
         {
-            id: 'classification',
-            label: 'Classification',
-        },
-        {
-            id: 'original_price',
-            label: 'Original Price',
-            cell: (props) => <ELAPrice price_ela={props.value} price_ela_fontsize={14} />,
-            width: 160,
-        },
-        {
-            id: 'original_owner',
-            label: 'original owner',
-            width: 160,
-        },
-        {
-            id: 'sale_started',
-            label: 'sale started',
-            width: 160,
-        },
-        {
-            id: 'latest_deal_price',
-            label: 'Latest deal price',
-            cell: (props) => <ELAPrice price_ela={props.value} price_ela_fontsize={14} />,
-            width: 160,
-        },
-        {
-            id: 'latest_original_owner',
-            label: 'Latest original owner',
-            width: 200,
-        },
-        {
-            id: 'latest_deal',
-            label: 'latest deal',
-            width: 160,
-        },
-        {
-            id: 'latest_update',
-            label: 'Latest Update',
-            width: 160,
-        },
-        {
-            id: 'number_of_deals',
-            label: 'number of deals',
-            width: 160,
-        },
-        {
-            id: 'number_of_bids',
-            label: 'number of Bids',
-            width: 160,
-        },
-        {
-            id: 'sort',
-            label: 'Sort',
-        },
-        {
-            id: 'sales_mode',
-            label: 'sales mode',
-            cell: (props) => <ProductBadge badgeType={props.value} />,
-        },
-        {
-            id: 'likes',
-            label: '# Likes',
-        },
-        {
-            id: 'views',
-            label: '# Views',
-        },
-        {
             id: 'edits',
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={onRemove}>
                         <Icon
-                            icon="ph:pencil-simple"
+                            icon="ph:trash"
                             fontSize={20}
-                            color="#1890FF"
+                            color="#EB5757"
                             style={{ marginBottom: 2, marginRight: 4 }}
                         />
-                        {`Edit`}
-                    </SecondaryButton>
+                        {`Remove`}
+                    </PinkButton>
                     <PrimaryButton size="small" sx={{ paddingX: 3 }}>
                         <Icon icon="ph:eye" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
                         {`Details`}
@@ -139,28 +107,21 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const data: AdminNFTItemType[] = useMemo(
         () =>
-            [...Array(278).keys()].map(
+            [...Array(800).keys()].map(
                 (item) =>
                     ({
                         id: item,
-                        rulenumber: String(item + 1).padStart(5, '0'),
-                        nftid: String(item + 1).padStart(5, '0'),
-                        nfttitle: 'NFT Title',
-                        state: 'online',
-                        classification: 'Blind Box',
-                        original_price: 199,
-                        original_owner: 'Nickname',
-                        sale_started: '2022-06-18  08:50:00',
-                        latest_deal_price: 199,
-                        latest_original_owner: 'Nickname',
-                        latest_deal: '2022-06-18  08:50:00',
-                        latest_update: '2022-06-18  08:50:00',
-                        number_of_deals: 377,
-                        number_of_bids: 377,
-                        sort: 32,
-                        sales_mode: enumBadgeType.BuyNow,
+                        token_id: '0x43d…5e4',
+                        nft_title: 'Testing',
+                        selling_price: 199,
+                        nft_owner: '0xec3dxxx56',
+                        nft_creator: '0x93cdxx45',
+                        created_date: '2022-06-18  08:50:00',
+                        listed_date: '2022-06-18  08:50:00',
                         likes: 377,
                         views: 377,
+                        sale_type: item % 2 === 0 ? enumBadgeType.BuyNow : enumBadgeType.OnAuction,
+                        status: item % 2 === 0 ? 'Online' : 'Removed',
                     } as AdminNFTItemType),
             ),
         [],
@@ -172,19 +133,19 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             value: 'online',
         },
         {
-            label: 'offline',
-            value: 'offline',
+            label: 'removed',
+            value: 'removed',
         },
     ];
 
     const saleTypeOptions: Array<TypeSelectItem> = [
         {
-            label: 'Sale Type 1',
-            value: 'Sale Type 1',
+            label: 'Buy now',
+            value: 'Buy now',
         },
         {
-            label: 'Sale Type 2',
-            value: 'Sale Type 2',
+            label: 'On auction',
+            value: 'On auction',
         },
     ];
 
@@ -206,68 +167,88 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         setSaleType(item);
     };
 
+    const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
+    const onRemove = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowRemoveNFTDlg(true);
+    };
+
     return (
-        <Stack height="100%" spacing={4}>
-            <Stack direction="row" alignItems="flex-end" spacing={1}>
-                <CustomTextField title="NFT ID" placeholder="Enter ID" />
-                <CustomTextField title="NFT Title" placeholder="Enter Title" />
-                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon
-                        icon="ph:magnifying-glass"
-                        fontSize={20}
-                        color="white"
-                        style={{ marginBottom: 2, marginRight: 4 }}
-                    />
-                    {`Search`}
-                </PrimaryButton>
-                <Stack spacing={0.5}>
-                    <Typography fontSize={12} fontWeight={700}>
-                        NFT State
-                    </Typography>
-                    <Select
-                        titlebox={
-                            <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
-                                {nftState ? nftState.label : 'Select'}
-                                <Icon icon="ph:caret-down" className="arrow-icon" />
-                            </SelectBtn>
-                        }
-                        selectedItem={nftState}
-                        options={nftStateOptions}
-                        isOpen={nftStateSelectOpen ? 1 : 0}
-                        handleClick={handleNFTStateChange}
-                        setIsOpen={setNftStateSelectOpen}
-                        width={140}
-                    />
+        <>
+            <Stack height="100%" spacing={4}>
+                <Stack direction="row" alignItems="flex-end" spacing={8}>
+                    <Stack direction="row" alignItems="flex-end" spacing={1}>
+                        <CustomTextField
+                            title="Search"
+                            placeholder="TokenID, NFT title, or Address"
+                            sx={{ width: 260 }}
+                        />
+                        <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                            <Icon
+                                icon="ph:magnifying-glass"
+                                fontSize={20}
+                                color="white"
+                                style={{ marginBottom: 2, marginRight: 4 }}
+                            />
+                            {`Search`}
+                        </PrimaryButton>
+                    </Stack>
+                    <Stack direction="row" alignItems="flex-end" spacing={1}>
+                        <Stack spacing={0.5}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                NFT Status
+                            </Typography>
+                            <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
+                                        {nftState ? nftState.label : 'Select'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
+                                selectedItem={nftState}
+                                options={nftStateOptions}
+                                isOpen={nftStateSelectOpen ? 1 : 0}
+                                handleClick={handleNFTStateChange}
+                                setIsOpen={setNftStateSelectOpen}
+                                width={140}
+                            />
+                        </Stack>
+                        <Stack spacing={0.5}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                Sale Type
+                            </Typography>
+                            <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
+                                        {saleType ? saleType.label : 'Select'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
+                                selectedItem={saleType}
+                                options={saleTypeOptions}
+                                isOpen={saleTypeSelectOpen ? 1 : 0}
+                                handleClick={handleSaleTypeChange}
+                                setIsOpen={setSaleTypeSelectOpen}
+                                width={140}
+                            />
+                        </Stack>
+                    </Stack>
                 </Stack>
-                <Stack spacing={0.5}>
-                    <Typography fontSize={12} fontWeight={700}>
-                        Sale Type
-                    </Typography>
-                    <Select
-                        titlebox={
-                            <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
-                                {saleType ? saleType.label : 'Select'}
-                                <Icon icon="ph:caret-down" className="arrow-icon" />
-                            </SelectBtn>
-                        }
-                        selectedItem={saleType}
-                        options={saleTypeOptions}
-                        isOpen={saleTypeSelectOpen ? 1 : 0}
-                        handleClick={handleSaleTypeChange}
-                        setIsOpen={setSaleTypeSelectOpen}
-                        width={140}
-                    />
-                </Stack>
-                <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
-                    {`New NFT`}
-                </PrimaryButton>
-                <IconButton sx={{ height: 40, borderRadius: 3, background: '#e8f4ff' }}>
-                    <Icon icon="ph:dots-three-vertical-bold" color="#1890FF" />
-                </IconButton>
+                <Table tabledata={tabledata} columns={columns} />
             </Stack>
-            <Table tabledata={tabledata} columns={columns} />
-        </Stack>
+            <ModalDialog
+                open={showRemoveNFTDlg}
+                onClose={() => {
+                    setShowRemoveNFTDlg(false);
+                }}
+            >
+                <RemoveNFT
+                    onClose={() => {
+                        setShowRemoveNFTDlg(false);
+                    }}
+                />
+            </ModalDialog>
+        </>
     );
 };
 

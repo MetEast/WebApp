@@ -1,4 +1,5 @@
 import React from 'react';
+import { enumBadgeType } from 'src/types/product-types';
 
 export type AdminTableColumn = {
     id: string;
@@ -9,19 +10,24 @@ export type AdminTableColumn = {
 
 export type AdminNFTItemType = {
     id: number; // required
-    rulenumber: string;
-    nftid: string;
-    nfttitle: string;
-    state: string;
-    classification: string;
-    original_price: number;
-    original_owner: string;
+    token_id: string;
+    nft_title: string;
+    selling_price: number;
+    nft_owner: string;
+    nft_creator: string;
+    created_date: string;
+    listed_date: string;
+    likes: number;
+    views: number;
+    sale_type: enumBadgeType.BuyNow | enumBadgeType.OnAuction;
+    status: 'Online' | 'Removed';
 };
 
 export type AdminUsersItemType = {
     id: number; // required
     address: string;
     username: string;
+    avatar: string;
     status: number;
     remarks: string;
 };
@@ -75,7 +81,7 @@ export type AdminBidsItemType = {
 
 export type AdminBannersItemType = {
     id: number; // required
-    banner_id: string;
+    banner_id: number;
     image: string;
     url: string;
     sort: number;
