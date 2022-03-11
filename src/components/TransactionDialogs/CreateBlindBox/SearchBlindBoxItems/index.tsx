@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Box, Grid, Typography, Checkbox } from '@mui/material';
+import { Stack, Box, Grid, Typography, Checkbox, Skeleton } from '@mui/material';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import SearchField from 'src/components/SearchField';
 import { TblHeaderTypo, TblBodyTypo, ImageBox } from './styles';
@@ -20,6 +20,7 @@ export interface ComponentProps {
 const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const [loadingItemsList, setLoadingItemsList] = useState<boolean>(true);
     const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
     // const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>(testItemsList);
     const [keyWord, setKeyWord] = useState<string>('');
@@ -40,11 +41,13 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
             const _BBCandidates = await getBBCandiates(signInDlgState.walletAccounts[0], keyWord, selectedTokenIds);
             if (!unmounted) {
                 setItemList(_BBCandidates.candidates);
+                setLoadingItemsList(false);
                 setItemChecked(_BBCandidates.itemChecked);
                 setAllChecked(_BBCandidates.allChecked);
                 setIndeterminateChecked(_BBCandidates.indeterminateChecked);
             }
         };
+        setLoadingItemsList(true);
         getFetchData().catch(console.error);
         return () => {
             unmounted = true;
@@ -181,7 +184,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                         ))}
                     </Grid>
                 ) : (
-                    <Grid container columns={25} rowGap={3} direction="row" alignItems="center">
+                    <Grid container columns={25} rowGap={3} direction="row" alignItems="center" columnSpacing={2}>
                         <Grid item xs={1} paddingY={1}>
                             <Checkbox
                                 color="primary"
@@ -206,42 +209,88 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                         <Grid item xs={5} paddingY={1}>
                             <TblHeaderTypo>project type</TblHeaderTypo>
                         </Grid>
-                        {itemList.map((item, index) => (
-                            <Grid item container alignItems="center" key={`search-blind-item-${index}`}>
-                                <Grid item xs={1}>
-                                    <Checkbox
-                                        color="primary"
-                                        sx={{ padding: 0 }}
-                                        value="off"
-                                        checked={itemChecked[index] === undefined ? false : itemChecked[index]}
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                            handleSelect(event, index);
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <TblBodyTypo>{item.id}</TblBodyTypo>
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <Box borderRadius={2} width={72} height={50} overflow="hidden">
-                                        <img
-                                            src={item.url}
+                        {(loadingItemsList ? [...Array(5)] : itemList).map((item, index) => (
+                            <Grid
+                                item
+                                container
+                                alignItems="center"
+                                columnSpacing={2}
+                                key={`search-blind-item-${index}`}
+                            >
+                                {loadingItemsList ? (
+                                    <Grid item xs={5}>
+                                        <Skeleton
+                                            variant="rectangular"
+                                            animation="wave"
                                             width="100%"
-                                            height="100%"
-                                            style={{ objectFit: 'cover' }}
-                                            alt=""
+                                            height={24}
+                                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
                                         />
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <TblBodyTypo>{reduceHexAddress(item.nftIdentity, 4)}</TblBodyTypo>
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <TblBodyTypo>{item.projectTitle}</TblBodyTypo>
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <TblBodyTypo>{item.projectType}</TblBodyTypo>
-                                </Grid>
+                                    </Grid>
+                                ) : (
+                                    <>
+                                        <Grid item xs={1}>
+                                            <Checkbox
+                                                color="primary"
+                                                sx={{ padding: 0 }}
+                                                value="off"
+                                                checked={itemChecked[index] === undefined ? false : itemChecked[index]}
+                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                    handleSelect(event, index);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TblBodyTypo>{item.id}</TblBodyTypo>
+                                        </Grid>
+                                    </>
+                                )}
+                                {loadingItemsList ? (
+                                    <Grid item xs={5}>
+                                        <Skeleton
+                                            variant="rectangular"
+                                            animation="wave"
+                                            width={72}
+                                            height={50}
+                                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                                        />
+                                    </Grid>
+                                ) : (
+                                    <Grid item xs={5}>
+                                        <Box borderRadius={2} width={72} height={50} overflow="hidden">
+                                            <img
+                                                src={item.url}
+                                                width="100%"
+                                                height="100%"
+                                                style={{ objectFit: 'cover' }}
+                                                alt=""
+                                            />
+                                        </Box>
+                                    </Grid>
+                                )}
+                                {loadingItemsList ? (
+                                    <Grid item xs={15}>
+                                        <Skeleton
+                                            variant="rectangular"
+                                            animation="wave"
+                                            width="100%"
+                                            height={24}
+                                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                                        />
+                                    </Grid>
+                                ) : (
+                                    <>
+                                        <Grid item xs={5}>
+                                            <TblBodyTypo>{reduceHexAddress(item.nftIdentity, 4)}</TblBodyTypo>
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                            <TblBodyTypo>{item.projectTitle}</TblBodyTypo>
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                            <TblBodyTypo>{item.projectType}</TblBodyTypo>
+                                        </Grid>
+                                    </>
+                                )}
                             </Grid>
                         ))}
                     </Grid>
