@@ -249,7 +249,7 @@ export const getNFTItem = async (
         _NFTItem.author =
             itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
         _NFTItem.authorDescription = itemObject.authorDescription || ' ';
-        _NFTItem.authorImg = _NFTItem.image; // -- no proper value
+        _NFTItem.authorImg = getImageFromAsset(itemObject.authorAvatar);
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject.holder;
         _NFTItem.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
@@ -460,6 +460,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.author = itemObject.createdName;
         _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.authorDescription = itemObject.createdDescription;
+        _BBItem.authorImg = getImageFromAsset(itemObject.authorAvatar);
         _BBItem.isLike =
             itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
         _BBItem.description = itemObject.description;
@@ -646,7 +647,7 @@ export const getMyNFTItem = async (
         _MyNFTItem.author =
             itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
         _MyNFTItem.authorDescription = itemObject.authorDescription || ' ';
-        _MyNFTItem.authorImg = _MyNFTItem.image; // -- no proper value
+        _MyNFTItem.authorImg = getImageFromAsset(itemObject.authorAvatar);
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
             itemObject.holderName === '' || itemObject.holder === itemObject.royaltyOwner

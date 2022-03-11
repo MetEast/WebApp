@@ -176,6 +176,7 @@ export type TypeProductFetch = {
     status: string;
     authorName: string;
     authorDescription: string;
+    authorAvatar: string;
     instock: number;
     sold: number;
     orderId: string;
