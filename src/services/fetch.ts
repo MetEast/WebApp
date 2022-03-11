@@ -117,7 +117,7 @@ export const getSearchParams = (
     filterRange: TypeFilterRange,
     filters: Array<enumFilterOption>,
     category: TypeSelectItem | undefined,
-) => {    
+) => {
     let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
     if (sortBy !== undefined) {
         switch (sortBy.value) {
@@ -363,16 +363,14 @@ export const getNFTLatestTxs = async (
             _NFTTxHistory.type =
                 itemObject.event === 'Mint' ? 'Created' : itemObject.to === address ? 'Bought From' : 'Sold To';
             _NFTTxHistory.price = parseInt(itemObject.price) / 1e18;
-            _NFTTxHistory.user = reduceHexAddress(
+            _NFTTxHistory.user =
                 _NFTTxHistory.type === 'Bought From'
                     ? itemObject.fromName === ''
-                        ? itemObject.from
+                        ? reduceHexAddress(itemObject.from, 4)
                         : itemObject.fromName
                     : itemObject.toName === ''
-                    ? itemObject.to
-                    : itemObject.toName,
-                4,
-            ); // no proper data
+                    ? reduceHexAddress(itemObject.to, 4)
+                    : itemObject.toName;
             const prodTransTimestamp = getTime(itemObject.timestamp.toString());
             _NFTTxHistory.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
             if (itemObject.event === 'BuyOrder')
@@ -647,7 +645,8 @@ export const getMyNFTItem = async (
         _MyNFTItem.author =
             itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
         _MyNFTItem.authorDescription = itemObject.authorDescription || ' ';
-        _MyNFTItem.authorImg = itemObject.authorAvatar === null ? 'default' : getImageFromAsset(itemObject.authorAvatar);
+        _MyNFTItem.authorImg =
+            itemObject.authorAvatar === null ? 'default' : getImageFromAsset(itemObject.authorAvatar);
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
             itemObject.holderName === '' || itemObject.holder === itemObject.royaltyOwner
@@ -670,7 +669,7 @@ export const getMyNFTItem = async (
 export const getBBCandiates = async (address: string, keyword: string, selectedTokenIds: Array<string>) => {
     const resBBCandidateList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${address}&keyword=${keyword}`,
-        FETCH_CONFIG_JSON
+        FETCH_CONFIG_JSON,
     );
     const jsonBBCandidateList = await resBBCandidateList.json();
     const arrBBCandidateList = jsonBBCandidateList.data === undefined ? [] : jsonBBCandidateList.data.result;
@@ -694,7 +693,12 @@ export const getBBCandiates = async (address: string, keyword: string, selectedT
     if (selectedTokenIds.length === _BBCandidateList.length) _allChecked = true;
     else if (selectedTokenIds.length > 0) _indeterminateChecked = true;
 
-    return {candidates: _BBCandidateList, allChecked: _allChecked, itemChecked: _itemCheckedList, indeterminateChecked: _indeterminateChecked};
+    return {
+        candidates: _BBCandidateList,
+        allChecked: _allChecked,
+        itemChecked: _itemCheckedList,
+        indeterminateChecked: _indeterminateChecked,
+    };
 };
 
 export const uploadUserProfile = (
