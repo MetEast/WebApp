@@ -25,8 +25,8 @@ const EditUserStatus: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     alt=""
                 />
             </Box>
-            <CustomTextField title="USEN NICKNAME" placeholder="USEN NICKNAME" />
-            <CustomTextField title="USER DID" placeholder="USER DID" />
+            <CustomTextField title="USEN NICKNAME" inputValue="JOHN" disabled />
+            <CustomTextField title="USER DID" inputValue="did.elastos.isjvndk3j42nc...24mvs" disabled />
             <Stack spacing={0.5}>
                 <Typography fontSize={12} fontWeight={700}>
                     STATUS
