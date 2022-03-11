@@ -30,7 +30,6 @@ import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/Pr
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import ReceivedBids from 'src/components/profile/ReceivedBids';
-import { TypeSelectItem } from 'src/types/select-types';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
@@ -48,8 +47,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
-    // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
 
     useEffect(() => {
@@ -327,11 +324,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 {bidsList.length === 0 ? (
                     <NoBids onClose={() => setViewBidDlgOpened(false)} />
                 ) : (
-                    <ReceivedBids
-                        bidsList={bidsList}
-                        closeDlg={() => setViewBidDlgOpened(false)}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
-                    />
+                    <ReceivedBids closeDlg={() => setViewBidDlgOpened(false)} />
                 )}
             </ModalDialog>
             <ModalDialog
