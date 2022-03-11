@@ -10,7 +10,7 @@ export interface ComponentProps {
     onClose: () => void;
 }
 
-const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+const EditBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const classes = useStyles();
 
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
@@ -25,7 +25,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             // className={classes.container}
         >
             <Stack alignItems="center">
-                <DialogTitleTypo>Create Banner</DialogTitleTypo>
+                <DialogTitleTypo>Edit Banner</DialogTitleTypo>
             </Stack>
             <Box>
                 <Grid container columnSpacing={4}>
@@ -125,4 +125,4 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     );
 };
 
-export default CreateBanner;
+export default EditBanner;

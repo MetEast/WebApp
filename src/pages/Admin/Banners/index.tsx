@@ -6,9 +6,11 @@ import { Icon } from '@iconify/react';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
 import CreateBanner from 'src/components/Admin/Dialogs/CreateBanner';
+import EditBanner from 'src/components/Admin/Dialogs/EditBanner';
 
 const AdminBanners: React.FC = (): JSX.Element => {
     const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
+    const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
 
     const columns: AdminTableColumn[] = [
         {
@@ -73,7 +75,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                     <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }}>
                         <Icon icon="ph:trash" fontSize={20} color="#EB5757" />
                     </PrimaryButton>
-                    <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }}>
+                    <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }} onClick={onEditBanner}>
                         <Icon icon="ph:pencil-simple" fontSize={20} color="#1890FF" />
                     </PrimaryButton>
                 </Stack>
@@ -101,6 +103,11 @@ const AdminBanners: React.FC = (): JSX.Element => {
 
     const [tabledata] = useState(data);
 
+    const onEditBanner = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowEditBannerDlg(true);
+    };
+
     return (
         <>
             <Stack height="100%" spacing={4}>
@@ -127,6 +134,18 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 <CreateBanner
                     onClose={() => {
                         setShowCreateBannerDlg(false);
+                    }}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={showEditBannerDlg}
+                onClose={() => {
+                    setShowEditBannerDlg(false);
+                }}
+            >
+                <EditBanner
+                    onClose={() => {
+                        setShowEditBannerDlg(false);
                     }}
                 />
             </ModalDialog>
