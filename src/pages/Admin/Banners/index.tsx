@@ -7,10 +7,12 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
 import CreateBanner from 'src/components/Admin/Dialogs/CreateBanner';
 import EditBanner from 'src/components/Admin/Dialogs/EditBanner';
+import DeleteBanner from 'src/components/Admin/Dialogs/DeleteBanner';
 
 const AdminBanners: React.FC = (): JSX.Element => {
     const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
     const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
+    const [showDeleteBannerDlg, setShowDeleteBannerDlg] = useState<boolean>(false);
 
     const columns: AdminTableColumn[] = [
         {
@@ -72,7 +74,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }}>
+                    <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }} onClick={onDeleteBanner}>
                         <Icon icon="ph:trash" fontSize={20} color="#EB5757" />
                     </PrimaryButton>
                     <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }} onClick={onEditBanner}>
@@ -106,6 +108,11 @@ const AdminBanners: React.FC = (): JSX.Element => {
     const onEditBanner = (event: React.MouseEvent) => {
         event.stopPropagation();
         setShowEditBannerDlg(true);
+    };
+
+    const onDeleteBanner = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowDeleteBannerDlg(true);
     };
 
     return (
@@ -146,6 +153,18 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 <EditBanner
                     onClose={() => {
                         setShowEditBannerDlg(false);
+                    }}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={showDeleteBannerDlg}
+                onClose={() => {
+                    setShowDeleteBannerDlg(false);
+                }}
+            >
+                <DeleteBanner
+                    onClose={() => {
+                        setShowDeleteBannerDlg(false);
                     }}
                 />
             </ModalDialog>
