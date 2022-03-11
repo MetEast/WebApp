@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
-import { Typography, Stack, IconButton } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
 import { enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
 import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
@@ -11,6 +11,8 @@ import { TypeSelectItem } from 'src/types/select-types';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
+import ModalDialog from 'src/components/ModalDialog';
+import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -84,7 +86,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PinkButton size="small" sx={{ paddingX: 3 }}>
+                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={onRemove}>
                         <Icon
                             icon="ph:trash"
                             fontSize={20}
@@ -165,64 +167,88 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         setSaleType(item);
     };
 
+    const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
+    const onRemove = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowRemoveNFTDlg(true);
+    };
+
     return (
-        <Stack height="100%" spacing={4}>
-            <Stack direction="row" alignItems="flex-end" spacing={8}>
-                <Stack direction="row" alignItems="flex-end" spacing={1}>
-                    <CustomTextField title="Search" placeholder="TokenID, NFT title, or Address" sx={{ width: 260 }} />
-                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                        <Icon
-                            icon="ph:magnifying-glass"
-                            fontSize={20}
-                            color="white"
-                            style={{ marginBottom: 2, marginRight: 4 }}
+        <>
+            <Stack height="100%" spacing={4}>
+                <Stack direction="row" alignItems="flex-end" spacing={8}>
+                    <Stack direction="row" alignItems="flex-end" spacing={1}>
+                        <CustomTextField
+                            title="Search"
+                            placeholder="TokenID, NFT title, or Address"
+                            sx={{ width: 260 }}
                         />
-                        {`Search`}
-                    </PrimaryButton>
-                </Stack>
-                <Stack direction="row" alignItems="flex-end" spacing={1}>
-                    <Stack spacing={0.5}>
-                        <Typography fontSize={12} fontWeight={700}>
-                            NFT Status
-                        </Typography>
-                        <Select
-                            titlebox={
-                                <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
-                                    {nftState ? nftState.label : 'Select'}
-                                    <Icon icon="ph:caret-down" className="arrow-icon" />
-                                </SelectBtn>
-                            }
-                            selectedItem={nftState}
-                            options={nftStateOptions}
-                            isOpen={nftStateSelectOpen ? 1 : 0}
-                            handleClick={handleNFTStateChange}
-                            setIsOpen={setNftStateSelectOpen}
-                            width={140}
-                        />
+                        <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                            <Icon
+                                icon="ph:magnifying-glass"
+                                fontSize={20}
+                                color="white"
+                                style={{ marginBottom: 2, marginRight: 4 }}
+                            />
+                            {`Search`}
+                        </PrimaryButton>
                     </Stack>
-                    <Stack spacing={0.5}>
-                        <Typography fontSize={12} fontWeight={700}>
-                            Sale Type
-                        </Typography>
-                        <Select
-                            titlebox={
-                                <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
-                                    {saleType ? saleType.label : 'Select'}
-                                    <Icon icon="ph:caret-down" className="arrow-icon" />
-                                </SelectBtn>
-                            }
-                            selectedItem={saleType}
-                            options={saleTypeOptions}
-                            isOpen={saleTypeSelectOpen ? 1 : 0}
-                            handleClick={handleSaleTypeChange}
-                            setIsOpen={setSaleTypeSelectOpen}
-                            width={140}
-                        />
+                    <Stack direction="row" alignItems="flex-end" spacing={1}>
+                        <Stack spacing={0.5}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                NFT Status
+                            </Typography>
+                            <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
+                                        {nftState ? nftState.label : 'Select'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
+                                selectedItem={nftState}
+                                options={nftStateOptions}
+                                isOpen={nftStateSelectOpen ? 1 : 0}
+                                handleClick={handleNFTStateChange}
+                                setIsOpen={setNftStateSelectOpen}
+                                width={140}
+                            />
+                        </Stack>
+                        <Stack spacing={0.5}>
+                            <Typography fontSize={12} fontWeight={700}>
+                                Sale Type
+                            </Typography>
+                            <Select
+                                titlebox={
+                                    <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
+                                        {saleType ? saleType.label : 'Select'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" />
+                                    </SelectBtn>
+                                }
+                                selectedItem={saleType}
+                                options={saleTypeOptions}
+                                isOpen={saleTypeSelectOpen ? 1 : 0}
+                                handleClick={handleSaleTypeChange}
+                                setIsOpen={setSaleTypeSelectOpen}
+                                width={140}
+                            />
+                        </Stack>
                     </Stack>
                 </Stack>
+                <Table tabledata={tabledata} columns={columns} />
             </Stack>
-            <Table tabledata={tabledata} columns={columns} />
-        </Stack>
+            <ModalDialog
+                open={showRemoveNFTDlg}
+                onClose={() => {
+                    setShowRemoveNFTDlg(false);
+                }}
+            >
+                <RemoveNFT
+                    onClose={() => {
+                        setShowRemoveNFTDlg(false);
+                    }}
+                />
+            </ModalDialog>
+        </>
     );
 };
 
