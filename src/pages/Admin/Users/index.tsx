@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import CustomTextField from 'src/components/TextField';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 
 const AdminUsers: React.FC = (): JSX.Element => {
@@ -16,10 +16,22 @@ const AdminUsers: React.FC = (): JSX.Element => {
         {
             id: 'address',
             label: 'Address',
+            width: 80,
         },
         {
             id: 'username',
             label: 'Username',
+            width: 80,
+        },
+        {
+            id: 'avatar',
+            label: 'Avatar',
+            cell: (props) => (
+                <Box borderRadius="50%" width={50} height={50} overflow="hidden" alignSelf="center">
+                    <img src={props.value} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
+                </Box>
+            ),
+            width: 80,
         },
         {
             id: 'status',
@@ -39,6 +51,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
                     {statusValues[props.value].label}
                 </Typography>
             ),
+            width: 80,
         },
         {
             id: 'remarks',
@@ -49,61 +62,40 @@ const AdminUsers: React.FC = (): JSX.Element => {
                 </Typography>
             ),
         },
-    ];
-
-    const data: AdminUsersItemType[] = [
         {
-            id: 0,
-            address: 'efgd....1234',
-            username: 'Shaba',
-            status: 2,
-            remarks: 'This user tried to scam buyers by uploading a fake NFT.',
-        },
-        {
-            id: 1,
-            address: 'efgd....1213',
-            username: 'Michael',
-            status: 0,
-            remarks: 'Bots',
-        },
-        {
-            id: 2,
-            address: 'e413....1441',
-            username: 'Tang',
-            status: 0,
-            remarks: '-',
-        },
-        {
-            id: 3,
-            address: 'efgd....1dfa',
-            username: 'asralf',
-            status: 1,
-            remarks: '',
-        },
-        {
-            id: 4,
-            address: 'e413....1gas',
-            username: 'John',
-            status: 2,
-            remarks: 'Bots',
-        },
-        {
-            id: 5,
-            address: 'efgd....1af4',
-            username: 'Doe',
-            status: 2,
-            remarks: 'Bots',
-        },
-        {
-            id: 6,
-            address: 'e413....11fa',
-            username: 'Hannah',
-            status: 2,
-            remarks: 'Multiple reports by the users about this user. Fake NFTs.',
+            id: 'edits',
+            label: '',
+            cell: (props) => (
+                <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                    <Icon
+                        icon="ph:pencil-simple"
+                        fontSize={20}
+                        color="#1890FF"
+                        style={{ marginBottom: 2, marginRight: 8 }}
+                    />
+                    {`Edit`}
+                </SecondaryButton>
+            ),
         },
     ];
 
-    const [tabledata] = useState(data);
+    const data: AdminUsersItemType[] = useMemo(
+        () =>
+            [...Array(800).keys()].map(
+                (item) =>
+                    ({
+                        id: 0,
+                        address: 'efgd....1234',
+                        username: 'Shaba',
+                        avatar: '/assets/images/avatar-template.png',
+                        status: item % 3,
+                        remarks: 'This user tried to scam buyers by uploading a fake NFT.',
+                    } as AdminUsersItemType),
+            ),
+        [],
+    );
+
+    const [tabledata, setTableData] = useState(data);
 
     return (
         <Stack height="100%" spacing={4}>

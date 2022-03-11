@@ -27,6 +27,7 @@ export type AdminUsersItemType = {
     id: number; // required
     address: string;
     username: string;
+    avatar: string;
     status: number;
     remarks: string;
 };
