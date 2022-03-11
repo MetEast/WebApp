@@ -103,7 +103,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <ProductImageContainer product={blindBoxDetail} updateLikes={updateBlindBoxLikes} />
+                    <ProductImageContainer product={blindBoxDetail} updateLikes={updateBlindBoxLikes} isBlindBox={true} />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
