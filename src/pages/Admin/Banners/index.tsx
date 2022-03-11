@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Stack, Typography, IconButton } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { AdminTableColumn, AdminBannersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
@@ -14,6 +14,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         {
             id: 'banner_id',
             label: 'Banner ID',
+            width: 100,
         },
         {
             id: 'image',
@@ -69,12 +70,12 @@ const AdminBanners: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#FDEEEE' }}>
-                        <Icon icon="ph:trash" color="#EB5757" />
-                    </IconButton>
-                    <IconButton sx={{ height: 40, borderRadius: 3, background: '#E8F4FF' }}>
-                        <Icon icon="ph:pencil-simple" color="#1890FF" />
-                    </IconButton>
+                    <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }}>
+                        <Icon icon="ph:trash" fontSize={20} color="#EB5757" />
+                    </PrimaryButton>
+                    <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }}>
+                        <Icon icon="ph:pencil-simple" fontSize={20} color="#1890FF" />
+                    </PrimaryButton>
                 </Stack>
             ),
         },
@@ -86,7 +87,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 (item) =>
                     ({
                         id: item,
-                        banner_id: String(84560673 + item),
+                        banner_id: item + 1,
                         image: '/assets/images/explore/singlenft-template4.png',
                         url: 'https://meteast.io/banner',
                         sort: 10,

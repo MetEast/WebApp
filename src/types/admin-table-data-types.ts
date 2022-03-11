@@ -81,7 +81,7 @@ export type AdminBidsItemType = {
 
 export type AdminBannersItemType = {
     id: number; // required
-    banner_id: string;
+    banner_id: number;
     image: string;
     url: string;
     sort: number;
