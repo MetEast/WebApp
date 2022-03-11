@@ -31,13 +31,17 @@ const AboutAuthor: React.FC<ComponentProps> = ({ name, description, img, address
                 <Grid container columnSpacing={1} rowGap={5}>
                     <Grid item>
                         {img ? (
-                            <img
-                                src={img}
-                                width={40}
-                                height={40}
-                                style={{ borderRadius: '9999px', objectFit: 'cover' }}
-                                alt=""
-                            />
+                            img !== 'default' ? (
+                                <img
+                                    src={img}
+                                    width={40}
+                                    height={40}
+                                    style={{ borderRadius: '9999px', objectFit: 'cover' }}
+                                    alt=""
+                                />
+                            ) : (
+                                <Icon icon="ph:user" width={40} height={40} color="#1890FF" />
+                            )
                         ) : (
                             <Skeleton
                                 variant="rectangular"

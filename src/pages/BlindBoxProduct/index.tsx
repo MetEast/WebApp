@@ -170,7 +170,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         <AboutAuthor
                             name={blindBoxDetail.author}
                             description={blindBoxDetail.authorDescription}
-                            img={blindBoxDetail.image}
+                            img={blindBoxDetail.authorImg}
                             address={reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)}
                         />
                     </Stack>

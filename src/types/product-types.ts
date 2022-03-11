@@ -199,6 +199,7 @@ export type TypeProductFetch = {
     createdName: string;
     createdAddress: string;
     createdDescription: string;
+    createdAvatar: string;
     isBlindbox: boolean;
 };
 
