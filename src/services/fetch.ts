@@ -303,7 +303,7 @@ export const getNFTLatestTxs = async (
     pageSize: number,
     sortBy?: string,
 ) => {
-    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&$pageSize=${pageSize}`;
+    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&pageSize=${pageSize}`;
     switch (sortBy) {
         case 'low_to_high':
             fetchUrl += `&orderType=price_l_to_h`;
@@ -408,7 +408,7 @@ export const getNFTLatestBids = async (
     pageSize: number,
     sortBy?: string,
 ) => {
-    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${tokenId}&address=${userAddress}&pageNum=${pageNum}&$pageSize=${pageSize}`;
+    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${tokenId}&address=${userAddress}&pageNum=${pageNum}&pageSize=${pageSize}`;
     switch (sortBy) {
         case 'low_to_high':
             fetchUrl += `&orderType=price_l_to_h`;
@@ -426,10 +426,7 @@ export const getNFTLatestBids = async (
             fetchUrl += `&orderType=mostrecent`;
             break;
     }
-    const resNFTBids = await fetch(
-        fetchUrl,
-        FETCH_CONFIG_JSON,
-    );
+    const resNFTBids = await fetch(fetchUrl, FETCH_CONFIG_JSON);
     const jsonNFTBids = await resNFTBids.json();
     const arrNFTBids = jsonNFTBids.data;
 
@@ -541,36 +538,47 @@ export const getMyNFTItemList = async (
         _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
         _myNFT.author =
             itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _myNFT.types = [];
         if (nTabId === 0 || nTabId === 5) {
-            // all = owned + sold
-            if (itemObject.status === 'NEW') {
-                // not on market
-                if (itemObject.holder === itemObject.royaltyOwner) _myNFT.type = enumMyNFTType.Created;
-                else if (itemObject.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
-                else if (itemObject.royaltyOwner !== walletAddress) _myNFT.type = enumMyNFTType.Purchased;
+            // all & liked
+            _myNFT.types.push(
+                itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased,
+            );
+            if (itemObject.holder === walletAddress) {
+                // owned
+                if (itemObject.status !== 'NEW')
+                    _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
             } else {
-                if (itemObject.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
-                else if (itemObject.royaltyOwner !== walletAddress) _myNFT.type = enumMyNFTType.Purchased;
-                else _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                // not owned
+                _myNFT.types.push(enumMyNFTType.Sold);
             }
         } else if (nTabId === 1) {
-            // owned = purchased + created + for sale
-            if (itemObject.status === 'NEW') {
-                // not on market
-                if (itemObject.holder === itemObject.royaltyOwner) _myNFT.type = enumMyNFTType.Created;
-                else _myNFT.type = enumMyNFTType.Purchased;
+            // owned
+            _myNFT.types.push(
+                itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased,
+            );
+            if (itemObject.status !== 'NEW')
+                _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
+        } else if (nTabId === 2) { // created
+            if (itemObject.holder === walletAddress) {
+                // owned
+                _myNFT.types.push(enumMyNFTType.Created);
+                if (itemObject.status !== 'NEW')
+                    _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
             } else {
-                _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                // not owned
+                if (itemObject.status === 'NEW') {
+                    _myNFT.types.push(enumMyNFTType.Created);
+                    _myNFT.types.push(enumMyNFTType.Sold);
+                }
+                else {
+                    _myNFT.types.push(enumMyNFTType.Sold);
+                    _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
+                }
             }
-        } else if (nTabId === 2) {
-            if (itemObject.status === 'NEW') {
-                // not on market
-                _myNFT.type = enumMyNFTType.Created;
-            } else {
-                _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            }
-        } else if (nTabId === 3)
-            _myNFT.type = itemObject.status === 'BUY NOW' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+        } else if (nTabId === 3) {
+            _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+        }
         else if (nTabId === 4) _myNFT.type = enumMyNFTType.Sold;
         _myNFT.likes = itemObject.likes;
         _myNFT.status = itemObject.status;
