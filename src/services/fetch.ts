@@ -301,11 +301,27 @@ export const getNFTLatestTxs = async (
     address: string,
     pageNum: number,
     pageSize: number,
+    sortBy?: string,
 ) => {
-    const resNFTTxs = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&$pageSize=${pageSize}&timeOrder=-1`,
-        FETCH_CONFIG_JSON,
-    );
+    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&$pageSize=${pageSize}`;
+    switch (sortBy) {
+        case 'low_to_high':
+            fetchUrl += `&orderType=price_l_to_h`;
+            break;
+        case 'high_to_low':
+            fetchUrl += `&orderType=price_h_to_l`;
+            break;
+        case 'most_recent':
+            fetchUrl += `&orderType=mostrecent`;
+            break;
+        case 'oldest':
+            fetchUrl += `&orderType=oldest`;
+            break;
+        default:
+            fetchUrl += `&orderType=mostrecent`;
+            break;
+    }
+    const resNFTTxs = await fetch(fetchUrl, FETCH_CONFIG_JSON);
     const jsonNFTTxs = await resNFTTxs.json();
     const arrNFTTxs = jsonNFTTxs.data;
 
@@ -357,7 +373,7 @@ export const getNFTLatestTxs = async (
         const timestamp = getTime(itemObject.timestamp.toString());
         _NFTTx.time = timestamp.date + ' ' + timestamp.time;
         _NFTTxList.push(_NFTTx);
-        //
+        // for my nft history
         if (address !== '' && (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder')) {
             const _NFTTxHistory: TypeNFTHisotry = { ...blankMyNFTHistory };
             _NFTTxHistory.type =
@@ -390,9 +406,28 @@ export const getNFTLatestBids = async (
     userAddress: string,
     pageNum: number,
     pageSize: number,
+    sortBy?: string,
 ) => {
+    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${tokenId}&address=${userAddress}&pageNum=${pageNum}&$pageSize=${pageSize}`;
+    switch (sortBy) {
+        case 'low_to_high':
+            fetchUrl += `&orderType=price_l_to_h`;
+            break;
+        case 'high_to_low':
+            fetchUrl += `&orderType=price_h_to_l`;
+            break;
+        case 'most_recent':
+            fetchUrl += `&orderType=mostrecent`;
+            break;
+        case 'oldest':
+            fetchUrl += `&orderType=oldest`;
+            break;
+        default:
+            fetchUrl += `&orderType=mostrecent`;
+            break;
+    }
     const resNFTBids = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${tokenId}&address=${userAddress}&pageNum=${pageNum}&$pageSize=${pageSize}&timeOrder=-1`,
+        fetchUrl,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTBids = await resNFTBids.json();

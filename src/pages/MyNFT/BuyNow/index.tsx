@@ -24,7 +24,6 @@ import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/Pr
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
-import { TypeSelectItem } from 'src/types/select-types';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 
@@ -36,7 +35,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
-    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
 
     useEffect(() => {
         let unmounted = false;

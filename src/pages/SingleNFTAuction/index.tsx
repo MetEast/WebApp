@@ -26,7 +26,6 @@ import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
-import { TypeSelectItem } from 'src/types/select-types';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';

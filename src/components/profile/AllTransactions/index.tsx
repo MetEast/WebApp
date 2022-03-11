@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Stack, Grid, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { SecondaryButton } from 'src/components/Buttons/styles';
@@ -9,34 +10,36 @@ import { SelectTitleBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { TypeNFTTransaction } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
+import { viewAllDlgSortOptions } from 'src/constants/select-constants';
+import { getNFTLatestTxs } from 'src/services/fetch';
 
 export interface ComponentProps {
 }
 
 const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
-    const transactionList: Array<TypeNFTTransaction> = [];
+    const params = useParams();
     const [dialogState, setDialogState] = useDialogContext();
-    const sortbyOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Option1',
-            value: 'Option1',
-        },
-        {
-            label: 'Option2',
-            value: 'Option2',
-        },
-        {
-            label: 'Option3',
-            value: 'Option3',
-        },
-    ];
-
+    const [allTxsList, setAllTxsList] = useState<Array<TypeNFTTransaction>>([]);
     const [sortby, setSortby] = React.useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
     const handleSortbyChange = (value: string) => {
-        const item = sortbyOptions.find((option) => option.value === value);
+        const item = viewAllDlgSortOptions.find((option) => option.value === value);
         setSortby(item);
     };
+
+    useEffect(() => {
+        let unmounted = false;
+        const fetchLatestTxs = async () => {
+            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 1000, sortby?.value);
+            if (!unmounted) {
+                setAllTxsList(_NFTTxs.txs);
+            }
+        };
+        fetchLatestTxs().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [params.id, sortby]);
 
     return (
         <Stack spacing={5} width={520}>
@@ -51,7 +54,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                         </SelectTitleBtn>
                     }
                     selectedItem={sortby}
-                    options={sortbyOptions}
+                    options={viewAllDlgSortOptions}
                     isOpen={sortBySelectOpen ? 1 : 0}
                     setIsOpen={isSortBySelectOpen}
                     handleClick={handleSortbyChange}
@@ -82,7 +85,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     </Grid>
                 </Grid>
                 <Grid container marginTop={2.5} rowGap={3} alignItems="center">
-                    {transactionList.map((item, index) => (
+                    {allTxsList.map((item, index) => (
                         <Grid item container key={`transaction-row-${index}`}>
                             <Grid item xs={4}>
                                 <Typography fontSize={16} fontWeight={700}>

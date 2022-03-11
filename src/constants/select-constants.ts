@@ -133,3 +133,22 @@ export const priceHistoryUnitSelectOptions: Array<TypeSelectItem> = [
         value: 'Monthly',
     },
 ];
+
+export const viewAllDlgSortOptions: Array<TypeSelectItem> = [
+    {
+        label: 'Price: Low to high',
+        value: enmSortOptionValues.low_to_high,
+    },
+    {
+        label: 'Price: High to low',
+        value: enmSortOptionValues.high_to_low,
+    },
+    {
+        label: 'Most Recent',
+        value: enmSortOptionValues.most_recent,
+    },
+    {
+        label: 'Oldest',
+        value: enmSortOptionValues.oldest,
+    },
+];

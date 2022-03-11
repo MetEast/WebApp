@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { TypeSelectItem } from 'src/types/select-types';
@@ -10,36 +10,40 @@ import { Icon } from '@iconify/react';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
+import { viewAllDlgSortOptions } from 'src/constants/select-constants';
+import { getNFTLatestBids } from 'src/services/fetch';
+import { useParams } from 'react-router-dom';
 
 export interface ComponentProps {
 }
 
 const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
-    const bidsList: Array<TypeSingleNFTBid> = [];
-    const myBidsList: Array<TypeSingleNFTBid> = [];
+    const params = useParams();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const sortbyOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Option1',
-            value: 'Option1',
-        },
-        {
-            label: 'Option2',
-            value: 'Option2',
-        },
-        {
-            label: 'Option3',
-            value: 'Option3',
-        },
-    ];
-
+    const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [sortby, setSortby] = useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
     const handleSortbyChange = (value: string) => {
-        const item = sortbyOptions.find((option) => option.value === value);
+        const item = viewAllDlgSortOptions.find((option) => option.value === value);
         setSortby(item);
     };
+
+    useEffect(() => {
+        let unmounted = false;
+        const fetchNFTLatestBids = async () => {
+            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 1000, sortby?.value);
+            if (!unmounted) {
+                setBidsList(_NFTBids.others);
+                setMyBidsList(_NFTBids.mine);
+            }
+        };
+        fetchNFTLatestBids().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts, params.id, sortby]);
     
     return (
         <Stack spacing={5} width={520}>
@@ -54,7 +58,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
                         </SelectTitleBtn>
                     }
                     selectedItem={sortby}
-                    options={sortbyOptions}
+                    options={viewAllDlgSortOptions}
                     isOpen={sortBySelectOpen ? 1 : 0}
                     setIsOpen={isSortBySelectOpen}
                     handleClick={handleSortbyChange}
