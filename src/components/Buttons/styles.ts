@@ -1,5 +1,23 @@
 import { styled, Button } from '@mui/material';
 
+const buttonStyles = {
+    primary: {
+        bgColor: '#1890ff',
+        hoverBgColor: '#28a0ff',
+        color: 'white',
+    },
+    secondary: {
+        bgColor: '#e8f4ff',
+        hoverBgColor: '#d8e4ef',
+        color: '#1890ff',
+    },
+    pink: {
+        bgColor: '#fdeeee',
+        hoverBgColor: '#fddede',
+        color: '#eb5757',
+    },
+};
+
 export const BaseButton = styled(Button)<{ size?: 'small' }>`
     height: ${({ size }) => (size === 'small' ? '40px' : '56px')};
     border-radius: ${({ size }) => (size === 'small' ? '12px' : '16px')};
@@ -7,11 +25,11 @@ export const BaseButton = styled(Button)<{ size?: 'small' }>`
     font-weight: 700;
 `;
 
-export const PrimaryButton = styled(BaseButton)`
-    background: #1890ff;
-    color: white;
+export const PrimaryButton = styled(BaseButton)<{ btn_type?: 'primary' | 'secondary' | 'pink' }>`
+    background: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].bgColor};
+    color: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].color};
     &:hover {
-        background: #28a0ff;
+        background: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].hoverBgColor};
     }
 `;
 

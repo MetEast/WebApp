@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
-import { PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 
 export interface ComponentProps {
@@ -9,16 +9,63 @@ export interface ComponentProps {
 }
 
 const EditUserStatus: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+    const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban'>('user');
+
     return (
-        <Stack spacing={4} width={520}>
+        <Stack spacing={3} width={340}>
             <Stack alignItems="center">
                 <DialogTitleTypo>Edit User Status</DialogTitleTypo>
             </Stack>
+            <Box borderRadius={2} width={80} height={80} overflow="hidden" alignSelf="center">
+                <img
+                    src="/assets/images/avatar-template.png"
+                    width="100%"
+                    height="100%"
+                    style={{ objectFit: 'cover' }}
+                    alt=""
+                />
+            </Box>
+            <CustomTextField title="USEN NICKNAME" placeholder="USEN NICKNAME" />
+            <CustomTextField title="USER DID" placeholder="USER DID" />
+            <Stack spacing={0.5}>
+                <Typography fontSize={12} fontWeight={700}>
+                    STATUS
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                    <PrimaryButton
+                        size="small"
+                        fullWidth
+                        btn_type={userStatus === 'user' ? 'primary' : 'secondary'}
+                        onClick={() => setUserStatus('user')}
+                    >
+                        user
+                    </PrimaryButton>
+                    <PrimaryButton
+                        size="small"
+                        fullWidth
+                        btn_type={userStatus === 'admin' ? 'primary' : 'secondary'}
+                        onClick={() => setUserStatus('admin')}
+                    >
+                        admin
+                    </PrimaryButton>
+                    <PrimaryButton
+                        size="small"
+                        fullWidth
+                        btn_type={userStatus === 'ban' ? 'primary' : 'secondary'}
+                        onClick={() => setUserStatus('ban')}
+                    >
+                        ban
+                    </PrimaryButton>
+                </Stack>
+            </Stack>
+            <CustomTextField title="REMARKS" placeholder="Enter remarks" multiline rows={3} />
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth onClick={onClose}>
+                <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
                     close
-                </SecondaryButton>
-                <PinkButton fullWidth>Confirm</PinkButton>
+                </PrimaryButton>
+                <PrimaryButton btn_type="pink" fullWidth>
+                    Confirm
+                </PrimaryButton>
             </Stack>
         </Stack>
     );
