@@ -2,6 +2,7 @@ import React from 'react';
 import { ListItemsWrapper, ListItemsStack, ItemButton } from './styles';
 import { Box } from '@mui/material';
 import { TypeSelectItem } from 'src/types/select-types';
+import { Icon } from '@iconify/react';
 
 interface ComponentProps {
     titlebox: React.ReactNode;
@@ -45,6 +46,7 @@ const Select: React.FC<ComponentProps> = ({
                             key={`sort-option-${index}`}
                             title={item.label}
                             value={item.value}
+                            icon={item.icon}
                             selectedValue={selectedItem?.value}
                             handleClick={handleClick}
                         />
@@ -59,10 +61,11 @@ interface SelectItemProps {
     handleClick: (value: string) => void;
     title: string;
     value: string;
+    icon?: string;
     selectedValue?: string;
 }
 
-const SelectItem: React.FC<SelectItemProps> = ({ title, value, selectedValue, handleClick }) => {
+const SelectItem: React.FC<SelectItemProps> = ({ title, value, icon, selectedValue, handleClick }) => {
     return (
         <ItemButton
             fullWidth
@@ -70,6 +73,7 @@ const SelectItem: React.FC<SelectItemProps> = ({ title, value, selectedValue, ha
             sx={{ fontSize: 14, fontWeight: 500 }}
             onClick={(e) => handleClick(value)}
         >
+            {icon && <Icon icon={icon} fontSize={16} style={{ marginRight: 4 }} />}
             {title}
         </ItemButton>
     );
