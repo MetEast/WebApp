@@ -36,12 +36,11 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
-    
+
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
@@ -49,7 +48,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 setProductDetail(_NFTItem);
             }
         };
-        getFetchData().catch(console.error);
+        fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -57,17 +56,17 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy, params.id]);
+    }, [params.id]);
     // -------------- Fetch Data -------------- //
     // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
@@ -261,10 +260,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions
-                    transactionList={transactionsList}
-                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
-                />
+                <AllTransactions />
             </ModalDialog>
             <ModalDialog
                 open={dialogState.changePriceDlgOpened}

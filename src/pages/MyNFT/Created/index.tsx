@@ -28,7 +28,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchMyNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
@@ -36,7 +36,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                 setProductDetail(_MyNFTItem);
             }
         };
-        if (signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
         else navigate('/');
         return () => {
             unmounted = true;
@@ -45,13 +45,13 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };

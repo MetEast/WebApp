@@ -31,11 +31,10 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchMyNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
@@ -43,7 +42,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                 setProductDetail(_MyNFTItem);
             }
         };
-        if (signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
         else navigate('/');
         return () => {
             unmounted = true;
@@ -52,18 +51,18 @@ const MyNFTSold: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs);
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
+    }, [params.id, signInDlgState.walletAccounts]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -181,10 +180,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions
-                    transactionList={transactionsList}
-                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
-                />
+                <AllTransactions />
             </ModalDialog>
         </Container>
     );

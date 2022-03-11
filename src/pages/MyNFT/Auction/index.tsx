@@ -55,7 +55,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchMyNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
@@ -63,7 +63,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 setProductDetail(_MyNFTItem);
             }
         };
-        if (signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
         else navigate('/');
         return () => {
             unmounted = true;
@@ -72,32 +72,32 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs);
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
+    }, [params.id, signInDlgState.walletAccounts]);
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchNFTLatestBids = async () => {
             const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setBidsList(_NFTBids.others);
             }
         };
-        getFetchData().catch(console.error);
+        fetchNFTLatestBids().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
+    }, [signInDlgState.walletAccounts, params.id]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -308,10 +308,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions
-                    transactionList={transactionsList}
-                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
-                />
+                <AllTransactions />
             </ModalDialog>
             <ModalDialog
                 open={dialogState.acceptBidDlgOpened}
@@ -351,11 +348,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                         }}
                     />
                 ) : (
-                    <AllBids
-                        bidsList={bidsList}
-                        myBidsList={[]}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
-                    />
+                    <AllBids />
                 )}
             </ModalDialog>
         </Container>

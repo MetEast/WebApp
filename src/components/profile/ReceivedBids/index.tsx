@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { TypeSelectItem } from 'src/types/select-types';
@@ -10,14 +10,11 @@ import { Icon } from '@iconify/react';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
-import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import { isInAppBrowser } from 'src/services/wallet';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
@@ -27,17 +24,9 @@ export interface ComponentProps {
 }
 
 const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHandler }): JSX.Element => {
-    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [sortby, setSortby] = useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = signInDlgState.isLoggedIn
-        ? new Web3(signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any))
-        : new Web3(Web3.givenProvider);
 
     const sortbyOptions: Array<TypeSelectItem> = [
         {
@@ -58,15 +47,6 @@ const ReceivedBids: React.FC<ComponentProps> = ({ bidsList, closeDlg, changeHand
         setSortby(item);
         changeHandler(item);
     };
-
-    // tx Fee
-    useEffect(() => {
-        const setAcceptBidTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        if(signInDlgState.isLoggedIn) setAcceptBidTxFee();
-    }, [signInDlgState.isLoggedIn, dialogState.acceptBidDlgStep]);
 
     return (
         <>

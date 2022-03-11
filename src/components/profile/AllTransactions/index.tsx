@@ -11,11 +11,10 @@ import { TypeNFTTransaction } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {
-    transactionList: Array<TypeNFTTransaction>;
-    changeHandler: (value: TypeSelectItem | undefined) => void;
 }
 
-const AllTransactions: React.FC<ComponentProps> = ({ transactionList, changeHandler }): JSX.Element => {
+const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
+    const transactionList: Array<TypeNFTTransaction> = [];
     const [dialogState, setDialogState] = useDialogContext();
     const sortbyOptions: Array<TypeSelectItem> = [
         {
@@ -37,7 +36,6 @@ const AllTransactions: React.FC<ComponentProps> = ({ transactionList, changeHand
     const handleSortbyChange = (value: string) => {
         const item = sortbyOptions.find((option) => option.value === value);
         setSortby(item);
-        changeHandler(item);
     };
 
     return (

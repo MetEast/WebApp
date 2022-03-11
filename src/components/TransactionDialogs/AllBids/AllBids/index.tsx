@@ -12,12 +12,11 @@ import { TypeSingleNFTBid } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {
-    bidsList: Array<TypeSingleNFTBid>;
-    myBidsList: Array<TypeSingleNFTBid>;
-    changeHandler: (value: TypeSelectItem | undefined) => void;
 }
 
-const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList, changeHandler}): JSX.Element => {
+const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
+    const bidsList: Array<TypeSingleNFTBid> = [];
+    const myBidsList: Array<TypeSingleNFTBid> = [];
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const sortbyOptions: Array<TypeSelectItem> = [
@@ -40,7 +39,6 @@ const AllBids: React.FC<ComponentProps> = ({bidsList, myBidsList, changeHandler}
     const handleSortbyChange = (value: string) => {
         const item = sortbyOptions.find((option) => option.value === value);
         setSortby(item);
-        changeHandler(item);
     };
     
     return (

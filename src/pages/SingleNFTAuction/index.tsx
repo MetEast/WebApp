@@ -42,13 +42,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
-    const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
@@ -56,7 +54,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 setProductDetail(_NFTItem);
             }
         };
-        getFetchData().catch(console.error);
+        fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -64,32 +62,32 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy, params.id]);
+    }, [params.id]);
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestBids = async () => {
             const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setMyBidsList(_NFTBids.mine);
                 setBidsList(_NFTBids.others);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestBids().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
+    }, [signInDlgState.walletAccounts, params.id]);
     // -------------- Fetch Data -------------- //
     // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
@@ -357,11 +355,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         }}
                     />
                 ) : (
-                    <AllBids
-                        bidsList={bidsList}
-                        myBidsList={myBidsList}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
-                    />
+                    <AllBids />
                 )}
             </ModalDialog>
             <ModalDialog
@@ -370,10 +364,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions
-                    transactionList={transactionsList}
-                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
-                />
+                <AllTransactions />
             </ModalDialog>
         </Container>
     );
