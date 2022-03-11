@@ -24,7 +24,11 @@ const MenuItem = (item: IMenuItem, depth: number): JSX.Element => {
                 paddingY={1}
                 spacing={1.5}
                 color={location.pathname === item.url ? '#1890FF' : 'white'}
-                sx={{ cursor: 'pointer', background: location.pathname === item.url ? 'white' : 'auto' }}
+                sx={{
+                    cursor: 'pointer',
+                    background: location.pathname === item.url ? 'white' : 'auto',
+                    ':hover': { background: location.pathname === item.url ? 'auto' : '#46A6FF' },
+                }}
                 borderRadius={3}
                 onClick={() => {
                     navigate(item.url);
@@ -56,26 +60,26 @@ const MenuBar: React.FC = (): JSX.Element => {
             icon: <Icon icon="ph:user" fontSize={20} />,
             url: '/admin/users',
         },
-        { title: 'BLIND BOXES', icon: <Icon icon="ph:cube" fontSize={20} />, url: '/admin/blindboxes' },
-        {
-            title: 'HOME',
-            icon: <Icon icon="ph:house" fontSize={20} />,
-            url: '',
-            submenu: [
-                { title: 'Popular', url: '/admin/home-popular' },
-                { title: 'Upcoming', url: '/admin/home-upcoming' },
-            ],
-        },
-        {
-            title: 'ORDERS',
-            icon: <Icon icon="ph:leaf" fontSize={20} />,
-            url: '',
-            submenu: [
-                { title: 'NFTs', url: '/admin/orders-nfts' },
-                { title: 'Blind Boxes', url: '/admin/orders-blindboxes' },
-            ],
-        },
-        { title: 'BIDS', icon: <Icon icon="ph:ticket" fontSize={20} />, url: '/admin/bids' },
+        // { title: 'BLIND BOXES', icon: <Icon icon="ph:cube" fontSize={20} />, url: '/admin/blindboxes' },
+        // {
+        //     title: 'HOME',
+        //     icon: <Icon icon="ph:house" fontSize={20} />,
+        //     url: '',
+        //     submenu: [
+        //         { title: 'Popular', url: '/admin/home-popular' },
+        //         { title: 'Upcoming', url: '/admin/home-upcoming' },
+        //     ],
+        // },
+        // {
+        //     title: 'ORDERS',
+        //     icon: <Icon icon="ph:leaf" fontSize={20} />,
+        //     url: '',
+        //     submenu: [
+        //         { title: 'NFTs', url: '/admin/orders-nfts' },
+        //         { title: 'Blind Boxes', url: '/admin/orders-blindboxes' },
+        //     ],
+        // },
+        // { title: 'BIDS', icon: <Icon icon="ph:ticket" fontSize={20} />, url: '/admin/bids' },
         { title: 'BANNERS', icon: <Icon icon="ph:mountains" fontSize={20} />, url: '/admin/banners' },
         { title: 'NOTIFICATIONS', icon: <Icon icon="ph:chat-circle" fontSize={20} />, url: '/admin/notifications' },
     ];
@@ -84,15 +88,10 @@ const MenuBar: React.FC = (): JSX.Element => {
 
     return (
         <Stack spacing={3}>
-            <Typography
-                fontSize={32}
-                fontWeight={900}
-                color="white"
-                textAlign="center"
-                sx={{ textTransform: 'uppercase' }}
-            >
-                Meteast
-            </Typography>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <img src="/assets/images/header/logo.svg" width={37} height={33} alt="" />
+                <img src="/assets/images/header/meteast_label.svg" width={153} height={18} alt="" />
+            </Stack>
             <BackToPublicBtn
                 onClick={() => {
                     navigate('/');
