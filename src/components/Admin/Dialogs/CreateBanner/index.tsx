@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import { useStyles } from './styles';
-import { DialogTitleTypo } from '../../styles';
+import { DialogTitleTypo } from '../../../TransactionDialogs/styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';

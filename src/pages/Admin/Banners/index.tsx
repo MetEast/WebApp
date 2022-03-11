@@ -5,10 +5,10 @@ import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ModalDialog from 'src/components/ModalDialog';
-import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
+import CreateBanner from 'src/components/Admin/Dialogs/CreateBanner';
 
 const AdminBanners: React.FC = (): JSX.Element => {
-    const [createBannerDlgOpen, setCreateBannerDlgOpen] = useState<boolean>(false);
+    const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
 
     const columns: AdminTableColumn[] = [
         {
@@ -109,7 +109,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                         size="small"
                         sx={{ paddingX: 3 }}
                         onClick={() => {
-                            setCreateBannerDlgOpen(true);
+                            setShowCreateBannerDlg(true);
                         }}
                     >
                         <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
@@ -119,14 +119,14 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 <Table tabledata={tabledata} columns={columns} />
             </Stack>
             <ModalDialog
-                open={createBannerDlgOpen}
+                open={showCreateBannerDlg}
                 onClose={() => {
-                    setCreateBannerDlgOpen(false);
+                    setShowCreateBannerDlg(false);
                 }}
             >
                 <CreateBanner
                     onClose={() => {
-                        setCreateBannerDlgOpen(false);
+                        setShowCreateBannerDlg(false);
                     }}
                 />
             </ModalDialog>
