@@ -53,7 +53,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
             formData.append('blindPrice', dialogState.crtBlindPrice.toString());
             formData.append('saleBegin', (new Date(dialogState.crtBlindSaleBegin).getTime() / 1e3).toString());
-            formData.append('saleEnd', (new Date(dialogState.crtBlindSaleEnd).getTime() / 1e3).toString());
+            // formData.append('saleEnd', (new Date(dialogState.crtBlindSaleEnd).getTime() / 1e3).toString());
             formData.append('maxPurchases', dialogState.crtBlindPurchases.toString());
             const config = {
                 headers: {
@@ -302,10 +302,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Sale Begins</DetailedInfoTitleTypo>
                         <DetailedInfoLabelTypo>{dialogState.crtBlindSaleBegin.replace('T', ' ')}</DetailedInfoLabelTypo>
                     </InfoItemWrapper>
-                    <InfoItemWrapper>
+                    {/* <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
                         <DetailedInfoLabelTypo>{dialogState.crtBlindSaleEnd.replace('T', ' ')}</DetailedInfoLabelTypo>
-                    </InfoItemWrapper>
+                    </InfoItemWrapper> */}
                     <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Max num of purchases</DetailedInfoTitleTypo>
                         <DetailedInfoLabelTypo>{dialogState.crtBlindPurchases}</DetailedInfoLabelTypo>
@@ -342,7 +342,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     crtBlindQuantity: 0,
                                     crtBlindPrice: 0,
                                     crtBlindSaleBegin: '',
-                                    crtBlindSaleEnd: '',
+                                    // crtBlindSaleEnd: '',
                                     crtBlindPurchases: 0,
                                 });
                             }}
