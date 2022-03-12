@@ -30,7 +30,6 @@ import {
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
-import jwt from 'jsonwebtoken';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -762,26 +761,24 @@ export const getBBCandiates = async (address: string, keyword: string, selectedT
 };
 
 export const uploadUserProfile = (
-    token: string,
-    did: string,
-    name: string,
-    description: string,
+    _token: string,
+    _did: string,
+    _name: string,
+    _description: string,
     _urlAvatar: string,
     _urlCoverImage: string,
+    _signature: string,
 ) =>
     new Promise((resolve, reject) => {
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
-        const jsonProfile = {
-            did: did,
-            name: name,
-            description: description,
+        const reqBody = {
+            token: _token,
+            did: _did,
+            name: _name,
+            description: _description,
             avatar: _urlAvatar,
             coverImage: _urlCoverImage,
-        };
-        const signedProfile = jwt.sign(jsonProfile, 'config.Auth.jwtSecret', { expiresIn: 60 * 60 * 24 * 7 });
-        const reqBody = {
-            token: token,
-            signedProfile: signedProfile,
+            signature: _signature,
         };
         fetch(reqUrl, {
             method: 'POST',

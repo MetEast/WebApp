@@ -12,6 +12,12 @@ import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { uploadUserProfile } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 import { useCookies } from 'react-cookie';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -34,6 +40,13 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [userDescription, setUserDescription] = useState<string>(signInDlgState.userDescription);
     const [avatarChanged, setAvatarChanged] = useState<boolean>(false);
     const [coverImageChanged, setCoverImageChanged] = useState<boolean>(false);
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
     const classes = useStyles();
 
     const handleSelectAvatar = (e: any) => {
@@ -56,6 +69,15 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         }
     };
 
+    const handleSignMessage = async (did: string, address: string) => {
+        try {
+            const signature = await walletConnectWeb3.eth.personal.sign(`Update profile with ${did}`, address, '');
+            return signature;
+        } catch (err) {
+            throw new Error('You need to sign the message to be able to edit profile.');
+        }
+    };
+
     const handleSubmit = async () => {
         setOnProgress(true);
         let urlAvatar: string = '';
@@ -67,6 +89,10 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .then((added: any) => {
                 urlCoverImage = coverImageChanged ? `meteast:image:${added.path}` : signInDlgState.userCoverImage;
+
+                return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
+            })
+            .then((signature: string) => {
                 return uploadUserProfile(
                     signInDlgState.token,
                     signInDlgState.userDid,
@@ -74,6 +100,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     userDescription,
                     urlAvatar,
                     urlCoverImage,
+                    signature,
                 );
             })
             .then((token: any) => {
@@ -86,7 +113,6 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         userAvatar: urlAvatar,
                         userCoverImage: urlCoverImage,
                     });
-                    console.log('previous cookies: ', cookies);
                     setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                     enqueueSnackbar('Saved!', {
                         variant: 'success',
@@ -102,7 +128,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 onClose();
             })
             .catch((error) => {
-                enqueueSnackbar('Error!', {
+                enqueueSnackbar(`Error: ${error}!`, {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
