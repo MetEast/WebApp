@@ -121,7 +121,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
                         {`Search`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} />
             </Stack>
             <ModalDialog
                 open={showEditUserStatusDlg}

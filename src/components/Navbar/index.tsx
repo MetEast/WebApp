@@ -139,39 +139,45 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     )}
                 </PrimaryButton>
             ) : (
-                <>
-                    <PrimaryButton
-                        size="small"
-                        onClick={() => {
-                            if (signInDlgState.isLoggedIn)
-                                setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
-                            else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                        }}
-                        sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
-                    >
-                        <Icon icon="ph:sticker" fontSize={20} color="white" style={{ marginBottom: 1 }} />
-                        {!mobile && (
-                            <Typography fontWeight={700} color="white" marginLeft={0.5}>
-                                CREATE NFT
-                            </Typography>
-                        )}
-                    </PrimaryButton>
-                    <PrimaryButton
-                        size="small"
-                        sx={{ minWidth: 40, background: '#A453D6', '&:hover': { background: '#A463D6' } }}
-                        onClick={() => {
-                            if (signInDlgState.isLoggedIn)
-                                setDialogState({
-                                    ...dialogState,
-                                    createBlindBoxDlgOpened: true,
-                                    createBlindBoxDlgStep: 0,
-                                });
-                            else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                        }}
-                    >
-                        <Icon icon="ph:cube" fontSize={20} color="white" style={{ marginBottom: 2 }} />
-                    </PrimaryButton>
-                </>
+                !mobile && (
+                    <>
+                        <PrimaryButton
+                            size="small"
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn)
+                                    setDialogState({
+                                        ...dialogState,
+                                        createNFTDlgOpened: true,
+                                        createNFTDlgStep: 0,
+                                    });
+                                else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                            }}
+                            sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
+                        >
+                            <Icon icon="ph:sticker" fontSize={20} color="white" style={{ marginBottom: 1 }} />
+                            {!mobile && (
+                                <Typography fontWeight={700} color="white" marginLeft={0.5}>
+                                    CREATE NFT
+                                </Typography>
+                            )}
+                        </PrimaryButton>
+                        <PrimaryButton
+                            size="small"
+                            sx={{ minWidth: 40, background: '#A453D6', '&:hover': { background: '#A463D6' } }}
+                            onClick={() => {
+                                if (signInDlgState.isLoggedIn)
+                                    setDialogState({
+                                        ...dialogState,
+                                        createBlindBoxDlgOpened: true,
+                                        createBlindBoxDlgStep: 0,
+                                    });
+                                else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                            }}
+                        >
+                            <Icon icon="ph:cube" fontSize={20} color="white" style={{ marginBottom: 2 }} />
+                        </PrimaryButton>
+                    </>
+                )
             )}
         </>
     ) : (

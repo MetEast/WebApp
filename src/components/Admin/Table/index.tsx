@@ -30,6 +30,7 @@ interface EnhancedTableProps {
     orderBy: string;
     rowCount: number;
     columns: AdminTableColumn[];
+    checkable: boolean;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -41,17 +42,19 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
-                    <Checkbox
-                        color="primary"
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={rowCount > 0 && numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                        inputProps={{
-                            'aria-label': 'select all desserts',
-                        }}
-                    />
-                </TableCell>
+                {props.checkable && (
+                    <TableCell padding="checkbox">
+                        <Checkbox
+                            color="primary"
+                            indeterminate={numSelected > 0 && numSelected < rowCount}
+                            checked={rowCount > 0 && numSelected === rowCount}
+                            onChange={onSelectAllClick}
+                            inputProps={{
+                                'aria-label': 'select all desserts',
+                            }}
+                        />
+                    </TableCell>
+                )}
                 {columns.map((column) => (
                     <TableCell key={column.id} sortDirection={orderBy === column.id ? order : false}>
                         <TableSortLabel
@@ -82,9 +85,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 interface ComponentProps {
     tabledata: AdminTableItemType[];
     columns: AdminTableColumn[];
+    checkable?: boolean;
 }
 
-const Table: React.FC<ComponentProps> = ({ tabledata, columns }): JSX.Element => {
+const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -172,6 +176,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns }): JSX.Element =>
                         onRequestSort={handleRequestSort}
                         rowCount={tabledata.length}
                         columns={columns}
+                        checkable={checkable}
                     />
                     <TableBody>
                         {stableSort(tabledata, getComparator(order, orderBy))
@@ -189,15 +194,17 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns }): JSX.Element =>
                                         key={row.id}
                                         selected={isItemSelected}
                                     >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                color="primary"
-                                                checked={isItemSelected}
-                                                inputProps={{
-                                                    'aria-labelledby': labelId,
-                                                }}
-                                            />
-                                        </TableCell>
+                                        {checkable && (
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby': labelId,
+                                                    }}
+                                                />
+                                            </TableCell>
+                                        )}
                                         {columns.map((column) => (
                                             <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
                                                 {column.cell
