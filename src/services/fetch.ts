@@ -186,16 +186,13 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         _BBItem.image = getImageFromAsset(itemObject.asset);
         _BBItem.price_ela = parseInt(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
-        // blindboxItem.author = itemObject.authorName || ' ';
         const curTimestamp = new Date().getTime() / 1000;
         _BBItem.type =
-            itemObject.instock === itemObject.sold
+            itemObject.instock === 0
                 ? enumBlindBoxNFTType.SoldOut
                 : parseInt(itemObject.saleBegin) > curTimestamp
                 ? enumBlindBoxNFTType.ComingSoon
-                : parseInt(itemObject.saleEnd) >= curTimestamp
-                ? enumBlindBoxNFTType.SaleEnds
-                : enumBlindBoxNFTType.SaleEnded;
+                : enumBlindBoxNFTType.SaleEnds;
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
         _BBItem.author =
@@ -480,11 +477,11 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
         const curTimestamp = new Date().getTime() / 1000;
         _BBItem.type =
-            curTimestamp < parseInt(itemObject.saleBegin)
+            itemObject.instock === 0
+                ? enumBlindBoxNFTType.SoldOut
+                : parseInt(itemObject.saleBegin) > curTimestamp
                 ? enumBlindBoxNFTType.ComingSoon
-                : curTimestamp <= parseInt(itemObject.saleEnd)
-                ? enumBlindBoxNFTType.SaleEnds
-                : enumBlindBoxNFTType.SaleEnded;
+                : enumBlindBoxNFTType.SaleEnds;
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
         _BBItem.author = itemObject.createdName;
