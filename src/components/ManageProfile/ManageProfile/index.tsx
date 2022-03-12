@@ -26,6 +26,9 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [toatlEarned, setTotalEarned] = useState<string>('0');
     const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
+    const arrStrDid = signInDlgState.userDid.split(':').filter((value: string) => value.length > 0);
+    const strUserDid = arrStrDid.length === 3 ? `did:elastos:${reduceHexAddress(arrStrDid[2], 7)}` : signInDlgState.userDid; 
+
     const showSnackBar = () => {
         enqueueSnackbar('Copied to Clipboard!', {
             variant: 'success',
@@ -124,7 +127,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         </Typography>
                                     </Stack>
                                 )}
-                                {signInDlgState.loginType === '1' && (
+                                {/* {signInDlgState.loginType === '1' && ( */}
                                     <Stack direction="row" spacing={0.5}>
                                         <CopyToClipboard
                                             text={signInDlgState.userDid}
@@ -139,10 +142,10 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                             </CopyToClipboardButton>
                                         </CopyToClipboard>
                                         <Typography fontSize={14} fontWeight={400}>
-                                            {`did:elastos:${reduceHexAddress(signInDlgState.userDid, 7)}`}
+                                            {strUserDid}
                                         </Typography>
                                     </Stack>
-                                )}
+                                {/* )} */}
                             </>
                         )}
                     </Grid>

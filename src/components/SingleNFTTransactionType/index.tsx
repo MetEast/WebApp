@@ -57,7 +57,7 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         else if (signInDlgState.chainId === 21)
             _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`;
         setTxHashUrl(_url);
-    }, [signInDlgState.chainId]);
+    }, [signInDlgState.chainId, transactionHash]);
 
     return (
         <Stack direction="row" alignItems="center" spacing={1}>

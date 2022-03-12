@@ -95,7 +95,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     //-------------- get My NFT List -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchAll = async () => {
+        const fetchAllTab = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
@@ -120,7 +120,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     }
                 });
         };
-        const getFetchTab = async () => {
+        const fetchSingleTab = async () => {
             const nTabId = getSelectedTabIndex();
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
@@ -142,8 +142,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
             }
         };
         if (signInDlgState.isLoggedIn) {
-            if (firstLoading) getFetchAll().catch(console.error);
-            else getFetchTab().catch(console.error);
+            if (firstLoading) fetchAllTab().catch(console.error);
+            else fetchSingleTab().catch(console.error);
         } else {
             navigate('/');
         }
@@ -166,7 +166,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     //-------------- today earned, totoal earned, earned list -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchUserProfit = async () => {
             const _totalEarned = await getMyTotalEarned(signInDlgState.walletAccounts[0]);
             const _todayEarned = await getMyTodayEarned(signInDlgState.walletAccounts[0]);
             const _myEarnedList = await getMyEarnedList(signInDlgState.walletAccounts[0]);
@@ -176,11 +176,15 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 setEarningList(_myEarnedList);
             }
         };
-        getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) {
+            fetchUserProfit().catch(console.error);
+        } else {
+            navigate('/');
+        }
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts]);
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //

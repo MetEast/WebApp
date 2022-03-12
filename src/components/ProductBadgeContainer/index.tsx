@@ -9,12 +9,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ProductBadgeContainerProps extends SpacingProps {
     nfttype: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
+    myNftTypes?: Array<enumMyNFTType>;
     content?: string;
     isReservedAuction: boolean;
 }
 
 const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     nfttype,
+    myNftTypes,
     content,
     isReservedAuction,
     ...otherProps
@@ -79,9 +81,21 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
         },
     };
     return (
-        <Container direction={'row'} alignItems="left" spacing={1} {...otherProps}>
-            {child[nfttype].element}
-        </Container>
+        <>
+            {myNftTypes ? (
+                <Grid container justifyContent={'flex'} spacing={1} {...otherProps}>
+                    {myNftTypes.map((item, index) => (
+                        <Grid item key={index}>
+                            {child[item].element}
+                        </Grid>
+                    ))}
+                </Grid>
+            ) : (
+                <Container direction={'row'} alignItems="left" spacing={1} {...otherProps}>
+                    {child[nfttype].element}
+                </Container>
+            )}
+        </>
     );
 };
 

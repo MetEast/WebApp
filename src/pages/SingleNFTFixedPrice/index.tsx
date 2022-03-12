@@ -19,22 +19,15 @@ import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
 import AllTransactions from 'src/components/profile/AllTransactions';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import { TypeSelectItem } from 'src/types/select-types';
 import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
 import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
-import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -42,19 +35,11 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
-    
+
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
@@ -62,7 +47,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 setProductDetail(_NFTItem);
             }
         };
-        getFetchData().catch(console.error);
+        fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -70,45 +55,18 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy, params.id]);
+    }, [params.id]);
     // -------------- Fetch Data -------------- //
-    // buy now tx fee
-    useEffect(() => {
-        const setBuyNowTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, buyNowTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setBuyNowTxFee();
-    }, [dialogState.buyNowDlgStep]);
-
-    // change price tx fee
-    useEffect(() => {
-        const setChangePriceTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setChangePriceTxFee();
-    }, [dialogState.changePriceDlgStep]);
-
-    // cancel sale tx fee
-    useEffect(() => {
-        const setCancelSaleTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setCancelSaleTxFee();
-    }, [dialogState.cancelSaleDlgStep]);
-
     // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
         setProductDetail((prevState: TypeProduct) => {
@@ -301,10 +259,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions
-                    transactionList={transactionsList}
-                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
-                />
+                <AllTransactions />
             </ModalDialog>
             <ModalDialog
                 open={dialogState.changePriceDlgOpened}

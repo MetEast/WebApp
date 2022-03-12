@@ -24,26 +24,19 @@ import {
 import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTLatestBids } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
 import ModalDialog from 'src/components/ModalDialog';
 import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
 import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import ReceivedBids from 'src/components/profile/ReceivedBids';
-import { TypeSelectItem } from 'src/types/select-types';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
-import { isInAppBrowser } from 'src/services/wallet';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -54,22 +47,11 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
-    const [bidSortBy, setBidSortBy] = useState<TypeSelectItem>();
-    // const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
 
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
-    
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchMyNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
@@ -77,7 +59,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 setProductDetail(_MyNFTItem);
             }
         };
-        if (signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
         else navigate('/');
         return () => {
             unmounted = true;
@@ -86,59 +68,32 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs);
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
+    }, [params.id, signInDlgState.walletAccounts]);
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchNFTLatestBids = async () => {
             const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setBidsList(_NFTBids.others);
             }
         };
-        getFetchData().catch(console.error);
+        fetchNFTLatestBids().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [bidSortBy, signInDlgState.walletAccounts, params.id]);
-
-    // change price tx fee
-    useEffect(() => {
-        const setChangePriceTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, changePriceTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setChangePriceTxFee();
-    }, [dialogState.changePriceDlgStep]);
-
-    // cancel sale tx fee
-    useEffect(() => {
-        const setCancelSaleTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, cancelSaleTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setCancelSaleTxFee();
-    }, [dialogState.cancelSaleDlgStep]);
-
-    // accept bid tx Fee
-    useEffect(() => {
-        const setAcceptBidTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, acceptBidTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setAcceptBidTxFee();
-    }, [dialogState.acceptBidDlgStep]);
+    }, [signInDlgState.walletAccounts, params.id]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -190,7 +145,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId, signInDlgState.token, signInDlgState.userDid]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -349,10 +304,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions
-                    transactionList={transactionsList}
-                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
-                />
+                <AllTransactions />
             </ModalDialog>
             <ModalDialog
                 open={dialogState.acceptBidDlgOpened}
@@ -372,11 +324,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 {bidsList.length === 0 ? (
                     <NoBids onClose={() => setViewBidDlgOpened(false)} />
                 ) : (
-                    <ReceivedBids
-                        bidsList={bidsList}
-                        closeDlg={() => setViewBidDlgOpened(false)}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
-                    />
+                    <ReceivedBids closeDlg={() => setViewBidDlgOpened(false)} />
                 )}
             </ModalDialog>
             <ModalDialog
@@ -392,11 +340,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                         }}
                     />
                 ) : (
-                    <AllBids
-                        bidsList={bidsList}
-                        myBidsList={[]}
-                        changeHandler={(value: TypeSelectItem | undefined) => setBidSortBy(value)}
-                    />
+                    <AllBids />
                 )}
             </ModalDialog>
         </Container>

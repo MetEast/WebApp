@@ -159,7 +159,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const handleMint = () => {
         if (!dialogState.mintFile) return;
         console.log('is pressed');
-        if (dialogState.mintTXFee > signInDlgState.walletBalance) {
+        if (dialogState.mintTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'warning',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -225,7 +225,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                         </Grid>
                         <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.mintTXFee} ELA</DetailedInfoLabelTypo>
+                            <DetailedInfoLabelTypo>{dialogState.mintTxFee} ELA</DetailedInfoLabelTypo>
                         </Grid>
                     </Grid>
                 </Stack>
@@ -244,7 +244,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     mintIntroduction: '',
                                     mintCategory: { label: '', value: '' },
                                     mintFile: new File([''], ''),
-                                    mintTXFee: 0,
+                                    mintTxFee: 0,
                                     mintTokenId: '',
                                     mintTokenUri: '',
                                     mintDidUri: '',

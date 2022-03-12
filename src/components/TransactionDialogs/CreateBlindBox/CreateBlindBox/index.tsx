@@ -37,8 +37,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxPurchasesError, setBlindboxPurchasesError] = useState(false);
     const [saleBegins, setSaleBegins] = React.useState<string>('');
     const [saleBeginsError, setSaleBeginsError] = useState(false);
-    const [saleEnds, setSaleEnds] = useState<string>('');
-    const [saleEndsError, setSaleEndsError] = useState(false);
+    // const [saleEnds, setSaleEnds] = useState<string>('');
+    // const [saleEndsError, setSaleEndsError] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
     const handleFileChange = (files: Array<File>) => {
@@ -196,7 +196,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     </Typography>
                                 )}
                             </Stack>
-                            <Stack spacing={0.5}>
+                            {/* <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Sale Ends
                                 </Typography>
@@ -212,7 +212,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         Invalid Date Format
                                     </Typography>
                                 )}
-                            </Stack>
+                            </Stack> */}
                         </Grid>
                     </Grid>
                 </Box>
@@ -240,7 +240,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     blindboxQuantity > 0 &&
                                     blindboxPrice > 0 &&
                                     saleBegins !== '' &&
-                                    saleEnds !== '' &&
+                                    // saleEnds !== '' &&
                                     blindboxPurchases > 0
                                 ) {
                                     setDialogState({
@@ -253,7 +253,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         crtBlindQuantity: blindboxQuantity,
                                         crtBlindPrice: blindboxPrice,
                                         crtBlindSaleBegin: saleBegins,
-                                        crtBlindSaleEnd: saleEnds,
+                                        // crtBlindSaleEnd: saleEnds,
                                         crtBlindPurchases: blindboxPurchases,
                                     });
                                 } else {
@@ -261,7 +261,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     setBlindboxDescriptionError(blindboxDescription === '');
                                     setBlindboxPurchasesError(blindboxPurchases === 0);
                                     setSaleBeginsError(isNaN(Date.parse(saleBegins)));
-                                    setSaleEndsError(isNaN(Date.parse(saleEnds)));
+                                    // setSaleEndsError(isNaN(Date.parse(saleEnds)));
                                     setBlindboxImageError(blindboxImage === undefined);
                                     setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
                                     enqueueSnackbar('Form validation failed!', {

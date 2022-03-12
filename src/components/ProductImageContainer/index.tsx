@@ -8,9 +8,10 @@ import { Box, Skeleton } from '@mui/material';
 export interface ComponentProps {
     product: TypeProduct;
     updateLikes: (type: string) => void;
+    isBlindBox?: boolean;
 }
 
-const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes }): JSX.Element => {
+const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes, isBlindBox }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [likeState, setLikeState] = useState(product.isLike);
 
@@ -23,11 +24,17 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes 
         if (signInDlgState.isLoggedIn) {
             const reqUrl =
                 `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
-            const reqBody = {
-                token: signInDlgState.token,
-                tokenId: product.tokenId,
-                did: signInDlgState.userDid,
-            };
+            const reqBody = isBlindBox
+                ? {
+                      token: signInDlgState.token,
+                      blindBoxIndex: product.tokenId,
+                      did: signInDlgState.userDid,
+                  }
+                : {
+                      token: signInDlgState.token,
+                      tokenId: product.tokenId,
+                      did: signInDlgState.userDid,
+                  };
             // change state first
             updateLikes(likeState ? 'dec' : 'inc');
             setLikeState(!likeState);

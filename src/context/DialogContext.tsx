@@ -9,7 +9,6 @@ interface State {
     createNFTDlgStep: number;
     mintCategory: TypeSelectItem;
     mintTitle: string;
-    // mintAuthor: string;
     mintIntroduction: string;
     mintFile?: File;
     mintRoyalties: number;
@@ -17,7 +16,7 @@ interface State {
     mintTokenUri: string;
     mintDidUri: string;
     mintTxHash: string;
-    mintTXFee: number;
+    mintTxFee: number;
     mintProgress: number;
     // create order for sale/auction
     sellSaleType: 'buynow' | 'auction';
@@ -126,13 +125,12 @@ const defaultState: State = {
     mintTitle: '',
     mintCategory: { label: '', value: '' },
     mintIntroduction: '',
-    // mintAuthor: '',
     mintRoyalties: 0,
     mintTokenId: '',
     mintTokenUri: '',
     mintDidUri: '',
     mintTxHash: '',
-    mintTXFee: 0,
+    mintTxFee: 0,
     mintProgress: 0,
     // create order for sale/auction
     sellSaleType: 'buynow',

@@ -21,6 +21,7 @@ import {
     resetWalletConnector,
     getWalletBalance,
     isInAppBrowser,
+    getChainGasPrice,
 } from 'src/services/wallet';
 import { UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -36,7 +37,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [dialogState] = useDialogContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const { activate, active, library, chainId, account } = useWeb3React<Web3Provider>();
@@ -484,22 +485,46 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 return _state;
             });
         }
+
+        if (!(linkType === '2' && !library)) {
+            getChainGasPrice(
+                new Web3(linkType === '1' ? (walletConnectProvider as any) : (library?.provider as any)),
+            ).then((gasPriceUnit: string) => {
+                const estimatedFee: number = (parseFloat(gasPriceUnit) * 5000000) / 1e18;
+                setDialogState({
+                    ...dialogState,
+                    mintTxFee: estimatedFee,
+                    sellTxFee: estimatedFee,
+                    buyNowTxFee: estimatedFee,
+                    changePriceTxFee: estimatedFee,
+                    cancelSaleTxFee: estimatedFee,
+                    acceptBidTxFee: estimatedFee,
+                    placeBidTxFee: estimatedFee,
+                    updateBidTxFee: estimatedFee,
+                    cancelBidTxFee: estimatedFee,
+                    crtBlindTxFee: estimatedFee,
+                    buyBlindTxFee: estimatedFee,
+                });
+            });
+        }
     }, [
+        library,
         dialogState.createNFTDlgStep,
         dialogState.buyNowDlgStep,
+        dialogState.changePriceDlgStep,
+        dialogState.cancelSaleDlgStep,
+        dialogState.acceptBidDlgStep,
         dialogState.placeBidDlgStep,
         dialogState.updateBidDlgStep,
         dialogState.cancelBidDlgStep,
-        dialogState.acceptBidDlgStep,
-        dialogState.changePriceDlgStep,
-        dialogState.cancelSaleDlgStep,
+        dialogState.createBlindBoxDlgStep,
         dialogState.buyBlindBoxDlgStep,
     ]);
 
     if (linkType === '1') initConnectivitySDK();
 
     // useEffect(() => {
-        console.log('--------accounts: ', signInDlgState);
+    console.log('--------accounts: ', signInDlgState);
     // }, [signInDlgState]);
 
     return (

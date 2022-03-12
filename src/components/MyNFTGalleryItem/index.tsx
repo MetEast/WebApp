@@ -152,6 +152,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                     ) : (
                         <ProductBadgeContainer
                             nfttype={product.type}
+                            myNftTypes={product.types}
                             content={product.endTime}
                             isReservedAuction={product.status === 'HAS BIDS'}
                         />

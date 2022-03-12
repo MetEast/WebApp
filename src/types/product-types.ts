@@ -76,6 +76,7 @@ export type TypeProduct = {
     holder: string; // owner
     holderName: string;
     type: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
+    types?: Array<enumMyNFTType>;
     isLike: boolean;
     endTime?: string;
     sold?: number;
@@ -176,6 +177,7 @@ export type TypeProductFetch = {
     status: string;
     authorName: string;
     authorDescription: string;
+    authorAvatar: string;
     instock: number;
     sold: number;
     orderId: string;
@@ -198,6 +200,7 @@ export type TypeProductFetch = {
     createdName: string;
     createdAddress: string;
     createdDescription: string;
+    createdAvatar: string;
     isBlindbox: boolean;
 };
 

@@ -18,17 +18,10 @@ import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from '
 import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import { isInAppBrowser } from 'src/services/wallet';
-import { TypeSelectItem } from 'src/types/select-types';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -37,19 +30,11 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const [transactionSortBy, setTransactionSortBy] = useState<TypeSelectItem>();
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
-    
+
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchMyNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
@@ -57,7 +42,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                 setProductDetail(_MyNFTItem);
             }
         };
-        if (signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
         else navigate('/');
         return () => {
             unmounted = true;
@@ -66,26 +51,18 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs);
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        getFetchData().catch(console.error);
+        fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [transactionSortBy, params.id, signInDlgState.walletAccounts]);
-
-    useEffect(() => {
-        const setSaleTxFee = async () => {
-            const gasPrice: string = await walletConnectWeb3.eth.getGasPrice();
-            setDialogState({ ...dialogState, sellTxFee: (parseFloat(gasPrice) * 5000000) / 1e18 });
-        };
-        setSaleTxFee();
-    }, [dialogState.createNFTDlgStep]);
+    }, [params.id, signInDlgState.walletAccounts]);
 
     const updateProductLikes = (type: string) => {
         let prodDetail: TypeProduct = { ...productDetail };
@@ -137,7 +114,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId, signInDlgState.token, signInDlgState.userDid]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -216,10 +193,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     setDialogState({ ...dialogState, allTxDlgOpened: false });
                 }}
             >
-                <AllTransactions
-                    transactionList={transactionsList}
-                    changeHandler={(value: TypeSelectItem | undefined) => setTransactionSortBy(value)}
-                />
+                <AllTransactions />
             </ModalDialog>
         </Container>
     );

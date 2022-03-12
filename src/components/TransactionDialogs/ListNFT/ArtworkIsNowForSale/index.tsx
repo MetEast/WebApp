@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
@@ -10,7 +10,6 @@ export interface ComponentProps {}
 
 const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
     const navigate = useNavigate();
-    const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
 
     return (

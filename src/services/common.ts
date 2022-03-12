@@ -27,7 +27,7 @@ export const getUTCTime = (timestamp: string) => {
     const pieces = date.toUTCString().split(' ');
     const [wd, d, m, y] = pieces;
     const dateStr = [m, d, y].join(' ');
-
+    console.log(wd);
     let hours = date.getUTCHours().toString();
     hours = hours.toString().padStart(2, '0');
     const min = date.getUTCMinutes().toString().padStart(2, '0');
