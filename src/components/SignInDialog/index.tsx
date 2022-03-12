@@ -486,7 +486,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             });
         }
 
-        if (!(linkType === '2' && !library)) {
+        if (library && linkType !== '0') {
             getChainGasPrice(
                 new Web3(linkType === '1' ? (walletConnectProvider as any) : (library?.provider as any)),
             ).then((gasPriceUnit: string) => {
