@@ -198,7 +198,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
+    const handlerFilterChange = (
+        status: number,
+        minPrice: string,
+        maxPrice: string,
+        category: TypeSelectItem | undefined,
+        opened: boolean,
+    ) => {
         if (opened) {
             let filters: Array<enumFilterOption> = [];
             if (status === 0) filters.push(enumFilterOption.buyNow);
@@ -247,6 +253,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
         <>
@@ -264,14 +271,15 @@ const ProfilePage: React.FC = (): JSX.Element => {
             </Box>
             <Container sx={{ overflow: 'visible' }}>
                 <Stack alignItems="center">
-                    <ProfileImageWrapper>
+                    <ProfileImageWrapper display={signInDlgState.userAvatar !== '' ? 'flex' : 'grid'}>
                         {signInDlgState.userAvatar !== '' ? (
                             <ProfileImage
                                 src={getImageFromAsset(signInDlgState.userAvatar)}
-                                style={{ borderRadius: '50%', width: 'inherit', height: 'inherit' }}
+                                // src="/assets/images/blindbox/blindbox-nft-template3.png"
+                                // src="/assets/images/avatar-template.png"
                             />
                         ) : (
-                            <Icon icon="ph:user" fontSize={80} color="#1890FF" />
+                            <Icon icon="ph:user" fontSize={matchUpMd ? 80 : matchDownSm ? 40 : 60} color="#1890FF" />
                         )}
                     </ProfileImageWrapper>
                     <Stack
