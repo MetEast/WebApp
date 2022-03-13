@@ -75,7 +75,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             if (signInDlgState.walletAccounts[0] === productDetail.holder) setShowBuyNowBtn(false);
             else setShowBuyNowBtn(true);
         }
-    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, productDetail]);
+    }, [signInDlgState.walletAccounts, productDetail]);
     // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
         setProductDetail((prevState: TypeProduct) => {
