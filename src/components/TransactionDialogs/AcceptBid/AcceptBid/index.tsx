@@ -22,13 +22,13 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    // const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-    //     ? window.elastos.getWeb3Provider()
-    //     : essentialsConnector.getWalletConnectProvider();
-    // const { library } = useWeb3React<Web3Provider>();
-    // const walletConnectWeb3 = new Web3(
-    //     signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    // );
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
 
     // const callSettleAuctionOrder = async (_orderId: string) => {
     //     const accounts = await walletConnectWeb3.eth.getAccounts();
@@ -86,7 +86,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
-        callContractMethod(signInDlgState.loginType, 2, dialogState.acceptBidOrderId)
+        callContractMethod(walletConnectWeb3, 2, dialogState.acceptBidOrderId)
             .then((txHash) => {
                 enqueueSnackbar('Accept bid succeed!', {
                     variant: 'success',
