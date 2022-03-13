@@ -17,10 +17,10 @@ export const ContainerWrapper = styled(Box)`
     }
     ${(props) => props.theme.breakpoints.up('lg')} {
         width: 100%;
-        max-width: 90%;
+        max-width: 1200px;
     }
     ${(props) => props.theme.breakpoints.up('xl')} {
         width: 100%;
-        max-width: 90%;
+        max-width: 1440px;
     }
 `;

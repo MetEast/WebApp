@@ -9,7 +9,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
 import { getELA2USD, getMyFavouritesList, getNFTItemList } from 'src/services/fetch';
 import { blankNFTItem } from 'src/constants/init-constants';
-import { Container } from './styles';
+import Container from 'src/components/Container';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -101,7 +101,7 @@ const HomePage: React.FC = (): JSX.Element => {
     };
 
     const theme = useTheme();
-    // const matchUpsm = useMediaQuery(theme.breakpoints.up('sm'));
+    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
     const matchUpmd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUplg = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -121,7 +121,7 @@ const HomePage: React.FC = (): JSX.Element => {
                     ))}
                 </Swiper>
             </Box>
-            <Container>
+            <Container sx={{ maxWidth: matchDownSm ? '100% !important' : 'auto' }}>
                 <Box mt={4}>
                     <Typography
                         fontSize={{ xs: 26, sm: 28, md: 32 }}
