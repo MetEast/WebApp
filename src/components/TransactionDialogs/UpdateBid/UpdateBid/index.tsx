@@ -16,8 +16,6 @@ import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'sr
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-import ModalDialog from 'src/components/ModalDialog';
-import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
@@ -30,7 +28,6 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [bidAmount, setBidAmount] = useState(0);
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
@@ -39,18 +36,13 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
-    
+
     const callChangeOrderPrice = async (_orderId: string, _price: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
-
         const contractAbi = METEAST_MARKET_CONTRACT_ABI;
         const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
         const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-
         const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log('Gas price:', gasPrice);
-
-        console.log('Sending transaction with account address:', accounts[0]);
         const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
@@ -59,10 +51,9 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
 
-        setLoadingDlgOpened(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
-            setLoadingDlgOpened(false);
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
         marketContract.methods
             .changeOrderPrice(_orderId, _price)
@@ -70,7 +61,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
-                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
                 clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
@@ -86,15 +77,19 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
                     changePriceTxHash: txHash,
                 });
             })
-            .on('error', (error: any, receipt: any) => {
+            .on('error', (error: any) => {
                 console.error('error', error);
                 enqueueSnackbar('Update bid error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setLoadingDlgOpened(false);
                 clearTimeout(timer);
-                setDialogState({ ...dialogState, changePriceDlgOpened: false, errorMessageDlgOpened: true });
+                setDialogState({
+                    ...dialogState,
+                    changePriceDlgOpened: false,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
             });
     };
 
@@ -116,75 +111,65 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     return (
-        <>
-            <Stack spacing={5} width={320}>
-                <Stack alignItems="center">
-                    <PageNumberTypo>1 of 2</PageNumberTypo>
-                    <DialogTitleTypo>Update Bid</DialogTitleTypo>
-                    <Typography fontSize={16} fontWeight={400} marginTop={1}>
-                        Current Bid: {dialogState.updateBidPrice} ELA
+        <Stack spacing={5} width={320}>
+            <Stack alignItems="center">
+                <PageNumberTypo>1 of 2</PageNumberTypo>
+                <DialogTitleTypo>Update Bid</DialogTitleTypo>
+                <Typography fontSize={16} fontWeight={400} marginTop={1}>
+                    Current Bid: {dialogState.updateBidPrice} ELA
+                </Typography>
+            </Stack>
+            <Stack spacing={2.5}>
+                <ELAPriceInput
+                    title="New Bid Amount"
+                    handleChange={(value) => {
+                        setBidAmount(value);
+                    }}
+                />
+                <Stack spacing={0.5}>
+                    <Typography fontSize={12} fontWeight={700}>
+                        Expiration
                     </Typography>
-                </Stack>
-                <Stack spacing={2.5}>
-                    <ELAPriceInput
-                        title="New Bid Amount"
-                        handleChange={(value) => {
-                            setBidAmount(value);
+                    <Select
+                        titlebox={
+                            <SelectBtn fullWidth isopen={expirationSelectOpen ? 1 : 0}>
+                                {expiration ? expiration.label : 'Select'}
+                                <Icon icon="ph:caret-down" className="arrow-icon" />
+                            </SelectBtn>
+                        }
+                        selectedItem={expiration}
+                        options={auctionNFTExpirationOptions}
+                        isOpen={expirationSelectOpen ? 1 : 0}
+                        handleClick={(value: string) => {
+                            const item = auctionNFTExpirationOptions.find((option) => option.value === value);
+                            setExpiration(item);
                         }}
+                        setIsOpen={setExpirationSelectOpen}
                     />
-                    <Stack spacing={0.5}>
-                        <Typography fontSize={12} fontWeight={700}>
-                            Expiration
-                        </Typography>
-                        <Select
-                            titlebox={
-                                <SelectBtn fullWidth isopen={expirationSelectOpen ? 1 : 0}>
-                                    {expiration ? expiration.label : 'Select'}
-                                    <Icon icon="ph:caret-down" className="arrow-icon" />
-                                </SelectBtn>
-                            }
-                            selectedItem={expiration}
-                            options={auctionNFTExpirationOptions}
-                            isOpen={expirationSelectOpen ? 1 : 0}
-                            handleClick={(value: string) => {
-                                const item = auctionNFTExpirationOptions.find((option) => option.value === value);
-                                setExpiration(item);
-                            }}
-                            setIsOpen={setExpirationSelectOpen}
-                        />
-                    </Stack>
-                </Stack>
-                <Stack direction="row" alignItems="center" spacing={2}>
-                    <SecondaryButton
-                        fullWidth
-                        onClick={() => {
-                            setDialogState({
-                                ...dialogState,
-                                updateBidPrice: 0,
-                                updateBidTxFee: 0,
-                                updateBidOrderId: '',
-                                updateBidTxHash: '',
-                                updateBidDlgOpened: false,
-                                updateBidDlgStep: 0,
-                            });
-                        }}
-                    >
-                        close
-                    </SecondaryButton>
-                    <PrimaryButton fullWidth onClick={handleUpdateBid}>
-                        Next
-                    </PrimaryButton>
                 </Stack>
             </Stack>
-            <ModalDialog
-                open={loadingDlgOpened}
-                onClose={() => {
-                    setLoadingDlgOpened(false);
-                }}
-            >
-                <WaitingConfirm />
-            </ModalDialog>
-        </>
+            <Stack direction="row" alignItems="center" spacing={2}>
+                <SecondaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({
+                            ...dialogState,
+                            updateBidPrice: 0,
+                            updateBidTxFee: 0,
+                            updateBidOrderId: '',
+                            updateBidTxHash: '',
+                            updateBidDlgOpened: false,
+                            updateBidDlgStep: 0,
+                        });
+                    }}
+                >
+                    close
+                </SecondaryButton>
+                <PrimaryButton fullWidth onClick={handleUpdateBid}>
+                    Next
+                </PrimaryButton>
+            </Stack>
+        </Stack>
     );
 };
 
