@@ -259,13 +259,19 @@ const ProfilePage: React.FC = (): JSX.Element => {
         <>
             <Box
                 onClick={() => {}}
-                sx={{ height: '254px', maxHeight: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}
+                sx={{
+                    height: 250,
+                    maxHeight: matchUpMd ? 250 : matchDownSm ? 130 : 180,
+                    cursor: 'pointer',
+                    backgroundColor: '#C3C5C8',
+                }}
             >
                 {signInDlgState.userCoverImage !== '' && (
                     <img
                         src={getImageFromAsset(signInDlgState.userCoverImage)}
+                        // src="/assets/images/blindbox/blindbox-nft-template1.png"
                         alt=""
-                        style={{ minWidth: '100%', maxHeight: '254px' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 250 }}
                     />
                 )}
             </Box>
