@@ -80,7 +80,6 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
 
 // Home Page & Product Page
 export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
-    console.log(fetchParams);
     const resNFTList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
         FETCH_CONFIG_JSON,

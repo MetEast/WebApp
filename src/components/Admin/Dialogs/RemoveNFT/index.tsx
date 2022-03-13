@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -11,7 +11,6 @@ import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'sr
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-import ModalDialog from 'src/components/ModalDialog';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
@@ -35,7 +34,6 @@ const RemoveNFT: React.FC<ComponentProps> = ({
 }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
@@ -47,15 +45,10 @@ const RemoveNFT: React.FC<ComponentProps> = ({
 
     const callCancelOrder = async (_orderId: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
-
         const contractAbi = METEAST_MARKET_CONTRACT_ABI;
         const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
         const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-
         const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log('Gas price:', gasPrice);
-
-        console.log('Sending transaction with account address:', accounts[0]);
         const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
@@ -64,10 +57,9 @@ const RemoveNFT: React.FC<ComponentProps> = ({
         };
         let txHash = '';
 
-        setLoadingDlgOpened(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
-            setLoadingDlgOpened(false);
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
         marketContract.methods
             .cancelOrder(_orderId)
@@ -75,7 +67,6 @@ const RemoveNFT: React.FC<ComponentProps> = ({
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
-                setLoadingDlgOpened(false);
                 clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
@@ -89,17 +80,17 @@ const RemoveNFT: React.FC<ComponentProps> = ({
                     cancelSaleDlgOpened: true,
                     cancelSaleDlgStep: 1,
                     cancelSaleTxHash: txHash,
+                    waitingConfirmDlgOpened: false,
                 });
             })
-            .on('error', (error: any, receipt: any) => {
+            .on('error', (error: any) => {
                 console.error('error', error);
                 enqueueSnackbar('Cancel sale error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setLoadingDlgOpened(false);
                 clearTimeout(timer);
-                setDialogState({ ...dialogState, cancelSaleDlgOpened: false, errorMessageDlgOpened: true });
+                setDialogState({ ...dialogState, cancelSaleDlgOpened: false, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
             });
     };
 
