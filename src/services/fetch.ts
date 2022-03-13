@@ -834,8 +834,10 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
         const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
         _AdminNFT.id = i + 1;
         _AdminNFT.tokenId = itemObject.tokenId;
+        _AdminNFT.tokenIdHex = itemObject.tokenIdHex;
         _AdminNFT.token_id = reduceHexAddress(itemObject.tokenIdHex, 4);
         _AdminNFT.nft_title = itemObject.name;
+        _AdminNFT.nft_image = getImageFromAsset(itemObject.asset);
         _AdminNFT.selling_price = itemObject.price / 1e18;
         _AdminNFT.nft_creator = reduceHexAddress(itemObject.royaltyOwner, 4);
         _AdminNFT.nft_owner = reduceHexAddress(itemObject.holder, 4);

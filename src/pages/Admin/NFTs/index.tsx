@@ -88,7 +88,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={onRemove}>
+                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={(event: React.MouseEvent) => onRemove(event, props.colId)}>
                         <Icon
                             icon="ph:trash"
                             fontSize={20}
@@ -161,9 +161,12 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         setSaleType(item);
     };
 
+    const [id2Remove, setId2Remove] = useState<number>(0);
     const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
-    const onRemove = (event: React.MouseEvent) => {
+    const onRemove = (event: React.MouseEvent, idx: number) => {
         event.stopPropagation();
+        alert(idx);
+        setId2Remove(idx);
         setShowRemoveNFTDlg(true);
     };
 
@@ -239,6 +242,11 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                 }}
             >
                 <RemoveNFT
+                    tokenId={tabledata[id2Remove].tokenId}
+                    tokenTitle={tabledata[id2Remove].nft_title}
+                    tokenCreator={tabledata[id2Remove].nft_creator}
+                    tokenIdHex={tabledata[id2Remove].tokenIdHex}
+                    tokenImage={tabledata[id2Remove].nft_image}
                     onClose={() => {
                         setShowRemoveNFTDlg(false);
                     }}

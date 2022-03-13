@@ -5,10 +5,22 @@ import { PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 
 export interface ComponentProps {
+    tokenId: string;
+    tokenTitle: string;
+    tokenCreator: string;
+    tokenIdHex: string;
+    tokenImage: string;
     onClose: () => void;
 }
 
-const RemoveNFT: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+const RemoveNFT: React.FC<ComponentProps> = ({
+    tokenId,
+    tokenTitle,
+    tokenCreator,
+    tokenIdHex,
+    tokenImage,
+    onClose,
+}): JSX.Element => {
     return (
         <Stack spacing={4} width={520}>
             <Stack alignItems="center">
@@ -18,22 +30,23 @@ const RemoveNFT: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 </Typography>
             </Stack>
             <Box borderRadius={2} width={180} height={120} overflow="hidden" alignSelf="center">
-                <img
-                    src="/assets/images/blindbox/blindbox-nft-template3.png"
-                    width="100%"
-                    height="100%"
-                    style={{ objectFit: 'cover' }}
-                    alt=""
-                />
+                <img src={tokenImage} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
             </Box>
-            <CustomTextField title="NFT TITLE" placeholder="NFT TITLE" />
-            <CustomTextField title="NFT CREATOR" placeholder="NFT CREATOR" />
-            <CustomTextField title="TOKEN ID" placeholder="TOKEN ID" />
+            <CustomTextField title="NFT TITLE" placeholder="NFT TITLE" inputValue={tokenTitle} disabled />
+            <CustomTextField title="NFT CREATOR" placeholder="NFT CREATOR" inputValue={tokenCreator} disabled />
+            <CustomTextField title="TOKEN ID" placeholder="TOKEN ID" inputValue={tokenIdHex} disabled />
             <Stack direction="row" spacing={2}>
                 <SecondaryButton fullWidth onClick={onClose}>
                     close
                 </SecondaryButton>
-                <PinkButton fullWidth>Confirm</PinkButton>
+                <PinkButton
+                    fullWidth
+                    onClick={() => {
+                        alert(tokenId);
+                    }}
+                >
+                    Confirm
+                </PinkButton>
             </Stack>
         </Stack>
     );
