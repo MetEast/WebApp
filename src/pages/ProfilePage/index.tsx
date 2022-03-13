@@ -260,8 +260,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
             <Box
                 onClick={() => {}}
                 sx={{
-                    height: 250,
-                    maxHeight: matchUpMd ? 250 : matchDownSm ? 130 : 180,
+                    height: 330,
+                    maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
                     cursor: 'pointer',
                     backgroundColor: '#C3C5C8',
                 }}
@@ -271,7 +271,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         src={getImageFromAsset(signInDlgState.userCoverImage)}
                         // src="/assets/images/blindbox/blindbox-nft-template1.png"
                         alt=""
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 250 }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 330 }}
                     />
                 )}
             </Box>
@@ -482,7 +482,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
                     <LooksEmptyBox sx={{ marginTop: 2 }} />
                 )}
-                <Grid container mt={2} columnSpacing={4}>
+                <Grid container mt={{ xs: 2, md: 4 }} columnSpacing={4} rowGap={{ xs: 2, md: 4 }}>
                     {myNFTList[getSelectedTabIndex()].map((item, index) => (
                         <Grid
                             item

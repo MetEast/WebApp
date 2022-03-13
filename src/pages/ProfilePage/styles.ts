@@ -54,9 +54,9 @@ export const ProfileImageWrapper = styled(Box)`
         margin-top: -70px;
     }
     ${(props) => props.theme.breakpoints.down('sm')} {
-        width: 70px;
-        height: 70px;
-        margin-top: -35px;
+        width: 90px;
+        height: 90px;
+        margin-top: -45px;
     }
 `;
 
