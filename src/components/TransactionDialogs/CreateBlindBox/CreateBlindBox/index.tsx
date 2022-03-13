@@ -9,7 +9,6 @@ import ELAPriceInput from '../../components/ELAPriceInput';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
-import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import SearchBlindBoxItems from '../SearchBlindBoxItems';
 
@@ -18,7 +17,6 @@ export interface ComponentProps {}
 const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const { enqueueSnackbar } = useSnackbar();
     const classes = useStyles();
 
     const [blindboxTitle, setBlindboxTitle] = useState<string>('');
@@ -264,10 +262,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     // setSaleEndsError(isNaN(Date.parse(saleEnds)));
                                     setBlindboxImageError(blindboxImage === undefined);
                                     setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
-                                    enqueueSnackbar('Form validation failed!', {
-                                        variant: 'warning',
-                                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                    });
                                 }
                             }}
                         >
