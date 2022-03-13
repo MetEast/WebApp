@@ -13,7 +13,7 @@ import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
-import { getAdminNFTItemList } from 'src/services/fetch';
+import { getAdminNFTItemList, getAdminSearchParams } from 'src/services/fetch';
 import { adminNftSaleTypeOptions, adminNftStateOptions } from 'src/constants/select-constants';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
@@ -109,7 +109,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const data: AdminNFTItemType[] = useMemo(
         () =>
-            [...Array(800).keys()].map(
+            [...Array(0).keys()].map(
                 (item) =>
                     ({
                         id: item,
@@ -129,17 +129,18 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         [],
     );
 
-    const [tabledata, setTabledata] = useState(data);
-
+    const [tabledata, setTabledata] = useState<Array<AdminNFTItemType>>(data);
+    const [inputString, setInputString] = useState<string>('');
+    const [keyWord, setKeyWord] = useState<string>('');
     const [nftState, setNftState] = useState<TypeSelectItem>();
-    const [nftStateSelectOpen, setNftStateSelectOpen] = useState(false);
+    const [nftStateSelectOpen, setNftStateSelectOpen] = useState<boolean>(false);
     const [saleType, setSaleType] = useState<TypeSelectItem>();
-    const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState(false);
+    const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState<boolean>(false);
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
-            const _adminNFTList = await getAdminNFTItemList('pageNum=1&pageSize=100');
+            const _adminNFTList = await getAdminNFTItemList(getAdminSearchParams(keyWord, nftState, saleType));
             if (!unmounted) {
                 setTabledata(_adminNFTList);
             }
@@ -148,9 +149,8 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, []);
+    }, [saleType, nftState, keyWord]);
 
-    console.log('-----------', tabledata)
     const handleNFTStateChange = (value: string) => {
         const item = adminNftStateOptions.find((option) => option.value === value);
         setNftState(item);
@@ -174,10 +174,12 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     <Stack direction="row" alignItems="flex-end" spacing={1}>
                         <CustomTextField
                             title="Search"
+                            inputValue={inputString}
                             placeholder="TokenID, NFT title, or Address"
                             sx={{ width: 260 }}
+                            changeHandler={(value: string) => setInputString(value)}
                         />
-                        <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                        <PrimaryButton size="small" sx={{ paddingX: 3 }} onClick={() => setKeyWord(inputString)}>
                             <Icon
                                 icon="ph:magnifying-glass"
                                 fontSize={20}

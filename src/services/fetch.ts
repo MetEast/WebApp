@@ -806,6 +806,21 @@ export const uploadUserProfile = (
     });
 
 // admin NFT
+export const getAdminSearchParams = (
+    keyWord: string,
+    status: TypeSelectItem | undefined,
+    saleType: TypeSelectItem | undefined,
+) => {
+    let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+    if (status !== undefined) {
+        searchParams += (status.value === 'online') ? '&status=online' : '&status=removed'; 
+    }
+    if (saleType !== undefined) {
+        searchParams += (saleType.value === 'Buy now') ? '&saleType=buynow' : '&saleType=onauction'; 
+    }
+    return searchParams;
+};
+
 export const getAdminNFTItemList = async (fetchParams: string) => {
     const resAdminNFTList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
@@ -819,7 +834,7 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
         const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
         _AdminNFT.id = i + 1;
         _AdminNFT.tokenId = itemObject.tokenId;
-        _AdminNFT.token_id = reduceHexAddress(itemObject.tokenId, 4);
+        _AdminNFT.token_id = reduceHexAddress(itemObject.tokenIdHex, 4);
         _AdminNFT.nft_title = itemObject.name;
         _AdminNFT.selling_price = itemObject.price / 1e18;
         _AdminNFT.nft_creator = reduceHexAddress(itemObject.royaltyOwner, 4);
