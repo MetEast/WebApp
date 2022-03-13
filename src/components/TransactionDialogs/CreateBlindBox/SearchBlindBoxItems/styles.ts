@@ -27,6 +27,10 @@ export const ImageBox = styled(Box)<{ selected: boolean }>`
             object-fit: cover;
         },
     }
+    .skeleton_box {
+        position: absolute;
+        inset: 0;
+    }
     .check_box {
         position: absolute;
         top: 8px;

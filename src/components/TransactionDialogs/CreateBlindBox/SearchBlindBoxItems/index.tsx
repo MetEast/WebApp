@@ -152,31 +152,67 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                     </Stack>
                 </Stack>
                 {matchDownMd && (
-                    <Typography fontSize={22} fontWeight={400} color="#4C4C4C">
-                        {selectedTokenIds.length} Nft Selected
-                    </Typography>
+                    <>
+                        {loadingItemsList ? (
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={36}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                            />
+                        ) : (
+                            <Typography fontSize={22} fontWeight={400} color="#4C4C4C">
+                                {selectedTokenIds.length} Nft Selected
+                            </Typography>
+                        )}
+                    </>
                 )}
             </Stack>
             <Box height="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
                 {matchDownMd ? (
                     <Grid container columnSpacing={3.5} rowGap={2}>
-                        {itemList.map((item, index) => (
+                        {(loadingItemsList ? [...Array(6)] : itemList).map((item, index) => (
                             <Grid item key={index} xs={6}>
                                 <Stack width="100%" spacing={1}>
-                                    <ImageBox
-                                        selected={itemChecked[index] === undefined ? false : itemChecked[index]}
-                                        onClick={() => handleSelectChange(index)}
-                                    >
-                                        <Box className="image_box">
-                                            <img src={item.url} alt="" />
-                                        </Box>
-                                        <Box className="check_box">
-                                            <Icon icon="ph:check" fontSize={20} color="#1890FF" />
-                                        </Box>
-                                    </ImageBox>
-                                    <Typography fontSize={12} fontWeight={700}>
-                                        {item.projectTitle}
-                                    </Typography>
+                                    {loadingItemsList ? (
+                                        <ImageBox selected={false}>
+                                            <Box className="skeleton_box">
+                                                <Skeleton
+                                                    variant="rectangular"
+                                                    animation="wave"
+                                                    width="100%"
+                                                    height="100%"
+                                                    sx={{ bgcolor: '#E8F4FF' }}
+                                                />
+                                            </Box>
+                                        </ImageBox>
+                                    ) : (
+                                        <ImageBox
+                                            selected={itemChecked[index] === undefined ? false : itemChecked[index]}
+                                            onClick={() => handleSelectChange(index)}
+                                        >
+                                            <Box className="image_box">
+                                                <img src={item.url} alt="" />
+                                            </Box>
+                                            <Box className="check_box">
+                                                <Icon icon="ph:check" fontSize={20} color="#1890FF" />
+                                            </Box>
+                                        </ImageBox>
+                                    )}
+                                    {loadingItemsList ? (
+                                        <Skeleton
+                                            variant="rectangular"
+                                            animation="wave"
+                                            width="100%"
+                                            height={24}
+                                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                                        />
+                                    ) : (
+                                        <Typography fontSize={12} fontWeight={700}>
+                                            {item.projectTitle}
+                                        </Typography>
+                                    )}
                                 </Stack>
                             </Grid>
                         ))}
