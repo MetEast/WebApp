@@ -143,4 +143,5 @@ export const blankContractMethodParam: TypeContractMethodPram = {
     orderId: '',
     orderIds: [],
     didUri: '',
+    _price: '0',
 };

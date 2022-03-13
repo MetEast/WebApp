@@ -66,4 +66,5 @@ export type TypeContractMethodPram = {
     orderId: string;
     orderIds: string[];
     didUri: string;
+    _price: string;
 };

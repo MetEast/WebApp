@@ -43,68 +43,6 @@ const RemoveNFT: React.FC<ComponentProps> = ({
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
 
-    const callCancelOrder = async (_orderId: string) => {
-        const accounts = await walletConnectWeb3.eth.getAccounts();
-        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        const transactionParams = {
-            from: accounts[0],
-            gasPrice: gasPrice,
-            gas: 5000000,
-            value: 0,
-        };
-        let txHash = '';
-
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
-        marketContract.methods
-            .cancelOrder(_orderId)
-            .send(transactionParams)
-            .on('transactionHash', (hash: any) => {
-                console.log('transactionHash', hash);
-                txHash = hash;
-                clearTimeout(timer);
-            })
-            .on('receipt', (receipt: any) => {
-                console.log('receipt', receipt);
-                enqueueSnackbar('Cancel sale succeed!', {
-                    variant: 'success',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                setDialogState({
-                    ...dialogState,
-                    cancelSaleDlgOpened: true,
-                    cancelSaleDlgStep: 1,
-                    cancelSaleTxHash: txHash,
-                    waitingConfirmDlgOpened: false,
-                });
-            })
-            .on('error', (error: any) => {
-                console.error('error', error);
-                enqueueSnackbar('Cancel sale error!', {
-                    variant: 'warning',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                clearTimeout(timer);
-                setDialogState({ ...dialogState, cancelSaleDlgOpened: false, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-            });
-    };
-
-    const handleCancelSale = () => {
-        if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
-            enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
-                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-            });
-            return;
-        }
-        callCancelOrder(dialogState.cancelSaleOrderId);
-    };
-
     return (
         <Stack spacing={4} width={520}>
             <Stack alignItems="center">

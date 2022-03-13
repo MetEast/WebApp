@@ -40,6 +40,9 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                 };
                 let contractMethod = null;
                 switch (param.method) {
+                    case 'changeOrderPrice':
+                        contractMethod = smartContract.methods.changeOrderPrice(param.orderId, param._price);
+                        break;
                     case 'cancelOrder':
                         contractMethod = smartContract.methods.cancelOrder(param.orderId);
                         break;
