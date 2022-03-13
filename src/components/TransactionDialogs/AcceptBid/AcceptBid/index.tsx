@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -21,6 +21,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [onProgress, setOnProgress] = useState<boolean>(false);
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -30,6 +31,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
     );
 
     const handleAcceptBid = () => {
+        setOnProgress(true);
         setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
@@ -38,7 +40,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
             ...blankContractMethodParam,
             contractType: 2,
             method: 'settleAuctionOrder',
-            price: 0,
+            price: '0',
             orderId: dialogState.acceptBidOrderId,
         })
             .then((txHash) => {
@@ -67,6 +69,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .finally(() => {
+                setOnProgress(false);
                 clearTimeout(timer);
             });
     };
@@ -120,7 +123,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     >
                         close
                     </SecondaryButton>
-                    <PrimaryButton fullWidth onClick={handleAcceptBid}>
+                    <PrimaryButton fullWidth disabled={onProgress} onClick={handleAcceptBid}>
                         Confirm
                     </PrimaryButton>
                 </Stack>

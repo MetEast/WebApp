@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -14,6 +14,8 @@ import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { callContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
@@ -21,6 +23,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [onProgress, setOnProgress] = useState<boolean>(false);
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -29,64 +32,49 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
 
-    const callBuyOrder = async (_orderId: string, _didUri: string, _price: string) => {
-        const accounts = await walletConnectWeb3.eth.getAccounts();
-
-        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        const transactionParams = {
-            from: accounts[0],
-            gasPrice: gasPrice,
-            gas: 5000000,
-            value: _price,
-        };
-        let txHash = '';
-
+    const handleBuyNow = () => {
+        setOnProgress(true);
         setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
-        marketContract.methods
-            .buyOrder(_orderId, _didUri)
-            .send(transactionParams)
-            .on('transactionHash', (hash: any) => {
-                console.log('transactionHash', hash);
-                txHash = hash;
-                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
-                clearTimeout(timer);
-            })
-            .on('receipt', (receipt: any) => {
-                console.log('receipt', receipt);
+        callContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 2,
+            method: 'buyOrder',
+            price: BigInt(dialogState.buyNowPrice * 1e18).toString(),
+            orderId: dialogState.buyNowOrderId,
+            didUri: signInDlgState.didUri,
+        })
+            .then((txHash) => {
                 enqueueSnackbar('Buy now succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, buyNowTxHash: txHash, buyNowDlgOpened: true, buyNowDlgStep: 1 });
+                setDialogState({
+                    ...dialogState,
+                    buyNowDlgOpened: true,
+                    buyNowDlgStep: 2,
+                    buyNowTxHash: new String(txHash).toString(),
+                    waitingConfirmDlgOpened: false,
+                });
             })
-            .on('error', (error: any) => {
-                console.error('error', error);
-                enqueueSnackbar('Buy now error!', {
+            .catch((error) => {
+                enqueueSnackbar(`Buy now error: ${error}!`, {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                clearTimeout(timer);
                 setDialogState({
                     ...dialogState,
                     buyNowDlgOpened: false,
-                    errorMessageDlgOpened: true,
                     waitingConfirmDlgOpened: false,
+                    errorMessageDlgOpened: true,
                 });
+            })
+            .finally(() => {
+                setOnProgress(false);
+                clearTimeout(timer);
             });
-    };
-
-    const handleBuyNow = async () => {
-        await callBuyOrder(
-            dialogState.buyNowOrderId,
-            signInDlgState.didUri,
-            BigInt(dialogState.buyNowPrice * 1e18).toString(),
-        );
     };
 
     return (
@@ -135,7 +123,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     >
                         close
                     </SecondaryButton>
-                    <PrimaryButton fullWidth onClick={handleBuyNow}>
+                    <PrimaryButton fullWidth disabled={onProgress} onClick={handleBuyNow}>
                         Confirm
                     </PrimaryButton>
                 </Stack>

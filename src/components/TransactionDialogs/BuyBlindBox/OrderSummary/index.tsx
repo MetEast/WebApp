@@ -22,7 +22,6 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
-
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -99,7 +98,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 setDialogState({
                     ...dialogState,
-                    buyNowDlgOpened: false,
+                    buyBlindBoxDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,
                 });
