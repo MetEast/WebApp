@@ -139,6 +139,8 @@ export const blankAdminNFTItem: AdminNFTItemType = {
 export const blankContractMethodParam: TypeContractMethodPram = {
     contractType: 1,
     method: '',
-    price: 0,
+    price: '0',
     orderId: '',
+    orderIds: [],
+    didUri: '',
 };

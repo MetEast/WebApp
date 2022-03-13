@@ -62,6 +62,8 @@ export type TypeIpfsUploadInfo = {
 export type TypeContractMethodPram = {
     contractType: number;
     method: string;
-    price: number;
+    price: string;
     orderId: string;
+    orderIds: string[];
+    didUri: string;
 };

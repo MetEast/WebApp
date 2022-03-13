@@ -5,8 +5,6 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { AbiItem } from 'web3-utils';
-import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
@@ -14,6 +12,8 @@ import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { callContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
@@ -30,53 +30,6 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
-
-    const callBuyOrderBatch = async (_orderIds: string[], _didUri: string, _price: string) => {
-        const accounts = await walletConnectWeb3.eth.getAccounts();
-        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-
-        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        const transactionParams = {
-            from: accounts[0],
-            gasPrice: gasPrice,
-            gas: 5000000,
-            value: _price,
-        };
-        let txHash = '';
-
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
-        marketContract.methods
-            .buyOrderBatch(_orderIds, _didUri)
-            .send(transactionParams)
-            .on('transactionHash', (hash: any) => {
-                console.log('transactionHash', hash);
-                txHash = hash;
-                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
-                clearTimeout(timer);
-            })
-            .on('receipt', (receipt: any) => {
-                console.log('receipt', receipt);
-                enqueueSnackbar('Buy Blind Box succeed!', {
-                    variant: 'success',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                sendSoldBlindBoxTokenIds(txHash);
-            })
-            .on('error', (error: any) => {
-                console.error('error', error);
-                enqueueSnackbar('Buy Blind Box error!', {
-                    variant: 'warning',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                clearTimeout(timer);
-                setDialogState({ ...dialogState, buyNowDlgOpened: false, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-            });
-    };
 
     const sendSoldBlindBoxTokenIds = (txHash: string) => {
         let unmounted = false;
@@ -117,13 +70,43 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         };
     };
 
-    const handleBuyBlindBox = async () => {
+    const handleBuyBlindBox = () => {
         setOnProgress(true);
-        await callBuyOrderBatch(
-            dialogState.buyBlindOrderIds,
-            signInDlgState.didUri,
-            BigInt(dialogState.buyBlindPriceEla * 1e18 * dialogState.buyBlindOrderIds.length).toString(),
-        );
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
+        const timer = setTimeout(() => {
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
+        }, 120000);
+        callContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 2,
+            method: 'buyOrderBatch',
+            price: BigInt(dialogState.buyBlindPriceEla * 1e18 * dialogState.buyBlindOrderIds.length).toString(),
+            orderIds: dialogState.buyBlindOrderIds,
+            didUri: signInDlgState.didUri,
+        })
+            .then((txHash) => {
+                enqueueSnackbar('Buy Blind Box succeed!', {
+                    variant: 'success',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
+                sendSoldBlindBoxTokenIds(new String(txHash).toString());
+            })
+            .catch((error) => {
+                enqueueSnackbar(`Buy Blind Box error: ${error}!`, {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                setDialogState({
+                    ...dialogState,
+                    buyNowDlgOpened: false,
+                    waitingConfirmDlgOpened: false,
+                    errorMessageDlgOpened: true,
+                });
+            })
+            .finally(() => {
+                clearTimeout(timer);
+            });
     };
 
     return (

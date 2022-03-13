@@ -6,8 +6,6 @@ import WarningTypo from '../../components/WarningTypo';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { AbiItem } from 'web3-utils';
-import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
@@ -31,58 +29,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
 
-    // const callSettleAuctionOrder = async (_orderId: string) => {
-    //     const accounts = await walletConnectWeb3.eth.getAccounts();
-    //     const contractAbi = METEAST_MARKET_CONTRACT_ABI;
-    //     const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-    //     const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-    //     const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-    //     const transactionParams = {
-    //         from: accounts[0],
-    //         gasPrice: gasPrice,
-    //         gas: 5000000,
-    //         value: 0,
-    //     };
-    //     let txHash = '';
-    //     setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
-    //     const timer = setTimeout(() => {
-    //         setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-    //     }, 120000);
-    //     marketContract.methods
-    //         .settleAuctionOrder(_orderId)
-    //         .send(transactionParams)
-    //         .on('transactionHash', (hash: any) => {
-    //             console.log('transactionHash', hash);
-    //             txHash = hash;
-    //             clearTimeout(timer);
-    //         })
-    //         .on('receipt', (receipt: any) => {
-    //             console.log('receipt', receipt);
-    //             enqueueSnackbar('Accept bid succeed!', {
-    //                 variant: 'success',
-    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
-    //             });
-    //             setDialogState({
-    //                 ...dialogState,
-    //                 acceptBidDlgOpened: true,
-    //                 acceptBidDlgStep: 2,
-    //                 acceptBidTxHash: txHash,
-    //                 waitingConfirmDlgOpened: false,
-    //             });
-    //         })
-    //         .on('error', (error: any) => {
-    //             console.error('error', error);
-    //             enqueueSnackbar('Accept bid error!', {
-    //                 variant: 'warning',
-    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
-    //             });
-    //             clearTimeout(timer);
-    //             setDialogState({ ...dialogState, acceptBidDlgOpened: false, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-    //         });
-    // };
-
     const handleAcceptBid = () => {
-        // callSettleAuctionOrder(dialogState.acceptBidOrderId);
         setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
@@ -108,7 +55,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar('Accept bid error!', {
+                enqueueSnackbar(`Accept bid error: ${error}!`, {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
