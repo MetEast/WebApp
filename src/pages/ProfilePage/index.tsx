@@ -359,12 +359,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             </Typography>
                             <SecondaryButton
                                 sx={{
-                                    height: 32,
+                                    height: 24,
                                     fontSize: 14,
                                     fontWeight: 500,
                                     borderRadius: 2,
                                     textTransform: 'none',
                                     display: { xs: 'flex', sm: 'none' },
+                                    alignItems: 'center',
                                 }}
                             >
                                 <Icon
@@ -392,7 +393,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             </SecondaryButton>
                             <PrimaryButton
                                 size={matchDownSm ? 'small' : undefined}
-                                sx={{ paddingX: { xs: 2, sm: 4 } }}
+                                sx={{ paddingX: { xs: 2, sm: 4 }, fontSize: { xs: 14, sm: 18 } }}
                                 onClick={() => {
                                     setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
                                 }}
@@ -403,6 +404,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 size={matchDownSm ? 'small' : undefined}
                                 sx={{
                                     paddingX: { xs: 2, sm: 4 },
+                                    fontSize: { xs: 14, sm: 18 },
                                     background: '#A453D6',
                                     '&:hover': { background: '#A463D6' },
                                 }}
@@ -421,7 +423,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 </Stack>
                 <Grid container marginTop={4} alignItems="center" rowSpacing={2.5}>
                     <Grid item xs={12} md={3} order={0}>
-                        <Typography fontSize={42} fontWeight={700} lineHeight={1.1}>
+                        <Typography fontSize={{ xs: 28, sm: 32, md: 42 }} fontWeight={700} lineHeight={1.1}>
                             Your NFTs
                         </Typography>
                     </Grid>
@@ -457,18 +459,20 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         />
                     </Grid>
                 </Grid>
-                <Box display="flex" mt={3}>
-                    {filters.map((item, index) => (
-                        <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>
-                            {filterOptions[item]}{' '}
-                            <DismissCircle24Filled style={{ display: 'flex', marginLeft: '4px' }} />
-                        </FilterItemTypography>
-                    ))}
-                </Box>
-                {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
-                    <LooksEmptyBox />
+                {filters.length > 0 && (
+                    <Box display="flex" mt={2}>
+                        {filters.map((item, index) => (
+                            <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>
+                                {filterOptions[item]}{' '}
+                                <DismissCircle24Filled style={{ display: 'flex', marginLeft: '4px' }} />
+                            </FilterItemTypography>
+                        ))}
+                    </Box>
                 )}
-                <Grid container mt={2} spacing={4}>
+                {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
+                    <LooksEmptyBox sx={{ marginTop: 2 }} />
+                )}
+                <Grid container mt={2} columnSpacing={4}>
                     {myNFTList[getSelectedTabIndex()].map((item, index) => (
                         <Grid
                             item
