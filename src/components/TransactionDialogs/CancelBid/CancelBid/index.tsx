@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
@@ -10,8 +10,6 @@ import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'sr
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-import ModalDialog from 'src/components/ModalDialog';
-import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
@@ -21,7 +19,6 @@ export interface ComponentProps {}
 const CancelBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
@@ -33,15 +30,10 @@ const CancelBid: React.FC<ComponentProps> = (): JSX.Element => {
 
     const callCancelOrder = async (_orderId: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
-
         const contractAbi = METEAST_MARKET_CONTRACT_ABI;
         const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
         const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-
         const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log('Gas price:', gasPrice);
-
-        console.log('Sending transaction with account address:', accounts[0]);
         const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
@@ -50,10 +42,9 @@ const CancelBid: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
 
-        setLoadingDlgOpened(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
-            setLoadingDlgOpened(false);
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
         marketContract.methods
             .cancelOrder(_orderId)
@@ -61,7 +52,7 @@ const CancelBid: React.FC<ComponentProps> = (): JSX.Element => {
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
-                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
                 clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
@@ -77,15 +68,19 @@ const CancelBid: React.FC<ComponentProps> = (): JSX.Element => {
                     cancelSaleTxHash: txHash,
                 });
             })
-            .on('error', (error: any, receipt: any) => {
+            .on('error', (error: any) => {
                 console.error('error', error);
                 enqueueSnackbar('Cancel bid error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setLoadingDlgOpened(false);
                 clearTimeout(timer);
-                setDialogState({ ...dialogState, cancelSaleDlgOpened: false, errorMessageDlgOpened: true });
+                setDialogState({
+                    ...dialogState,
+                    cancelSaleDlgOpened: false,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
             });
     };
 
@@ -101,44 +96,34 @@ const CancelBid: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     return (
-        <>
-            <Stack spacing={5} width={320}>
-                <Stack alignItems="center">
-                    <DialogTitleTypo>Are you sure?</DialogTitleTypo>
-                    <Typography fontSize={16} fontWeight={400} marginTop={1}>
-                        Do you really want to cancel your bid?
-                    </Typography>
-                </Stack>
-                <Stack direction="row" alignItems="center" spacing={2}>
-                    <SecondaryButton
-                        fullWidth
-                        onClick={() => {
-                            setDialogState({
-                                ...dialogState,
-                                cancelBidTxFee: 0,
-                                cancelBidOrderId: '',
-                                cancelBidTxHash: '',
-                                cancelBidDlgOpened: false,
-                                cancelBidDlgStep: 0,
-                            });
-                        }}
-                    >
-                        Back
-                    </SecondaryButton>
-                    <PinkButton fullWidth onClick={handleCancelBid}>
-                        Cancel Bid
-                    </PinkButton>
-                </Stack>
+        <Stack spacing={5} width={320}>
+            <Stack alignItems="center">
+                <DialogTitleTypo>Are you sure?</DialogTitleTypo>
+                <Typography fontSize={16} fontWeight={400} marginTop={1}>
+                    Do you really want to cancel your bid?
+                </Typography>
             </Stack>
-            <ModalDialog
-                open={loadingDlgOpened}
-                onClose={() => {
-                    setLoadingDlgOpened(false);
-                }}
-            >
-                <WaitingConfirm />
-            </ModalDialog>
-        </>
+            <Stack direction="row" alignItems="center" spacing={2}>
+                <SecondaryButton
+                    fullWidth
+                    onClick={() => {
+                        setDialogState({
+                            ...dialogState,
+                            cancelBidTxFee: 0,
+                            cancelBidOrderId: '',
+                            cancelBidTxHash: '',
+                            cancelBidDlgOpened: false,
+                            cancelBidDlgStep: 0,
+                        });
+                    }}
+                >
+                    Back
+                </SecondaryButton>
+                <PinkButton fullWidth onClick={handleCancelBid}>
+                    Cancel Bid
+                </PinkButton>
+            </Stack>
+        </Stack>
     );
 };
 

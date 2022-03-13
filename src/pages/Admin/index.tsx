@@ -12,10 +12,10 @@ const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Ele
             <SignInDlgContainer />
             <Box position="relative">
                 {/* <Stack position="absolute" top={0} left={0} height="100vh" justifyContent="center">
-                <ShowMenuBtn>
-                    <Icon icon="ph:caret-right-bold" color="white" />
-                </ShowMenuBtn>
-            </Stack> */}
+                    <ShowMenuBtn>
+                        <Icon icon="ph:caret-right-bold" color="white" />
+                    </ShowMenuBtn>
+                </Stack> */}
                 <Stack
                     position="absolute"
                     top={0}

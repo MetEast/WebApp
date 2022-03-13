@@ -4,6 +4,8 @@ import { TypeSelectItem } from 'src/types/select-types';
 interface State {
     // manage profile
     manageProfileDlgOpened: boolean;
+    // confirm transaction
+    waitingConfirmDlgOpened: boolean;
     // mint nft
     createNFTDlgOpened: boolean;
     createNFTDlgStep: number;
@@ -119,6 +121,8 @@ interface State {
 const defaultState: State = {
     // manage profile
     manageProfileDlgOpened: false,
+    // confirm transaction
+    waitingConfirmDlgOpened: false,
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,

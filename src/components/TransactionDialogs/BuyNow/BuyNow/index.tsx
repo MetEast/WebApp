@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -11,8 +11,6 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-import ModalDialog from 'src/components/ModalDialog';
-import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
@@ -23,7 +21,6 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -31,19 +28,15 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
-    
+
     const callBuyOrder = async (_orderId: string, _didUri: string, _price: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
 
-        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-
-        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log('Gas price:', gasPrice);
-
-        console.log('Sending transaction with account address:', accounts[0]);
-        let transactionParams = {
+        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
@@ -51,10 +44,9 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
 
-        setLoadingDlgOpened(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
-            setLoadingDlgOpened(false);
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
         marketContract.methods
             .buyOrder(_orderId, _didUri)
@@ -62,7 +54,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
-                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
                 clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
@@ -73,15 +65,19 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 setDialogState({ ...dialogState, buyNowTxHash: txHash, buyNowDlgOpened: true, buyNowDlgStep: 1 });
             })
-            .on('error', (error: any, receipt: any) => {
+            .on('error', (error: any) => {
                 console.error('error', error);
                 enqueueSnackbar('Buy now error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setLoadingDlgOpened(false);
                 clearTimeout(timer);
-                setDialogState({ ...dialogState, buyNowDlgOpened: false, errorMessageDlgOpened: true });
+                setDialogState({
+                    ...dialogState,
+                    buyNowDlgOpened: false,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
             });
     };
 
@@ -94,70 +90,60 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     return (
-        <>
-            <Stack spacing={5} width={340}>
-                <Stack alignItems="center">
-                    <DialogTitleTypo>Buy Now</DialogTitleTypo>
-                </Stack>
-                <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
-                    <Grid container rowSpacing={0.5}>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.buyNowName}</DetailedInfoLabelTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.buyNowPrice || 0} ELA</DetailedInfoLabelTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.buyNowTxFee} ELA</DetailedInfoLabelTypo>
-                        </Grid>
-                    </Grid>
-                </Stack>
-                <Stack alignItems="center" spacing={1}>
-                    <Typography fontSize={14} fontWeight={600}>
-                        Available: {signInDlgState.walletBalance} ELA
-                    </Typography>
-                    <Stack direction="row" width="100%" spacing={2}>
-                        <SecondaryButton
-                            fullWidth
-                            onClick={() => {
-                                setDialogState({
-                                    ...dialogState,
-                                    buyNowDlgOpened: false,
-                                    buyNowPrice: 0,
-                                    buyNowName: '',
-                                    buyNowOrderId: '',
-                                });
-                            }}
-                        >
-                            close
-                        </SecondaryButton>
-                        <PrimaryButton fullWidth onClick={handleBuyNow}>
-                            Confirm
-                        </PrimaryButton>
-                    </Stack>
-                    <WarningTypo width={240}>
-                        In case of payment problems, please contact the official customer service
-                    </WarningTypo>
-                </Stack>
+        <Stack spacing={5} width={340}>
+            <Stack alignItems="center">
+                <DialogTitleTypo>Buy Now</DialogTitleTypo>
             </Stack>
-            <ModalDialog
-                open={loadingDlgOpened}
-                onClose={() => {
-                    setLoadingDlgOpened(false);
-                }}
-            >
-                <WaitingConfirm />
-            </ModalDialog>
-        </>
+            <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
+                <Grid container rowSpacing={0.5}>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>{dialogState.buyNowName}</DetailedInfoLabelTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Price</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>{dialogState.buyNowPrice || 0} ELA</DetailedInfoLabelTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>{dialogState.buyNowTxFee} ELA</DetailedInfoLabelTypo>
+                    </Grid>
+                </Grid>
+            </Stack>
+            <Stack alignItems="center" spacing={1}>
+                <Typography fontSize={14} fontWeight={600}>
+                    Available: {signInDlgState.walletBalance} ELA
+                </Typography>
+                <Stack direction="row" width="100%" spacing={2}>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({
+                                ...dialogState,
+                                buyNowDlgOpened: false,
+                                buyNowPrice: 0,
+                                buyNowName: '',
+                                buyNowOrderId: '',
+                            });
+                        }}
+                    >
+                        close
+                    </SecondaryButton>
+                    <PrimaryButton fullWidth onClick={handleBuyNow}>
+                        Confirm
+                    </PrimaryButton>
+                </Stack>
+                <WarningTypo width={240}>
+                    In case of payment problems, please contact the official customer service
+                </WarningTypo>
+            </Stack>
+        </Stack>
     );
 };
 

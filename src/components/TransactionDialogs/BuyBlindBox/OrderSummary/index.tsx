@@ -11,8 +11,6 @@ import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConn
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { useSnackbar } from 'notistack';
-import ModalDialog from 'src/components/ModalDialog';
-import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
@@ -23,7 +21,6 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [loadingDlgOpened, setLoadingDlgOpened] = useState<boolean>(false);
     const [onProgress, setOnProgress] = useState<boolean>(false);
 
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
@@ -36,16 +33,12 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
 
     const callBuyOrderBatch = async (_orderIds: string[], _didUri: string, _price: string) => {
         const accounts = await walletConnectWeb3.eth.getAccounts();
+        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
 
-        let contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        let contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        let marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-
-        let gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        console.log('Gas price:', gasPrice);
-
-        console.log('Sending transaction with account address:', accounts[0]);
-        let transactionParams = {
+        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
+        const transactionParams = {
             from: accounts[0],
             gasPrice: gasPrice,
             gas: 5000000,
@@ -53,10 +46,9 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         };
         let txHash = '';
 
-        setLoadingDlgOpened(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
-            setLoadingDlgOpened(false);
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true });
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
         marketContract.methods
             .buyOrderBatch(_orderIds, _didUri)
@@ -64,7 +56,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             .on('transactionHash', (hash: any) => {
                 console.log('transactionHash', hash);
                 txHash = hash;
-                setLoadingDlgOpened(false);
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
                 clearTimeout(timer);
             })
             .on('receipt', (receipt: any) => {
@@ -75,15 +67,14 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 sendSoldBlindBoxTokenIds(txHash);
             })
-            .on('error', (error: any, receipt: any) => {
+            .on('error', (error: any) => {
                 console.error('error', error);
                 enqueueSnackbar('Buy Blind Box error!', {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setLoadingDlgOpened(false);
                 clearTimeout(timer);
-                setDialogState({ ...dialogState, buyNowDlgOpened: false, errorMessageDlgOpened: true });
+                setDialogState({ ...dialogState, buyNowDlgOpened: false, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
             });
     };
 
@@ -136,91 +127,81 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     return (
-        <>
-            <Stack spacing={5} width={320}>
-                <Stack alignItems="center">
-                    <PageNumberTypo>2 of 2</PageNumberTypo>
-                    <DialogTitleTypo>Order Summary</DialogTitleTypo>
-                </Stack>
-                <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
-                    <Grid container width={200}>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.buyBlindName}</DetailedInfoLabelTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Unit Price</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla} ELA</DetailedInfoLabelTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Amount</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.buyBlindAmount}</DetailedInfoLabelTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Subtotal</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>
-                                {(dialogState.buyBlindPriceEla * dialogState.buyBlindAmount).toFixed(2)} ELA
-                            </DetailedInfoLabelTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>{dialogState.buyBlindTxFee} ELA</DetailedInfoLabelTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoTitleTypo>Total</DetailedInfoTitleTypo>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <DetailedInfoLabelTypo>
-                                {(
-                                    dialogState.buyBlindPriceEla * dialogState.buyBlindAmount +
-                                    dialogState.buyBlindTxFee
-                                ).toFixed(2)}{' '}
-                                ELA
-                            </DetailedInfoLabelTypo>
-                        </Grid>
-                    </Grid>
-                </Stack>
-                <Stack alignItems="center" spacing={1}>
-                    <Typography fontSize={14} fontWeight={600}>
-                        Available: {signInDlgState.walletBalance} ELA
-                    </Typography>
-                    <Stack direction="row" width="100%" spacing={2}>
-                        <SecondaryButton
-                            fullWidth
-                            onClick={() => {
-                                setDialogState({ ...dialogState, buyBlindBoxDlgStep: 0, buyBlindBoxDlgOpened: true });
-                            }}
-                        >
-                            Back
-                        </SecondaryButton>
-                        <PrimaryButton fullWidth disabled={onProgress} onClick={handleBuyBlindBox}>
-                            Confirm
-                        </PrimaryButton>
-                    </Stack>
-                    <WarningTypo width={240}>
-                        In case of payment problems, please contact the official customer service
-                    </WarningTypo>
-                </Stack>
+        <Stack spacing={5} width={320}>
+            <Stack alignItems="center">
+                <PageNumberTypo>2 of 2</PageNumberTypo>
+                <DialogTitleTypo>Order Summary</DialogTitleTypo>
             </Stack>
-            <ModalDialog
-                open={loadingDlgOpened}
-                onClose={() => {
-                    setLoadingDlgOpened(false);
-                }}
-            >
-                <WaitingConfirm />
-            </ModalDialog>
-        </>
+            <Stack alignItems="center" paddingX={6} paddingY={4} borderRadius={4} sx={{ background: '#F0F1F2' }}>
+                <Grid container width={200}>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindName}</DetailedInfoLabelTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Unit Price</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla} ELA</DetailedInfoLabelTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Amount</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindAmount}</DetailedInfoLabelTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Subtotal</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>
+                            {(dialogState.buyBlindPriceEla * dialogState.buyBlindAmount).toFixed(2)} ELA
+                        </DetailedInfoLabelTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindTxFee} ELA</DetailedInfoLabelTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoTitleTypo>Total</DetailedInfoTitleTypo>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DetailedInfoLabelTypo>
+                            {(
+                                dialogState.buyBlindPriceEla * dialogState.buyBlindAmount +
+                                dialogState.buyBlindTxFee
+                            ).toFixed(2)}{' '}
+                            ELA
+                        </DetailedInfoLabelTypo>
+                    </Grid>
+                </Grid>
+            </Stack>
+            <Stack alignItems="center" spacing={1}>
+                <Typography fontSize={14} fontWeight={600}>
+                    Available: {signInDlgState.walletBalance} ELA
+                </Typography>
+                <Stack direction="row" width="100%" spacing={2}>
+                    <SecondaryButton
+                        fullWidth
+                        onClick={() => {
+                            setDialogState({ ...dialogState, buyBlindBoxDlgStep: 0, buyBlindBoxDlgOpened: true });
+                        }}
+                    >
+                        Back
+                    </SecondaryButton>
+                    <PrimaryButton fullWidth disabled={onProgress} onClick={handleBuyBlindBox}>
+                        Confirm
+                    </PrimaryButton>
+                </Stack>
+                <WarningTypo width={240}>
+                    In case of payment problems, please contact the official customer service
+                </WarningTypo>
+            </Stack>
+        </Stack>
     );
 };
 
