@@ -6,8 +6,6 @@ import ELAPriceInput from '../../components/ELAPriceInput';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { AbiItem } from 'web3-utils';
-import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
@@ -124,7 +122,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
                 >
                     close
                 </SecondaryButton>
-                <PrimaryButton fullWidth onClick={handleChangePrice}>
+                <PrimaryButton fullWidth disabled={onProgress} onClick={handleChangePrice}>
                     Confirm
                 </PrimaryButton>
             </Stack>
