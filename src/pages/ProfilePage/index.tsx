@@ -386,11 +386,21 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         >
                             {signInDlgState.userDescription}
                         </Typography>
-                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3.5}>
+                        <Stack direction="row" alignItems="center" spacing={{ xs: 1, sm: 2 }} marginTop={3.5}>
                             <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'none', sm: 'none' } }}>
                                 <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                                 <NotificationTypo>2</NotificationTypo>
                             </SecondaryButton>
+                            <PrimaryButton
+                                btn_type="secondary"
+                                size="small"
+                                sx={{ minWidth: 40, display: { sm: 'none' }, marginRight: '10px !important' }}
+                                onClick={() => {
+                                    setDialogState({ ...dialogState, manageProfileDlgOpened: true });
+                                }}
+                            >
+                                <Icon icon="ci:settings-future" fontSize={24} />
+                            </PrimaryButton>
                             <PrimaryButton
                                 size={matchDownSm ? 'small' : undefined}
                                 sx={{ paddingX: { xs: 2, sm: 4 }, fontSize: { xs: 14, sm: 18 } }}
