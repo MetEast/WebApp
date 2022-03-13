@@ -54,7 +54,7 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
         [enumBadgeType.Original]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:fingerprint" />,
         },
         [enumBadgeType.Museum]: {
             background: '#24AECC1A',
@@ -64,37 +64,37 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
         [enumBadgeType.Arts]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:paint-brush" />,
         },
         [enumBadgeType.Sports]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:football" />,
         },
         [enumBadgeType.Dimension]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:line-segments" />,
         },
         [enumBadgeType.Pets]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:paw-print" />,
         },
         [enumBadgeType.Recreation]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:video-camera" />,
         },
         [enumBadgeType.Star]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:star" />,
         },
         [enumBadgeType.Other]: {
             background: '#24AECC1A',
             color: '#24AECC',
-            icon: <Icon icon="ph:bank" />,
+            icon: <Icon icon="ph:leaf" />,
         },
         [enumBadgeType.Created]: {
             background: '#FFEAD8',

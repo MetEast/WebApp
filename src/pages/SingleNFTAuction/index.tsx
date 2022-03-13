@@ -32,6 +32,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
+import { getMintCategory } from 'src/services/common';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -160,23 +161,18 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                         views={productDetail.views}
                     />
                     <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <Grid container spacing={1}>
-                            <Grid item xs={'auto'}>
-                                <ProductBadge badgeType={enumBadgeType.OnAuction} />
-                            </Grid>
-                            {productDetail.status !== 'HAS BIDS' && (
-                                <Grid item xs={'auto'}>
-                                    <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-                                </Grid>
-                            )}
-                            <Grid item xs={12} sm={'auto'}>
-                                {productDetail.isExpired ? (
-                                    <ProductBadge badgeType={enumBadgeType.SaleEnded} />
-                                ) : (
-                                    <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
-                                )}
-                            </Grid>
-                        </Grid>
+                        <ProductBadge badgeType={enumBadgeType.OnAuction} />
+                        {/* - For the initial version, we don't support to display this badge because we dont' have such feature with
+                        "Reserve Price" on the contract; We can manage to support after having discussing with the sponsor team. */}
+                        {/* {productDetail.status !== 'HAS BIDS' && (
+                            <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
+                        )} */}
+                        {productDetail.isExpired ? (
+                            <ProductBadge badgeType={enumBadgeType.SaleEnded} />
+                        ) : (
+                            <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                        )}
+                        <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                     </Stack>
                     <ELAPrice
                         price_ela={productDetail.price_ela}
