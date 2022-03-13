@@ -27,6 +27,7 @@ import {
     blankMyEarning,
     blankMyNFTHistory,
     blankBBCandidate,
+    blankAdminNFTItem,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -79,6 +80,7 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
 
 // Home Page & Product Page
 export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
+    console.log(fetchParams);
     const resNFTList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
         FETCH_CONFIG_JSON,
@@ -804,30 +806,36 @@ export const uploadUserProfile = (
     });
 
 // admin NFT
-// export const getAdminNFTItemList = async (fetchParams: string) => {
-//     const resAdminNFTList = await fetch(
-//         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
-//         FETCH_CONFIG_JSON,
-//     );
-//     const jsonAdminNFTList = await resAdminNFTList.json();
-//     const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
-
-//     const _arrNFTList: Array<AdminNFTItemType> = [];
-//     for (let i = 0; i < arrAdminNFTList.length; i++) {
-//         const itemObject: TypeProductFetch = arrAdminNFTList[i];
-//         const _AdminNFT: TypeProduct = { ...blankNFTItem };
-//         _AdminNFT.tokenId = itemObject.tokenId;
-//         _AdminNFT.name = itemObject.name;
-//         _AdminNFT.image = getImageFromAsset(itemObject.asset);
-//         _AdminNFT.price_ela = itemObject.price / 1e18;
-//         _AdminNFT.author =
-//             itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
-//         _AdminNFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-//         _AdminNFT.likes = itemObject.likes;
-//         _AdminNFT.views = itemObject.views;
-//         _AdminNFT.status = itemObject.status;
-
-//         _arrNFTList.push(_AdminNFT);
-//     }
-//     return _arrNFTList;
-// };
+export const getAdminNFTItemList = async (fetchParams: string) => {
+    const resAdminNFTList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonAdminNFTList = await resAdminNFTList.json();
+    const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
+    const _arrAdminNFTList: Array<AdminNFTItemType> = [];
+    for (let i = 0; i < arrAdminNFTList.length; i++) {
+        const itemObject: TypeProductFetch = arrAdminNFTList[i];
+        const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
+        _AdminNFT.id = i + 1;
+        _AdminNFT.tokenId = itemObject.tokenId;
+        _AdminNFT.token_id = reduceHexAddress(itemObject.tokenId, 4);
+        _AdminNFT.nft_title = itemObject.name;
+        _AdminNFT.selling_price = itemObject.price / 1e18;
+        _AdminNFT.nft_creator = reduceHexAddress(itemObject.royaltyOwner, 4);
+        _AdminNFT.nft_owner = reduceHexAddress(itemObject.holder, 4);
+        _AdminNFT.sale_type = itemObject.endTime === '0' ? enumBadgeType.BuyNow : enumBadgeType.OnAuction;
+        _AdminNFT.likes = itemObject.likes;
+        _AdminNFT.views = itemObject.views;
+        _AdminNFT.status = itemObject.status === 'REMOVED' ? 'Removed' : 'Online'; // ------
+        const createdTime = getTime(itemObject.createTime);
+        _AdminNFT.created_date = createdTime.date + ' ' + createdTime.time;
+        if (itemObject.marketTime === undefined) _AdminNFT.listed_date = '';
+        else {
+            const listedTime = getTime(itemObject.marketTime.toString());
+            _AdminNFT.listed_date = listedTime.date + ' ' + listedTime.time;
+        }
+        _arrAdminNFTList.push(_AdminNFT);
+    }
+    return _arrAdminNFTList;
+};

@@ -36,7 +36,7 @@ const HomePage: React.FC = (): JSX.Element => {
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchCollections = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _newNFTList = await getNFTItemList('pageNum=1&pageSize=10', ELA2USD, likeList);
@@ -50,7 +50,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 setCollectionList(_popularNFTList);
             }
         };
-        getFetchData().catch(console.error);
+        fetchCollections().catch(console.error);
         return () => {
             unmounted = true;
         };

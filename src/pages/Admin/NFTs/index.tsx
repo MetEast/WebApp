@@ -13,7 +13,8 @@ import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
-// import { getAdminNFTItemList } from 'src/services/fetch';
+import { getAdminNFTItemList } from 'src/services/fetch';
+import { adminNftSaleTypeOptions, adminNftStateOptions } from 'src/constants/select-constants';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -128,57 +129,35 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         [],
     );
 
-    const nftStateOptions: Array<TypeSelectItem> = [
-        {
-            label: 'online',
-            value: 'online',
-        },
-        {
-            label: 'removed',
-            value: 'removed',
-        },
-    ];
-
-    const saleTypeOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Buy now',
-            value: 'Buy now',
-        },
-        {
-            label: 'On auction',
-            value: 'On auction',
-        },
-    ];
-
     const [tabledata, setTabledata] = useState(data);
 
     const [nftState, setNftState] = useState<TypeSelectItem>();
     const [nftStateSelectOpen, setNftStateSelectOpen] = useState(false);
-
     const [saleType, setSaleType] = useState<TypeSelectItem>();
     const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState(false);
 
-    // useEffect(() => {
-    //     let unmounted = false;
-    //     const getFetchData = async () => {
-    //         const _adminNFTList = await getAdminNFTItemList('pageNum=1&pageSize=10');
-    //         if (!unmounted) {
-    //             setTabledata(_adminNFTList);
-    //         }
-    //     };
-    //     getFetchData().catch(console.error);
-    //     return () => {
-    //         unmounted = true;
-    //     };
-    // }, []);
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _adminNFTList = await getAdminNFTItemList('pageNum=1&pageSize=100');
+            if (!unmounted) {
+                setTabledata(_adminNFTList);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, []);
 
+    console.log('-----------', tabledata)
     const handleNFTStateChange = (value: string) => {
-        const item = nftStateOptions.find((option) => option.value === value);
+        const item = adminNftStateOptions.find((option) => option.value === value);
         setNftState(item);
     };
 
     const handleSaleTypeChange = (value: string) => {
-        const item = saleTypeOptions.find((option) => option.value === value);
+        const item = adminNftSaleTypeOptions.find((option) => option.value === value);
         setSaleType(item);
     };
 
@@ -221,7 +200,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                                     </SelectBtn>
                                 }
                                 selectedItem={nftState}
-                                options={nftStateOptions}
+                                options={adminNftStateOptions}
                                 isOpen={nftStateSelectOpen ? 1 : 0}
                                 handleClick={handleNFTStateChange}
                                 setIsOpen={setNftStateSelectOpen}
@@ -240,7 +219,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                                     </SelectBtn>
                                 }
                                 selectedItem={saleType}
-                                options={saleTypeOptions}
+                                options={adminNftSaleTypeOptions}
                                 isOpen={saleTypeSelectOpen ? 1 : 0}
                                 handleClick={handleSaleTypeChange}
                                 setIsOpen={setSaleTypeSelectOpen}

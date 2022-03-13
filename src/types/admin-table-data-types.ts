@@ -10,6 +10,7 @@ export type AdminTableColumn = {
 
 export type AdminNFTItemType = {
     id: number; // required
+    tokenId: string;
     token_id: string;
     nft_title: string;
     selling_price: number;
