@@ -208,7 +208,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true 
                                         {columns.map((column) => (
                                             <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
                                                 {column.cell
-                                                    ? column.cell({ value: (row as any)[column.id] })
+                                                    ? column.cell({ value: (row as any)[column.id], data: row})
                                                     : (row as any)[column.id]}
                                             </TableCell>
                                         ))}

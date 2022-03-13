@@ -88,7 +88,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={(event: React.MouseEvent) => onRemove(event, props.colId)}>
+                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={(event: React.MouseEvent) => onRemove(event, props.data)}>
                         <Icon
                             icon="ph:trash"
                             fontSize={20}
@@ -109,7 +109,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const data: AdminNFTItemType[] = useMemo(
         () =>
-            [...Array(0).keys()].map(
+            [...Array(2).keys()].map(
                 (item) =>
                     ({
                         id: item,
@@ -163,10 +163,9 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const [id2Remove, setId2Remove] = useState<number>(0);
     const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
-    const onRemove = (event: React.MouseEvent, idx: number) => {
+    const onRemove = (event: React.MouseEvent, data: AdminNFTItemType) => {
         event.stopPropagation();
-        alert(idx);
-        setId2Remove(idx);
+        setId2Remove(tabledata.findIndex((value: AdminNFTItemType) => value.tokenId === data.tokenId));
         setShowRemoveNFTDlg(true);
     };
 
