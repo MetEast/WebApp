@@ -30,6 +30,7 @@ import {
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import { AdminNFTItemType } from 'src/types/admin-table-data-types';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -597,6 +598,7 @@ export const getMyNFTItemList = async (
             }
         }
         _myNFT.likes = itemObject.likes;
+        _myNFT.views = itemObject.views;
         _myNFT.status = itemObject.status;
         _myNFT.isLike =
             nTabId === 5
@@ -760,6 +762,7 @@ export const getBBCandiates = async (address: string, keyword: string, selectedT
     };
 };
 
+// edit profile
 export const uploadUserProfile = (
     _token: string,
     _did: string,
@@ -799,3 +802,32 @@ export const uploadUserProfile = (
                 reject(error);
             });
     });
+
+// admin NFT
+// export const getAdminNFTItemList = async (fetchParams: string) => {
+//     const resAdminNFTList = await fetch(
+//         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
+//         FETCH_CONFIG_JSON,
+//     );
+//     const jsonAdminNFTList = await resAdminNFTList.json();
+//     const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
+
+//     const _arrNFTList: Array<AdminNFTItemType> = [];
+//     for (let i = 0; i < arrAdminNFTList.length; i++) {
+//         const itemObject: TypeProductFetch = arrAdminNFTList[i];
+//         const _AdminNFT: TypeProduct = { ...blankNFTItem };
+//         _AdminNFT.tokenId = itemObject.tokenId;
+//         _AdminNFT.name = itemObject.name;
+//         _AdminNFT.image = getImageFromAsset(itemObject.asset);
+//         _AdminNFT.price_ela = itemObject.price / 1e18;
+//         _AdminNFT.author =
+//             itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+//         _AdminNFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+//         _AdminNFT.likes = itemObject.likes;
+//         _AdminNFT.views = itemObject.views;
+//         _AdminNFT.status = itemObject.status;
+
+//         _arrNFTList.push(_AdminNFT);
+//     }
+//     return _arrNFTList;
+// };

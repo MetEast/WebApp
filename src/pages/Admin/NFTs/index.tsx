@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
@@ -13,6 +13,7 @@ import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
+// import { getAdminNFTItemList } from 'src/services/fetch';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -156,6 +157,20 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const [saleType, setSaleType] = useState<TypeSelectItem>();
     const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState(false);
+
+    // useEffect(() => {
+    //     let unmounted = false;
+    //     const getFetchData = async () => {
+    //         const _adminNFTList = await getAdminNFTItemList('pageNum=1&pageSize=10');
+    //         if (!unmounted) {
+    //             setTabledata(_adminNFTList);
+    //         }
+    //     };
+    //     getFetchData().catch(console.error);
+    //     return () => {
+    //         unmounted = true;
+    //     };
+    // }, []);
 
     const handleNFTStateChange = (value: string) => {
         const item = nftStateOptions.find((option) => option.value === value);

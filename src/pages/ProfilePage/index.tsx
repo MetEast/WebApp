@@ -352,6 +352,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     textTransform: 'none',
                                     display: { xs: 'flex', sm: 'none' },
                                 }}
+                                onClick={() => {
+                                    navigate('/admin/nfts');
+                                }}
                             >
                                 <Icon
                                     icon="ph:user"
