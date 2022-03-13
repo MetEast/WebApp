@@ -2,11 +2,12 @@ import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
 import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
+import { TypeContractMethodPram } from 'src/types/mint-types';
 
-export const callContractMethod = (walletConnectWeb3: Web3, contractType: number, _orderId: string) =>
+export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractMethodPram) =>
     new Promise((resolve, reject) => {
-        const contractAbi = contractType === 1 ? METEAST_CONTRACT_ABI : METEAST_MARKET_CONTRACT_ABI;
-        const contractAddress = contractType === 1 ? METEAST_CONTRACT_ADDRESS : METEAST_MARKET_CONTRACT_ADDRESS;
+        const contractAbi = param.contractType === 1 ? METEAST_CONTRACT_ABI : METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = param.contractType === 1 ? METEAST_CONTRACT_ADDRESS : METEAST_MARKET_CONTRACT_ADDRESS;
         const smartContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
         let accounts: string[] = [];
         let gasPrice: string = '';
@@ -37,9 +38,13 @@ export const callContractMethod = (walletConnectWeb3: Web3, contractType: number
                     gas: 5000000,
                     value: 0,
                 };
-                console.log(accounts, '----', gasPrice, '----', transactionParams);
-                smartContract.methods
-                    .settleAuctionOrder(_orderId)
+                let contractMethod = null;
+                switch (param.method) {
+                    case 'settleAuctionOrder':
+                        contractMethod = smartContract.methods.settleAuctionOrder(param.orderId);
+                        break;
+                }
+                contractMethod
                     .send(transactionParams)
                     .once('transactionHash', handleTxEvent)
                     .once('receipt', handleReceiptEvent)

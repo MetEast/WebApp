@@ -15,6 +15,7 @@ import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
@@ -86,7 +87,13 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
-        callContractMethod(walletConnectWeb3, 2, dialogState.acceptBidOrderId)
+        callContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 2,
+            method: 'settleAuctionOrder',
+            price: 0,
+            orderId: dialogState.acceptBidOrderId,
+        })
             .then((txHash) => {
                 enqueueSnackbar('Accept bid succeed!', {
                     variant: 'success',
@@ -111,7 +118,8 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,
                 });
-            }).finally(() => {
+            })
+            .finally(() => {
                 clearTimeout(timer);
             });
     };

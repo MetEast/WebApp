@@ -519,23 +519,21 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         dialogState.cancelBidDlgStep,
         dialogState.createBlindBoxDlgStep,
         dialogState.buyBlindBoxDlgStep,
-        // dialogState.createNFTDlgOpened,
-        // dialogState.buyNowDlgOpened,
-        // dialogState.changePriceDlgOpened,
-        // dialogState.cancelSaleDlgOpened,
-        // dialogState.acceptBidDlgOpened,
-        // dialogState.placeBidDlgOpened,
-        // dialogState.updateBidDlgOpened,
-        // dialogState.cancelBidDlgOpened,
-        // dialogState.createBlindBoxDlgOpened,
-        // dialogState.buyBlindBoxDlgOpened,
+        dialogState.createNFTDlgOpened,
+        dialogState.buyNowDlgOpened,
+        dialogState.changePriceDlgOpened,
+        dialogState.cancelSaleDlgOpened,
+        dialogState.acceptBidDlgOpened,
+        dialogState.placeBidDlgOpened,
+        dialogState.updateBidDlgOpened,
+        dialogState.cancelBidDlgOpened,
+        dialogState.createBlindBoxDlgOpened,
+        dialogState.buyBlindBoxDlgOpened,
     ]);
 
     if (linkType === '1') initConnectivitySDK();
 
-    // useEffect(() => {
     console.log('--------accounts: ', signInDlgState);
-    // }, [signInDlgState]);
 
     return (
         <>

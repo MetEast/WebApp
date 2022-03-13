@@ -1,4 +1,5 @@
 import { AdminNFTItemType } from 'src/types/admin-table-data-types';
+import { TypeContractMethodPram } from 'src/types/mint-types';
 import {
     TypeProduct,
     TypeNFTTransaction,
@@ -133,4 +134,11 @@ export const blankAdminNFTItem: AdminNFTItemType = {
     views: 0,
     sale_type: enumBadgeType.BuyNow,
     status: 'Online',
+};
+
+export const blankContractMethodParam: TypeContractMethodPram = {
+    contractType: 1,
+    method: '',
+    price: 0,
+    orderId: '',
 };
