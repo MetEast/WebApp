@@ -40,6 +40,12 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                 };
                 let contractMethod = null;
                 switch (param.method) {
+                    case 'mint':
+                        contractMethod = smartContract.methods.mint(param.tokenId, param.tokenUri, param.royaltyFee);
+                        break;
+                    case 'burn':
+                        contractMethod = smartContract.methods.burn(param.tokenId);
+                        break;
                     case 'bidForOrder':
                         contractMethod = smartContract.methods.bidForOrder(param.orderId, param._price, param.didUri);
                         break;

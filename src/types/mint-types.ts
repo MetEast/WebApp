@@ -63,6 +63,9 @@ export type TypeContractMethodPram = {
     contractType: number;
     method: string;
     price: string;
+    tokenId: string;
+    tokenUri: string;
+    royaltyFee: number;
     orderId: string;
     orderIds: string[];
     didUri: string;

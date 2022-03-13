@@ -9,21 +9,21 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { uploadDidUri2Ipfs, uploadImage2Ipfs, uploadMetaData2Ipfs } from 'src/services/ipfs';
 import Web3 from 'web3';
-import { AbiItem } from 'web3-utils';
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { callContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
 const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [onProgress, setOnProgress] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
+    const [onProgress, setOnProgress] = useState<boolean>(false);
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -32,77 +32,46 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
 
-    const callMintNFT = async (_tokenId: string, _tokenUri: string, _didUri: string, _royaltyFee: number) => {
-        const accounts = await walletConnectWeb3.eth.getAccounts();
-        const contractAbi = METEAST_CONTRACT_ABI;
-        const contractAddress = METEAST_CONTRACT_ADDRESS; // Elastos Testnet
-        const meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        const transactionParams = {
-            from: accounts[0],
-            gasPrice: gasPrice,
-            gas: 5000000,
-            value: 0,
-        };
-        let txHash = '';
-
+    const mint2net = (paramObj: any) => {
+        enqueueSnackbar('Ipfs upload succeed!', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+        });
         setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
         setDialogState({ ...dialogState, mintProgress: 70 });
-        meteastContract.methods
-            .mint(_tokenId, _tokenUri, _royaltyFee)
-            .send(transactionParams)
-            .on('transactionHash', (hash: any) => {
-                console.log('transactionHash', hash);
-                txHash = hash;
-                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
-                clearTimeout(timer);
-            })
-            .on('receipt', (receipt: any) => {
-                console.log('receipt', receipt);
+        callContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 1,
+            method: 'mint',
+            price: '0',
+            tokenId: paramObj._id,
+            tokenUri: paramObj._uri,
+            didUri: paramObj._didUri,
+            royaltyFee: dialogState.mintRoyalties * 1e4,
+        })
+            .then((txHash) => {
                 enqueueSnackbar('Mint token succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
                     ...dialogState,
-                    mintTxHash: txHash,
-                    mintTokenId: _tokenId,
-                    mintTokenUri: _tokenUri,
-                    mintDidUri: _didUri,
                     createNFTDlgOpened: true,
                     createNFTDlgStep: 2,
+                    mintTxHash: new String(txHash).toString(),
+                    mintTokenId: paramObj._id,
+                    mintTokenUri: paramObj._uri,
+                    mintDidUri: paramObj._didUri,
                     mintProgress: 100,
-                });
-                setOnProgress(false);
-            })
-            .on('error', (error: any) => {
-                console.error('error', error);
-                enqueueSnackbar('Mint token error!', {
-                    variant: 'warning',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                clearTimeout(timer);
-                setDialogState({
-                    ...dialogState,
-                    createNFTDlgOpened: false,
-                    errorMessageDlgOpened: true,
                     waitingConfirmDlgOpened: false,
-                    mintProgress: 0,
                 });
-                setOnProgress(false);
+            })
+            .finally(() => {
+                clearTimeout(timer);
             });
-    };
-
-    const mint2net = async (paramObj: any) => {
-        enqueueSnackbar('Ipfs upload succeed!', {
-            variant: 'success',
-            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-        });
-        await callMintNFT(paramObj._id, paramObj._uri, paramObj._didUri, dialogState.mintRoyalties * 1e4);
-        return true;
     };
 
     const uploadData = () =>
@@ -149,7 +118,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleMint = () => {
         if (!dialogState.mintFile) return;
-        console.log('is pressed');
         if (dialogState.mintTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'warning',
@@ -160,18 +128,21 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         setOnProgress(true);
         uploadData()
             .then((paramObj) => mint2net(paramObj))
-            .then((success) => {
-                if (!success)
-                    enqueueSnackbar('Mint token error!', {
-                        variant: 'warning',
-                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                    });
-            })
             .catch((error) => {
-                enqueueSnackbar('Mint token error!', {
+                enqueueSnackbar(`Mint token error: ${error}!`, {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
+                setDialogState({
+                    ...dialogState,
+                    createNFTDlgOpened: false,
+                    waitingConfirmDlgOpened: false,
+                    errorMessageDlgOpened: true,
+                    mintProgress: 0,
+                });
+            })
+            .finally(() => {
+                setOnProgress(false);
             });
     };
 
