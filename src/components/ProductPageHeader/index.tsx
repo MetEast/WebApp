@@ -3,13 +3,14 @@ import { Stack, Box, Menu, MenuItem, Link } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { IconBtn } from './styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share';
 import { getShorternUrl } from 'src/services/fetch';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 // import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
 const ProductPageHeader: React.FC = (): JSX.Element => {
+    const param = useParams();
     const navigate = useNavigate();
     const [showReportBtn, setShowReportBtn] = useState<boolean>(false);
     const [isOpenSharePopup, setOpenSharePopup] = useState(null);
@@ -33,8 +34,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, []);
-    console.log(shortUrl);
+    }, [param.id]);
 
     return (
         <Stack direction="row" justifyContent="space-between">

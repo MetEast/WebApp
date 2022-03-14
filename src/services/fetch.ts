@@ -54,16 +54,8 @@ export const getShorternUrl = async (url: string) => {
     try {
         const resShorternUrl = await fetch(
             `https://s.meteast.io/api/v2/action/shorten?key=2b495b2175ec5470d35482f524ac87&url=${url}&is_secret=false`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                },
-            }
         );
-        const jsonShorternUrl = await resShorternUrl.json();
-        return jsonShorternUrl;
+        return resShorternUrl.text();
     } catch (error) {
         return '';
     }
@@ -834,10 +826,10 @@ export const getAdminSearchParams = (
 ) => {
     let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
     if (status !== undefined) {
-        searchParams += (status.value === 'online') ? '&status=online' : '&status=removed'; 
+        searchParams += status.value === 'online' ? '&status=online' : '&status=removed';
     }
     if (saleType !== undefined) {
-        searchParams += (saleType.value === 'Buy now') ? '&saleType=buynow' : '&saleType=onauction'; 
+        searchParams += saleType.value === 'Buy now' ? '&saleType=buynow' : '&saleType=onauction';
     }
     return searchParams;
 };
@@ -877,3 +869,41 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
     }
     return _arrAdminNFTList;
 };
+
+// export const getAdminUserList = async (fetchParams: string) => {
+//     https://backend-test.meteast.io/api/v1/admin/listaddress?address=0x7Dfd88bD287bc0541C96C8686BDB13C80c4c26D0&pageNum=1&pageSize=100&keyword=e7233BEE4e436E15407
+
+//     const resAdminNFTList = await fetch(
+//         `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?address={}${fetchParams}`,
+//         FETCH_CONFIG_JSON,
+//     );
+//     const jsonAdminNFTList = await resAdminNFTList.json();
+//     const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
+//     const _arrAdminNFTList: Array<AdminNFTItemType> = [];
+//     for (let i = 0; i < arrAdminNFTList.length; i++) {
+//         const itemObject: TypeProductFetch = arrAdminNFTList[i];
+//         const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
+//         _AdminNFT.id = i + 1;
+//         _AdminNFT.tokenId = itemObject.tokenId;
+//         _AdminNFT.tokenIdHex = itemObject.tokenIdHex;
+//         _AdminNFT.token_id = reduceHexAddress(itemObject.tokenIdHex, 4);
+//         _AdminNFT.nft_title = itemObject.name;
+//         _AdminNFT.nft_image = getImageFromAsset(itemObject.asset);
+//         _AdminNFT.selling_price = itemObject.price / 1e18;
+//         _AdminNFT.nft_creator = reduceHexAddress(itemObject.royaltyOwner, 4);
+//         _AdminNFT.nft_owner = reduceHexAddress(itemObject.holder, 4);
+//         _AdminNFT.sale_type = itemObject.endTime === '0' ? enumBadgeType.BuyNow : enumBadgeType.OnAuction;
+//         _AdminNFT.likes = itemObject.likes;
+//         _AdminNFT.views = itemObject.views;
+//         _AdminNFT.status = itemObject.status === 'REMOVED' ? 'Removed' : 'Online'; // ------
+//         const createdTime = getTime(itemObject.createTime);
+//         _AdminNFT.created_date = createdTime.date + ' ' + createdTime.time;
+//         if (itemObject.marketTime === undefined) _AdminNFT.listed_date = '';
+//         else {
+//             const listedTime = getTime(itemObject.marketTime.toString());
+//             _AdminNFT.listed_date = listedTime.date + ' ' + listedTime.time;
+//         }
+//         _arrAdminNFTList.push(_AdminNFT);
+//     }
+//     return _arrAdminNFTList;
+// };

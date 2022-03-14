@@ -15,6 +15,7 @@ import ModalDialog from 'src/components/ModalDialog';
 import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
 import { getAdminNFTItemList, getAdminSearchParams } from 'src/services/fetch';
 import { adminNftSaleTypeOptions, adminNftStateOptions } from 'src/constants/select-constants';
+import { blankAdminNFTItem } from 'src/constants/init-constants';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -88,7 +89,11 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={(event: React.MouseEvent) => onRemove(event, props.data)}>
+                    <PinkButton
+                        size="small"
+                        sx={{ paddingX: 3 }}
+                        onClick={(event: React.MouseEvent) => onRemove(event, props.data)}
+                    >
                         <Icon
                             icon="ph:trash"
                             fontSize={20}
@@ -107,27 +112,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         },
     ];
 
-    const data: AdminNFTItemType[] = useMemo(
-        () =>
-            [...Array(2).keys()].map(
-                (item) =>
-                    ({
-                        id: item,
-                        token_id: '0x43d…5e4',
-                        nft_title: 'Testing',
-                        selling_price: 199,
-                        nft_owner: '0xec3dxxx56',
-                        nft_creator: '0x93cdxx45',
-                        created_date: '2022-06-18  08:50:00',
-                        listed_date: '2022-06-18  08:50:00',
-                        likes: 377,
-                        views: 377,
-                        sale_type: item % 2 === 0 ? enumBadgeType.BuyNow : enumBadgeType.OnAuction,
-                        status: item % 2 === 0 ? 'Online' : 'Removed',
-                    } as AdminNFTItemType),
-            ),
-        [],
-    );
+    const data: AdminNFTItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminNFTItem), []);
 
     const [tabledata, setTabledata] = useState<Array<AdminNFTItemType>>(data);
     const [inputString, setInputString] = useState<string>('');
@@ -136,7 +121,9 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const [nftStateSelectOpen, setNftStateSelectOpen] = useState<boolean>(false);
     const [saleType, setSaleType] = useState<TypeSelectItem>();
     const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState<boolean>(false);
-
+    const [id2Remove, setId2Remove] = useState<number>(0);
+    const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
+    
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
@@ -161,8 +148,6 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         setSaleType(item);
     };
 
-    const [id2Remove, setId2Remove] = useState<number>(0);
-    const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
     const onRemove = (event: React.MouseEvent, data: AdminNFTItemType) => {
         event.stopPropagation();
         setId2Remove(tabledata.findIndex((value: AdminNFTItemType) => value.tokenId === data.tokenId));

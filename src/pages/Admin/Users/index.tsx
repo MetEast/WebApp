@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
@@ -7,6 +7,9 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
+import { getAdminNFTItemList, getAdminSearchParams } from 'src/services/fetch';
+import { adminNftSaleTypeOptions, adminNftStateOptions } from 'src/constants/select-constants';
+import { blankAdminNFTItem } from 'src/constants/init-constants';
 
 const AdminUsers: React.FC = (): JSX.Element => {
     const statusValues = [
@@ -99,8 +102,24 @@ const AdminUsers: React.FC = (): JSX.Element => {
     );
 
     const [tabledata, setTableData] = useState(data);
-
+    const [inputString, setInputString] = useState<string>('');
+    const [keyWord, setKeyWord] = useState<string>('');
     const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
+
+    // useEffect(() => {
+    //     let unmounted = false;
+    //     const getFetchData = async () => {
+    //         const _adminUserList = await getAdminNFTItemList(getAdminSearchParams(keyWord, undefined, undefined));
+    //         if (!unmounted) {
+    //             setTabledata(_adminUserList);
+    //         }
+    //     };
+    //     getFetchData().catch(console.error);
+    //     return () => {
+    //         unmounted = true;
+    //     };
+    // }, [keyWord]);
+
     const onEdit = (event: React.MouseEvent) => {
         event.stopPropagation();
         setShowEditUserStatusDlg(true);
@@ -110,8 +129,8 @@ const AdminUsers: React.FC = (): JSX.Element => {
         <>
             <Stack height="100%" spacing={4}>
                 <Stack direction="row" alignItems="flex-end" columnGap={1}>
-                    <CustomTextField title="Search" placeholder="Search anything..." sx={{ width: 320 }} />
-                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                    <CustomTextField title="Search" placeholder="Search anything..." inputValue={inputString} sx={{ width: 320 }} changeHandler={(value: string) => setInputString(value)}/>
+                    <PrimaryButton size="small" sx={{ paddingX: 3 }} onClick={() => setKeyWord(inputString)}>
                         <Icon
                             icon="ph:magnifying-glass"
                             fontSize={20}
