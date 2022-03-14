@@ -3,6 +3,7 @@ import { useSnackbar, SnackbarContent } from 'notistack';
 import { Stack, Typography, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import CloseIcon from '@mui/icons-material/Close';
+import { makeStyles } from '@material-ui/core/styles';
 
 export interface ComponentProps {
     id: string | number;
@@ -30,7 +31,14 @@ const variantStyles = {
     },
 };
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        minWidth: '0 !important',
+    },
+}));
+
 const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, message, variant }, ref) => {
+    const classes = useStyles();
     const { closeSnackbar } = useSnackbar();
 
     const handleDismiss = useCallback(() => {
@@ -38,7 +46,7 @@ const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, me
     }, [id, closeSnackbar]);
 
     return (
-        <SnackbarContent ref={ref}>
+        <SnackbarContent ref={ref} className={classes.root}>
             <Stack
                 direction="row"
                 alignItems="center"
@@ -48,7 +56,7 @@ const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, me
                 maxWidth={350}
                 sx={{ background: variantStyles[variant].backgroundColor }}
             >
-                <Icon icon={variantStyles[variant].icon} fontSize={32} color="white" />
+                <Icon icon={variantStyles[variant].icon} fontSize={20} color="white" />
                 <Stack>
                     {title && (
                         <Typography fontSize={18} fontWeight={700} color="white">
