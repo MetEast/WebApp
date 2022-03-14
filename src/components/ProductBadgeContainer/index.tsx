@@ -34,11 +34,13 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
             <Grid item>
                 <ProductBadge badgeType={enumBadgeType.OnAuction} />
             </Grid>
-            {matchUpXl && !isReservedAuction && (
+            {/* - For the initial version, we don't support to display this badge because we dont' have such feature with
+            "Reserve Price" on the contract; We can manage to support after having discussing with the sponsor team. */}
+            {/* {matchUpXl && !isReservedAuction && (
                 <Grid item>
                     <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
                 </Grid>
-            )}
+            )} */}
         </Grid>
     );
     const badgeCreated = <ProductBadge badgeType={enumBadgeType.Created} />;

@@ -198,7 +198,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
+    const handlerFilterChange = (
+        status: number,
+        minPrice: string,
+        maxPrice: string,
+        category: TypeSelectItem | undefined,
+        opened: boolean,
+    ) => {
         if (opened) {
             let filters: Array<enumFilterOption> = [];
             if (status === 0) filters.push(enumFilterOption.buyNow);
@@ -247,31 +253,39 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
         <>
             <Box
                 onClick={() => {}}
-                sx={{ height: '254px', maxHeight: '254px', cursor: 'pointer', backgroundColor: '#C3C5C8' }}
+                sx={{
+                    height: 330,
+                    maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
+                    cursor: 'pointer',
+                    backgroundColor: '#C3C5C8',
+                }}
             >
                 {signInDlgState.userCoverImage !== '' && (
                     <img
                         src={getImageFromAsset(signInDlgState.userCoverImage)}
+                        // src="/assets/images/blindbox/blindbox-nft-template1.png"
                         alt=""
-                        style={{ minWidth: '100%', maxHeight: '254px' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 330 }}
                     />
                 )}
             </Box>
             <Container sx={{ overflow: 'visible' }}>
                 <Stack alignItems="center">
-                    <ProfileImageWrapper>
+                    <ProfileImageWrapper display={signInDlgState.userAvatar !== '' ? 'flex' : 'grid'}>
                         {signInDlgState.userAvatar !== '' ? (
                             <ProfileImage
                                 src={getImageFromAsset(signInDlgState.userAvatar)}
-                                style={{ borderRadius: '50%', width: 'inherit', height: 'inherit' }}
+                                // src="/assets/images/blindbox/blindbox-nft-template3.png"
+                                // src="/assets/images/avatar-template.png"
                             />
                         ) : (
-                            <Icon icon="ph:user" fontSize={80} color="#1890FF" />
+                            <Icon icon="ph:user" fontSize={matchUpMd ? 80 : matchDownSm ? 40 : 60} color="#1890FF" />
                         )}
                     </ProfileImageWrapper>
                     <Stack
@@ -345,12 +359,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             </Typography>
                             <SecondaryButton
                                 sx={{
-                                    height: 32,
+                                    height: 24,
                                     fontSize: 14,
                                     fontWeight: 500,
                                     borderRadius: 2,
                                     textTransform: 'none',
                                     display: { xs: 'flex', sm: 'none' },
+                                    alignItems: 'center',
                                 }}
                                 onClick={() => {
                                     navigate('/admin/nfts');
@@ -374,14 +389,24 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         >
                             {signInDlgState.userDescription}
                         </Typography>
-                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3.5}>
+                        <Stack direction="row" alignItems="center" spacing={{ xs: 1, sm: 2 }} marginTop={3.5}>
                             <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'none', sm: 'none' } }}>
                                 <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                                 <NotificationTypo>2</NotificationTypo>
                             </SecondaryButton>
                             <PrimaryButton
+                                btn_type="secondary"
+                                size="small"
+                                sx={{ minWidth: 40, display: { sm: 'none' }, marginRight: '10px !important' }}
+                                onClick={() => {
+                                    setDialogState({ ...dialogState, manageProfileDlgOpened: true });
+                                }}
+                            >
+                                <Icon icon="ci:settings-future" fontSize={24} />
+                            </PrimaryButton>
+                            <PrimaryButton
                                 size={matchDownSm ? 'small' : undefined}
-                                sx={{ paddingX: { xs: 2, sm: 4 } }}
+                                sx={{ paddingX: { xs: 2, sm: 4 }, fontSize: { xs: 14, sm: 18 } }}
                                 onClick={() => {
                                     setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
                                 }}
@@ -392,6 +417,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 size={matchDownSm ? 'small' : undefined}
                                 sx={{
                                     paddingX: { xs: 2, sm: 4 },
+                                    fontSize: { xs: 14, sm: 18 },
                                     background: '#A453D6',
                                     '&:hover': { background: '#A463D6' },
                                 }}
@@ -410,7 +436,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 </Stack>
                 <Grid container marginTop={4} alignItems="center" rowSpacing={2.5}>
                     <Grid item xs={12} md={3} order={0}>
-                        <Typography fontSize={42} fontWeight={700} lineHeight={1.1}>
+                        <Typography fontSize={{ xs: 28, sm: 32, md: 42 }} fontWeight={700} lineHeight={1.1}>
                             Your NFTs
                         </Typography>
                     </Grid>
@@ -446,18 +472,20 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         />
                     </Grid>
                 </Grid>
-                <Box display="flex" mt={3}>
-                    {filters.map((item, index) => (
-                        <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>
-                            {filterOptions[item]}{' '}
-                            <DismissCircle24Filled style={{ display: 'flex', marginLeft: '4px' }} />
-                        </FilterItemTypography>
-                    ))}
-                </Box>
-                {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
-                    <LooksEmptyBox />
+                {filters.length > 0 && (
+                    <Box display="flex" mt={2}>
+                        {filters.map((item, index) => (
+                            <FilterItemTypography key={`filter-option-${index}`} onClick={handleClickFilterItem(item)}>
+                                {filterOptions[item]}{' '}
+                                <DismissCircle24Filled style={{ display: 'flex', marginLeft: '4px' }} />
+                            </FilterItemTypography>
+                        ))}
+                    </Box>
                 )}
-                <Grid container mt={2} spacing={4}>
+                {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
+                    <LooksEmptyBox sx={{ marginTop: 2 }} />
+                )}
+                <Grid container mt={{ xs: 2, md: 4 }} columnSpacing={4} rowGap={{ xs: 2, md: 4 }}>
                     {myNFTList[getSelectedTabIndex()].map((item, index) => (
                         <Grid
                             item

@@ -123,7 +123,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             >
                 <Icon icon="ph:user" fontSize={20} />
             </ProfileButton>
-            {isProfilePage ? (
+            {isProfilePage && !mobile ? (
                 <PrimaryButton
                     size="small"
                     sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}

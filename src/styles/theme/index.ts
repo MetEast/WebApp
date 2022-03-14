@@ -2,6 +2,15 @@ import { createTheme, ThemeOptions } from '@mui/material';
 
 const themeOptions: ThemeOptions = {
     spacing: (factor: number) => `${factor * 0.5}rem`,
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 900,
+            lg: 1200,
+            xl: 1600,
+        },
+    },
 };
 
 const theme = createTheme(themeOptions);

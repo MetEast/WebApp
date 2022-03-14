@@ -38,7 +38,7 @@ export const FilterButton = styled(Button)<{ selected: boolean }>`
 `;
 
 export const ProfileImageWrapper = styled(Box)`
-    display: grid;
+    /* display: grid; */
     place-content: center;
     position: relative;
     width: 180px;
@@ -48,6 +48,16 @@ export const ProfileImageWrapper = styled(Box)`
     margin-top: -90px;
     background: #e8f4ff;
     z-index: 10;
+    ${(props) => props.theme.breakpoints.down('md')} {
+        width: 140px;
+        height: 140px;
+        margin-top: -70px;
+    }
+    ${(props) => props.theme.breakpoints.down('sm')} {
+        width: 90px;
+        height: 90px;
+        margin-top: -45px;
+    }
 `;
 
 export const ProfileImage = styled('img')`
@@ -56,6 +66,7 @@ export const ProfileImage = styled('img')`
     /* padding: 4px; */
     /* border-radius: 50%; */
     background: white;
+    object-fit: cover;
 `;
 
 export const EmptyTitleGalleryItem = styled(Typography)`
