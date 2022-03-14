@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Stack, Grid, Typography } from '@mui/material';
+import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -101,81 +101,152 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
-            <Grid container marginTop={5} columnSpacing={5}>
+            <Grid container marginTop={5} columnSpacing={5} rowGap={2}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <ProductImageContainer product={blindBoxDetail} updateLikes={updateBlindBoxLikes} isBlindBox={true} />
+                    {blindBoxDetail.tokenId === '' ? (
+                        <Box
+                            position="relative"
+                            borderRadius={4}
+                            overflow="hidden"
+                            sx={{ width: '100%', paddingTop: '75%' }}
+                        >
+                            <Box position="absolute" sx={{ inset: 0 }}>
+                                <Skeleton
+                                    variant="rectangular"
+                                    animation="wave"
+                                    width="100%"
+                                    height="100%"
+                                    sx={{ bgcolor: '#E8F4FF' }}
+                                />
+                            </Box>
+                        </Box>
+                    ) : (
+                        <ProductImageContainer
+                            product={blindBoxDetail}
+                            updateLikes={updateBlindBoxLikes}
+                            isBlindBox={true}
+                        />
+                    )}
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
-                        {blindBoxDetail.name}
-                    </Typography>
-                    <ProductSnippets
-                        nickname={blindBoxDetail.author === '' ? blindBoxDetail.royaltyOwner : blindBoxDetail.author}
-                        sold={blindBoxDetail.sold}
-                        instock={blindBoxDetail.instock}
-                        likes={blindBoxDetail.likes}
-                        views={blindBoxDetail.views}
-                    />
-                    <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge
-                            badgeType={
-                                blindBoxDetail.type === enumBlindBoxNFTType.ComingSoon
-                                    ? enumBadgeType.ComingSoon
-                                    : blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds
-                                    ? enumBadgeType.SaleEnds
-                                    : enumBadgeType.SaleEnded
-                            }
-                            content={blindBoxDetail.endTime}
-                        />
-                    </Stack>
-                    <ELAPrice price_ela={blindBoxDetail.price_ela} price_usd={blindBoxDetail.price_usd} marginTop={3} />
-                    {signInDlgState.walletAccounts !== [] &&
-                        blindBoxDetail.holder !== signInDlgState.walletAccounts[0] &&
-                        blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                        blindBoxDetail.state === 'online' &&
-                        signInDlgState.userDid !== blindBoxDetail.did && (
-                            <PrimaryButton
-                                sx={{ marginTop: 3, width: '100%' }}
-                                onClick={() => {
-                                    setDialogState({
-                                        ...dialogState,
-                                        buyBlindBoxDlgOpened: true,
-                                        buyBlindBoxDlgStep: 0,
-                                        buyBlindName: blindBoxDetail.name,
-                                        buyBlindPriceEla: blindBoxDetail.price_ela,
-                                        buyBlindPriceUsd: blindBoxDetail.price_usd,
-                                        buyBlindAmount: 1,
-                                        buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                        buyBlindCreator:
-                                            blindBoxDetail.author === ''
-                                                ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
-                                                : blindBoxDetail.author,
-                                        buyBlindLeftAmount:
-                                            blindBoxDetail.maxPurchases !== undefined &&
-                                            blindBoxDetail.sold !== undefined
-                                                ? blindBoxDetail.maxPurchases - blindBoxDetail.sold
-                                                : 0,
-                                    });
-                                }}
-                            >
-                                Buy Now
-                            </PrimaryButton>
-                        )}
+                    {blindBoxDetail.tokenId === '' ? (
+                        <>
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={45}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={45}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF', marginTop: 2 }}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={56}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF', marginTop: 3 }}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
+                                {blindBoxDetail.name}
+                            </Typography>
+                            <ProductSnippets
+                                nickname={
+                                    blindBoxDetail.author === '' ? blindBoxDetail.royaltyOwner : blindBoxDetail.author
+                                }
+                                sold={blindBoxDetail.sold}
+                                instock={blindBoxDetail.instock}
+                                likes={blindBoxDetail.likes}
+                                views={blindBoxDetail.views}
+                            />
+                            <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
+                                <ProductBadge
+                                    badgeType={
+                                        blindBoxDetail.type === enumBlindBoxNFTType.ComingSoon
+                                            ? enumBadgeType.ComingSoon
+                                            : blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds
+                                            ? enumBadgeType.SaleEnds
+                                            : enumBadgeType.SaleEnded
+                                    }
+                                    content={blindBoxDetail.endTime}
+                                />
+                            </Stack>
+                            <ELAPrice
+                                price_ela={blindBoxDetail.price_ela}
+                                price_usd={blindBoxDetail.price_usd}
+                                marginTop={3}
+                            />
+                            {signInDlgState.walletAccounts !== [] &&
+                                blindBoxDetail.holder !== signInDlgState.walletAccounts[0] &&
+                                blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
+                                blindBoxDetail.state === 'online' &&
+                                signInDlgState.userDid !== blindBoxDetail.did && (
+                                    <PrimaryButton
+                                        sx={{ marginTop: 3, width: '100%' }}
+                                        onClick={() => {
+                                            setDialogState({
+                                                ...dialogState,
+                                                buyBlindBoxDlgOpened: true,
+                                                buyBlindBoxDlgStep: 0,
+                                                buyBlindName: blindBoxDetail.name,
+                                                buyBlindPriceEla: blindBoxDetail.price_ela,
+                                                buyBlindPriceUsd: blindBoxDetail.price_usd,
+                                                buyBlindAmount: 1,
+                                                buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                                buyBlindCreator:
+                                                    blindBoxDetail.author === ''
+                                                        ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                        : blindBoxDetail.author,
+                                                buyBlindLeftAmount:
+                                                    blindBoxDetail.maxPurchases !== undefined &&
+                                                    blindBoxDetail.sold !== undefined
+                                                        ? blindBoxDetail.maxPurchases - blindBoxDetail.sold
+                                                        : 0,
+                                            });
+                                        }}
+                                    >
+                                        Buy Now
+                                    </PrimaryButton>
+                                )}
+                        </>
+                    )}
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={10}>
-                <Grid item xs={12} md={6}>
-                    <Stack spacing={5}>
-                        <ProjectDescription description={blindBoxDetail.description} />
-                        <AboutAuthor
-                            name={blindBoxDetail.author}
-                            description={blindBoxDetail.authorDescription}
-                            img={blindBoxDetail.authorImg}
-                            address={reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)}
+            {blindBoxDetail.tokenId === '' ? (
+                <Box position="relative" marginTop={5} sx={{ width: '100%', paddingTop: '75%' }}>
+                    <Box position="absolute" sx={{ inset: 0 }}>
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height="100%"
+                            sx={{ borderRadius: 4, bgcolor: '#E8F4FF' }}
                         />
-                    </Stack>
+                    </Box>
+                </Box>
+            ) : (
+                <Grid container marginTop={5} columnSpacing={10}>
+                    <Grid item xs={12} md={6}>
+                        <Stack spacing={5}>
+                            <ProjectDescription description={blindBoxDetail.description} />
+                            <AboutAuthor
+                                name={blindBoxDetail.author}
+                                description={blindBoxDetail.authorDescription}
+                                img={blindBoxDetail.authorImg}
+                                address={reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)}
+                            />
+                        </Stack>
+                    </Grid>
                 </Grid>
-            </Grid>
+            )}
             <ModalDialog
                 open={dialogState.buyBlindBoxDlgOpened}
                 onClose={() => {
