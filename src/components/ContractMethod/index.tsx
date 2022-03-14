@@ -5,7 +5,7 @@ import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'sr
 import { TypeContractMethodPram } from 'src/types/mint-types';
 
 export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractMethodPram) =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve: (value: string) => void, reject: (error: string) => void) => {
         const contractAbi = param.contractType === 1 ? METEAST_CONTRACT_ABI : METEAST_MARKET_CONTRACT_ABI;
         const contractAddress = param.contractType === 1 ? METEAST_CONTRACT_ADDRESS : METEAST_MARKET_CONTRACT_ADDRESS;
         const smartContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
@@ -73,6 +73,15 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                                 param.tokenId,
                                 param.quoteToken,
                                 param._price,
+                                param.didUri,
+                                param.isBlindBox,
+                            );
+                            break;
+                        case 'createOrderForSaleBatch':
+                            contractMethod = smartContract.methods.createOrderForSaleBatch(
+                                param.tokenIds,
+                                param.quoteTokens,
+                                param._prices,
                                 param.didUri,
                                 param.isBlindBox,
                             );

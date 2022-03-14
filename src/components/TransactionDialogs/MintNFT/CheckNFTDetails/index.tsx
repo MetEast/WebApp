@@ -51,7 +51,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             didUri: paramObj._didUri,
             royaltyFee: dialogState.mintRoyalties * 1e4,
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Mint token succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -60,7 +60,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     createNFTDlgOpened: true,
                     createNFTDlgStep: 2,
-                    mintTxHash: new String(txHash).toString(),
+                    mintTxHash: txHash,
                     mintTokenId: paramObj._id,
                     mintTokenUri: paramObj._uri,
                     mintDidUri: paramObj._didUri,

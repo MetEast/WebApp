@@ -43,7 +43,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
             price: '0',
             orderId: dialogState.acceptBidOrderId,
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Accept bid succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -52,7 +52,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     acceptBidDlgOpened: true,
                     acceptBidDlgStep: 2,
-                    acceptBidTxHash: new String(txHash).toString(),
+                    acceptBidTxHash: txHash,
                     waitingConfirmDlgOpened: false,
                 });
             })

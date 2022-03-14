@@ -49,7 +49,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
             price: '0',
             orderId: dialogState.cancelSaleOrderId,
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Cancel sale succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -58,7 +58,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     cancelSaleDlgOpened: true,
                     cancelSaleDlgStep: 1,
-                    cancelSaleTxHash: new String(txHash).toString(),
+                    cancelSaleTxHash: txHash,
                     waitingConfirmDlgOpened: false,
                 });
             })

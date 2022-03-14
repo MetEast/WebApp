@@ -65,7 +65,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
             orderId: dialogState.updateBidOrderId,
             _price: BigInt(bidAmount * 1e18).toString(),
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Update bid succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -74,7 +74,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     changePriceDlgOpened: true,
                     changePriceDlgStep: 1,
-                    changePriceTxHash: new String(txHash).toString(),
+                    changePriceTxHash: txHash,
                     waitingConfirmDlgOpened: false,
                 });
             })

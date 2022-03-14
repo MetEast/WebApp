@@ -52,7 +52,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             _price: BigInt(dialogState.placeBidAmount * 1e18).toString(),
             didUri: signInDlgState.didUri,
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Place bid succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -61,7 +61,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     placeBidDlgOpened: true,
                     placeBidDlgStep: 2,
-                    placeBidTxHash: new String(txHash).toString(),
+                    placeBidTxHash: txHash,
                     waitingConfirmDlgOpened: false,
                 });
             })

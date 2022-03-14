@@ -61,8 +61,8 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 operator: METEAST_MARKET_CONTRACT_ADDRESS,
                 approved: true,
             })
-                .then((result) => {
-                    if (new String(result).toString() === 'success') {
+                .then((result: string) => {
+                    if (result === 'success') {
                         enqueueSnackbar(`Set approval succeed!`, {
                             variant: 'success',
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -94,7 +94,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                   didUri: signInDlgState.didUri,
                               },
                     )
-                        .then((txHash) => {
+                        .then((txHash: string) => {
                             enqueueSnackbar(
                                 `Order for ${dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'} succeed!`,
                                 {
@@ -106,7 +106,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 ...dialogState,
                                 createNFTDlgOpened: true,
                                 createNFTDlgStep: 5,
-                                sellTxHash: new String(txHash).toString(),
+                                sellTxHash: txHash,
                                 waitingConfirmDlgOpened: false,
                             });
                         })

@@ -83,13 +83,13 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             orderIds: dialogState.buyBlindOrderIds,
             didUri: signInDlgState.didUri,
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Buy Blind Box succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
-                sendSoldBlindBoxTokenIds(new String(txHash).toString());
+                sendSoldBlindBoxTokenIds(txHash);
             })
             .catch((error) => {
                 enqueueSnackbar(`Buy Blind Box error: ${error}!`, {

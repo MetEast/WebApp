@@ -58,7 +58,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
             orderId: dialogState.changePriceOrderId,
             _price: BigInt(bidAmount * 1e18).toString(),
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Change place succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -67,7 +67,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     changePriceDlgOpened: true,
                     changePriceDlgStep: 1,
-                    changePriceTxHash: new String(txHash).toString(),
+                    changePriceTxHash: txHash,
                     waitingConfirmDlgOpened: false,
                 });
             })

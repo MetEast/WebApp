@@ -19,6 +19,8 @@ import { isInAppBrowser } from 'src/services/wallet';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { callContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
@@ -27,7 +29,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
-
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -37,7 +38,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
     );
 
     const uploadBlindBoxInfo = (imgUri: string) =>
-        new Promise((resolve, reject) => {
+        new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
             const formData = new FormData();
             formData.append('token', signInDlgState.token);
             formData.append('did', signInDlgState.userDid);
@@ -69,156 +70,295 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
         });
 
-    const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
-        const accounts = await walletConnectWeb3.eth.getAccounts();
-        const contractAbi = METEAST_CONTRACT_ABI;
-        const contractAddress = METEAST_CONTRACT_ADDRESS;
-        const meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-        const isApproval = await meteastContract.methods.isApprovedForAll(accounts[0], _operator).call();
-        const _quoteToken = '0x0000000000000000000000000000000000000000';
+    // const callSetApprovalForAll = async (_operator: string, _approved: boolean) => {
+    //     const accounts = await walletConnectWeb3.eth.getAccounts();
+    //     const contractAbi = METEAST_CONTRACT_ABI;
+    //     const contractAddress = METEAST_CONTRACT_ADDRESS;
+    //     const meteastContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+    //     const isApproval = await meteastContract.methods.isApprovedForAll(accounts[0], _operator).call();
+    //     const _quoteToken = '0x0000000000000000000000000000000000000000';
 
-        if (isApproval === true) {
-            console.log('Operator', _operator, ' is already approved');
-            createOrder(_quoteToken);
-        } else {
-            const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-            const transactionParams = {
-                from: accounts[0],
-                gasPrice: gasPrice,
-                gas: 5000000,
-                value: 0,
-            };
+    //     if (isApproval === true) {
+    //         console.log('Operator', _operator, ' is already approved');
+    //         createOrder(_quoteToken);
+    //     } else {
+    //         const gasPrice = await walletConnectWeb3.eth.getGasPrice();
+    //         const transactionParams = {
+    //             from: accounts[0],
+    //             gasPrice: gasPrice,
+    //             gas: 5000000,
+    //             value: 0,
+    //         };
+    //         setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
+    //         const timer = setTimeout(() => {
+    //             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
+    //         }, 120000);
+    //         meteastContract.methods
+    //             .setApprovalForAll(_operator, _approved)
+    //             .send(transactionParams)
+    //             .on('transactionHash', (hash: any) => {
+    //                 console.log('transactionHash', hash);
+    //                 setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
+    //                 clearTimeout(timer);
+    //             })
+    //             .on('receipt', (receipt: any) => {
+    //                 console.log('receipt', receipt);
+    //                 enqueueSnackbar('Set approval for all succeed!', {
+    //                     variant: 'success',
+    //                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //                 });
+    //                 createOrder(_quoteToken);
+    //             })
+    //             .on('error', (error: any) => {
+    //                 console.error('error', error);
+    //                 enqueueSnackbar('Set approval for all error!', {
+    //                     variant: 'warning',
+    //                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //                 });
+    //                 clearTimeout(timer);
+    //                 setDialogState({
+    //                     ...dialogState,
+    //                     createBlindBoxDlgOpened: false,
+    //                     errorMessageDlgOpened: true,
+    //                     waitingConfirmDlgOpened: false,
+    //                 });
+    //             });
+    //     }
+    // };
+
+    // const callCreateOrderForSaleBatch = async (
+    //     _tokenIds: string[],
+    //     _quoteTokens: string[],
+    //     _prices: string[],
+    //     _didUri: string,
+    //     _isBlindBox: boolean,
+    // ) => {
+    //     const accounts = await walletConnectWeb3.eth.getAccounts();
+    //     const contractAbi = METEAST_MARKET_CONTRACT_ABI;
+    //     const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
+    //     const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+    //     const gasPrice = await walletConnectWeb3.eth.getGasPrice();
+    //     const transactionParams = {
+    //         from: accounts[0],
+    //         gasPrice: gasPrice,
+    //         gas: 5000000,
+    //         value: 0,
+    //     };
+    //     let txHash = '';
+    //     setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
+    //     const timer = setTimeout(() => {
+    //         setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
+    //     }, 120000);
+    //     marketContract.methods
+    //         .createOrderForSaleBatch(_tokenIds, _quoteTokens, _prices, _didUri, _isBlindBox)
+    //         .send(transactionParams)
+    //         .on('transactionHash', (hash: any) => {
+    //             console.log('transactionHash', hash);
+    //             txHash = hash;
+    //             setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
+    //             clearTimeout(timer);
+    //         })
+    //         .on('receipt', (receipt: any) => {
+    //             console.log('receipt', receipt);
+    //             enqueueSnackbar('Create Blind Box succeed!', {
+    //                 variant: 'success',
+    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //             });
+    //             setDialogState({
+    //                 ...dialogState,
+    //                 crtBlindTxHash: txHash,
+    //                 createBlindBoxDlgOpened: true,
+    //                 createBlindBoxDlgStep: 2,
+    //             });
+    //             setOnProgress(false);
+    //         })
+    //         .on('error', (error: any) => {
+    //             console.error('error', error);
+    //             enqueueSnackbar('Create Blind Box error!', {
+    //                 variant: 'warning',
+    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //             });
+    //             clearTimeout(timer);
+    //             setDialogState({
+    //                 ...dialogState,
+    //                 createBlindBoxDlgOpened: false,
+    //                 errorMessageDlgOpened: true,
+    //                 waitingConfirmDlgOpened: false,
+    //             });
+    //             setOnProgress(false);
+    //         });
+    // };
+
+    // const createOrder = async (_quoteToken: string) => {
+    //     let _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
+    //     let _inQuoteTokens: string[] = Array(_inTokenIds.length);
+    //     let _inPrices: string[] = Array(_inTokenIds.length);
+    //     _inQuoteTokens.fill(_quoteToken);
+    //     _inPrices.fill(BigInt(dialogState.crtBlindPrice * 1e18).toString());
+    //     await callCreateOrderForSaleBatch(_inTokenIds, _inQuoteTokens, _inPrices, signInDlgState.didUri, true);
+    // };
+
+    // const handleCreateBlindBox = () => {
+    //     if (!dialogState.crtBlindImage) return;
+    //     if (dialogState.crtBlindTxFee > signInDlgState.walletBalance) {
+    //         enqueueSnackbar('Insufficient balance!', {
+    //             variant: 'warning',
+    //             anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //         });
+    //         return;
+    //     }
+    //     setOnProgress(true);
+    //     uploadImage2Ipfs(dialogState.crtBlindImage)
+    //         .then((added: any) => {
+    //             const imgUri = `meteast:image:${added.path}`;
+    //             return uploadBlindBoxInfo(imgUri);
+    //         })
+    //         .then((success) => {
+    //             if (success) {
+    //                 enqueueSnackbar('Upload data to backend servce succeed!', {
+    //                     variant: 'success',
+    //                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //                 });
+    //                 return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
+    //             } else {
+    //                 enqueueSnackbar('Upload data to backend servce error!', {
+    //                     variant: 'warning',
+    //                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //                 });
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //             enqueueSnackbar('Create Blind Box error!', {
+    //                 variant: 'warning',
+    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //             });
+    //         });
+    // };
+
+    const callCreateOrderForSaleBatch = () =>
+        new Promise((resolve: (value: string) => void, reject: (error: string) => void) => {
+            if (!dialogState.crtBlindImage) return;
+            if (dialogState.crtBlindTxFee > signInDlgState.walletBalance) {
+                enqueueSnackbar('Insufficient balance!', {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                reject('InsufficientBalance');
+                return;
+            }
+            setOnProgress(true);
             setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
             const timer = setTimeout(() => {
                 setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
             }, 120000);
-            meteastContract.methods
-                .setApprovalForAll(_operator, _approved)
-                .send(transactionParams)
-                .on('transactionHash', (hash: any) => {
-                    console.log('transactionHash', hash);
-                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
-                    clearTimeout(timer);
+
+            callContractMethod(walletConnectWeb3, {
+                ...blankContractMethodParam,
+                contractType: 1,
+                method: 'setApprovalForAll',
+                price: '0',
+                operator: METEAST_MARKET_CONTRACT_ADDRESS,
+                approved: true,
+            })
+                .then((result: string) => {
+                    if (result === 'success') {
+                        enqueueSnackbar(`Set approval succeed!`, {
+                            variant: 'success',
+                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                        });
+                    }
+                    const _quoteToken = '0x0000000000000000000000000000000000000000';
+                    const _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
+                    const _inQuoteTokens: string[] = Array(_inTokenIds.length);
+                    const _inPrices: string[] = Array(_inTokenIds.length);
+                    _inQuoteTokens.fill(_quoteToken);
+                    _inPrices.fill(BigInt(dialogState.crtBlindPrice * 1e18).toString());
+
+                    callContractMethod(walletConnectWeb3, {
+                        ...blankContractMethodParam,
+                        contractType: 2,
+                        method: 'createOrderForSaleBatch',
+                        price: '0',
+                        tokenIds: _inTokenIds,
+                        quoteTokens: _inQuoteTokens,
+                        _prices: _inPrices,
+                        didUri: signInDlgState.didUri,
+                        isBlindBox: true,
+                    })
+                        .then((txHash: string) => {
+                            enqueueSnackbar(`Create Blind Box succeed!`, {
+                                variant: 'success',
+                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            });
+                            resolve(txHash);
+                        })
+                        .catch((error) => {
+                            enqueueSnackbar(`Create Blind Box error: ${error}!`, {
+                                variant: 'warning',
+                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            });
+                            setDialogState({
+                                ...dialogState,
+                                createBlindBoxDlgOpened: false,
+                                waitingConfirmDlgOpened: false,
+                                errorMessageDlgOpened: true,
+                            });
+                            reject('createOrderForSaleBatchError');
+                        });
                 })
-                .on('receipt', (receipt: any) => {
-                    console.log('receipt', receipt);
-                    enqueueSnackbar('Set approval for all succeed!', {
-                        variant: 'success',
-                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                    });
-                    createOrder(_quoteToken);
-                })
-                .on('error', (error: any) => {
-                    console.error('error', error);
-                    enqueueSnackbar('Set approval for all error!', {
+                .catch((error) => {
+                    enqueueSnackbar(`Set approval error: ${error}!`, {
                         variant: 'warning',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                    setDialogState({
+                        ...dialogState,
+                        createBlindBoxDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                    reject('setApprovalError');
+                })
+                .finally(() => {
+                    setOnProgress(false);
                     clearTimeout(timer);
-                    setDialogState({ ...dialogState, createBlindBoxDlgOpened: false, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
                 });
-        }
-    };
-
-    const callCreateOrderForSaleBatch = async (
-        _tokenIds: string[],
-        _quoteTokens: string[],
-        _prices: string[],
-        _didUri: string,
-        _isBlindBox: boolean,
-    ) => {
-        const accounts = await walletConnectWeb3.eth.getAccounts();
-        const contractAbi = METEAST_MARKET_CONTRACT_ABI;
-        const contractAddress = METEAST_MARKET_CONTRACT_ADDRESS;
-        const marketContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
-        const gasPrice = await walletConnectWeb3.eth.getGasPrice();
-        const transactionParams = {
-            from: accounts[0],
-            gasPrice: gasPrice,
-            gas: 5000000,
-            value: 0,
-        };
-        let txHash = '';
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
-        marketContract.methods
-            .createOrderForSaleBatch(_tokenIds, _quoteTokens, _prices, _didUri, _isBlindBox)
-            .send(transactionParams)
-            .on('transactionHash', (hash: any) => {
-                console.log('transactionHash', hash);
-                txHash = hash;
-                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
-                clearTimeout(timer);
-            })
-            .on('receipt', (receipt: any) => {
-                console.log('receipt', receipt);
-                enqueueSnackbar('Create Blind Box succeed!', {
-                    variant: 'success',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                setDialogState({
-                    ...dialogState,
-                    crtBlindTxHash: txHash,
-                    createBlindBoxDlgOpened: true,
-                    createBlindBoxDlgStep: 2,
-                });
-                setOnProgress(false);
-            })
-            .on('error', (error: any) => {
-                console.error('error', error);
-                enqueueSnackbar('Create Blind Box error!', {
-                    variant: 'warning',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                clearTimeout(timer);
-                setDialogState({ ...dialogState, createBlindBoxDlgOpened: false, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-                setOnProgress(false);
-            });
-    };
-
-    const createOrder = async (_quoteToken: string) => {
-        let _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
-        let _inQuoteTokens: string[] = Array(_inTokenIds.length);
-        let _inPrices: string[] = Array(_inTokenIds.length);
-        _inQuoteTokens.fill(_quoteToken);
-        _inPrices.fill(BigInt(dialogState.crtBlindPrice * 1e18).toString());
-        await callCreateOrderForSaleBatch(_inTokenIds, _inQuoteTokens, _inPrices, signInDlgState.didUri, true);
-    };
+        });
 
     const handleCreateBlindBox = () => {
-        if (!dialogState.crtBlindImage) return;
-        if (dialogState.crtBlindTxFee > signInDlgState.walletBalance) {
-            enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
-                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-            });
-            return;
-        }
-        setOnProgress(true);
-        uploadImage2Ipfs(dialogState.crtBlindImage)
+        let transactionHash = '';
+        callCreateOrderForSaleBatch()
+            .then((txHash: string) => {
+                transactionHash = txHash;
+                return uploadImage2Ipfs(dialogState.crtBlindImage);
+            })
             .then((added: any) => {
                 const imgUri = `meteast:image:${added.path}`;
                 return uploadBlindBoxInfo(imgUri);
             })
-            .then((success) => {
+            .then((success: boolean) => {
                 if (success) {
-                    enqueueSnackbar('Upload data to backend servce succeed!', {
+                    enqueueSnackbar(`Create Blind Box succeed!`, {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    return callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
+                    setDialogState({
+                        ...dialogState,
+                        createBlindBoxDlgOpened: true,
+                        createBlindBoxDlgStep: 2,
+                        crtBlindTxHash: transactionHash,
+                        waitingConfirmDlgOpened: false,
+                    });
                 } else {
-                    enqueueSnackbar('Upload data to backend servce error!', {
+                    enqueueSnackbar(`Create Blind Box error!`, {
                         variant: 'warning',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
             })
             .catch((error) => {
-                console.log(error);
-                enqueueSnackbar('Create Blind Box error!', {
+                enqueueSnackbar(`Create Blind Box error: ${error}!`, {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

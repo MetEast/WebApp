@@ -44,7 +44,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             orderId: dialogState.buyNowOrderId,
             didUri: signInDlgState.didUri,
         })
-            .then((txHash) => {
+            .then((txHash: string) => {
                 enqueueSnackbar('Buy now succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -53,7 +53,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     buyNowDlgOpened: true,
                     buyNowDlgStep: 2,
-                    buyNowTxHash: new String(txHash).toString(),
+                    buyNowTxHash: txHash,
                     waitingConfirmDlgOpened: false,
                 });
             })
