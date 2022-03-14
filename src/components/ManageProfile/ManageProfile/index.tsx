@@ -27,7 +27,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
     const arrStrDid = signInDlgState.userDid.split(':').filter((value: string) => value.length > 0);
-    const strUserDid = arrStrDid.length === 3 ? `did:elastos:${reduceHexAddress(arrStrDid[2], 7)}` : signInDlgState.userDid; 
+    const strUserDid = arrStrDid.length === 3 ? `did:elastos:${reduceHexAddress(arrStrDid[2], 7)}` : reduceHexAddress(signInDlgState.userDid, 10); 
 
     const showSnackBar = () => {
         enqueueSnackbar('Copied to Clipboard!', {
