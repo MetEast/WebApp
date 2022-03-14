@@ -3,12 +3,14 @@ import { Stack, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
+import { AdminUsersItemType } from 'src/types/admin-table-data-types';
 
 export interface ComponentProps {
+    user2Edit: AdminUsersItemType;
     onClose: () => void;
 }
 
-const EditUserStatus: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, onClose }): JSX.Element => {
     const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban'>('user');
 
     return (
@@ -25,8 +27,8 @@ const EditUserStatus: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     alt=""
                 />
             </Box>
-            <CustomTextField title="USEN NICKNAME" inputValue="JOHN" disabled />
-            <CustomTextField title="USER DID" inputValue="did.elastos.isjvndk3j42nc...24mvs" disabled />
+            <CustomTextField title="USEN NICKNAME" inputValue={user2Edit.username} disabled />
+            <CustomTextField title="USER ADDRESS" inputValue={user2Edit.address} disabled />
             <Stack spacing={0.5}>
                 <Typography fontSize={12} fontWeight={700}>
                     STATUS
@@ -58,7 +60,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     </PrimaryButton>
                 </Stack>
             </Stack>
-            <CustomTextField title="REMARKS" placeholder="Enter remarks" multiline rows={3} />
+            <CustomTextField title="REMARKS" placeholder="Enter remarks" multiline rows={3} inputValue={user2Edit.remarks} />
             <Stack direction="row" spacing={2}>
                 <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
                     close

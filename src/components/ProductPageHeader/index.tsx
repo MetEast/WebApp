@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 import { SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { IconBtn } from './styles';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share';
+import { FacebookIcon, TwitterIcon } from 'react-share';
 import { getShorternUrl } from 'src/services/fetch';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 // import FullscreenIcon from '@mui/icons-material/Fullscreen';

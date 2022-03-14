@@ -101,3 +101,12 @@ export type AdminTableItemType =
     | AdminOrdersBlindBoxItemType
     | AdminBidsItemType
     | AdminBannersItemType;
+
+export type AdminUsersItemFetchType = {
+    id: number; // required
+    address: string;
+    name: string;
+    avatar: string;
+    role: number;
+    remarks: string;
+};

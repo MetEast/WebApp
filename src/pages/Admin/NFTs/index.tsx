@@ -3,7 +3,6 @@ import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
 import { Typography, Stack } from '@mui/material';
-import { enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
 import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
@@ -114,7 +113,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const data: AdminNFTItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminNFTItem), []);
 
-    const [tabledata, setTabledata] = useState<Array<AdminNFTItemType>>(data);
+    const [tabledata, setTableData] = useState<Array<AdminNFTItemType>>(data);
     const [inputString, setInputString] = useState<string>('');
     const [keyWord, setKeyWord] = useState<string>('');
     const [nftState, setNftState] = useState<TypeSelectItem>();
@@ -123,13 +122,13 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState<boolean>(false);
     const [id2Remove, setId2Remove] = useState<number>(0);
     const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
-    
+
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
             const _adminNFTList = await getAdminNFTItemList(getAdminSearchParams(keyWord, nftState, saleType));
             if (!unmounted) {
-                setTabledata(_adminNFTList);
+                setTableData(_adminNFTList);
             }
         };
         getFetchData().catch(console.error);
@@ -226,11 +225,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                 }}
             >
                 <RemoveNFT
-                    tokenId={tabledata[id2Remove].tokenId}
-                    tokenTitle={tabledata[id2Remove].nft_title}
-                    tokenCreator={tabledata[id2Remove].nft_creator}
-                    tokenIdHex={tabledata[id2Remove].tokenIdHex}
-                    tokenImage={tabledata[id2Remove].nft_image}
+                    token2Remove={tabledata[id2Remove]}
                     onClose={() => {
                         setShowRemoveNFTDlg(false);
                     }}

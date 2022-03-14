@@ -7,9 +7,9 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
-import { getAdminNFTItemList, getAdminSearchParams } from 'src/services/fetch';
-import { adminNftSaleTypeOptions, adminNftStateOptions } from 'src/constants/select-constants';
-import { blankAdminNFTItem } from 'src/constants/init-constants';
+import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
+import { blankAdminUserItem } from 'src/constants/init-constants';
+import { useSignInContext } from 'src/context/SignInContext';
 
 const AdminUsers: React.FC = (): JSX.Element => {
     const statusValues = [
@@ -34,7 +34,11 @@ const AdminUsers: React.FC = (): JSX.Element => {
             label: 'Avatar',
             cell: (props) => (
                 <Box borderRadius="50%" width={50} height={50} overflow="hidden" alignSelf="center">
-                    <img src={props.value} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
+                    {props.value === '' ? (
+                        <Icon icon="ph:user" fontSize={40} color="#1890FF" />
+                    ) : (
+                        <img src={props.value} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
+                    )}
                 </Box>
             ),
             width: 80,
@@ -72,7 +76,11 @@ const AdminUsers: React.FC = (): JSX.Element => {
             id: 'edits',
             label: '',
             cell: (props) => (
-                <SecondaryButton size="small" sx={{ paddingX: 3 }} onClick={onEdit}>
+                <SecondaryButton
+                    size="small"
+                    sx={{ paddingX: 3 }}
+                    onClick={(event: React.MouseEvent) => onEdit(event, props.data)}
+                >
                     <Icon
                         icon="ph:pencil-simple"
                         fontSize={20}
@@ -85,43 +93,35 @@ const AdminUsers: React.FC = (): JSX.Element => {
         },
     ];
 
-    const data: AdminUsersItemType[] = useMemo(
-        () =>
-            [...Array(800).keys()].map(
-                (item) =>
-                    ({
-                        id: item,
-                        address: 'efgd....1234',
-                        username: 'Shaba',
-                        avatar: '/assets/images/avatar-template.png',
-                        status: item % 3,
-                        remarks: 'This user tried to scam buyers by uploading a fake NFT.',
-                    } as AdminUsersItemType),
-            ),
-        [],
-    );
+    const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
+    const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
     const [inputString, setInputString] = useState<string>('');
     const [keyWord, setKeyWord] = useState<string>('');
+    const [id2Edit, setId2Edit] = useState<number>(0);
     const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     let unmounted = false;
-    //     const getFetchData = async () => {
-    //         const _adminUserList = await getAdminNFTItemList(getAdminSearchParams(keyWord, undefined, undefined));
-    //         if (!unmounted) {
-    //             setTabledata(_adminUserList);
-    //         }
-    //     };
-    //     getFetchData().catch(console.error);
-    //     return () => {
-    //         unmounted = true;
-    //     };
-    // }, [keyWord]);
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            const _adminUserList = await getAdminUserList(
+                getAdminSearchParams(keyWord, undefined, undefined),
+                signInDlgState.walletAccounts[0],
+            );
+            if (!unmounted) {
+                setTableData(_adminUserList);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [keyWord, signInDlgState.walletAccounts]);
 
-    const onEdit = (event: React.MouseEvent) => {
+    const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();
+        setId2Edit(tabledata.findIndex((value: AdminUsersItemType) => value.address === data.address));
         setShowEditUserStatusDlg(true);
     };
 
@@ -129,7 +129,13 @@ const AdminUsers: React.FC = (): JSX.Element => {
         <>
             <Stack height="100%" spacing={4}>
                 <Stack direction="row" alignItems="flex-end" columnGap={1}>
-                    <CustomTextField title="Search" placeholder="Search anything..." inputValue={inputString} sx={{ width: 320 }} changeHandler={(value: string) => setInputString(value)}/>
+                    <CustomTextField
+                        title="Search"
+                        placeholder="Search anything..."
+                        inputValue={inputString}
+                        sx={{ width: 320 }}
+                        changeHandler={(value: string) => setInputString(value)}
+                    />
                     <PrimaryButton size="small" sx={{ paddingX: 3 }} onClick={() => setKeyWord(inputString)}>
                         <Icon
                             icon="ph:magnifying-glass"
@@ -149,6 +155,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
                 }}
             >
                 <EditUserStatus
+                    user2Edit={tabledata[id2Edit]}
                     onClose={() => {
                         setShowEditUserStatusDlg(false);
                     }}

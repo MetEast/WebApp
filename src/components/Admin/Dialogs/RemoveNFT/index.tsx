@@ -14,24 +14,14 @@ import Web3 from 'web3';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { AdminNFTItemType } from 'src/types/admin-table-data-types';
 
 export interface ComponentProps {
-    tokenId: string;
-    tokenTitle: string;
-    tokenCreator: string;
-    tokenIdHex: string;
-    tokenImage: string;
+    token2Remove: AdminNFTItemType;
     onClose: () => void;
 }
 
-const RemoveNFT: React.FC<ComponentProps> = ({
-    tokenId,
-    tokenTitle,
-    tokenCreator,
-    tokenIdHex,
-    tokenImage,
-    onClose,
-}): JSX.Element => {
+const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -52,11 +42,11 @@ const RemoveNFT: React.FC<ComponentProps> = ({
                 </Typography>
             </Stack>
             <Box borderRadius={2} width={180} height={120} overflow="hidden" alignSelf="center">
-                <img src={tokenImage} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
+                <img src={token2Remove.nft_image} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
             </Box>
-            <CustomTextField title="NFT TITLE" placeholder="NFT TITLE" inputValue={tokenTitle} disabled />
-            <CustomTextField title="NFT CREATOR" placeholder="NFT CREATOR" inputValue={tokenCreator} disabled />
-            <CustomTextField title="TOKEN ID" placeholder="TOKEN ID" inputValue={tokenIdHex} disabled />
+            <CustomTextField title="NFT TITLE" placeholder="NFT TITLE" inputValue={token2Remove.nft_title} disabled />
+            <CustomTextField title="NFT CREATOR" placeholder="NFT CREATOR" inputValue={token2Remove.nft_creator} disabled />
+            <CustomTextField title="TOKEN ID" placeholder="TOKEN ID" inputValue={token2Remove.tokenIdHex} disabled />
             <Stack direction="row" spacing={2}>
                 <SecondaryButton fullWidth onClick={onClose}>
                     close
@@ -64,7 +54,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({
                 <PinkButton
                     fullWidth
                     onClick={() => {
-                        alert(tokenId);
+                        alert(token2Remove.tokenId);
                     }}
                 >
                     Confirm
