@@ -22,8 +22,9 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            const reqUrl =
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
+                likeState ? 'decTokenLikes' : 'incTokenLikes'
+            }`;
             const reqBody = isBlindBox
                 ? {
                       token: signInDlgState.token,
@@ -63,26 +64,7 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
 
     return (
         <Container>
-            {product.image ? (
-                <img src={product.image} alt="" />
-            ) : (
-                <Box
-                    position="relative"
-                    borderRadius={4.5}
-                    overflow="hidden"
-                    sx={{ width: '100%', paddingTop: '100%' }}
-                >
-                    <Box position="absolute" sx={{ inset: 0 }}>
-                        <Skeleton
-                            variant="rectangular"
-                            animation="wave"
-                            width="100%"
-                            height="100%"
-                            sx={{ bgcolor: '#E8F4FF' }}
-                        />
-                    </Box>
-                </Box>
-            )}
+            <img src={product.image} alt="" />
             <LikeBtn onClick={changeLikeState}>
                 {likeState ? (
                     <Icon icon="ph:heart-fill" fontSize={'2vw'} color="red" />
