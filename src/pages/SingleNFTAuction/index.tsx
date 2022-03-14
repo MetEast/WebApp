@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Stack, Grid, Typography } from '@mui/material';
+import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeSingleNFTBid } from 'src/types/product-types';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -146,166 +146,228 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
-            <Grid container marginTop={6} columnSpacing={5}>
+            <Grid container marginTop={6} columnSpacing={5} rowGap={2}>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                    {productDetail.tokenId === '' ? (
+                        <Box
+                            position="relative"
+                            borderRadius={4}
+                            overflow="hidden"
+                            sx={{ width: '100%', paddingTop: '75%' }}
+                        >
+                            <Box position="absolute" sx={{ inset: 0 }}>
+                                <Skeleton
+                                    variant="rectangular"
+                                    animation="wave"
+                                    width="100%"
+                                    height="100%"
+                                    sx={{ bgcolor: '#E8F4FF' }}
+                                />
+                            </Box>
+                        </Box>
+                    ) : (
+                        <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                    )}
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
-                        {productDetail.name}
-                    </Typography>
-                    <ProductSnippets
-                        nickname={productDetail.author}
-                        likes={productDetail.likes}
-                        views={productDetail.views}
-                    />
-                    <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={enumBadgeType.OnAuction} />
-                        {/* - For the initial version, we don't support to display this badge because we dont' have such feature with
-                        "Reserve Price" on the contract; We can manage to support after having discussing with the sponsor team. */}
-                        {/* {productDetail.status !== 'HAS BIDS' && (
-                            <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-                        )} */}
-                        {productDetail.isExpired ? (
-                            <ProductBadge badgeType={enumBadgeType.SaleEnded} />
-                        ) : (
-                            <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
-                        )}
-                        <ProductBadge badgeType={getMintCategory(productDetail.category)} />
-                    </Stack>
-                    <ELAPrice
-                        price_ela={productDetail.price_ela}
-                        price_usd={productDetail.price_usd}
-                        detail_page={true}
-                        marginTop={3}
-                    />
-                    {productDetail.isExpired ? (
-                        bidsList.length === 0 ? (
-                            <></>
-                        ) : (
-                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                <SecondaryButton
-                                    sx={{ width: '100%', height: 40 }}
-                                    onClick={() => {
-                                        if (signInDlgState.isLoggedIn) {
-                                            setDialogState({
-                                                ...dialogState,
-                                                acceptBidDlgOpened: true,
-                                                acceptBidDlgStep: 0,
-                                                acceptBidName: bidsList[0].user,
-                                                acceptBidOrderId: bidsList[0].orderId || '',
-                                                acceptBidPrice: bidsList[0].price,
-                                            });
-                                        } else {
-                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                        }
-                                    }}
-                                >
-                                    Settle Auction
-                                </SecondaryButton>
-                            </Stack>
-                        )
+                    {productDetail.tokenId === '' ? (
+                        <>
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={45}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={45}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF', marginTop: 2 }}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={56}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF', marginTop: 3 }}
+                            />
+                        </>
                     ) : (
                         <>
-                            {(signInDlgState.walletAccounts.length === 0 ||
-                                (signInDlgState.walletAccounts.length !== 0 &&
-                                    productDetail.holder !== signInDlgState.walletAccounts[0])) && (
-                                <PrimaryButton
-                                    sx={{ marginTop: 3, width: '100%' }}
-                                    onClick={() => {
-                                        if (signInDlgState.isLoggedIn) {
-                                            setDialogState({
-                                                ...dialogState,
-                                                placeBidDlgOpened: true,
-                                                placeBidDlgStep: 0,
-                                                placeBidName: productDetail.name,
-                                                placeBidOrderId: productDetail.orderId || '',
-                                                placeBidMinLimit: productDetail.price_ela,
-                                            });
-                                        } else {
-                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                        }
-                                    }}
-                                >
-                                    Place Bid
-                                </PrimaryButton>
-                            )}
-                            {signInDlgState.walletAccounts.length !== 0 &&
-                                productDetail.holder === signInDlgState.walletAccounts[0] &&
-                                bidsList.length === 0 && (
+                            <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
+                                {productDetail.name}
+                            </Typography>
+                            <ProductSnippets
+                                nickname={productDetail.author}
+                                likes={productDetail.likes}
+                                views={productDetail.views}
+                            />
+                            <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
+                                <ProductBadge badgeType={enumBadgeType.OnAuction} />
+                                {productDetail.isExpired ? (
+                                    <ProductBadge badgeType={enumBadgeType.SaleEnded} />
+                                ) : (
+                                    <ProductBadge badgeType={enumBadgeType.SaleEnds} content={productDetail.endTime} />
+                                )}
+                                <ProductBadge badgeType={getMintCategory(productDetail.category)} />
+                            </Stack>
+                            <ELAPrice
+                                price_ela={productDetail.price_ela}
+                                price_usd={productDetail.price_usd}
+                                detail_page={true}
+                                marginTop={3}
+                            />
+                            {productDetail.isExpired ? (
+                                bidsList.length === 0 ? (
+                                    <></>
+                                ) : (
                                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                        <PinkButton
-                                            sx={{ width: '100%', height: 40 }}
-                                            onClick={() => {
-                                                if (signInDlgState.isLoggedIn) {
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        cancelSaleDlgOpened: true,
-                                                        cancelSaleDlgStep: 0,
-                                                        cancelSaleOrderId: productDetail.orderId || '',
-                                                    });
-                                                } else {
-                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                                }
-                                            }}
-                                        >
-                                            Cancel Sale
-                                        </PinkButton>
                                         <SecondaryButton
                                             sx={{ width: '100%', height: 40 }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
                                                     setDialogState({
                                                         ...dialogState,
-                                                        changePriceDlgOpened: true,
-                                                        changePriceDlgStep: 0,
-                                                        changePriceCurPrice: productDetail.price_ela,
-                                                        changePriceOrderId: productDetail.orderId || '',
+                                                        acceptBidDlgOpened: true,
+                                                        acceptBidDlgStep: 0,
+                                                        acceptBidName: bidsList[0].user,
+                                                        acceptBidOrderId: bidsList[0].orderId || '',
+                                                        acceptBidPrice: bidsList[0].price,
                                                     });
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                                 }
                                             }}
                                         >
-                                            Change Price
+                                            Settle Auction
                                         </SecondaryButton>
                                     </Stack>
-                                )}
+                                )
+                            ) : (
+                                <>
+                                    {(signInDlgState.walletAccounts.length === 0 ||
+                                        (signInDlgState.walletAccounts.length !== 0 &&
+                                            productDetail.holder !== signInDlgState.walletAccounts[0])) && (
+                                        <PrimaryButton
+                                            sx={{ marginTop: 3, width: '100%' }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        placeBidDlgOpened: true,
+                                                        placeBidDlgStep: 0,
+                                                        placeBidName: productDetail.name,
+                                                        placeBidOrderId: productDetail.orderId || '',
+                                                        placeBidMinLimit: productDetail.price_ela,
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Place Bid
+                                        </PrimaryButton>
+                                    )}
+                                    {signInDlgState.walletAccounts.length !== 0 &&
+                                        productDetail.holder === signInDlgState.walletAccounts[0] &&
+                                        bidsList.length === 0 && (
+                                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                                <PinkButton
+                                                    sx={{ width: '100%', height: 40 }}
+                                                    onClick={() => {
+                                                        if (signInDlgState.isLoggedIn) {
+                                                            setDialogState({
+                                                                ...dialogState,
+                                                                cancelSaleDlgOpened: true,
+                                                                cancelSaleDlgStep: 0,
+                                                                cancelSaleOrderId: productDetail.orderId || '',
+                                                            });
+                                                        } else {
+                                                            setSignInDlgState({
+                                                                ...signInDlgState,
+                                                                signInDlgOpened: true,
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+                                                    Cancel Sale
+                                                </PinkButton>
+                                                <SecondaryButton
+                                                    sx={{ width: '100%', height: 40 }}
+                                                    onClick={() => {
+                                                        if (signInDlgState.isLoggedIn) {
+                                                            setDialogState({
+                                                                ...dialogState,
+                                                                changePriceDlgOpened: true,
+                                                                changePriceDlgStep: 0,
+                                                                changePriceCurPrice: productDetail.price_ela,
+                                                                changePriceOrderId: productDetail.orderId || '',
+                                                            });
+                                                        } else {
+                                                            setSignInDlgState({
+                                                                ...signInDlgState,
+                                                                signInDlgOpened: true,
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+                                                    Change Price
+                                                </SecondaryButton>
+                                            </Stack>
+                                        )}
+                                </>
+                            )}
                         </>
                     )}
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={10}>
-                <Grid item md={4} xs={12}>
-                    <Stack spacing={5}>
-                        <ProjectDescription description={productDetail.description} />
-                        <AboutAuthor
-                            name={productDetail.author}
-                            description={productDetail.authorDescription}
-                            img={productDetail.authorImg}
-                            address={productDetail.authorAddress}
+            {productDetail.tokenId === '' ? (
+                <Box position="relative" marginTop={5} sx={{ width: '100%', paddingTop: '75%' }}>
+                    <Box position="absolute" sx={{ inset: 0 }}>
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height="100%"
+                            sx={{ borderRadius: 4, bgcolor: '#E8F4FF' }}
                         />
-                        <ChainDetails
-                            tokenId={productDetail.tokenIdHex}
-                            ownerName={productDetail.holderName}
-                            ownerAddress={productDetail.holder}
-                            royalties={productDetail.royalties}
-                            createTime={productDetail.createTime}
-                        />
-                    </Stack>
+                    </Box>
+                </Box>
+            ) : (
+                <Grid container marginTop={5} columnSpacing={10}>
+                    <Grid item md={4} xs={12}>
+                        <Stack spacing={5}>
+                            <ProjectDescription description={productDetail.description} />
+                            <AboutAuthor
+                                name={productDetail.author}
+                                description={productDetail.authorDescription}
+                                img={productDetail.authorImg}
+                                address={productDetail.authorAddress}
+                            />
+                            <ChainDetails
+                                tokenId={productDetail.tokenIdHex}
+                                ownerName={productDetail.holderName}
+                                ownerAddress={productDetail.holder}
+                                royalties={productDetail.royalties}
+                                createTime={productDetail.createTime}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item md={8} xs={12}>
+                        <Stack spacing={10}>
+                            <SingleNFTBidsTable
+                                isLoggedIn={signInDlgState.isLoggedIn}
+                                myBidsList={myBidsList}
+                                bidsList={bidsList}
+                            />
+                            <PriceHistoryView />
+                            <NFTTransactionTable transactionsList={transactionsList} />
+                        </Stack>
+                    </Grid>
                 </Grid>
-                <Grid item md={8} xs={12}>
-                    <Stack spacing={10}>
-                        <SingleNFTBidsTable
-                            isLoggedIn={signInDlgState.isLoggedIn}
-                            myBidsList={myBidsList}
-                            bidsList={bidsList}
-                        />
-                        <PriceHistoryView />
-                        <NFTTransactionTable transactionsList={transactionsList} />
-                    </Stack>
-                </Grid>
-            </Grid>
+            )}
             <ModalDialog
                 open={dialogState.placeBidDlgOpened}
                 onClose={() => {
