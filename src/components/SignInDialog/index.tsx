@@ -30,6 +30,7 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import Web3 from 'web3';
 import { Web3Provider } from '@ethersproject/providers';
+import SnackMessage from 'src/components/SnackMessage';
 
 export interface ComponentProps {}
 
@@ -53,14 +54,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     let linkType = cookies.METEAST_LINK;
 
     const showSucceedSnackBar = () => {
-        const loginSucceed = enqueueSnackbar('Login succeed.', {
-            variant: 'success',
+        enqueueSnackbar('', {
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            autoHideDuration: 3000,
+            content: (key) => <SnackMessage id={key} message="Login succeed." variant="success" />,
         });
-        const timer = setTimeout(() => {
-            closeSnackbar(loginSucceed);
-            clearTimeout(timer);
-        }, 5000);
     };
 
     // ------------------------------ MM Connection ------------------------------ //
@@ -546,6 +544,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 await signInWithEssentials();
                             }
                         } else signInWithWallet(wallet);
+                        // showSucceedSnackBar();
                     }}
                 />
             </ModalDialog>
