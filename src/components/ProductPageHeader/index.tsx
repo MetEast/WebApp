@@ -1,12 +1,23 @@
 import React from 'react';
-import { Stack, Box, Menu, MenuItem } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Stack, Box, Menu, MenuItem, Tooltip } from '@mui/material';
+import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { Icon } from '@iconify/react';
-import { SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { IconBtn } from './styles';
 import { useNavigate } from 'react-router-dom';
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 // import FullscreenIcon from '@mui/icons-material/Fullscreen';
+
+const ReportBtnTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        fontSize: 14,
+        borderRadius: 8,
+    },
+}));
 
 const ProductPageHeader: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
@@ -104,15 +115,17 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                         display={showReportBtn ? 'block' : 'none'}
                         sx={{ position: 'absolute', right: 0, top: '100%' }}
                     >
-                        <PinkButton size="small" sx={{ paddingX: 2.5, marginTop: 0.5 }}>
-                            <Icon
-                                icon="ph:megaphone"
-                                fontSize={20}
-                                color="#eb5757"
-                                style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
-                            />
-                            Report
-                        </PinkButton>
+                        <ReportBtnTooltip title="Coming Soon">
+                            <PrimaryButton btn_type="pink" size="small" sx={{ paddingX: 2.5, marginTop: 0.5 }}>
+                                <Icon
+                                    icon="ph:megaphone"
+                                    fontSize={20}
+                                    color="#eb5757"
+                                    style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
+                                />
+                                Report
+                            </PrimaryButton>
+                        </ReportBtnTooltip>
                     </Box>
                 </Box>
             </Stack>
