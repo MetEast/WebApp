@@ -49,6 +49,26 @@ export const FETCH_CONFIG_JSON = {
     },
 };
 
+export const getShorternUrl = async (url: string) => {
+    // ${process.env.REACT_APP_SHORTERN_SERVICE_URL}
+    try {
+        const resShorternUrl = await fetch(
+            `https://s.meteast.io/api/v2/action/shorten?key=2b495b2175ec5470d35482f524ac87&url=${url}&is_secret=false`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            }
+        );
+        const jsonShorternUrl = await resShorternUrl.json();
+        return jsonShorternUrl;
+    } catch (error) {
+        return '';
+    }
+};
+
 export const getELA2USD = async () => {
     try {
         const resElaUsdRate = await fetch(
