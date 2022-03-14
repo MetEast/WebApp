@@ -175,13 +175,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         </>
                     ) : (
                         <>
-                            <Typography noWrap fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
+                            <Typography noWrap fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700} lineHeight={1}>
                                 {productDetail.name}
                             </Typography>
                             <ProductSnippets
                                 nickname={productDetail.author}
                                 likes={productDetail.likes}
                                 views={productDetail.views}
+                                sx={{ marginTop: 1 }}
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                                 <ProductBadge badgeType={enumBadgeType.BuyNow} />
