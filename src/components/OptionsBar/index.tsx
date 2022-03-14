@@ -41,7 +41,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     return (
         <Stack direction="row" spacing={{ xs: 1, md: 2 }} sx={{ height: 40 }} {...otherProps}>
             <SearchField
-                placeholder="Search name, description, address and tokenID"
+                placeholder="Search name, description, address"
                 handleChange={handleKeyWordChange}
             />
             <Select
