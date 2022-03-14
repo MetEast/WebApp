@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Stack, Grid, Typography, Box } from '@mui/material';
+import { Stack, Grid, Typography, Skeleton, Box } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
@@ -116,68 +116,129 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             <ProductPageHeader />
             <Grid container marginTop={5} columnSpacing={5} rowGap={1}>
                 <Grid item xs={12} md={6}>
-                    <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                    {productDetail.tokenId === '' ? (
+                        <Box
+                            position="relative"
+                            borderRadius={4}
+                            overflow="hidden"
+                            sx={{ width: '100%', paddingTop: '75%' }}
+                        >
+                            <Box position="absolute" sx={{ inset: 0 }}>
+                                <Skeleton
+                                    variant="rectangular"
+                                    animation="wave"
+                                    width="100%"
+                                    height="100%"
+                                    sx={{ bgcolor: '#E8F4FF' }}
+                                />
+                            </Box>
+                        </Box>
+                    ) : (
+                        <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                    )}
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Typography fontSize={56} fontWeight={700}>
-                        {productDetail.name}
-                    </Typography>
-                    <ProductSnippets
-                        nickname={productDetail.author}
-                        likes={productDetail.likes}
-                        views={productDetail.views}
-                    />
-                    <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                        <ProductBadge badgeType={enumBadgeType.Created} />
-                        <ProductBadge badgeType={getMintCategory(productDetail.category)} />
-                    </Stack>
-                    <PrimaryButton
-                        sx={{ marginTop: 3, width: '100%' }}
-                        onClick={() => {
-                            setDialogState({
-                                ...dialogState,
-                                mintTokenId: productDetail.tokenIdHex,
-                                createNFTDlgOpened: true,
-                                createNFTDlgStep: 3,
-                            });
-                        }}
-                    >
-                        Sell
-                    </PrimaryButton>
+                    {productDetail.tokenId === '' ? (
+                        <>
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={45}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={45}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF', marginTop: 2 }}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={56}
+                                sx={{ borderRadius: 2, bgcolor: '#E8F4FF', marginTop: 3 }}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Typography fontSize={56} fontWeight={700}>
+                                {productDetail.name}
+                            </Typography>
+                            <ProductSnippets
+                                nickname={productDetail.author}
+                                likes={productDetail.likes}
+                                views={productDetail.views}
+                            />
+                            <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
+                                <ProductBadge badgeType={enumBadgeType.Created} />
+                                <ProductBadge badgeType={getMintCategory(productDetail.category)} />
+                            </Stack>
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    setDialogState({
+                                        ...dialogState,
+                                        mintTokenId: productDetail.tokenIdHex,
+                                        createNFTDlgOpened: true,
+                                        createNFTDlgStep: 3,
+                                    });
+                                }}
+                            >
+                                Sell
+                            </PrimaryButton>
+                        </>
+                    )}
                 </Grid>
             </Grid>
-            <Grid container marginTop={5} columnSpacing={10}>
-                <Grid item xs={12} md={4}>
-                    <Stack spacing={5}>
-                        <ProductTransHistory historyList={prodTransHistory} />
-                        <ProjectDescription description={productDetail.description} />
-                        <Box>
-                            <Grid container columnSpacing={10} rowGap={5}>
-                                <Grid item xs={12} sm={6} md={12}>
-                                    <AboutAuthor
-                                        name={productDetail.author}
-                                        description={productDetail.authorDescription}
-                                        img={productDetail.authorImg}
-                                        address={productDetail.authorAddress}
-                                    />
+            {productDetail.tokenId === '' ? (
+                <Box position="relative" marginTop={5} sx={{ width: '100%', paddingTop: '75%' }}>
+                    <Box position="absolute" sx={{ inset: 0 }}>
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height="100%"
+                            sx={{ borderRadius: 4, bgcolor: '#E8F4FF' }}
+                        />
+                    </Box>
+                </Box>
+            ) : (
+                <Grid container marginTop={5} columnSpacing={10}>
+                    <Grid item xs={12} md={4}>
+                        <Stack spacing={5}>
+                            <ProductTransHistory historyList={prodTransHistory} />
+                            <ProjectDescription description={productDetail.description} />
+                            <Box>
+                                <Grid container columnSpacing={10} rowGap={5}>
+                                    <Grid item xs={12} sm={6} md={12}>
+                                        <AboutAuthor
+                                            name={productDetail.author}
+                                            description={productDetail.authorDescription}
+                                            img={productDetail.authorImg}
+                                            address={productDetail.authorAddress}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={12}>
+                                        <ChainDetails
+                                            tokenId={productDetail.tokenIdHex}
+                                            ownerName={productDetail.holderName}
+                                            ownerAddress={productDetail.holder}
+                                            royalties={productDetail.royalties}
+                                            createTime={productDetail.createTime}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={12}>
-                                    <ChainDetails
-                                        tokenId={productDetail.tokenIdHex}
-                                        ownerName={productDetail.holderName}
-                                        ownerAddress={productDetail.holder}
-                                        royalties={productDetail.royalties}
-                                        createTime={productDetail.createTime}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Stack>
+                            </Box>
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+                        <Stack spacing={10}></Stack>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} md={8}>
-                    <Stack spacing={10}></Stack>
-                </Grid>
-            </Grid>
+            )}
         </Container>
     );
 };
