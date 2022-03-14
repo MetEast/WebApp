@@ -71,6 +71,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleSignMessage = async (did: string, address: string) => {
         try {
+            console.log(did, address)
             const signature = await walletConnectWeb3.eth.personal.sign(`Update profile with ${did}`, address, '');
             return signature;
         } catch (err) {
@@ -95,6 +96,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             .then((signature: string) => {
                 return uploadUserProfile(
                     signInDlgState.token,
+                    signInDlgState.walletAccounts[0],
                     signInDlgState.userDid,
                     userName,
                     userDescription,
@@ -128,7 +130,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 onClose();
             })
             .catch((error) => {
-                enqueueSnackbar(`Error: ${error}!`, {
+                enqueueSnackbar(error, {
                     variant: 'warning',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

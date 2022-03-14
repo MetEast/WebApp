@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -15,6 +15,8 @@ import { useSnackbar } from 'notistack';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { callContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
@@ -22,6 +24,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    const [onProgress, setOnProgress] = useState<boolean>(false);
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -227,6 +230,17 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         }
     };
 
+    // const handleSell = () => {
+    //     if (dialogState.sellTxFee > signInDlgState.walletBalance) {
+    //         enqueueSnackbar('Insufficient balance!', {
+    //             variant: 'warning',
+    //             anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //         });
+    //         return;
+    //     }
+    //     callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
+    // };
+
     const handleSell = () => {
         if (dialogState.sellTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
@@ -235,7 +249,111 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             });
             return;
         }
-        callSetApprovalForAll(METEAST_MARKET_CONTRACT_ADDRESS, true);
+        setOnProgress(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
+        const timer = setTimeout(() => {
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
+        }, 120000);
+        const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
+
+        walletConnectWeb3.eth.getBlock('latest').then((currentBlock: any) => {
+            let auctionTime: number =
+                typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
+            if (dialogState.sellSaleEnds.value === '1 month') auctionTime += 30 * 24 * 3600;
+            else if (dialogState.sellSaleEnds.value === '1 week') auctionTime += 7 * 24 * 3600;
+            else if (dialogState.sellSaleEnds.value === '1 day') auctionTime += 24 * 3600;
+
+            callContractMethod(walletConnectWeb3, {
+                ...blankContractMethodParam,
+                contractType: 1,
+                method: 'setApprovalForAll',
+                price: '0',
+                operator: METEAST_MARKET_CONTRACT_ADDRESS,
+                approved: true,
+            })
+                .then((result) => {
+                    enqueueSnackbar(`Set approval succeed!`, {
+                        variant: 'success',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                    console.log(result);
+                    callContractMethod(
+                        walletConnectWeb3,
+                        dialogState.sellSaleType === 'buynow'
+                            ? {
+                                  ...blankContractMethodParam,
+                                  contractType: 2,
+                                  method: 'createOrderForSale',
+                                  price: '0',
+                                  tokenId: dialogState.mintTokenId,
+                                  quoteToken: _quoteToken,
+                                  _price: BigInt(dialogState.sellPrice * 1e18).toString(),
+                                  didUri: signInDlgState.didUri,
+                                  isBlindBox: false,
+                              }
+                            : {
+                                  ...blankContractMethodParam,
+                                  contractType: 2,
+                                  method: 'createOrderForAuction',
+                                  price: '0',
+                                  tokenId: dialogState.mintTokenId,
+                                  quoteToken: _quoteToken,
+                                  _price: BigInt(dialogState.sellMinPrice * 1e18).toString(),
+                                  endTime: auctionTime.toString(),
+                                  didUri: signInDlgState.didUri,
+                              },
+                    )
+                        .then((txHash) => {
+                            enqueueSnackbar(
+                                `Order for ${dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'} succeed!`,
+                                {
+                                    variant: 'success',
+                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                },
+                            );
+                            setDialogState({
+                                ...dialogState,
+                                createNFTDlgOpened: true,
+                                createNFTDlgStep: 5,
+                                sellTxHash: new String(txHash).toString(),
+                                waitingConfirmDlgOpened: false,
+                            });
+                        })
+                        .catch((error) => {
+                            enqueueSnackbar(
+                                `Order for ${
+                                    dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'
+                                } error: ${error}!`,
+                                {
+                                    variant: 'warning',
+                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                },
+                            );
+                            setDialogState({
+                                ...dialogState,
+                                createNFTDlgOpened: false,
+                                waitingConfirmDlgOpened: false,
+                                errorMessageDlgOpened: true,
+                            });
+                        })
+                })
+                .catch((error) => {
+                    enqueueSnackbar(`Set approval error: ${error}!`, {
+                        variant: 'warning',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                    setDialogState({
+                        ...dialogState,
+                        createNFTDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                })
+                .finally(() => {
+                    setOnProgress(false);
+                    clearTimeout(timer);
+                });
+        });
     };
 
     return (

@@ -766,6 +766,7 @@ export const getBBCandiates = async (address: string, keyword: string, selectedT
 // edit profile
 export const uploadUserProfile = (
     _token: string,
+    _address: string,
     _did: string,
     _name: string,
     _description: string,
@@ -777,6 +778,7 @@ export const uploadUserProfile = (
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
         const reqBody = {
             token: _token,
+            address: _address,
             did: _did,
             name: _name,
             description: _description,

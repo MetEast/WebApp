@@ -147,4 +147,9 @@ export const blankContractMethodParam: TypeContractMethodPram = {
     orderIds: [],
     didUri: '',
     _price: '0',
+    quoteToken: '',
+    isBlindBox: false,
+    endTime: '',
+    operator: '',
+    approved: false,
 };

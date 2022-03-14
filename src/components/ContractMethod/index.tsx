@@ -24,6 +24,7 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
             console.error('error', error);
             reject(error);
         };
+
         walletConnectWeb3.eth
             .getAccounts()
             .then((_accounts: string[]) => {
@@ -38,37 +39,81 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                     gas: 5000000,
                     value: param.price,
                 };
-                let contractMethod = null;
-                switch (param.method) {
-                    case 'mint':
-                        contractMethod = smartContract.methods.mint(param.tokenId, param.tokenUri, param.royaltyFee);
-                        break;
-                    case 'burn':
-                        contractMethod = smartContract.methods.burn(param.tokenId);
-                        break;
-                    case 'bidForOrder':
-                        contractMethod = smartContract.methods.bidForOrder(param.orderId, param._price, param.didUri);
-                        break;
-                    case 'changeOrderPrice':
-                        contractMethod = smartContract.methods.changeOrderPrice(param.orderId, param._price);
-                        break;
-                    case 'cancelOrder':
-                        contractMethod = smartContract.methods.cancelOrder(param.orderId);
-                        break;
-                    case 'buyOrder':
-                        contractMethod = smartContract.methods.buyOrder(param.orderId, param.didUri);
-                        break;
-                    case 'buyOrderBatch':
-                        contractMethod = smartContract.methods.buyOrderBatch(param.orderIds, param.didUri);
-                        break;
-                    case 'settleAuctionOrder':
-                        contractMethod = smartContract.methods.settleAuctionOrder(param.orderId);
-                        break;
+
+                if (param.method === 'setApprovalForAll') {
+                    smartContract.methods
+                        .isApprovedForAll(accounts[0], param.operator)
+                        .call()
+                        .then((success: boolean) => {
+                            if (success) resolve('success');
+                            else {
+                                smartContract.methods
+                                    .setApprovalForAll(param.operator, param.approved)
+                                    .send(transactionParams)
+                                    .once('transactionHash', handleTxEvent)
+                                    .once('receipt', handleReceiptEvent)
+                                    .on('error', handleErrorEvent);
+                            }
+                        });
+                } else {
+                    let contractMethod = null;
+                    switch (param.method) {
+                        case 'mint':
+                            contractMethod = smartContract.methods.mint(
+                                param.tokenId,
+                                param.tokenUri,
+                                param.royaltyFee,
+                            );
+                            break;
+                        case 'burn':
+                            contractMethod = smartContract.methods.burn(param.tokenId);
+                            break;
+                        case 'createOrderForSale':
+                            contractMethod = smartContract.methods.createOrderForSale(
+                                param.tokenId,
+                                param.quoteToken,
+                                param._price,
+                                param.didUri,
+                                param.isBlindBox,
+                            );
+                            break;
+                        case 'createOrderForAuction':
+                            contractMethod = smartContract.methods.createOrderForAuction(
+                                param.tokenId,
+                                param.quoteToken,
+                                param._price,
+                                param.endTime,
+                                param.didUri,
+                            );
+                            break;
+                        case 'bidForOrder':
+                            contractMethod = smartContract.methods.bidForOrder(
+                                param.orderId,
+                                param._price,
+                                param.didUri,
+                            );
+                            break;
+                        case 'changeOrderPrice':
+                            contractMethod = smartContract.methods.changeOrderPrice(param.orderId, param._price);
+                            break;
+                        case 'cancelOrder':
+                            contractMethod = smartContract.methods.cancelOrder(param.orderId);
+                            break;
+                        case 'buyOrder':
+                            contractMethod = smartContract.methods.buyOrder(param.orderId, param.didUri);
+                            break;
+                        case 'buyOrderBatch':
+                            contractMethod = smartContract.methods.buyOrderBatch(param.orderIds, param.didUri);
+                            break;
+                        case 'settleAuctionOrder':
+                            contractMethod = smartContract.methods.settleAuctionOrder(param.orderId);
+                            break;
+                    }
+                    contractMethod
+                        .send(transactionParams)
+                        .once('transactionHash', handleTxEvent)
+                        .once('receipt', handleReceiptEvent)
+                        .on('error', handleErrorEvent);
                 }
-                contractMethod
-                    .send(transactionParams)
-                    .once('transactionHash', handleTxEvent)
-                    .once('receipt', handleReceiptEvent)
-                    .on('error', handleErrorEvent);
             });
     });

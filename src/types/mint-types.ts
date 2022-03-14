@@ -70,4 +70,9 @@ export type TypeContractMethodPram = {
     orderIds: string[];
     didUri: string;
     _price: string;
+    quoteToken: string;
+    isBlindBox: boolean;
+    endTime: string;
+    operator: string;
+    approved: boolean;
 };
