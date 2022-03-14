@@ -62,11 +62,12 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 approved: true,
             })
                 .then((result) => {
-                    enqueueSnackbar(`Set approval succeed!`, {
-                        variant: 'success',
-                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                    });
-                    console.log(result);
+                    if (new String(result).toString() === 'success') {
+                        enqueueSnackbar(`Set approval succeed!`, {
+                            variant: 'success',
+                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                        });
+                    }
                     callContractMethod(
                         walletConnectWeb3,
                         dialogState.sellSaleType === 'buynow'

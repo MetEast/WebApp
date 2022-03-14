@@ -37,11 +37,10 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             variant: 'success',
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
         });
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, mintProgress: 70 });
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
-        setDialogState({ ...dialogState, mintProgress: 70 });
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 1,
@@ -67,6 +66,19 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     mintDidUri: paramObj._didUri,
                     mintProgress: 100,
                     waitingConfirmDlgOpened: false,
+                });
+            })
+            .catch((error) => {
+                enqueueSnackbar(`Mint token error: ${error}!`, {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                setDialogState({
+                    ...dialogState,
+                    createNFTDlgOpened: false,
+                    waitingConfirmDlgOpened: false,
+                    errorMessageDlgOpened: true,
+                    mintProgress: 0,
                 });
             })
             .finally(() => {
@@ -128,19 +140,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         setOnProgress(true);
         uploadData()
             .then((paramObj) => mint2net(paramObj))
-            .catch((error) => {
-                enqueueSnackbar(`Mint token error: ${error}!`, {
-                    variant: 'warning',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-                setDialogState({
-                    ...dialogState,
-                    createNFTDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                    mintProgress: 0,
-                });
-            })
             .finally(() => {
                 setOnProgress(false);
             });

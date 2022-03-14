@@ -47,7 +47,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
             contractType: 2,
             method: 'cancelOrder',
             price: '0',
-            orderId: dialogState.cancelBidOrderId,
+            orderId: dialogState.cancelSaleOrderId,
         })
             .then((txHash) => {
                 enqueueSnackbar('Cancel sale succeed!', {
