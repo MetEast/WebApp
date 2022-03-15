@@ -5,6 +5,7 @@ import { DialogTitleTypo } from '../../../TransactionDialogs/styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';
+import { TypeImageFile } from 'src/types/select-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -15,7 +16,18 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>('home');
-
+    const [bannerImage, setBannerImage] = useState<TypeImageFile>({
+        preview: '',
+        raw: new File([''], ''),
+    });
+    const handleBannerImageChanged = (e: any) => {
+        if (e.target.files.length) {
+            setBannerImage({
+                preview: URL.createObjectURL(e.target.files[0]),
+                raw: e.target.files[0],
+            });
+        }
+    };
     return (
         <Stack
             spacing={5}
@@ -35,23 +47,46 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 Image
                             </Typography>
                             <img
-                                src="/assets/images/blindbox/blindbox-nft-template2.png"
+                                src={bannerImage.preview === '' ? "/assets/images/blindbox/blindbox-nft-template2.png" : bannerImage.preview}
                                 style={{ borderRadius: '18px' }}
                                 alt=""
                             />
                             <Stack direction="row" spacing={1}>
-                                <PrimaryButton btn_type="pink" fullWidth size="small">
+                                <PrimaryButton
+                                    btn_type="pink"
+                                    fullWidth
+                                    size="small"
+                                    onClick={() => {
+                                        setBannerImage({
+                                            preview: '',
+                                            raw: new File([''], ''),
+                                        });
+                                    }}
+                                >
                                     <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
                                     {`Delete`}
                                 </PrimaryButton>
-                                <PrimaryButton btn_type="secondary" fullWidth size="small">
-                                    <Icon
-                                        icon="ph:pencil-simple"
-                                        fontSize={20}
-                                        style={{ marginBottom: 4, marginRight: 4 }}
-                                    />
-                                    {`Edit`}
-                                </PrimaryButton>
+                                <label htmlFor="banner-image" style={{ width: '100%' }}>
+                                    <PrimaryButton
+                                        btn_type="secondary"
+                                        fullWidth
+                                        size="small"
+                                        onClick={() => document.getElementById('banner-image')?.click()}
+                                    >
+                                        <Icon
+                                            icon="ph:pencil-simple"
+                                            fontSize={20}
+                                            style={{ marginBottom: 4, marginRight: 4 }}
+                                        />
+                                        {`Edit`}
+                                    </PrimaryButton>
+                                </label>
+                                <input
+                                    type="file"
+                                    id="banner-image"
+                                    style={{ display: 'none' }}
+                                    onChange={handleBannerImageChanged}
+                                />
                             </Stack>
                         </Stack>
                         <CustomTextField title="URL" placeholder="Enter Banner URL" changeHandler={(value) => {}} />
