@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { AdminTableColumn, AdminBannersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
@@ -8,12 +8,10 @@ import ModalDialog from 'src/components/ModalDialog';
 import CreateBanner from 'src/components/Admin/Dialogs/CreateBanner';
 import EditBanner from 'src/components/Admin/Dialogs/EditBanner';
 import DeleteBanner from 'src/components/Admin/Dialogs/DeleteBanner';
+import { getAdminBannerList } from 'src/services/fetch';
+import { useSignInContext } from 'src/context/SignInContext';
 
 const AdminBanners: React.FC = (): JSX.Element => {
-    const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
-    const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
-    const [showDeleteBannerDlg, setShowDeleteBannerDlg] = useState<boolean>(false);
-
     const columns: AdminTableColumn[] = [
         {
             id: 'banner_id',
@@ -103,7 +101,28 @@ const AdminBanners: React.FC = (): JSX.Element => {
         [],
     );
 
-    const [tabledata] = useState(data);
+    const [signInDlgState] = useSignInContext();
+    const [tabledata, setTableData] = useState(data);
+    const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
+    const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
+    const [showDeleteBannerDlg, setShowDeleteBannerDlg] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            setIsLoading(true);
+            const _adminBannerList = await getAdminBannerList(signInDlgState.walletAccounts[0]);
+            if (!unmounted) {
+                setTableData(_adminBannerList);
+                setIsLoading(false);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
 
     const onEditBanner = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -130,7 +149,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                         {`New Banner`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
             <ModalDialog
                 open={showCreateBannerDlg}

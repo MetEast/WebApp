@@ -101,16 +101,19 @@ const AdminUsers: React.FC = (): JSX.Element => {
     const [keyWord, setKeyWord] = useState<string>('');
     const [id2Edit, setId2Edit] = useState<number>(0);
     const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
+            setIsLoading(true);
             const _adminUserList = await getAdminUserList(
                 getAdminSearchParams(keyWord, undefined, undefined),
                 signInDlgState.walletAccounts[0],
             );
             if (!unmounted) {
                 setTableData(_adminUserList);
+                setIsLoading(false);
             }
         };
         getFetchData().catch(console.error);
@@ -154,7 +157,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
                         {`Search`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
             <ModalDialog
                 open={showEditUserStatusDlg}
