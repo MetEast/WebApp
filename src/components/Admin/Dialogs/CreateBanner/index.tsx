@@ -12,10 +12,11 @@ import { addAdminBanner } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {
+    handleBannerUpdates: () => void;
     onClose: () => void;
 }
 
-const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }): JSX.Element => {
     // const classes = useStyles();
     const [signInDlgState] = useSignInContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -38,7 +39,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     };
 
     const handleSubmit = async () => {
-        if ((bannerImage.preview === '' && bannerUrl === '')|| isNaN(parseInt(sort))) return;
+        if ((bannerImage.preview === '' && bannerUrl === '') || isNaN(parseInt(sort))) return;
         setOnProgress(true);
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
@@ -46,6 +47,14 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         uploadImage2Ipfs(bannerImage.raw)
             .then((added: any) => {
                 url = `meteast:image:${added.path}`;
+                console.log(
+                    signInDlgState.token,
+                    signInDlgState.walletAccounts[0],
+                    url === '' ? bannerUrl : url,
+                    pageLocation,
+                    status,
+                    parseInt(sort),
+                );
                 return addAdminBanner(
                     signInDlgState.token,
                     signInDlgState.walletAccounts[0],
@@ -61,8 +70,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                }
-                else {
+                } else {
                     enqueueSnackbar('Error', {
                         variant: 'warning',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -77,6 +85,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .finally(() => {
                 setOnProgress(false);
+                handleBannerUpdates();
                 onClose();
             });
     };
@@ -146,7 +155,11 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 />
                             </Stack>
                         </Stack>
-                        <CustomTextField title="URL" placeholder="Enter Banner URL" changeHandler={(value: string) => setBannerUrl(value)} />
+                        <CustomTextField
+                            title="URL"
+                            placeholder="Enter Banner URL"
+                            changeHandler={(value: string) => setBannerUrl(value)}
+                        />
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
                         <Stack spacing={0.5}>
@@ -203,7 +216,12 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="Sort" inputValue={sort} placeholder="10" changeHandler={(value: string) => setSort(value)} />
+                        <CustomTextField
+                            title="Sort"
+                            inputValue={sort}
+                            placeholder="10"
+                            changeHandler={(value: string) => setSort(value)}
+                        />
                     </Grid>
                 </Grid>
             </Box>

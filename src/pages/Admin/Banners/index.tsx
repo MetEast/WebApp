@@ -107,6 +107,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
     const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
     const [showDeleteBannerDlg, setShowDeleteBannerDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [reload, setReload] = useState<boolean>(false);
 
     useEffect(() => {
         let unmounted = false;
@@ -122,7 +123,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+    }, [reload, signInDlgState.walletAccounts]);
 
     const onEditBanner = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -161,6 +162,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                     onClose={() => {
                         setShowCreateBannerDlg(false);
                     }}
+                    handleBannerUpdates={() => setReload(!reload)}
                 />
             </ModalDialog>
             <ModalDialog
