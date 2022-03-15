@@ -14,6 +14,12 @@ import {
     enumBadgeType,
 } from 'src/types/product-types';
 
+export const blankPageBanners: string[] = [
+    '/assets/images/banners/banner1.png',
+    '/assets/images/banners/banner2.png',
+    '/assets/images/banners/banner3.png',
+];
+
 export const blankNFTItem: TypeProduct = {
     tokenId: '',
     name: '',

@@ -12,7 +12,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
-import { blankBBItem } from 'src/constants/init-constants';
+import { blankBBItem, blankPageBanners } from 'src/constants/init-constants';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -27,11 +27,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         blankBBItem,
         blankBBItem,
     ]);
-    const [adBanners, setAdBanners] = useState<string[]>([
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ]);
+    const [adBanners, setAdBanners] = useState<string[]>(blankPageBanners);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -39,7 +35,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(signInDlgState.walletAccounts[0], 3);
             if (!unmounted) {
-                setAdBanners(_adBanners);
+                setAdBanners(_adBanners.length === 0 ? blankPageBanners : _adBanners);
             }
         };
         fetchBanners().catch(console.error);

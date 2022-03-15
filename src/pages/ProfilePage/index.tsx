@@ -269,7 +269,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 {signInDlgState.userCoverImage !== '' && (
                     <img
                         src={getImageFromAsset(signInDlgState.userCoverImage)}
-                        // src="/assets/images/blindbox/blindbox-nft-template1.png"
                         alt=""
                         style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 330 }}
                     />
