@@ -8,6 +8,7 @@ import EnterSaleDetails from '../ListNFT/EnterSaleDetails';
 import CheckSaleDetails from '../ListNFT/CheckSaleDetails';
 import ArtworkIsNowForSale from '../ListNFT/ArtworkIsNowForSale';
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
+import WaitingConfirm from '../Others/WaitingConfirm';
 
 export interface ComponentProps {}
 
@@ -39,6 +40,14 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         setDialogState({ ...dialogState, errorMessageDlgOpened: false });
                     }}
                 />
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.waitingConfirmDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
+                }}
+            >
+                <WaitingConfirm />
             </ModalDialog>
         </>
     );

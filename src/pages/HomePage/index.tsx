@@ -7,8 +7,8 @@ import NFTPreview from 'src/components/NFTPreview';
 import 'swiper/swiper-bundle.css';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList, getNFTItemList } from 'src/services/fetch';
-import { blankNFTItem } from 'src/constants/init-constants';
+import { getELA2USD, getMyFavouritesList, getNFTItemList, getPageBannerList } from 'src/services/fetch';
+import { blankNFTItem, blankPageBanners } from 'src/constants/init-constants';
 import Container from 'src/components/Container';
 
 const HomePage: React.FC = (): JSX.Element => {
@@ -27,16 +27,26 @@ const HomePage: React.FC = (): JSX.Element => {
         blankNFTItem,
         blankNFTItem,
     ]);
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
+    const [adBanners, setAdBanners] = useState<string[]>(blankPageBanners);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
-        const getFetchData = async () => {
+        const fetchBanners = async () => {
+            const _adBanners = await getPageBannerList(signInDlgState.walletAccounts[0], 1);
+            if (!unmounted) {
+                setAdBanners(_adBanners.length === 0 ? blankPageBanners : _adBanners);
+            }
+        };
+        fetchBanners().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
+
+    useEffect(() => {
+        let unmounted = false;
+        const fetchCollections = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _newNFTList = await getNFTItemList('pageNum=1&pageSize=10', ELA2USD, likeList);
@@ -50,7 +60,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 setCollectionList(_popularNFTList);
             }
         };
-        getFetchData().catch(console.error);
+        fetchCollections().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -102,11 +112,11 @@ const HomePage: React.FC = (): JSX.Element => {
 
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
-    const matchUpmd = useMediaQuery(theme.breakpoints.up('md'));
-    const matchUplg = useMediaQuery(theme.breakpoints.up('lg'));
+    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
+    const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
 
-    const slidesPerView = matchUplg ? 4.5 : matchUpmd ? 3.5 : 2.5;
-    const spaceBetweenSlideItems = matchUplg ? 32 : 16;
+    const slidesPerView = matchUpLg ? 4.5 : matchUpMd ? 3.5 : 2.5;
+    const spaceBetweenSlideItems = matchUpLg ? 32 : 16;
 
     return (
         <Stack direction="column" minHeight="75vh">
@@ -114,8 +124,23 @@ const HomePage: React.FC = (): JSX.Element => {
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
-                                <img src={item} alt="" style={{ minWidth: '100%' }} />
+                            <Box
+                                overflow="hidden"
+                                onClick={() => {}}
+                                sx={{
+                                    height: 330,
+                                    maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
+                                    cursor: 'pointer',
+                                    backgroundColor: '#C3C5C8',
+                                }}
+                            >
+                                {item !== '' && (
+                                    <img
+                                        src={item}
+                                        alt=""
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 330 }}
+                                    />
+                                )}
                             </Box>
                         </SwiperSlide>
                     ))}

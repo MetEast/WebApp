@@ -160,7 +160,7 @@ export type TypeProductFetch = {
     holder: string;
     holderName: string;
     createTime: string;
-    timestamp: number;
+    marketTime: number;
     endTime: string;
     tokenIdHex: string;
     type: string;

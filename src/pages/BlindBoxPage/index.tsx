@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import 'swiper/swiper-bundle.css';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import NFTPreview from 'src/components/NFTPreview';
@@ -9,10 +11,10 @@ import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { getELA2USD, getSearchParams, getBBItemList } from 'src/services/fetch';
+import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
-import { blankBBItem } from 'src/constants/init-constants';
+import { blankBBItem, blankPageBanners } from 'src/constants/init-constants';
 
 const BlindBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -27,13 +29,23 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         blankBBItem,
         blankBBItem,
     ]);
-    const adBanners = [
-        '/assets/images/banners/banner1.png',
-        '/assets/images/banners/banner2.png',
-        '/assets/images/banners/banner3.png',
-    ];
+    const [adBanners, setAdBanners] = useState<string[]>(blankPageBanners);
 
     // -------------- Fetch Data -------------- //
+    useEffect(() => {
+        let unmounted = false;
+        const fetchBanners = async () => {
+            const _adBanners = await getPageBannerList(signInDlgState.walletAccounts[0], 3);
+            if (!unmounted) {
+                setAdBanners(_adBanners.length === 0 ? blankPageBanners : _adBanners);
+            }
+        };
+        fetchBanners().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
+
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
@@ -99,14 +111,33 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setBlindBoxList(bbList);
     };
 
+    const theme = useTheme();
+    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
+
     return (
         <Box minHeight="75vh">
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
-                                <img src={item} alt="" style={{ minWidth: '100%' }} />
+                            <Box
+                                overflow="hidden"
+                                onClick={() => {}}
+                                sx={{
+                                    height: 330,
+                                    maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
+                                    cursor: 'pointer',
+                                    backgroundColor: '#C3C5C8',
+                                }}
+                            >
+                                {item !== '' && (
+                                    <img
+                                        src={item}
+                                        alt=""
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 330 }}
+                                    />
+                                )}
                             </Box>
                         </SwiperSlide>
                     ))}

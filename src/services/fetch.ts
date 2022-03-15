@@ -27,9 +27,19 @@ import {
     blankMyEarning,
     blankMyNFTHistory,
     blankBBCandidate,
+    blankAdminNFTItem,
+    blankAdminUserItem,
+    blankAdminBannerItem,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import {
+    AdminNFTItemType,
+    AdminUsersItemFetchType,
+    AdminUsersItemType,
+    AdminBannersItemType,
+    AdminBannersItemFetchType,
+} from 'src/types/admin-table-data-types';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -45,6 +55,17 @@ export const FETCH_CONFIG_JSON = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
     },
+};
+
+export const getShorternUrl = async (url: string) => {
+    try {
+        const resShorternUrl = await fetch(
+            `${process.env.REACT_APP_SHORTERN_SERVICE_URL}/api/v2/action/shorten?key=2b495b2175ec5470d35482f524ac87&url=${url}&is_secret=false`,
+        );
+        return resShorternUrl.text();
+    } catch (error) {
+        return '';
+    }
 };
 
 export const getELA2USD = async () => {
@@ -74,6 +95,21 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
             return [];
         }
     } else return [];
+};
+
+export const getPageBannerList = async (address: string, location: number) => {
+    const resPageBannerList = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&location=${location}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonPageBannerList = await resPageBannerList.json();
+    const arrPageBannerList = jsonPageBannerList.data === undefined ? [] : jsonPageBannerList.data;
+    const _arrPageBannerList: Array<string> = [];
+    for (let i = 0; i < arrPageBannerList.length; i++) {
+        const itemObject: AdminBannersItemFetchType = arrPageBannerList[i];
+        _arrPageBannerList.push(itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image);
+    }
+    return _arrPageBannerList;
 };
 
 // Home Page & Product Page
@@ -597,6 +633,7 @@ export const getMyNFTItemList = async (
             }
         }
         _myNFT.likes = itemObject.likes;
+        _myNFT.views = itemObject.views;
         _myNFT.status = itemObject.status;
         _myNFT.isLike =
             nTabId === 5
@@ -760,8 +797,10 @@ export const getBBCandiates = async (address: string, keyword: string, selectedT
     };
 };
 
+// edit profile
 export const uploadUserProfile = (
     _token: string,
+    _address: string,
     _did: string,
     _name: string,
     _description: string,
@@ -773,6 +812,7 @@ export const uploadUserProfile = (
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
         const reqBody = {
             token: _token,
+            address: _address,
             did: _did,
             name: _name,
             description: _description,
@@ -793,6 +833,242 @@ export const uploadUserProfile = (
                     resolve(data.token);
                 } else {
                     reject(data);
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+
+// admin NFT
+export const getAdminSearchParams = (
+    keyWord: string,
+    status: TypeSelectItem | undefined,
+    saleType: TypeSelectItem | undefined,
+) => {
+    let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+    if (status !== undefined) {
+        searchParams += status.value === 'online' ? '&status=online' : '&status=removed';
+    }
+    if (saleType !== undefined) {
+        searchParams += saleType.value === 'Buy now' ? '&saleType=buynow' : '&saleType=onauction';
+    }
+    return searchParams;
+};
+
+export const getAdminNFTItemList = async (fetchParams: string) => {
+    const resAdminNFTList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonAdminNFTList = await resAdminNFTList.json();
+    const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
+    const _arrAdminNFTList: Array<AdminNFTItemType> = [];
+    for (let i = 0; i < arrAdminNFTList.length; i++) {
+        const itemObject: TypeProductFetch = arrAdminNFTList[i];
+        const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
+        _AdminNFT.id = i + 1;
+        _AdminNFT.tokenId = itemObject.tokenId;
+        _AdminNFT.token_id = itemObject.tokenIdHex;
+        _AdminNFT.nft_title = itemObject.name;
+        _AdminNFT.nft_image = getImageFromAsset(itemObject.asset);
+        _AdminNFT.selling_price = itemObject.price / 1e18;
+        _AdminNFT.nft_creator = itemObject.royaltyOwner;
+        _AdminNFT.nft_owner = itemObject.holder;
+        _AdminNFT.sale_type = itemObject.endTime === '0' ? enumBadgeType.BuyNow : enumBadgeType.OnAuction;
+        _AdminNFT.likes = itemObject.likes;
+        _AdminNFT.views = itemObject.views;
+        _AdminNFT.status = itemObject.status === 'REMOVED' ? 'Removed' : 'Online'; // ------
+        const createdTime = getTime(itemObject.createTime);
+        _AdminNFT.created_date = createdTime.date + ' ' + createdTime.time;
+        if (itemObject.marketTime === undefined) _AdminNFT.listed_date = '';
+        else {
+            const listedTime = getTime(itemObject.marketTime.toString());
+            _AdminNFT.listed_date = listedTime.date + ' ' + listedTime.time;
+        }
+        _arrAdminNFTList.push(_AdminNFT);
+    }
+    return _arrAdminNFTList;
+};
+
+export const getAdminUserList = async (fetchParams: string, address: string) => {
+    const resAdminUserList = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?address=${address}&${fetchParams}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonAdminUserList = await resAdminUserList.json();
+    const arrAdminUserList = jsonAdminUserList.data === undefined ? [] : jsonAdminUserList.data;
+    const _arrAdminUserList: Array<AdminUsersItemType> = [];
+    for (let i = 0; i < arrAdminUserList.length; i++) {
+        const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
+        const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
+        _AdminUser.id = i + 1;
+        _AdminUser.address = reduceHexAddress(itemObject.address, 7);
+        _AdminUser.wholeAddress = itemObject.address;
+        _AdminUser.username = itemObject.name;
+        _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
+        _AdminUser.status = Math.abs(itemObject.role - 1);
+        _AdminUser.remarks = itemObject.remarks;
+        _arrAdminUserList.push(_AdminUser);
+    }
+    return _arrAdminUserList;
+};
+
+export const updateUserRole = async (_token: string, _address: string, _role: number, _remarks: string) => {
+    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateRole`;
+    const reqBody = {
+        token: _token,
+        address: _address,
+        userRole: _role,
+        remarks: _remarks,
+    };
+    fetch(reqUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqBody),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.code === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            return false;
+        });
+};
+
+export const getAdminBannerList = async (address: string) => {
+    const resAdminBannerList = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&pageNum=1&pageSize=${1000}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonAdminBannerList = await resAdminBannerList.json();
+    const arrAdminBannerList = jsonAdminBannerList.data === undefined ? [] : jsonAdminBannerList.data;
+    const _arrAdminBannerList: Array<AdminBannersItemType> = [];
+    for (let i = 0; i < arrAdminBannerList.length; i++) {
+        const itemObject: AdminBannersItemFetchType = arrAdminBannerList[i];
+        const _AdminBanner: AdminBannersItemType = { ...blankAdminBannerItem };
+        _AdminBanner.id = itemObject._id;
+        _AdminBanner.banner_id = i + 1;
+        _AdminBanner.image =
+            itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image;
+        _AdminBanner.url =
+            itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image;
+        _AdminBanner.sort = itemObject.sort;
+        _AdminBanner.location = itemObject.location === 1 ? 'home' : itemObject.location === 2 ? 'explore' : 'blindbox';
+        _AdminBanner.status = itemObject.status === 0 ? 'offline' : 'online';
+        const createdTime =
+            itemObject.created === '' || itemObject.created === undefined
+                ? { date: '', time: '' }
+                : getTime(itemObject.created);
+        _AdminBanner.created = createdTime.date + ' ' + createdTime.time;
+        _arrAdminBannerList.push(_AdminBanner);
+    }
+    return _arrAdminBannerList;
+};
+
+export const addAdminBanner = (
+    token: string,
+    address: string,
+    image: string,
+    location: number,
+    status: number,
+    sort: number,
+) =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
+        const reqBody = {
+            token: token,
+            owner: address,
+            image: image,
+            location: location,
+            status: status,
+            sort: sort,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    reject('error');
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+
+export const updateAdminBanner = (
+    token: string,
+    id: number,
+    image: string,
+    location: number,
+    status: number,
+    sort: number,
+) =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateBanner`;
+        const reqBody = {
+            token: token,
+            id: id,
+            image: image,
+            location: location,
+            status: status,
+            sort: sort,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    reject('error');
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+
+export const deleteAdminBanner = (token: string, id: number) =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/deleteBanner`;
+        const reqBody = {
+            token: token,
+            id: id,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    reject('error');
                 }
             })
             .catch((error) => {

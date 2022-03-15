@@ -58,3 +58,24 @@ export type TypeIpfsUploadInfo = {
     tokenUri: string;
     didUri: string;
 }
+
+export type TypeContractMethodPram = {
+    contractType: number;
+    method: string;
+    price: string;
+    tokenId: string;
+    tokenIds: string[];
+    tokenUri: string;
+    royaltyFee: number;
+    orderId: string;
+    orderIds: string[];
+    didUri: string;
+    _price: string;
+    _prices: string[];
+    quoteToken: string;
+    quoteTokens: string[];
+    isBlindBox: boolean;
+    endTime: string;
+    operator: string;
+    approved: boolean;
+};

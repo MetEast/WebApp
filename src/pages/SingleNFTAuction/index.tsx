@@ -42,7 +42,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
@@ -208,11 +207,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                                 <ProductBadge badgeType={enumBadgeType.OnAuction} />
-                                {/* - For the initial version, we don't support to display this badge because we dont' have such feature with
-                        "Reserve Price" on the contract; We can manage to support after having discussing with the sponsor team. */}
-                                {/* {productDetail.status !== 'HAS BIDS' && (
-                            <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-                        )} */}
                                 {productDetail.isExpired ? (
                                     <ProductBadge badgeType={enumBadgeType.SaleEnded} />
                                 ) : (
@@ -226,31 +220,59 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 detail_page={true}
                                 marginTop={3}
                             />
-                            {signInDlgState.walletAccounts.length !== 0 && (
+                            {productDetail.isExpired ? (
+                                bidsList.length === 0 ? (
+                                    <></>
+                                ) : (
+                                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                        <SecondaryButton
+                                            sx={{ width: '100%', height: 40 }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        acceptBidDlgOpened: true,
+                                                        acceptBidDlgStep: 0,
+                                                        acceptBidName: bidsList[0].user,
+                                                        acceptBidOrderId: bidsList[0].orderId || '',
+                                                        acceptBidPrice: bidsList[0].price,
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Settle Auction
+                                        </SecondaryButton>
+                                    </Stack>
+                                )
+                            ) : (
                                 <>
-                                    {productDetail.holder !== signInDlgState.walletAccounts[0] &&
-                                        !productDetail.isExpired && (
-                                            <PrimaryButton
-                                                sx={{ marginTop: 3, width: '100%' }}
-                                                onClick={() => {
-                                                    if (signInDlgState.isLoggedIn) {
-                                                        setDialogState({
-                                                            ...dialogState,
-                                                            placeBidDlgOpened: true,
-                                                            placeBidDlgStep: 0,
-                                                            placeBidName: productDetail.name,
-                                                            placeBidOrderId: productDetail.orderId || '',
-                                                            placeBidMinLimit: productDetail.price_ela,
-                                                        });
-                                                    } else {
-                                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                                    }
-                                                }}
-                                            >
-                                                Place Bid
-                                            </PrimaryButton>
-                                        )}
-                                    {productDetail.holder === signInDlgState.walletAccounts[0] &&
+                                    {(signInDlgState.walletAccounts.length === 0 ||
+                                        (signInDlgState.walletAccounts.length !== 0 &&
+                                            productDetail.holder !== signInDlgState.walletAccounts[0])) && (
+                                        <PrimaryButton
+                                            sx={{ marginTop: 3, width: '100%' }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        placeBidDlgOpened: true,
+                                                        placeBidDlgStep: 0,
+                                                        placeBidName: productDetail.name,
+                                                        placeBidOrderId: productDetail.orderId || '',
+                                                        placeBidMinLimit: productDetail.price_ela,
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Place Bid
+                                        </PrimaryButton>
+                                    )}
+                                    {signInDlgState.walletAccounts.length !== 0 &&
+                                        productDetail.holder === signInDlgState.walletAccounts[0] &&
                                         bidsList.length === 0 && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <PinkButton
@@ -296,29 +318,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                 </SecondaryButton>
                                             </Stack>
                                         )}
-                                    {productDetail.isExpired && bidsList.length !== 0 && (
-                                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                            <SecondaryButton
-                                                sx={{ width: '100%', height: 40 }}
-                                                onClick={() => {
-                                                    if (signInDlgState.isLoggedIn) {
-                                                        setDialogState({
-                                                            ...dialogState,
-                                                            acceptBidDlgOpened: true,
-                                                            acceptBidDlgStep: 0,
-                                                            acceptBidName: bidsList[0].user,
-                                                            acceptBidOrderId: bidsList[0].orderId || '',
-                                                            acceptBidPrice: bidsList[0].price,
-                                                        });
-                                                    } else {
-                                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                                    }
-                                                }}
-                                            >
-                                                Settle Auction
-                                            </SecondaryButton>
-                                        </Stack>
-                                    )}
                                 </>
                             )}
                         </>

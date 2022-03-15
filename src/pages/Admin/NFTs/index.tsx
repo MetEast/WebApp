@@ -1,9 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Table from 'src/components/Admin/Table';
 import { AdminNFTItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
 import ELAPrice from 'src/components/ELAPrice';
 import { Typography, Stack } from '@mui/material';
-import { enumBadgeType } from 'src/types/product-types';
 import ProductBadge from 'src/components/ProductBadge';
 import { PrimaryButton, PinkButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
@@ -13,12 +12,31 @@ import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
+import { getAdminNFTItemList, getAdminSearchParams } from 'src/services/fetch';
+import { adminNftSaleTypeOptions, adminNftStateOptions } from 'src/constants/select-constants';
+import { blankAdminNFTItem } from 'src/constants/init-constants';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyToClipboardButton } from './styles';
+import { useSnackbar } from 'notistack';
+import { reduceHexAddress } from 'src/services/common';
+
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
         {
             id: 'token_id',
             label: 'TOKEN ID',
+            cell: (props) => (
+                <Typography fontSize={16} >
+                    {reduceHexAddress(props.value, 4)}
+                    <CopyToClipboard text={props.value} onCopy={showSnackBar}>
+                        <CopyToClipboardButton>
+                            <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                        </CopyToClipboardButton>
+                    </CopyToClipboard>
+                </Typography>
+            ),
+            width: 130,
         },
         {
             id: 'nft_title',
@@ -33,10 +51,32 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         {
             id: 'nft_owner',
             label: 'NFT owner',
+            cell: (props) => (
+                <Typography fontSize={16} >
+                    {reduceHexAddress(props.value, 4)}
+                    <CopyToClipboard text={props.value} onCopy={showSnackBar}>
+                        <CopyToClipboardButton>
+                            <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                        </CopyToClipboardButton>
+                    </CopyToClipboard>
+                </Typography>
+            ),
+            width: 130,
         },
         {
             id: 'nft_creator',
             label: 'NFT CREATOR',
+            cell: (props) => (
+                <Typography fontSize={16} >
+                    {reduceHexAddress(props.value, 4)}
+                    <CopyToClipboard text={props.value} onCopy={showSnackBar}>
+                        <CopyToClipboardButton>
+                            <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                        </CopyToClipboardButton>
+                    </CopyToClipboard>
+                </Typography>
+            ),
+            width: 130,
         },
         {
             id: 'created_date',
@@ -48,45 +88,49 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: 'LISTED DATE',
             width: 160,
         },
-        {
-            id: 'likes',
-            label: '# Likes',
-            width: 100,
-        },
-        {
-            id: 'views',
-            label: '# Views',
-            width: 100,
-        },
+        // {
+        //     id: 'likes',
+        //     label: '# Likes',
+        //     width: 100,
+        // },
+        // {
+        //     id: 'views',
+        //     label: '# Views',
+        //     width: 100,
+        // },
         {
             id: 'sale_type',
             label: 'SALE TYPE',
             cell: (props) => <ProductBadge badgeType={props.value} />,
         },
-        {
-            id: 'status',
-            label: 'STATUS',
-            cell: (props) => (
-                <Typography
-                    display="inline-block"
-                    fontSize={14}
-                    fontWeight={500}
-                    paddingX={1}
-                    paddingY={0.5}
-                    borderRadius={2}
-                    color={props.value === 'Online' ? '#1EA557' : '#EB5757'}
-                    sx={{ background: props.value === 'Online' ? '#C9F5DC' : '#FDEEEE' }}
-                >
-                    {props.value}
-                </Typography>
-            ),
-        },
+        // {
+        //     id: 'status',
+        //     label: 'STATUS',
+        //     cell: (props) => (
+        //         <Typography
+        //             display="inline-block"
+        //             fontSize={14}
+        //             fontWeight={500}
+        //             paddingX={1}
+        //             paddingY={0.5}
+        //             borderRadius={2}
+        //             color={props.value === 'Online' ? '#1EA557' : '#EB5757'}
+        //             sx={{ background: props.value === 'Online' ? '#C9F5DC' : '#FDEEEE' }}
+        //         >
+        //             {props.value}
+        //         </Typography>
+        //     ),
+        // },
         {
             id: 'edits',
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PinkButton size="small" sx={{ paddingX: 3 }} onClick={onRemove}>
+                    <PinkButton
+                        size="small"
+                        sx={{ paddingX: 3 }}
+                        onClick={(event: React.MouseEvent) => onRemove(event, props.data)}
+                    >
                         <Icon
                             icon="ph:trash"
                             fontSize={20}
@@ -95,82 +139,74 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         />
                         {`Remove`}
                     </PinkButton>
-                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                    {/* <PrimaryButton size="small" sx={{ paddingX: 3 }}>
                         <Icon icon="ph:eye" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
                         {`Details`}
-                    </PrimaryButton>
+                    </PrimaryButton> */}
                 </Stack>
             ),
             width: 280,
         },
     ];
 
-    const data: AdminNFTItemType[] = useMemo(
-        () =>
-            [...Array(800).keys()].map(
-                (item) =>
-                    ({
-                        id: item,
-                        token_id: '0x43d…5e4',
-                        nft_title: 'Testing',
-                        selling_price: 199,
-                        nft_owner: '0xec3dxxx56',
-                        nft_creator: '0x93cdxx45',
-                        created_date: '2022-06-18  08:50:00',
-                        listed_date: '2022-06-18  08:50:00',
-                        likes: 377,
-                        views: 377,
-                        sale_type: item % 2 === 0 ? enumBadgeType.BuyNow : enumBadgeType.OnAuction,
-                        status: item % 2 === 0 ? 'Online' : 'Removed',
-                    } as AdminNFTItemType),
-            ),
-        [],
-    );
-
-    const nftStateOptions: Array<TypeSelectItem> = [
-        {
-            label: 'online',
-            value: 'online',
-        },
-        {
-            label: 'removed',
-            value: 'removed',
-        },
-    ];
-
-    const saleTypeOptions: Array<TypeSelectItem> = [
-        {
-            label: 'Buy now',
-            value: 'Buy now',
-        },
-        {
-            label: 'On auction',
-            value: 'On auction',
-        },
-    ];
-
-    const [tabledata, setTabledata] = useState(data);
-
+    const data: AdminNFTItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminNFTItem), []);
+    const { enqueueSnackbar } = useSnackbar();
+    const [tabledata, setTableData] = useState<Array<AdminNFTItemType>>(data);
+    const [inputString, setInputString] = useState<string>('');
+    const [keyWord, setKeyWord] = useState<string>('');
     const [nftState, setNftState] = useState<TypeSelectItem>();
-    const [nftStateSelectOpen, setNftStateSelectOpen] = useState(false);
-
+    const [nftStateSelectOpen, setNftStateSelectOpen] = useState<boolean>(false);
     const [saleType, setSaleType] = useState<TypeSelectItem>();
-    const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState(false);
+    const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState<boolean>(false);
+    const [id2Remove, setId2Remove] = useState<number>(0);
+    const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            setIsLoading(true);
+            const _adminNFTList = await getAdminNFTItemList(getAdminSearchParams(keyWord, nftState, saleType));
+            if (!unmounted) {
+                setTableData(_adminNFTList);
+                setIsLoading(false);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [saleType, nftState, keyWord]);
 
     const handleNFTStateChange = (value: string) => {
-        const item = nftStateOptions.find((option) => option.value === value);
+        const item = adminNftStateOptions.find((option) => option.value === value);
         setNftState(item);
     };
 
     const handleSaleTypeChange = (value: string) => {
-        const item = saleTypeOptions.find((option) => option.value === value);
+        const item = adminNftSaleTypeOptions.find((option) => option.value === value);
         setSaleType(item);
     };
 
-    const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
-    const onRemove = (event: React.MouseEvent) => {
+    const onRemove = (event: React.MouseEvent, data: AdminNFTItemType) => {
         event.stopPropagation();
+        setId2Remove(tabledata.findIndex((value: AdminNFTItemType) => value.tokenId === data.tokenId));
         setShowRemoveNFTDlg(true);
+    };
+
+    const updateNFTList = (editedItem: AdminNFTItemType) => {
+        setTableData((prevState: AdminNFTItemType[]) => {
+            const nftList = [...prevState];
+            nftList[id2Remove] = editedItem;
+            return nftList;
+        });
+    };
+
+    const showSnackBar = () => {
+        enqueueSnackbar('Copied to Clipboard!', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+        });
     };
 
     return (
@@ -180,10 +216,12 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     <Stack direction="row" alignItems="flex-end" spacing={1}>
                         <CustomTextField
                             title="Search"
+                            inputValue={inputString}
                             placeholder="TokenID, NFT title, or Address"
                             sx={{ width: 260 }}
+                            changeHandler={(value: string) => setInputString(value)}
                         />
-                        <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                        <PrimaryButton size="small" sx={{ paddingX: 3 }} onClick={() => setKeyWord(inputString)}>
                             <Icon
                                 icon="ph:magnifying-glass"
                                 fontSize={20}
@@ -206,7 +244,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                                     </SelectBtn>
                                 }
                                 selectedItem={nftState}
-                                options={nftStateOptions}
+                                options={adminNftStateOptions}
                                 isOpen={nftStateSelectOpen ? 1 : 0}
                                 handleClick={handleNFTStateChange}
                                 setIsOpen={setNftStateSelectOpen}
@@ -225,7 +263,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                                     </SelectBtn>
                                 }
                                 selectedItem={saleType}
-                                options={saleTypeOptions}
+                                options={adminNftSaleTypeOptions}
                                 isOpen={saleTypeSelectOpen ? 1 : 0}
                                 handleClick={handleSaleTypeChange}
                                 setIsOpen={setSaleTypeSelectOpen}
@@ -234,7 +272,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         </Stack>
                     </Stack>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
             <ModalDialog
                 open={showRemoveNFTDlg}
@@ -243,6 +281,8 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                 }}
             >
                 <RemoveNFT
+                    token2Remove={tabledata[id2Remove]}
+                    handleTokenUpdate={updateNFTList}
                     onClose={() => {
                         setShowRemoveNFTDlg(false);
                     }}

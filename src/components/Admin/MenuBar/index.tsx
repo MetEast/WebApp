@@ -11,12 +11,12 @@ interface IMenuItem {
     submenu?: IMenuItem[];
 }
 
-const MenuItem = (item: IMenuItem, depth: number): JSX.Element => {
+const MenuItem = (item: IMenuItem, index: number, depth: number): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
 
     return (
-        <Stack spacing={0.5}>
+        <Stack spacing={0.5} key={index}>
             <Stack
                 direction="row"
                 alignItems="center"
@@ -43,7 +43,7 @@ const MenuItem = (item: IMenuItem, depth: number): JSX.Element => {
                     {item.title}
                 </Typography>
             </Stack>
-            {item.submenu?.map((item) => MenuItem(item, depth + 1))}
+            {item.submenu?.map((item, index) => MenuItem(item, index, depth + 1))}
         </Stack>
     );
 };
@@ -100,7 +100,7 @@ const MenuBar: React.FC = (): JSX.Element => {
                 <Icon icon="ph:caret-left-bold" color="#1ea557" style={{ marginBottom: 2, marginRight: 4 }} />
                 {`Back to public`}
             </BackToPublicBtn>
-            <Stack spacing={1}>{menu.map((item) => MenuItem(item, 0))}</Stack>
+            <Stack spacing={1}>{menu.map((item, index) => MenuItem(item, index, 0))}</Stack>
         </Stack>
     );
 };

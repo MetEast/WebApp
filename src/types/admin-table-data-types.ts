@@ -10,8 +10,10 @@ export type AdminTableColumn = {
 
 export type AdminNFTItemType = {
     id: number; // required
+    tokenId: string;
     token_id: string;
     nft_title: string;
+    nft_image: string;
     selling_price: number;
     nft_owner: string;
     nft_creator: string;
@@ -26,6 +28,7 @@ export type AdminNFTItemType = {
 export type AdminUsersItemType = {
     id: number; // required
     address: string;
+    wholeAddress: string;
     username: string;
     avatar: string;
     status: number;
@@ -98,3 +101,22 @@ export type AdminTableItemType =
     | AdminOrdersBlindBoxItemType
     | AdminBidsItemType
     | AdminBannersItemType;
+
+export type AdminUsersItemFetchType = {
+    id: number; // required
+    address: string;
+    name: string;
+    avatar: string;
+    role: number;
+    remarks: string;
+};
+
+export type AdminBannersItemFetchType = {
+    id: number; // required
+    _id: number;
+    image: string;
+    sort: number;
+    location: number;
+    status: number;
+    created: string;
+};

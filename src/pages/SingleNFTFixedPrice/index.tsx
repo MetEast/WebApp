@@ -35,7 +35,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-
+    const [showBuyNowBtn, setShowBuyNowBtn] = useState<boolean>(false);
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
@@ -67,6 +67,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         };
     }, [params.id]);
     // -------------- Fetch Data -------------- //
+    useEffect(() => {
+        if (signInDlgState.walletAccounts.length === 0) {
+            setShowBuyNowBtn(true);
+        }
+        else {
+            if (signInDlgState.walletAccounts[0] === productDetail.holder) setShowBuyNowBtn(false);
+            else setShowBuyNowBtn(true);
+        }
+    }, [signInDlgState.walletAccounts, productDetail]);
     // -------------- Likes & Views -------------- //
     const updateProductLikes = (type: string) => {
         setProductDetail((prevState: TypeProduct) => {
@@ -194,8 +203,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                 detail_page={true}
                                 marginTop={3}
                             />
-                            {signInDlgState.walletAccounts !== [] &&
-                            productDetail.holder !== signInDlgState.walletAccounts[0] ? (
+                            {showBuyNowBtn ? (
                                 <PrimaryButton
                                     sx={{ marginTop: 3, width: '100%' }}
                                     onClick={() => {

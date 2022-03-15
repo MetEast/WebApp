@@ -152,3 +152,25 @@ export const viewAllDlgSortOptions: Array<TypeSelectItem> = [
         value: enmSortOptionValues.oldest,
     },
 ];
+
+export const adminNftStateOptions: Array<TypeSelectItem> = [
+    {
+        label: 'online',
+        value: 'online',
+    },
+    {
+        label: 'removed',
+        value: 'removed',
+    },
+];
+
+export const adminNftSaleTypeOptions: Array<TypeSelectItem> = [
+    {
+        label: 'Buy now',
+        value: 'Buy now',
+    },
+    {
+        label: 'On auction',
+        value: 'On auction',
+    },
+];

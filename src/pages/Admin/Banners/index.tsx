@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { AdminTableColumn, AdminBannersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
@@ -8,12 +8,11 @@ import ModalDialog from 'src/components/ModalDialog';
 import CreateBanner from 'src/components/Admin/Dialogs/CreateBanner';
 import EditBanner from 'src/components/Admin/Dialogs/EditBanner';
 import DeleteBanner from 'src/components/Admin/Dialogs/DeleteBanner';
+import { getAdminBannerList } from 'src/services/fetch';
+import { useSignInContext } from 'src/context/SignInContext';
+import { blankAdminBannerItem } from 'src/constants/init-constants';
 
 const AdminBanners: React.FC = (): JSX.Element => {
-    const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
-    const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
-    const [showDeleteBannerDlg, setShowDeleteBannerDlg] = useState<boolean>(false);
-
     const columns: AdminTableColumn[] = [
         {
             id: 'banner_id',
@@ -46,24 +45,24 @@ const AdminBanners: React.FC = (): JSX.Element => {
             id: 'location',
             label: 'Location',
         },
-        {
-            id: 'status',
-            label: 'Status',
-            cell: (props) => (
-                <Typography
-                    display="inline-block"
-                    fontSize={14}
-                    fontWeight={500}
-                    paddingX={1}
-                    paddingY={0.5}
-                    borderRadius={2}
-                    color="#1EA557"
-                    sx={{ background: '#C9F5DC' }}
-                >
-                    {props.value}
-                </Typography>
-            ),
-        },
+        // {
+        //     id: 'status',
+        //     label: 'Status',
+        //     cell: (props) => (
+        //         <Typography
+        //             display="inline-block"
+        //             fontSize={14}
+        //             fontWeight={500}
+        //             paddingX={1}
+        //             paddingY={0.5}
+        //             borderRadius={2}
+        //             color="#1EA557"
+        //             sx={{ background: '#C9F5DC' }}
+        //         >
+        //             {props.value}
+        //         </Typography>
+        //     ),
+        // },
         {
             id: 'created',
             label: 'Created',
@@ -74,10 +73,10 @@ const AdminBanners: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }} onClick={onDeleteBanner}>
+                    <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }} onClick={(event: React.MouseEvent) => onDeleteBanner(event, props.data)}>
                         <Icon icon="ph:trash" fontSize={20} color="#EB5757" />
                     </PrimaryButton>
-                    <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }} onClick={onEditBanner}>
+                    <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }} onClick={(event: React.MouseEvent) => onEditBanner(event, props.data)}>
                         <Icon icon="ph:pencil-simple" fontSize={20} color="#1890FF" />
                     </PrimaryButton>
                 </Stack>
@@ -85,33 +84,42 @@ const AdminBanners: React.FC = (): JSX.Element => {
         },
     ];
 
-    const data: AdminBannersItemType[] = useMemo(
-        () =>
-            [...Array(111).keys()].map(
-                (item) =>
-                    ({
-                        id: item,
-                        banner_id: item + 1,
-                        image: '/assets/images/explore/singlenft-template4.png',
-                        url: 'https://meteast.io/banner',
-                        sort: 10,
-                        location: 'Blind Box',
-                        status: 'online',
-                        created: '2022-06-18  08:50:00',
-                    } as AdminBannersItemType),
-            ),
-        [],
-    );
+    const data: AdminBannersItemType[] = useMemo(() => [...Array(111).keys()].map((item) => blankAdminBannerItem), []);
 
-    const [tabledata] = useState(data);
+    const [signInDlgState] = useSignInContext();
+    const [tabledata, setTableData] = useState(data);
+    const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
+    const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
+    const [showDeleteBannerDlg, setShowDeleteBannerDlg] = useState<boolean>(false);
+    const [id2Edit, setId2Edit] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [reload, setReload] = useState<boolean>(false);
 
-    const onEditBanner = (event: React.MouseEvent) => {
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            setIsLoading(true);
+            const _adminBannerList = await getAdminBannerList(signInDlgState.walletAccounts[0]);
+            if (!unmounted) {
+                setTableData(_adminBannerList);
+                setIsLoading(false);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [reload, signInDlgState.walletAccounts]);
+
+    const onEditBanner = (event: React.MouseEvent, data: AdminBannersItemType) => {
         event.stopPropagation();
+        setId2Edit(tabledata.findIndex((value: AdminBannersItemType) => value.id === data.id));
         setShowEditBannerDlg(true);
     };
 
-    const onDeleteBanner = (event: React.MouseEvent) => {
+    const onDeleteBanner = (event: React.MouseEvent, data: AdminBannersItemType) => {
         event.stopPropagation();
+        setId2Edit(tabledata.findIndex((value: AdminBannersItemType) => value.id === data.id));
         setShowDeleteBannerDlg(true);
     };
 
@@ -130,7 +138,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                         {`New Banner`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
             <ModalDialog
                 open={showCreateBannerDlg}
@@ -142,6 +150,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                     onClose={() => {
                         setShowCreateBannerDlg(false);
                     }}
+                    handleBannerUpdates={() => setReload(!reload)}
                 />
             </ModalDialog>
             <ModalDialog
@@ -151,9 +160,11 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <EditBanner
+                    banner2Edit={tabledata[id2Edit]}
                     onClose={() => {
                         setShowEditBannerDlg(false);
                     }}
+                    handleBannerUpdates={() => setReload(!reload)}
                 />
             </ModalDialog>
             <ModalDialog
@@ -163,9 +174,11 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <DeleteBanner
+                    bannerId={tabledata[id2Edit].id}
                     onClose={() => {
                         setShowDeleteBannerDlg(false);
                     }}
+                    handleBannerUpdates={() => setReload(!reload)}
                 />
             </ModalDialog>
         </>

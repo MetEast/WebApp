@@ -484,7 +484,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             });
         }
 
-        if (!(linkType === '2' && !library)) {
+        if (linkType === '1' || (library && linkType === '2')) {
             getChainGasPrice(
                 new Web3(linkType === '1' ? (walletConnectProvider as any) : (library?.provider as any)),
             ).then((gasPriceUnit: string) => {
@@ -517,13 +517,21 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         dialogState.cancelBidDlgStep,
         dialogState.createBlindBoxDlgStep,
         dialogState.buyBlindBoxDlgStep,
+        dialogState.createNFTDlgOpened,
+        dialogState.buyNowDlgOpened,
+        dialogState.changePriceDlgOpened,
+        dialogState.cancelSaleDlgOpened,
+        dialogState.acceptBidDlgOpened,
+        dialogState.placeBidDlgOpened,
+        dialogState.updateBidDlgOpened,
+        dialogState.cancelBidDlgOpened,
+        dialogState.createBlindBoxDlgOpened,
+        dialogState.buyBlindBoxDlgOpened,
     ]);
 
     if (linkType === '1') initConnectivitySDK();
 
-    // useEffect(() => {
     console.log('--------accounts: ', signInDlgState);
-    // }, [signInDlgState]);
 
     return (
         <>

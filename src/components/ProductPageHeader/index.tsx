@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { Stack, Box, Menu, MenuItem, Tooltip } from '@mui/material';
+import { Stack, Box, Menu, MenuItem, Tooltip, Link } from '@mui/material';
 import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { IconBtn } from './styles';
-import { useNavigate } from 'react-router-dom';
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FacebookIcon, TwitterIcon } from 'react-share';
+import { getShorternUrl } from 'src/services/fetch';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 // import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
@@ -21,10 +22,11 @@ const ReportBtnTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const ProductPageHeader: React.FC = (): JSX.Element => {
+    const param = useParams();
     const navigate = useNavigate();
-    const [showReportBtn, setShowReportBtn] = React.useState<boolean>(false);
-
-    const [isOpenSharePopup, setOpenSharePopup] = React.useState(null);
+    const [showReportBtn, setShowReportBtn] = useState<boolean>(false);
+    const [isOpenSharePopup, setOpenSharePopup] = useState(null);
+    const [shortUrl, setShortUrl] = useState<string>('');
     const openSharePopupMenu = (event: any) => {
         setOpenSharePopup(event.currentTarget);
     };
@@ -32,6 +34,20 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
         setOpenSharePopup(null);
     };
 
+    useEffect(() => {
+        let unmounted = false;
+        const getShortUrl = async () => {
+            const _shortUrl = await getShorternUrl(window.location.href);
+            if (!unmounted) {
+                setShortUrl(_shortUrl);
+            }
+        };
+        getShortUrl().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [param.id]);
+    
     return (
         <Stack direction="row" justifyContent="space-between">
             <SecondaryButton
@@ -69,38 +85,38 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                     <MenuItem onClick={handleCloseSharePopup}>
-                        <FacebookShareButton
+                        {/* <FacebookShareButton
                             url={window.location.href}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
                             <FacebookIcon size={32} round />
                             &nbsp;&nbsp;Share on Facebook
-                        </FacebookShareButton>
-                        {/* <Link
-                            href={`https://s.meteast.io/eluGI?u=${window.location.href}`}
+                        </FacebookShareButton> */}
+                        <Link
+                            href={`https://www.facebook.com/sharer/sharer.php?u=${shortUrl}`}
                             target="_blank"
                             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black' }}
                         >
                             <FacebookIcon size={32} round />
                             &nbsp;&nbsp;Share on Facebook
-                        </Link> */}
+                        </Link>
                     </MenuItem>
                     <MenuItem onClick={handleCloseSharePopup}>
-                        <TwitterShareButton
+                        {/* <TwitterShareButton
                             url={window.location.href}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
                             <TwitterIcon size={32} round />
                             &nbsp;&nbsp;Share on Twitter
-                        </TwitterShareButton>
-                        {/* <Link
-                            href={`https://s.meteast.io/gguQ3?url=${window.location.href}`}
+                        </TwitterShareButton> */}
+                        <Link
+                            href={`https://twitter.com/share?url=${shortUrl}`}
                             target="_blank"
                             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black' }}
                         >
                             <TwitterIcon size={32} round />
                             &nbsp;&nbsp;Share on Twitter
-                        </Link> */}
+                        </Link>
                     </MenuItem>
                 </Menu>
                 <Box

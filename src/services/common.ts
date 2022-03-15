@@ -9,6 +9,12 @@ export const getImageFromAsset = (id: string) => {
     return `${process.env.REACT_APP_IPFS_NODE_URL}/${uri}`;
 };
 
+export const getAssetFromImage = (url: string) => {
+    if (url === undefined || url === null || url === '') return '';
+    const asset = url.replace(`${process.env.REACT_APP_IPFS_NODE_URL}/`, '');
+    return `meteast:image:${asset}`;
+};
+
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);

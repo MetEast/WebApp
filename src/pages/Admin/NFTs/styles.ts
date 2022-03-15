@@ -17,3 +17,12 @@ export const SelectBtn = styled(Button)<{ isOpen: number }>`
         transition: transform 200ms linear;
     }
 `;
+
+export const CopyToClipboardButton = styled(Button)`
+    background: #FFF;
+    padding: 0;
+    margin: 0 0 0 5px;
+    min-width: 0;
+    &:active {
+    }
+`;

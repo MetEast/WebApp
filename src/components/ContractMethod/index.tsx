@@ -1,48 +1,131 @@
 import Web3 from 'web3';
-import { ethers } from 'ethers';
-import { AbiItem } from 'web3-utils'
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS  } from 'src/contracts/MET';
-// import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
+import { AbiItem } from 'web3-utils';
+import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
+import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
+import { TypeContractMethodPram } from 'src/types/mint-types';
 
-export const getABI = (contractAddress: string) => {
-    fetch(`${process.env.ETHERSCAN_API_URL}?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHERSACN_API_KEY_TOKEN}`).then(response => {
-        response.json().then(res => {
-            return res.result;            
-        });
-    }).catch(err => {
-        console.log(err);
+export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractMethodPram) =>
+    new Promise((resolve: (value: string) => void, reject: (error: string) => void) => {
+        const contractAbi = param.contractType === 1 ? METEAST_CONTRACT_ABI : METEAST_MARKET_CONTRACT_ABI;
+        const contractAddress = param.contractType === 1 ? METEAST_CONTRACT_ADDRESS : METEAST_MARKET_CONTRACT_ADDRESS;
+        const smartContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        let accounts: string[] = [];
+        let gasPrice: string = '';
+        let txHash: string = '';
+        const handleTxEvent = (hash: string) => {
+            console.log('transactionHash', hash);
+            txHash = hash;
+        };
+        const handleReceiptEvent = (receipt: any) => {
+            console.log('receipt', receipt);
+            resolve(txHash);
+        };
+        const handleErrorEvent = (error: any) => {
+            console.error('error', error);
+            reject(error);
+        };
+
+        walletConnectWeb3.eth
+            .getAccounts()
+            .then((_accounts: string[]) => {
+                accounts = _accounts;
+                return walletConnectWeb3.eth.getGasPrice();
+            })
+            .then((_gasPrice: string) => {
+                gasPrice = _gasPrice;
+                const transactionParams = {
+                    from: accounts[0],
+                    gasPrice: gasPrice,
+                    gas: 5000000,
+                    value: param.price,
+                };
+
+                if (param.method === 'setApprovalForAll') {
+                    smartContract.methods
+                        .isApprovedForAll(accounts[0], param.operator)
+                        .call()
+                        .then((success: boolean) => {
+                            if (success) resolve('success');
+                            else {
+                                smartContract.methods
+                                    .setApprovalForAll(param.operator, param.approved)
+                                    .send(transactionParams)
+                                    .once('transactionHash', handleTxEvent)
+                                    .once('receipt', handleReceiptEvent)
+                                    .on('error', handleErrorEvent);
+                            }
+                        });
+                } else {
+                    let contractMethod = null;
+                    switch (param.method) {
+                        case 'mint':
+                            contractMethod = smartContract.methods.mint(
+                                param.tokenId,
+                                param.tokenUri,
+                                param.royaltyFee,
+                            );
+                            break;
+                        case 'burn':
+                            contractMethod = smartContract.methods.burn(param.tokenId);
+                            break;
+                        case 'createOrderForSale':
+                            contractMethod = smartContract.methods.createOrderForSale(
+                                param.tokenId,
+                                param.quoteToken,
+                                param._price,
+                                param.didUri,
+                                param.isBlindBox,
+                            );
+                            break;
+                        case 'createOrderForSaleBatch':
+                            contractMethod = smartContract.methods.createOrderForSaleBatch(
+                                param.tokenIds,
+                                param.quoteTokens,
+                                param._prices,
+                                param.didUri,
+                                param.isBlindBox,
+                            );
+                            break;
+                        case 'createOrderForAuction':
+                            contractMethod = smartContract.methods.createOrderForAuction(
+                                param.tokenId,
+                                param.quoteToken,
+                                param._price,
+                                param.endTime,
+                                param.didUri,
+                            );
+                            break;
+                        case 'bidForOrder':
+                            contractMethod = smartContract.methods.bidForOrder(
+                                param.orderId,
+                                param._price,
+                                param.didUri,
+                            );
+                            break;
+                        case 'changeOrderPrice':
+                            contractMethod = smartContract.methods.changeOrderPrice(param.orderId, param._price);
+                            break;
+                        case 'cancelOrder':
+                            contractMethod = smartContract.methods.cancelOrder(param.orderId);
+                            break;
+                        case 'buyOrder':
+                            contractMethod = smartContract.methods.buyOrder(param.orderId, param.didUri);
+                            break;
+                        case 'buyOrderBatch':
+                            contractMethod = smartContract.methods.buyOrderBatch(param.orderIds, param.didUri);
+                            break;
+                        case 'settleAuctionOrder':
+                            contractMethod = smartContract.methods.settleAuctionOrder(param.orderId);
+                            break;
+                        default:
+                            resolve('no action');
+                            break;
+                    }
+                    contractMethod
+                        .send(transactionParams)
+                        .once('transactionHash', handleTxEvent)
+                        .once('receipt', handleReceiptEvent)
+                        .on('error', handleErrorEvent);
+                }
+            });
     });
-};
-
-
-export const mintEther = async (tokenId: number, uri: string, royaltyFee: number) => {
-    try {
-        const { ethereum } = window;
-  
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum);
-          const signer = provider.getSigner();
-          const meteastContract = new ethers.Contract(METEAST_CONTRACT_ADDRESS, METEAST_CONTRACT_ABI, signer);
-  
-          console.log("Initialize payment");
-          let nftTxn = await meteastContract.mint(tokenId, uri, royaltyFee);
-  
-          console.log("Mining... please wait");
-          await nftTxn.wait();
-  
-          console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
-  
-        } else {
-          console.log("Ethereum object does not exist");
-        }
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-export const mint = async (tokenId: number, uri: string, royaltyFee: number) => {
-    const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
-    const meteast_contract = new web3.eth.Contract(METEAST_CONTRACT_ABI as AbiItem[], METEAST_CONTRACT_ADDRESS);
-    return await meteast_contract.methods.mint(tokenId, uri, royaltyFee).call();
-}
-
