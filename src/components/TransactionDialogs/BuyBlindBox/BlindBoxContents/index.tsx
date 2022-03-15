@@ -1,14 +1,25 @@
-import React, {useState} from 'react';
-import { Stack, Typography, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
+import { EffectCards } from 'swiper';
 
 export interface ComponentProps {}
 
+const testImages = [
+    '/assets/images/blindbox/blindbox-nft-template1.png',
+    '/assets/images/blindbox/blindbox-nft-template2.png',
+    '/assets/images/blindbox/blindbox-nft-template3.png',
+    '/assets/images/blindbox/blindbox-nft-template4.png',
+    '/assets/images/avatar-template.png',
+];
+
 const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState] = useDialogContext();
-    const [imgIndex, setImgIndex] = useState<number>(1);
+    const [imgIndex, setImgIndex] = useState<number>(0);
+    const [swiper, setSwiper] = useState<{ slidePrev: () => void; slideNext: () => void }>();
 
     return (
         <Stack spacing={3} width={320}>
@@ -16,10 +27,40 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Blind Box Contents</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center">
-                <PageNumberTypo>{imgIndex} of {dialogState.buyBlindAmount}</PageNumberTypo>
-                <Box borderRadius={4} overflow="hidden">
-                    <img src={dialogState.buyBlindImages[imgIndex - 1]} alt="" />
-                </Box>
+                <PageNumberTypo>
+                    {imgIndex + 1} of {dialogState.buyBlindAmount}
+                    {/* {imgIndex + 1} of {testImages.length} */}
+                </PageNumberTypo>
+                <Swiper
+                    effect={'cards'}
+                    grabCursor={true}
+                    modules={[EffectCards]}
+                    onInit={(ev) => {
+                        setSwiper(ev);
+                    }}
+                    onSlideChange={({ activeIndex }) => {
+                        setImgIndex(activeIndex);
+                    }}
+                    className="mySwiper"
+                    style={{ width: 240, height: 240 }}
+                >
+                    {/* {testImages.map((item, index) => (
+                        <SwiperSlide style={{ borderRadius: 16 }}>
+                            <img src={item} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
+                        </SwiperSlide>
+                    ))} */}
+                    {dialogState.buyBlindImages.map((item, index) => (
+                        <SwiperSlide style={{ borderRadius: 16 }}>
+                            <img
+                                src={dialogState.buyBlindImages[index]}
+                                width="100%"
+                                height="100%"
+                                style={{ objectFit: 'cover' }}
+                                alt=""
+                            />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
                 <Typography fontSize={18} fontWeight={700} marginTop={2}>
                     {dialogState.buyBlindName}
                 </Typography>
@@ -28,20 +69,10 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                 </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton
-                    fullWidth
-                    onClick={() => {
-                        if(imgIndex > 1) setImgIndex(imgIndex - 1);
-                    }}
-                >
+                <SecondaryButton fullWidth onClick={() => swiper?.slidePrev()}>
                     Previous
                 </SecondaryButton>
-                <PrimaryButton
-                    fullWidth
-                    onClick={() => {
-                        if(imgIndex < dialogState.buyBlindAmount) setImgIndex(imgIndex + 1);
-                    }}
-                >
+                <PrimaryButton fullWidth onClick={() => swiper?.slideNext()}>
                     Next
                 </PrimaryButton>
             </Stack>

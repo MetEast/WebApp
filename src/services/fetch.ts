@@ -925,7 +925,7 @@ export const updateUserRole = async (_token: string, _address: string, _role: nu
 
 export const getAdminBannerList = async (address: string) => {
     const resAdminBannerList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/admin/api/v1/listBanner?owner=${address}&pageNum=1$pageSize=${1000}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&pageNum=1$pageSize=${1000}`,
         FETCH_CONFIG_JSON,
     );
     const jsonAdminBannerList = await resAdminBannerList.json();
@@ -949,7 +949,7 @@ export const getAdminBannerList = async (address: string) => {
 };
 
 export const addAdminBanner = async (token: string, address: string, image: string, location: number, status: number, sort : number) => {
-    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/admin/api/v1/createBanner`;
+    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
     const reqBody = {
         token: token,
         owner: address,

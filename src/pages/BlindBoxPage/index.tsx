@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid } from '@mui/material';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
 import 'swiper/swiper-bundle.css';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import NFTPreview from 'src/components/NFTPreview';
@@ -67,7 +67,13 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
+    const handlerFilterChange = (
+        status: number,
+        minPrice: string,
+        maxPrice: string,
+        category: TypeSelectItem | undefined,
+        opened: boolean,
+    ) => {
         if (opened) {
             let filters: Array<enumFilterOption> = [];
             if (status === 0) filters.push(enumFilterOption.buyNow);

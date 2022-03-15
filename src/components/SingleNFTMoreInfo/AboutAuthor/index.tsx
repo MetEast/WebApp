@@ -58,7 +58,7 @@ const AboutAuthor: React.FC<ComponentProps> = ({ name, description, img, address
                         </Typography>
                         <Typography fontSize={12} fontWeight={700} color={'#1890FF'}>
                             {reduceHexAddress(address, 4)}
-                            <CopyToClipboard text={address} onCopy={showSnackBar}>
+                            <CopyToClipboard text={address} onCopy={address !== '' ? showSnackBar : () => {}}>
                                 <CopyToClipboardButton>
                                     <Icon icon="ph:copy" />
                                 </CopyToClipboardButton>
