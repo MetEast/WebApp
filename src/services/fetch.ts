@@ -1034,3 +1034,30 @@ export const updateAdminBanner = (
                 reject(error);
             });
     });
+
+export const deleteAdminBanner = (token: string, id: number) =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/deleteBanner`;
+        const reqBody = {
+            token: token,
+            id: id,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    reject('error');
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });

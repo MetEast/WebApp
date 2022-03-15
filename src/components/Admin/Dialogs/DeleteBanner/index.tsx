@@ -5,10 +5,12 @@ import { DialogTitleTypo } from '../../../TransactionDialogs/styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 
 export interface ComponentProps {
+    bannerId: number;
+    handleBannerUpdates: () => void;
     onClose: () => void;
 }
 
-const DeleteBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+const DeleteBanner: React.FC<ComponentProps> = ({ bannerId, handleBannerUpdates, onClose }): JSX.Element => {
     const classes = useStyles();
 
     return (
