@@ -11,7 +11,6 @@ export type AdminTableColumn = {
 export type AdminNFTItemType = {
     id: number; // required
     tokenId: string;
-    tokenIdHex: string;
     token_id: string;
     nft_title: string;
     nft_image: string;

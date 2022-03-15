@@ -18,6 +18,8 @@ import { blankAdminNFTItem } from 'src/constants/init-constants';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
+import { reduceHexAddress } from 'src/services/common';
+
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -26,7 +28,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: 'TOKEN ID',
             cell: (props) => (
                 <Typography fontSize={16} >
-                    {props.value}
+                    {reduceHexAddress(props.value, 4)}
                     <CopyToClipboard text={props.value} onCopy={showSnackBar}>
                         <CopyToClipboardButton>
                             <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
@@ -51,7 +53,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: 'NFT owner',
             cell: (props) => (
                 <Typography fontSize={16} >
-                    {props.value}
+                    {reduceHexAddress(props.value, 4)}
                     <CopyToClipboard text={props.value} onCopy={showSnackBar}>
                         <CopyToClipboardButton>
                             <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
@@ -66,7 +68,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: 'NFT CREATOR',
             cell: (props) => (
                 <Typography fontSize={16} >
-                    {props.value}
+                    {reduceHexAddress(props.value, 4)}
                     <CopyToClipboard text={props.value} onCopy={showSnackBar}>
                         <CopyToClipboardButton>
                             <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />

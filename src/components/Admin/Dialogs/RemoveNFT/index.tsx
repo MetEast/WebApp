@@ -28,7 +28,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, 
             </Box>
             <CustomTextField title="NFT TITLE" placeholder="NFT TITLE" inputValue={token2Remove.nft_title} disabled />
             <CustomTextField title="NFT CREATOR" placeholder="NFT CREATOR" inputValue={token2Remove.nft_creator} disabled />
-            <CustomTextField title="TOKEN ID" placeholder="TOKEN ID" inputValue={token2Remove.tokenIdHex} disabled />
+            <CustomTextField title="TOKEN ID" placeholder="TOKEN ID" inputValue={token2Remove.token_id} disabled />
             <Stack direction="row" spacing={2}>
                 <SecondaryButton fullWidth onClick={onClose}>
                     close

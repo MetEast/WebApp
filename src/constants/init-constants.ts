@@ -121,7 +121,6 @@ export const blankBBCandidate: TypeBlindBoxSelectItem = {
 export const blankAdminNFTItem: AdminNFTItemType = {
     id: 0,
     tokenId: '',
-    tokenIdHex: '',
     token_id: '',
     nft_title: '',
     nft_image: '',
