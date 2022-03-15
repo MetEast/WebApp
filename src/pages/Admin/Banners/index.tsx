@@ -45,24 +45,24 @@ const AdminBanners: React.FC = (): JSX.Element => {
             id: 'location',
             label: 'Location',
         },
-        {
-            id: 'status',
-            label: 'Status',
-            cell: (props) => (
-                <Typography
-                    display="inline-block"
-                    fontSize={14}
-                    fontWeight={500}
-                    paddingX={1}
-                    paddingY={0.5}
-                    borderRadius={2}
-                    color="#1EA557"
-                    sx={{ background: '#C9F5DC' }}
-                >
-                    {props.value}
-                </Typography>
-            ),
-        },
+        // {
+        //     id: 'status',
+        //     label: 'Status',
+        //     cell: (props) => (
+        //         <Typography
+        //             display="inline-block"
+        //             fontSize={14}
+        //             fontWeight={500}
+        //             paddingX={1}
+        //             paddingY={0.5}
+        //             borderRadius={2}
+        //             color="#1EA557"
+        //             sx={{ background: '#C9F5DC' }}
+        //         >
+        //             {props.value}
+        //         </Typography>
+        //     ),
+        // },
         {
             id: 'created',
             label: 'Created',

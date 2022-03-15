@@ -21,7 +21,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
     const [signInDlgState] = useSignInContext();
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
-    const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
+    // const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>('home');
     // const [bannerUrl, setBannerUrl] = useState<string>('');
     const [sort, setSort] = useState<string>('10');
@@ -43,7 +43,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
         setOnProgress(true);
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
-        const status = blindboxStatus === 'offline' ? 0 : 1;
+        // const status = blindboxStatus === 'offline' ? 0 : 1;
         uploadImage2Ipfs(bannerImage.raw)
             .then((added: any) => {
                 url = `meteast:image:${added.path}`;
@@ -52,7 +52,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
                     signInDlgState.walletAccounts[0],
                     url,
                     pageLocation,
-                    status,
+                    1,
                     parseInt(sort),
                 );
             })
@@ -185,7 +185,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <Stack spacing={0.5}>
+                        {/* <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Banner Status
                             </Typography>
@@ -207,7 +207,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
                                     Online
                                 </PrimaryButton>
                             </Stack>
-                        </Stack>
+                        </Stack> */}
                         <CustomTextField
                             title="Sort"
                             inputValue={sort}

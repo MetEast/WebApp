@@ -25,7 +25,7 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
     const [signInDlgState] = useSignInContext();
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
-    const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>(banner2Edit.status === 'offline' ? 'offline' : 'online');
+    // const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>(banner2Edit.status === 'offline' ? 'offline' : 'online');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>(banner2Edit.location === 'home' ? 'home' : (banner2Edit.location === 'explore' ? 'explore' : 'blindbox'));
     // const [bannerUrl, setBannerUrl] = useState<string>('');
     const [sort, setSort] = useState<string>(banner2Edit.sort.toString());
@@ -50,7 +50,7 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
         setOnProgress(true);
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
-        const status = blindboxStatus === 'offline' ? 0 : 1;
+        // const status = blindboxStatus === 'offline' ? 0 : 1;
         uploadImage2Ipfs(imageChanged ? bannerImage.raw : undefined)
             .then((added: any) => {
                 url = imageChanged ? `meteast:image:${added.path}` : getAssetFromImage(banner2Edit.url);
@@ -59,7 +59,7 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
                     banner2Edit.id,
                     url,
                     pageLocation,
-                    status,
+                    1,
                     parseInt(sort),
                 );
             })
@@ -192,7 +192,7 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <Stack spacing={0.5}>
+                        {/* <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Banner Status
                             </Typography>
@@ -214,7 +214,7 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
                                     Online
                                 </PrimaryButton>
                             </Stack>
-                        </Stack>
+                        </Stack> */}
                         <CustomTextField
                             title="Sort"
                             inputValue={sort}
