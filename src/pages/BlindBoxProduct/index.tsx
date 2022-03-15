@@ -242,7 +242,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 name={blindBoxDetail.author}
                                 description={blindBoxDetail.authorDescription}
                                 img={blindBoxDetail.authorImg}
-                                address={reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)}
+                                address={blindBoxDetail.royaltyOwner || ''}
                             />
                         </Stack>
                     </Grid>
