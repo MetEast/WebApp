@@ -16,6 +16,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { ImageBox } from './styles';
 
 export interface ComponentProps {}
 
@@ -159,14 +160,14 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 borderRadius={4}
                 sx={{ background: '#F0F1F2' }}
             >
-                <Box borderRadius={4.5} maxHeight={120} overflow="hidden">
-                    <img
-                        src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
-                        alt="file preview"
-                        width="100%"
-                        height="100%"
-                        style={{ objectFit: 'cover' }}
-                    />
+                <Box position="relative" borderRadius={4.5} overflow="hidden" sx={{ width: '100%', paddingTop: '75%' }}>
+                    <ImageBox>
+                        <img
+                            src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
+                            // src="assets/images/blindbox/blindbox-nft-template5.png"
+                            alt="file preview"
+                        />
+                    </ImageBox>
                 </Box>
                 <Grid container>
                     <Grid item xs={6}>
