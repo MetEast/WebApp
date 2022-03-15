@@ -1,4 +1,4 @@
-export const METEAST_MARKET_CONTRACT_ADDRESS = '0x2Ac890bE6864e06774B34fb075d60CC2E03d286e';
+export const METEAST_MARKET_CONTRACT_ADDRESS = '0x10BA18755E192733457a5ad4081E8B723E8C0A36';
 export const METEAST_MARKET_CONTRACT_ABI = [
   {
     "anonymous": false,
@@ -441,6 +441,19 @@ export const METEAST_MARKET_CONTRACT_ABI = [
       }
     ],
     "name": "cancelOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_orderIds",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "cancelOrderBatch",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
