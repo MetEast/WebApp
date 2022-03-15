@@ -11,10 +11,12 @@ import { getShorternUrl } from 'src/services/fetch';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 // import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
-const ReportBtnTooltip = styled(({ className, ...props }: TooltipProps) => (
+type ReportBtnTooltipProps<P> = P & { show: boolean };
+
+const ReportBtnTooltip = styled(({ className, ...props }: ReportBtnTooltipProps<TooltipProps>) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
-    marginTop: '12px !important',
+))(({ theme, show }) => ({
+    marginTop: show ? '12px !important' : '-1000px !important',
     [`& .${tooltipClasses.tooltip}`]: {
         fontSize: 14,
         borderRadius: 8,
@@ -47,7 +49,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [param.id]);
-    
+
     return (
         <Stack direction="row" justifyContent="space-between">
             <SecondaryButton
@@ -131,7 +133,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                         display={showReportBtn ? 'block' : 'none'}
                         sx={{ position: 'absolute', right: 0, top: '100%' }}
                     >
-                        <ReportBtnTooltip title="Coming Soon">
+                        <ReportBtnTooltip title="Coming Soon" show={showReportBtn}>
                             <span>
                                 <PrimaryButton
                                     disabled
