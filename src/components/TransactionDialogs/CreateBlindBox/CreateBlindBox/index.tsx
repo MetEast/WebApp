@@ -76,24 +76,24 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     <Grid container columnSpacing={4} rowGap={3}>
                         <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
                             <CustomTextField
-                                title="Blind Box Title"
-                                placeholder="Enter Blind Box Title"
+                                title="Title"
+                                placeholder="Enter Title"
                                 error={blindboxTitleError}
-                                errorText="Blind Box Title can not be empty."
+                                errorText="Title can not be empty."
                                 changeHandler={(value: string) => setBlindboxTitle(value)}
                             />
                             <CustomTextField
-                                title="Blind Box Description"
-                                placeholder="Is WYSIWYG is needed here?"
+                                title="Description"
+                                placeholder="Enter Description"
                                 error={blindboxDescriptionError}
-                                errorText="Blind Box Description can not be empty."
+                                errorText="Description can not be empty."
                                 multiline
                                 rows={3}
                                 changeHandler={(value: string) => setBlindboxDescription(value)}
                             />
                             <Stack height="100%" spacing={1}>
                                 <Typography fontSize={12} fontWeight={700}>
-                                    Blind Box Main Image
+                                    Main Image
                                 </Typography>
                                 <UploadSingleFile
                                     file={stateFile}
@@ -108,7 +108,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 />
                                 {blindboxImageError && (
                                     <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                        Source file should be selected.
+                                        Image file should be selected.
                                     </Typography>
                                 )}
                             </Stack>
@@ -116,7 +116,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                         <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={2}>
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
-                                    Blind box items
+                                    Items
                                 </Typography>
                                 <PrimaryButton fullWidth size="small" onClick={() => setSelectDlgOpened(true)}>
                                     Choose NFTs to add
@@ -143,7 +143,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             </Stack>
                             <Stack spacing={1}>
                                 <Typography fontSize={12} fontWeight={700}>
-                                    Blind Box Status
+                                    Status
                                 </Typography>
                                 <Stack direction="row" spacing={1}>
                                     <PrimaryButton

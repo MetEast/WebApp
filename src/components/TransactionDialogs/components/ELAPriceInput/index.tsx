@@ -53,7 +53,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({ title, placeholder, handleCha
                 />
                 <Stack direction="row" alignItems="center">
                     <img src="/assets/icons/elatos-ela.svg" height={20} alt="" />
-                    <Typography fontSize={16} fontWeight={700} marginLeft={0.5}>
+                    <Typography fontSize={16} fontWeight={700} marginLeft={0.5} sx={{ wordBreak: 'normal' }}>
                         ELA
                     </Typography>
                 </Stack>
