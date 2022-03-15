@@ -147,7 +147,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     return (
-        <Stack spacing={5} width={340}>
+        <Stack spacing={5} width={360}>
             <Stack alignItems="center">
                 <PageNumberTypo>2 of 2</PageNumberTypo>
                 <DialogTitleTypo>Check NFT Details</DialogTitleTypo>
