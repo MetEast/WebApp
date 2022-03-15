@@ -931,7 +931,7 @@ export const updateUserRole = async (_token: string, _address: string, _role: nu
 
 export const getAdminBannerList = async (address: string) => {
     const resAdminBannerList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&pageNum=1$pageSize=${1000}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&pageNum=1&pageSize=${1000}`,
         FETCH_CONFIG_JSON,
     );
     const jsonAdminBannerList = await resAdminBannerList.json();
@@ -940,14 +940,20 @@ export const getAdminBannerList = async (address: string) => {
     for (let i = 0; i < arrAdminBannerList.length; i++) {
         const itemObject: AdminBannersItemFetchType = arrAdminBannerList[i];
         const _AdminBanner: AdminBannersItemType = { ...blankAdminBannerItem };
-        _AdminBanner.id = i + 1;
-        _AdminBanner.banner_id = itemObject.banner_id;
-        _AdminBanner.image = itemObject.image;
-        _AdminBanner.url = itemObject.url;
+        _AdminBanner.id = itemObject._id;
+        _AdminBanner.banner_id = i + 1;
+        _AdminBanner.image =
+            itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image;
+        _AdminBanner.url =
+            itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image;
         _AdminBanner.sort = itemObject.sort;
-        _AdminBanner.location = itemObject.location;
-        _AdminBanner.status = itemObject.status;
-        _AdminBanner.created = itemObject.created;
+        _AdminBanner.location = itemObject.location === 1 ? 'home' : itemObject.location === 2 ? 'explore' : 'blindbox';
+        _AdminBanner.status = itemObject.status === 0 ? 'offline' : 'online';
+        const createdTime =
+            itemObject.created === '' || itemObject.created === undefined
+                ? { date: '', time: '' }
+                : getTime(itemObject.created);
+        _AdminBanner.created = createdTime.date + ' ' + createdTime.time;
         _arrAdminBannerList.push(_AdminBanner);
     }
     return _arrAdminBannerList;

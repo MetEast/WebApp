@@ -23,7 +23,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>('home');
-    const [bannerUrl, setBannerUrl] = useState<string>('');
+    // const [bannerUrl, setBannerUrl] = useState<string>('');
     const [sort, setSort] = useState<string>('10');
     const [bannerImage, setBannerImage] = useState<TypeImageFile>({
         preview: '',
@@ -39,7 +39,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
     };
 
     const handleSubmit = async () => {
-        if ((bannerImage.preview === '' && bannerUrl === '') || isNaN(parseInt(sort))) return;
+        if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
         setOnProgress(true);
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
@@ -47,18 +47,10 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
         uploadImage2Ipfs(bannerImage.raw)
             .then((added: any) => {
                 url = `meteast:image:${added.path}`;
-                console.log(
-                    signInDlgState.token,
-                    signInDlgState.walletAccounts[0],
-                    url === '' ? bannerUrl : url,
-                    pageLocation,
-                    status,
-                    parseInt(sort),
-                );
                 return addAdminBanner(
                     signInDlgState.token,
                     signInDlgState.walletAccounts[0],
-                    url === '' ? bannerUrl : url,
+                    url,
                     pageLocation,
                     status,
                     parseInt(sort),
@@ -151,15 +143,15 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
                                     type="file"
                                     id="banner-image"
                                     style={{ display: 'none' }}
-                                    onChange={handleBannerImageChanged}
+                                    onClick={handleBannerImageChanged}
                                 />
                             </Stack>
                         </Stack>
-                        <CustomTextField
+                        {/* <CustomTextField
                             title="URL"
                             placeholder="Enter Banner URL"
                             changeHandler={(value: string) => setBannerUrl(value)}
-                        />
+                        /> */}
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
                         <Stack spacing={0.5}>

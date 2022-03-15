@@ -114,11 +114,10 @@ export type AdminUsersItemFetchType = {
 
 export type AdminBannersItemFetchType = {
     id: number; // required
-    banner_id: number;
+    _id: number;
     image: string;
-    url: string;
     sort: number;
-    location: string;
-    status: string;
+    location: number;
+    status: number;
     created: string;
 };
