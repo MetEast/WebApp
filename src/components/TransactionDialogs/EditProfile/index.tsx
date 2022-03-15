@@ -71,7 +71,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleSignMessage = async (did: string, address: string) => {
         try {
-            console.log(did, address)
+            console.log(did, address);
             const signature = await walletConnectWeb3.eth.personal.sign(`Update profile with ${did}`, address, '');
             return signature;
         } catch (err) {
@@ -210,7 +210,13 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     </Typography>
                     <BannerBox sx={{ backgroundColor: '#C3C5C8' }}>
                         {userCoverImageURL.preview !== '' && (
-                            <img src={userCoverImageURL.preview} width="100%" height="100%" alt="" />
+                            <img
+                                src={userCoverImageURL.preview}
+                                width="100%"
+                                height="100%"
+                                style={{ objectFit: 'cover' }}
+                                alt=""
+                            />
                         )}
                         <Stack
                             className="hover_box_container"
