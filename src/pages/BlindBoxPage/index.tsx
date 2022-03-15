@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import 'swiper/swiper-bundle.css';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import NFTPreview from 'src/components/NFTPreview';
@@ -109,14 +111,33 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         setBlindBoxList(bbList);
     };
 
+    const theme = useTheme();
+    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
+
     return (
         <Box minHeight="75vh">
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
                     {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box overflow="hidden" onClick={() => {}} sx={{ cursor: 'pointer' }}>
-                                <img src={item} alt="" style={{ minWidth: '100%' }} />
+                            <Box
+                                overflow="hidden"
+                                onClick={() => {}}
+                                sx={{
+                                    height: 330,
+                                    maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
+                                    cursor: 'pointer',
+                                    backgroundColor: '#C3C5C8',
+                                }}
+                            >
+                                {item !== '' && (
+                                    <img
+                                        src={item}
+                                        alt=""
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 330 }}
+                                    />
+                                )}
                             </Box>
                         </SwiperSlide>
                     ))}
