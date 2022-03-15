@@ -11,7 +11,7 @@ export const TblBodyTypo = styled(Typography)({
     fontWeight: 400,
 });
 
-export const ImageBox = styled(Box)<{ selected: boolean }>`
+export const MobileImageBox = styled(Box)<{ selected: boolean }>`
     width: 100%;
     padding-top: 75%;
     border-radius: 8px;
@@ -43,4 +43,18 @@ export const ImageBox = styled(Box)<{ selected: boolean }>`
         border: ${({ selected }) => (selected ? '1px solid transparent' : '1px solid white')};
         background: ${({ selected }) => (selected ? '#E8F4FF' : '#90909080')};
     },
+`;
+export const ImageBox = styled(Box)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 72px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 8px;
+    }
 `;
