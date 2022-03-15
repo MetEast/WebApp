@@ -883,6 +883,7 @@ export const getAdminUserList = async (fetchParams: string, address: string) => 
         const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
         _AdminUser.id = i + 1;
         _AdminUser.address = reduceHexAddress(itemObject.address, 7);
+        _AdminUser.wholeAddress = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
         _AdminUser.status = Math.abs(itemObject.role - 1);
@@ -890,4 +891,33 @@ export const getAdminUserList = async (fetchParams: string, address: string) => 
         _arrAdminUserList.push(_AdminUser);
     }
     return _arrAdminUserList;
+};
+
+export const updateUserRole = async (_token: string, _address: string, _role: number, _remarks: string) => {
+    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateRole`;
+    const reqBody = {
+        token: _token,
+        address: _address,
+        userRole: _role,
+        remarks: _remarks,
+    };
+    fetch(reqUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqBody),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.code === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            return false;
+        });
 };

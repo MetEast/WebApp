@@ -125,6 +125,14 @@ const AdminUsers: React.FC = (): JSX.Element => {
         setShowEditUserStatusDlg(true);
     };
 
+    const updateUserList = (editedItem: AdminUsersItemType) => {
+        setTableData((prevState: AdminUsersItemType[]) => {
+            const userList = [...prevState];
+            userList[id2Edit] = editedItem;
+            return userList;
+        });
+    };
+
     return (
         <>
             <Stack height="100%" spacing={4}>
@@ -156,6 +164,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
             >
                 <EditUserStatus
                     user2Edit={tabledata[id2Edit]}
+                    handleUserUpdate={updateUserList}
                     onClose={() => {
                         setShowEditUserStatusDlg(false);
                     }}
