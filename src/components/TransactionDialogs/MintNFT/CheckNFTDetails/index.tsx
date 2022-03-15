@@ -186,7 +186,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     return (
         <>
-            <Stack spacing={5} width={340}>
+            <Stack spacing={5} width={360}>
                 <Stack alignItems="center">
                     <PageNumberTypo>2 of 2</PageNumberTypo>
                     <DialogTitleTypo>Check NFT Details</DialogTitleTypo>
@@ -199,14 +199,22 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     borderRadius={4}
                     sx={{ background: '#F0F1F2' }}
                 >
-                    <Box borderRadius={4.5} maxHeight={120} overflow="hidden">
-                        <img
-                            src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
-                            alt="file preview"
-                            width="100%"
-                            height="100%"
-                            style={{ objectFit: 'cover' }}
-                        />
+                    <Box
+                        position="relative"
+                        borderRadius={4.5}
+                        overflow="hidden"
+                        sx={{ width: '100%', paddingTop: '75%' }}
+                    >
+                        <Box position="absolute" sx={{ inset: 0 }}>
+                            <img
+                                src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
+                                // src="assets/images/blindbox/blindbox-nft-template5.png"
+                                alt="file preview"
+                                width="100%"
+                                height="100%"
+                                style={{ objectFit: 'contain' }}
+                            />
+                        </Box>
                     </Box>
                     <Grid container>
                         <Grid item xs={6}>
