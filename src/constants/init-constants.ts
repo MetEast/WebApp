@@ -1,4 +1,4 @@
-import { AdminNFTItemType, AdminUsersItemType } from 'src/types/admin-table-data-types';
+import { AdminNFTItemType, AdminUsersItemType, AdminBannersItemType } from 'src/types/admin-table-data-types';
 import { TypeContractMethodPram } from 'src/types/mint-types';
 import {
     TypeProduct,
@@ -144,6 +144,17 @@ export const blankAdminUserItem: AdminUsersItemType = {
     avatar: '',
     status: 0,
     remarks: '',
+};
+
+export const blankAdminBannerItem: AdminBannersItemType = {
+    id: 0, // required
+    banner_id: 0,
+    image: '',
+    url: '',
+    sort: 0,
+    location: '',
+    status: '',
+    created: '',
 };
 
 export const blankContractMethodParam: TypeContractMethodPram = {

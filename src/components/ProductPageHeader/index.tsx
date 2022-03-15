@@ -46,7 +46,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [param.id]);
-
+    
     return (
         <Stack direction="row" justifyContent="space-between">
             <SecondaryButton

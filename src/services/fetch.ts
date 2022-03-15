@@ -29,10 +29,11 @@ import {
     blankBBCandidate,
     blankAdminNFTItem,
     blankAdminUserItem,
+    blankAdminBannerItem,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
-import { AdminNFTItemType, AdminUsersItemFetchType, AdminUsersItemType } from 'src/types/admin-table-data-types';
+import { AdminNFTItemType, AdminUsersItemFetchType, AdminUsersItemType, AdminBannersItemType, AdminBannersItemFetchType } from 'src/types/admin-table-data-types';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -900,6 +901,62 @@ export const updateUserRole = async (_token: string, _address: string, _role: nu
         address: _address,
         userRole: _role,
         remarks: _remarks,
+    };
+    fetch(reqUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqBody),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.code === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            return false;
+        });
+};
+
+export const getAdminBannerList = async (address: string) => {
+    const resAdminBannerList = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/admin/api/v1/listBanner?owner=${address}&pageNum=1$pageSize=${1000}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonAdminBannerList = await resAdminBannerList.json();
+    const arrAdminBannerList = jsonAdminBannerList.data === undefined ? [] : jsonAdminBannerList.data;
+    const _arrAdminBannerList: Array<AdminBannersItemType> = [];
+    for (let i = 0; i < arrAdminBannerList.length; i++) {
+        const itemObject: AdminBannersItemFetchType = arrAdminBannerList[i];
+        const _AdminBanner: AdminBannersItemType = { ...blankAdminBannerItem };
+        _AdminBanner.id = i + 1;
+        _AdminBanner.banner_id = itemObject.banner_id;
+        _AdminBanner.image = itemObject.image;
+        _AdminBanner.url = itemObject.url;
+        _AdminBanner.sort = itemObject.sort;
+        _AdminBanner.location = itemObject.location;
+        _AdminBanner.status = itemObject.status;
+        _AdminBanner.created = itemObject.created;
+        _arrAdminBannerList.push(_AdminBanner);
+    }
+    return _arrAdminBannerList;
+
+};
+
+export const addAdminBanner = async (token: string, address: string, image: string, location: number, status: number, sort : number) => {
+    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/admin/api/v1/createBanner`;
+    const reqBody = {
+        token: token,
+        owner: address,
+        image: image,
+        location: location,
+        status: status,
+        sort: sort,
     };
     fetch(reqUrl, {
         method: 'POST',

@@ -11,6 +11,7 @@ import {
     Checkbox,
     TableSortLabel,
     Typography,
+    Skeleton,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
@@ -86,9 +87,10 @@ interface ComponentProps {
     tabledata: AdminTableItemType[];
     columns: AdminTableColumn[];
     checkable?: boolean;
+    isLoading?: boolean;
 }
 
-const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true }): JSX.Element => {
+const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true, isLoading = true }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -164,6 +166,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true 
         setCurPaginationFirstPage(Math.floor(page / 10) * 10);
     }, [page]);
 
+    console.log(isLoading);
     return (
         <Stack height="100%">
             <TableContainer component={Paper} sx={{ height: '70%' }}>
@@ -186,33 +189,45 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true 
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
-                                    <TableRow
-                                        hover
-                                        onClick={(event) => handleClick(event, row.id)}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        key={row.id}
-                                        selected={isItemSelected}
-                                    >
-                                        {checkable && (
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
+                                    <>
+                                        {isLoading ? (
+                                            <Skeleton
+                                                variant="rectangular"
+                                                animation="wave"
+                                                width="100%"
+                                                height="100%"
+                                                sx={{ borderRadius: 4, bgcolor: '#E8F4FF' }}
+                                            />
+                                        ) : (
+                                            <TableRow
+                                                hover
+                                                onClick={(event) => handleClick(event, row.id)}
+                                                role="checkbox"
+                                                aria-checked={isItemSelected}
+                                                key={row.id}
+                                                selected={isItemSelected}
+                                            >
+                                                {checkable && (
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            color="primary"
+                                                            checked={isItemSelected}
+                                                            inputProps={{
+                                                                'aria-labelledby': labelId,
+                                                            }}
+                                                        />
+                                                    </TableCell>
+                                                )}
+                                                {columns.map((column) => (
+                                                    <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
+                                                        {column.cell
+                                                            ? column.cell({ value: (row as any)[column.id], data: row })
+                                                            : (row as any)[column.id]}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
                                         )}
-                                        {columns.map((column) => (
-                                            <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
-                                                {column.cell
-                                                    ? column.cell({ value: (row as any)[column.id], data: row})
-                                                    : (row as any)[column.id]}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
+                                    </>
                                 );
                             })}
                         {emptyRows > 0 && (
