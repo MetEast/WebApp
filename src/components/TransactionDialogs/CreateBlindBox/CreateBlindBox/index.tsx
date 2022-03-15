@@ -27,7 +27,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxDescriptionError, setBlindboxDescriptionError] = useState(false);
     const [blindboxImage, setBlindboxImage] = useState<File>();
     const [blindboxImageError, setBlindboxImageError] = useState(false);
-    
+
     const [stateFile, setStateFile] = useState(null);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [blindboxQuantity, setBlindboxQuantity] = useState<number>(0);
@@ -105,7 +105,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         height: { xs: '200px', sm: '100%' },
                                         marginTop: '1rem',
                                         borderRadius: '8px',
-                                        background: '#E8F4FF',
                                         cursor: 'pointer',
                                     }}
                                 />

@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography, Stack } from '@mui/material';
 import { SxProps } from '@mui/system';
 import { Icon } from '@iconify/react';
+import { ImageBox } from './styles';
 
 // utils
 // import { fData } from '../../utils/formatNumber';
@@ -53,7 +54,7 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
     });
 
     return (
-        <Box sx={{ width: '100%', ...sx }}>
+        <Box sx={{ width: '100%', background: file ? 'none' : '#E8F4FF', ...sx }}>
             <DropZoneStyle
                 {...getRootProps()}
                 sx={{
@@ -70,9 +71,9 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
             >
                 <input name="imgFile" {...getInputProps()} />
                 {file ? (
-                    <Box sx={{ width: '100%', height: '100%', position: 'absolute' }}>
-                        <img src={file.preview} alt="" width="100%" height="100%" style={{ objectFit: 'cover' }} />
-                    </Box>
+                    <ImageBox>
+                        <img src={file.preview} alt="" />
+                    </ImageBox>
                 ) : (
                     <Stack justifyContent="center" alignItems="center">
                         <Icon icon="ph:cloud-arrow-up" fontSize={24} color="#1890FF" />
@@ -80,7 +81,7 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
                             Upload Image
                         </Typography>
                     </Stack>
-                )}  
+                )}
             </DropZoneStyle>
 
             {/* {fileRejections.length > 0 && <ShowRejectionItems />} */}
