@@ -18,6 +18,7 @@ import WaitingConfirm from '../../Others/WaitingConfirm';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { ImageBox } from './styles';
 
 export interface ComponentProps {}
 
@@ -205,16 +206,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         overflow="hidden"
                         sx={{ width: '100%', paddingTop: '75%' }}
                     >
-                        <Box position="absolute" sx={{ inset: 0 }}>
+                        <ImageBox>
                             <img
                                 src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
                                 // src="assets/images/blindbox/blindbox-nft-template5.png"
                                 alt="file preview"
-                                width="100%"
-                                height="100%"
-                                style={{ objectFit: 'contain' }}
                             />
-                        </Box>
+                        </ImageBox>
                     </Box>
                     <Grid container>
                         <Grid item xs={6}>
