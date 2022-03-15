@@ -13,6 +13,7 @@ import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } fr
 const ReportBtnTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(({ theme }) => ({
+    marginTop: '12px !important',
     [`& .${tooltipClasses.tooltip}`]: {
         fontSize: 14,
         borderRadius: 8,
@@ -106,9 +107,8 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                     position="relative"
                     onMouseEnter={() => setShowReportBtn(true)}
                     onMouseLeave={() => setShowReportBtn(false)}
-                    onClick={() => setShowReportBtn(!showReportBtn)}
                 >
-                    <IconBtn>
+                    <IconBtn onClick={() => setShowReportBtn(!showReportBtn)}>
                         <Icon icon="ph:dots-three-vertical-bold" color="#1890FF" />
                     </IconBtn>
                     <Box
@@ -116,15 +116,22 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                         sx={{ position: 'absolute', right: 0, top: '100%' }}
                     >
                         <ReportBtnTooltip title="Coming Soon">
-                            <PrimaryButton btn_type="pink" size="small" sx={{ paddingX: 2.5, marginTop: 0.5 }}>
-                                <Icon
-                                    icon="ph:megaphone"
-                                    fontSize={20}
-                                    color="#eb5757"
-                                    style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
-                                />
-                                Report
-                            </PrimaryButton>
+                            <span>
+                                <PrimaryButton
+                                    disabled
+                                    btn_type="pink"
+                                    size="small"
+                                    sx={{ paddingX: 2.5, marginTop: 0.5 }}
+                                >
+                                    <Icon
+                                        icon="ph:megaphone"
+                                        fontSize={20}
+                                        color="rgba(0, 0, 0, 0.26)"
+                                        style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
+                                    />
+                                    Report
+                                </PrimaryButton>
+                            </span>
                         </ReportBtnTooltip>
                     </Box>
                 </Box>
