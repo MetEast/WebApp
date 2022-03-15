@@ -8,7 +8,7 @@ import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { getELA2USD, getMyFavouritesList, getNFTItemList, getSearchParams } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList, getNFTItemList, getPageBannerList, getSearchParams } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
@@ -27,13 +27,27 @@ const ExplorePage: React.FC = (): JSX.Element => {
         blankNFTItem,
         blankNFTItem,
     ]);
-    const adBanners = [
+    const [adBanners, setAdBanners] = useState<string[]>([
         '/assets/images/banners/banner1.png',
         '/assets/images/banners/banner2.png',
         '/assets/images/banners/banner3.png',
-    ];
+    ]);
 
     // -------------- Fetch Data -------------- //
+    useEffect(() => {
+        let unmounted = false;
+        const fetchBanners = async () => {
+            const _adBanners = await getPageBannerList(signInDlgState.walletAccounts[0], 2);
+            if (!unmounted) {
+                setAdBanners(_adBanners);
+            }
+        };
+        fetchBanners().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
+
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {

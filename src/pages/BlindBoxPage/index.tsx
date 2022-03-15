@@ -9,7 +9,7 @@ import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { getELA2USD, getSearchParams, getBBItemList } from 'src/services/fetch';
+import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -27,13 +27,27 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
         blankBBItem,
         blankBBItem,
     ]);
-    const adBanners = [
+    const [adBanners, setAdBanners] = useState<string[]>([
         '/assets/images/banners/banner1.png',
         '/assets/images/banners/banner2.png',
         '/assets/images/banners/banner3.png',
-    ];
+    ]);
 
     // -------------- Fetch Data -------------- //
+    useEffect(() => {
+        let unmounted = false;
+        const fetchBanners = async () => {
+            const _adBanners = await getPageBannerList(signInDlgState.walletAccounts[0], 3);
+            if (!unmounted) {
+                setAdBanners(_adBanners);
+            }
+        };
+        fetchBanners().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
+
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
