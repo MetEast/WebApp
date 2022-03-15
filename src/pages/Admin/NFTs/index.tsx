@@ -15,12 +15,26 @@ import RemoveNFT from 'src/components/Admin/Dialogs/RemoveNFT';
 import { getAdminNFTItemList, getAdminSearchParams } from 'src/services/fetch';
 import { adminNftSaleTypeOptions, adminNftStateOptions } from 'src/constants/select-constants';
 import { blankAdminNFTItem } from 'src/constants/init-constants';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyToClipboardButton } from './styles';
+import { useSnackbar } from 'notistack';
 
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
         {
             id: 'token_id',
             label: 'TOKEN ID',
+            cell: (props) => (
+                <Typography fontSize={16} >
+                    {props.value}
+                    <CopyToClipboard text={props.value} onCopy={showSnackBar}>
+                        <CopyToClipboardButton>
+                            <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                        </CopyToClipboardButton>
+                    </CopyToClipboard>
+                </Typography>
+            ),
+            width: 130,
         },
         {
             id: 'nft_title',
@@ -35,10 +49,32 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         {
             id: 'nft_owner',
             label: 'NFT owner',
+            cell: (props) => (
+                <Typography fontSize={16} >
+                    {props.value}
+                    <CopyToClipboard text={props.value} onCopy={showSnackBar}>
+                        <CopyToClipboardButton>
+                            <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                        </CopyToClipboardButton>
+                    </CopyToClipboard>
+                </Typography>
+            ),
+            width: 130,
         },
         {
             id: 'nft_creator',
             label: 'NFT CREATOR',
+            cell: (props) => (
+                <Typography fontSize={16} >
+                    {props.value}
+                    <CopyToClipboard text={props.value} onCopy={showSnackBar}>
+                        <CopyToClipboardButton>
+                            <Icon icon="ph:copy" style={{ background: '#F0F1F2' }} />
+                        </CopyToClipboardButton>
+                    </CopyToClipboard>
+                </Typography>
+            ),
+            width: 130,
         },
         {
             id: 'created_date',
@@ -50,39 +86,39 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: 'LISTED DATE',
             width: 160,
         },
-        {
-            id: 'likes',
-            label: '# Likes',
-            width: 100,
-        },
-        {
-            id: 'views',
-            label: '# Views',
-            width: 100,
-        },
+        // {
+        //     id: 'likes',
+        //     label: '# Likes',
+        //     width: 100,
+        // },
+        // {
+        //     id: 'views',
+        //     label: '# Views',
+        //     width: 100,
+        // },
         {
             id: 'sale_type',
             label: 'SALE TYPE',
             cell: (props) => <ProductBadge badgeType={props.value} />,
         },
-        {
-            id: 'status',
-            label: 'STATUS',
-            cell: (props) => (
-                <Typography
-                    display="inline-block"
-                    fontSize={14}
-                    fontWeight={500}
-                    paddingX={1}
-                    paddingY={0.5}
-                    borderRadius={2}
-                    color={props.value === 'Online' ? '#1EA557' : '#EB5757'}
-                    sx={{ background: props.value === 'Online' ? '#C9F5DC' : '#FDEEEE' }}
-                >
-                    {props.value}
-                </Typography>
-            ),
-        },
+        // {
+        //     id: 'status',
+        //     label: 'STATUS',
+        //     cell: (props) => (
+        //         <Typography
+        //             display="inline-block"
+        //             fontSize={14}
+        //             fontWeight={500}
+        //             paddingX={1}
+        //             paddingY={0.5}
+        //             borderRadius={2}
+        //             color={props.value === 'Online' ? '#1EA557' : '#EB5757'}
+        //             sx={{ background: props.value === 'Online' ? '#C9F5DC' : '#FDEEEE' }}
+        //         >
+        //             {props.value}
+        //         </Typography>
+        //     ),
+        // },
         {
             id: 'edits',
             label: '',
@@ -101,10 +137,10 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         />
                         {`Remove`}
                     </PinkButton>
-                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                    {/* <PrimaryButton size="small" sx={{ paddingX: 3 }}>
                         <Icon icon="ph:eye" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
                         {`Details`}
-                    </PrimaryButton>
+                    </PrimaryButton> */}
                 </Stack>
             ),
             width: 280,
@@ -112,7 +148,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     ];
 
     const data: AdminNFTItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminNFTItem), []);
-
+    const { enqueueSnackbar } = useSnackbar();
     const [tabledata, setTableData] = useState<Array<AdminNFTItemType>>(data);
     const [inputString, setInputString] = useState<string>('');
     const [keyWord, setKeyWord] = useState<string>('');
@@ -161,6 +197,13 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             const nftList = [...prevState];
             nftList[id2Remove] = editedItem;
             return nftList;
+        });
+    };
+
+    const showSnackBar = () => {
+        enqueueSnackbar('Copied to Clipboard!', {
+            variant: 'success',
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
         });
     };
 
