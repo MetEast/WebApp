@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-import { useStyles } from './styles';
+// import { useStyles } from './styles';
 import { DialogTitleTypo } from '../../../TransactionDialogs/styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';
+import { useSignInContext } from 'src/context/SignInContext';
 import { TypeImageFile } from 'src/types/select-types';
+import { uploadImage2Ipfs } from 'src/services/ipfs';
+import { addAdminBanner } from 'src/services/fetch';
+import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -13,9 +17,13 @@ export interface ComponentProps {
 
 const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     // const classes = useStyles();
-
+    const [signInDlgState] = useSignInContext();
+    const { enqueueSnackbar } = useSnackbar();
+    const [onProgress, setOnProgress] = useState<boolean>(false);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>('home');
+    const [bannerUrl, setBannerUrl] = useState<string>('');
+    const [sort, setSort] = useState<string>('10');
     const [bannerImage, setBannerImage] = useState<TypeImageFile>({
         preview: '',
         raw: new File([''], ''),
@@ -28,6 +36,51 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             });
         }
     };
+
+    const handleSubmit = async () => {
+        if ((bannerImage.preview === '' && bannerUrl === '')|| isNaN(parseInt(sort))) return;
+        setOnProgress(true);
+        let url: string = '';
+        const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
+        const status = blindboxStatus === 'offline' ? 0 : 1;
+        uploadImage2Ipfs(bannerImage.raw)
+            .then((added: any) => {
+                url = `meteast:image:${added.path}`;
+                return addAdminBanner(
+                    signInDlgState.token,
+                    signInDlgState.walletAccounts[0],
+                    url === '' ? bannerUrl : url,
+                    pageLocation,
+                    status,
+                    parseInt(sort),
+                );
+            })
+            .then((success: boolean) => {
+                if (success) {
+                    enqueueSnackbar('Added!', {
+                        variant: 'success',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                }
+                else {
+                    enqueueSnackbar('Error', {
+                        variant: 'warning',
+                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    });
+                }
+            })
+            .catch((error) => {
+                enqueueSnackbar(error, {
+                    variant: 'warning',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+            })
+            .finally(() => {
+                setOnProgress(false);
+                onClose();
+            });
+    };
+
     return (
         <Stack
             spacing={5}
@@ -47,7 +100,11 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 Image
                             </Typography>
                             <img
-                                src={bannerImage.preview === '' ? "/assets/images/blindbox/blindbox-nft-template2.png" : bannerImage.preview}
+                                src={
+                                    bannerImage.preview === ''
+                                        ? '/assets/images/blindbox/blindbox-nft-template2.png'
+                                        : bannerImage.preview
+                                }
                                 style={{ borderRadius: '18px' }}
                                 alt=""
                             />
@@ -89,7 +146,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 />
                             </Stack>
                         </Stack>
-                        <CustomTextField title="URL" placeholder="Enter Banner URL" changeHandler={(value) => {}} />
+                        <CustomTextField title="URL" placeholder="Enter Banner URL" changeHandler={(value: string) => setBannerUrl(value)} />
                     </Grid>
                     <Grid item xs={6} display="flex" flexDirection="column" rowGap={3}>
                         <Stack spacing={0.5}>
@@ -146,7 +203,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 </PrimaryButton>
                             </Stack>
                         </Stack>
-                        <CustomTextField title="Sort" inputValue="10" placeholder="" changeHandler={(value) => {}} />
+                        <CustomTextField title="Sort" inputValue={sort} placeholder="10" changeHandler={(value: string) => setSort(value)} />
                     </Grid>
                 </Grid>
             </Box>
@@ -154,7 +211,9 @@ const CreateBanner: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
                     close
                 </PrimaryButton>
-                <PrimaryButton fullWidth>Confirm</PrimaryButton>
+                <PrimaryButton fullWidth disabled={onProgress} onClick={handleSubmit}>
+                    Confirm
+                </PrimaryButton>
             </Stack>
         </Stack>
     );

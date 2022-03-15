@@ -33,7 +33,13 @@ import {
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
-import { AdminNFTItemType, AdminUsersItemFetchType, AdminUsersItemType, AdminBannersItemType, AdminBannersItemFetchType } from 'src/types/admin-table-data-types';
+import {
+    AdminNFTItemType,
+    AdminUsersItemFetchType,
+    AdminUsersItemType,
+    AdminBannersItemType,
+    AdminBannersItemFetchType,
+} from 'src/types/admin-table-data-types';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -945,36 +951,42 @@ export const getAdminBannerList = async (address: string) => {
         _arrAdminBannerList.push(_AdminBanner);
     }
     return _arrAdminBannerList;
-
 };
 
-export const addAdminBanner = async (token: string, address: string, image: string, location: number, status: number, sort : number) => {
-    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
-    const reqBody = {
-        token: token,
-        owner: address,
-        image: image,
-        location: location,
-        status: status,
-        sort: sort,
-    };
-    fetch(reqUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reqBody),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.code === 200) {
-                return true;
-            } else {
-                return false;
-            }
+export const addAdminBanner = (
+    token: string,
+    address: string,
+    image: string,
+    location: number,
+    status: number,
+    sort: number,
+) =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
+        const reqBody = {
+            token: token,
+            owner: address,
+            image: image,
+            location: location,
+            status: status,
+            sort: sort,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
         })
-        .catch((error) => {
-            console.log(error);
-            return false;
-        });
-};
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    reject('error');
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
