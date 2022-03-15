@@ -11,6 +11,7 @@ import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { updateAdminBanner } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
+import { getAssetFromImage } from 'src/services/common';
 
 export interface ComponentProps {
     banner2Edit: AdminBannersItemType;
@@ -52,7 +53,7 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
         const status = blindboxStatus === 'offline' ? 0 : 1;
         uploadImage2Ipfs(imageChanged ? bannerImage.raw : undefined)
             .then((added: any) => {
-                url = imageChanged ? `meteast:image:${added.path}` : banner2Edit.url;
+                url = imageChanged ? `meteast:image:${added.path}` : getAssetFromImage(banner2Edit.url);
                 return updateAdminBanner(
                     signInDlgState.token,
                     banner2Edit.id,
