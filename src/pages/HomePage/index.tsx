@@ -7,7 +7,7 @@ import NFTPreview from 'src/components/NFTPreview';
 import 'swiper/swiper-bundle.css';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList, getNFTItemList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList, getNFTItemList, getPageBannerList } from 'src/services/fetch';
 import { blankNFTItem } from 'src/constants/init-constants';
 import Container from 'src/components/Container';
 
@@ -27,16 +27,17 @@ const HomePage: React.FC = (): JSX.Element => {
         blankNFTItem,
         blankNFTItem,
     ]);
-    const adBanners = [
+    const [adBanners, setAdBanners] = useState<string[]>([
         '/assets/images/banners/banner1.png',
         '/assets/images/banners/banner2.png',
         '/assets/images/banners/banner3.png',
-    ];
+    ])
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const fetchCollections = async () => {
+            const _adBanners = await getPageBannerList(signInDlgState.walletAccounts[0], 1);
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _newNFTList = await getNFTItemList('pageNum=1&pageSize=10', ELA2USD, likeList);
@@ -46,6 +47,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 likeList,
             );
             if (!unmounted) {
+                setAdBanners(_adBanners);
                 setProductList(_newNFTList);
                 setCollectionList(_popularNFTList);
             }

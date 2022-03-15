@@ -97,6 +97,21 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     } else return [];
 };
 
+export const getPageBannerList = async (address: string, location: number) => {
+    const resPageBannerList = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&location=${location}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonPageBannerList = await resPageBannerList.json();
+    const arrPageBannerList = jsonPageBannerList.data === undefined ? [] : jsonPageBannerList.data;
+    const _arrPageBannerList: Array<string> = [];
+    for (let i = 0; i < arrPageBannerList.length; i++) {
+        const itemObject: AdminBannersItemFetchType = arrPageBannerList[i];
+        _arrPageBannerList.push(itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image);
+    }
+    return _arrPageBannerList;
+};
+
 // Home Page & Product Page
 export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTList = await fetch(
