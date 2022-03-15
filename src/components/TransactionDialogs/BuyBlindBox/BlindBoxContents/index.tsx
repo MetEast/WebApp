@@ -52,7 +52,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                     {dialogState.buyBlindImages.map((item, index) => (
                         <SwiperSlide style={{ borderRadius: 16 }}>
                             <img
-                                src={dialogState.buyBlindImages[imgIndex]}
+                                src={dialogState.buyBlindImages[index]}
                                 width="100%"
                                 height="100%"
                                 style={{ objectFit: 'cover' }}
