@@ -38,7 +38,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
         }
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
         setOnProgress(true);
         let url: string = '';

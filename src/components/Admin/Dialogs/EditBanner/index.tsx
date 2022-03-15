@@ -44,7 +44,7 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
         }
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
         setOnProgress(true);
         let url: string = '';
