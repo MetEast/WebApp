@@ -1,6 +1,7 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
+import { SxProps } from '@mui/system';
 
 export interface ComponentProps {
     nickname?: string;
@@ -8,11 +9,12 @@ export interface ComponentProps {
     instock?: number;
     likes?: number;
     views?: number;
+    sx?: SxProps;
 }
 
-const ProductSnippets: React.FC<ComponentProps> = ({ nickname, sold, instock, likes, views }): JSX.Element => {
+const ProductSnippets: React.FC<ComponentProps> = ({ nickname, sold, instock, likes, views, sx }): JSX.Element => {
     return (
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ ...sx }}>
             {nickname !== undefined && (
                 <Stack direction="row" alignItems="center" spacing={1}>
                     <Icon icon="ph:palette" />

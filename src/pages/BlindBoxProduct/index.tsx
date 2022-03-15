@@ -155,7 +155,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         </>
                     ) : (
                         <>
-                            <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700}>
+                            <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700} lineHeight={1}>
                                 {blindBoxDetail.name}
                             </Typography>
                             <ProductSnippets
@@ -166,6 +166,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 instock={blindBoxDetail.instock}
                                 likes={blindBoxDetail.likes}
                                 views={blindBoxDetail.views}
+                                sx={{ marginTop: 1 }}
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                                 <ProductBadge

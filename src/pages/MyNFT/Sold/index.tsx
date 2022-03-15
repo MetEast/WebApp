@@ -168,13 +168,19 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                         </>
                     ) : (
                         <>
-                            <Typography fontSize={56} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+                            <Typography
+                                fontSize={56}
+                                fontWeight={700}
+                                lineHeight={1}
+                                sx={{ textTransform: 'capitalize' }}
+                            >
                                 Sculpting with the Heart
                             </Typography>
                             <ProductSnippets
                                 nickname={productDetail.author}
                                 likes={productDetail.likes}
                                 views={productDetail.views}
+                                sx={{ marginTop: 1 }}
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                                 <ProductBadge badgeType={enumBadgeType.Sold} />
