@@ -50,7 +50,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                         </SwiperSlide>
                     ))} */}
                     {dialogState.buyBlindImages.map((item, index) => (
-                        <SwiperSlide>
+                        <SwiperSlide style={{ borderRadius: 16 }}>
                             <img
                                 src={dialogState.buyBlindImages[imgIndex]}
                                 width="100%"
