@@ -8,10 +8,11 @@ import { AdminNFTItemType } from 'src/types/admin-table-data-types';
 
 export interface ComponentProps {
     token2Remove: AdminNFTItemType;
+    handleTokenUpdate: (value: AdminNFTItemType) => void;
     onClose: () => void;
 }
 
-const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Element => {
+const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
 
     return (
@@ -36,6 +37,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
                     fullWidth
                     onClick={() => {
                         alert(token2Remove.tokenId);
+                        handleTokenUpdate(token2Remove);
                     }}
                 >
                     Confirm

@@ -153,6 +153,14 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         setShowRemoveNFTDlg(true);
     };
 
+    const updateNFTList = (editedItem: AdminNFTItemType) => {
+        setTableData((prevState: AdminNFTItemType[]) => {
+            const nftList = [...prevState];
+            nftList[id2Remove] = editedItem;
+            return nftList;
+        });
+    };
+
     return (
         <>
             <Stack height="100%" spacing={4}>
@@ -226,6 +234,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             >
                 <RemoveNFT
                     token2Remove={tabledata[id2Remove]}
+                    handleTokenUpdate={updateNFTList}
                     onClose={() => {
                         setShowRemoveNFTDlg(false);
                     }}
