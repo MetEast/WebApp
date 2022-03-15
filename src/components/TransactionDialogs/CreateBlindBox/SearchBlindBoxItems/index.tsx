@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid, Typography, Checkbox, Skeleton } from '@mui/material';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import SearchField from 'src/components/SearchField';
-import { TblHeaderTypo, TblBodyTypo, ImageBox } from './styles';
+import { TblHeaderTypo, TblBodyTypo, MobileImageBox, ImageBox } from './styles';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeBlindBoxSelectItem } from 'src/types/product-types';
@@ -176,7 +176,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                             <Grid item key={index} xs={6}>
                                 <Stack width="100%" spacing={1}>
                                     {loadingItemsList ? (
-                                        <ImageBox selected={false}>
+                                        <MobileImageBox selected={false}>
                                             <Box className="skeleton_box">
                                                 <Skeleton
                                                     variant="rectangular"
@@ -186,9 +186,9 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                                                     sx={{ bgcolor: '#E8F4FF' }}
                                                 />
                                             </Box>
-                                        </ImageBox>
+                                        </MobileImageBox>
                                     ) : (
-                                        <ImageBox
+                                        <MobileImageBox
                                             selected={itemChecked[index] === undefined ? false : itemChecked[index]}
                                             onClick={() => handleSelectChange(index)}
                                         >
@@ -198,7 +198,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                                             <Box className="check_box">
                                                 <Icon icon="ph:check" fontSize={20} color="#1890FF" />
                                             </Box>
-                                        </ImageBox>
+                                        </MobileImageBox>
                                     )}
                                     {loadingItemsList ? (
                                         <Skeleton
@@ -291,15 +291,13 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                                     </Grid>
                                 ) : (
                                     <Grid item xs={5}>
-                                        <Box borderRadius={2} width={72} height={50} overflow="hidden">
+                                        <ImageBox>
                                             <img
                                                 src={item.url}
-                                                width="100%"
-                                                height="100%"
-                                                style={{ objectFit: 'cover' }}
+                                                // src="assets/images/blindbox/blindbox-nft-template5.png"
                                                 alt=""
                                             />
-                                        </Box>
+                                        </ImageBox>
                                     </Grid>
                                 )}
                                 {loadingItemsList ? (
