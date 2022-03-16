@@ -15,7 +15,7 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
 
     return (
         <Container
-            justifyContent={emptyNotifications ? 'center' : 'space-between'}
+            justifyContent={emptyNotifications ? 'auto' : 'space-between'}
             alignItems={emptyNotifications ? 'center' : 'auto'}
             spacing={6}
             sx={{ overflowY: 'auto', overflowX: 'hidden' }}
@@ -27,14 +27,14 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                         fontWeight={700}
                         lineHeight={1}
                         textAlign="center"
-                        sx={{ textTransform: 'capitalize' }}
+                        sx={{ textTransform: 'capitalize', wordBreak: 'normal' }}
                     >
                         you Currently have No notifications
                     </Typography>
                     <img src="/assets/images/notifications/no-notifications.svg" width="80%" alt="" />
-                    <PrimaryButton fullWidth onClick={onClose}>
+                    {/* <PrimaryButton fullWidth onClick={onClose}>
                         Back
-                    </PrimaryButton>
+                    </PrimaryButton> */}
                 </>
             ) : (
                 <>
@@ -42,29 +42,34 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                         <Typography fontSize={42} fontWeight={700}>
                             Notifications
                         </Typography>
-                        <Typography
-                            fontSize={16}
-                            fontWeight={500}
-                            color="#1EA557"
-                            paddingX={1.5}
-                            paddingY={0.5}
-                            borderRadius={3}
-                            sx={{ background: '#C9F5DC' }}
-                        >
-                            28 Unread
-                        </Typography>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
+                            <Typography
+                                fontSize={16}
+                                fontWeight={500}
+                                color="#1EA557"
+                                paddingX={1.5}
+                                paddingY={0.5}
+                                borderRadius={3}
+                                sx={{ background: '#C9F5DC' }}
+                            >
+                                28 Unread
+                            </Typography>
+                            <PrimaryButton size="small" sx={{ width: 108, height: 32, fontSize: 12 }}>
+                                Mark as read
+                            </PrimaryButton>
+                        </Stack>
                     </Stack>
                     <Stack spacing={3} height="100%">
                         {notificationsList.map((item, index) => (
                             <NotificationItem key={index} data={item} />
                         ))}
                     </Stack>
-                    <Stack direction="row" spacing={2}>
+                    {/* <Stack direction="row" spacing={2}>
                         <SecondaryButton fullWidth onClick={onClose}>
                             Close
                         </SecondaryButton>
                         <PrimaryButton fullWidth>Mark as read</PrimaryButton>
-                    </Stack>
+                    </Stack> */}
                 </>
             )}
         </Container>
