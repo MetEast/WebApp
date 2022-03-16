@@ -13,6 +13,8 @@ export interface ComponentProps {
     fontSize?: number;
     fontWeight?: number;
     number?: boolean;
+    inputOnlyValid?: boolean;
+    enableEmpty?: boolean;
     error?: boolean;
     errorText?: string;
     limit?: number;
@@ -32,26 +34,30 @@ const CustomTextField: React.FC<ComponentProps> = ({
     fontWeight,
     number = false,
     error = false,
+    inputOnlyValid = false,
+    enableEmpty = false,
     errorText = '',
     limit,
     sx,
     changeHandler = () => {},
 }): JSX.Element => {
-    const [text, setText] = useState(inputValue);
+    const [text, setText] = useState(inputValue ? inputValue : '');
     const [invalid, setInvalid] = useState<boolean>(true);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = limit ? event.target.value.slice(0, limit) : event.target.value;
-        setText(value);
-        changeHandler(value);
-
-        if (number) setInvalid(value === '' || isNaN(Number(value)));
-        else setInvalid(value === '');
+        let valid = false;
+        if (number) {
+            valid = (enableEmpty && value === '') || (value !== '' && !isNaN(Number(value)));
+        } else {
+            valid = enableEmpty || value !== '';
+        }
+        setInvalid(!valid);
+        if (!inputOnlyValid || valid) {
+            setText(value);
+            changeHandler(value);
+        }
     };
-
-    React.useEffect(() => {
-        setText(inputValue);
-    }, [inputValue]);
 
     return (
         <Stack spacing={0.5} sx={{ ...sx }}>
