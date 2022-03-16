@@ -42,12 +42,16 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
 
     const handleSubmit = () => {
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
-        if (bannerList.findIndex((item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort)) !== -1) {
+        if (
+            bannerList.findIndex(
+                (item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort),
+            ) !== -1
+        ) {
             enqueueSnackbar('Same sort exist!', {
                 variant: 'warning',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
-            return ;
+            return;
         }
         setOnProgress(true);
         let url: string = '';
@@ -109,14 +113,22 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                             <Typography fontSize={12} fontWeight={700}>
                                 Image
                             </Typography>
-                            <img
-                                src={
-                                    bannerImage.preview === ''
-                                        ? '/assets/images/blindbox/blindbox-nft-template2.png'
-                                        : bannerImage.preview
-                                }
-                                style={{ borderRadius: '18px' }}
-                                alt=""
+                            <label htmlFor="banner-image" style={{ width: '100%' }}>
+                                <img
+                                    src={
+                                        bannerImage.preview === ''
+                                            ? '/assets/images/blindbox/blindbox-nft-template2.png'
+                                            : bannerImage.preview
+                                    }
+                                    style={{ borderRadius: '18px' }}
+                                    alt=""
+                                />
+                            </label>
+                            <input
+                                type="file"
+                                id="banner-image"
+                                style={{ display: 'none' }}
+                                onChange={handleBannerImageChanged}
                             />
                             <Stack direction="row" spacing={1}>
                                 <PrimaryButton
@@ -133,27 +145,19 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                     <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
                                     {`Delete`}
                                 </PrimaryButton>
-                                <label htmlFor="banner-image" style={{ width: '100%' }}>
-                                    <PrimaryButton
-                                        btn_type="secondary"
-                                        fullWidth
-                                        size="small"
-                                        onClick={() => document.getElementById('banner-image')?.click()}
-                                    >
-                                        <Icon
-                                            icon="ph:pencil-simple"
-                                            fontSize={20}
-                                            style={{ marginBottom: 4, marginRight: 4 }}
-                                        />
-                                        {`Edit`}
-                                    </PrimaryButton>
-                                </label>
-                                <input
-                                    type="file"
-                                    id="banner-image"
-                                    style={{ display: 'none' }}
-                                    onClick={handleBannerImageChanged}
-                                />
+                                <PrimaryButton
+                                    btn_type="secondary"
+                                    fullWidth
+                                    size="small"
+                                    onClick={() => document.getElementById('banner-image')?.click()}
+                                >
+                                    <Icon
+                                        icon="ph:pencil-simple"
+                                        fontSize={20}
+                                        style={{ marginBottom: 4, marginRight: 4 }}
+                                    />
+                                    {`Edit`}
+                                </PrimaryButton>
                             </Stack>
                         </Stack>
                         {/* <CustomTextField
