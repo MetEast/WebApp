@@ -12,7 +12,7 @@ export const DataTable = styled(Table)({
     },
 });
 
-export const PageButton = styled(Button)<{ active: boolean }>`
+export const PageButton = styled(Button)<{ active: number }>`
     width: 40px;
     min-width: 0;
     height: 40px;

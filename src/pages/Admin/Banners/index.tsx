@@ -84,7 +84,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         },
     ];
 
-    const data: AdminBannersItemType[] = useMemo(() => [...Array(111).keys()].map((item) => blankAdminBannerItem), []);
+    const data: AdminBannersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminBannerItem), []);
 
     const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
@@ -147,6 +147,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <CreateBanner
+                    bannerList={tabledata}
                     onClose={() => {
                         setShowCreateBannerDlg(false);
                     }}
@@ -160,7 +161,8 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <EditBanner
-                    banner2Edit={tabledata[id2Edit]}
+                    bannerList={tabledata}
+                    banner2Edit={tabledata.length === 0 ? blankAdminBannerItem : tabledata[id2Edit]}
                     onClose={() => {
                         setShowEditBannerDlg(false);
                     }}
@@ -174,7 +176,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <DeleteBanner
-                    bannerId={tabledata[id2Edit].id}
+                    bannerId={tabledata.length === 0 ? 0 : tabledata[id2Edit].id}
                     onClose={() => {
                         setShowDeleteBannerDlg(false);
                     }}

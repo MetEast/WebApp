@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext } from 'react';
 import { TypeSelectItem } from 'src/types/select-types';
 
-interface State {
+interface DlgState {
     // manage profile
     manageProfileDlgOpened: boolean;
     // confirm transaction
@@ -12,7 +12,7 @@ interface State {
     mintCategory: TypeSelectItem;
     mintTitle: string;
     mintIntroduction: string;
-    mintFile?: File;
+    mintFile: File;
     mintRoyalties: number;
     mintTokenId: string;
     mintTokenUri: string;
@@ -118,7 +118,7 @@ interface State {
     allBidDlgOpened: boolean;
 }
 
-const defaultState: State = {
+export const defaultDlgState: DlgState = {
     // manage profile
     manageProfileDlgOpened: false,
     // confirm transaction
@@ -129,6 +129,7 @@ const defaultState: State = {
     mintTitle: '',
     mintCategory: { label: '', value: '' },
     mintIntroduction: '',
+    mintFile: new File([], ''),
     mintRoyalties: 0,
     mintTokenId: '',
     mintTokenUri: '',
@@ -235,16 +236,16 @@ const defaultState: State = {
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
 
-const defaultContextValue: ContextType<State> = [defaultState, () => {}];
+const defaultContextValue: ContextType<DlgState> = [defaultDlgState, () => {}];
 
 export const DialogContext = createContext(defaultContextValue);
 
 export const DialogContextProvider: React.FC = ({ children, ...props }) => {
-    const [contextState, setContextState] = useState<State>(defaultState);
+    const [contextState, setContextState] = useState<DlgState>(defaultDlgState);
 
-    const ctxValue: ContextType<State> = [
+    const ctxValue: ContextType<DlgState> = [
         contextState,
-        (value: State) => {
+        (value: DlgState) => {
             setContextState(value);
         },
     ];

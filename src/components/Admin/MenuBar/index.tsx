@@ -81,7 +81,7 @@ const MenuBar: React.FC = (): JSX.Element => {
         // },
         // { title: 'BIDS', icon: <Icon icon="ph:ticket" fontSize={20} />, url: '/admin/bids' },
         { title: 'BANNERS', icon: <Icon icon="ph:mountains" fontSize={20} />, url: '/admin/banners' },
-        { title: 'NOTIFICATIONS', icon: <Icon icon="ph:chat-circle" fontSize={20} />, url: '/admin/notifications' },
+        // { title: 'NOTIFICATIONS', icon: <Icon icon="ph:chat-circle" fontSize={20} />, url: '/admin/notifications' },
     ];
 
     const navigate = useNavigate();

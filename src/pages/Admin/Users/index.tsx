@@ -166,7 +166,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
                 }}
             >
                 <EditUserStatus
-                    user2Edit={tabledata[id2Edit]}
+                    user2Edit={tabledata.length === 0 ? blankAdminUserItem : tabledata[id2Edit]}
                     handleUserUpdate={updateUserList}
                     onClose={() => {
                         setShowEditUserStatusDlg(false);

@@ -851,14 +851,14 @@ export const getAdminSearchParams = (
         searchParams += status.value === 'online' ? '&status=online' : '&status=removed';
     }
     if (saleType !== undefined) {
-        searchParams += saleType.value === 'Buy now' ? '&saleType=buynow' : '&saleType=onauction';
+        searchParams += `&filter_status=${saleType.value === 'Buy now' ? 'BUY NOW' : 'ON AUCTION'}`;
     }
     return searchParams;
 };
 
 export const getAdminNFTItemList = async (fetchParams: string) => {
     const resAdminNFTList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
+        `${process.env.REACT_APP_SERVICE_URL}/admin/api/v1/listMarketTokens?${fetchParams}`,
         FETCH_CONFIG_JSON,
     );
     const jsonAdminNFTList = await resAdminNFTList.json();
@@ -875,10 +875,11 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
         _AdminNFT.selling_price = itemObject.price / 1e18;
         _AdminNFT.nft_creator = itemObject.royaltyOwner;
         _AdminNFT.nft_owner = itemObject.holder;
+        _AdminNFT.orderId = itemObject.orderId;
         _AdminNFT.sale_type = itemObject.endTime === '0' ? enumBadgeType.BuyNow : enumBadgeType.OnAuction;
         _AdminNFT.likes = itemObject.likes;
         _AdminNFT.views = itemObject.views;
-        _AdminNFT.status = itemObject.status === 'REMOVED' ? 'Removed' : 'Online'; // ------
+        _AdminNFT.status = itemObject.status === 'DELETED' ? 'Removed' : 'Online';
         const createdTime = getTime(itemObject.createTime);
         _AdminNFT.created_date = createdTime.date + ' ' + createdTime.time;
         if (itemObject.marketTime === undefined) _AdminNFT.listed_date = '';

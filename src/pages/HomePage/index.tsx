@@ -38,7 +38,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 setAdBanners(_adBanners.length === 0 ? blankPageBanners : _adBanners);
             }
         };
-        fetchBanners().catch(console.error);
+        if (signInDlgState.walletAccounts.length) fetchBanners().catch(console.error);
         return () => {
             unmounted = true;
         };

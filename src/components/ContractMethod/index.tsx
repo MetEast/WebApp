@@ -117,6 +117,9 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                         case 'settleAuctionOrder':
                             contractMethod = smartContract.methods.settleAuctionOrder(param.orderId);
                             break;
+                        case 'takeDownOrder':
+                            contractMethod = smartContract.methods.takeDownOrder(param.orderId);
+                            break;
                         default:
                             resolve('no action');
                             break;

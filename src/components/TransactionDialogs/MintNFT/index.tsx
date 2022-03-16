@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
 import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
@@ -19,7 +19,20 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.createNFTDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, createNFTDlgOpened: false, mintProgress: 0 });
+                    setDialogState({
+                        ...dialogState,
+                        mintTitle: '',
+                        mintIntroduction: '',
+                        mintCategory: { label: '', value: '' },
+                        mintFile: new File([''], ''),
+                        mintTxFee: 0,
+                        mintTxHash: '',
+                        mintTokenId: '',
+                        mintTokenUri: '',
+                        mintDidUri: '',
+                        mintProgress: 0,
+                        createNFTDlgOpened: false,
+                    });
                 }}
             >
                 {dialogState.createNFTDlgStep === 0 && <MintNFT />}
@@ -32,12 +45,12 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.errorMessageDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, errorMessageDlgOpened: false });
+                    setDialogState(defaultDlgState);
                 }}
             >
                 <ErrorMessage
                     onClose={() => {
-                        setDialogState({ ...dialogState, errorMessageDlgOpened: false });
+                        setDialogState(defaultDlgState);
                     }}
                 />
             </ModalDialog>

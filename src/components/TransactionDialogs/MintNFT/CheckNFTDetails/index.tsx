@@ -200,16 +200,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         onClick={() => {
                             setDialogState({
                                 ...dialogState,
-                                mintTitle: '',
-                                // mintAuthor: '',
-                                mintIntroduction: '',
-                                mintCategory: { label: '', value: '' },
-                                mintFile: new File([''], ''),
-                                mintTxFee: 0,
-                                mintTokenId: '',
-                                mintTokenUri: '',
-                                mintDidUri: '',
-                                mintProgress: 0,
                                 createNFTDlgOpened: true,
                                 createNFTDlgStep: 0,
                             });
