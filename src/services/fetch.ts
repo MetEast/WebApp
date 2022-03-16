@@ -875,6 +875,7 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
         _AdminNFT.selling_price = itemObject.price / 1e18;
         _AdminNFT.nft_creator = itemObject.royaltyOwner;
         _AdminNFT.nft_owner = itemObject.holder;
+        _AdminNFT.orderId = itemObject.orderId;
         _AdminNFT.sale_type = itemObject.endTime === '0' ? enumBadgeType.BuyNow : enumBadgeType.OnAuction;
         _AdminNFT.likes = itemObject.likes;
         _AdminNFT.views = itemObject.views;

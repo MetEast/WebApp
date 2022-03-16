@@ -17,6 +17,7 @@ export type AdminNFTItemType = {
     selling_price: number;
     nft_owner: string;
     nft_creator: string;
+    orderId: string;
     created_date: string;
     listed_date: string;
     likes: number;

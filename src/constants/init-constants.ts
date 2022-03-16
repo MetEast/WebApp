@@ -133,6 +133,7 @@ export const blankAdminNFTItem: AdminNFTItemType = {
     selling_price: 0,
     nft_owner: '',
     nft_creator: '',
+    orderId: '',
     created_date: '',
     listed_date: '',
     likes: 0,
