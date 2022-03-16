@@ -160,7 +160,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <EditBanner
-                    banner2Edit={tabledata[id2Edit]}
+                    banner2Edit={tabledata.length === 0 ? blankAdminBannerItem : tabledata[id2Edit]}
                     onClose={() => {
                         setShowEditBannerDlg(false);
                     }}
@@ -174,7 +174,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <DeleteBanner
-                    bannerId={tabledata[id2Edit].id}
+                    bannerId={tabledata.length === 0 ? 0 : tabledata[id2Edit].id}
                     onClose={() => {
                         setShowDeleteBannerDlg(false);
                     }}
