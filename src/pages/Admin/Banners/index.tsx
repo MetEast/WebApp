@@ -147,6 +147,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <CreateBanner
+                    bannerList={tabledata}
                     onClose={() => {
                         setShowCreateBannerDlg(false);
                     }}

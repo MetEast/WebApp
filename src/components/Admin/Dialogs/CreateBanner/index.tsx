@@ -10,13 +10,15 @@ import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { addAdminBanner } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
+import { AdminBannersItemType } from 'src/types/admin-table-data-types';
 
 export interface ComponentProps {
+    bannerList: AdminBannersItemType[];
     handleBannerUpdates: () => void;
     onClose: () => void;
 }
 
-const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }): JSX.Element => {
+const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdates, onClose }): JSX.Element => {
     // const classes = useStyles();
     const [signInDlgState] = useSignInContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -40,6 +42,13 @@ const CreateBanner: React.FC<ComponentProps> = ({ handleBannerUpdates, onClose }
 
     const handleSubmit = () => {
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
+        if (bannerList.findIndex((item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort)) !== -1) {
+            enqueueSnackbar('Same sort exist!', {
+                variant: 'warning',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return ;
+        }
         setOnProgress(true);
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
