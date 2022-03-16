@@ -125,19 +125,21 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PinkButton
-                        size="small"
-                        sx={{ paddingX: 3 }}
-                        onClick={(event: React.MouseEvent) => onRemove(event, props.data)}
-                    >
-                        <Icon
-                            icon="ph:trash"
-                            fontSize={20}
-                            color="#EB5757"
-                            style={{ marginBottom: 2, marginRight: 4 }}
-                        />
-                        {`Remove`}
-                    </PinkButton>
+                    {props.data.status === 'Online' && (
+                        <PinkButton
+                            size="small"
+                            sx={{ paddingX: 3 }}
+                            onClick={(event: React.MouseEvent) => onRemove(event, props.data)}
+                        >
+                            <Icon
+                                icon="ph:trash"
+                                fontSize={20}
+                                color="#EB5757"
+                                style={{ marginBottom: 2, marginRight: 4 }}
+                            />
+                            {`Remove`}
+                        </PinkButton>
+                    )}
                     {/* <PrimaryButton size="small" sx={{ paddingX: 3 }}>
                         <Icon icon="ph:eye" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
                         {`Details`}
