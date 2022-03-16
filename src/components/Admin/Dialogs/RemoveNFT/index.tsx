@@ -90,6 +90,11 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, 
         handleTokenUpdate(token2Remove);
     };
 
+    const handleRmoveToken = () => {
+        alert(token2Remove.tokenId);
+        handleTokenUpdate(token2Remove);
+    };
+
     return (
         <Stack spacing={4} width={520}>
             <Stack alignItems="center">
