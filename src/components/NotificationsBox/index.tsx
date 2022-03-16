@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { Container } from './styles';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import NotificationItem from './NotificationItem';
 import { TypeNotification } from 'src/types/notification-types';
+import useOnClickOutside from 'src/hooks/useOnClickOutside';
 
 interface ComponentProps {
     notificationsList: Array<TypeNotification>;
@@ -13,12 +14,16 @@ interface ComponentProps {
 const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose }): JSX.Element => {
     const emptyNotifications = notificationsList.length === 0;
 
+    const node = useRef<HTMLDivElement>();
+    useOnClickOutside(node, onClose);
+
     return (
         <Container
             justifyContent={emptyNotifications ? 'auto' : 'space-between'}
             alignItems={emptyNotifications ? 'center' : 'auto'}
             spacing={6}
             sx={{ overflowY: 'auto', overflowX: 'hidden' }}
+            ref={node}
         >
             {emptyNotifications ? (
                 <>
@@ -32,9 +37,6 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                         you Currently have No notifications
                     </Typography>
                     <img src="/assets/images/notifications/no-notifications.svg" width="80%" alt="" />
-                    {/* <PrimaryButton fullWidth onClick={onClose}>
-                        Back
-                    </PrimaryButton> */}
                 </>
             ) : (
                 <>
@@ -64,12 +66,6 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                             <NotificationItem key={index} data={item} />
                         ))}
                     </Stack>
-                    {/* <Stack direction="row" spacing={2}>
-                        <SecondaryButton fullWidth onClick={onClose}>
-                            Close
-                        </SecondaryButton>
-                        <PrimaryButton fullWidth>Mark as read</PrimaryButton>
-                    </Stack> */}
                 </>
             )}
         </Container>
