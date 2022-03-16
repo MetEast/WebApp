@@ -126,11 +126,10 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             title="Royalties"
                             placeholder="10"
                             error={royaltiesError}
-                            errorText="Royalties should be between 0 and 100."
+                            errorText="Royalties should be between 0 and 30."
                             sx={{ marginTop: 3 }}
                             handleChange={(value: string) => {
-                                if (value === '' || isNaN(Number(value))) setRoyalties(0);
-                                else setRoyalties(parseFloat(value));
+                                setRoyalties(parseFloat(value));
                             }}
                         />
                     </Grid>
@@ -210,7 +209,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             } else {
                                 setTitleError(title === '');
                                 setIntroductionError(introduction === '');
-                                setRoyaltiesError(royalties <= 0 || royalties >= 100);
+                                setRoyaltiesError(isNaN(royalties) || royalties < 0 || royalties > 30);
                                 setCategoryError(category === undefined);
                                 setMintFileError(mintFile === undefined);
                             }
