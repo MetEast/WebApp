@@ -29,6 +29,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [stateFile, setStateFile] = useState(null);
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [blindboxQuantity, setBlindboxQuantity] = useState<number>(0);
+    const [blindboxQuantityError, setBlindboxQuantityError] = useState(-1);
     const [blindboxPrice, setBlindboxPrice] = useState<number>(0);
     const [blindboxPriceError, setBlindBoxPriceError] = useState(false);
     const [blindboxPurchases, setBlindboxPurchases] = useState<number>(0);
@@ -57,6 +58,9 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         const tokenIds: string[] = dialogState.crtBlindTokenIds.split(';').filter((item: string) => item.length > 0);
         setBlindboxQuantity(tokenIds.length);
+        if (blindboxQuantityError >= 0) {
+            setBlindboxQuantityError(tokenIds.length);
+        }
     }, [dialogState.crtBlindTokenIds]);
 
     return (
@@ -126,6 +130,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 <CustomTextField
                                     disabled
                                     inputValue={blindboxQuantity.toString() || ''}
+                                    error={blindboxQuantityError === 0}
+                                    errorText="Select at least 1 NFT"
                                     title="Number of NFT"
                                     placeholder="es. 1000"
                                     changeHandler={(value: string) => setBlindboxQuantity(parseInt(value))}
@@ -221,7 +227,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                         <SecondaryButton
                             fullWidth
                             onClick={() => {
-                                setDialogState({ ...dialogState, createBlindBoxDlgOpened: false });
+                                setDialogState({
+                                    ...dialogState,
+                                    createBlindBoxDlgOpened: false,
+                                    crtBlindTokenIds: '',
+                                });
                             }}
                         >
                             Back
@@ -261,6 +271,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     // setSaleEndsError(isNaN(Date.parse(saleEnds)));
                                     setBlindboxImageError(blindboxImage === undefined);
                                     setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
+                                    setBlindboxQuantityError(blindboxQuantity);
                                 }
                             }}
                         >

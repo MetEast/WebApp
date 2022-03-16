@@ -41,7 +41,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
     sx,
     changeHandler = () => {},
 }): JSX.Element => {
-    const [text, setText] = useState(inputValue ? inputValue : '');
+    const [text, setText] = useState('');
     const [invalid, setInvalid] = useState<boolean>(true);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +58,10 @@ const CustomTextField: React.FC<ComponentProps> = ({
             changeHandler(value);
         }
     };
+
+    React.useEffect(() => {
+        setText(inputValue === undefined ? '' : inputValue);
+    }, [inputValue]);
 
     return (
         <Stack spacing={0.5} sx={{ ...sx }}>
