@@ -4,6 +4,7 @@ import { SxProps } from '@mui/system';
 
 export interface ComponentProps {
     title?: string;
+    inputValue?: string;
     placeholder?: string;
     error?: boolean;
     errorText?: string;
@@ -13,13 +14,14 @@ export interface ComponentProps {
 
 const RoyaltyInput: React.FC<ComponentProps> = ({
     title,
+    inputValue,
     placeholder,
     error = false,
     errorText = '',
     sx,
     handleChange = () => {},
 }): JSX.Element => {
-    const [text, setText] = useState('10');
+    const [text, setText] = useState(inputValue);
     const [invalid, setInvalid] = useState<boolean>(true);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

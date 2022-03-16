@@ -19,17 +19,19 @@ export interface ComponentProps {}
 const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [category, setCategory] = useState<TypeSelectItem>();
+    const [category, setCategory] = useState<TypeSelectItem>(dialogState.mintCategory);
     const [categoryError, setCategoryError] = useState(false);
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
-    const [title, setTitle] = useState<string>('');
+    const [title, setTitle] = useState<string>(dialogState.mintTitle);
     const [titleError, setTitleError] = useState(false);
-    const [introduction, setIntroduction] = useState<string>('');
+    const [introduction, setIntroduction] = useState<string>(dialogState.mintIntroduction);
     const [introductionError, setIntroductionError] = useState(false);
-    const [mintFile, setMintFile] = useState<File>();
+    const [mintFile, setMintFile] = useState<File>(dialogState.mintFile);
     const [mintFileError, setMintFileError] = useState(false);
-    const [stateFile, setStateFile] = useState(null);
-    const [royalties, setRoyalties] = useState<number>(10);
+    const [stateFile, setStateFile] = useState(dialogState.mintTitle === '' ? null : {raw: dialogState.mintFile, preview: URL.createObjectURL(dialogState.mintFile)});
+    const [royalties, setRoyalties] = useState<number>(
+        dialogState.mintRoyalties === 0 ? 10 : dialogState.mintRoyalties,
+    );
     const [royaltiesError, setRoyaltiesError] = useState(false);
 
     const handleFileChange = (files: Array<File>) => {
@@ -67,6 +69,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                     <Grid item xs={12} sm={6} display="flex" flexDirection="column">
                         <CustomTextField
                             title="Project Title"
+                            inputValue={title}
                             placeholder="Placeholder Text"
                             error={titleError}
                             errorText="Project title can not be empty."
@@ -74,6 +77,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                         />
                         <CustomTextField
                             title="Project Introduction"
+                            inputValue={introduction}
                             placeholder="Enter Introduction"
                             multiline
                             rows={3}
@@ -111,7 +115,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 isOpen={categorySelectOpen ? 1 : 0}
                                 handleClick={(value: string) => {
                                     const item = mintNFTCategoryOptions.find((option) => option.value === value);
-                                    setCategory(item);
+                                    setCategory(item || { label: '', value: '' });
                                     setCategoryError(false);
                                 }}
                                 setIsOpen={setCategorySelectOpen}
@@ -124,6 +128,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                         </Stack>
                         <RoyaltyInput
                             title="Royalties"
+                            inputValue={royalties.toString()}
                             placeholder="10"
                             error={royaltiesError}
                             errorText="Royalties should be between 0 and 30."
