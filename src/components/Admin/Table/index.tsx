@@ -11,7 +11,6 @@ import {
     Checkbox,
     TableSortLabel,
     Typography,
-    Skeleton,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
@@ -166,7 +165,6 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
         setCurPaginationFirstPage(Math.floor(page / 10) * 10);
     }, [page]);
 
-    console.log(isLoading);
     return (
         <Stack height="100%">
             <TableContainer component={Paper} sx={{ height: '70%' }}>
@@ -190,11 +188,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
 
                                 return (
                                     <>
-                                        {(isLoading || tabledata.length === 0) ? (
-                                            <TableRow style={{ height: 53 * emptyRows }}>
-                                                <TableCell colSpan={6} />
-                                            </TableRow>
-                                        ) : (
+                                        {!isLoading && (
                                             <TableRow
                                                 hover
                                                 onClick={(event) => handleClick(event, row.id)}
