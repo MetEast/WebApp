@@ -20,14 +20,13 @@ import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
 import { reduceHexAddress } from 'src/services/common';
 
-
 const AdminNFTs: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
         {
             id: 'token_id',
             label: 'TOKEN ID',
             cell: (props) => (
-                <Typography fontSize={16} >
+                <Typography fontSize={16}>
                     {reduceHexAddress(props.value, 4)}
                     <CopyToClipboard text={props.value} onCopy={showSnackBar}>
                         <CopyToClipboardButton>
@@ -52,7 +51,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             id: 'nft_owner',
             label: 'NFT owner',
             cell: (props) => (
-                <Typography fontSize={16} >
+                <Typography fontSize={16}>
                     {reduceHexAddress(props.value, 4)}
                     <CopyToClipboard text={props.value} onCopy={showSnackBar}>
                         <CopyToClipboardButton>
@@ -67,7 +66,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             id: 'nft_creator',
             label: 'NFT CREATOR',
             cell: (props) => (
-                <Typography fontSize={16} >
+                <Typography fontSize={16}>
                     {reduceHexAddress(props.value, 4)}
                     <CopyToClipboard text={props.value} onCopy={showSnackBar}>
                         <CopyToClipboardButton>
@@ -238,7 +237,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={nftStateSelectOpen ? 1 : 0}>
+                                    <SelectBtn fullWidth isopen={nftStateSelectOpen ? 1 : 0}>
                                         {nftState ? nftState.label : 'Select'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
@@ -257,7 +256,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={saleTypeSelectOpen ? 1 : 0}>
+                                    <SelectBtn fullWidth isopen={saleTypeSelectOpen ? 1 : 0}>
                                         {saleType ? saleType.label : 'Select'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
@@ -280,13 +279,22 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     setShowRemoveNFTDlg(false);
                 }}
             >
-                <RemoveNFT
-                    token2Remove={tabledata[id2Remove]}
-                    handleTokenUpdate={updateNFTList}
-                    onClose={() => {
-                        setShowRemoveNFTDlg(false);
-                    }}
-                />
+                {tabledata.length === 0 ? (
+                    <RemoveNFT
+                        handleTokenUpdate={updateNFTList}
+                        onClose={() => {
+                            setShowRemoveNFTDlg(false);
+                        }}
+                    />
+                ) : (
+                    <RemoveNFT
+                        token2Remove={tabledata[id2Remove]}
+                        handleTokenUpdate={updateNFTList}
+                        onClose={() => {
+                            setShowRemoveNFTDlg(false);
+                        }}
+                    />
+                )}
             </ModalDialog>
         </>
     );

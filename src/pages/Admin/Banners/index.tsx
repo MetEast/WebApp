@@ -84,7 +84,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         },
     ];
 
-    const data: AdminBannersItemType[] = useMemo(() => [...Array(111).keys()].map((item) => blankAdminBannerItem), []);
+    const data: AdminBannersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminBannerItem), []);
 
     const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);

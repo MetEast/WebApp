@@ -190,14 +190,10 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
 
                                 return (
                                     <>
-                                        {isLoading ? (
-                                            <Skeleton
-                                                variant="rectangular"
-                                                animation="wave"
-                                                width="100%"
-                                                height="100%"
-                                                sx={{ borderRadius: 4, bgcolor: '#E8F4FF' }}
-                                            />
+                                        {(isLoading || tabledata.length === 0) ? (
+                                            <TableRow style={{ height: 53 * emptyRows }}>
+                                                <TableCell colSpan={6} />
+                                            </TableRow>
                                         ) : (
                                             <TableRow
                                                 hover
