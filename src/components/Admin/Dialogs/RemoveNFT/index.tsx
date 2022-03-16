@@ -4,6 +4,16 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import Web3 from 'web3';
+import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+import { callContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam } from 'src/constants/init-constants';
 import { AdminNFTItemType } from 'src/types/admin-table-data-types';
 import { reduceHexAddress } from 'src/services/common';
 
@@ -75,26 +85,6 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, 
             });
     };
 
-    const handleRmoveToken = () => {
-        alert(token2Remove.tokenId);
-        handleTokenUpdate(token2Remove);
-    };
-
-    const handleRmoveToken = () => {
-        alert(token2Remove.tokenId);
-        handleTokenUpdate(token2Remove);
-    };
-
-    const handleRmoveToken = () => {
-        alert(token2Remove.tokenId);
-        handleTokenUpdate(token2Remove);
-    };
-
-    const handleRmoveToken = () => {
-        alert(token2Remove.tokenId);
-        handleTokenUpdate(token2Remove);
-    };
-
     return (
         <Stack spacing={4} width={520}>
             <Stack alignItems="center">
@@ -118,7 +108,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, 
                 <SecondaryButton fullWidth onClick={onClose}>
                     close
                 </SecondaryButton>
-                <PinkButton fullWidth onClick={handleRmoveToken}>
+                <PinkButton fullWidth disabled={onProgress} onClick={handleRmoveToken}>
                     Confirm
                 </PinkButton>
             </Stack>
