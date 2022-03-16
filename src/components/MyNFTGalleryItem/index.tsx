@@ -33,8 +33,9 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         event.preventDefault();
         event.stopPropagation();
         if (signInDlgState.isLoggedIn) {
-            const reqUrl =
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
+                likeState ? 'decTokenLikes' : 'incTokenLikes'
+            }`;
             const reqBody = {
                 token: signInDlgState.token,
                 tokenId: product.tokenId,
@@ -53,7 +54,6 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.code === 200) {
-
                     } else {
                         console.log(data);
                     }
@@ -83,7 +83,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         <GalleryItemContainer>
             <ProductImageContainer
                 onClick={() => {
-                    navigate(getUrl());
+                    if (!isLoading) navigate(getUrl());
                 }}
             >
                 <ImageBox loading={isLoading ? 1 : 0}>

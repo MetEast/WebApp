@@ -52,8 +52,9 @@ const NFTPreview: React.FC<ComponentProps> = ({
         event.preventDefault(); //
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            const reqUrl =
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
+                likeState ? 'decTokenLikes' : 'incTokenLikes'
+            }`;
             const reqBody = isBlindBox
                 ? {
                       token: signInDlgState.token,
@@ -94,7 +95,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
         <GalleryItemContainer>
             <ProductImageContainer
                 onClick={() => {
-                    navigate(getUrl());
+                    if (product.tokenId !== '') navigate(getUrl());
                 }}
             >
                 <ImageBox loading={product.tokenId === '' ? 1 : 0}>
