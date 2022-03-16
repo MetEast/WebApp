@@ -13,7 +13,13 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { mintNFTCategoryOptions } from 'src/constants/select-constants';
 
 interface ComponentProps {
-    changeHandler: (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => void;
+    changeHandler: (
+        status: number,
+        minPrice: string,
+        maxPrice: string,
+        category: TypeSelectItem | undefined,
+        opened: boolean,
+    ) => void;
 }
 
 const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element => {
@@ -78,15 +84,19 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                 <CustomTextField
                     placeholder="Min"
                     number={true}
+                    inputOnlyValid={true}
+                    enableEmpty={true}
                     sx={{ width: '100%' }}
                     changeHandler={(value: string) => setMinPrice(value)}
                 />
-                <Typography fontSize={14} fontWeight={400}>
+                <Typography fontSize={14} fontWeight={400} sx={{ wordBreak: 'normal' }}>
                     to
                 </Typography>
                 <CustomTextField
                     placeholder="Max"
                     number={true}
+                    inputOnlyValid={true}
+                    enableEmpty={true}
                     sx={{ width: '100%' }}
                     changeHandler={(value: string) => setMaxPrice(value)}
                 />
