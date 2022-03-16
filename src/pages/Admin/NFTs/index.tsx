@@ -279,22 +279,13 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     setShowRemoveNFTDlg(false);
                 }}
             >
-                {tabledata.length === 0 ? (
-                    <RemoveNFT
-                        handleTokenUpdate={updateNFTList}
-                        onClose={() => {
-                            setShowRemoveNFTDlg(false);
-                        }}
-                    />
-                ) : (
-                    <RemoveNFT
-                        token2Remove={tabledata[id2Remove]}
-                        handleTokenUpdate={updateNFTList}
-                        onClose={() => {
-                            setShowRemoveNFTDlg(false);
-                        }}
-                    />
-                )}
+                <RemoveNFT
+                    token2Remove={tabledata.length === 0 ? blankAdminNFTItem : tabledata[id2Remove]}
+                    handleTokenUpdate={updateNFTList}
+                    onClose={() => {
+                        setShowRemoveNFTDlg(false);
+                    }}
+                />
             </ModalDialog>
         </>
     );
