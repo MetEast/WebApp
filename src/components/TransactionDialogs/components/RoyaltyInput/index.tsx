@@ -26,7 +26,7 @@ const RoyaltyInput: React.FC<ComponentProps> = ({
         const value = event.target.value;
         setText(value);
         handleChange(value);
-        setInvalid(value === '' || isNaN(Number(value)) || Number(value) <= 0 || Number(value) >= 100);
+        setInvalid(value === '' || isNaN(Number(value)) || Number(value) < 0 || Number(value) > 30);
     };
 
     return (
