@@ -161,6 +161,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                 }}
             >
                 <EditBanner
+                    bannerList={tabledata}
                     banner2Edit={tabledata.length === 0 ? blankAdminBannerItem : tabledata[id2Edit]}
                     onClose={() => {
                         setShowEditBannerDlg(false);

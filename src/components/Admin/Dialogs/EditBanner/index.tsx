@@ -14,12 +14,13 @@ import { useSnackbar } from 'notistack';
 import { getAssetFromImage } from 'src/services/common';
 
 export interface ComponentProps {
+    bannerList: AdminBannersItemType[];
     banner2Edit: AdminBannersItemType;
     handleBannerUpdates: () => void;
     onClose: () => void;
 }
 
-const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates, onClose }): JSX.Element => {
+const EditBanner: React.FC<ComponentProps> = ({ bannerList, banner2Edit, handleBannerUpdates, onClose }): JSX.Element => {
     // const classes = useStyles();
 
     const [signInDlgState] = useSignInContext();
@@ -47,6 +48,13 @@ const EditBanner: React.FC<ComponentProps> = ({ banner2Edit, handleBannerUpdates
 
     const handleSubmit = () => {
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
+        if (bannerList.findIndex((item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort)) !== -1) {
+            enqueueSnackbar('Same sort exist!', {
+                variant: 'warning',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return ;
+        }
         setOnProgress(true);
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
