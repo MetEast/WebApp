@@ -180,44 +180,40 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
                         checkable={checkable}
                     />
                     <TableBody>
-                        {stableSort(tabledata, getComparator(order, orderBy))
+                        {!isLoading && stableSort(tabledata, getComparator(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
                                 const isItemSelected = isSelected(row.id);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
-                                    <>
-                                        {!isLoading && (
-                                            <TableRow
-                                                hover
-                                                onClick={(event) => handleClick(event, row.id)}
-                                                role="checkbox"
-                                                aria-checked={isItemSelected}
-                                                key={row.id}
-                                                selected={isItemSelected}
-                                            >
-                                                {checkable && (
-                                                    <TableCell padding="checkbox">
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={isItemSelected}
-                                                            inputProps={{
-                                                                'aria-labelledby': labelId,
-                                                            }}
-                                                        />
-                                                    </TableCell>
-                                                )}
-                                                {columns.map((column) => (
-                                                    <TableCell sx={{ fontSize: 16, fontWeight: 400 }}>
-                                                        {column.cell
-                                                            ? column.cell({ value: (row as any)[column.id], data: row })
-                                                            : (row as any)[column.id]}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
+                                    <TableRow
+                                        hover
+                                        onClick={(event) => handleClick(event, row.id)}
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        key={row.id}
+                                        selected={isItemSelected}
+                                    >
+                                        {checkable && (
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby': labelId,
+                                                    }}
+                                                />
+                                            </TableCell>
                                         )}
-                                    </>
+                                        {columns.map((column, index) => (
+                                            <TableCell key={`table-cell-${index}`} sx={{ fontSize: 16, fontWeight: 400 }}>
+                                                {column.cell
+                                                    ? column.cell({ value: (row as any)[column.id], data: row })
+                                                    : (row as any)[column.id]}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
                                 );
                             })}
                         {emptyRows > 0 && (
@@ -247,13 +243,14 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
                     >
                         <Icon icon="ph:caret-left-bold" color="#1890FF" />
                     </IconButton>
-                    {[...Array(10).keys()].map((item) => {
+                    {[...Array(10).keys()].map((item, index) => {
                         let pagenum = curPaginationFirstPage + item;
                         let enable = pagenum < totalPages;
                         let active = pagenum === page;
                         return (
                             <PageButton
-                                active={active}
+                                key={`page-button-${index}`}
+                                active={active ? 1 : 0}
                                 onClick={() => {
                                     setCurPage(pagenum);
                                 }}
