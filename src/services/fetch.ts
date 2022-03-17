@@ -99,7 +99,7 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
 
 export const getPageBannerList = async (address: string, location: number) => {
     const resPageBannerList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&location=${location}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listBanner?owner=${address}&location=${location}`,
         FETCH_CONFIG_JSON,
     );
     const jsonPageBannerList = await resPageBannerList.json();
@@ -921,7 +921,7 @@ export const updateUserRole = async (_token: string, _address: string, _role: nu
     const reqBody = {
         token: _token,
         address: _address,
-        userRole: _role,
+        userRole: _role.toString(),
         remarks: _remarks,
     };
     fetch(reqUrl, {
@@ -989,9 +989,9 @@ export const addAdminBanner = (
             token: token,
             owner: address,
             image: image,
-            location: location,
-            status: status,
-            sort: sort,
+            location: location.toString(),
+            status: status.toString(),
+            sort: sort.toString(),
         };
         fetch(reqUrl, {
             method: 'POST',
@@ -1025,11 +1025,11 @@ export const updateAdminBanner = (
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateBanner`;
         const reqBody = {
             token: token,
-            id: id,
+            id: id.toString(),
             image: image,
-            location: location,
-            status: status,
-            sort: sort,
+            location: location.toString(),
+            status: status.toString(),
+            sort: sort.toString(),
         };
         fetch(reqUrl, {
             method: 'POST',
@@ -1056,7 +1056,7 @@ export const deleteAdminBanner = (token: string, id: number) =>
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/deleteBanner`;
         const reqBody = {
             token: token,
-            id: id,
+            id: id.toString(),
         };
         fetch(reqUrl, {
             method: 'POST',

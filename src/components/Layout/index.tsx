@@ -7,11 +7,9 @@ import Container from '../Container';
 import SignInDlgContainer from '../SignInDialog';
 import ProgressBar from '../ProgressBar';
 import { useDialogContext } from 'src/context/DialogContext';
-import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
-import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';
-import ManageProfileDlgContainer from '../ManageProfile';
 import { useLocation } from 'react-router-dom';
 import AdminPage from 'src/pages/Admin';
+import TransactionDlgContainer from '../TransactionDialogs';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
     const location = useLocation();
@@ -65,9 +63,7 @@ const Layout: React.FC = ({ children }): JSX.Element => {
             ) : (
                 <AdminPage>{children}</AdminPage>
             )}
-            <MintNFTDlgContainer />
-            <CreateBlindBoxDlgContainer />
-            <ManageProfileDlgContainer />
+            <TransactionDlgContainer />
         </>
     );
 };
