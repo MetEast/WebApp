@@ -354,7 +354,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             <Typography fontSize={{ xs: 32, sm: 56 }} fontWeight={700}>
                                 {signInDlgState.userName === ''
                                     ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
-                                    : signInDlgState.userName}
+                                    : reduceHexAddress(signInDlgState.userName, 4)}
                             </Typography>
                             <SecondaryButton
                                 sx={{

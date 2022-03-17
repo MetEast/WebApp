@@ -199,6 +199,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     title="Author name"
                     placeholder="Enter your name"
                     height={56}
+                    limit={40}
                     sx={{ marginTop: 2.5 }}
                     inputValue={userName}
                     changeHandler={(value: string) => setUserName(value)}
