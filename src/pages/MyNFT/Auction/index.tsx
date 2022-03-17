@@ -30,8 +30,6 @@ import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/Pr
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import ReceivedBids from 'src/components/profile/ReceivedBids';
-import AllTransactions from 'src/components/profile/AllTransactions';
-import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
@@ -368,14 +366,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
             </ModalDialog>
             <ModalDialog
-                open={dialogState.allTxDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, allTxDlgOpened: false });
-                }}
-            >
-                <AllTransactions />
-            </ModalDialog>
-            <ModalDialog
                 open={dialogState.acceptBidDlgOpened}
                 onClose={() => {
                     setDialogState({ ...dialogState, acceptBidDlgOpened: false });
@@ -394,22 +384,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     <NoBids onClose={() => setViewBidDlgOpened(false)} />
                 ) : (
                     <ReceivedBids closeDlg={() => setViewBidDlgOpened(false)} />
-                )}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.allBidDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, allBidDlgOpened: false });
-                }}
-            >
-                {bidsList.length === 0 ? (
-                    <NoBids
-                        onClose={() => {
-                            setDialogState({ ...dialogState, allBidDlgOpened: false });
-                        }}
-                    />
-                ) : (
-                    <AllBids />
                 )}
             </ModalDialog>
         </Container>

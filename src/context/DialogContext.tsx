@@ -116,6 +116,7 @@ interface DlgState {
     allTxDlgOpened: boolean;
     // all bids
     allBidDlgOpened: boolean;
+    noBidDlgOpened: boolean;
 }
 
 export const defaultDlgState: DlgState = {
@@ -233,6 +234,7 @@ export const defaultDlgState: DlgState = {
     allTxDlgOpened: false,
     // all bids
     allBidDlgOpened: false,
+    noBidDlgOpened: false,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

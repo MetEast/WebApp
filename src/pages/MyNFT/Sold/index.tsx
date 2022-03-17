@@ -244,14 +244,6 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <ModalDialog
-                open={dialogState.allTxDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, allTxDlgOpened: false });
-                }}
-            >
-                <AllTransactions />
-            </ModalDialog>
         </Container>
     );
 };

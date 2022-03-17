@@ -6,6 +6,9 @@ import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';
 import ManageProfileDlgContainer from '../ManageProfile';
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
+import AllTransactions from 'src/components/profile/AllTransactions';
+import AllBids from './AllBids/AllBids';
+import NoBids from './AllBids/NoBids';
 
 export interface ComponentProps {}
 
@@ -35,6 +38,38 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }}
             >
                 <WaitingConfirm />
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.allTxDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allTxDlgOpened: false });
+                }}
+            >
+                <AllTransactions />
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.allBidDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, allBidDlgOpened: false });
+                }}
+            >
+                <AllBids
+                    onClose={() => {
+                        setDialogState({ ...dialogState, allBidDlgOpened: false });
+                    }}
+                />
+            </ModalDialog>
+            <ModalDialog
+                open={dialogState.noBidDlgOpened}
+                onClose={() => {
+                    setDialogState({ ...dialogState, noBidDlgOpened: false });
+                }}
+            >
+                <NoBids
+                    onClose={() => {
+                        setDialogState({ ...dialogState, noBidDlgOpened: false });
+                    }}
+                />
             </ModalDialog>
         </>
     );

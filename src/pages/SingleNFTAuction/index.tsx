@@ -406,30 +406,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 {dialogState.acceptBidDlgStep === 0 && <AcceptBid />}
                 {dialogState.acceptBidDlgStep === 1 && <SaleSuccess />}
             </ModalDialog>
-            <ModalDialog
-                open={dialogState.allBidDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, allBidDlgOpened: false });
-                }}
-            >
-                {bidsList.length === 0 && myBidsList.length === 0 ? (
-                    <NoBids
-                        onClose={() => {
-                            setDialogState({ ...dialogState, allBidDlgOpened: false });
-                        }}
-                    />
-                ) : (
-                    <AllBids />
-                )}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.allTxDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, allTxDlgOpened: false });
-                }}
-            >
-                <AllTransactions />
-            </ModalDialog>
         </Container>
     );
 };
