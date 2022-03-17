@@ -33,11 +33,12 @@ export const NotificationsBoxContainer = styled(Box)<{ show: boolean }>`
     right: 0;
     padding-top: 8px;
     ${(props) => props.theme.breakpoints.down('sm')} {
-        position: fixed;
+        /* position: fixed;
         width: 100vw;
         height: 100vh;
         background: white;
         inset: 0;
-        z-index: 30;
+        z-index: 30; */
+        display: none;
     }
 `;
