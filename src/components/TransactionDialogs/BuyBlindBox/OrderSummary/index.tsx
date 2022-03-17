@@ -37,6 +37,8 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             token: signInDlgState.token,
             blindBoxId: dialogState.buyBlindBoxId,
             tokenIds: dialogState.buyBlindTokenIds,
+            buyer: signInDlgState.walletAccounts[0],
+            totalPrice: dialogState.buyBlindPriceEla * dialogState.buyBlindOrderIds.length,
         };
         fetch(reqUrl, {
             method: 'POST',
