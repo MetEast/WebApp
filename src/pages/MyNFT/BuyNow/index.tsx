@@ -299,14 +299,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                 {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
                 {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
             </ModalDialog>
-            <ModalDialog
-                open={dialogState.allTxDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, allTxDlgOpened: false });
-                }}
-            >
-                <AllTransactions />
-            </ModalDialog>
         </Container>
     );
 };

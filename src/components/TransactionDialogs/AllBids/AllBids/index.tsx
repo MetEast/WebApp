@@ -9,18 +9,17 @@ import { SelectTitleBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeSingleNFTBid } from 'src/types/product-types';
-import { useDialogContext } from 'src/context/DialogContext';
 import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestBids } from 'src/services/fetch';
 import { useParams } from 'react-router-dom';
 
 export interface ComponentProps {
+    onClose: () => void;
 }
 
-const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
+const AllBids: React.FC<ComponentProps> = ({onClose}): JSX.Element => {
     const params = useParams();
     const [signInDlgState] = useSignInContext();
-    const [dialogState, setDialogState] = useDialogContext();
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [sortby, setSortby] = useState<TypeSelectItem>();
@@ -128,9 +127,7 @@ const AllBids: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             <SecondaryButton
                 fullWidth
-                onClick={() => {
-                    setDialogState({ ...dialogState, allBidDlgOpened: false });
-                }}
+                onClick={onClose}
             >
                 Close
             </SecondaryButton>

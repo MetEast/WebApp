@@ -15,6 +15,7 @@ import { enumBadgeType, TypeProduct, TypeNFTHisotry } from 'src/types/product-ty
 import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 
@@ -23,6 +24,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
 
@@ -180,12 +182,23 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                             <PrimaryButton
                                 sx={{ marginTop: 3, width: '100%' }}
                                 onClick={() => {
-                                    setDialogState({
-                                        ...dialogState,
-                                        mintTokenId: productDetail.tokenIdHex,
-                                        createNFTDlgOpened: true,
-                                        createNFTDlgStep: 3,
-                                    });
+                                    if (productDetail.status === 'DELETED') {
+                                        enqueueSnackbar(
+                                            `This NFT is taken down by admin!`,
+                                            {
+                                                variant: 'error',
+                                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                            },
+                                        );
+                                    }
+                                    else {
+                                        setDialogState({
+                                            ...dialogState,
+                                            mintTokenId: productDetail.tokenIdHex,
+                                            createNFTDlgOpened: true,
+                                            createNFTDlgStep: 3,
+                                        });
+                                    }
                                 }}
                             >
                                 Sell

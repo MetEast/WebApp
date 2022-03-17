@@ -44,7 +44,10 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                         </Typography>
                         <ViewAllBtn
                             onClick={() => {
-                                setDialogState({ ...dialogState, allBidDlgOpened: true });
+                                if (bidsList.length === 0 && myBidsList.length === 0)
+                                    setDialogState({ ...dialogState, noBidDlgOpened: true });
+                                else 
+                                    setDialogState({ ...dialogState, allBidDlgOpened: true });
                             }}
                         >
                             View ALL

@@ -286,17 +286,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         onClick={() => {
                             setDialogState({
                                 ...dialogState,
+                                createBlindBoxDlgOpened: true,
                                 createBlindBoxDlgStep: 0,
-                                crtBlindTitle: '',
-                                crtBlindDescription: '',
-                                crtBlindImage: new File([''], ''),
-                                crtBlindTokenIds: '',
-                                crtBlindStatus: 'offline',
-                                crtBlindQuantity: 0,
-                                crtBlindPrice: 0,
-                                crtBlindSaleBegin: '',
-                                // crtBlindSaleEnd: '',
-                                crtBlindPurchases: 0,
                             });
                         }}
                     >

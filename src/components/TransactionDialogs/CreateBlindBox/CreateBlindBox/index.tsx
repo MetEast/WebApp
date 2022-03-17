@@ -19,24 +19,24 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const classes = useStyles();
 
-    const [blindboxTitle, setBlindboxTitle] = useState<string>('');
+    const [blindboxTitle, setBlindboxTitle] = useState<string>(dialogState.crtBlindTitle);
     const [blindboxTitleError, setBlindboxTitleError] = useState(false);
-    const [blindboxDescription, setBlindboxDescription] = useState<string>('');
+    const [blindboxDescription, setBlindboxDescription] = useState<string>(dialogState.crtBlindDescription);
     const [blindboxDescriptionError, setBlindboxDescriptionError] = useState(false);
-    const [blindboxImage, setBlindboxImage] = useState<File>();
+    const [blindboxImage, setBlindboxImage] = useState<File>(dialogState.crtBlindImage);
     const [blindboxImageError, setBlindboxImageError] = useState(false);
 
-    const [stateFile, setStateFile] = useState(null);
-    const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
-    const [blindboxQuantity, setBlindboxQuantity] = useState<number>(0);
+    const [stateFile, setStateFile] = useState(dialogState.crtBlindTitle === '' ? null : {raw: dialogState.crtBlindImage, preview: URL.createObjectURL(dialogState.crtBlindImage)});
+    const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>(dialogState.crtBlindStatus);
+    const [blindboxQuantity, setBlindboxQuantity] = useState<number>(dialogState.crtBlindQuantity);
     const [blindboxQuantityError, setBlindboxQuantityError] = useState(-1);
-    const [blindboxPrice, setBlindboxPrice] = useState<number>(0);
+    const [blindboxPrice, setBlindboxPrice] = useState<number>(dialogState.crtBlindPrice);
     const [blindboxPriceError, setBlindBoxPriceError] = useState(false);
-    const [blindboxPurchases, setBlindboxPurchases] = useState<number>(0);
+    const [blindboxPurchases, setBlindboxPurchases] = useState<number>(dialogState.crtBlindPurchases);
     const [blindboxPurchasesError, setBlindboxPurchasesError] = useState(false);
-    const [saleBegins, setSaleBegins] = React.useState<string>('');
+    const [saleBegins, setSaleBegins] = React.useState<string>(dialogState.crtBlindSaleBegin);
     const [saleBeginsError, setSaleBeginsError] = useState(false);
-    // const [saleEnds, setSaleEnds] = useState<string>('');
+    // const [saleEnds, setSaleEnds] = useState<string>(dialogState.crtBlindEnd);
     // const [saleEndsError, setSaleEndsError] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
@@ -81,6 +81,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                         <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
                             <CustomTextField
                                 title="Title"
+                                inputValue={blindboxTitle}
                                 placeholder="Enter Title"
                                 error={blindboxTitleError}
                                 errorText="Title can not be empty."
@@ -88,6 +89,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             />
                             <CustomTextField
                                 title="Description"
+                                inputValue={blindboxDescription}
                                 placeholder="Enter Description"
                                 error={blindboxDescriptionError}
                                 errorText="Description can not be empty."
@@ -138,6 +140,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 />
                                 <CustomTextField
                                     title="Max Num of Purchases"
+                                    inputValue={blindboxPurchases.toString()}
                                     placeholder="es. 1000"
                                     error={blindboxPurchasesError}
                                     errorText="Max number of Purchases cannot be empty"
@@ -230,7 +233,17 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 setDialogState({
                                     ...dialogState,
                                     createBlindBoxDlgOpened: false,
+                                    createBlindBoxDlgStep: 0,
+                                    crtBlindTitle: '',
+                                    crtBlindDescription: '',
+                                    crtBlindImage: new File([''], ''),
                                     crtBlindTokenIds: '',
+                                    crtBlindStatus: 'offline',
+                                    crtBlindQuantity: 0,
+                                    crtBlindPrice: 0,
+                                    crtBlindSaleBegin: '',
+                                    // crtBlindSaleEnd: '',
+                                    crtBlindPurchases: 0,
                                 });
                             }}
                         >

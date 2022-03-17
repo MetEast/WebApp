@@ -18,6 +18,7 @@ import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from '
 import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
 import ModalDialog from 'src/components/ModalDialog';
 import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
@@ -28,6 +29,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
@@ -190,12 +192,23 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                             <PrimaryButton
                                 sx={{ marginTop: 3, width: '100%' }}
                                 onClick={() => {
-                                    setDialogState({
-                                        ...dialogState,
-                                        mintTokenId: productDetail.tokenIdHex,
-                                        createNFTDlgOpened: true,
-                                        createNFTDlgStep: 3,
-                                    });
+                                    if (productDetail.status === 'DELETED') {
+                                        enqueueSnackbar(
+                                            `This NFT is taken down by admin!`,
+                                            {
+                                                variant: 'error',
+                                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                            },
+                                        );
+                                    }
+                                    else {
+                                        setDialogState({
+                                            ...dialogState,
+                                            mintTokenId: productDetail.tokenIdHex,
+                                            createNFTDlgOpened: true,
+                                            createNFTDlgStep: 3,
+                                        });
+                                    }
                                 }}
                             >
                                 Sell
@@ -253,14 +266,6 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <ModalDialog
-                open={dialogState.allTxDlgOpened}
-                onClose={() => {
-                    setDialogState({ ...dialogState, allTxDlgOpened: false });
-                }}
-            >
-                <AllTransactions />
-            </ModalDialog>
         </Container>
     );
 };

@@ -2,14 +2,12 @@ import { FC, PropsWithChildren } from 'react';
 import { Box, Stack } from '@mui/material';
 import { MenuBox, ContentBox } from './styles';
 import MenuBar from 'src/components/Admin/MenuBar';
-import SignInDlgContainer from 'src/components/SignInDialog';
 
 export interface ComponentProps {}
 
 const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Element => {
     return (
         <>
-            <SignInDlgContainer />
             <Box position="relative">
                 {/* <Stack position="absolute" top={0} left={0} height="100vh" justifyContent="center">
                     <ShowMenuBtn>
