@@ -17,9 +17,11 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
     const [signInDlgState] = useSignInContext();
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban'>(
-        user2Edit.status <= 1 ? 'admin' : user2Edit.status == 2 ? 'user' : 'ban',
+        user2Edit.status <= 1 ? 'admin' : user2Edit.status === 2 ? 'user' : 'ban',
     );
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
+
+    const [type, setType] = useState<number>(0); //0: ban general user, 1: unban general user, 2: add admin, 3: remove admin
 
     const handleUpdateUserRole = async () => {
         setOnProgress(true);
@@ -41,7 +43,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
             </Box>
             <CustomTextField title="USEN NICKNAME" inputValue={user2Edit.username} disabled />
             <CustomTextField title="USER ADDRESS" inputValue={user2Edit.address} disabled />
-            <Stack spacing={0.5}>
+            {/* <Stack spacing={0.5}>
                 <Typography fontSize={12} fontWeight={700}>
                     STATUS
                 </Typography>
@@ -71,7 +73,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                         ban
                     </PrimaryButton>
                 </Stack>
-            </Stack>
+            </Stack> */}
             <CustomTextField
                 title="REMARKS"
                 placeholder="Enter remarks"
@@ -80,13 +82,40 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                 inputValue={remarks}
                 changeHandler={(value: string) => setRemarks(value)}
             />
-            <Stack direction="row" spacing={2}>
+            {/* <Stack direction="row" spacing={2}>
                 <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
                     close
                 </PrimaryButton>
                 <PrimaryButton btn_type="pink" fullWidth disabled={onProgress} onClick={handleUpdateUserRole}>
                     Confirm
                 </PrimaryButton>
+            </Stack> */}
+            <Stack spacing={2}>
+                {type === 0 && (
+                    <PrimaryButton btn_type="pink" fullWidth>
+                        ban general user
+                    </PrimaryButton>
+                )}
+                {type === 1 && (
+                    <PrimaryButton btn_type="secondary" fullWidth>
+                        unban general user
+                    </PrimaryButton>
+                )}
+                {type === 2 && (
+                    <>
+                        <PrimaryButton btn_type="green" fullWidth>
+                            add admin
+                        </PrimaryButton>
+                        <PrimaryButton btn_type="pink" fullWidth>
+                            ban general user
+                        </PrimaryButton>
+                    </>
+                )}
+                {type === 3 && (
+                    <PrimaryButton btn_type="pink" fullWidth>
+                        remove admin
+                    </PrimaryButton>
+                )}
             </Stack>
         </Stack>
     );
