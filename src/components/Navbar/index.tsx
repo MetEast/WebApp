@@ -183,6 +183,23 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     </>
                 )
             )}
+            {signInDlgState.userRole < 2 && (!mobile || !isProfilePage) && (
+                <PrimaryButton
+                    size="small"
+                    sx={{ paddingX: 2 }}
+                    onClick={() => {
+                        navigate('/admin/nfts');
+                    }}
+                >
+                    {mobile ? 'admin' : 'admin area'}
+                    <Icon
+                        icon="ph:arrow-square-out"
+                        fontSize={20}
+                        color="white"
+                        style={{ marginLeft: 4, marginBottom: 4 }}
+                    />
+                </PrimaryButton>
+            )}
         </>
     ) : (
         <PrimaryButton
