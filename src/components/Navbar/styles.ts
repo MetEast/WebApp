@@ -17,7 +17,7 @@ export const NotificationTypo = styled(Typography)`
     background: #1890ff;
 `;
 
-export const ProfileButton = styled(BaseButton)<{ selected: boolean }>`
+export const MenuButton = styled(BaseButton)<{ selected: boolean }>`
     min-width: 40px;
     background: ${({ selected }) => (selected ? '#E8F4FF' : 'transparent')};
     color: ${({ selected }) => (selected ? '#1890FF' : 'black')};

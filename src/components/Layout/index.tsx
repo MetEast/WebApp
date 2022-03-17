@@ -11,7 +11,11 @@ import { useLocation } from 'react-router-dom';
 import AdminPage from 'src/pages/Admin';
 import TransactionDlgContainer from '../TransactionDialogs';
 
-const Layout: React.FC = ({ children }): JSX.Element => {
+interface ComponentProps {
+    showFooter?: boolean;
+}
+
+const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.Element => {
     const location = useLocation();
     const [dialogState] = useDialogContext();
 
@@ -41,6 +45,11 @@ const Layout: React.FC = ({ children }): JSX.Element => {
                     </Box>
                     <Box paddingTop={{ xs: 0, sm: 12 }} paddingBottom={{ xs: 9, sm: 2 }}>
                         {children}
+                        {showFooter && (
+                            <Container>
+                                <Footer marginTop={5} />
+                            </Container>
+                        )}
                         <Container>
                             <Footer marginTop={5} />
                         </Container>
