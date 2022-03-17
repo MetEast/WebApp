@@ -21,6 +21,8 @@ import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
+import { dummyProducts } from 'src/constants/dummyData';
+import NFTPreview from 'src/components/NFTPreview';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -28,6 +30,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
+    const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>(dummyProducts);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -273,6 +276,15 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                     />
                                 </Stack>
                             </Grid>
+                        </Grid>
+                    )}
+                    {pageType === 'sold' && (
+                        <Grid container mt={2} spacing={4}>
+                            {nftSoldList.map((item, index) => (
+                                <Grid item xs={6} md={3} key={`explore-product-${index}`}>
+                                    <NFTPreview product={item} productType={3} index={index} />
+                                </Grid>
+                            ))}
                         </Grid>
                     )}
                 </>
