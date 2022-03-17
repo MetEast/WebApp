@@ -19,8 +19,6 @@ import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from '
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import ModalDialog from 'src/components/ModalDialog';
-import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 

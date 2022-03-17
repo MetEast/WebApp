@@ -16,9 +16,6 @@ import { getMintCategory } from 'src/services/common';
 import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
 import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
-import ModalDialog from 'src/components/ModalDialog';
-import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 
@@ -26,7 +23,6 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     const params = useParams();
     const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
-    const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);

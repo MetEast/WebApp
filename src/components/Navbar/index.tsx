@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { BaseButton, PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import { NotificationTypo, MenuButton, NotificationsBoxContainer } from './styles';
 import ModalDialog from 'src/components/ModalDialog';
 import NotificationsBox from 'src/components/NotificationsBox';

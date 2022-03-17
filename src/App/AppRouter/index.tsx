@@ -12,7 +12,6 @@ import MyNFTBuyNow from 'src/pages/MyNFT/BuyNow';
 import MyNFTAuction from 'src/pages/MyNFT/Auction';
 import MyNFTCreated from 'src/pages/MyNFT/Created';
 import MyNFTSold from 'src/pages/MyNFT/Sold';
-import AdminPage from 'src/pages/Admin';
 import AdminNFTs from 'src/pages/Admin/NFTs';
 import AdminUsers from 'src/pages/Admin/Users';
 import AdminBlindBoxes from 'src/pages/Admin/BlindBoxes';
