@@ -6,6 +6,7 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { addAdminBanner } from 'src/services/fetch';
@@ -21,6 +22,7 @@ export interface ComponentProps {
 const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdates, onClose }): JSX.Element => {
     // const classes = useStyles();
     const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
     // const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
@@ -54,6 +56,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
             return;
         }
         setOnProgress(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, loadingDlgOpened: true });
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
         // const status = blindboxStatus === 'offline' ? 0 : 1;
@@ -89,6 +92,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                 });
             })
             .finally(() => {
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
                 setOnProgress(false);
                 handleBannerUpdates();
                 onClose();

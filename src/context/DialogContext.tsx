@@ -6,6 +6,7 @@ interface DlgState {
     manageProfileDlgOpened: boolean;
     // confirm transaction
     waitingConfirmDlgOpened: boolean;
+    loadingDlgOpened: boolean;
     // error msg
     errorMessageDlgOpened: boolean;
     // all transactions
@@ -125,6 +126,7 @@ export const defaultDlgState: DlgState = {
     manageProfileDlgOpened: false,
     // confirm transaction
     waitingConfirmDlgOpened: false,
+    loadingDlgOpened: false,
     // error msg
     errorMessageDlgOpened: false,
     // all transactions
