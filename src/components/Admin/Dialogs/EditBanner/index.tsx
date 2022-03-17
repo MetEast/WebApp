@@ -57,7 +57,7 @@ const EditBanner: React.FC<ComponentProps> = ({
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
         if (
             bannerList.findIndex(
-                (item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort),
+                (item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort) && item.id !== banner2Edit.id,
             ) !== -1
         ) {
             enqueueSnackbar('Same sort exist!', {
