@@ -12,9 +12,9 @@ import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
     product: TypeProduct;
-    productType: number; //0: from Home page, 1: from Products page, 2: from BlindBox page
+    productType: number; //0: from Home page, 1: from Products page, 2: from BlindBox page, 3: from BlindBox Product NFTSold
     index: number;
-    updateLikes: (index: number, type: string) => void;
+    updateLikes?: (index: number, type: string) => void;
     productViewMode?: 'grid1' | 'grid2';
     isBlindBox?: boolean;
 }
@@ -67,7 +67,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                       did: signInDlgState.userDid,
                   };
             // change state first
-            updateLikes(index, likeState ? 'dec' : 'inc');
+            if (updateLikes !== undefined) updateLikes(index, likeState ? 'dec' : 'inc');
             setLikeState(!likeState);
             fetch(reqUrl, {
                 method: 'POST',
@@ -95,7 +95,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
         <GalleryItemContainer>
             <ProductImageContainer
                 onClick={() => {
-                    if (product.tokenId !== '') navigate(getUrl());
+                    if (product.tokenId !== '' && productType !== 3) navigate(getUrl());
                 }}
             >
                 <ImageBox loading={product.tokenId === '' ? 1 : 0}>
@@ -167,40 +167,42 @@ const NFTPreview: React.FC<ComponentProps> = ({
                         </Box>
                     )}
                 </Box>
-                <Stack
-                    direction={{ xs: 'column-reverse', md: 'column' }}
-                    height="100%"
-                    justifyContent={{ xs: 'flex-end', md: 'space-between' }}
-                    marginTop={{ xs: 0.25, md: 1 }}
-                    spacing={{ xs: 0.25, md: 1 }}
-                >
-                    {product.tokenId === '' ? (
-                        <Skeleton
-                            variant="rectangular"
-                            animation="wave"
-                            width="100%"
-                            height={16}
-                            sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
-                        />
-                    ) : (
-                        <ProductBadgeContainer
-                            nfttype={product.type}
-                            content={product.endTime}
-                            isReservedAuction={product.status === 'HAS BIDS'}
-                        />
-                    )}
-                    {product.tokenId === '' ? (
-                        <Skeleton
-                            variant="rectangular"
-                            animation="wave"
-                            width="100%"
-                            height={16}
-                            sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
-                        />
-                    ) : (
-                        <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
-                    )}
-                </Stack>
+                {productType !== 3 && (
+                    <Stack
+                        direction={{ xs: 'column-reverse', md: 'column' }}
+                        height="100%"
+                        justifyContent={{ xs: 'flex-end', md: 'space-between' }}
+                        marginTop={{ xs: 0.25, md: 1 }}
+                        spacing={{ xs: 0.25, md: 1 }}
+                    >
+                        {product.tokenId === '' ? (
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={16}
+                                sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
+                            />
+                        ) : (
+                            <ProductBadgeContainer
+                                nfttype={product.type}
+                                content={product.endTime}
+                                isReservedAuction={product.status === 'HAS BIDS'}
+                            />
+                        )}
+                        {product.tokenId === '' ? (
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={16}
+                                sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
+                            />
+                        ) : (
+                            <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
+                        )}
+                    </Stack>
+                )}
             </Stack>
         </GalleryItemContainer>
     );
