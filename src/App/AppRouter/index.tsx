@@ -78,85 +78,92 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </Layout>
                     }
                 />
-                <Route path="/admin" element={<AdminPage />} />
+                {/* <Route
+                    path="/admin"
+                    element={
+                        <Layout>
+                            <AdminPage />
+                        </Layout>
+                    }
+                /> */}
                 <Route
                     path="/admin/nfts"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminNFTs />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/users"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminUsers />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/blindboxes"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminBlindBoxes />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/home-popular"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminHomePopular />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/home-upcoming"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminHomeUpcoming />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/orders-nfts"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminOrderNFTs />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/orders-blindboxes"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminOrderBlindBoxes />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/bids"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminBids />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/banners"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminBanners />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route
                     path="/admin/notifications"
                     element={
-                        <AdminPage>
+                        <Layout>
                             <AdminNotifications />
-                        </AdminPage>
+                        </Layout>
                     }
                 />
                 <Route path="" element={<User />}>

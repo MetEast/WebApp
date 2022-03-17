@@ -35,6 +35,7 @@ import SnackMessage from 'src/components/SnackMessage';
 export interface ComponentProps {}
 
 const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+    // alert(1)
     const navigate = useNavigate();
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -531,7 +532,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    // console.log('--------accounts: ', signInDlgState);
+    console.log('--------accounts: ', signInDlgState);
 
     return (
         <>
