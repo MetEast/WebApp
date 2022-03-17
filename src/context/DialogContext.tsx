@@ -6,6 +6,15 @@ interface DlgState {
     manageProfileDlgOpened: boolean;
     // confirm transaction
     waitingConfirmDlgOpened: boolean;
+    // error msg
+    errorMessageDlgOpened: boolean;
+    // all transactions
+    allTxDlgOpened: boolean;
+    // all bids
+    allBidDlgOpened: boolean;
+    noBidDlgOpened: boolean;
+    // progres bar
+    progressBar: number;
     // mint nft
     createNFTDlgOpened: boolean;
     createNFTDlgStep: number;
@@ -19,7 +28,6 @@ interface DlgState {
     mintDidUri: string;
     mintTxHash: string;
     mintTxFee: number;
-    mintProgress: number;
     // create order for sale/auction
     sellSaleType: 'buynow' | 'auction';
     sellSaleEnds: TypeSelectItem;
@@ -110,13 +118,6 @@ interface DlgState {
     buyBlindTxHash: string;
     buyBlindCreator: string;
     buyBlindLeftAmount: number;
-    // error msg
-    errorMessageDlgOpened: boolean;
-    // all transactions
-    allTxDlgOpened: boolean;
-    // all bids
-    allBidDlgOpened: boolean;
-    noBidDlgOpened: boolean;
 }
 
 export const defaultDlgState: DlgState = {
@@ -124,6 +125,15 @@ export const defaultDlgState: DlgState = {
     manageProfileDlgOpened: false,
     // confirm transaction
     waitingConfirmDlgOpened: false,
+    // error msg
+    errorMessageDlgOpened: false,
+    // all transactions
+    allTxDlgOpened: false,
+    // all bids
+    allBidDlgOpened: false,
+    noBidDlgOpened: false,
+    // progress bar
+    progressBar: 0,
     // mint nft
     createNFTDlgOpened: false,
     createNFTDlgStep: 0,
@@ -137,7 +147,6 @@ export const defaultDlgState: DlgState = {
     mintDidUri: '',
     mintTxHash: '',
     mintTxFee: 0,
-    mintProgress: 0,
     // create order for sale/auction
     sellSaleType: 'buynow',
     sellSaleEnds: { label: '', value: '' },
@@ -228,13 +237,6 @@ export const defaultDlgState: DlgState = {
     buyBlindTxHash: '',
     buyBlindCreator: '',
     buyBlindLeftAmount: 0,
-    // error msg
-    errorMessageDlgOpened: false,
-    // all transactions
-    allTxDlgOpened: false,
-    // all bids
-    allBidDlgOpened: false,
-    noBidDlgOpened: false,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

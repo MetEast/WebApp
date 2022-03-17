@@ -39,7 +39,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, 
     const handleRmoveToken = () => {
         if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
@@ -70,7 +70,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, 
             })
             .catch((error) => {
                 enqueueSnackbar(`Remove Token error: ${error}!`, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({

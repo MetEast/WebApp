@@ -58,7 +58,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .catch((error) => {
                 enqueueSnackbar(`Accept bid error: ${error}!`, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({

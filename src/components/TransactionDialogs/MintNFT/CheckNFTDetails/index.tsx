@@ -38,7 +38,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             variant: 'success',
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
         });
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, mintProgress: 70 });
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 70 });
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
         }, 120000);
@@ -65,13 +65,13 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     mintTokenId: paramObj._id,
                     mintTokenUri: paramObj._uri,
                     mintDidUri: paramObj._didUri,
-                    mintProgress: 100,
+                    progressBar: 100,
                     waitingConfirmDlgOpened: false,
                 });
             })
             .catch((error) => {
                 enqueueSnackbar(`Mint token error: ${error}!`, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
@@ -79,7 +79,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     createNFTDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,
-                    mintProgress: 0,
+                    progressBar: 0,
                 });
             })
             .finally(() => {
@@ -97,7 +97,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((added: any) => {
                     // Hash of image path - tokenId
                     _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
-                    setDialogState({ ...dialogState, mintProgress: 10 });
+                    setDialogState({ ...dialogState, progressBar: 10 });
                     return uploadMetaData2Ipfs(
                         added,
                         signInDlgState.userDid,
@@ -111,7 +111,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((metaRecv: any) => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
-                    setDialogState({ ...dialogState, mintProgress: 30 });
+                    setDialogState({ ...dialogState, progressBar: 30 });
                     return uploadDidUri2Ipfs(
                         signInDlgState.userDid,
                         signInDlgState.userName,
@@ -121,7 +121,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((didRecv: any) => {
                     // didUri
                     _didUri = `meteast:json:${didRecv.path}`;
-                    setDialogState({ ...dialogState, mintProgress: 50 });
+                    setDialogState({ ...dialogState, progressBar: 50 });
                     resolve({ _id, _uri, _didUri });
                 })
                 .catch((error) => {
@@ -133,7 +133,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         if (!dialogState.mintFile) return;
         if (dialogState.mintTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;

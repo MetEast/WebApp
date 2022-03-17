@@ -32,7 +32,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
     const handleCancelSale = () => {
         if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
@@ -64,7 +64,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .catch((error) => {
                 enqueueSnackbar(`Cancel sale error: ${error}!`, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({

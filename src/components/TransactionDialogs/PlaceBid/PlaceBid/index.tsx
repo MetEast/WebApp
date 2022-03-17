@@ -80,13 +80,13 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         if (bidAmount !== 0 && expiration?.value !== undefined && expiration?.value !== '')
                             if (isNaN(parseFloat(bidAmount.toString()))) {
                                 enqueueSnackbar('Invalid number!', {
-                                    variant: 'warning',
+                                    variant: 'error',
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                                 });
                             }
                             else if (bidAmount < dialogState.placeBidMinLimit) {
                                 enqueueSnackbar(`Bid amount must be greater than ${dialogState.placeBidMinLimit}!`, {
-                                    variant: 'warning',
+                                    variant: 'error',
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                                 });
                             }
@@ -101,7 +101,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                             }
                         else
                             enqueueSnackbar('Form validation failed!', {
-                                variant: 'warning',
+                                variant: 'error',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
                     }}

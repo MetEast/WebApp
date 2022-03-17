@@ -132,7 +132,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         console.log(error);
                         enqueueSnackbar(
                             `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
-                            { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                            { variant: 'error', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
                         );
                         try {
                             currentConnector
@@ -255,7 +255,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     console.log(error);
                     enqueueSnackbar(
                         `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
-                        { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                        { variant: 'error', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
                     );
                     try {
                         essentialsConnector

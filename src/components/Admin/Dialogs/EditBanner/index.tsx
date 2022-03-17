@@ -61,7 +61,7 @@ const EditBanner: React.FC<ComponentProps> = ({
             ) !== -1
         ) {
             enqueueSnackbar('Same sort exist!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
@@ -83,14 +83,14 @@ const EditBanner: React.FC<ComponentProps> = ({
                     });
                 } else {
                     enqueueSnackbar('Error', {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
             })
             .catch((error) => {
                 enqueueSnackbar(error, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             })

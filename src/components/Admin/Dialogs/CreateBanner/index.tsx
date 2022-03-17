@@ -48,7 +48,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
             ) !== -1
         ) {
             enqueueSnackbar('Same sort exist!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
@@ -77,14 +77,14 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                     });
                 } else {
                     enqueueSnackbar('Error', {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
             })
             .catch((error) => {
                 enqueueSnackbar(error, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             })
