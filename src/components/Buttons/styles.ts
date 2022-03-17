@@ -16,6 +16,11 @@ const buttonStyles = {
         hoverBgColor: '#fddede',
         color: '#eb5757',
     },
+    green: {
+        bgColor: '#C9F5DC',
+        hoverBgColor: '#B9FFCC',
+        color: '#1EA557',
+    },
 };
 
 export const BaseButton = styled(Button)<{ size?: 'small' }>`
@@ -25,7 +30,7 @@ export const BaseButton = styled(Button)<{ size?: 'small' }>`
     font-weight: 700;
 `;
 
-export const PrimaryButton = styled(BaseButton)<{ btn_type?: 'primary' | 'secondary' | 'pink' }>`
+export const PrimaryButton = styled(BaseButton)<{ btn_type?: 'primary' | 'secondary' | 'pink' | 'green' }>`
     background: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].bgColor};
     color: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].color};
     &:hover {
