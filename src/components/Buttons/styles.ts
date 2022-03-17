@@ -30,11 +30,11 @@ export const BaseButton = styled(Button)<{ size?: 'small' }>`
     font-weight: 700;
 `;
 
-export const PrimaryButton = styled(BaseButton)<{ btn_type?: 'primary' | 'secondary' | 'pink' | 'green' }>`
-    background: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].bgColor};
-    color: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].color};
+export const PrimaryButton = styled(BaseButton)<{ btn_color?: 'primary' | 'secondary' | 'pink' | 'green' }>`
+    background: ${({ btn_color = 'primary' }) => buttonStyles[btn_color].bgColor};
+    color: ${({ btn_color = 'primary' }) => buttonStyles[btn_color].color};
     &:hover {
-        background: ${({ btn_type = 'primary' }) => buttonStyles[btn_type].hoverBgColor};
+        background: ${({ btn_color = 'primary' }) => buttonStyles[btn_color].hoverBgColor};
     }
 `;
 

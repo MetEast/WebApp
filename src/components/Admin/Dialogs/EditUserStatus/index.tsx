@@ -51,7 +51,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                     <PrimaryButton
                         size="small"
                         fullWidth
-                        btn_type={userStatus === 'user' ? 'primary' : 'secondary'}
+                        btn_color={userStatus === 'user' ? 'primary' : 'secondary'}
                         onClick={() => setUserStatus('user')}
                     >
                         user
@@ -59,7 +59,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                     <PrimaryButton
                         size="small"
                         fullWidth
-                        btn_type={userStatus === 'admin' ? 'primary' : 'secondary'}
+                        btn_color={userStatus === 'admin' ? 'primary' : 'secondary'}
                         onClick={() => setUserStatus('admin')}
                     >
                         admin
@@ -67,7 +67,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                     <PrimaryButton
                         size="small"
                         fullWidth
-                        btn_type={userStatus === 'ban' ? 'primary' : 'secondary'}
+                        btn_color={userStatus === 'ban' ? 'primary' : 'secondary'}
                         onClick={() => setUserStatus('ban')}
                     >
                         ban
@@ -83,36 +83,36 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                 changeHandler={(value: string) => setRemarks(value)}
             />
             {/* <Stack direction="row" spacing={2}>
-                <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
+                <PrimaryButton btn_color="secondary" fullWidth onClick={onClose}>
                     close
                 </PrimaryButton>
-                <PrimaryButton btn_type="pink" fullWidth disabled={onProgress} onClick={handleUpdateUserRole}>
+                <PrimaryButton btn_color="pink" fullWidth disabled={onProgress} onClick={handleUpdateUserRole}>
                     Confirm
                 </PrimaryButton>
             </Stack> */}
             <Stack spacing={2}>
                 {type === 0 && (
-                    <PrimaryButton btn_type="pink" fullWidth>
+                    <PrimaryButton btn_color="pink" fullWidth>
                         ban general user
                     </PrimaryButton>
                 )}
                 {type === 1 && (
-                    <PrimaryButton btn_type="secondary" fullWidth>
+                    <PrimaryButton btn_color="secondary" fullWidth>
                         unban general user
                     </PrimaryButton>
                 )}
                 {type === 2 && (
                     <>
-                        <PrimaryButton btn_type="green" fullWidth>
+                        <PrimaryButton btn_color="green" fullWidth>
                             add admin
                         </PrimaryButton>
-                        <PrimaryButton btn_type="pink" fullWidth>
+                        <PrimaryButton btn_color="pink" fullWidth>
                             ban general user
                         </PrimaryButton>
                     </>
                 )}
                 {type === 3 && (
-                    <PrimaryButton btn_type="pink" fullWidth>
+                    <PrimaryButton btn_color="pink" fullWidth>
                         remove admin
                     </PrimaryButton>
                 )}

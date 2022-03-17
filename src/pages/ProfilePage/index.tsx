@@ -394,7 +394,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 <NotificationTypo>2</NotificationTypo>
                             </SecondaryButton>
                             <PrimaryButton
-                                btn_type="secondary"
+                                btn_color="secondary"
                                 size="small"
                                 sx={{ minWidth: 40, display: { sm: 'none' }, marginRight: '10px !important' }}
                                 onClick={() => {

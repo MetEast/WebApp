@@ -58,10 +58,10 @@ const DeleteBanner: React.FC<ComponentProps> = ({ bannerId, handleBannerUpdates,
                 </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
-                <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
+                <PrimaryButton btn_color="secondary" fullWidth onClick={onClose}>
                     Back
                 </PrimaryButton>
-                <PrimaryButton btn_type="pink" fullWidth disabled={onProgress} onClick={handleDelete}>
+                <PrimaryButton btn_color="pink" fullWidth disabled={onProgress} onClick={handleDelete}>
                     Delete
                 </PrimaryButton>
             </Stack>
