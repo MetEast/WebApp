@@ -62,8 +62,8 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
-    const [testdlgOpen, setTestdlgOpen] = useState<boolean>(false);
-    const testDlgShow = false;
+    // const [testdlgOpen, setTestdlgOpen] = useState<boolean>(false);
+    // const testDlgShow = false;
 
     const isProfilePage = location.pathname === '/profile';
 
@@ -228,7 +228,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 ) : (
                     <Stack direction="row" alignItems="center" spacing={2}>
                         {menuButtons}
-                        {testDlgShow && (
+                        {/* {testDlgShow && (
                             <Button
                                 onClick={() => {
                                     setTestdlgOpen(true);
@@ -236,11 +236,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                             >
                                 DlgTest
                             </Button>
-                        )}
+                        )} */}
                     </Stack>
                 )}
             </Stack>
-            {testDlgShow && (
+            {/* {testDlgShow && (
                 <ModalDialog
                     open={testdlgOpen}
                     onClose={() => {
@@ -253,7 +253,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                         }}
                     />
                 </ModalDialog>
-            )}
+            )} */}
         </>
     );
 };

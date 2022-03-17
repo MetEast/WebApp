@@ -17,6 +17,7 @@ export interface SignInState {
     userDescription: string;
     userAvatar: string;
     userCoverImage: string;
+    userRole: number;
 }
 
 const defaultState: SignInState = {
@@ -46,6 +47,7 @@ const defaultState: SignInState = {
     userDescription: '',
     userAvatar: '',
     userCoverImage: '',
+    userRole: 2,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
