@@ -11,7 +11,11 @@ import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';
 import ManageProfileDlgContainer from '../ManageProfile';
 
-const Layout: React.FC = ({ children }): JSX.Element => {
+interface ComponentProps {
+    showFooter?: boolean;
+}
+
+const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.Element => {
     const [dialogState] = useDialogContext();
     return (
         <>
@@ -37,9 +41,11 @@ const Layout: React.FC = ({ children }): JSX.Element => {
             </Box>
             <Box paddingTop={{ xs: 0, sm: 12 }} paddingBottom={{ xs: 9, sm: 2 }}>
                 {children}
-                <Container>
-                    <Footer marginTop={5} />
-                </Container>
+                {showFooter && (
+                    <Container>
+                        <Footer marginTop={5} />
+                    </Container>
+                )}
             </Box>
             <Box
                 sx={{

@@ -8,7 +8,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
 import { BaseButton, PrimaryButton } from 'src/components/Buttons/styles';
-import { NotificationTypo, ProfileButton, NotificationsBoxContainer } from './styles';
+import { NotificationTypo, MenuButton, NotificationsBoxContainer } from './styles';
 import ModalDialog from 'src/components/ModalDialog';
 import NotificationsBox from 'src/components/NotificationsBox';
 
@@ -99,13 +99,17 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const menuButtons = signInDlgState.isLoggedIn ? (
         <>
             <Box position="relative">
-                <BaseButton
+                <MenuButton
                     size="small"
+                    selected={location.pathname === '/notifications'}
                     sx={{ minWidth: 40 }}
-                    onClick={() => setShowNotificationsBox(!showNotificationsBox)}
+                    onClick={() => {
+                        if (mobile) navigate('/notifications');
+                        else setShowNotificationsBox(!showNotificationsBox);
+                    }}
                 >
                     <Icon icon="ph:chat-circle" fontSize={20} color="black" />
-                </BaseButton>
+                </MenuButton>
                 <NotificationTypo>2</NotificationTypo>
                 <NotificationsBoxContainer show={showNotificationsBox}>
                     <NotificationsBox
@@ -114,7 +118,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     />
                 </NotificationsBoxContainer>
             </Box>
-            <ProfileButton
+            <MenuButton
                 size="small"
                 selected={isProfilePage}
                 onClick={() => {
@@ -122,7 +126,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 }}
             >
                 <Icon icon="ph:user" fontSize={20} />
-            </ProfileButton>
+            </MenuButton>
             {isProfilePage && !mobile ? (
                 <PrimaryButton
                     size="small"

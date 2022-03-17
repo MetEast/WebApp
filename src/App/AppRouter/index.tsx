@@ -25,8 +25,14 @@ import AdminBanners from 'src/pages/Admin/Banners';
 import AdminNotifications from 'src/pages/Admin/Notifications';
 import User from 'src/components/user';
 import MyNFTPurchased from 'src/pages/MyNFT/Purchased';
+import NotificationsPage from 'src/pages/Notifications';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const AppRouter: React.FC = (): JSX.Element => {
+    const theme = useTheme();
+    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <BrowserRouter>
             <Routes>
@@ -78,6 +84,16 @@ const AppRouter: React.FC = (): JSX.Element => {
                         </Layout>
                     }
                 />
+                {matchDownSm && (
+                    <Route
+                        path="/notifications"
+                        element={
+                            <Layout showFooter={false}>
+                                <NotificationsPage />
+                            </Layout>
+                        }
+                    />
+                )}
                 <Route path="/admin" element={<AdminPage />} />
                 <Route
                     path="/admin/nfts"
