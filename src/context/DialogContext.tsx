@@ -84,7 +84,7 @@ interface DlgState {
     createBlindBoxDlgStep: number;
     crtBlindTitle: string;
     crtBlindDescription: string;
-    crtBlindImage?: File;
+    crtBlindImage: File;
     crtBlindTokenIds: string;
     crtBlindTokenNames: string;
     crtBlindStatus: 'offline' | 'online';
@@ -129,7 +129,7 @@ export const defaultDlgState: DlgState = {
     mintTitle: '',
     mintCategory: { label: '', value: '' },
     mintIntroduction: '',
-    mintFile: new File([], ''),
+    mintFile: new File([''], ''),
     mintRoyalties: 0,
     mintTokenId: '',
     mintTokenUri: '',
@@ -201,6 +201,7 @@ export const defaultDlgState: DlgState = {
     createBlindBoxDlgStep: 0,
     crtBlindTitle: '',
     crtBlindDescription: '',
+    crtBlindImage: new File([''], ''),
     crtBlindTokenIds: '',
     crtBlindTokenNames: '',
     crtBlindStatus: 'offline',
