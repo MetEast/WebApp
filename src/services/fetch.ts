@@ -776,6 +776,7 @@ export const getBBCandiates = async (address: string, keyword: string, selectedT
     let _indeterminateChecked: boolean = false;
     for (let i = 0; i < arrBBCandidateList.length; i++) {
         const itemObject: TypeProductFetch = arrBBCandidateList[i];
+        if (itemObject.status === 'DELETED') continue;
         const _BBCandidate: TypeBlindBoxSelectItem = { ...blankBBCandidate };
         _BBCandidate.id = i + 1;
         _BBCandidate.tokenId = itemObject.tokenId;
