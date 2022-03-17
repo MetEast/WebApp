@@ -132,7 +132,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                             />
                             <Stack direction="row" spacing={1}>
                                 <PrimaryButton
-                                    btn_type="pink"
+                                    btn_color="pink"
                                     fullWidth
                                     size="small"
                                     onClick={() => {
@@ -146,7 +146,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                     {`Delete`}
                                 </PrimaryButton>
                                 <PrimaryButton
-                                    btn_type="secondary"
+                                    btn_color="secondary"
                                     fullWidth
                                     size="small"
                                     onClick={() => document.getElementById('banner-image')?.click()}
@@ -175,7 +175,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    btn_type={location === 'home' ? 'primary' : 'secondary'}
+                                    btn_color={location === 'home' ? 'primary' : 'secondary'}
                                     onClick={() => setLocation('home')}
                                 >
                                     Home
@@ -183,7 +183,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    btn_type={location === 'explore' ? 'primary' : 'secondary'}
+                                    btn_color={location === 'explore' ? 'primary' : 'secondary'}
                                     onClick={() => setLocation('explore')}
                                 >
                                     Explore
@@ -191,7 +191,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    btn_type={location === 'blindbox' ? 'primary' : 'secondary'}
+                                    btn_color={location === 'blindbox' ? 'primary' : 'secondary'}
                                     onClick={() => setLocation('blindbox')}
                                 >
                                     Blind Box
@@ -206,7 +206,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    btn_type={blindboxStatus === 'offline' ? 'primary' : 'secondary'}
+                                    btn_color={blindboxStatus === 'offline' ? 'primary' : 'secondary'}
                                     onClick={() => setBlindboxStatus('offline')}
                                 >
                                     Offline
@@ -214,7 +214,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                 <PrimaryButton
                                     fullWidth
                                     size="small"
-                                    btn_type={blindboxStatus === 'online' ? 'primary' : 'secondary'}
+                                    btn_color={blindboxStatus === 'online' ? 'primary' : 'secondary'}
                                     onClick={() => setBlindboxStatus('online')}
                                 >
                                     Online
@@ -231,7 +231,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                 </Grid>
             </Box>
             <Stack width="100%" direction="row" spacing={2}>
-                <PrimaryButton btn_type="secondary" fullWidth onClick={onClose}>
+                <PrimaryButton btn_color="secondary" fullWidth onClick={onClose}>
                     close
                 </PrimaryButton>
                 <PrimaryButton fullWidth disabled={onProgress} onClick={handleSubmit}>

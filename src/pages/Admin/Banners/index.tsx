@@ -73,10 +73,10 @@ const AdminBanners: React.FC = (): JSX.Element => {
             label: '',
             cell: (props) => (
                 <Stack direction="row" spacing={1}>
-                    <PrimaryButton size="small" btn_type="pink" sx={{ minWidth: 40 }} onClick={(event: React.MouseEvent) => onDeleteBanner(event, props.data)}>
+                    <PrimaryButton size="small" btn_color="pink" sx={{ minWidth: 40 }} onClick={(event: React.MouseEvent) => onDeleteBanner(event, props.data)}>
                         <Icon icon="ph:trash" fontSize={20} color="#EB5757" />
                     </PrimaryButton>
-                    <PrimaryButton size="small" btn_type="secondary" sx={{ minWidth: 40 }} onClick={(event: React.MouseEvent) => onEditBanner(event, props.data)}>
+                    <PrimaryButton size="small" btn_color="secondary" sx={{ minWidth: 40 }} onClick={(event: React.MouseEvent) => onEditBanner(event, props.data)}>
                         <Icon icon="ph:pencil-simple" fontSize={20} color="#1890FF" />
                     </PrimaryButton>
                 </Stack>

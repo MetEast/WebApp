@@ -137,7 +137,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                             <span>
                                 <PrimaryButton
                                     disabled
-                                    btn_type="pink"
+                                    btn_color="pink"
                                     size="small"
                                     sx={{ paddingX: 2.5, marginTop: 0.5 }}
                                 >
