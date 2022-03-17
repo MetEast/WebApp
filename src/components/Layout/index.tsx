@@ -50,9 +50,6 @@ const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.
                                 <Footer marginTop={5} />
                             </Container>
                         )}
-                        <Container>
-                            <Footer marginTop={5} />
-                        </Container>
                     </Box>
                     <Box
                         sx={{
