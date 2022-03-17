@@ -148,6 +148,7 @@ export const blankAdminUserItem: AdminUsersItemType = {
     wholeAddress: '',
     username: '',
     avatar: '',
+    role: 0,
     status: 0,
     remarks: '',
 };

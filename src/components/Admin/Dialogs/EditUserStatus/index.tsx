@@ -21,7 +21,20 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
     );
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
 
-    const [type, setType] = useState<number>(0); //0: ban general user, 1: unban general user, 2: add admin, 3: remove admin
+    const [type, setType] = useState<number>(-1);
+
+    useEffect(() => {
+        console.log(signInDlgState.userRole, '---', user2Edit.status)
+        if (signInDlgState.userRole === 0) { // contract deployer
+            if (user2Edit.role === 1) setType(3);
+            else if (user2Edit.role === 2) setType(2);
+            else if (user2Edit.role === 3) setType(1);
+        }
+        else { // admin
+            if (user2Edit.role === 2) setType(0);
+            else if (user2Edit.role === 3) setType(1);
+        }
+    }, [signInDlgState.userRole]);
 
     const handleUpdateUserRole = async () => {
         setOnProgress(true);

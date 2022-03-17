@@ -32,6 +32,7 @@ export type AdminUsersItemType = {
     wholeAddress: string;
     username: string;
     avatar: string;
+    role: number;
     status: number;
     remarks: string;
 };
