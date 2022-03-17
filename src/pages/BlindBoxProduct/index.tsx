@@ -27,6 +27,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
+    const [pageType, setPageType] = useState<'details' | 'sold'>('details');
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -234,19 +235,47 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     </Box>
                 </Box>
             ) : (
-                <Grid container marginTop={5} columnSpacing={10}>
-                    <Grid item xs={12} md={6}>
-                        <Stack spacing={5}>
-                            <ProjectDescription description={blindBoxDetail.description} />
-                            <AboutAuthor
-                                name={blindBoxDetail.author}
-                                description={blindBoxDetail.authorDescription}
-                                img={blindBoxDetail.authorImg}
-                                address={blindBoxDetail.royaltyOwner || ''}
-                            />
-                        </Stack>
-                    </Grid>
-                </Grid>
+                <>
+                    <Stack
+                        direction="row"
+                        width="fit-content"
+                        borderRadius={3}
+                        marginTop={5}
+                        sx={{ background: '#e8f4ff' }}
+                    >
+                        <PrimaryButton
+                            size="small"
+                            btn_color={pageType === 'details' ? 'primary' : 'none'}
+                            sx={{ width: 160 }}
+                            onClick={() => setPageType('details')}
+                        >
+                            BLInbox details
+                        </PrimaryButton>
+                        <PrimaryButton
+                            size="small"
+                            btn_color={pageType === 'sold' ? 'primary' : 'none'}
+                            sx={{ width: 116 }}
+                            onClick={() => setPageType('sold')}
+                        >
+                            NFTs SOLD
+                        </PrimaryButton>
+                    </Stack>
+                    {pageType === 'details' && (
+                        <Grid container marginTop={5} columnSpacing={10}>
+                            <Grid item xs={12} md={6}>
+                                <Stack spacing={5}>
+                                    <ProjectDescription description={blindBoxDetail.description} />
+                                    <AboutAuthor
+                                        name={blindBoxDetail.author}
+                                        description={blindBoxDetail.authorDescription}
+                                        img={blindBoxDetail.authorImg}
+                                        address={blindBoxDetail.royaltyOwner || ''}
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    )}
+                </>
             )}
             <ModalDialog
                 open={dialogState.buyBlindBoxDlgOpened}
