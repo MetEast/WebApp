@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { SxProps } from '@mui/system';
+import { reduceUserName } from 'src/services/common';
 
 export interface ComponentProps {
     nickname?: string;
@@ -19,7 +20,7 @@ const ProductSnippets: React.FC<ComponentProps> = ({ nickname, sold, instock, li
                 <Stack direction="row" alignItems="center" spacing={1}>
                     <Icon icon="ph:palette" />
                     <Typography fontWeight={500} fontSize={12}>
-                        {`by ${nickname}`}
+                        {`by ${nickname.length > 10 ? reduceUserName(nickname, 3) : nickname}`}
                     </Typography>
                 </Stack>
             )}

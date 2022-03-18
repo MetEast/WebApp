@@ -50,6 +50,12 @@ export const reduceHexAddress = (strAddress: string, nDigits: number) =>
           )}`
         : '';
 
+// Get Abbrevation of user name //
+export const reduceUserName = (username: string, nDigits: number) =>
+    username
+        ? `${username.substring(0, nDigits)}...${username.substring(username.length - nDigits, username.length)}`
+        : '';
+
 export const storeWithExpireTime = (key: string, value: string, ttl: number) => {
     const now = new Date();
     // `item` is an object which contains the original value

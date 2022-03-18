@@ -13,7 +13,7 @@ import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, 
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeProduct, TypeYourEarning } from 'src/types/product-types';
-import { getImageFromAsset, reduceHexAddress } from 'src/services/common';
+import { getImageFromAsset, reduceHexAddress, reduceUserName } from 'src/services/common';
 import {
     getELA2USD,
     getMyFavouritesList,
@@ -355,7 +355,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 {signInDlgState.userName === ''
                                     ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
                                     : signInDlgState.userName.length > 16
-                                    ? reduceHexAddress(signInDlgState.userName, 4)
+                                    ? reduceUserName(signInDlgState.userName, 4)
                                     : signInDlgState.userName}
                             </Typography>
                             <SecondaryButton
