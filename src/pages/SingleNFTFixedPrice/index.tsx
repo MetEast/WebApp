@@ -70,8 +70,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     useEffect(() => {
         if (signInDlgState.walletAccounts.length === 0) {
             setShowBuyNowBtn(true);
-        }
-        else {
+        } else {
             if (signInDlgState.walletAccounts[0] === productDetail.holder) setShowBuyNowBtn(false);
             else setShowBuyNowBtn(true);
         }
@@ -279,7 +278,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     </Box>
                 </Box>
             ) : (
-                <Grid container marginTop={5} columnSpacing={10}>
+                <Grid container marginTop={5} columnSpacing={10} rowGap={5}>
                     <Grid item md={4} xs={12}>
                         <Stack spacing={5}>
                             <ProjectDescription description={productDetail.description} />
