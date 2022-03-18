@@ -789,14 +789,17 @@ export const getMyNFTItem = async (
 };
 
 // BB creation
-export const getBBCandiates = async (address: string, keyword: string, selectedTokenIds: Array<string>) => {
+export const getBBCandiatesList = async (address: string, keyword: string) => {
     const resBBCandidateList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${address}&keyword=${keyword}`,
         FETCH_CONFIG_JSON,
     );
     const jsonBBCandidateList = await resBBCandidateList.json();
     const arrBBCandidateList = jsonBBCandidateList.data === undefined ? [] : jsonBBCandidateList.data.result;
+    return arrBBCandidateList;
+};
 
+export const getBBCandiates = (arrBBCandidateList: Array<any>, selectedTokenIds: Array<string>) => {
     const _BBCandidateList: Array<TypeBlindBoxSelectItem> = [];
     const _itemCheckedList: Array<boolean> = [];
     let _allChecked: boolean = false;
