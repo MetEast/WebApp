@@ -4,6 +4,7 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 import { getImageFromAsset } from 'src/services/common';
 import { ProfileImageWrapper, ProfileImage, BannerBox, useStyles } from './styles';
 import CustomTextField from 'src/components/TextField';
@@ -18,7 +19,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {
     onClose: () => void;

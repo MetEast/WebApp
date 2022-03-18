@@ -183,4 +183,5 @@ export const blankContractMethodParam: TypeContractMethodPram = {
     endTime: '',
     operator: '',
     approved: false,
+    address: '',
 };

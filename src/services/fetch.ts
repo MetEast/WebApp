@@ -944,34 +944,34 @@ export const getAdminUserList = async (fetchParams: string, address: string) => 
     return _arrAdminUserList;
 };
 
-export const updateUserRole = async (_token: string, _address: string, _role: number, _remarks: string) => {
-    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateRole`;
-    const reqBody = {
-        token: _token,
-        address: _address,
-        userRole: _role.toString(),
-        remarks: _remarks,
-    };
-    fetch(reqUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reqBody),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.code === 200) {
-                return true;
-            } else {
-                return false;
-            }
+export const updateUserRole = (_token: string, _address: string, _role: number, _remarks: string) =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateRole`;
+        const reqBody = {
+            token: _token,
+            address: _address,
+            userRole: _role.toString(),
+            remarks: _remarks,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
         })
-        .catch((error) => {
-            console.log(error);
-            return false;
-        });
-};
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
 
 export const getAdminBannerList = async (address: string) => {
     const resAdminBannerList = await fetch(
