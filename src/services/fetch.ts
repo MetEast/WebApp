@@ -938,8 +938,7 @@ export const getAdminUserList = async (fetchParams: string, address: string) => 
         _AdminUser.address = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
-        _AdminUser.role = itemObject.role;
-        _AdminUser.status = Math.abs(itemObject.role - 1);
+        _AdminUser.status = itemObject.role;
         _AdminUser.remarks = itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
