@@ -99,6 +99,7 @@ export type TypeProduct = {
     maxQuantity?: number;
     did?: string;
     isBlindbox?: boolean;
+    soldIds?: string[];
 };
 
 export type TypeNFTTransaction = {

@@ -107,7 +107,9 @@ export const getPageBannerList = async (address: string, location: number) => {
     const _arrPageBannerList: Array<string> = [];
     for (let i = 0; i < arrPageBannerList.length; i++) {
         const itemObject: AdminBannersItemFetchType = arrPageBannerList[i];
-        _arrPageBannerList.push(itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image);
+        _arrPageBannerList.push(
+            itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image,
+        );
     }
     return _arrPageBannerList;
 };
@@ -302,6 +304,30 @@ export const getNFTItem = async (
         _NFTItem.isBlindbox = itemObject.isBlindbox;
     }
     return _NFTItem;
+};
+
+// BB product
+export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<TypeFavouritesFetch>) => {
+    const resNFTItems = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?tokenIds=${tokenIds}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNFTItems = await resNFTItems.json();
+    const arrNFTItems = await jsonNFTItems.data;
+    const _NFTItems: Array<TypeProduct> = [];
+    for (let i = 0; i < arrNFTItems.length; i++) {
+        const itemObject: TypeProductFetch = arrNFTItems[i];
+        const _NFT: TypeProduct = { ...blankNFTItem };
+        _NFT.tokenId = itemObject.tokenId;
+        _NFT.name = itemObject.name;
+        _NFT.image = getImageFromAsset(itemObject.asset);
+        _NFT.isLike =
+            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+                ? false
+                : true;
+        _NFTItems.push(_NFT);
+    }
+    return _NFTItems;
 };
 
 // const getLatestTransaction = async () => {
@@ -538,6 +564,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.maxPurchases = parseInt(itemObject.maxPurchases);
         _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);
         _BBItem.did = itemObject.did;
+        _BBItem.soldIds = itemObject.sold_tokenIds;
     }
     return _BBItem;
 };

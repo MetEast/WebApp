@@ -24,7 +24,6 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
     const [type, setType] = useState<number>(-1);
 
     useEffect(() => {
-        console.log(signInDlgState.userRole, '---', user2Edit.status)
         if (signInDlgState.userRole === 0) { // contract deployer
             if (user2Edit.role === 1) setType(3);
             else if (user2Edit.role === 2) setType(2);
