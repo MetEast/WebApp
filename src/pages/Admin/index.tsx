@@ -2,17 +2,23 @@ import { FC, PropsWithChildren, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { MenuBox, ContentBox } from './styles';
 import MenuBar from 'src/components/Admin/MenuBar';
-import { useSignInContext } from 'src/context/SignInContext';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { UserTokenType } from 'src/types/auth-types';
+import jwtDecode from 'jwt-decode';
 
 export interface ComponentProps {}
 
 const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Element => {
     const navigate = useNavigate();
-    const [signInDlgState] = useSignInContext();
+    const [cookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
     useEffect(() => {
-        if (signInDlgState.userRole >= 2)  navigate('/');
-    }, [signInDlgState.userRole]);
+        const user: UserTokenType =
+            cookies.METEAST_TOKEN === undefined
+                ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
+                : jwtDecode(cookies.METEAST_TOKEN);
+        if (parseInt(user.role) >= 2)  navigate('/');
+    }, []);
     
     return (
         <>
