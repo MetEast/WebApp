@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-// import { useStyles } from './styles';
+import { ImageBox } from './styles';
 import { DialogTitleTypo } from '../../../TransactionDialogs/styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
@@ -117,23 +117,30 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                             <Typography fontSize={12} fontWeight={700}>
                                 Image
                             </Typography>
-                            <label htmlFor="banner-image" style={{ width: '100%' }}>
-                                <img
-                                    src={
-                                        bannerImage.preview === ''
-                                            ? '/assets/images/blindbox/blindbox-nft-template2.png'
-                                            : bannerImage.preview
-                                    }
-                                    style={{ borderRadius: '18px' }}
-                                    alt=""
-                                />
-                            </label>
-                            <input
-                                type="file"
-                                id="banner-image"
-                                style={{ display: 'none' }}
-                                onChange={handleBannerImageChanged}
-                            />
+                            <Box
+                                position="relative"
+                                borderRadius={4.5}
+                                overflow="hidden"
+                                sx={{ width: '100%', paddingTop: '75%' }}
+                            >
+                                <ImageBox htmlFor="banner-image">
+                                    <img
+                                        src={
+                                            bannerImage.preview === ''
+                                                ? '/assets/images/blindbox/blindbox-nft-template2.png'
+                                                : bannerImage.preview
+                                        }
+                                        alt=""
+                                    />
+                                    <input
+                                        type="file"
+                                        id="banner-image"
+                                        style={{ display: 'none' }}
+                                        onChange={handleBannerImageChanged}
+                                    />
+                                </ImageBox>
+                            </Box>
+
                             <Stack direction="row" spacing={1}>
                                 <PrimaryButton
                                     btn_color="pink"
