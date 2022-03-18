@@ -256,6 +256,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                             <Grid
                                 item
                                 container
+                                columns={25}
                                 alignItems="center"
                                 columnSpacing={2}
                                 key={`search-blind-item-${index}`}
