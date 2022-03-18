@@ -10,7 +10,7 @@ import { reduceHexAddress } from 'src/services/common';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
-import { getBBCandiates } from 'src/services/fetch';
+import { getBBCandiatesList, getBBCandiates } from 'src/services/fetch';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -20,6 +20,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [loadingItemsList, setLoadingItemsList] = useState<boolean>(true);
+    const [bbCandidateLists, setBBCandidateLists] = useState<Array<any>>([]);
     const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
     const [keyWord, setKeyWord] = useState<string>('');
     const [allChecked, setAllChecked] = useState<boolean>(false);
@@ -34,24 +35,32 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
-        let unmounted = false;
         const getFetchData = async () => {
-            const _BBCandidates = await getBBCandiates(signInDlgState.walletAccounts[0], keyWord, selectedTokenIds);
-            if (!unmounted) {
-                setItemList(_BBCandidates.candidates);
-                setLoadingItemsList(false);
-                setItemChecked(_BBCandidates.itemChecked);
-                setAllChecked(_BBCandidates.allChecked);
-                setIndeterminateChecked(_BBCandidates.indeterminateChecked);
-            }
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], keyWord);
+            setBBCandidateLists(_BBCandidatesList);
+            setLoadingItemsList(false);
         };
         setLoadingItemsList(true);
         getFetchData().catch(console.error);
+    }, [signInDlgState.walletAccounts, keyWord]);
+    // -------------- Fetch Data -------------- //
+
+    useEffect(() => {
+        let unmounted = false;
+
+        const _BBCandidates = getBBCandiates(bbCandidateLists, selectedTokenIds);
+        if (!unmounted) {
+            setItemList(_BBCandidates.candidates);
+            setLoadingItemsList(false);
+            setItemChecked(_BBCandidates.itemChecked);
+            setAllChecked(_BBCandidates.allChecked);
+            setIndeterminateChecked(_BBCandidates.indeterminateChecked);
+        }
+
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts, keyWord, selectedTokenIds]);
-    // -------------- Fetch Data -------------- //
+    }, [bbCandidateLists, selectedTokenIds]);
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         let _itemChecked: Array<boolean> = Array(itemList.length);
