@@ -351,10 +351,15 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </Stack>
                     <Stack alignItems="center" marginTop={{ sm: -29, md: -7 }}>
                         <Stack alignItems="center">
-                            <Typography fontSize={{ xs: 32, sm: 56 }} fontWeight={700}>
+                            <Typography
+                                fontSize={{ xs: 32, sm: 56 }}
+                                fontWeight={700}
+                                textAlign="center"
+                                lineHeight={1.1}
+                            >
                                 {signInDlgState.userName === ''
                                     ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
-                                    : signInDlgState.userName.length > 16
+                                    : signInDlgState.userName.length > 40
                                     ? reduceUserName(signInDlgState.userName, 4)
                                     : signInDlgState.userName}
                             </Typography>
