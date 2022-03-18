@@ -31,7 +31,6 @@ export type AdminUsersItemType = {
     address: string;
     username: string;
     avatar: string;
-    role: number;
     status: number;
     remarks: string;
 };

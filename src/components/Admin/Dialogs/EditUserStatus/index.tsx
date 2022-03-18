@@ -36,8 +36,8 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
     const [onProgress, setOnProgress] = useState<boolean>(false);
-    const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban'>(
-        user2Edit.status <= 1 ? 'admin' : user2Edit.status === 2 ? 'user' : 'ban',
+    const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban' | 'moderator'>(
+        user2Edit.status === 0 ? 'admin' : (user2Edit.status === 1 ? 'moderator' : (user2Edit.status === 2 ? 'user' : 'ban')),
     );
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
     const [type, setType] = useState<number>(-1);
@@ -45,13 +45,13 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
     useEffect(() => {
         if (signInDlgState.userRole === 0) {
             // contract deployer
-            if (user2Edit.role === 1) setType(3);
-            else if (user2Edit.role === 2) setType(2);
-            else if (user2Edit.role === 3) setType(1);
+            if (user2Edit.status === 1) setType(3);
+            else if (user2Edit.status === 2) setType(2);
+            else if (user2Edit.status === 3) setType(1);
         } else {
             // admin
-            if (user2Edit.role === 2) setType(0);
-            else if (user2Edit.role === 3) setType(1);
+            if (user2Edit.status === 2) setType(0);
+            else if (user2Edit.status === 3) setType(1);
         }
     }, [signInDlgState.userRole]);
 
