@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Stack, Grid, Typography } from '@mui/material';
+import { Stack, Grid, Typography, Skeleton } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
@@ -19,6 +19,7 @@ export interface ComponentProps {}
 const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     const params = useParams();
     const [dialogState, setDialogState] = useDialogContext();
+    const [loadingData, setLoadingData] = useState(true);
     const [allTxsList, setAllTxsList] = useState<Array<TypeNFTTransaction>>([]);
     const [sortby, setSortby] = React.useState<TypeSelectItem>();
     const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
@@ -34,6 +35,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
             if (!unmounted) {
                 setAllTxsList(_NFTTxs.txs);
             }
+            setLoadingData(false);
         };
         fetchLatestTxs().catch(console.error);
         return () => {
@@ -67,7 +69,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 /> */}
             </Stack>
             <Stack spacing={3} height="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                <Grid container display={{ xs: 'none', sm: 'flex' }}>
+                <Grid container columnSpacing={1} display={{ xs: 'none', sm: 'flex' }}>
                     <Grid item xs={4}>
                         <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                             Type
@@ -90,10 +92,30 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     </Grid>
                 </Grid>
                 <Grid container marginTop={2.5} rowGap={3} alignItems="center">
-                    {allTxsList.map((item, index) => (
-                        <Grid item container alignItems="center" key={`transaction-row-${index}`}>
+                    {(loadingData ? [...Array(4)] : allTxsList).map((item, index) => (
+                        <Grid
+                            item
+                            container
+                            alignItems="center"
+                            columnSpacing={1}
+                            rowGap={1}
+                            key={`transaction-row-${index}`}
+                        >
                             <Grid item xs={6} sm={4} order={{ xs: 2, sm: 0 }}>
-                                <SingleNFTTransactionType transactionType={item.type} transactionHash={item.txHash} />
+                                {loadingData ? (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        animation="wave"
+                                        width="100%"
+                                        height={24}
+                                        sx={{ bgcolor: '#E8F4FF', borderRadius: 2 }}
+                                    />
+                                ) : (
+                                    <SingleNFTTransactionType
+                                        transactionType={item.type}
+                                        transactionHash={item.txHash}
+                                    />
+                                )}
                             </Grid>
                             <Grid
                                 item
@@ -103,14 +125,34 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                 display="flex"
                                 justifyContent={{ xs: 'flex-end', sm: 'flex-start' }}
                             >
-                                <Typography fontSize={16} fontWeight={700}>
-                                    {item.user}
-                                </Typography>
+                                {loadingData ? (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        animation="wave"
+                                        width="100%"
+                                        height={24}
+                                        sx={{ bgcolor: '#E8F4FF', borderRadius: 2 }}
+                                    />
+                                ) : (
+                                    <Typography fontSize={16} fontWeight={700}>
+                                        {item.user}
+                                    </Typography>
+                                )}
                             </Grid>
                             <Grid item xs={6} sm={3} order={{ xs: 0, sm: 2 }}>
-                                <Typography fontSize={12} fontWeight={500}>
-                                    {item.time}
-                                </Typography>
+                                {loadingData ? (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        animation="wave"
+                                        width="100%"
+                                        height={24}
+                                        sx={{ bgcolor: '#E8F4FF', borderRadius: 2 }}
+                                    />
+                                ) : (
+                                    <Typography fontSize={12} fontWeight={500}>
+                                        {item.time}
+                                    </Typography>
+                                )}
                             </Grid>
                             <Grid
                                 item
@@ -120,7 +162,17 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                 display="flex"
                                 justifyContent={{ xs: 'flex-end', sm: 'flex-start' }}
                             >
-                                <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
+                                {loadingData ? (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        animation="wave"
+                                        width="100%"
+                                        height={24}
+                                        sx={{ bgcolor: '#E8F4FF', borderRadius: 2 }}
+                                    />
+                                ) : (
+                                    <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
+                                )}
                             </Grid>
                         </Grid>
                     ))}
