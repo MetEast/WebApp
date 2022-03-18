@@ -309,7 +309,7 @@ export const getNFTItem = async (
 // BB product
 export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTItems = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?tokenIds=${tokenIds}`,
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?ids=${tokenIds}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTItems = await resNFTItems.json();
