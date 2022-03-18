@@ -1,4 +1,5 @@
 import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material';
 
 export const useStyles = makeStyles((theme: any) => ({
     container: {
@@ -13,3 +14,19 @@ export const useStyles = makeStyles((theme: any) => ({
         },
     },
 }));
+
+export const ImageBox = styled('label')`
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 12px;
+        /* width: 100%;
+        height: 100%;
+        object-fit: contain; */
+    }
+`;
