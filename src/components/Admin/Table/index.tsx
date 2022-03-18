@@ -143,20 +143,24 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
     };
 
     const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected: readonly number[] = [];
+        // if (selected.length > 0 && selected.indexOf(id) === -1) {
+        //     event.stopPropagation();
+        //     return;
+        // }
+        // const selectedIndex = selected.indexOf(id);
+        // let newSelected: readonly number[] = [];
 
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-        }
+        // if (selectedIndex === -1) {
+        //     newSelected = newSelected.concat(selected, id);
+        // } else if (selectedIndex === 0) {
+        //     newSelected = newSelected.concat(selected.slice(1));
+        // } else if (selectedIndex === selected.length - 1) {
+        //     newSelected = newSelected.concat(selected.slice(0, -1));
+        // } else if (selectedIndex > 0) {
+        //     newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+        // }
 
-        setSelected(newSelected);
+        setSelected([id]);
     };
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
@@ -180,42 +184,46 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
                         checkable={checkable}
                     />
                     <TableBody>
-                        {!isLoading && stableSort(tabledata, getComparator(order, orderBy))
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row, index) => {
-                                const isItemSelected = isSelected(row.id);
-                                const labelId = `enhanced-table-checkbox-${index}`;
+                        {!isLoading &&
+                            stableSort(tabledata, getComparator(order, orderBy))
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((row, index) => {
+                                    const isItemSelected = isSelected(row.id);
+                                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                                return (
-                                    <TableRow
-                                        hover
-                                        onClick={(event) => handleClick(event, row.id)}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        key={row.id}
-                                        selected={isItemSelected}
-                                    >
-                                        {checkable && (
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
-                                        )}
-                                        {columns.map((column, index) => (
-                                            <TableCell key={`table-cell-${index}`} sx={{ fontSize: 16, fontWeight: 400 }}>
-                                                {column.cell
-                                                    ? column.cell({ value: (row as any)[column.id], data: row })
-                                                    : (row as any)[column.id]}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                );
-                            })}
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={(event) => handleClick(event, row.id)}
+                                            role="checkbox"
+                                            aria-checked={isItemSelected}
+                                            key={row.id}
+                                            selected={isItemSelected}
+                                        >
+                                            {checkable && (
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox
+                                                        color="primary"
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby': labelId,
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                            )}
+                                            {columns.map((column, index) => (
+                                                <TableCell
+                                                    key={`table-cell-${index}`}
+                                                    sx={{ fontSize: 16, fontWeight: 400 }}
+                                                >
+                                                    {column.cell
+                                                        ? column.cell({ value: (row as any)[column.id], data: row })
+                                                        : (row as any)[column.id]}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    );
+                                })}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
                                 <TableCell colSpan={6} />
