@@ -13,8 +13,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestTxs } from 'src/services/fetch';
 
-export interface ComponentProps {
-}
+export interface ComponentProps {}
 
 const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     const params = useParams();
@@ -42,10 +41,10 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     }, [params.id, sortby]);
 
     return (
-        <Stack spacing={5} width={520}>
+        <Stack spacing={5} width={{ xs: '100%', sm: 520 }}>
             <Stack direction="row" justifyContent="space-between">
                 <DialogTitleTypo>All Transactions</DialogTitleTypo>
-                <Select
+                {/* <Select
                     titlebox={
                         <SelectTitleBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
                             <Icon icon="ph:sort-ascending" fontSize={20} />
@@ -59,7 +58,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     setIsOpen={isSortBySelectOpen}
                     handleClick={handleSortbyChange}
                     width={160}
-                />
+                /> */}
             </Stack>
             <Stack spacing={3}>
                 <Grid container>

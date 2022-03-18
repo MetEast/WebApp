@@ -334,7 +334,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     </Box>
                 </Box>
             ) : (
-                <Grid container marginTop={5} columnSpacing={10}>
+                <Grid container marginTop={5} columnSpacing={10} rowGap={5}>
                     <Grid item md={4} xs={12}>
                         <Stack spacing={5}>
                             <ProjectDescription description={productDetail.description} />
