@@ -935,8 +935,7 @@ export const getAdminUserList = async (fetchParams: string, address: string) => 
         const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
         const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
         _AdminUser.id = i + 1;
-        _AdminUser.address = reduceHexAddress(itemObject.address, 7);
-        _AdminUser.wholeAddress = itemObject.address;
+        _AdminUser.address = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
         _AdminUser.role = itemObject.role;

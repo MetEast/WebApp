@@ -10,6 +10,7 @@ import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
 import { blankAdminUserItem } from 'src/constants/init-constants';
 import { useSignInContext } from 'src/context/SignInContext';
+import { reduceHexAddress } from 'src/services/common';
 
 const AdminUsers: React.FC = (): JSX.Element => {
     const statusValues = [
@@ -22,6 +23,11 @@ const AdminUsers: React.FC = (): JSX.Element => {
         {
             id: 'address',
             label: 'Address',
+            cell: (props) => (
+                <Typography fontSize={16}>
+                    {reduceHexAddress(props.value, 7)}
+                </Typography>
+            ),
             width: 80,
         },
         {

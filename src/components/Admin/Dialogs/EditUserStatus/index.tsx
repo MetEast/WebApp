@@ -16,6 +16,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { Icon } from '@iconify/react';
 
 export interface ComponentProps {
     user2Edit: AdminUsersItemType;
@@ -42,28 +43,17 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
     const [type, setType] = useState<number>(-1);
 
     useEffect(() => {
-        if (signInDlgState.userRole === 0) { // contract deployer
+        if (signInDlgState.userRole === 0) {
+            // contract deployer
             if (user2Edit.role === 1) setType(3);
             else if (user2Edit.role === 2) setType(2);
             else if (user2Edit.role === 3) setType(1);
-        }
-        else { // admin
+        } else {
+            // admin
             if (user2Edit.role === 2) setType(0);
             else if (user2Edit.role === 3) setType(1);
         }
     }, [signInDlgState.userRole]);
-
-    // const handleUpdateUserRole = async () => {
-    //     'unban user'
-
-    //     setOnProgress(true);
-    //     const role = userStatus === 'admin' ? 1 : userStatus === 'user' ? 2 : 3;
-    //     await updateUserRole(signInDlgState.token, user2Edit.wholeAddress, role, remarks);
-    //     setOnProgress(false);
-    //     const updatedUserInfo: AdminUsersItemType = { ...user2Edit, status: Math.abs(role - 1), remarks: remarks };
-    //     handleUserUpdate(updatedUserInfo);
-    //     onClose();
-    // };
 
     const handleUpdateUserRole = (methodName: string, state: boolean) => {
         if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
@@ -96,12 +86,12 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                     price: '0',
                     address: user2Edit.address,
                     approved: state,
-                }); 
+                });
             })
             .then((txHash: string) => {
                 console.log(txHash);
                 role = userStatus === 'admin' ? 1 : userStatus === 'user' ? 2 : 3;
-                return updateUserRole(signInDlgState.token, user2Edit.wholeAddress, role, remarks);
+                return updateUserRole(signInDlgState.token, user2Edit.address, role, remarks);
             })
             .then((success: boolean) => {
                 if (success) {
@@ -113,7 +103,11 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                         ...dialogState,
                         waitingConfirmDlgOpened: false,
                     });
-                    const updatedUserInfo: AdminUsersItemType = { ...user2Edit, status: Math.abs(role - 1), remarks: remarks };
+                    const updatedUserInfo: AdminUsersItemType = {
+                        ...user2Edit,
+                        status: Math.abs(role - 1),
+                        remarks: remarks,
+                    };
                     handleUserUpdate(updatedUserInfo);
                 }
             })
@@ -141,7 +135,11 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                 <DialogTitleTypo>Edit User Status</DialogTitleTypo>
             </Stack>
             <Box borderRadius={'50%'} width={80} height={80} overflow="hidden" alignSelf="center">
-                <img src={user2Edit.avatar} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
+                {user2Edit.avatar === '' ? (
+                    <Icon icon="ph:user" fontSize={80} color="#1890FF" />
+                ) : (
+                    <img src={user2Edit.avatar} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
+                )}
             </Box>
             <CustomTextField title="USEN NICKNAME" inputValue={user2Edit.username} disabled />
             <CustomTextField title="USER ADDRESS" inputValue={user2Edit.address} disabled />
@@ -194,27 +192,52 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
             </Stack> */}
             <Stack spacing={2}>
                 {type === 0 && (
-                    <PrimaryButton btn_color="pink" fullWidth onClick={() => handleUpdateUserRole('setBlacklist', true)}>
+                    <PrimaryButton
+                        btn_color="pink"
+                        fullWidth
+                        disabled={onProgress}
+                        onClick={() => handleUpdateUserRole('setBlacklist', true)}
+                    >
                         ban general user
                     </PrimaryButton>
                 )}
                 {type === 1 && (
-                    <PrimaryButton btn_color="secondary" fullWidth onClick={() => handleUpdateUserRole('setBlacklist', false)}>
+                    <PrimaryButton
+                        btn_color="secondary"
+                        fullWidth
+                        disabled={onProgress}
+                        onClick={() => handleUpdateUserRole('setBlacklist', false)}
+                    >
                         unban general user
                     </PrimaryButton>
                 )}
                 {type === 2 && (
                     <>
-                        <PrimaryButton btn_color="green" fullWidth onClick={() => handleUpdateUserRole('addManager', false)}>
+                        <PrimaryButton
+                            btn_color="green"
+                            fullWidth
+                            disabled={onProgress}
+                            onClick={() => handleUpdateUserRole('addManager', false)}
+                        >
                             add admin
                         </PrimaryButton>
-                        <PrimaryButton btn_color="pink" fullWidth onClick={() => handleUpdateUserRole('setBlacklist', true)}>
+                        <PrimaryButton
+                            btn_color="pink"
+                            fullWidth
+                            disabled={onProgress}
+                            onClick={() => handleUpdateUserRole('setBlacklist', true)}
+                        >
                             ban general user
                         </PrimaryButton>
                     </>
                 )}
                 {type === 3 && (
-                    <PrimaryButton btn_color="pink" fullWidth onClick={() => handleUpdateUserRole('removeManager', false)}>
+                    <PrimaryButton
+                        btn_color="pink"
+                        fullWidth
+                        disabled={onProgress}
+                        onClick={() => handleUpdateUserRole('removeManager', false)}
+                    >
                         remove admin
                     </PrimaryButton>
                 )}
