@@ -71,7 +71,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
         }, 120000);
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 2,
+            contractType: 1,
             method: methodName,
             price: '0',
             address: user2Edit.address,
@@ -81,8 +81,8 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                 console.log(txHash);
                 return callContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
-                    contractType: 1,
-                    method: methodName === 'setBlacklist' ? methodName : '',
+                    contractType: 2,
+                    method: methodName,
                     price: '0',
                     address: user2Edit.address,
                     approved: state,
