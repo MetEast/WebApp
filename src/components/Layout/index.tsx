@@ -23,8 +23,8 @@ const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.
         <>
             <SignInDlgContainer />
             <ProgressBar
-                isFinished={dialogState.mintProgress === 0 || dialogState.mintProgress === 100}
-                progress={dialogState.mintProgress}
+                isFinished={dialogState.progressBar === 0 || dialogState.progressBar === 100}
+                progress={dialogState.progressBar}
             />
             {location.pathname.indexOf('/admin') === -1 ? (
                 <>

@@ -145,9 +145,9 @@ export const blankAdminNFTItem: AdminNFTItemType = {
 export const blankAdminUserItem: AdminUsersItemType = {
     id: 0,
     address: '',
-    wholeAddress: '',
     username: '',
     avatar: '',
+    role: 0,
     status: 0,
     remarks: '',
 };
@@ -182,4 +182,5 @@ export const blankContractMethodParam: TypeContractMethodPram = {
     endTime: '',
     operator: '',
     approved: false,
+    address: '',
 };

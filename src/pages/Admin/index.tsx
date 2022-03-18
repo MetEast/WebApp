@@ -1,11 +1,19 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { MenuBox, ContentBox } from './styles';
 import MenuBar from 'src/components/Admin/MenuBar';
+import { useSignInContext } from 'src/context/SignInContext';
+import { useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Element => {
+    const navigate = useNavigate();
+    const [signInDlgState] = useSignInContext();
+    useEffect(() => {
+        if (signInDlgState.userRole >= 2)  navigate('/');
+    }, [signInDlgState.userRole]);
+    
     return (
         <>
             <Box position="relative">

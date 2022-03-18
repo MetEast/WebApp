@@ -41,13 +41,13 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
     const handleUpdateBid = () => {
         if (dialogState.updateBidTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
         } else if (isNaN(bidAmount) || bidAmount <= 0) {
             enqueueSnackbar('Invalid price!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
@@ -80,7 +80,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .catch((error) => {
                 enqueueSnackbar(`Update bid error: ${error}!`, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({

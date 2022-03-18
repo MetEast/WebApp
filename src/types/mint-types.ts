@@ -78,4 +78,5 @@ export type TypeContractMethodPram = {
     endTime: string;
     operator: string;
     approved: boolean;
+    address: string;
 };

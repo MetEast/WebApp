@@ -15,7 +15,7 @@ import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindB
 import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
-import { getBBItem, getELA2USD } from 'src/services/fetch';
+import { getBBItem, getELA2USD, getMyFavouritesList, getNFTItems } from 'src/services/fetch';
 import { reduceHexAddress } from 'src/services/common';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -38,8 +38,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             const ELA2USD = await getELA2USD();
             const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
+            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','), likeList)
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
+                setNftSoldList(_BBSoldNFTs);
             }
         };
         getFetchData().catch(console.error);

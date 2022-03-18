@@ -4,6 +4,7 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 import { getImageFromAsset } from 'src/services/common';
 import { ProfileImageWrapper, ProfileImage, BannerBox, useStyles } from './styles';
 import CustomTextField from 'src/components/TextField';
@@ -25,6 +26,7 @@ export interface ComponentProps {
 
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
@@ -71,7 +73,10 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleSignMessage = async (did: string, address: string) => {
         try {
-            console.log(did, address);
+            enqueueSnackbar('Sign with wallet.', {
+                variant: 'info',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
             const signature = await walletConnectWeb3.eth.personal.sign(`Update profile with ${did}`, address, '');
             return signature;
         } catch (err) {
@@ -85,15 +90,17 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         let urlCoverImage: string = '';
         uploadImage2Ipfs(avatarChanged ? userAvatarURL.raw : undefined)
             .then((added: any) => {
+                setDialogState({ ...dialogState, progressBar: 20});
                 urlAvatar = avatarChanged ? `meteast:image:${added.path}` : signInDlgState.userAvatar;
                 return uploadImage2Ipfs(coverImageChanged ? userCoverImageURL.raw : undefined);
             })
             .then((added: any) => {
+                setDialogState({ ...dialogState, progressBar: 40});
                 urlCoverImage = coverImageChanged ? `meteast:image:${added.path}` : signInDlgState.userCoverImage;
-
                 return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
             })
             .then((signature: string) => {
+                setDialogState({ ...dialogState, progressBar: 70});
                 return uploadUserProfile(
                     signInDlgState.token,
                     signInDlgState.walletAccounts[0],
@@ -106,6 +113,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 );
             })
             .then((token: any) => {
+                setDialogState({ ...dialogState, progressBar: 100});
                 if (token) {
                     setSignInDlgState({
                         ...signInDlgState,
@@ -122,7 +130,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     });
                 } else {
                     enqueueSnackbar('Error!', {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
@@ -131,7 +139,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .catch((error) => {
                 enqueueSnackbar(error, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setOnProgress(false);

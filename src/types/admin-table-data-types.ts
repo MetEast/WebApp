@@ -29,9 +29,9 @@ export type AdminNFTItemType = {
 export type AdminUsersItemType = {
     id: number; // required
     address: string;
-    wholeAddress: string;
     username: string;
     avatar: string;
+    role: number;
     status: number;
     remarks: string;
 };

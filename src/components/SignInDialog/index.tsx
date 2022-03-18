@@ -119,6 +119,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
                                 if (user.coverImage !== '' && user.coverImage !== undefined)
                                     _state.userCoverImage = user.coverImage;
+                                _state.userRole = parseInt(user.role);
                                 return _state;
                             });
                             showSucceedSnackBar();
@@ -132,7 +133,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         console.log(error);
                         enqueueSnackbar(
                             `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
-                            { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                            { variant: 'error', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
                         );
                         try {
                             currentConnector
@@ -231,6 +232,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
                                 if (user.coverImage !== '' && user.coverImage !== undefined)
                                     _state.userCoverImage = user.coverImage;
+                                _state.userRole = parseInt(user.role);
                                 _state.signInDlgOpened = false;
                                 if (isInAppBrowser()) {
                                     const inAppProvider: any = window.elastos.getWeb3Provider();
@@ -255,7 +257,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     console.log(error);
                     enqueueSnackbar(
                         `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
-                        { variant: 'warning', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
+                        { variant: 'error', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
                     );
                     try {
                         essentialsConnector
@@ -436,10 +438,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         const user: UserTokenType =
             cookies.METEAST_TOKEN === undefined
-                ? { did: '', name: '', description: '', avatar: '', coverImage: '', exp: 0, iat: 0 }
+                ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
                 : jwtDecode(cookies.METEAST_TOKEN);
-        // const arrDid = user.did.split(':');
-        // const did = arrDid.length === 3 ? arrDid[2] : user.did;
         getDidUri(user.did, '', user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
@@ -450,6 +450,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 userDescription: user.description,
                 userAvatar: user.avatar,
                 userCoverImage: user.coverImage,
+                userRole: 1,
+                // parseInt(user.role),
             });
         });
     }, [_signInState]);

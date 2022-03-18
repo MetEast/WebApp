@@ -522,6 +522,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 open={editProfileDlgOpen}
                 onClose={() => {
                     setEditProfileDlgOpen(false);
+                    setDialogState({ ...dialogState, progressBar: 0 });
                 }}
             >
                 <EditProfile

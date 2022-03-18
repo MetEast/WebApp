@@ -73,7 +73,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             if (!dialogState.crtBlindImage) return;
             if (dialogState.crtBlindTxFee > signInDlgState.walletBalance) {
                 enqueueSnackbar('Insufficient balance!', {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 reject('InsufficientBalance');
@@ -127,7 +127,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         })
                         .catch((error) => {
                             enqueueSnackbar(`Create Blind Box error: ${error}!`, {
-                                variant: 'warning',
+                                variant: 'error',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
                             setDialogState({
@@ -141,7 +141,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 })
                 .catch((error) => {
                     enqueueSnackbar(`Set approval error: ${error}!`, {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                     setDialogState({
@@ -184,14 +184,14 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     });
                 } else {
                     enqueueSnackbar(`Create Blind Box error!`, {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
             })
             .catch((error) => {
                 enqueueSnackbar(`Create Blind Box error: ${error}!`, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             });

@@ -34,10 +34,10 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.waitingConfirmDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
+                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
                 }}
             >
-                <WaitingConfirm />
+                <WaitingConfirm loadingDlg={dialogState.loadingDlgOpened} />
             </ModalDialog>
             <ModalDialog
                 open={dialogState.allTxDlgOpened}
