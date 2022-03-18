@@ -12,6 +12,7 @@ import { TypeNFTTransaction } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestTxs } from 'src/services/fetch';
+import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 
 export interface ComponentProps {}
 
@@ -64,15 +65,20 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                 <Grid container>
                     <Grid item xs={4}>
                         <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
+                            Type
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                             User
                         </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                         <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                             Date
                         </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={2}>
                         <Typography
                             fontSize={14}
                             fontWeight={700}
@@ -87,16 +93,19 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     {allTxsList.map((item, index) => (
                         <Grid item container key={`transaction-row-${index}`}>
                             <Grid item xs={4}>
+                                <SingleNFTTransactionType transactionType={item.type} transactionHash={item.txHash} />
+                            </Grid>
+                            <Grid item xs={3}>
                                 <Typography fontSize={16} fontWeight={700}>
                                     {item.user}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={3}>
                                 <Typography fontSize={12} fontWeight={500}>
                                     {item.time}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={2}>
                                 <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight={true} />
                             </Grid>
                         </Grid>
