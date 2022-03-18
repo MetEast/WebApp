@@ -118,5 +118,5 @@ export type AdminBannersItemFetchType = {
     sort: number;
     location: number;
     status: number;
-    created: string;
+    createTime: string;
 };

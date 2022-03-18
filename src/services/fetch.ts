@@ -995,9 +995,9 @@ export const getAdminBannerList = async (address: string) => {
         _AdminBanner.location = itemObject.location === 1 ? 'home' : itemObject.location === 2 ? 'explore' : 'blindbox';
         _AdminBanner.status = itemObject.status === 0 ? 'offline' : 'online';
         const createdTime =
-            itemObject.created === '' || itemObject.created === undefined
+            itemObject.createTime === '' || itemObject.createTime === undefined
                 ? { date: '', time: '' }
-                : getTime(itemObject.created);
+                : getTime(itemObject.createTime);
         _AdminBanner.created = createdTime.date + ' ' + createdTime.time;
         _arrAdminBannerList.push(_AdminBanner);
     }
