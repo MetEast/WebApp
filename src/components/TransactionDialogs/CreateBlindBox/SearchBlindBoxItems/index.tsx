@@ -338,9 +338,9 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 )}
             </Box>
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth onClick={onClose}>
+                <PrimaryButton btn_color="secondary" fullWidth onClick={onClose}>
                     Back
-                </SecondaryButton>
+                </PrimaryButton>
                 <PrimaryButton
                     fullWidth
                     onClick={() => {

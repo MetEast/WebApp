@@ -8,17 +8,17 @@ import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { useSnackbar } from 'notistack';
 import { auctionNFTExpirationOptions } from 'src/constants/select-constants';
 
 export interface ComponentProps {}
 
 const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-    const { enqueueSnackbar } = useSnackbar();
     const [expiration, setExpiration] = useState<TypeSelectItem>();
     const [expirationSelectOpen, setExpirationSelectOpen] = useState(false);
+    const [expirationError, setExpirationError] = useState(false);
     const [bidAmount, setBidAmount] = useState(0);
+    const [bidAmountError, setBidAmountError] = useState(false);
 
     return (
         <Stack spacing={5} width={320} paddingY={6}>
@@ -29,6 +29,8 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack spacing={2}>
                 <ELAPriceInput
                     title="Bid Amount"
+                    error={bidAmountError}
+                    errorText={`Bid amount must be greater than ${dialogState.placeBidMinLimit}`}
                     handleChange={(value) => {
                         setBidAmount(value);
                     }}
@@ -50,9 +52,15 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         handleClick={(value: string) => {
                             const item = auctionNFTExpirationOptions.find((option) => option.value === value);
                             setExpiration(item);
+                            setExpirationError(false);
                         }}
                         setIsOpen={setExpirationSelectOpen}
                     />
+                    {expirationError && (
+                        <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                            Category should be selected.
+                        </Typography>
+                    )}
                 </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
@@ -68,7 +76,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                             placeBidName: '',
                             placeBidTxHash: '',
                             placeBidOrderId: '',
-                            placeBidMinLimit: 0
+                            placeBidMinLimit: 0,
                         });
                     }}
                 >
@@ -77,33 +85,18 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        if (bidAmount !== 0 && expiration?.value !== undefined && expiration?.value !== '')
-                            if (isNaN(parseFloat(bidAmount.toString()))) {
-                                enqueueSnackbar('Invalid number!', {
-                                    variant: 'error',
-                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                });
-                            }
-                            else if (bidAmount < dialogState.placeBidMinLimit) {
-                                enqueueSnackbar(`Bid amount must be greater than ${dialogState.placeBidMinLimit}!`, {
-                                    variant: 'error',
-                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                });
-                            }
-                            else {
-                                setDialogState({
-                                    ...dialogState,
-                                    placeBidDlgOpened: true,
-                                    placeBidDlgStep: 1,
-                                    placeBidAmount: bidAmount,
-                                    placeBidExpire: expiration
-                                });
-                            }
-                        else
-                            enqueueSnackbar('Form validation failed!', {
-                                variant: 'error',
-                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                        if (bidAmount >= dialogState.placeBidMinLimit && expiration !== undefined) {
+                            setDialogState({
+                                ...dialogState,
+                                placeBidDlgOpened: true,
+                                placeBidDlgStep: 1,
+                                placeBidAmount: bidAmount,
+                                placeBidExpire: expiration,
                             });
+                        } else {
+                            setExpirationError(expiration === undefined);
+                            setBidAmountError(isNaN(bidAmount) || bidAmount < dialogState.placeBidMinLimit);
+                        }
                     }}
                 >
                     Next
