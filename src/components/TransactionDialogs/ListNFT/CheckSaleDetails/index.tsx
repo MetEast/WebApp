@@ -34,7 +34,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const handleSell = () => {
         if (dialogState.sellTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
@@ -116,7 +116,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'
                                 } error: ${error}!`,
                                 {
-                                    variant: 'warning',
+                                    variant: 'error',
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                                 },
                             );
@@ -130,7 +130,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 })
                 .catch((error) => {
                     enqueueSnackbar(`Set approval error: ${error}!`, {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                     setDialogState({

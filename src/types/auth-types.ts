@@ -8,6 +8,7 @@ export type UserTokenType = {
     description: string;
     avatar: string;
     coverImage: string;
+    role: string;
     exp: number;
     iat: number;
 }

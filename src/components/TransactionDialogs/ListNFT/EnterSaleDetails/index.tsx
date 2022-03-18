@@ -33,7 +33,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 (saleType === 'auction' && (isNaN(minPrice) || minPrice === 0))
             ) {
                 enqueueSnackbar('Invalid number!', {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             } else {
@@ -48,7 +48,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             }
         } else
             enqueueSnackbar('Form validation failed!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
     };

@@ -306,6 +306,30 @@ export const getNFTItem = async (
     return _NFTItem;
 };
 
+// BB product
+export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<TypeFavouritesFetch>) => {
+    const resNFTItems = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?ids=${tokenIds}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNFTItems = await resNFTItems.json();
+    const arrNFTItems = await jsonNFTItems.data;
+    const _NFTItems: Array<TypeProduct> = [];
+    for (let i = 0; i < arrNFTItems.length; i++) {
+        const itemObject: TypeProductFetch = arrNFTItems[i];
+        const _NFT: TypeProduct = { ...blankNFTItem };
+        _NFT.tokenId = itemObject.tokenId;
+        _NFT.name = itemObject.name;
+        _NFT.image = getImageFromAsset(itemObject.asset);
+        _NFT.isLike =
+            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+                ? false
+                : true;
+        _NFTItems.push(_NFT);
+    }
+    return _NFTItems;
+};
+
 // const getLatestTransaction = async () => {
 //     const resLatestTransaction = await fetch(
 //         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
@@ -540,6 +564,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.maxPurchases = parseInt(itemObject.maxPurchases);
         _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);
         _BBItem.did = itemObject.did;
+        _BBItem.soldIds = itemObject.sold_tokenIds;
     }
     return _BBItem;
 };
@@ -910,45 +935,44 @@ export const getAdminUserList = async (fetchParams: string, address: string) => 
         const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
         const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
         _AdminUser.id = i + 1;
-        _AdminUser.address = reduceHexAddress(itemObject.address, 7);
-        _AdminUser.wholeAddress = itemObject.address;
+        _AdminUser.address = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
-        _AdminUser.status = Math.abs(itemObject.role - 1);
+        _AdminUser.status = itemObject.role;
         _AdminUser.remarks = itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
     return _arrAdminUserList;
 };
 
-export const updateUserRole = async (_token: string, _address: string, _role: number, _remarks: string) => {
-    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateRole`;
-    const reqBody = {
-        token: _token,
-        address: _address,
-        userRole: _role.toString(),
-        remarks: _remarks,
-    };
-    fetch(reqUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reqBody),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.code === 200) {
-                return true;
-            } else {
-                return false;
-            }
+export const updateUserRole = (_token: string, _address: string, _role: number, _remarks: string) =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateRole`;
+        const reqBody = {
+            token: _token,
+            address: _address,
+            userRole: _role.toString(),
+            remarks: _remarks,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
         })
-        .catch((error) => {
-            console.log(error);
-            return false;
-        });
-};
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
 
 export const getAdminBannerList = async (address: string) => {
     const resAdminBannerList = await fetch(
@@ -971,9 +995,9 @@ export const getAdminBannerList = async (address: string) => {
         _AdminBanner.location = itemObject.location === 1 ? 'home' : itemObject.location === 2 ? 'explore' : 'blindbox';
         _AdminBanner.status = itemObject.status === 0 ? 'offline' : 'online';
         const createdTime =
-            itemObject.created === '' || itemObject.created === undefined
+            itemObject.createTime === '' || itemObject.createTime === undefined
                 ? { date: '', time: '' }
-                : getTime(itemObject.created);
+                : getTime(itemObject.createTime);
         _AdminBanner.created = createdTime.date + ' ' + createdTime.time;
         _arrAdminBannerList.push(_AdminBanner);
     }

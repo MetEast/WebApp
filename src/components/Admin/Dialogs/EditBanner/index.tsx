@@ -7,6 +7,7 @@ import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';
 import { AdminBannersItemType } from 'src/types/admin-table-data-types';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { updateAdminBanner } from 'src/services/fetch';
@@ -29,6 +30,7 @@ const EditBanner: React.FC<ComponentProps> = ({
     // const classes = useStyles();
 
     const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
     // const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>(banner2Edit.status === 'offline' ? 'offline' : 'online');
@@ -57,16 +59,17 @@ const EditBanner: React.FC<ComponentProps> = ({
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
         if (
             bannerList.findIndex(
-                (item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort),
+                (item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort) && item.id !== banner2Edit.id,
             ) !== -1
         ) {
             enqueueSnackbar('Same sort exist!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
         }
         setOnProgress(true);
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, loadingDlgOpened: true });
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
         // const status = blindboxStatus === 'offline' ? 0 : 1;
@@ -83,18 +86,19 @@ const EditBanner: React.FC<ComponentProps> = ({
                     });
                 } else {
                     enqueueSnackbar('Error', {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
             })
             .catch((error) => {
                 enqueueSnackbar(error, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             })
             .finally(() => {
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
                 setOnProgress(false);
                 handleBannerUpdates();
                 onClose();

@@ -10,10 +10,12 @@ import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
 import { blankAdminUserItem } from 'src/constants/init-constants';
 import { useSignInContext } from 'src/context/SignInContext';
+import { reduceHexAddress } from 'src/services/common';
 
 const AdminUsers: React.FC = (): JSX.Element => {
     const statusValues = [
         { label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' },
+        { label: 'Moderator', bgcolor: '#C9F5DC', color: '#1EA557' },
         { label: 'User', bgcolor: '#E8F4FF', color: '#1890FF' },
         { label: 'Banned', bgcolor: '#FDEEEE', color: '#EB5757' },
     ];
@@ -22,6 +24,11 @@ const AdminUsers: React.FC = (): JSX.Element => {
         {
             id: 'address',
             label: 'Address',
+            cell: (props) => (
+                <Typography fontSize={16}>
+                    {reduceHexAddress(props.value, 7)}
+                </Typography>
+            ),
             width: 80,
         },
         {

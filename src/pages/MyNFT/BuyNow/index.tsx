@@ -23,7 +23,6 @@ import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePri
 import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
 import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
 import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
-import AllTransactions from 'src/components/profile/AllTransactions';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 

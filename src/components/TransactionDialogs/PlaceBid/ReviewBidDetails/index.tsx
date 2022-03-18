@@ -33,7 +33,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const handlePlaceBid = () => {
         if (dialogState.placeBidTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
-                variant: 'warning',
+                variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
@@ -67,7 +67,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .catch((error) => {
                 enqueueSnackbar(`Place bid error: ${error}!`, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({

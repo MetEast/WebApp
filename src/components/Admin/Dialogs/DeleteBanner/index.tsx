@@ -31,14 +31,14 @@ const DeleteBanner: React.FC<ComponentProps> = ({ bannerId, handleBannerUpdates,
                     });
                 } else {
                     enqueueSnackbar('Error', {
-                        variant: 'warning',
+                        variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
             })
             .catch((error) => {
                 enqueueSnackbar(error, {
-                    variant: 'warning',
+                    variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
             })

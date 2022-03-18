@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { BaseButton, PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import { NotificationTypo, MenuButton, NotificationsBoxContainer } from './styles';
 import ModalDialog from 'src/components/ModalDialog';
 import NotificationsBox from 'src/components/NotificationsBox';
@@ -62,8 +62,8 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
-    const [testdlgOpen, setTestdlgOpen] = useState<boolean>(false);
-    const testDlgShow = false;
+    // const [testdlgOpen, setTestdlgOpen] = useState<boolean>(false);
+    // const testDlgShow = false;
 
     const isProfilePage = location.pathname === '/profile';
 
@@ -183,6 +183,23 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     </>
                 )
             )}
+            {signInDlgState.userRole < 2 && (!mobile || !isProfilePage) && (
+                <PrimaryButton
+                    size="small"
+                    sx={{ paddingX: 2 }}
+                    onClick={() => {
+                        navigate('/admin/nfts');
+                    }}
+                >
+                    {mobile ? 'admin' : 'admin area'}
+                    <Icon
+                        icon="ph:arrow-square-out"
+                        fontSize={20}
+                        color="white"
+                        style={{ marginLeft: 4, marginBottom: 4 }}
+                    />
+                </PrimaryButton>
+            )}
         </>
     ) : (
         <PrimaryButton
@@ -228,7 +245,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 ) : (
                     <Stack direction="row" alignItems="center" spacing={2}>
                         {menuButtons}
-                        {testDlgShow && (
+                        {/* {testDlgShow && (
                             <Button
                                 onClick={() => {
                                     setTestdlgOpen(true);
@@ -236,11 +253,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                             >
                                 DlgTest
                             </Button>
-                        )}
+                        )} */}
                     </Stack>
                 )}
             </Stack>
-            {testDlgShow && (
+            {/* {testDlgShow && (
                 <ModalDialog
                     open={testdlgOpen}
                     onClose={() => {
@@ -253,7 +270,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                         }}
                     />
                 </ModalDialog>
-            )}
+            )} */}
         </>
     );
 };
