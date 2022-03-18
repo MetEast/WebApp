@@ -42,7 +42,12 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     }, [params.id, sortby]);
 
     return (
-        <Stack spacing={5} width={{ xs: '100%', sm: 520 }}>
+        <Stack
+            spacing={5}
+            width={{ xs: '100%', sm: 560 }}
+            maxHeight={{ sm: '70vh' }}
+            height={{ xs: '90vh', sm: 'auto' }}
+        >
             <Stack direction="row" justifyContent="space-between">
                 <DialogTitleTypo>All Transactions</DialogTitleTypo>
                 {/* <Select
@@ -61,8 +66,8 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                     width={160}
                 /> */}
             </Stack>
-            <Stack spacing={3}>
-                <Grid container>
+            <Stack spacing={3} height="100%" sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                <Grid container display={{ xs: 'none', sm: 'flex' }}>
                     <Grid item xs={4}>
                         <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                             Type
@@ -79,34 +84,43 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Typography
-                            fontSize={14}
-                            fontWeight={700}
-                            sx={{ textTransform: 'uppercase' }}
-                            textAlign={'right'}
-                        >
+                        <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                             Price
                         </Typography>
                     </Grid>
                 </Grid>
                 <Grid container marginTop={2.5} rowGap={3} alignItems="center">
                     {allTxsList.map((item, index) => (
-                        <Grid item container key={`transaction-row-${index}`}>
-                            <Grid item xs={4}>
+                        <Grid item container alignItems="center" key={`transaction-row-${index}`}>
+                            <Grid item xs={6} sm={4} order={{ xs: 2, sm: 0 }}>
                                 <SingleNFTTransactionType transactionType={item.type} transactionHash={item.txHash} />
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid
+                                item
+                                xs={6}
+                                sm={3}
+                                order={{ xs: 3, sm: 1 }}
+                                display="flex"
+                                justifyContent={{ xs: 'flex-end', sm: 'flex-start' }}
+                            >
                                 <Typography fontSize={16} fontWeight={700}>
                                     {item.user}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={6} sm={3} order={{ xs: 0, sm: 2 }}>
                                 <Typography fontSize={12} fontWeight={500}>
                                     {item.time}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={2}>
-                                <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight={true} />
+                            <Grid
+                                item
+                                xs={6}
+                                sm={2}
+                                order={{ xs: 1, sm: 3 }}
+                                display="flex"
+                                justifyContent={{ xs: 'flex-end', sm: 'flex-start' }}
+                            >
+                                <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                             </Grid>
                         </Grid>
                     ))}
