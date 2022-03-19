@@ -81,6 +81,32 @@ export const getNotificationList = async (address: string) => {
     return _arrNotificationList;
 };
 
+export const markNotificationsAsRead = (token: string, ids: string) => {
+    const reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/readNotifications?ids=${ids}`;
+    const reqBody = {
+        token: token,
+        ids: ids,
+    };
+    fetch(reqUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqBody),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.code === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .catch((error) => {
+            return false;
+        });
+};
+
 export const getShorternUrl = async (url: string) => {
     try {
         const resShorternUrl = await fetch(
