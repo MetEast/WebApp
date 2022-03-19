@@ -13,6 +13,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestTxs } from 'src/services/fetch';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
+import Username from 'src/components/Username';
 
 export interface ComponentProps {}
 
@@ -134,9 +135,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
                                         sx={{ bgcolor: '#E8F4FF', borderRadius: 2 }}
                                     />
                                 ) : (
-                                    <Typography fontSize={16} fontWeight={700}>
-                                        {item.user}
-                                    </Typography>
+                                    <Username username={item.user} fontSize={16} fontWeight={700} />
                                 )}
                             </Grid>
                             <Grid item xs={6} sm={3} order={{ xs: 0, sm: 2 }}>
