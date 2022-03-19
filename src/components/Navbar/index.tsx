@@ -18,12 +18,11 @@ interface ComponentProps {
 }
 
 const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const navigate = useNavigate();
     const location = useLocation();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [unReadCount, setUnReadCount] = useState<number>(0);
-    const [notificationList, setNotificationList] = useState<Array<TypeNotification>>([]);
+    // const [notificationList, setNotificationList] = useState<Array<TypeNotification>>([]);
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     const isProfilePage = location.pathname === '/profile';
 
@@ -33,8 +32,8 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
             const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
             if (!unmounted) {
-                setNotificationList(_notificationList);
-                setUnReadCount(_unReadNotes.length);
+                // setNotificationList(_notificationList);
+                setSignInDlgState({...signInDlgState, notesUnreadCnt: _unReadNotes.length, notesList: _notificationList});
             }
         };
         if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
@@ -42,6 +41,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             unmounted = true;
         };
     };
+
     const menuItemsList: Array<TypeMenuItem> = [
         {
             title: 'Home',
@@ -88,10 +88,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 >
                     <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                 </MenuButton>
-                {unReadCount !== 0 && <NotificationTypo>{unReadCount}</NotificationTypo>}
+                {signInDlgState.notesUnreadCnt !== 0 && <NotificationTypo>{signInDlgState.notesUnreadCnt}</NotificationTypo>}
                 <NotificationsBoxContainer show={showNotificationsBox}>
                     <NotificationsBox
-                        notificationsList={notificationList}
+                        notificationsList={signInDlgState.notesList}
                         onClose={() => setShowNotificationsBox(false)}
                     />
                 </NotificationsBoxContainer>

@@ -6,15 +6,16 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { getNotificationList } from 'src/services/fetch';
 
 const NotificationsPage: React.FC = (): JSX.Element => { 
-    const [signInDlgState] = useSignInContext();   
-    const [notificationList, setNotificationList] = useState<Array<TypeNotification>>([]);
+    const [signInDlgState, setSignInDlgState] = useSignInContext();   
+    // const [notificationList, setNotificationList] = useState<Array<TypeNotification>>([]);
 
     useEffect(() => {
         let unmounted = false;
         const fetchNotifications = async () => {
             const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
             if (!unmounted) {
-                setNotificationList(_notificationList);
+                // setNotificationList(_notificationList);
+                setSignInDlgState({...signInDlgState, notesList: _notificationList});
             }
         };
         if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
@@ -25,7 +26,7 @@ const NotificationsPage: React.FC = (): JSX.Element => {
 
     return (
         <Stack direction="column">
-            <NotificationsBox notificationsList={notificationList} onClose={() => {}} />
+            <NotificationsBox notificationsList={signInDlgState.notesList} onClose={() => {}} />
         </Stack>
     );
 };
