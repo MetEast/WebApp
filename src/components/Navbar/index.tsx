@@ -104,6 +104,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     selected={location.pathname === '/notifications'}
                     sx={{ minWidth: 40 }}
                     onClick={() => {
+                        
                         if (mobile) navigate('/notifications');
                         else setShowNotificationsBox(!showNotificationsBox);
                     }}

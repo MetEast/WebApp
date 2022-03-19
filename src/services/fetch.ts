@@ -17,6 +17,7 @@ import {
     enumMyNFTType,
     enumBadgeType,
 } from 'src/types/product-types';
+import { TypeNotification } from 'src/types/notification-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
 import {
     blankNFTItem,
@@ -55,6 +56,24 @@ export const FETCH_CONFIG_JSON = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
     },
+};
+
+export const getNotificationList = async (address: string) => {
+    const resNotificationList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getUnReadNotifications?${address}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNotificationList = await resNotificationList.json();
+    const arrNotificationList = jsonNotificationList.data === undefined ? [] : jsonNotificationList.data.result;
+
+    const _arrNotificationList: Array<TypeNotification> = [];
+    // for (let i = 0; i < arrNotificationList.length; i++) {
+    //     const itemObject: TypeNotification = arrNotificationList[i];
+    //     const _Note: TypeNotification = { ...blankNFTItem };
+
+    //     _arrNotificationList.push(_Note);
+    // }
+    return _arrNotificationList;
 };
 
 export const getShorternUrl = async (url: string) => {

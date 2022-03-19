@@ -449,7 +449,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 userDescription: user.description,
                 userAvatar: user.avatar,
                 userCoverImage: user.coverImage,
-                userRole: parseInt(user.role),
+                userRole: 1,
+                // parseInt(user.role),
             });
         });
     }, [_signInState]);
@@ -532,7 +533,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    // console.log('--------accounts: ', signInDlgState);
+    console.log('--------accounts: ', signInDlgState);
 
     return (
         <>
