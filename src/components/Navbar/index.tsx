@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Stack, Link, Button } from '@mui/material';
+import { Box, Typography, Stack, Link } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
 import PageButton from './PageButton';
@@ -22,7 +22,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    // const [notificationList, setNotificationList] = useState<Array<TypeNotification>>([]);
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     const isProfilePage = location.pathname === '/profile';
 
@@ -32,7 +31,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
             const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
             if (!unmounted) {
-                // setNotificationList(_notificationList);
                 setSignInDlgState({...signInDlgState, notesUnreadCnt: _unReadNotes.length, notesList: _notificationList});
             }
         };

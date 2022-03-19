@@ -71,6 +71,7 @@ export const getNotificationList = async (address: string) => {
     for (let i = 0; i < arrNotificationList.length; i++) {
         const itemObject: TypeNotificationFetch = arrNotificationList[i];
         const _Note: TypeNotification = { ...blankNotification };
+        _Note.id = itemObject._id;
         _Note.title = itemObject.title;
         _Note.content = itemObject.context;
         const timestamp = getTime(itemObject.date.toString());

@@ -186,6 +186,7 @@ export const blankContractMethodParam: TypeContractMethodPram = {
 };
 
 export const blankNotification: TypeNotification = {
+    id: '',
     title: '',
     content: '',
     date: '',

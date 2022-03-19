@@ -5,6 +5,8 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import NotificationItem from './NotificationItem';
 import { TypeNotification } from 'src/types/notification-types';
 import useOnClickOutside from 'src/hooks/useOnClickOutside';
+import { useSignInContext } from 'src/context/SignInContext';
+import { markNotificationsAsRead } from 'src/services/fetch';
 
 interface ComponentProps {
     notificationsList: Array<TypeNotification>;
@@ -12,13 +14,31 @@ interface ComponentProps {
 }
 
 const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose }): JSX.Element => {
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const emptyNotifications = notificationsList.length === 0;
-    const unReadNotes = notificationsList.filter((item: TypeNotification) => item.isRead === false)
+    const unReadNotes = notificationsList.filter((item: TypeNotification) => item.isRead === false);
     const node = useRef<HTMLDivElement>();
     useOnClickOutside(node, onClose);
 
     const handleMarkAsUnread = () => {
-        alert(1);
+        let unmounted = false;
+        const markAsRead = async () => {
+            let ids = '';
+            notificationsList.forEach((item: TypeNotification) => {
+                ids.concat(item.id);
+            });
+            markNotificationsAsRead(signInDlgState.token, ids);
+            if (!unmounted) {
+                setSignInDlgState({
+                    ...signInDlgState,
+                    notesUnreadCnt: 0,
+                });
+            }
+        };
+        if (signInDlgState.walletAccounts.length) markAsRead().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (
@@ -60,7 +80,11 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                             >
                                 {unReadNotes.length} Unread
                             </Typography>
-                            <PrimaryButton size="small" sx={{ width: 108, height: 32, fontSize: 12 }} onClick={handleMarkAsUnread}>
+                            <PrimaryButton
+                                size="small"
+                                sx={{ width: 108, height: 32, fontSize: 12 }}
+                                onClick={handleMarkAsUnread}
+                            >
                                 Mark as read
                             </PrimaryButton>
                         </Stack>
