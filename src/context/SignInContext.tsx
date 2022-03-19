@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
+import { TypeNotification } from 'src/types/notification-types';
 
 export interface SignInState {
     signInDlgOpened: boolean;
@@ -18,6 +19,9 @@ export interface SignInState {
     userAvatar: string;
     userCoverImage: string;
     userRole: number;
+    // notification
+    notesUnreadCnt: number;
+    notesList: TypeNotification[];
 }
 
 const defaultState: SignInState = {
@@ -48,6 +52,9 @@ const defaultState: SignInState = {
     userAvatar: '',
     userCoverImage: '',
     userRole: 2,
+    // notification
+    notesUnreadCnt: 0,
+    notesList: [],
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

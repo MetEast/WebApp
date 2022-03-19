@@ -9,47 +9,7 @@ import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { NotificationTypo, MenuButton, NotificationsBoxContainer } from './styles';
-import ModalDialog from 'src/components/ModalDialog';
 import NotificationsBox from 'src/components/NotificationsBox';
-
-// dialogs for test
-// import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
-// import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
-// import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
-// import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
-// import MintNFT from 'src/components/TransactionDialogs/MintNFT/MintNFT';
-// import CheckNFTDetails from 'src/components/TransactionDialogs/MintNFT/CheckNFTDetails';
-// import NFTMinted from 'src/components/TransactionDialogs/MintNFT/NFTMinted';
-// import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
-// import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
-// import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
-// import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
-// import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
-// import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
-// import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
-// import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
-// import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
-// import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
-// import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
-// import EnterSaleDetails from 'src/components/TransactionDialogs/ListNFT/EnterSaleDetails';
-// import CheckSaleDetails from 'src/components/TransactionDialogs/ListNFT/CheckSaleDetails';
-// import ArtworkIsNowForSale from 'src/components/TransactionDialogs/ListNFT/ArtworkIsNowForSale';
-// import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
-// import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
-// import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
-// import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
-// import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
-// import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
-// import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
-// import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
-// import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
-// import CreateBanner from 'src/components/TransactionDialogs/CreateBanner/CreateBanner';
-// import YourEarnings from 'src/components/profile/YourEarnings';
-// import AllTransactions from 'src/components/profile/AllTransactions';
-// import ReceivedBids from 'src/components/profile/ReceivedBids';
-// import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
-// import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
-import ManageProfile from 'src/components/ManageProfile/ManageProfile';
 import { getNotificationList } from 'src/services/fetch';
 import { TypeNotification } from 'src/types/notification-types';
 
@@ -65,9 +25,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const [unReadCount, setUnReadCount] = useState<number>(0);
     const [notificationList, setNotificationList] = useState<Array<TypeNotification>>([]);
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
-    // const [testdlgOpen, setTestdlgOpen] = useState<boolean>(false);
-    // const testDlgShow = false;
-
     const isProfilePage = location.pathname === '/profile';
 
     const getUnReadNotes = () => {
@@ -266,32 +223,9 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 ) : (
                     <Stack direction="row" alignItems="center" spacing={2}>
                         {menuButtons}
-                        {/* {testDlgShow && (
-                            <Button
-                                onClick={() => {
-                                    setTestdlgOpen(true);
-                                }}
-                            >
-                                DlgTest
-                            </Button>
-                        )} */}
                     </Stack>
                 )}
             </Stack>
-            {/* {testDlgShow && (
-                <ModalDialog
-                    open={testdlgOpen}
-                    onClose={() => {
-                        setTestdlgOpen(false);
-                    }}
-                >
-                    <ManageProfile
-                        onClose={() => {
-                            setTestdlgOpen(false);
-                        }}
-                    />
-                </ModalDialog>
-            )} */}
         </>
     );
 };
