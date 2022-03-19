@@ -17,6 +17,10 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
     const node = useRef<HTMLDivElement>();
     useOnClickOutside(node, onClose);
 
+    const handleMarkAsUnread = () => {
+        alert(1);
+    };
+
     return (
         <Container
             justifyContent={emptyNotifications ? 'auto' : 'space-between'}
@@ -56,7 +60,7 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                             >
                                 {unReadNotes.length} Unread
                             </Typography>
-                            <PrimaryButton size="small" sx={{ width: 108, height: 32, fontSize: 12 }}>
+                            <PrimaryButton size="small" sx={{ width: 108, height: 32, fontSize: 12 }} onClick={handleMarkAsUnread}>
                                 Mark as read
                             </PrimaryButton>
                         </Stack>

@@ -50,7 +50,8 @@ import NotificationsBox from 'src/components/NotificationsBox';
 // import AllBids from 'src/components/TransactionDialogs/AllBids/AllBids';
 // import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import ManageProfile from 'src/components/ManageProfile/ManageProfile';
-import { dummyNotificationList } from 'src/constants/dummyData';
+import { getNotificationList } from 'src/services/fetch';
+import { TypeNotification } from 'src/types/notification-types';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -61,12 +62,29 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
+    const [unReadCount, setUnReadCount] = useState<number>(0);
+    const [notificationList, setNotificationList] = useState<Array<TypeNotification>>([]);
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     // const [testdlgOpen, setTestdlgOpen] = useState<boolean>(false);
     // const testDlgShow = false;
 
     const isProfilePage = location.pathname === '/profile';
 
+    const getUnReadNotes = () => {
+        let unmounted = false;
+        const fetchNotifications = async () => {
+            const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
+            const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
+            if (!unmounted) {
+                setNotificationList(_notificationList);
+                setUnReadCount(_unReadNotes.length);
+            }
+        };
+        if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    };
     const menuItemsList: Array<TypeMenuItem> = [
         {
             title: 'Home',
@@ -104,17 +122,19 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     selected={location.pathname === '/notifications'}
                     sx={{ minWidth: 40 }}
                     onClick={() => {
-                        
                         if (mobile) navigate('/notifications');
-                        else setShowNotificationsBox(!showNotificationsBox);
+                        else {
+                            getUnReadNotes();
+                            setShowNotificationsBox(!showNotificationsBox);
+                        }
                     }}
                 >
                     <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                 </MenuButton>
-                <NotificationTypo>2</NotificationTypo>
+                {unReadCount !== 0 && <NotificationTypo>{unReadCount}</NotificationTypo>}
                 <NotificationsBoxContainer show={showNotificationsBox}>
                     <NotificationsBox
-                        notificationsList={dummyNotificationList}
+                        notificationsList={notificationList}
                         onClose={() => setShowNotificationsBox(false)}
                     />
                 </NotificationsBoxContainer>

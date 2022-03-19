@@ -9,6 +9,11 @@ interface ComponentProps {
 }
 
 const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
+
+    const handleDelete = () => {
+        alert(2)
+    };
+
     return (
         <Stack spacing={0.5}>
             <Stack direction="row" alignItems="center" spacing={1}>
@@ -37,7 +42,7 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
                 <Typography fontSize={14} fontWeight={400}>
                     {data.content}
                 </Typography>
-                <PinkButton sx={{ minWidth: 40, height: 32, borderRadius: 2.5 }}>
+                <PinkButton sx={{ minWidth: 40, height: 32, borderRadius: 2.5 }} onClick={handleDelete}>
                     <Icon icon="ph:trash" color="#EB5757" />
                 </PinkButton>
             </Stack>
