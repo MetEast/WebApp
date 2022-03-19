@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
+import Username from 'src/components/Username';
 
 interface ComponentProps {
     name: string;
@@ -53,9 +54,7 @@ const AboutAuthor: React.FC<ComponentProps> = ({ name, description, img, address
                         )}
                     </Grid>
                     <Grid item>
-                        <Typography fontSize={16} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
-                            {name}
-                        </Typography>
+                        <Username username={name} fontSize={16} fontWeight={700} />
                         <Typography fontSize={12} fontWeight={700} color={'#1890FF'}>
                             {reduceHexAddress(address, 4)}
                             <CopyToClipboard text={address} onCopy={address !== '' ? showSnackBar : () => {}}>

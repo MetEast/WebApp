@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
+import Username from 'src/components/Username';
 
 interface ComponentProps {
     tokenId: string;
@@ -71,7 +72,7 @@ const ChainDetails: React.FC<ComponentProps> = ({
                 </Grid>
                 <Grid container item xs={7} spacing={0.3}>
                     <Grid item xs={12} textAlign={'right'}>
-                        {ownerName}
+                        <Username username={ownerName} fontSize={14} fontWeight={600} />
                     </Grid>
                     <Grid item xs={12} fontSize={12} color={'#1890FF'} textAlign={'right'}>
                         {reduceHexAddress(ownerAddress, 4) + ' '}

@@ -6,6 +6,7 @@ import ELAPrice from 'src/components/ELAPrice';
 // import { useTheme } from '@mui/material/styles';
 // import useMediaQuery from '@mui/material/useMediaQuery';
 import { useDialogContext } from 'src/context/DialogContext';
+import Username from 'src/components/Username';
 
 interface ComponentProps {
     bidsList: Array<TypeSingleNFTBid>;
@@ -30,8 +31,7 @@ const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
                 </Typography>
                 <ViewAllBtn
                     onClick={() => {
-                        if (bidsList.length === 0)
-                            setDialogState({ ...dialogState, noBidDlgOpened: true });
+                        if (bidsList.length === 0) setDialogState({ ...dialogState, noBidDlgOpened: true });
                         else setDialogState({ ...dialogState, allBidDlgOpened: true });
                     }}
                 >
@@ -55,9 +55,7 @@ const NFTBidTable: React.FC<ComponentProps> = ({ bidsList }): JSX.Element => {
                 {bidsList.map((item, index) => (
                     <Grid container item key={index} alignItems="center">
                         <Grid item xs={12} sm={bidsTblColumns[0].width} order={{ xs: 3, sm: 1, md: 1, lg: 1 }}>
-                            <Typography fontSize={16} fontWeight={700}>
-                                {item.user}
-                            </Typography>
+                            <Username username={item.user} fontSize={16} fontWeight={700} />
                         </Grid>
                         <Grid item xs={6} sm={bidsTblColumns[1].width} order={{ xs: 1, sm: 2, md: 2, lg: 2 }}>
                             <Typography fontSize={12} fontWeight={500}>
