@@ -3,15 +3,34 @@ import { Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { PinkButton } from 'src/components/Buttons/styles';
 import { TypeNotification } from 'src/types/notification-types';
+import { useSignInContext } from 'src/context/SignInContext';
+import { markNotificationsAsRead } from 'src/services/fetch';
 
 interface ComponentProps {
     data: TypeNotification;
 }
 
 const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
 
-    const handleDelete = () => {
-        alert(2)
+    const handleDelete = async () => {
+        let unmounted = false;
+        const markAsRead = async () => {
+            const result = await markNotificationsAsRead(data.id);
+            if (!unmounted && result) {
+                const notesList = [...signInDlgState.notesList];
+                const id = notesList.findIndex((item: TypeNotification) => item.id === data.id);
+                setSignInDlgState({
+                    ...signInDlgState,
+                    notesUnreadCnt: 0,
+                    notesList: notesList.splice(id, 1), 
+                });
+            }
+        };
+        if (signInDlgState.walletAccounts.length) markAsRead().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

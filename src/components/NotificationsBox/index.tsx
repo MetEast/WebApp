@@ -20,19 +20,20 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
     const node = useRef<HTMLDivElement>();
     useOnClickOutside(node, onClose);
 
-    const handleMarkAsUnread = () => {
+    const handleMarkAsUnread = async () => {
         let unmounted = false;
         const markAsRead = async () => {
-            let ids = '';
+            const arrNoteIds: string[] = [];
             notificationsList.forEach((item: TypeNotification) => {
-                ids.concat(item.id);
+                arrNoteIds.push(item.id);
             });
-            markNotificationsAsRead(signInDlgState.token, ids);
-            if (!unmounted) {
+            const result = await markNotificationsAsRead(arrNoteIds.join(','));
+            if (!unmounted && result) {
                 setSignInDlgState({
                     ...signInDlgState,
                     notesUnreadCnt: 0,
                 });
+                onClose();
             }
         };
         if (signInDlgState.walletAccounts.length) markAsRead().catch(console.error);
