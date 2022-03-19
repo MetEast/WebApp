@@ -13,7 +13,7 @@ interface ComponentProps {
 
 const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose }): JSX.Element => {
     const emptyNotifications = notificationsList.length === 0;
-
+    const unReadNotes = notificationsList.filter((item: TypeNotification) => item.isRead === false)
     const node = useRef<HTMLDivElement>();
     useOnClickOutside(node, onClose);
 
@@ -54,7 +54,7 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                                 borderRadius={3}
                                 sx={{ background: '#C9F5DC' }}
                             >
-                                28 Unread
+                                {unReadNotes.length} Unread
                             </Typography>
                             <PrimaryButton size="small" sx={{ width: 108, height: 32, fontSize: 12 }}>
                                 Mark as read
