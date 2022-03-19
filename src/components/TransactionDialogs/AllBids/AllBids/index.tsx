@@ -12,12 +12,13 @@ import { TypeSingleNFTBid } from 'src/types/product-types';
 import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestBids } from 'src/services/fetch';
 import { useParams } from 'react-router-dom';
+import Username from 'src/components/Username';
 
 export interface ComponentProps {
     onClose: () => void;
 }
 
-const AllBids: React.FC<ComponentProps> = ({onClose}): JSX.Element => {
+const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const params = useParams();
     const [signInDlgState] = useSignInContext();
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
@@ -32,7 +33,13 @@ const AllBids: React.FC<ComponentProps> = ({onClose}): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchNFTLatestBids = async () => {
-            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 1000, sortby?.value);
+            const _NFTBids = await getNFTLatestBids(
+                params.id,
+                signInDlgState.walletAccounts[0],
+                1,
+                1000,
+                sortby?.value,
+            );
             if (!unmounted) {
                 setBidsList(_NFTBids.others);
                 setMyBidsList(_NFTBids.mine);
@@ -43,7 +50,7 @@ const AllBids: React.FC<ComponentProps> = ({onClose}): JSX.Element => {
             unmounted = true;
         };
     }, [signInDlgState.walletAccounts, params.id, sortby]);
-    
+
     return (
         <Stack spacing={5} width={520}>
             <Stack direction="row" justifyContent="space-between">
@@ -107,9 +114,7 @@ const AllBids: React.FC<ComponentProps> = ({onClose}): JSX.Element => {
                             {bidsList.map((item, index) => (
                                 <Grid container item key={`all-bids-${index}`}>
                                     <Grid item xs={4}>
-                                        <Typography fontSize={16} fontWeight={700}>
-                                            {item.user}
-                                        </Typography>
+                                        <Username username={item.user} fontSize={16} fontWeight={700} />
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Typography fontSize={12} fontWeight={500}>
@@ -125,10 +130,7 @@ const AllBids: React.FC<ComponentProps> = ({onClose}): JSX.Element => {
                     </Box>
                 )}
             </Stack>
-            <SecondaryButton
-                fullWidth
-                onClick={onClose}
-            >
+            <SecondaryButton fullWidth onClick={onClose}>
                 Close
             </SecondaryButton>
         </Stack>

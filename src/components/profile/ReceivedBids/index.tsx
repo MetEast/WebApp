@@ -12,6 +12,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestBids } from 'src/services/fetch';
 import { useParams } from 'react-router-dom';
+import Username from 'src/components/Username';
 
 export interface ComponentProps {
     closeDlg: () => void;
@@ -32,7 +33,13 @@ const ReceivedBids: React.FC<ComponentProps> = ({ closeDlg }): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchNFTLatestBids = async () => {
-            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 1000, sortby?.value);
+            const _NFTBids = await getNFTLatestBids(
+                params.id,
+                signInDlgState.walletAccounts[0],
+                1,
+                1000,
+                sortby?.value,
+            );
             if (!unmounted) {
                 setBidsList(_NFTBids.others);
             }
@@ -86,9 +93,7 @@ const ReceivedBids: React.FC<ComponentProps> = ({ closeDlg }): JSX.Element => {
                         {bidsList.map((item, index) => (
                             <Grid item container key={index}>
                                 <Grid item xs={4}>
-                                    <Typography fontSize={16} fontWeight={700}>
-                                        {item.user}
-                                    </Typography>
+                                    <Username username={item.user} fontSize={16} fontWeight={700} />
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Typography fontSize={12} fontWeight={500}>

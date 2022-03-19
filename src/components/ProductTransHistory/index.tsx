@@ -5,6 +5,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import ProductBadge from 'src/components/ProductBadge';
 import { enumBadgeType, enumTransactionType, TypeNFTHisotry } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
+import Username from 'src/components/Username';
 
 interface ComponentProps {
     historyList: Array<TypeNFTHisotry>;
@@ -15,14 +16,12 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Ele
 
     let initUrl = '';
     if (signInDlgState.chainId === 20) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx`;
-    else if (signInDlgState.chainId === 21)
-        initUrl = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx`;
+    else if (signInDlgState.chainId === 21) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx`;
     const [txHashUrl, setTxHashUrl] = useState<string>(initUrl);
     useEffect(() => {
         let _url = '';
         if (signInDlgState.chainId === 20) _url = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx`;
-        else if (signInDlgState.chainId === 21)
-            _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx`;
+        else if (signInDlgState.chainId === 21) _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx`;
         setTxHashUrl(_url);
     }, [signInDlgState.chainId]);
 
@@ -62,9 +61,7 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Ele
                                         />
                                     </Link>
                                 </Stack>
-                                <Typography fontSize={16} fontWeight={400}>
-                                    {item.user}
-                                </Typography>
+                                <Username username={item.user} fontSize={16} fontWeight={400} />
                             </Box>
                             <Stack alignItems="flex-end">
                                 <ELAPrice price_ela={item.price} price_ela_fontsize={14} />

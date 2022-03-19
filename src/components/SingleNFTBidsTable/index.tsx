@@ -9,6 +9,7 @@ import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
 import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
 import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
 import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
+import Username from 'src/components/Username';
 
 interface ComponentProps {
     isLoggedIn: boolean;
@@ -46,8 +47,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                             onClick={() => {
                                 if (bidsList.length === 0 && myBidsList.length === 0)
                                     setDialogState({ ...dialogState, noBidDlgOpened: true });
-                                else 
-                                    setDialogState({ ...dialogState, allBidDlgOpened: true });
+                                else setDialogState({ ...dialogState, allBidDlgOpened: true });
                             }}
                         >
                             View ALL
@@ -98,9 +98,7 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                                         sm={bidsTblColumns[0].width}
                                         order={{ xs: 3, sm: 1, md: 1, lg: 1 }}
                                     >
-                                        <Typography fontSize={16} fontWeight={700}>
-                                            {item.user}
-                                        </Typography>
+                                        <Username username={item.user} fontSize={16} fontWeight={700} />
                                     </Grid>
                                     <Grid
                                         item
