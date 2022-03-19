@@ -17,7 +17,7 @@ import {
     enumMyNFTType,
     enumBadgeType,
 } from 'src/types/product-types';
-import { TypeNotification } from 'src/types/notification-types';
+import { TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
 import {
     blankNFTItem,
@@ -31,6 +31,7 @@ import {
     blankAdminNFTItem,
     blankAdminUserItem,
     blankAdminBannerItem,
+    blankNotification,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -60,19 +61,23 @@ export const FETCH_CONFIG_JSON = {
 
 export const getNotificationList = async (address: string) => {
     const resNotificationList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getUnReadNotifications?${address}`,
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getUnReadNotifications?address=${address}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNotificationList = await resNotificationList.json();
-    const arrNotificationList = jsonNotificationList.data === undefined ? [] : jsonNotificationList.data.result;
+    const arrNotificationList = jsonNotificationList.data;
 
     const _arrNotificationList: Array<TypeNotification> = [];
-    // for (let i = 0; i < arrNotificationList.length; i++) {
-    //     const itemObject: TypeNotification = arrNotificationList[i];
-    //     const _Note: TypeNotification = { ...blankNFTItem };
-
-    //     _arrNotificationList.push(_Note);
-    // }
+    for (let i = 0; i < arrNotificationList.length; i++) {
+        const itemObject: TypeNotificationFetch = arrNotificationList[i];
+        const _Note: TypeNotification = { ...blankNotification };
+        _Note.title = itemObject.title;
+        _Note.content = itemObject.context;
+        const timestamp = getTime(itemObject.date.toString());
+        _Note.title = timestamp.date + ' ' + timestamp.time;
+        _Note.isRead = itemObject.isRead === 1 ? true : false;
+        _arrNotificationList.push(_Note);
+    }
     return _arrNotificationList;
 };
 

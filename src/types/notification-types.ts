@@ -4,3 +4,12 @@ export type TypeNotification = {
     date: string;
     isRead?: boolean;
 };
+
+export type TypeNotificationFetch = {
+    _id: string;
+    title: string;
+    context: string;
+    date: number;
+    to: string;
+    isRead: number;
+};

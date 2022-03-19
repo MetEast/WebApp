@@ -1,5 +1,6 @@
 import { AdminNFTItemType, AdminUsersItemType, AdminBannersItemType } from 'src/types/admin-table-data-types';
 import { TypeContractMethodPram } from 'src/types/mint-types';
+import { TypeNotification } from 'src/types/notification-types';
 import {
     TypeProduct,
     TypeNFTTransaction,
@@ -182,4 +183,10 @@ export const blankContractMethodParam: TypeContractMethodPram = {
     operator: '',
     approved: false,
     address: '',
+};
+
+export const blankNotification: TypeNotification = {
+    title: '',
+    content: '',
+    date: '',
 };
