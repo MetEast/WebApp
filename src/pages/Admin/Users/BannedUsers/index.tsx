@@ -6,10 +6,7 @@ import CustomTextField from 'src/components/TextField';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
-import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
-import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
-import { blankAdminUserItem } from 'src/constants/init-constants';
-import { useSignInContext } from 'src/context/SignInContext';
+import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
 import { reduceHexAddress } from 'src/services/common';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
@@ -81,6 +78,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                     btn_color={(props.data as AdminUsersItemType).status === 0 ? 'pink' : 'secondary'}
                     size="small"
                     sx={{ paddingX: 3 }}
+                    onClick={(event: React.MouseEvent) => onEdit(event, props.data)}
                 >
                     {(props.data as AdminUsersItemType).status === 0 ? 'BAN user' : 'Unban user'}
                 </PrimaryButton>
@@ -105,8 +103,13 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
     );
 
     const [tabledata, setTableData] = useState(data);
-    const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
+    const [showBannedUsersDlg, setShowBannedUsersDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
+        event.stopPropagation();
+        setShowBannedUsersDlg(true);
+    };
 
     return (
         <>
@@ -129,12 +132,14 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 </Stack>
                 <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
-            {/* <ModalDialog
-                open={showEditUserStatusDlg}
+            <ModalDialog
+                open={showBannedUsersDlg}
                 onClose={() => {
-                    setShowEditUserStatusDlg(false);
+                    setShowBannedUsersDlg(false);
                 }}
-            ></ModalDialog> */}
+            >
+                <BannedUsers />
+            </ModalDialog>
         </>
     );
 };
