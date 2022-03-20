@@ -68,11 +68,12 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setTimeout(() => setWaitingToReconnect(false), 5000);
             };
 
-            client.onmessage = (message: TypeNotificationFSocket) => {
-                if(message.type === 'alert') console.log('received message', message);
-                if (message.type === 'alert' && message.to === signInDlgState.walletAccounts[0]) {
+            client.onmessage = (message: any) => {
+                const msgData: TypeNotificationFSocket = message.data;
+                console.log('received message', msgData);
+                if (msgData.type === 'alert' && msgData.to?.toLowerCase() === signInDlgState.walletAccounts[0].toLowerCase()) {
                     alert(1)
-                    showSucceedSnackBar(message.title || '', message.context || '');
+                    showSucceedSnackBar(msgData.title || '', msgData.context || '');
                     setSignInDlgState({ ...signInDlgState, notesUnreadCnt: signInDlgState.notesUnreadCnt + 1 });
                 }
                 // addMessage(`received '${message.data}'`);

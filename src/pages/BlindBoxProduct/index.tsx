@@ -194,7 +194,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             />
                             {(signInDlgState.walletAccounts.length === 0 ||
                                 (signInDlgState.walletAccounts.length !== 0 &&
-                                    blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0] &&
+                                    blindBoxDetail.royaltyOwner?.toLowerCase() !== signInDlgState.walletAccounts[0].toLowerCase() &&
                                     blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
                                     blindBoxDetail.state === 'online')) && (
                                 <PrimaryButton
