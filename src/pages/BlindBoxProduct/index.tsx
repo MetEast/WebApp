@@ -255,7 +255,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             sx={{ width: 160 }}
                             onClick={() => setPageType('details')}
                         >
-                            BLInbox details
+                            details
                         </PrimaryButton>
                         <PrimaryButton
                             size="small"
