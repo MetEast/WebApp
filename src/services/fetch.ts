@@ -61,7 +61,7 @@ export const FETCH_CONFIG_JSON = {
 
 export const getNotificationList = async (address: string) => {
     const resNotificationList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getUnReadNotifications?address=${address}`,
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNotifications?address=${address}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNotificationList = await resNotificationList.json();
@@ -85,6 +85,15 @@ export const getNotificationList = async (address: string) => {
 export const markNotificationsAsRead = async (ids: string) => {
     const resRead = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/readNotifications?ids=${ids}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonRead = await resRead.json();
+    return jsonRead.code === 200;
+};
+
+export const removeNotifications = async (ids: string) => {
+    const resRead = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/removeNotifications?ids=${ids}`,
         FETCH_CONFIG_JSON,
     );
     const jsonRead = await resRead.json();
@@ -340,7 +349,7 @@ export const getNFTItem = async (
     return _NFTItem;
 };
 
-// BB product
+// BB sold product
 export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTItems = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?ids=${tokenIds}`,
@@ -601,6 +610,33 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.soldIds = itemObject.sold_tokenIds;
     }
     return _BBItem;
+};
+
+export const updateBBStatus = async (token: string, BBId: number, status: 'online' | 'offline') => {
+    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateBlindboxStatusById`;
+    const reqBody = {
+        token: token,
+        blindBoxId: BBId,
+        status: status,
+    };
+    fetch(reqUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqBody),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.code === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .catch((error) => {
+            return false;
+        });
 };
 
 // Profile Page
