@@ -1,20 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
-import { blankAdminUserItem } from 'src/constants/init-constants';
 import Table from 'src/components/Admin/Table';
-import CustomTextField from 'src/components/TextField';
-import { PrimaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
-import ModalDialog from 'src/components/ModalDialog';
-import Moderators from 'src/components/Admin/Dialogs/Users/Moderators';
 import { reduceHexAddress } from 'src/services/common';
 
-const AdminUserModerators: React.FC = (): JSX.Element => {
-    const statusValues = [
-        { label: 'User', bgcolor: '#E8F4FF', color: '#1890FF' },
-        { label: 'Moderator', bgcolor: '#0B1054', color: '#FFFFFF' },
-    ];
+const AdminUserAdmins: React.FC = (): JSX.Element => {
+    const statusValues = [{ label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' }];
 
     const columns: AdminTableColumn[] = [
         {
@@ -66,20 +58,6 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
             id: 'remarks',
             label: '',
         },
-        {
-            id: 'edits',
-            label: '',
-            cell: (props) => (
-                <PrimaryButton
-                    btn_color={(props.data as AdminUsersItemType).status === 0 ? 'green' : 'pink'}
-                    size="small"
-                    sx={{ paddingX: 3 }}
-                    onClick={(event: React.MouseEvent) => onEdit(event, props.data)}
-                >
-                    {(props.data as AdminUsersItemType).status === 0 ? 'ADD MODERATOR' : 'remove Moderator'}
-                </PrimaryButton>
-            ),
-        },
     ];
 
     const data: AdminUsersItemType[] = useMemo(
@@ -91,7 +69,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                         address: 'efgd....' + (1001 + item),
                         username: 'Shaba',
                         avatar: '/assets/images/avatar-template.png',
-                        status: item % 2,
+                        status: 0,
                         remarks: '',
                     } as AdminUsersItemType),
             ),
@@ -99,52 +77,18 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
     );
 
     const [tabledata, setTableData] = useState(data);
-    const [id2Edit, setId2Edit] = useState<number>(0);
-    const [showModeratorsDlg, setShowModeratorsDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
-        event.stopPropagation();
-        setId2Edit(tabledata.findIndex((value: AdminUsersItemType) => value.address === data.address));
-        setShowModeratorsDlg(true);
-    };
 
     return (
         <>
             <Stack height="100%" spacing={4}>
-                <Stack direction="row" alignItems="flex-end" columnGap={1}>
-                    <CustomTextField
-                        title="Add Moderator"
-                        placeholder="Search for an address or username"
-                        sx={{ width: 320 }}
-                    />
-                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
-                        <Icon
-                            icon="ph:magnifying-glass"
-                            fontSize={20}
-                            color="white"
-                            style={{ marginBottom: 2, marginRight: 4 }}
-                        />
-                        {`Search`}
-                    </PrimaryButton>
-                </Stack>
+                <Typography fontSize={42} fontWeight={700}>
+                    ADMINS
+                </Typography>
                 <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
-            <ModalDialog
-                open={showModeratorsDlg}
-                onClose={() => {
-                    setShowModeratorsDlg(false);
-                }}
-            >
-                <Moderators
-                    user2Edit={tabledata.length === 0 ? blankAdminUserItem : tabledata[id2Edit]}
-                    onClose={() => {
-                        setShowModeratorsDlg(false);
-                    }}
-                />
-            </ModalDialog>
         </>
     );
 };
 
-export default AdminUserModerators;
+export default AdminUserAdmins;
