@@ -69,8 +69,9 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
             };
 
             client.onmessage = (message: TypeNotificationFSocket) => {
-                console.log('received message', message);
+                if(message.type === 'alert') console.log('received message', message);
                 if (message.type === 'alert' && message.to === signInDlgState.walletAccounts[0]) {
+                    alert(1)
                     showSucceedSnackBar(message.title || '', message.context || '');
                     setSignInDlgState({ ...signInDlgState, notesUnreadCnt: signInDlgState.notesUnreadCnt + 1 });
                 }

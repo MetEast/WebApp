@@ -18,13 +18,15 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
         const markAsRead = async () => {
             const result = await markNotificationsAsRead(data.id);
             if (!unmounted && result) {
-                const notesList = [...signInDlgState.notesList];
+                const notesList = signInDlgState.notesList;
                 const id = notesList.findIndex((item: TypeNotification) => item.id === data.id);
+                notesList.splice(id, 1);
                 setSignInDlgState({
                     ...signInDlgState,
-                    notesUnreadCnt: 0,
-                    notesList: notesList.splice(id, 1), 
+                    notesUnreadCnt: notesList.length,
+                    notesList: notesList, 
                 });
+                    
             }
         };
         if (signInDlgState.walletAccounts.length) markAsRead().catch(console.error);

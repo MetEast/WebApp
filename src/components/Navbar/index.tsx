@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Stack, Link } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
@@ -39,6 +39,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             unmounted = true;
         };
     };
+
+    useEffect(() => {
+        getUnReadNotes();
+    }, []);
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
