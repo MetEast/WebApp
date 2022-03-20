@@ -133,7 +133,12 @@ const NFTPreview: React.FC<ComponentProps> = ({
                         />
                     ) : (
                         <Box>
-                            <Typography noWrap fontWeight={700} fontSize={{ xs: 16, lg: 22 }}>
+                            <Typography
+                                noWrap
+                                fontWeight={700}
+                                fontSize={{ xs: 16, lg: 22 }}
+                                textAlign={productType === 3 ? 'center' : 'left'}
+                            >
                                 {product.name}
                             </Typography>
                             <Box
