@@ -14,3 +14,11 @@ export type TypeNotificationFetch = {
     to: string;
     isRead: number;
 };
+
+export type TypeNotificationFSocket = {
+    id?: string;
+    title?: string;
+    context?: string;
+    type: string;
+    to?: string;
+};

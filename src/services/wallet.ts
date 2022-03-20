@@ -11,6 +11,7 @@ declare global {
         ethereum: any;
         web3: any;
         elastos: any;
+        client: any;
     }
 }
 

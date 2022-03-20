@@ -40,7 +40,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const { activate, active, library, chainId, account } = useWeb3React<Web3Provider>();
     const [activatingConnector, setActivatingConnector] = useState<InjectedConnector | WalletConnectConnector | null>(
         null,
@@ -49,7 +49,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     // const [walletConnectProvider] = useState<WalletConnectProvider>(
     //     isInAppBrowser() ? window.elastos.getWeb3Provider() : essentialsConnector.getWalletConnectProvider(),
     // );
-
     const [_signInState, _setSignInState] = useState<SignInState>(signInDlgState);
     let linkType = cookies.METEAST_LINK;
 
