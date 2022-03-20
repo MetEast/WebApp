@@ -32,7 +32,7 @@ export type AdminUsersItemType = {
     username: string;
     avatar: string;
     status: number;
-    remarks: string;
+    remarks?: string;
 };
 
 export type AdminBlindBoxItemType = {
