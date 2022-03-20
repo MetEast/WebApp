@@ -60,6 +60,7 @@ const MenuBar: React.FC = (): JSX.Element => {
             icon: <Icon icon="ph:user" fontSize={20} />,
             url: '',
             submenu: [
+                { title: 'Admins', url: '/admin/users/admins' },
                 { title: 'Moderators', url: '/admin/users/moderators' },
                 { title: 'Banned Users', url: '/admin/users/bannedusers' },
             ],

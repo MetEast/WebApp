@@ -92,6 +92,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                         username: 'Shaba',
                         avatar: '/assets/images/avatar-template.png',
                         status: item % 2,
+                        remarks: '',
                     } as AdminUsersItemType),
             ),
         [],

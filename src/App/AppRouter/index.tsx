@@ -15,6 +15,7 @@ import MyNFTSold from 'src/pages/MyNFT/Sold';
 import AdminNFTs from 'src/pages/Admin/NFTs';
 import AdminBannedUsers from 'src/pages/Admin/Users/BannedUsers';
 import AdminUserModerators from 'src/pages/Admin/Users/Moderators';
+import AdminUserAdmins from 'src/pages/Admin/Users/Admins';
 import AdminBlindBoxes from 'src/pages/Admin/BlindBoxes';
 import AdminHomePopular from 'src/pages/Admin/HomePopular';
 import AdminHomeUpcoming from 'src/pages/Admin/HomeUpcoming';
@@ -111,10 +112,10 @@ const AppRouter: React.FC = (): JSX.Element => {
                     }
                 />
                 <Route
-                    path="/admin/users/bannedusers"
+                    path="/admin/users/admins"
                     element={
                         <Layout>
-                            <AdminBannedUsers />
+                            <AdminUserAdmins />
                         </Layout>
                     }
                 />
@@ -123,6 +124,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <AdminUserModerators />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/admin/users/bannedusers"
+                    element={
+                        <Layout>
+                            <AdminBannedUsers />
                         </Layout>
                     }
                 />
