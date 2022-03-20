@@ -94,6 +94,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
     return (
         <GalleryItemContainer>
             <ProductImageContainer
+                sx={{ cursor: productType === 3 ? 'auto' : 'pointer' }}
                 onClick={() => {
                     if (product.tokenId !== '' && productType !== 3) navigate(getUrl());
                 }}
@@ -110,13 +111,15 @@ const NFTPreview: React.FC<ComponentProps> = ({
                     ) : (
                         <>
                             <img src={product.image} alt="" />
-                            <LikeBtn onClick={changeLikeState}>
-                                {likeState ? (
-                                    <Icon icon="ph:heart-fill" fontSize="2vw" color="red" />
-                                ) : (
-                                    <Icon icon="ph:heart" fontSize="2vw" color="black" />
-                                )}
-                            </LikeBtn>
+                            {productType !== 3 && (
+                                <LikeBtn onClick={changeLikeState}>
+                                    {likeState ? (
+                                        <Icon icon="ph:heart-fill" fontSize="2vw" color="red" />
+                                    ) : (
+                                        <Icon icon="ph:heart" fontSize="2vw" color="black" />
+                                    )}
+                                </LikeBtn>
+                            )}
                         </>
                     )}
                 </ImageBox>

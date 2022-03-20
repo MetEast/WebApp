@@ -12,7 +12,6 @@ export const ProductImageContainer = styled(Stack)`
     position: relative;
     width: 100%;
     padding-top: 75%;
-    cursor: pointer;
 `;
 
 export const ImageBox = styled(Box)<{ loading: number }>`

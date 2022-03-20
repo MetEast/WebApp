@@ -252,7 +252,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         <PrimaryButton
                             size="small"
                             btn_color={pageType === 'details' ? 'primary' : 'none'}
-                            sx={{ width: 160 }}
+                            sx={{ width: 120 }}
                             onClick={() => setPageType('details')}
                         >
                             details
@@ -260,7 +260,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         <PrimaryButton
                             size="small"
                             btn_color={pageType === 'sold' ? 'primary' : 'none'}
-                            sx={{ width: 116 }}
+                            sx={{ width: 120 }}
                             onClick={() => setPageType('sold')}
                         >
                             NFTs SOLD
