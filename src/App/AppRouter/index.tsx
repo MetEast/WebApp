@@ -5,7 +5,7 @@ import HomePage from 'src/pages/HomePage';
 import ExplorePage from 'src/pages/ExplorePage';
 import SingleNFTFixedPrice from 'src/pages/SingleNFTFixedPrice';
 import SingleNFTAuction from 'src/pages/SingleNFTAuction';
-import BlindBoxPage from 'src/pages/BlindBoxPage';
+import MysteryBoxPage from 'src/pages/MysteryBoxPage';
 import BlindBoxProduct from 'src/pages/BlindBoxProduct';
 import ProfilePage from 'src/pages/ProfilePage';
 import MyNFTBuyNow from 'src/pages/MyNFT/BuyNow';
@@ -73,7 +73,7 @@ const AppRouter: React.FC = (): JSX.Element => {
                     path="/blind-box"
                     element={
                         <Layout>
-                            <BlindBoxPage />
+                            <MysteryBoxPage />
                         </Layout>
                     }
                 />

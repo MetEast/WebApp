@@ -16,7 +16,7 @@ import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem, blankPageBanners } from 'src/constants/init-constants';
 
-const BlindBoxPage: React.FC = (): JSX.Element => {
+const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
@@ -193,4 +193,4 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     );
 };
 
-export default BlindBoxPage;
+export default MysteryBoxPage;
