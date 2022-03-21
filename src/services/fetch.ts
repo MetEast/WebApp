@@ -205,7 +205,7 @@ export const getSearchParams = (
     return searchParams;
 };
 
-// Blind Box Page
+// Mystery Box Page
 export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginState: boolean, did: string) => {
     const resBBList = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/v1/SearchBlindBox?${fetchParams}`,

@@ -140,7 +140,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 rowGap={2}
             >
                 <Typography fontSize={22} fontWeight={700}>
-                    Blind Box Items
+                    Mystery Box Items
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <SearchField

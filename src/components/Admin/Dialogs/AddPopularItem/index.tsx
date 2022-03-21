@@ -15,7 +15,7 @@ const AddPopularItem: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             <Stack spacing={3}>
                 <SearchTextField title="Normal NFTs" placeholder="Search NFT" />
-                <SearchTextField title="Blind Boxes" placeholder="Search Blind Box" />
+                <SearchTextField title="Mystery Boxes" placeholder="Search Mystery Box" />
                 <CustomTextField title="Sort" />
             </Stack>
             <Stack direction="row" spacing={2}>

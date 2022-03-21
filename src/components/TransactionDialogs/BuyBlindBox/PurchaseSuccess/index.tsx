@@ -15,7 +15,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <DialogTitleTypo>Purchase Successful!</DialogTitleTypo>
                 <Typography fontSize={16} fontWeight={400}>
-                    You have just received {dialogState.buyBlindAmount} Blind Box!
+                    You have just received {dialogState.buyBlindAmount} Mystery Box!
                 </Typography>
             </Stack>
             <Stack>
@@ -29,7 +29,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                         setDialogState({ ...dialogState, buyBlindBoxDlgStep: 3, buyBlindBoxDlgOpened: true });
                     }}
                 >
-                    Open Blind box
+                    Open Mystery Box
                 </PrimaryButton>
             </Stack>
         </Stack>

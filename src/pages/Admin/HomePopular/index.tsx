@@ -55,7 +55,7 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
                     ({
                         id: 84560673 + item,
                         project_title: 'Project Title',
-                        project_type: 'Blind Box',
+                        project_type: 'Mystery Box',
                         sort: 10,
                         created: '2022-06-18  08:50:00',
                     } as AdminHomeItemType),

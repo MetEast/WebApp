@@ -86,7 +86,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             didUri: signInDlgState.didUri,
         })
             .then((txHash: string) => {
-                enqueueSnackbar('Buy Blind Box succeed!', {
+                enqueueSnackbar('Buy Mystery Box succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
@@ -94,7 +94,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                 sendSoldBlindBoxTokenIds(txHash);
             })
             .catch((error) => {
-                enqueueSnackbar(`Buy Blind Box error: ${error}!`, {
+                enqueueSnackbar(`Buy Mystery Box error: ${error}!`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
