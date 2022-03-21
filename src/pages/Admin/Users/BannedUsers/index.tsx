@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
+import { blankAdminUserItem } from 'src/constants/init-constants';
 import Table from 'src/components/Admin/Table';
 import CustomTextField from 'src/components/TextField';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -8,7 +9,6 @@ import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
-import { blankAdminUserItem } from 'src/constants/init-constants';
 import { useSignInContext } from 'src/context/SignInContext';
 import { reduceHexAddress } from 'src/services/common';
 
@@ -98,7 +98,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 (item) =>
                     ({
                         id: item,
-                        address: 'efgd....1234',
+                        address: 'efgd....' + (1001 + item),
                         username: 'Shaba',
                         avatar: '/assets/images/avatar-template.png',
                         status: item % 3,
@@ -109,8 +109,15 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
     );
 
     const [tabledata, setTableData] = useState(data);
-    const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
+    const [id2Edit, setId2Edit] = useState<number>(0);
+    const [showBannedUsersDlg, setShowBannedUsersDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
+        event.stopPropagation();
+        setId2Edit(tabledata.findIndex((value: AdminUsersItemType) => value.address === data.address));
+        setShowBannedUsersDlg(true);
+    };
 
     return (
         <>
@@ -138,7 +145,14 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 onClose={() => {
                     setShowEditUserStatusDlg(false);
                 }}
-            ></ModalDialog> */}
+            >
+                <BannedUsers
+                    user2Edit={tabledata.length === 0 ? blankAdminUserItem : tabledata[id2Edit]}
+                    onClose={() => {
+                        setShowBannedUsersDlg(false);
+                    }}
+                />
+                </ModalDialog>*/}
         </>
     );
 };
