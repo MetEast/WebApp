@@ -531,7 +531,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    console.log('--------accounts: ', signInDlgState);
+    // console.log('--------accounts: ', signInDlgState);
 
     return (
         <>
