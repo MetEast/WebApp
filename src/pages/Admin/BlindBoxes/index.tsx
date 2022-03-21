@@ -13,11 +13,11 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
         {
             id: 'blindbox_id',
-            label: 'Blind Box ID',
+            label: 'Mystery Box ID',
         },
         {
             id: 'blindbox_name',
-            label: 'Blind Box name',
+            label: 'Mystery Box name',
             width: 160,
         },
         {
@@ -106,7 +106,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                     ({
                         id: item,
                         blindbox_id: String(item + 1).padStart(4, '0'),
-                        blindbox_name: 'Blind Box Title',
+                        blindbox_name: 'Mystery Box Title',
                         status: 'offline',
                         price: 199,
                         sale_begins: '2022-06-18  08:50:00',
@@ -128,8 +128,8 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
         <>
             <Stack height="100%" spacing={4}>
                 <Stack direction="row" alignItems="flex-end" columnGap={1}>
-                    <CustomTextField title="Blind Box ID" placeholder="Enter ID" />
-                    <CustomTextField title="Blind Box Name" placeholder="Enter Name" />
+                    <CustomTextField title="Mystery Box ID" placeholder="Enter ID" />
+                    <CustomTextField title="Mystery Box Name" placeholder="Enter Name" />
                     <PrimaryButton size="small" sx={{ paddingX: 3 }}>
                         <Icon
                             icon="ph:magnifying-glass"
@@ -141,7 +141,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                     </PrimaryButton>
                     <Stack spacing={0.5} marginLeft={2}>
                         <Typography fontSize={12} fontWeight={700}>
-                            Blind Box Status
+                            Mystery Box Status
                         </Typography>
                         <Stack direction="row" spacing={1}>
                             <SecondaryButton size="small" sx={{ paddingX: 3 }}>
@@ -160,7 +160,7 @@ const AdminBlindBoxes: React.FC = (): JSX.Element => {
                         }}
                     >
                         <Icon icon="ph:plus" fontSize={20} color="white" style={{ marginBottom: 2, marginRight: 4 }} />
-                        {`New Blind Box`}
+                        {`New Mystery Box`}
                     </PrimaryButton>
                 </Stack>
                 <Table tabledata={tabledata} columns={columns} />

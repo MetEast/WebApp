@@ -205,7 +205,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                     btn_color={location === 'blindbox' ? 'primary' : 'secondary'}
                                     onClick={() => setLocation('blindbox')}
                                 >
-                                    Blind Box
+                                    Mystery Box
                                 </PrimaryButton>
                             </Stack>
                         </Stack>

@@ -325,120 +325,134 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             Edit Profile
                         </SecondaryButton>
                     </Stack>
-                    <Stack
-                        width="100%"
-                        direction="row"
-                        justifyContent="space-between"
-                        marginTop={{ sm: 24, md: 2 }}
-                        display={{ xs: 'none', sm: 'flex' }}
-                    >
-                        <Stack>
-                            <Typography fontSize={20} fontWeight={900}>
-                                {toatlEarned}&nbsp;ELA
-                            </Typography>
-                            <Typography fontSize={16} fontWeight={400}>
-                                Total Earned
-                            </Typography>
-                        </Stack>
-                        <Stack alignItems="flex-end">
-                            <Typography fontSize={20} fontWeight={900}>
-                                {todayEarned}&nbsp;ELA
-                            </Typography>
-                            <Typography fontSize={16} fontWeight={400}>
-                                Earned Today
-                            </Typography>
-                        </Stack>
-                    </Stack>
-                    <Stack alignItems="center" marginTop={{ sm: -29, md: -7 }}>
-                        <Stack alignItems="center">
-                            <Typography
-                                fontSize={{ xs: 32, sm: 56 }}
-                                fontWeight={700}
-                                textAlign="center"
-                                lineHeight={1.1}
-                            >
-                                {signInDlgState.userName === ''
-                                    ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
-                                    : signInDlgState.userName.length > 40
-                                    ? reduceUserName(signInDlgState.userName, 4)
-                                    : signInDlgState.userName}
-                            </Typography>
-                            <SecondaryButton
-                                sx={{
-                                    height: 24,
-                                    fontSize: 14,
-                                    fontWeight: 500,
-                                    borderRadius: 2,
-                                    textTransform: 'none',
-                                    display: { xs: 'flex', sm: 'none' },
-                                    alignItems: 'center',
-                                }}
-                                onClick={() => {
-                                    navigate('/admin/nfts');
-                                }}
-                            >
-                                <Icon
-                                    icon="ph:user"
-                                    fontSize={16}
-                                    color="#1890FF"
-                                    style={{ marginBottom: 1, marginRight: 4 }}
-                                />
-                                Admin
-                            </SecondaryButton>
-                        </Stack>
-                        <Typography
-                            width={{ xs: '90%', sm: '80%', md: '60%' }}
-                            fontSize={{ xs: 14, sm: 16, md: 18 }}
-                            fontWeight={400}
-                            textAlign="center"
-                            marginTop={1}
+                    <Grid container>
+                        <Grid
+                            item
+                            xs={12}
+                            display={{ xs: 'none', sm: 'flex' }}
+                            order={{ sm: 1, lg: 0 }}
+                            marginTop={{ sm: -7, lg: 2 }}
                         >
-                            {signInDlgState.userDescription}
-                        </Typography>
-                        <Stack direction="row" alignItems="center" spacing={{ xs: 1, sm: 2 }} marginTop={3.5}>
-                            <SecondaryButton size="small" sx={{ minWidth: 54, display: { xs: 'none', sm: 'none' } }}>
-                                <Icon icon="ph:chat-circle" fontSize={20} color="black" />
-                                <NotificationTypo>2</NotificationTypo>
-                            </SecondaryButton>
-                            <PrimaryButton
-                                btn_color="secondary"
-                                size="small"
-                                sx={{ minWidth: 40, display: { sm: 'none' }, marginRight: '10px !important' }}
-                                onClick={() => {
-                                    setDialogState({ ...dialogState, manageProfileDlgOpened: true });
-                                }}
-                            >
-                                <Icon icon="ci:settings-future" fontSize={24} />
-                            </PrimaryButton>
-                            <PrimaryButton
-                                size={matchDownSm ? 'small' : undefined}
-                                sx={{ paddingX: { xs: 2, sm: 4 }, fontSize: { xs: 14, sm: 18 } }}
-                                onClick={() => {
-                                    setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 0 });
-                                }}
-                            >
-                                Create NFT
-                            </PrimaryButton>
-                            <PrimaryButton
-                                size={matchDownSm ? 'small' : undefined}
-                                sx={{
-                                    paddingX: { xs: 2, sm: 4 },
-                                    fontSize: { xs: 14, sm: 18 },
-                                    background: '#A453D6',
-                                    '&:hover': { background: '#A463D6' },
-                                }}
-                                onClick={() => {
-                                    setDialogState({
-                                        ...dialogState,
-                                        createBlindBoxDlgOpened: true,
-                                        createBlindBoxDlgStep: 0,
-                                    });
-                                }}
-                            >
-                                New Blind Box
-                            </PrimaryButton>
-                        </Stack>
-                    </Stack>
+                            <Stack width="100%" direction="row" justifyContent="space-between">
+                                <Stack>
+                                    <Typography fontSize={20} fontWeight={900}>
+                                        {toatlEarned}&nbsp;ELA
+                                    </Typography>
+                                    <Typography fontSize={16} fontWeight={400}>
+                                        Total Earned
+                                    </Typography>
+                                </Stack>
+                                <Stack alignItems="flex-end">
+                                    <Typography fontSize={20} fontWeight={900}>
+                                        {todayEarned}&nbsp;ELA
+                                    </Typography>
+                                    <Typography fontSize={16} fontWeight={400}>
+                                        Earned Today
+                                    </Typography>
+                                </Stack>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={12} order={{ sm: 0, lg: 1 }} marginTop={{ xs: 3, sm: 5, lg: -4 }}>
+                            <Stack alignItems="center">
+                                <Stack alignItems="center">
+                                    <Typography
+                                        width={{ lg: '80%', xl: '100%' }}
+                                        fontSize={{ xs: 32, sm: 56 }}
+                                        fontWeight={700}
+                                        textAlign="center"
+                                        lineHeight={1.1}
+                                    >
+                                        {signInDlgState.userName === ''
+                                            ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
+                                            : signInDlgState.userName.length > 40
+                                            ? reduceUserName(signInDlgState.userName, 4)
+                                            : signInDlgState.userName}
+                                    </Typography>
+                                    <SecondaryButton
+                                        sx={{
+                                            height: 24,
+                                            fontSize: 14,
+                                            fontWeight: 500,
+                                            borderRadius: 2,
+                                            textTransform: 'none',
+                                            display: { xs: 'flex', sm: 'none' },
+                                            alignItems: 'center',
+                                        }}
+                                        onClick={() => {
+                                            navigate('/admin/nfts');
+                                        }}
+                                    >
+                                        <Icon
+                                            icon="ph:user"
+                                            fontSize={16}
+                                            color="#1890FF"
+                                            style={{ marginBottom: 1, marginRight: 4 }}
+                                        />
+                                        Admin
+                                    </SecondaryButton>
+                                </Stack>
+                                <Typography
+                                    width={{ xs: '90%', sm: '80%', md: '60%' }}
+                                    fontSize={{ xs: 14, sm: 16, md: 18 }}
+                                    fontWeight={400}
+                                    textAlign="center"
+                                    marginTop={1}
+                                >
+                                    {signInDlgState.userDescription}
+                                </Typography>
+                                <Stack direction="row" alignItems="center" spacing={{ xs: 1, sm: 2 }} marginTop={3.5}>
+                                    <SecondaryButton
+                                        size="small"
+                                        sx={{ minWidth: 54, display: { xs: 'none', sm: 'none' } }}
+                                    >
+                                        <Icon icon="ph:chat-circle" fontSize={20} color="black" />
+                                        <NotificationTypo>2</NotificationTypo>
+                                    </SecondaryButton>
+                                    <PrimaryButton
+                                        btn_color="secondary"
+                                        size="small"
+                                        sx={{ minWidth: 40, display: { sm: 'none' }, marginRight: '10px !important' }}
+                                        onClick={() => {
+                                            setDialogState({ ...dialogState, manageProfileDlgOpened: true });
+                                        }}
+                                    >
+                                        <Icon icon="ci:settings-future" fontSize={24} />
+                                    </PrimaryButton>
+                                    <PrimaryButton
+                                        size={matchDownSm ? 'small' : undefined}
+                                        sx={{ paddingX: { xs: 2, sm: 4 }, fontSize: { xs: 14, sm: 18 } }}
+                                        onClick={() => {
+                                            setDialogState({
+                                                ...dialogState,
+                                                createNFTDlgOpened: true,
+                                                createNFTDlgStep: 0,
+                                            });
+                                        }}
+                                    >
+                                        Create NFT
+                                    </PrimaryButton>
+                                    <PrimaryButton
+                                        size={matchDownSm ? 'small' : undefined}
+                                        sx={{
+                                            paddingX: { xs: 2, sm: 4 },
+                                            fontSize: { xs: 14, sm: 18 },
+                                            background: '#A453D6',
+                                            '&:hover': { background: '#A463D6' },
+                                        }}
+                                        onClick={() => {
+                                            setDialogState({
+                                                ...dialogState,
+                                                createBlindBoxDlgOpened: true,
+                                                createBlindBoxDlgStep: 0,
+                                            });
+                                        }}
+                                    >
+                                        New Mystery Box
+                                    </PrimaryButton>
+                                </Stack>
+                            </Stack>
+                        </Grid>
+                    </Grid>
                 </Stack>
                 <Grid container marginTop={4} alignItems="center" rowSpacing={2.5}>
                     <Grid item xs={12} md={3} order={0}>

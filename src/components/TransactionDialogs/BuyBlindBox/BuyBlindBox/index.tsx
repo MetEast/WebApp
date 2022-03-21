@@ -52,7 +52,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
                 <PageNumberTypo>1 of 2</PageNumberTypo>
-                <DialogTitleTypo>Buy Blind Box</DialogTitleTypo>
+                <DialogTitleTypo>Buy Mystery Box</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center">
                 <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>

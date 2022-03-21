@@ -11,6 +11,8 @@ import { useDialogContext } from 'src/context/DialogContext';
 import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import ModalDialog from 'src/components/ModalDialog';
 import SearchBlindBoxItems from '../SearchBlindBoxItems';
+import { getBBCandiatesList } from 'src/services/fetch';
+import { TypeProductFetch } from 'src/types/product-types';
 
 export interface ComponentProps {}
 
@@ -26,7 +28,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxImage, setBlindboxImage] = useState<File>(dialogState.crtBlindImage);
     const [blindboxImageError, setBlindboxImageError] = useState(false);
 
-    const [stateFile, setStateFile] = useState(dialogState.crtBlindTitle === '' ? null : {raw: dialogState.crtBlindImage, preview: URL.createObjectURL(dialogState.crtBlindImage)});
+    const [stateFile, setStateFile] = useState(
+        dialogState.crtBlindTitle === ''
+            ? null
+            : { raw: dialogState.crtBlindImage, preview: URL.createObjectURL(dialogState.crtBlindImage) },
+    );
     const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>(dialogState.crtBlindStatus);
     const [blindboxQuantity, setBlindboxQuantity] = useState<number>(dialogState.crtBlindQuantity);
     const [blindboxQuantityError, setBlindboxQuantityError] = useState(-1);
@@ -63,6 +69,19 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         }
     }, [dialogState.crtBlindTokenIds]);
 
+    useEffect(() => {
+        const getFetchData = async () => {
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '');
+            let count = 0;
+            for (let i = 0; i < _BBCandidatesList.length; i++) {
+                const itemObject: TypeProductFetch = _BBCandidatesList[i];
+                if (itemObject.status !== 'DELETED') count++;
+            }
+            setBlindboxPurchases(count);
+        };
+        getFetchData().catch(console.error);
+    }, [signInDlgState.walletAccounts]);
+
     return (
         <>
             <Stack
@@ -74,7 +93,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             >
                 <Stack alignItems="center">
                     <PageNumberTypo>1 of 2</PageNumberTypo>
-                    <DialogTitleTypo>Create Blind Box</DialogTitleTypo>
+                    <DialogTitleTypo>Create Mystery Box</DialogTitleTypo>
                 </Stack>
                 <Box>
                     <Grid container columnSpacing={4} rowGap={3}>

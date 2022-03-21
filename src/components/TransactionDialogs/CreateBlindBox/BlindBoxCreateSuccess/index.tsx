@@ -15,7 +15,7 @@ const BlindBoxCreateSuccess: React.FC<ComponentProps> = (): JSX.Element => {
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
-                <DialogTitleTypo>Blind Box Created Successfully</DialogTitleTypo>
+                <DialogTitleTypo>Mystery Box Created Successfully</DialogTitleTypo>
             </Stack>
             <Stack>
                 <img src="/assets/images/transactionsdlg/blindbox-create-success.svg" alt="" />
