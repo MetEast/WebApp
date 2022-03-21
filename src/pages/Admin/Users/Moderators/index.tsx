@@ -84,21 +84,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         },
     ];
 
-    const data: AdminUsersItemType[] = useMemo(
-        () =>
-            [...Array(800).keys()].map(
-                (item) =>
-                    ({
-                        id: item,
-                        address: 'efgd....' + (1001 + item),
-                        username: 'Shaba',
-                        avatar: '/assets/images/avatar-template.png',
-                        status: item % 2,
-                        remarks: '',
-                    } as AdminUsersItemType),
-            ),
-        [],
-    );
+    const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
     const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
@@ -134,6 +120,14 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         setShowModeratorsDlg(true);
     };
 
+    const updateUserList = (editedItem: AdminUsersItemType) => {
+        setTableData((prevState: AdminUsersItemType[]) => {
+            const userList = [...prevState];
+            userList[id2Edit] = editedItem;
+            return userList;
+        });
+    };
+
     return (
         <>
             <Stack height="100%" spacing={4}>
@@ -165,6 +159,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
             >
                 <Moderators
                     user2Edit={tabledata.length === 0 ? blankAdminUserItem : tabledata[id2Edit]}
+                    handleUserUpdate={updateUserList}
                     onClose={() => {
                         setShowModeratorsDlg(false);
                     }}

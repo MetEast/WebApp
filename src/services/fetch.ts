@@ -1007,13 +1007,21 @@ export const getAdminUserList = async (fetchParams: string, address: string, sta
         const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
         if (status === 0 && itemObject.role !== 0) continue;
         else if (status === 1 && !(itemObject.role === 1 || itemObject.role === 2)) continue;
-        else if (status === 2 && itemObject.role !== 3) continue;
+        else if (status === 2 && !(itemObject.role === 2 || itemObject.role === 3)) continue;
         const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
         _AdminUser.id = i + 1;
         _AdminUser.address = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
-        _AdminUser.status = status === 1 ? itemObject.role - 1 : 0;
+        if (status === 0) _AdminUser.status = 0;
+        else if (status === 1) {
+            if (itemObject.role === 2) _AdminUser.status = 0;
+            else if (itemObject.role === 1) _AdminUser.status = 1;
+        }
+        else if (status === 2) {
+            if (itemObject.role === 2) _AdminUser.status = 0;
+            else if (itemObject.role === 3) _AdminUser.status = 1;
+        }
         _AdminUser.remarks = status !== 2 ? '' : itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
