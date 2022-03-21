@@ -118,7 +118,8 @@ interface DlgState {
     buyBlindTxFee: number;
     buyBlindTxHash: string;
     buyBlindCreator: string;
-    buyBlindLeftAmount: number;
+    buyBlindMaxPurchases: number;
+    buyBlindInstock: number;
 }
 
 export const defaultDlgState: DlgState = {
@@ -238,7 +239,8 @@ export const defaultDlgState: DlgState = {
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',
-    buyBlindLeftAmount: 0,
+    buyBlindMaxPurchases: 0,
+    buyBlindInstock: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

@@ -5,6 +5,9 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import NotificationItem from './NotificationItem';
 import { TypeNotification } from 'src/types/notification-types';
 import useOnClickOutside from 'src/hooks/useOnClickOutside';
+import { useSignInContext } from 'src/context/SignInContext';
+import { markNotificationsAsRead } from 'src/services/fetch';
+import { useNotificationContext } from 'src/context/NotificationContext';
 
 interface ComponentProps {
     notificationsList: Array<TypeNotification>;
@@ -12,10 +15,34 @@ interface ComponentProps {
 }
 
 const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose }): JSX.Element => {
+    const [signInDlgState] = useSignInContext();
+    const [notificationState, setNotificationState] = useNotificationContext();
     const emptyNotifications = notificationsList.length === 0;
-
+    const unReadNotes = notificationsList.filter((item: TypeNotification) => item.isRead === false);
     const node = useRef<HTMLDivElement>();
     useOnClickOutside(node, onClose);
+
+    const handleMarkAsUnread = async () => {
+        let unmounted = false;
+        const markAsRead = async () => {
+            const arrNoteIds: string[] = [];
+            notificationsList.forEach((item: TypeNotification) => {
+                arrNoteIds.push(item.id);
+            });
+            const result = await markNotificationsAsRead(arrNoteIds.join(','));
+            if (!unmounted && result) {
+                setNotificationState({
+                    ...notificationState,
+                    notesUnreadCnt: 0,
+                });
+                onClose();
+            }
+        };
+        if (signInDlgState.walletAccounts.length) markAsRead().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    };
 
     return (
         <Container
@@ -54,9 +81,13 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                                 borderRadius={3}
                                 sx={{ background: '#C9F5DC' }}
                             >
-                                28 Unread
+                                {unReadNotes.length} Unread
                             </Typography>
-                            <PrimaryButton size="small" sx={{ width: 108, height: 32, fontSize: 12 }}>
+                            <PrimaryButton
+                                size="small"
+                                sx={{ width: 108, height: 32, fontSize: 12 }}
+                                onClick={handleMarkAsUnread}
+                            >
                                 Mark as read
                             </PrimaryButton>
                         </Stack>

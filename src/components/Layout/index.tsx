@@ -10,6 +10,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { useLocation } from 'react-router-dom';
 import AdminPage from 'src/pages/Admin';
 import TransactionDlgContainer from '../TransactionDialogs';
+import WebSocketContainer from '../Websocket';
 
 interface ComponentProps {
     showFooter?: boolean;
@@ -70,6 +71,7 @@ const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.
                 <AdminPage>{children}</AdminPage>
             )}
             <TransactionDlgContainer />
+            <WebSocketContainer />
         </>
     );
 };

@@ -247,7 +247,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 <>
                                     {(signInDlgState.walletAccounts.length === 0 ||
                                         (signInDlgState.walletAccounts.length !== 0 &&
-                                            productDetail.holder !== signInDlgState.walletAccounts[0])) && (
+                                            productDetail.holder.toLowerCase() !== signInDlgState.walletAccounts[0].toLowerCase())) && (
                                         <PrimaryButton
                                             sx={{ marginTop: 3, width: '100%' }}
                                             onClick={() => {
@@ -269,7 +269,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                         </PrimaryButton>
                                     )}
                                     {signInDlgState.walletAccounts.length !== 0 &&
-                                        productDetail.holder === signInDlgState.walletAccounts[0] &&
+                                        productDetail.holder.toLowerCase() === signInDlgState.walletAccounts[0].toLowerCase() &&
                                         bidsList.length === 0 && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <PinkButton

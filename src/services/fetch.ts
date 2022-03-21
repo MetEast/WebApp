@@ -17,6 +17,7 @@ import {
     enumMyNFTType,
     enumBadgeType,
 } from 'src/types/product-types';
+import { TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
 import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
 import {
     blankNFTItem,
@@ -30,6 +31,7 @@ import {
     blankAdminNFTItem,
     blankAdminUserItem,
     blankAdminBannerItem,
+    blankNotification,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -55,6 +57,47 @@ export const FETCH_CONFIG_JSON = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
     },
+};
+
+export const getNotificationList = async (address: string) => {
+    const resNotificationList = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNotifications?address=${address}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNotificationList = await resNotificationList.json();
+    const arrNotificationList = jsonNotificationList.data;
+
+    const _arrNotificationList: Array<TypeNotification> = [];
+    for (let i = 0; i < arrNotificationList.length; i++) {
+        const itemObject: TypeNotificationFetch = arrNotificationList[i];
+        const _Note: TypeNotification = { ...blankNotification };
+        _Note.id = itemObject._id;
+        _Note.title = itemObject.title;
+        _Note.content = itemObject.context;
+        const timestamp = getTime(itemObject.date.toString());
+        _Note.title = timestamp.date + ' ' + timestamp.time;
+        _Note.isRead = itemObject.isRead === 1 ? true : false;
+        _arrNotificationList.push(_Note);
+    }
+    return _arrNotificationList;
+};
+
+export const markNotificationsAsRead = async (ids: string) => {
+    const resRead = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/readNotifications?ids=${ids}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonRead = await resRead.json();
+    return jsonRead.code === 200;
+};
+
+export const removeNotifications = async (ids: string) => {
+    const resRead = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/removeNotifications?ids=${ids}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonRead = await resRead.json();
+    return jsonRead.code === 200;
 };
 
 export const getShorternUrl = async (url: string) => {
@@ -306,7 +349,7 @@ export const getNFTItem = async (
     return _NFTItem;
 };
 
-// BB product
+// BB sold product
 export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTItems = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?ids=${tokenIds}`,
@@ -560,6 +603,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         } else {
             _BBItem.endTime = '';
         }
+        _BBItem.status = itemObject.status;
         _BBItem.state = itemObject.state;
         _BBItem.maxPurchases = parseInt(itemObject.maxPurchases);
         _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);
@@ -568,6 +612,34 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
     }
     return _BBItem;
 };
+
+export const updateBBStatus = (token: string, BBId: number, status: 'online' | 'offline') =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateBlindboxStatusById`;
+        const reqBody = {
+            token: token,
+            blindBoxId: BBId,
+            status: status,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch((error) => {
+                reject(false);
+            });
+    });
 
 // Profile Page
 export const getMyNFTItemList = async (
