@@ -1,17 +1,21 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
-import { blankAdminUserItem } from 'src/constants/init-constants';
 import Table from 'src/components/Admin/Table';
 import CustomTextField from 'src/components/TextField';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
-import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
+import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
+import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
+import { blankAdminUserItem } from 'src/constants/init-constants';
+import { useSignInContext } from 'src/context/SignInContext';
 import { reduceHexAddress } from 'src/services/common';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
     const statusValues = [
+        { label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' },
+        { label: 'Moderator', bgcolor: '#C9F5DC', color: '#1EA557' },
         { label: 'User', bgcolor: '#E8F4FF', color: '#1890FF' },
         { label: 'Banned', bgcolor: '#FDEEEE', color: '#EB5757' },
     ];
@@ -75,14 +79,15 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
             id: 'edits',
             label: '',
             cell: (props) => (
-                <PrimaryButton
-                    btn_color={(props.data as AdminUsersItemType).status === 0 ? 'pink' : 'secondary'}
-                    size="small"
-                    sx={{ paddingX: 3 }}
-                    onClick={(event: React.MouseEvent) => onEdit(event, props.data)}
-                >
-                    {(props.data as AdminUsersItemType).status === 0 ? 'BAN user' : 'Unban user'}
-                </PrimaryButton>
+                <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                    <Icon
+                        icon="ph:pencil-simple"
+                        fontSize={20}
+                        color="#1890FF"
+                        style={{ marginBottom: 2, marginRight: 8 }}
+                    />
+                    {`Edit`}
+                </SecondaryButton>
             ),
         },
     ];
@@ -93,10 +98,10 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 (item) =>
                     ({
                         id: item,
-                        address: 'efgd....' + (1001 + item),
+                        address: 'efgd....1234',
                         username: 'Shaba',
                         avatar: '/assets/images/avatar-template.png',
-                        status: item % 2,
+                        status: item % 3,
                         remarks: 'This user tried to scam buyers by uploading a fake NFT.',
                     } as AdminUsersItemType),
             ),
@@ -113,6 +118,8 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
         setId2Edit(tabledata.findIndex((value: AdminUsersItemType) => value.address === data.address));
         setShowBannedUsersDlg(true);
     };
+
+    const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
 
     return (
         <>
@@ -135,7 +142,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 </Stack>
                 <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
-            <ModalDialog
+            {/* <ModalDialog
                 open={showBannedUsersDlg}
                 onClose={() => {
                     setShowBannedUsersDlg(false);
@@ -147,7 +154,13 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                         setShowBannedUsersDlg(false);
                     }}
                 />
-            </ModalDialog>
+            </ModalDialog> */}
+            {/* <ModalDialog
+                open={showEditUserStatusDlg}
+                onClose={() => {
+                    setShowEditUserStatusDlg(false);
+                }}
+            ></ModalDialog> */}
         </>
     );
 };
