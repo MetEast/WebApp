@@ -25,7 +25,7 @@ import NFTPreview from 'src/components/NFTPreview';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
@@ -54,7 +54,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         let unmounted = false;
         updateBBStatus(signInDlgState.token, parseInt(blindBoxDetail.tokenId), 'online').then((success: boolean) => {
             if (!unmounted && success) {
-                const _BBItem = {...blindBoxDetail};
+                const _BBItem = { ...blindBoxDetail };
                 _BBItem.status = 'online';
                 setBlindBoxDetail(_BBItem);
             }
@@ -215,25 +215,30 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 <PrimaryButton
                                     sx={{ marginTop: 3, width: '100%' }}
                                     onClick={() => {
-                                        setDialogState({
-                                            ...dialogState,
-                                            buyBlindBoxDlgOpened: true,
-                                            buyBlindBoxDlgStep: 0,
-                                            buyBlindName: blindBoxDetail.name,
-                                            buyBlindPriceEla: blindBoxDetail.price_ela,
-                                            buyBlindPriceUsd: blindBoxDetail.price_usd,
-                                            buyBlindAmount: 1,
-                                            buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                            buyBlindCreator:
-                                                blindBoxDetail.author === ''
-                                                    ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
-                                                    : blindBoxDetail.author,
-                                            buyBlindLeftAmount:
-                                                blindBoxDetail.maxPurchases !== undefined &&
-                                                blindBoxDetail.sold !== undefined
-                                                    ? blindBoxDetail.maxPurchases - blindBoxDetail.sold
-                                                    : 0,
-                                        });
+                                        if (signInDlgState.isLoggedIn) {
+                                            setDialogState({
+                                                ...dialogState,
+                                                buyBlindBoxDlgOpened: true,
+                                                buyBlindBoxDlgStep: 0,
+                                                buyBlindName: blindBoxDetail.name,
+                                                buyBlindPriceEla: blindBoxDetail.price_ela,
+                                                buyBlindPriceUsd: blindBoxDetail.price_usd,
+                                                buyBlindAmount: 1,
+                                                buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                                buyBlindCreator:
+                                                    blindBoxDetail.author === ''
+                                                        ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                        : blindBoxDetail.author,
+                                                buyBlindMaxPurchases:
+                                                    blindBoxDetail.maxPurchases === undefined
+                                                        ? 0
+                                                        : blindBoxDetail.maxPurchases,
+                                                buyBlindInstock:
+                                                    blindBoxDetail.instock === undefined ? 0 : blindBoxDetail.instock,
+                                            });
+                                        } else {
+                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                        }
                                     }}
                                 >
                                     Buy Now
