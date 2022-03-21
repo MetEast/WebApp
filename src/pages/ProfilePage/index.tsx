@@ -329,7 +329,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         width="100%"
                         direction="row"
                         justifyContent="space-between"
-                        marginTop={{ sm: 24, lg: 2 }}
+                        marginTop={{ sm: 27, lg: 2 }}
                         display={{ xs: 'none', sm: 'flex' }}
                     >
                         <Stack>
@@ -349,7 +349,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             </Typography>
                         </Stack>
                     </Stack>
-                    <Stack alignItems="center" marginTop={{ sm: -29, lg: -7 }}>
+                    <Stack alignItems="center" marginTop={{ xs: 3, sm: -29, lg: -4 }}>
                         <Stack alignItems="center">
                             <Typography
                                 width={{ lg: '80%', xl: '100%' }}
