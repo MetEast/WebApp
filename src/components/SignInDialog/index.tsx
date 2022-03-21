@@ -448,8 +448,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 userDescription: user.description,
                 userAvatar: user.avatar,
                 userCoverImage: user.coverImage,
-                userRole: 1,
-                // parseInt(user.role),
+                userRole: parseInt(user.role),
             });
         });
     }, [_signInState]);
