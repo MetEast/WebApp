@@ -375,7 +375,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                             fontWeight: 500,
                                             borderRadius: 2,
                                             textTransform: 'none',
-                                            display: { xs: 'flex', sm: 'none' },
+                                            display: { xs: 'none', sm: 'none' },
                                             alignItems: 'center',
                                         }}
                                         onClick={() => {
