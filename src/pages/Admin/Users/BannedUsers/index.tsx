@@ -3,7 +3,7 @@ import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import CustomTextField from 'src/components/TextField';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
@@ -14,6 +14,8 @@ import { reduceHexAddress } from 'src/services/common';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
     const statusValues = [
+        { label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' },
+        { label: 'Moderator', bgcolor: '#C9F5DC', color: '#1EA557' },
         { label: 'User', bgcolor: '#E8F4FF', color: '#1890FF' },
         { label: 'Banned', bgcolor: '#FDEEEE', color: '#EB5757' },
     ];
@@ -77,13 +79,15 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
             id: 'edits',
             label: '',
             cell: (props) => (
-                <PrimaryButton
-                    btn_color={(props.data as AdminUsersItemType).status === 0 ? 'pink' : 'secondary'}
-                    size="small"
-                    sx={{ paddingX: 3 }}
-                >
-                    {(props.data as AdminUsersItemType).status === 0 ? 'BAN user' : 'Unban user'}
-                </PrimaryButton>
+                <SecondaryButton size="small" sx={{ paddingX: 3 }}>
+                    <Icon
+                        icon="ph:pencil-simple"
+                        fontSize={20}
+                        color="#1890FF"
+                        style={{ marginBottom: 2, marginRight: 8 }}
+                    />
+                    {`Edit`}
+                </SecondaryButton>
             ),
         },
     ];
@@ -97,7 +101,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                         address: 'efgd....1234',
                         username: 'Shaba',
                         avatar: '/assets/images/avatar-template.png',
-                        status: item % 2,
+                        status: item % 3,
                         remarks: 'This user tried to scam buyers by uploading a fake NFT.',
                     } as AdminUsersItemType),
             ),
@@ -105,17 +109,8 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
     );
 
     const [tabledata, setTableData] = useState(data);
-    const [id2Edit, setId2Edit] = useState<number>(0);
-    const [showBannedUsersDlg, setShowBannedUsersDlg] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
-        event.stopPropagation();
-        setId2Edit(tabledata.findIndex((value: AdminUsersItemType) => value.address === data.address));
-        setShowBannedUsersDlg(true);
-    };
-
     const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     return (
         <>
@@ -138,19 +133,6 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 </Stack>
                 <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
-            {/* <ModalDialog
-                open={showBannedUsersDlg}
-                onClose={() => {
-                    setShowBannedUsersDlg(false);
-                }}
-            >
-                <BannedUsers
-                    user2Edit={tabledata.length === 0 ? blankAdminUserItem : tabledata[id2Edit]}
-                    onClose={() => {
-                        setShowBannedUsersDlg(false);
-                    }}
-                />
-            </ModalDialog> */}
             {/* <ModalDialog
                 open={showEditUserStatusDlg}
                 onClose={() => {
