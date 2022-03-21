@@ -353,10 +353,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             </Stack>
                         </Grid>
                         <Grid item xs={12} order={{ sm: 0, lg: 1 }} marginTop={{ xs: 3, sm: 5, lg: -4 }}>
-                            <Stack alignItems="center">
-                                <Stack alignItems="center">
+                            <Stack alignItems="center" width="100%">
+                                <Stack alignItems="center" width="100%">
                                     <Typography
-                                        width={{ lg: '80%', xl: '100%' }}
+                                        width={{ lg: '80%' }}
                                         fontSize={{ xs: 32, sm: 56 }}
                                         fontWeight={700}
                                         textAlign="center"
