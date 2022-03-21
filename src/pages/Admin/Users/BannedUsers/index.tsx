@@ -4,18 +4,14 @@ import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data
 import { blankAdminUserItem } from 'src/constants/init-constants';
 import Table from 'src/components/Admin/Table';
 import CustomTextField from 'src/components/TextField';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
-import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
-import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
-import { useSignInContext } from 'src/context/SignInContext';
+import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
 import { reduceHexAddress } from 'src/services/common';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
     const statusValues = [
-        { label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' },
-        { label: 'Moderator', bgcolor: '#C9F5DC', color: '#1EA557' },
         { label: 'User', bgcolor: '#E8F4FF', color: '#1890FF' },
         { label: 'Banned', bgcolor: '#FDEEEE', color: '#EB5757' },
     ];
@@ -79,15 +75,14 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
             id: 'edits',
             label: '',
             cell: (props) => (
-                <SecondaryButton size="small" sx={{ paddingX: 3 }}>
-                    <Icon
-                        icon="ph:pencil-simple"
-                        fontSize={20}
-                        color="#1890FF"
-                        style={{ marginBottom: 2, marginRight: 8 }}
-                    />
-                    {`Edit`}
-                </SecondaryButton>
+                <PrimaryButton
+                    btn_color={(props.data as AdminUsersItemType).status === 0 ? 'pink' : 'secondary'}
+                    size="small"
+                    sx={{ paddingX: 3 }}
+                    onClick={(event: React.MouseEvent) => onEdit(event, props.data)}
+                >
+                    {(props.data as AdminUsersItemType).status === 0 ? 'BAN user' : 'Unban user'}
+                </PrimaryButton>
             ),
         },
     ];
@@ -101,7 +96,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                         address: 'efgd....' + (1001 + item),
                         username: 'Shaba',
                         avatar: '/assets/images/avatar-template.png',
-                        status: item % 3,
+                        status: item % 2,
                         remarks: 'This user tried to scam buyers by uploading a fake NFT.',
                     } as AdminUsersItemType),
             ),
@@ -140,10 +135,10 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 </Stack>
                 <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
-            {/* <ModalDialog
-                open={showEditUserStatusDlg}
+            <ModalDialog
+                open={showBannedUsersDlg}
                 onClose={() => {
-                    setShowEditUserStatusDlg(false);
+                    setShowBannedUsersDlg(false);
                 }}
             >
                 <BannedUsers
@@ -152,7 +147,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                         setShowBannedUsersDlg(false);
                     }}
                 />
-                </ModalDialog>*/}
+            </ModalDialog>
         </>
     );
 };
