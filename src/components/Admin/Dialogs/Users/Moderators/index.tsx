@@ -142,7 +142,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                     <img src={user2Edit.avatar} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
                 )}
             </Box>
-            <CustomTextField title="USEN NICKNAME" placeholder="JOHN" disabled inputValue={user2Edit.username} />
+            <CustomTextField title="USEN NICKNAME" placeholder="JOHN" disabled inputValue={user2Edit.username.length > 10 ? reduceHexAddress(user2Edit.username, 5) : user2Edit.username} />
             <CustomTextField title="USER ADDRESS" placeholder="0xcd681b9edcb...4e4ad5e58688168500c346" disabled inputValue={reduceHexAddress(user2Edit.address, 15)} />
             {/* <CustomTextField title="REMARKS" placeholder="Enter remarks" multiline rows={3} /> */}
             <Stack direction="row" spacing={2}>

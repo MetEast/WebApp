@@ -107,7 +107,7 @@ export type AdminUsersItemFetchType = {
     address: string;
     name: string;
     avatar: string;
-    role: number;
+    role: string;
     remarks: string;
 };
 

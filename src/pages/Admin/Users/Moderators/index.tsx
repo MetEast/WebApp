@@ -28,6 +28,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         {
             id: 'username',
             label: 'Username',
+            cell: (props) => <Typography fontSize={16}>{props.value.length > 10 ? reduceHexAddress(props.value, 4) : props.value}</Typography>,
             width: 80,
         },
         {
