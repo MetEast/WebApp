@@ -4,10 +4,6 @@ import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
 import { reduceHexAddress } from 'src/services/common';
-import CustomTextField from 'src/components/TextField';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
-import ModalDialog from 'src/components/ModalDialog';
-import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
 import { blankAdminUserItem } from 'src/constants/init-constants';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -72,9 +68,6 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [inputString, setInputString] = useState<string>('');
-    const [id2Edit, setId2Edit] = useState<number>(0);
-    const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
 
     useEffect(() => {
         let unmounted = false;

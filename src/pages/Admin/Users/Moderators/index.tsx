@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import { blankAdminUserItem } from 'src/constants/init-constants';
@@ -9,6 +9,8 @@ import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import Moderators from 'src/components/Admin/Dialogs/Users/Moderators';
 import { reduceHexAddress } from 'src/services/common';
+import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
+import { useSignInContext } from 'src/context/SignInContext';
 
 const AdminUserModerators: React.FC = (): JSX.Element => {
     const statusValues = [
@@ -98,10 +100,33 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         [],
     );
 
+    const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [inputString, setInputString] = useState<string>('');
+    const [keyWord, setKeyWord] = useState<string>('');
     const [id2Edit, setId2Edit] = useState<number>(0);
     const [showModeratorsDlg, setShowModeratorsDlg] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            setIsLoading(true);
+            const _adminUserList = await getAdminUserList(
+                getAdminSearchParams(keyWord, undefined, undefined),
+                signInDlgState.walletAccounts[0],
+                1,
+            );
+            if (!unmounted) {
+                setTableData(_adminUserList);
+                setIsLoading(false);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [keyWord, signInDlgState.walletAccounts]);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();
@@ -115,10 +140,12 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                 <Stack direction="row" alignItems="flex-end" columnGap={1}>
                     <CustomTextField
                         title="Add Moderator"
+                        inputValue={inputString}
                         placeholder="Search for an address or username"
+                        changeHandler={(value: string) => setInputString(value)}
                         sx={{ width: 320 }}
                     />
-                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                    <PrimaryButton size="small" sx={{ paddingX: 3 }} onClick={() => setKeyWord(inputString)}>
                         <Icon
                             icon="ph:magnifying-glass"
                             fontSize={20}
