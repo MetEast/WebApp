@@ -995,7 +995,7 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
     return _arrAdminNFTList;
 };
 
-export const getAdminUserList = async (fetchParams: string, address: string) => {
+export const getAdminUserList = async (fetchParams: string, address: string, status: number) => {
     const resAdminUserList = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?address=${address}&${fetchParams}`,
         FETCH_CONFIG_JSON,
@@ -1010,8 +1010,9 @@ export const getAdminUserList = async (fetchParams: string, address: string) => 
         _AdminUser.address = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
-        _AdminUser.status = itemObject.role;
-        _AdminUser.remarks = itemObject.remarks;
+        _AdminUser.status = status;
+        // itemObject.role;
+        _AdminUser.remarks = status === 0 ? '' : itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
     return _arrAdminUserList;

@@ -1,9 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
 import { reduceHexAddress } from 'src/services/common';
+import CustomTextField from 'src/components/TextField';
+import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import ModalDialog from 'src/components/ModalDialog';
+import EditUserStatus from 'src/components/Admin/Dialogs/EditUserStatus';
+import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
+import { blankAdminUserItem } from 'src/constants/init-constants';
+import { useSignInContext } from 'src/context/SignInContext';
 
 const AdminUserAdmins: React.FC = (): JSX.Element => {
     const statusValues = [{ label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' }];
@@ -60,24 +67,34 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
         },
     ];
 
-    const data: AdminUsersItemType[] = useMemo(
-        () =>
-            [...Array(800).keys()].map(
-                (item) =>
-                    ({
-                        id: item,
-                        address: 'efgd....' + (1001 + item),
-                        username: 'Shaba',
-                        avatar: '/assets/images/avatar-template.png',
-                        status: 0,
-                        remarks: '',
-                    } as AdminUsersItemType),
-            ),
-        [],
-    );
+    const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
+    const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [inputString, setInputString] = useState<string>('');
+    const [id2Edit, setId2Edit] = useState<number>(0);
+    const [showEditUserStatusDlg, setShowEditUserStatusDlg] = useState<boolean>(false);
+
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            setIsLoading(true);
+            const _adminUserList = await getAdminUserList(
+                getAdminSearchParams('', undefined, undefined),
+                signInDlgState.walletAccounts[0],
+                0,
+            );
+            if (!unmounted) {
+                setTableData(_adminUserList);
+                setIsLoading(false);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [signInDlgState.walletAccounts]);
 
     return (
         <>

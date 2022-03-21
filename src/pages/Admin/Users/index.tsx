@@ -117,6 +117,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
             const _adminUserList = await getAdminUserList(
                 getAdminSearchParams(keyWord, undefined, undefined),
                 signInDlgState.walletAccounts[0],
+                0
             );
             if (!unmounted) {
                 setTableData(_adminUserList);
