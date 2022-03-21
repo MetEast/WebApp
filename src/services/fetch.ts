@@ -603,6 +603,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         } else {
             _BBItem.endTime = '';
         }
+        _BBItem.status = itemObject.status;
         _BBItem.state = itemObject.state;
         _BBItem.maxPurchases = parseInt(itemObject.maxPurchases);
         _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);

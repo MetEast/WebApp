@@ -22,14 +22,18 @@ import { blankBBItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import NFTPreview from 'src/components/NFTPreview';
+import { useSnackbar } from 'notistack';
+import SnackMessage from 'src/components/SnackMessage';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
-    const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([blankBBItem]);
+    const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([]);
+    const [onProgress, setOnProgress] = useState<boolean>(false);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -52,11 +56,18 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
 
     const changeBBStatus = async () => {
         let unmounted = false;
+        setOnProgress(true);
         updateBBStatus(signInDlgState.token, parseInt(blindBoxDetail.tokenId), 'online').then((success: boolean) => {
             if (!unmounted && success) {
                 const _BBItem = { ...blindBoxDetail };
                 _BBItem.status = 'online';
                 setBlindBoxDetail(_BBItem);
+                setOnProgress(false);
+                enqueueSnackbar('', {
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    autoHideDuration: 3000,
+                    content: (key) => <SnackMessage id={key} message="Put online succeed." variant="success" />,
+                }); 
             }
         });
         return () => {
@@ -248,7 +259,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 blindBoxDetail.royaltyOwner?.toLowerCase() ===
                                     signInDlgState.walletAccounts[0].toLowerCase() &&
                                 blindBoxDetail.status === 'offline' && (
-                                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={changeBBStatus}>
+                                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} disabled={onProgress} onClick={changeBBStatus}>
                                         Put online
                                     </PrimaryButton>
                                 )}

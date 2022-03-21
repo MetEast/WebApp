@@ -68,7 +68,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 <Stack direction="row" spacing={1} marginTop={1}>
                     <IconBtn
                         onClick={() => {
-                            amount >= 1 && setAmount(amount - 1);
+                            amount > 1 && setAmount(amount - 1);
                         }}
                     >
                         <Icon icon="ph:minus" color="#1890FF" />
