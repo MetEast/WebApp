@@ -153,7 +153,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
                             <Grid
                                 item
                                 xs={productViewMode === 'grid1' ? 12 : 6}
-                                md={productViewMode === 'grid1' ? 6 : 3}
+                                md={productViewMode === 'grid1' ? 6 : 4}
+                                lg={productViewMode === 'grid1' ? 6 : 3}
                                 key={`explore-product-${index}`}
                             >
                                 <NFTPreview
