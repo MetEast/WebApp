@@ -74,7 +74,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             >
                 <Stack alignItems="center">
                     <PageNumberTypo>1 of 2</PageNumberTypo>
-                    <DialogTitleTypo>Create Blind Box</DialogTitleTypo>
+                    <DialogTitleTypo>Create Mystery Box</DialogTitleTypo>
                 </Stack>
                 <Box>
                     <Grid container columnSpacing={4} rowGap={3}>

@@ -119,14 +119,14 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         isBlindBox: true,
                     })
                         .then((txHash: string) => {
-                            enqueueSnackbar(`Create Blind Box succeed!`, {
+                            enqueueSnackbar(`Create Mystery Box succeed!`, {
                                 variant: 'success',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
                             resolve(txHash);
                         })
                         .catch((error) => {
-                            enqueueSnackbar(`Create Blind Box error: ${error}!`, {
+                            enqueueSnackbar(`Create Mystery Box error: ${error}!`, {
                                 variant: 'error',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
@@ -171,7 +171,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .then((success: boolean) => {
                 if (success) {
-                    enqueueSnackbar(`Create Blind Box succeed!`, {
+                    enqueueSnackbar(`Create Mystery Box succeed!`, {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
@@ -183,14 +183,14 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         waitingConfirmDlgOpened: false,
                     });
                 } else {
-                    enqueueSnackbar(`Create Blind Box error!`, {
+                    enqueueSnackbar(`Create Mystery Box error!`, {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(`Create Blind Box error: ${error}!`, {
+                enqueueSnackbar(`Create Mystery Box error: ${error}!`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
@@ -219,7 +219,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         >
             <Stack alignItems="center">
                 <PageNumberTypo>2 of 2</PageNumberTypo>
-                <DialogTitleTypo>Check Blind Box Details</DialogTitleTypo>
+                <DialogTitleTypo>Check Mystery Box Details</DialogTitleTypo>
             </Stack>
             <Stack paddingX={6} paddingY={4} spacing={1} borderRadius={5} sx={{ background: '#F0F1F2' }}>
                 <InfoItemWrapper>

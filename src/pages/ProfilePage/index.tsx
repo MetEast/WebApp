@@ -435,7 +435,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     });
                                 }}
                             >
-                                New Blind Box
+                                New Mystery Box
                             </PrimaryButton>
                         </Stack>
                     </Stack>

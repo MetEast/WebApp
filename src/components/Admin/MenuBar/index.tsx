@@ -81,7 +81,7 @@ const MenuBar: React.FC = (): JSX.Element => {
         //     url: '',
         //     submenu: [
         //         { title: 'NFTs', url: '/admin/orders-nfts' },
-        //         { title: 'Blind Boxes', url: '/admin/orders-blindboxes' },
+        //         { title: 'Mystery Boxes', url: '/admin/orders-blindboxes' },
         //     ],
         // },
         // { title: 'BIDS', icon: <Icon icon="ph:ticket" fontSize={20} />, url: '/admin/bids' },

@@ -10,11 +10,11 @@ const AdminOrderBlindBoxes: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
         {
             id: 'blindbox_id',
-            label: 'Blind Box ID',
+            label: 'Mystery Box ID',
         },
         {
             id: 'blindbox_title',
-            label: 'Blind Box Title',
+            label: 'Mystery Box Title',
             width: 160,
         },
         {
@@ -83,7 +83,7 @@ const AdminOrderBlindBoxes: React.FC = (): JSX.Element => {
                     ({
                         id: item,
                         blindbox_id: String(84560673 + item),
-                        blindbox_title: 'Blind Box Title',
+                        blindbox_title: 'Mystery Box Title',
                         status: 'Unpaid',
                         order_amount: 199,
                         created: '2022-06-18  08:50:00',

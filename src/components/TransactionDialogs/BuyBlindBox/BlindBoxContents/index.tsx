@@ -24,7 +24,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
     return (
         <Stack spacing={3} width={320}>
             <Stack alignItems="center">
-                <DialogTitleTypo>Blind Box Contents</DialogTitleTypo>
+                <DialogTitleTypo>Mystery Box Contents</DialogTitleTypo>
             </Stack>
             <Stack alignItems="center">
                 <PageNumberTypo>
