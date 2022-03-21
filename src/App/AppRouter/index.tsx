@@ -14,6 +14,7 @@ import MyNFTCreated from 'src/pages/MyNFT/Created';
 import MyNFTSold from 'src/pages/MyNFT/Sold';
 import AdminNFTs from 'src/pages/Admin/NFTs';
 import AdminBannedUsers from 'src/pages/Admin/Users/BannedUsers';
+import AdminUserModerators from 'src/pages/Admin/Users/Moderators';
 import AdminBlindBoxes from 'src/pages/Admin/BlindBoxes';
 import AdminHomePopular from 'src/pages/Admin/HomePopular';
 import AdminHomeUpcoming from 'src/pages/Admin/HomeUpcoming';
@@ -114,6 +115,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <AdminBannedUsers />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/admin/users/moderators"
+                    element={
+                        <Layout>
+                            <AdminUserModerators />
                         </Layout>
                     }
                 />

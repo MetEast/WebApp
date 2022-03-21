@@ -7,7 +7,7 @@ import CustomTextField from 'src/components/TextField';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
-import Moderators from 'src/components/Admin/Dialogs/Users/Moderators';
+import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
 import { reduceHexAddress } from 'src/services/common';
 
 const AdminUserModerators: React.FC = (): JSX.Element => {
@@ -92,7 +92,6 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                         username: 'Shaba',
                         avatar: '/assets/images/avatar-template.png',
                         status: item % 2,
-                        remarks: '',
                     } as AdminUsersItemType),
             ),
         [],
@@ -100,13 +99,13 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
 
     const [tabledata, setTableData] = useState(data);
     const [id2Edit, setId2Edit] = useState<number>(0);
-    const [showModeratorsDlg, setShowModeratorsDlg] = useState<boolean>(false);
+    const [showBannedUsersDlg, setShowBannedUsersDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();
         setId2Edit(tabledata.findIndex((value: AdminUsersItemType) => value.address === data.address));
-        setShowModeratorsDlg(true);
+        setShowBannedUsersDlg(true);
     };
 
     return (
@@ -130,19 +129,19 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                 </Stack>
                 <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
             </Stack>
-            <ModalDialog
-                open={showModeratorsDlg}
+            {/* <ModalDialog
+                open={showBannedUsersDlg}
                 onClose={() => {
-                    setShowModeratorsDlg(false);
+                    setShowBannedUsersDlg(false);
                 }}
             >
-                <Moderators
+                <BannedUsers
                     user2Edit={tabledata.length === 0 ? blankAdminUserItem : tabledata[id2Edit]}
                     onClose={() => {
-                        setShowModeratorsDlg(false);
+                        setShowBannedUsersDlg(false);
                     }}
                 />
-            </ModalDialog>
+            </ModalDialog> */}
         </>
     );
 };
