@@ -612,32 +612,33 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
     return _BBItem;
 };
 
-export const updateBBStatus = async (token: string, BBId: number, status: 'online' | 'offline') => {
-    const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateBlindboxStatusById`;
-    const reqBody = {
-        token: token,
-        blindBoxId: BBId,
-        status: status,
-    };
-    fetch(reqUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reqBody),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.code === 200) {
-                return true;
-            } else {
-                return false;
-            }
+export const updateBBStatus = (token: string, BBId: number, status: 'online' | 'offline') =>
+    new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateBlindboxStatusById`;
+        const reqBody = {
+            token: token,
+            blindBoxId: BBId,
+            status: status,
+        };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
         })
-        .catch((error) => {
-            return false;
-        });
-};
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch((error) => {
+                reject(false);
+            });
+    });
 
 // Profile Page
 export const getMyNFTItemList = async (

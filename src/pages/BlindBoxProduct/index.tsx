@@ -15,22 +15,21 @@ import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindB
 import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
-import { getBBItem, getELA2USD, getMyFavouritesList, getNFTItems } from 'src/services/fetch';
+import { getBBItem, getELA2USD, getMyFavouritesList, getNFTItems, updateBBStatus } from 'src/services/fetch';
 import { reduceHexAddress } from 'src/services/common';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
-import { dummyProducts } from 'src/constants/dummyData';
 import NFTPreview from 'src/components/NFTPreview';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
-    const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>(dummyProducts);
+    const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([blankBBItem]);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -39,7 +38,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             const ELA2USD = await getELA2USD();
             const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','), likeList)
+            const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','), likeList);
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
                 setNftSoldList(_BBSoldNFTs);
@@ -50,6 +49,20 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
+
+    const changeBBStatus = async () => {
+        let unmounted = false;
+        updateBBStatus(signInDlgState.token, parseInt(blindBoxDetail.tokenId), 'online').then((success: boolean) => {
+            if (!unmounted && success) {
+                const _BBItem = {...blindBoxDetail};
+                _BBItem.status = 'online';
+                setBlindBoxDetail(_BBItem);
+            }
+        });
+        return () => {
+            unmounted = true;
+        };
+    };
 
     const updateBlindBoxLikes = (type: string) => {
         setBlindBoxDetail((prevState: TypeProduct) => {
@@ -194,9 +207,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             />
                             {(signInDlgState.walletAccounts.length === 0 ||
                                 (signInDlgState.walletAccounts.length !== 0 &&
-                                    blindBoxDetail.royaltyOwner?.toLowerCase() !== signInDlgState.walletAccounts[0].toLowerCase() &&
+                                    blindBoxDetail.royaltyOwner?.toLowerCase() !==
+                                        signInDlgState.walletAccounts[0].toLowerCase() &&
                                     blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                                    blindBoxDetail.state === 'online')) && (
+                                    blindBoxDetail.state === 'online' &&
+                                    blindBoxDetail.status === 'online')) && (
                                 <PrimaryButton
                                     sx={{ marginTop: 3, width: '100%' }}
                                     onClick={() => {
@@ -224,6 +239,14 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                     Buy Now
                                 </PrimaryButton>
                             )}
+                            {signInDlgState.walletAccounts.length !== 0 &&
+                                blindBoxDetail.royaltyOwner?.toLowerCase() ===
+                                    signInDlgState.walletAccounts[0].toLowerCase() &&
+                                blindBoxDetail.status === 'offline' && (
+                                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} onClick={changeBBStatus}>
+                                        Put online
+                                    </PrimaryButton>
+                                )}
                         </>
                     )}
                 </Grid>
