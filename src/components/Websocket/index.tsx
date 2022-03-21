@@ -3,11 +3,14 @@ import { TypeNotificationFSocket } from 'src/types/notification-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useSnackbar } from 'notistack';
 import SnackMessage from '../SnackMessage';
+import { useNotificationContext } from 'src/context/NotificationContext';
+
 const URL = 'wss://assist-test.meteast.io/socket';
 
 export interface ComponentProps {}
 const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [signInDlgState] = useSignInContext();
+    const [notificationState, setNotificationState] = useNotificationContext();
     const { enqueueSnackbar } = useSnackbar();
     const clientRef: any = useRef(null);
     const [waitingToReconnect, setWaitingToReconnect] = useState<boolean>(false);
@@ -69,11 +72,20 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
             };
 
             client.onmessage = (message: any) => {
-                const msgData: TypeNotificationFSocket = message.data;
-                // console.log('received message', msgData);
-                if (msgData.type === 'alert' && msgData.to?.toLowerCase() === signInDlgState.walletAccounts[0].toLowerCase()) {
-                    showSucceedSnackBar(msgData.title || '', msgData.context || '');
-                    setSignInDlgState({ ...signInDlgState, notesUnreadCnt: signInDlgState.notesUnreadCnt + 1 });
+                const msgData: TypeNotificationFSocket = JSON.parse(message.data);
+                let userAddress = '';
+                if (signInDlgState.walletAccounts.length !== 0)
+                    userAddress = signInDlgState.walletAccounts[0].toLowerCase();
+                // console.log('received message', msgData, msgData.type);
+                if (msgData.type === 'alert') {
+                    const note: TypeNotificationFSocket = { ...msgData };
+                    if (note.to !== undefined && note.to.toLowerCase() === userAddress) {
+                        showSucceedSnackBar(note.title || '', note.context || '');
+                        setNotificationState({
+                            ...notificationState,
+                            notesUnreadCnt: notificationState.notesUnreadCnt + 1,
+                        });
+                    }
                 }
                 // addMessage(`received '${message.data}'`);
             };

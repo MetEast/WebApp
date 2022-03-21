@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Typography, Stack, Link } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
@@ -12,6 +12,7 @@ import { NotificationTypo, MenuButton, NotificationsBoxContainer } from './style
 import NotificationsBox from 'src/components/NotificationsBox';
 import { getNotificationList } from 'src/services/fetch';
 import { TypeNotification } from 'src/types/notification-types';
+import { useNotificationContext } from 'src/context/NotificationContext';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -21,28 +22,29 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [notificationState, setNotificationState] = useNotificationContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     const isProfilePage = location.pathname === '/profile';
 
-    const getUnReadNotes = () => {
+    const getUnReadNotes = useCallback(() => {
         let unmounted = false;
         const fetchNotifications = async () => {
             const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
             const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
             if (!unmounted) {
-                setSignInDlgState({...signInDlgState, notesUnreadCnt: _unReadNotes.length, notesList: _notificationList});
+                setNotificationState({...notificationState, notesUnreadCnt: _unReadNotes.length, notesList: _notificationList});
             }
         };
         if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
         return () => {
             unmounted = true;
         };
-    };
+    }, [signInDlgState.walletAccounts]);
 
     useEffect(() => {
         getUnReadNotes();
-    }, []);
+    }, [signInDlgState.walletAccounts]);
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
@@ -90,10 +92,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 >
                     <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                 </MenuButton>
-                {signInDlgState.notesUnreadCnt !== 0 && <NotificationTypo>{signInDlgState.notesUnreadCnt}</NotificationTypo>}
+                {notificationState.notesUnreadCnt !== 0 && <NotificationTypo>{notificationState.notesUnreadCnt}</NotificationTypo>}
                 <NotificationsBoxContainer show={showNotificationsBox}>
                     <NotificationsBox
-                        notificationsList={signInDlgState.notesList}
+                        notificationsList={notificationState.notesList}
                         onClose={() => setShowNotificationsBox(false)}
                     />
                 </NotificationsBoxContainer>

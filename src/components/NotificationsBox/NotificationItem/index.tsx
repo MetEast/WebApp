@@ -3,33 +3,33 @@ import { Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { PinkButton } from 'src/components/Buttons/styles';
 import { TypeNotification } from 'src/types/notification-types';
-import { useSignInContext } from 'src/context/SignInContext';
 import { removeNotifications } from 'src/services/fetch';
+import { useNotificationContext } from 'src/context/NotificationContext';
 
 interface ComponentProps {
     data: TypeNotification;
 }
 
 const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [notificationState, setNotificationState] = useNotificationContext();
 
     const handleDelete = async () => {
         let unmounted = false;
         const removeNote = async () => {
             const result = await removeNotifications(data.id);
             if (!unmounted && result) {
-                const notesList = signInDlgState.notesList;
+                const notesList = notificationState.notesList;
                 const id = notesList.findIndex((item: TypeNotification) => item.id === data.id);
                 notesList.splice(id, 1);
-                setSignInDlgState({
-                    ...signInDlgState,
-                    notesUnreadCnt: data.isRead === true ? signInDlgState.notesUnreadCnt : signInDlgState.notesUnreadCnt - 1,
+                setNotificationState({
+                    ...notificationState,
+                    notesUnreadCnt: data.isRead === true ? notificationState.notesUnreadCnt : notificationState.notesUnreadCnt - 1,
                     notesList: notesList, 
                 });
                     
             }
         };
-        if (signInDlgState.walletAccounts.length) removeNote().catch(console.error);
+        removeNote().catch(console.error);
         return () => {
             unmounted = true;
         };

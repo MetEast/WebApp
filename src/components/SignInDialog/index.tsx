@@ -552,7 +552,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 await signInWithEssentials();
                             }
                         } else signInWithWallet(wallet);
-                        // showSucceedSnackBar();
                     }}
                 />
             </ModalDialog>

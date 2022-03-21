@@ -3,16 +3,18 @@ import { Stack } from '@mui/material';
 import NotificationsBox from 'src/components/NotificationsBox';
 import { useSignInContext } from 'src/context/SignInContext';
 import { getNotificationList } from 'src/services/fetch';
+import { useNotificationContext } from 'src/context/NotificationContext';
 
 const NotificationsPage: React.FC = (): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [signInDlgState] = useSignInContext();
+    const [notificationState, setNotificationState] = useNotificationContext();
 
     useEffect(() => {
         let unmounted = false;
         const fetchNotifications = async () => {
             const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
             if (!unmounted) {
-                setSignInDlgState({ ...signInDlgState, notesList: _notificationList });
+                setNotificationState({ ...notificationState, notesList: _notificationList });
             }
         };
         if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
@@ -23,7 +25,7 @@ const NotificationsPage: React.FC = (): JSX.Element => {
 
     return (
         <Stack direction="column">
-            <NotificationsBox notificationsList={signInDlgState.notesList} onClose={() => {}} />
+            <NotificationsBox notificationsList={notificationState.notesList} onClose={() => {}} />
         </Stack>
     );
 };

@@ -11,6 +11,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { SnackbarProvider } from 'notistack';
 import { CookiesProvider } from 'react-cookie';
 import { SignInContextProvider } from 'src/context/SignInContext';
+import { NotificationContextProvider } from 'src/context/NotificationContext';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any): Web3Provider => {
@@ -61,11 +62,13 @@ const App: React.FC = (): JSX.Element => {
                 <Web3ReactProvider getLibrary={getLibrary}>
                     <SignInContextProvider>
                         <DialogContextProvider>
-                            <SnackbarProvider maxSnack={1}>
-                                <CookiesProvider>
-                                    <AppRouter />
-                                </CookiesProvider>
-                            </SnackbarProvider>
+                            <NotificationContextProvider>
+                                <SnackbarProvider maxSnack={1}>
+                                    <CookiesProvider>
+                                        <AppRouter />
+                                    </CookiesProvider>
+                                </SnackbarProvider>
+                            </NotificationContextProvider>
                         </DialogContextProvider>
                     </SignInContextProvider>
                 </Web3ReactProvider>

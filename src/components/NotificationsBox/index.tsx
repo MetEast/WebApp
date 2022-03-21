@@ -7,6 +7,7 @@ import { TypeNotification } from 'src/types/notification-types';
 import useOnClickOutside from 'src/hooks/useOnClickOutside';
 import { useSignInContext } from 'src/context/SignInContext';
 import { markNotificationsAsRead } from 'src/services/fetch';
+import { useNotificationContext } from 'src/context/NotificationContext';
 
 interface ComponentProps {
     notificationsList: Array<TypeNotification>;
@@ -14,7 +15,8 @@ interface ComponentProps {
 }
 
 const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose }): JSX.Element => {
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [signInDlgState] = useSignInContext();
+    const [notificationState, setNotificationState] = useNotificationContext();
     const emptyNotifications = notificationsList.length === 0;
     const unReadNotes = notificationsList.filter((item: TypeNotification) => item.isRead === false);
     const node = useRef<HTMLDivElement>();
@@ -29,8 +31,8 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
             });
             const result = await markNotificationsAsRead(arrNoteIds.join(','));
             if (!unmounted && result) {
-                setSignInDlgState({
-                    ...signInDlgState,
+                setNotificationState({
+                    ...notificationState,
                     notesUnreadCnt: 0,
                 });
                 onClose();

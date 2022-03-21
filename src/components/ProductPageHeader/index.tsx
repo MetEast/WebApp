@@ -11,7 +11,7 @@ import { getShorternUrl } from 'src/services/fetch';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 // import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
-type ReportBtnTooltipProps<P> = P & { show: boolean };
+type ReportBtnTooltipProps<P> = P & { show: number };
 
 const ReportBtnTooltip = styled(({ className, ...props }: ReportBtnTooltipProps<TooltipProps>) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -133,7 +133,7 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                         display={showReportBtn ? 'block' : 'none'}
                         sx={{ position: 'absolute', right: 0, top: '100%' }}
                     >
-                        <ReportBtnTooltip title="Coming Soon" show={showReportBtn}>
+                        <ReportBtnTooltip title="Coming Soon" show={showReportBtn ? 1 : 0}>
                             <span>
                                 <PrimaryButton
                                     disabled
