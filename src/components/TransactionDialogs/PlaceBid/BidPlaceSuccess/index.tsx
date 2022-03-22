@@ -15,7 +15,7 @@ const BidPlaceSuccess: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <DialogTitleTypo>Bid placed successfully!</DialogTitleTypo>
                 <Typography fontSize={16} fontWeight={400}>
-                    You've just bid {dialogState.placeBidAmount} for {dialogState.placeBidName}
+                    You've just bid {dialogState.placeBidAmount} ELA for {dialogState.placeBidName}
                 </Typography>
             </Stack>
             <Stack>
