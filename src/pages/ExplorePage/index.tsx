@@ -102,7 +102,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
         }
     };
     // -------------- Option Bar -------------- //
-
+    
     // -------------- Likes -------------- //
     const updateProductLikes = (id: number, type: string) => {
         let prodList: Array<TypeProduct> = [...productList];
