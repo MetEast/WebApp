@@ -7,9 +7,10 @@ export interface ComponentProps {
     bannerTitle: string;
     buttonLabel?: string;
     sx?: SxProps;
+    onBannerBtnClick?: () => void;
 }
 
-const LooksEmptyBox: React.FC<ComponentProps> = ({ bannerTitle, buttonLabel, sx }): JSX.Element => {
+const LooksEmptyBox: React.FC<ComponentProps> = ({ bannerTitle, buttonLabel, sx, onBannerBtnClick }): JSX.Element => {
     return (
         <Stack
             justifyContent="center"
@@ -24,7 +25,11 @@ const LooksEmptyBox: React.FC<ComponentProps> = ({ bannerTitle, buttonLabel, sx 
                 {bannerTitle}
             </Typography>
             <img src="/assets/images/profile/looks-empty-here.svg" alt="Looks Empty Here" style={{ marginTop: 16 }} />
-            {buttonLabel && <PrimaryButton sx={{ width: 250, marginTop: 4 }}>{buttonLabel}</PrimaryButton>}
+            {buttonLabel && (
+                <PrimaryButton sx={{ width: 250, marginTop: 4 }} onClick={onBannerBtnClick}>
+                    {buttonLabel}
+                </PrimaryButton>
+            )}
         </Stack>
     );
 };

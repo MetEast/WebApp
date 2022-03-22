@@ -24,6 +24,7 @@ interface OptionsBarProps extends SpacingProps {
     handleSortChange: (value: string) => void;
     productViewMode: string;
     setProductViewMode: (value: 'grid1' | 'grid2') => void;
+    emptyKeyword?: number;
 }
 
 const OptionsBar: React.FC<OptionsBarProps> = ({
@@ -34,6 +35,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     handleSortChange,
     productViewMode,
     setProductViewMode,
+    emptyKeyword,
     ...otherProps
 }): JSX.Element => {
     const theme = useTheme();
@@ -46,7 +48,11 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
 
     return (
         <Stack direction="row" spacing={{ xs: 1, md: 2 }} sx={{ height: 40 }} {...otherProps}>
-            <SearchField placeholder="Search name, description, address" handleChange={handleKeyWordChange} />
+            <SearchField
+                placeholder="Search name, description, address"
+                emptyKeyword={emptyKeyword}
+                handleChange={handleKeyWordChange}
+            />
             <Select
                 titlebox={
                     <SortByBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
