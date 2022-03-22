@@ -944,12 +944,8 @@ export const uploadUserProfile = (
     });
 
 // admin NFT
-export const getAdminSearchParams = (
-    keyWord: string,
-    status: TypeSelectItem | undefined,
-    saleType: TypeSelectItem | undefined,
-) => {
-    let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+export const getAdminSearchParams = (status: TypeSelectItem | undefined, saleType: TypeSelectItem | undefined) => {
+    let searchParams = `pageNum=1&pageSize=${1000}`;
     if (status !== undefined) {
         searchParams += status.value === 'online' ? '&status=online' : '&status=removed';
     }
@@ -959,9 +955,9 @@ export const getAdminSearchParams = (
     return searchParams;
 };
 
-export const getAdminNFTItemList = async (fetchParams: string) => {
+export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) => {
     const resAdminNFTList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/admin/api/v1/listMarketTokens?${fetchParams}`,
+        `${process.env.REACT_APP_SERVICE_URL}/admin/api/v1/listMarketTokens?${fetchParams}&keyword=${keyWord}`,
         FETCH_CONFIG_JSON,
     );
     const jsonAdminNFTList = await resAdminNFTList.json();
@@ -969,6 +965,8 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
     const _arrAdminNFTList: Array<AdminNFTItemType> = [];
     for (let i = 0; i < arrAdminNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrAdminNFTList[i];
+        if (keyWord === '' && itemObject.status !== 'DELETED') continue;
+        else if (keyWord !== '' && itemObject.status === 'DELETED') continue; 
         const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
         _AdminNFT.id = i + 1;
         _AdminNFT.tokenId = itemObject.tokenId;
@@ -995,9 +993,9 @@ export const getAdminNFTItemList = async (fetchParams: string) => {
     return _arrAdminNFTList;
 };
 
-export const getAdminUserList = async (fetchParams: string, address: string, status: number) => {
+export const getAdminUserList = async (keyWord: string, fetchParams: string, address: string, status: number) => {
     const resAdminUserList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?address=${address}&${fetchParams}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?address=${address}&keyword=${keyWord}&${fetchParams}`,
         FETCH_CONFIG_JSON,
     );
     const jsonAdminUserList = await resAdminUserList.json();
@@ -1006,8 +1004,14 @@ export const getAdminUserList = async (fetchParams: string, address: string, sta
     for (let i = 0; i < arrAdminUserList.length; i++) {
         const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
         if (status === 0 && parseInt(itemObject.role) !== 0) continue;
-        else if (status === 1 && !(parseInt(itemObject.role) === 1 || parseInt(itemObject.role) === 2)) continue;
-        else if (status === 2 && !(parseInt(itemObject.role) === 2 || parseInt(itemObject.role) === 3)) continue;
+        else if (status === 1) {
+            if (keyWord === '' && parseInt(itemObject.role) !== 1) continue;
+            else if (keyWord !== '' && parseInt(itemObject.role) !== 2) continue;
+        } 
+        else if (status === 2) {
+            if (keyWord === '' && parseInt(itemObject.role) !== 3) continue;
+            else if (keyWord !== '' && parseInt(itemObject.role) !== 2) continue;
+        }
         const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
         _AdminUser.id = i + 1;
         _AdminUser.address = itemObject.address;
@@ -1017,8 +1021,7 @@ export const getAdminUserList = async (fetchParams: string, address: string, sta
         else if (status === 1) {
             if (parseInt(itemObject.role) === 2) _AdminUser.status = 0;
             else if (parseInt(itemObject.role) === 1) _AdminUser.status = 1;
-        }
-        else if (status === 2) {
+        } else if (status === 2) {
             if (parseInt(itemObject.role) === 2) _AdminUser.status = 0;
             else if (parseInt(itemObject.role) === 3) _AdminUser.status = 1;
         }

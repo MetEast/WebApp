@@ -100,7 +100,8 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             setIsLoading(true);
             const _adminUserList = await getAdminUserList(
-                getAdminSearchParams(keyWord, undefined, undefined),
+                keyWord, 
+                getAdminSearchParams(undefined, undefined),
                 signInDlgState.walletAccounts[0],
                 1,
             );

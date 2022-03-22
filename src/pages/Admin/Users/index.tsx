@@ -24,11 +24,7 @@ const AdminUsers: React.FC = (): JSX.Element => {
         {
             id: 'address',
             label: 'Address',
-            cell: (props) => (
-                <Typography fontSize={16}>
-                    {reduceHexAddress(props.value, 7)}
-                </Typography>
-            ),
+            cell: (props) => <Typography fontSize={16}>{reduceHexAddress(props.value, 7)}</Typography>,
             width: 80,
         },
         {
@@ -115,9 +111,10 @@ const AdminUsers: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             setIsLoading(true);
             const _adminUserList = await getAdminUserList(
-                getAdminSearchParams(keyWord, undefined, undefined),
+                keyWord,
+                getAdminSearchParams(undefined, undefined),
                 signInDlgState.walletAccounts[0],
-                0
+                0,
             );
             if (!unmounted) {
                 setTableData(_adminUserList);
