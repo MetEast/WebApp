@@ -32,7 +32,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleBuyNow = () => {
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 10 });
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 50 });
         const timer = setTimeout(() => {
             setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false, progressBar: 0 });
         }, 120000);

@@ -307,7 +307,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.buyNowDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, buyNowDlgOpened: false });
+                    setDialogState({ ...dialogState, buyNowDlgOpened: false, progressBar: 0 });
                 }}
             >
                 {dialogState.buyNowDlgStep === 0 && <BuyNow />}
