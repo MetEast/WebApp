@@ -50,9 +50,9 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
         }
         let role = -1;
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
+        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 10 });
         const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
+            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false, progressBar: 0 });
         }, 120000);
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -64,6 +64,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
         })
             .then((txHash: string) => {
                 console.log(txHash);
+                setDialogState({ ...dialogState, progressBar: 40 });
                 return callContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
                     contractType: 2,
@@ -75,6 +76,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
             })
             .then((txHash: string) => {
                 console.log(txHash);
+                setDialogState({ ...dialogState, progressBar: 70 });
                 role = user2Edit.status === 0 ? 3 : 2;
                 return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
             })
@@ -87,6 +89,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                     setDialogState({
                         ...dialogState,
                         waitingConfirmDlgOpened: false,
+                        progressBar: 100,
                     });
                     const updatedUserInfo: AdminUsersItemType = {
                         ...user2Edit,
@@ -105,6 +108,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                     ...dialogState,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,
+                    progressBar: 0,
                 });
             })
             .finally(() => {

@@ -11,6 +11,7 @@ import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
 import { reduceHexAddress } from 'src/services/common';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
     const statusValues = [
@@ -96,6 +97,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
     const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [tabledata, setTableData] = useState(data);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [inputString, setInputString] = useState<string>('');
@@ -172,6 +174,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                     handleUserUpdate={updateUserList}
                     onClose={() => {
                         setShowBannedUsersDlg(false);
+                        setDialogState({ ...dialogState, progressBar: 0 });
                     }}
                 />
             </ModalDialog>
