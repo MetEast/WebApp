@@ -279,11 +279,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Stack alignItems="center">
                     <ProfileImageWrapper display={signInDlgState.userAvatar !== '' ? 'flex' : 'grid'}>
                         {signInDlgState.userAvatar !== '' ? (
-                            <ProfileImage
-                                src={getImageFromAsset(signInDlgState.userAvatar)}
-                                // src="/assets/images/blindbox/blindbox-nft-template3.png"
-                                // src="/assets/images/avatar-template.png"
-                            />
+                            <ProfileImage src={getImageFromAsset(signInDlgState.userAvatar)} />
                         ) : (
                             <Icon icon="ph:user" fontSize={matchUpMd ? 80 : matchDownSm ? 40 : 60} color="#1890FF" />
                         )}

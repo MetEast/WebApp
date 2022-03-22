@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -34,7 +34,12 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
         setOnProgress(true);
         setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 50 });
         const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false, progressBar: 0 });
+            setDialogState({
+                ...dialogState,
+                errorMessageDlgOpened: true,
+                waitingConfirmDlgOpened: false,
+                progressBar: 0,
+            });
         }, 120000);
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -51,10 +56,10 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 setDialogState({
                     ...dialogState,
-                    buyNowDlgOpened: true,
-                    buyNowDlgStep: 2,
-                    buyNowTxHash: txHash,
                     waitingConfirmDlgOpened: false,
+                    buyNowDlgOpened: true,
+                    buyNowDlgStep: 1,
+                    buyNowTxHash: txHash,
                     progressBar: 100,
                 });
             })
