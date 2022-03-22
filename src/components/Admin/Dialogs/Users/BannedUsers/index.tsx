@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Stack, Box } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
@@ -37,24 +37,8 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
     const [onProgress, setOnProgress] = useState<boolean>(false);
-    const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban' | 'moderator'>(
-        user2Edit.status === 0 ? 'admin' : (user2Edit.status === 1 ? 'moderator' : (user2Edit.status === 2 ? 'user' : 'ban')),
-    );
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
-    const [type, setType] = useState<number>(-1);
 
-    useEffect(() => {
-        if (signInDlgState.userRole === 0) {
-            // contract deployer
-            if (user2Edit.status === 1) setType(3);
-            else if (user2Edit.status === 2) setType(2);
-            else if (user2Edit.status === 3) setType(1);
-        } else {
-            // admin
-            if (user2Edit.status === 2) setType(0);
-            else if (user2Edit.status === 3) setType(1);
-        }
-    }, [signInDlgState.userRole]);
 
     const handleUpdateUserRole = (methodName: string, state: boolean) => {
         if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
@@ -91,12 +75,12 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
             })
             .then((txHash: string) => {
                 console.log(txHash);
-                role = user2Edit.status === 0 ? 1 : 2;
+                role = user2Edit.status === 0 ? 3 : 2;
                 return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
             })
             .then((success: boolean) => {
                 if (success) {
-                    enqueueSnackbar(`${user2Edit.status === 0 ? 'Add Moderator' : 'Remove Moderator'} succeed!`, {
+                    enqueueSnackbar(`${user2Edit.status === 0 ? 'Ban user' : 'Unban user'} succeed!`, {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
@@ -106,7 +90,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                     });
                     const updatedUserInfo: AdminUsersItemType = {
                         ...user2Edit,
-                        status: role === 1 ? 1 : 0,
+                        status: role === 2 ? 0 : 1,
                         remarks: '',
                     };
                     handleUserUpdate(updatedUserInfo);
@@ -142,14 +126,14 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                     <img src={user2Edit.avatar} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
                 )}
             </Box>
-            <CustomTextField title="USEN NICKNAME" placeholder="JOHN" disabled />
-            <CustomTextField title="USER ADDRESS" placeholder="0xcd681b9edcb...4e4ad5e58688168500c346" disabled />
-            <CustomTextField title="REMARKS" placeholder="Enter remarks" multiline rows={3} />
+            <CustomTextField title="USEN NICKNAME" placeholder="JOHN" inputValue={user2Edit.username.length > 10 ? reduceHexAddress(user2Edit.username, 4) : user2Edit.username} disabled />
+            <CustomTextField title="USER ADDRESS" placeholder="0xcd681b9edcb...4e4ad5e58688168500c346" inputValue={reduceHexAddress(user2Edit.address, 15)} disabled />
+            <CustomTextField title="REMARKS" placeholder="Enter remarks" inputValue={remarks} multiline rows={3} changeHandler={(value: string) => setRemarks(value)} />
             <Stack direction="row" spacing={2}>
                 <PrimaryButton btn_color="primary" fullWidth onClick={onClose}>
                     close
                 </PrimaryButton>
-                <PrimaryButton btn_color="pink" fullWidth>
+                <PrimaryButton btn_color="pink" fullWidth disabled={onProgress} onClick={() => handleUpdateUserRole('setBlacklist', user2Edit.status === 0 ? true : false)}>
                     confirm
                 </PrimaryButton>
             </Stack>
