@@ -155,9 +155,7 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
                     marginTop={5}
                 />
                 {blindBoxList.length === 0 ? (
-                    <Stack mt={6}>
-                        <LooksEmptyBox />
-                    </Stack>
+                    <LooksEmptyBox sx={{ marginTop: 6 }} />
                 ) : (
                     <Grid container mt={2} spacing={4}>
                         {blindBoxList.map((item, index) => (

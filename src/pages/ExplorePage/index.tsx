@@ -10,7 +10,13 @@ import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
-import { getELA2USD, getMyFavouritesList, getNFTItemList, getPageBannerList, getSearchParams } from 'src/services/fetch';
+import {
+    getELA2USD,
+    getMyFavouritesList,
+    getNFTItemList,
+    getPageBannerList,
+    getSearchParams,
+} from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem, blankPageBanners } from 'src/constants/init-constants';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
@@ -75,7 +81,13 @@ const ExplorePage: React.FC = (): JSX.Element => {
         setSortBy(item);
     };
 
-    const handlerFilterChange = (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
+    const handlerFilterChange = (
+        status: number,
+        minPrice: string,
+        maxPrice: string,
+        category: TypeSelectItem | undefined,
+        opened: boolean,
+    ) => {
         if (opened) {
             let filters: Array<enumFilterOption> = [];
             if (status === 0) filters.push(enumFilterOption.buyNow);
@@ -134,7 +146,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     ))}
                 </Swiper>
             </Box>
-            <Container>
+            <Container sx={{ overflow: 'visible' }}>
                 <OptionsBar
                     sortOptions={sortOptions}
                     sortSelected={sortBy}
@@ -146,7 +158,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     marginTop={5}
                 />
                 {productList.length === 0 ? (
-                    <LooksEmptyBox sx={{ marginTop: 2 }} />
+                    <LooksEmptyBox sx={{ marginTop: 6 }} />
                 ) : (
                     <Grid container mt={2} spacing={4}>
                         {productList.map((item, index) => (

@@ -12,7 +12,13 @@ import FilterCard from './FilterCard';
 
 interface OptionsBarProps extends SpacingProps {
     handleKeyWordChange: (value: string) => void;
-    handlerFilterChange: (status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => void;
+    handlerFilterChange: (
+        status: number,
+        minPrice: string,
+        maxPrice: string,
+        category: TypeSelectItem | undefined,
+        opened: boolean,
+    ) => void;
     sortOptions: TypeSelectItem[];
     sortSelected?: TypeSelectItem;
     handleSortChange: (value: string) => void;
@@ -40,10 +46,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
 
     return (
         <Stack direction="row" spacing={{ xs: 1, md: 2 }} sx={{ height: 40 }} {...otherProps}>
-            <SearchField
-                placeholder="Search name, description, address"
-                handleChange={handleKeyWordChange}
-            />
+            <SearchField placeholder="Search name, description, address" handleChange={handleKeyWordChange} />
             <Select
                 titlebox={
                     <SortByBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
@@ -82,7 +85,13 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 </FilterButton>
                 <FiltersBox display={showFiltersCard ? 'flex' : 'none'}>
                     <FilterCard
-                        changeHandler={(status: number, minPrice: string, maxPrice: string, category: TypeSelectItem | undefined, opened: boolean) => {
+                        changeHandler={(
+                            status: number,
+                            minPrice: string,
+                            maxPrice: string,
+                            category: TypeSelectItem | undefined,
+                            opened: boolean,
+                        ) => {
                             handlerFilterChange(status, minPrice, maxPrice, category, opened);
                             if (!opened) setShowFiltersCard(opened);
                         }}
