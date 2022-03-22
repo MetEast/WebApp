@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SearchFieldWrapper, SearchTextField } from './styles';
 import { Icon } from '@iconify/react';
 import { SxProps } from '@mui/system';
@@ -6,10 +6,11 @@ import { SxProps } from '@mui/system';
 interface ComponentProps {
     handleChange: (value: string) => void;
     placeholder?: string;
+    emptyKeyword?: number;
     sx?: SxProps;
 }
 
-const SearchField: React.FC<ComponentProps> = ({ handleChange, placeholder, sx }): JSX.Element => {
+const SearchField: React.FC<ComponentProps> = ({ handleChange, placeholder, emptyKeyword, sx }): JSX.Element => {
     const [keyWord, setKeyWord] = useState('');
 
     const handleChangeKeyWord = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +24,10 @@ const SearchField: React.FC<ComponentProps> = ({ handleChange, placeholder, sx }
             handleChange(keyWord);
         }
     };
+
+    useEffect(() => {
+        setKeyWord('');
+    }, [emptyKeyword]);
 
     return (
         <SearchFieldWrapper sx={{ ...sx }}>

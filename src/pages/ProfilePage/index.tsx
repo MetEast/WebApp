@@ -44,6 +44,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [category, setCategory] = useState<TypeSelectItem>();
     const [keyWord, setKeyWord] = useState<string>('');
+    const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
         nftGalleryFilterBtnTypes.All,
     );
@@ -485,6 +486,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             sortOptions={sortOptions}
                             sortSelected={sortBy}
                             productViewMode={productViewMode}
+                            emptyKeyword={emptyKeyword}
                             handleKeyWordChange={handleKeyWordChange}
                             handlerFilterChange={handlerFilterChange}
                             handleSortChange={handleChangeSortBy}
@@ -507,6 +509,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         bannerTitle="No Products Found For This Search"
                         buttonLabel="Back to all Items"
                         sx={{ marginTop: 6 }}
+                        onBannerBtnClick={() => {
+                            setEmptyKeyword(emptyKeyword + 1);
+                            handleKeyWordChange('');
+                        }}
                     />
                 )}
                 <Grid container mt={{ xs: 2, md: 4 }} columnSpacing={4} rowGap={{ xs: 2, md: 4 }}>
