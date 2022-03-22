@@ -158,7 +158,11 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     marginTop={5}
                 />
                 {productList.length === 0 ? (
-                    <LooksEmptyBox sx={{ marginTop: 6 }} />
+                    <LooksEmptyBox
+                        bannerTitle="No Products Found For This Search"
+                        buttonLabel="Back to all Items"
+                        sx={{ marginTop: 6 }}
+                    />
                 ) : (
                     <Grid container mt={2} spacing={4}>
                         {productList.map((item, index) => (

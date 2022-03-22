@@ -20,7 +20,7 @@ const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Elem
             </Stack>
             <Stack spacing={3} maxHeight={{ xs: 400, md: '100%' }} sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
                 {earnings.length === 0 ? (
-                    <LooksEmptyBox />
+                    <LooksEmptyBox bannerTitle="Looks Empty Here" />
                 ) : (
                     <>
                         {earnings.map((item, index) => (

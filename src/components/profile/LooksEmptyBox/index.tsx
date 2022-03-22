@@ -4,10 +4,12 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import { SxProps } from '@mui/system';
 
 export interface ComponentProps {
+    bannerTitle: string;
+    buttonLabel?: string;
     sx?: SxProps;
 }
 
-const LooksEmptyBox: React.FC<ComponentProps> = ({ sx }): JSX.Element => {
+const LooksEmptyBox: React.FC<ComponentProps> = ({ bannerTitle, buttonLabel, sx }): JSX.Element => {
     return (
         <Stack
             justifyContent="center"
@@ -19,10 +21,10 @@ const LooksEmptyBox: React.FC<ComponentProps> = ({ sx }): JSX.Element => {
             sx={{ background: '#E8F4FF', ...sx }}
         >
             <Typography fontSize={32} fontWeight={700}>
-                Looks Empty Here
+                {bannerTitle}
             </Typography>
             <img src="/assets/images/profile/looks-empty-here.svg" alt="Looks Empty Here" style={{ marginTop: 16 }} />
-            <PrimaryButton sx={{ width: 250, marginTop: 4 }}>GET YOUR FIRST NFT</PrimaryButton>
+            {buttonLabel && <PrimaryButton sx={{ width: 250, marginTop: 4 }}>{buttonLabel}</PrimaryButton>}
         </Stack>
     );
 };

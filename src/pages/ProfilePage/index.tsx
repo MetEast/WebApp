@@ -503,7 +503,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     </Box>
                 )}
                 {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
-                    <LooksEmptyBox sx={{ marginTop: 6 }} />
+                    <LooksEmptyBox
+                        bannerTitle="No Products Found For This Search"
+                        buttonLabel="Back to all Items"
+                        sx={{ marginTop: 6 }}
+                    />
                 )}
                 <Grid container mt={{ xs: 2, md: 4 }} columnSpacing={4} rowGap={{ xs: 2, md: 4 }}>
                     {myNFTList[getSelectedTabIndex()].map((item, index) => (
