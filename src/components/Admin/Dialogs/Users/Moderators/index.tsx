@@ -37,26 +37,8 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
     const [onProgress, setOnProgress] = useState<boolean>(false);
-    const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban' | 'moderator'>(
-        user2Edit.status === 0 ? 'admin' : (user2Edit.status === 1 ? 'moderator' : (user2Edit.status === 2 ? 'user' : 'ban')),
-    );
-    const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
-    const [type, setType] = useState<number>(-1);
 
-    useEffect(() => {
-        if (signInDlgState.userRole === 0) {
-            // contract deployer
-            if (user2Edit.status === 1) setType(3);
-            else if (user2Edit.status === 2) setType(2);
-            else if (user2Edit.status === 3) setType(1);
-        } else {
-            // admin
-            if (user2Edit.status === 2) setType(0);
-            else if (user2Edit.status === 3) setType(1);
-        }
-    }, [signInDlgState.userRole]);
-
-    const handleUpdateUserRole = (methodName: string, state: boolean) => {
+    const handleUpdateUserRole = (methodName: string) => {
         if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
@@ -76,7 +58,6 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             method: methodName,
             price: '0',
             address: user2Edit.address,
-            approved: state,
         })
             .then((txHash: string) => {
                 console.log(txHash);
@@ -86,7 +67,6 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                     method: methodName,
                     price: '0',
                     address: user2Edit.address,
-                    approved: state,
                 });
             })
             .then((txHash: string) => {
@@ -149,7 +129,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                 <PrimaryButton btn_color="primary" fullWidth onClick={onClose}>
                     close
                 </PrimaryButton>
-                <PrimaryButton btn_color="pink" fullWidth disabled={onProgress} onClick={() => handleUpdateUserRole(user2Edit.status === 0 ? 'addManager' : 'removeManager', false)}>
+                <PrimaryButton btn_color="pink" fullWidth disabled={onProgress} onClick={() => handleUpdateUserRole(user2Edit.status === 0 ? 'addManager' : 'removeManager')}>
                     confirm
                 </PrimaryButton>
             </Stack>
