@@ -68,14 +68,16 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                     created by {dialogState.buyBlindCreator}
                 </Typography>
             </Stack>
-            <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth onClick={() => swiper?.slidePrev()}>
-                    Previous
-                </SecondaryButton>
-                <PrimaryButton fullWidth onClick={() => swiper?.slideNext()}>
-                    Next
-                </PrimaryButton>
-            </Stack>
+            {dialogState.buyBlindAmount > 1 && (
+                <Stack direction="row" spacing={2}>
+                    <SecondaryButton fullWidth onClick={() => swiper?.slidePrev()}>
+                        Previous
+                    </SecondaryButton>
+                    <PrimaryButton fullWidth onClick={() => swiper?.slideNext()}>
+                        Next
+                    </PrimaryButton>
+                </Stack>
+            )}
         </Stack>
     );
 };
