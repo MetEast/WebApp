@@ -70,7 +70,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         if (signInDlgState.walletAccounts.length === 0) {
             setShowBuyNowBtn(true);
         } else {
-            if (signInDlgState.walletAccounts[0].toLowerCase() === productDetail.holder.toLowerCase()) setShowBuyNowBtn(false);
+            if (signInDlgState.walletAccounts[0].toLowerCase() === productDetail.holder.toLowerCase())
+                setShowBuyNowBtn(false);
             else setShowBuyNowBtn(true);
         }
     }, [signInDlgState.walletAccounts, productDetail]);
@@ -201,65 +202,66 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                 detail_page={true}
                                 marginTop={3}
                             />
-                            {showBuyNowBtn ? (
-                                <PrimaryButton
-                                    sx={{ marginTop: 3, width: '100%' }}
-                                    onClick={() => {
-                                        if (signInDlgState.isLoggedIn) {
-                                            setDialogState({
-                                                ...dialogState,
-                                                buyNowDlgOpened: true,
-                                                buyNowDlgStep: 0,
-                                                buyNowPrice: productDetail.price_ela,
-                                                buyNowName: productDetail.name,
-                                                buyNowOrderId: productDetail.orderId || '',
-                                            });
-                                        } else {
-                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                        }
-                                    }}
-                                >
-                                    buy now
-                                </PrimaryButton>
-                            ) : (
-                                <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                    <PinkButton
-                                        sx={{ width: '100%' }}
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    cancelSaleDlgOpened: true,
-                                                    cancelSaleDlgStep: 0,
-                                                    cancelSaleOrderId: productDetail.orderId || '',
-                                                });
-                                            } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                            }
-                                        }}
-                                    >
-                                        Cancel Sale
-                                    </PinkButton>
+                            {productDetail.status !== 'NEW' &&
+                                (showBuyNowBtn ? (
                                     <PrimaryButton
-                                        sx={{ width: '100%' }}
+                                        sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
                                                 setDialogState({
                                                     ...dialogState,
-                                                    changePriceDlgOpened: true,
-                                                    changePriceDlgStep: 0,
-                                                    changePriceCurPrice: productDetail.price_ela,
-                                                    changePriceOrderId: productDetail.orderId || '',
+                                                    buyNowDlgOpened: true,
+                                                    buyNowDlgStep: 0,
+                                                    buyNowPrice: productDetail.price_ela,
+                                                    buyNowName: productDetail.name,
+                                                    buyNowOrderId: productDetail.orderId || '',
                                                 });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                             }
                                         }}
                                     >
-                                        Change Price
+                                        buy now
                                     </PrimaryButton>
-                                </Stack>
-                            )}
+                                ) : (
+                                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                        <PinkButton
+                                            sx={{ width: '100%' }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        cancelSaleDlgOpened: true,
+                                                        cancelSaleDlgStep: 0,
+                                                        cancelSaleOrderId: productDetail.orderId || '',
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Cancel Sale
+                                        </PinkButton>
+                                        <PrimaryButton
+                                            sx={{ width: '100%' }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        changePriceDlgOpened: true,
+                                                        changePriceDlgStep: 0,
+                                                        changePriceCurPrice: productDetail.price_ela,
+                                                        changePriceOrderId: productDetail.orderId || '',
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Change Price
+                                        </PrimaryButton>
+                                    </Stack>
+                                ))}
                         </>
                     )}
                 </Grid>
@@ -307,7 +309,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.buyNowDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, buyNowDlgOpened: false });
+                    setDialogState({ ...dialogState, buyNowDlgOpened: false, progressBar: 0 });
                 }}
             >
                 {dialogState.buyNowDlgStep === 0 && <BuyNow />}

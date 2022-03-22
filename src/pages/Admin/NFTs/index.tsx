@@ -167,7 +167,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminNFTList = await getAdminNFTItemList(getAdminSearchParams(keyWord, nftState, saleType));
+            const _adminNFTList = await getAdminNFTItemList(keyWord, getAdminSearchParams(nftState, saleType));
             if (!unmounted) {
                 setTableData(_adminNFTList);
                 setIsLoading(false);

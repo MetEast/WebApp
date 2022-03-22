@@ -87,6 +87,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     inputOnlyValid={true}
                     enableEmpty={true}
                     sx={{ width: '100%' }}
+                    inputValue={minPrice}
                     changeHandler={(value: string) => setMinPrice(value)}
                 />
                 <Typography fontSize={14} fontWeight={400} sx={{ wordBreak: 'normal' }}>
@@ -98,6 +99,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     inputOnlyValid={true}
                     enableEmpty={true}
                     sx={{ width: '100%' }}
+                    inputValue={maxPrice}
                     changeHandler={(value: string) => setMaxPrice(value)}
                 />
             </Stack>

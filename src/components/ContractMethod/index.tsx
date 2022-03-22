@@ -127,8 +127,6 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                             contractMethod = smartContract.methods.removeManager(param.address);
                             break;
                         case 'setBlacklist':
-                            alert(param.address)
-                            alert(param.approved)
                             contractMethod = smartContract.methods.setBlacklist(param.address, param.approved);
                             break;
                         default:

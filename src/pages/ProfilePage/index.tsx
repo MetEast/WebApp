@@ -123,11 +123,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
         };
         const fetchSingleTab = async () => {
             const nTabId = getSelectedTabIndex();
+            // if (!unmounted) {
+            //     setLoadingState(nTabId, true);
+            // }
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            if (!unmounted) {
-                setLoadingState(nTabId, true);
-            }
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
             const _searchedMyNFTList = await getMyNFTItemList(
                 searchParams,
@@ -142,7 +142,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 setLoadingState(nTabId, false);
             }
         };
-        if (signInDlgState.isLoggedIn) {
+        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length !== 0 && signInDlgState.userDid !== '') {
             if (firstLoading) fetchAllTab().catch(console.error);
             else fetchSingleTab().catch(console.error);
         } else {
@@ -279,11 +279,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 <Stack alignItems="center">
                     <ProfileImageWrapper display={signInDlgState.userAvatar !== '' ? 'flex' : 'grid'}>
                         {signInDlgState.userAvatar !== '' ? (
-                            <ProfileImage
-                                src={getImageFromAsset(signInDlgState.userAvatar)}
-                                // src="/assets/images/blindbox/blindbox-nft-template3.png"
-                                // src="/assets/images/avatar-template.png"
-                            />
+                            <ProfileImage src={getImageFromAsset(signInDlgState.userAvatar)} />
                         ) : (
                             <Icon icon="ph:user" fontSize={matchUpMd ? 80 : matchDownSm ? 40 : 60} color="#1890FF" />
                         )}
@@ -473,7 +469,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 <FilterButton
                                     key={`filter-button-${index}`}
                                     selected={items.label === nftGalleryFilterBtnSelected}
-                                    onClick={() => setNftGalleryFilterBtnSelected(items.label)}
+                                    onClick={() => {
+                                        setNftGalleryFilterBtnSelected(items.label);
+                                        setLoadingState(index, true);
+                                        setMyNFTData(index, [blankMyNFTItem, blankMyNFTItem, blankMyNFTItem, blankMyNFTItem]);
+                                    }}
                                 >
                                     {items.label}
                                     <p>{myNFTList[index].length}</p>

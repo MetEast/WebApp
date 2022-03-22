@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import { blankAdminUserItem } from 'src/constants/init-constants';
@@ -9,6 +9,9 @@ import { Icon } from '@iconify/react';
 import ModalDialog from 'src/components/ModalDialog';
 import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
 import { reduceHexAddress } from 'src/services/common';
+import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
+import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
     const statusValues = [
@@ -26,6 +29,11 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
         {
             id: 'username',
             label: 'Username',
+            cell: (props) => (
+                <Typography fontSize={16}>
+                    {props.value.length > 10 ? reduceHexAddress(props.value, 4) : props.value}
+                </Typography>
+            ),
             width: 80,
         },
         {
@@ -86,32 +94,50 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
             ),
         },
     ];
+    const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
-    const data: AdminUsersItemType[] = useMemo(
-        () =>
-            [...Array(800).keys()].map(
-                (item) =>
-                    ({
-                        id: item,
-                        address: 'efgd....' + (1001 + item),
-                        username: 'Shaba',
-                        avatar: '/assets/images/avatar-template.png',
-                        status: item % 2,
-                        remarks: 'This user tried to scam buyers by uploading a fake NFT.',
-                    } as AdminUsersItemType),
-            ),
-        [],
-    );
-
+    const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [tabledata, setTableData] = useState(data);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [inputString, setInputString] = useState<string>('');
+    const [keyWord, setKeyWord] = useState<string>('');
     const [id2Edit, setId2Edit] = useState<number>(0);
     const [showBannedUsersDlg, setShowBannedUsersDlg] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        let unmounted = false;
+        const getFetchData = async () => {
+            setIsLoading(true);
+            const _adminUserList = await getAdminUserList(
+                keyWord, 
+                getAdminSearchParams(undefined, undefined),
+                signInDlgState.walletAccounts[0],
+                2,
+            );
+            if (!unmounted) {
+                setTableData(_adminUserList);
+                setIsLoading(false);
+            }
+        };
+        getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
+    }, [keyWord, signInDlgState.walletAccounts]);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();
         setId2Edit(tabledata.findIndex((value: AdminUsersItemType) => value.address === data.address));
         setShowBannedUsersDlg(true);
+    };
+
+    const updateUserList = (editedItem: AdminUsersItemType) => {
+        setTableData((prevState: AdminUsersItemType[]) => {
+            const userList = [...prevState];
+            userList[id2Edit] = editedItem;
+            return userList;
+        });
     };
 
     return (
@@ -121,9 +147,11 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                     <CustomTextField
                         title="Ban User"
                         placeholder="Search for an address or username"
+                        inputValue={inputString}
                         sx={{ width: 320 }}
+                        changeHandler={(value: string) => setInputString(value)}
                     />
-                    <PrimaryButton size="small" sx={{ paddingX: 3 }}>
+                    <PrimaryButton size="small" sx={{ paddingX: 3 }} onClick={() => setKeyWord(inputString)}>
                         <Icon
                             icon="ph:magnifying-glass"
                             fontSize={20}
@@ -143,8 +171,10 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
             >
                 <BannedUsers
                     user2Edit={tabledata.length === 0 ? blankAdminUserItem : tabledata[id2Edit]}
+                    handleUserUpdate={updateUserList}
                     onClose={() => {
                         setShowBannedUsersDlg(false);
+                        setDialogState({ ...dialogState, progressBar: 0 });
                     }}
                 />
             </ModalDialog>
