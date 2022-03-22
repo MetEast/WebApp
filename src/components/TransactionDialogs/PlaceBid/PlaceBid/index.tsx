@@ -37,7 +37,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 />
                 <Stack spacing={0.5}>
                     <Typography fontSize={12} fontWeight={700}>
-                        Category
+                        Bid Expiration
                     </Typography>
                     <Select
                         titlebox={
@@ -58,7 +58,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                     />
                     {expirationError && (
                         <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                            Category should be selected.
+                            Bid expiration should be selected.
                         </Typography>
                     )}
                 </Stack>
