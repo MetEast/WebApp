@@ -657,7 +657,6 @@ export const getMyNFTItemList = async (
     const resMyNFTList = await fetch(fetchUrl, FETCH_CONFIG_JSON);
     const jsonMyNFTList = await resMyNFTList.json();
     const arrMyNFTList = jsonMyNFTList.data === undefined ? [] : jsonMyNFTList.data.result;
-
     const _arrMyNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrMyNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrMyNFTList[i];
@@ -693,7 +692,7 @@ export const getMyNFTItemList = async (
                 _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
         } else if (nTabId === 2) {
             // created
-            // _myNFT.type = enumMyNFTType.Created;
+            _myNFT.type = enumMyNFTType.Created;
             if (itemObject.holder === walletAddress) {
                 // owned
                 _myNFT.types.push(enumMyNFTType.Created);

@@ -17,7 +17,7 @@ const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Ele
             cookies.METEAST_TOKEN === undefined
                 ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
                 : jwtDecode(cookies.METEAST_TOKEN);
-        // if (user.role === '' || parseInt(user.role) >= 2)  navigate('/');
+        if (user.role === '' || parseInt(user.role) >= 2)  navigate('/');
     }, []);
     
     return (
