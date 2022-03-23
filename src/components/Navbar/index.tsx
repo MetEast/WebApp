@@ -8,7 +8,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { NotificationTypo, MenuButton, NotificationsBoxContainer } from './styles';
+import { useStyles, NotificationTypo, MenuButton, NotificationsBoxContainer } from './styles';
 import NotificationsBox from 'src/components/NotificationsBox';
 import { getNotificationList } from 'src/services/fetch';
 import { TypeNotification } from 'src/types/notification-types';
@@ -27,6 +27,8 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     const isProfilePage = location.pathname === '/profile';
+
+    const classes = useStyles();
 
     const getUnReadNotes = useCallback(() => {
         let unmounted = false;
@@ -100,10 +102,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 {notificationState.notesUnreadCnt !== 0 && (
                     <NotificationTypo>{notificationState.notesUnreadCnt}</NotificationTypo>
                 )}
-                <NotificationsBoxContainer show={showNotificationsBox}>
+                <NotificationsBoxContainer show={showNotificationsBox} className={classes.container}>
                     <NotificationsBox
                         notificationsList={notificationState.notesList}
-                        // notificationsList={dummyNotificationList}   // test data
+                        // notificationsList={dummyNotificationList} // test data
                         onClose={() => setShowNotificationsBox(false)}
                     />
                 </NotificationsBoxContainer>
