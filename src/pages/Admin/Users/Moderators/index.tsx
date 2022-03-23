@@ -77,7 +77,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                 <PrimaryButton
                     btn_color={(props.data as AdminUsersItemType).status === 0 ? 'green' : 'pink'}
                     size="small"
-                    sx={{ paddingX: 3 }}
+                    sx={{ paddingX: 3, display: signInDlgState.userRole === 0 ? 'inline-flex' : 'none' }}
                     onClick={(event: React.MouseEvent) => onEdit(event, props.data)}
                 >
                     {(props.data as AdminUsersItemType).status === 0 ? 'ADD MODERATOR' : 'remove Moderator'}
