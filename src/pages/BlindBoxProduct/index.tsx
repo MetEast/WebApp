@@ -67,7 +67,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     autoHideDuration: 3000,
                     content: (key) => <SnackMessage id={key} message="Put online succeed." variant="success" />,
-                }); 
+                });
             }
         });
         return () => {
@@ -218,8 +218,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             />
                             {(signInDlgState.walletAccounts.length === 0 ||
                                 (signInDlgState.walletAccounts.length !== 0 &&
-                                    blindBoxDetail.royaltyOwner?.toLowerCase() !==
-                                        signInDlgState.walletAccounts[0].toLowerCase() &&
+                                    blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0] &&
                                     blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
                                     blindBoxDetail.state === 'online' &&
                                     blindBoxDetail.status === 'online')) && (
@@ -256,10 +255,13 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 </PrimaryButton>
                             )}
                             {signInDlgState.walletAccounts.length !== 0 &&
-                                blindBoxDetail.royaltyOwner?.toLowerCase() ===
-                                    signInDlgState.walletAccounts[0].toLowerCase() &&
+                                blindBoxDetail.royaltyOwner === signInDlgState.walletAccounts[0] &&
                                 blindBoxDetail.status === 'offline' && (
-                                    <PrimaryButton sx={{ marginTop: 3, width: '100%' }} disabled={onProgress} onClick={changeBBStatus}>
+                                    <PrimaryButton
+                                        sx={{ marginTop: 3, width: '100%' }}
+                                        disabled={onProgress}
+                                        onClick={changeBBStatus}
+                                    >
                                         Put online
                                     </PrimaryButton>
                                 )}

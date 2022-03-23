@@ -28,7 +28,7 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const addMessage = (message: TypeNotificationFSocket) => {
         setMessages([...messages, message]);
     };
-    
+
     useEffect(() => {
         if (waitingToReconnect) {
             return;
@@ -75,12 +75,11 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
             client.onmessage = (message: any) => {
                 const msgData: TypeNotificationFSocket = JSON.parse(message.data);
                 let userAddress = '';
-                if (signInDlgState.walletAccounts.length !== 0)
-                    userAddress = signInDlgState.walletAccounts[0].toLowerCase();
+                if (signInDlgState.walletAccounts.length !== 0) userAddress = signInDlgState.walletAccounts[0];
                 // console.log('received message', msgData, msgData.type);
                 if (msgData.type === 'alert') {
                     const note: TypeNotificationFSocket = { ...msgData };
-                    if (note.to !== undefined && note.to.toLowerCase() === userAddress) {
+                    if (note.to !== undefined && note.to === userAddress) {
                         showSucceedSnackBar(note.title || '', note.context || '');
                         setNotificationState({
                             ...notificationState,
