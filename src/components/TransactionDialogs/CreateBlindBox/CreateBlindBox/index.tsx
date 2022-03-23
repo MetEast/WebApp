@@ -306,7 +306,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     setBlindboxPurchasesError(blindboxPurchases === 0);
                                     setSaleBeginsError(isNaN(Date.parse(saleBegins)));
                                     // setSaleEndsError(isNaN(Date.parse(saleEnds)));
-                                    setBlindboxImageError(blindboxImage === undefined);
+                                    setBlindboxImageError(stateFile === null);
                                     setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
                                     setBlindboxQuantityError(blindboxQuantity);
                                 }
