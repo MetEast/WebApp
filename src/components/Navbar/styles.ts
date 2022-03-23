@@ -47,18 +47,12 @@ export const NotificationsBoxContainer = styled(Box)<{ show: boolean }>`
     top: 40px;
     right: 0;
     max-height: 70vh;
-<<<<<<< HEAD
     padding-top: 16px;
     overflow-y: auto;
     overflow-x: hidden;
     background: white;
     border-radius: 32px;
     box-shadow: 0px 4px 40px -26px rgba(0, 20, 39, 0.8);
-=======
-    padding-top: 8px;
-    overflow-y: auto;
-    overflow-x: hidden;
->>>>>>> edf9def (Notifications box layout updated)
     ${(props) => props.theme.breakpoints.down('sm')} {
         /* position: fixed;
         width: 100vw;

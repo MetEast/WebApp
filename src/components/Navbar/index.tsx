@@ -102,10 +102,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 {notificationState.notesUnreadCnt !== 0 && (
                     <NotificationTypo>{notificationState.notesUnreadCnt}</NotificationTypo>
                 )}
-                <NotificationsBoxContainer show={showNotificationsBox}>
+                <NotificationsBoxContainer show={showNotificationsBox} className={classes.container}>
                     <NotificationsBox
                         notificationsList={notificationState.notesList}
-                        // notificationsList={dummyNotificationList}   // test data
+                        // notificationsList={dummyNotificationList} // test data
                         onClose={() => setShowNotificationsBox(false)}
                     />
                 </NotificationsBoxContainer>
