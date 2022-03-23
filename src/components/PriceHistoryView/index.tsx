@@ -127,7 +127,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             const nItem = productPriceList.findIndex((option) => option.onlyDate.startsWith(value));
             return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
         };
-        let _latestPriceList: Array<TypeChartAxis> = [];
+        const _latestPriceList: Array<TypeChartAxis> = [];
         let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
         for (let i = 0; i < _dateList.length; i++) {
             _latestPriceList.push({
