@@ -25,8 +25,8 @@ interface ComponentProps {
 const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element => {
     const location = useLocation();
     const [status, setStatus] = useState<number>(-1);
-    const [minPrice, setMinPrice] = useState<string>('0');
-    const [maxPrice, setMaxPrice] = useState<string>('0');
+    const [minPrice, setMinPrice] = useState<string>();
+    const [maxPrice, setMaxPrice] = useState<string>();
 
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -120,7 +120,13 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     size={matchDownSm ? 'small' : undefined}
                     fullWidth
                     onClick={() => {
-                        changeHandler(status, minPrice, maxPrice, category, false);
+                        changeHandler(
+                            status,
+                            minPrice === undefined ? '0' : minPrice,
+                            maxPrice === undefined ? '0' : maxPrice,
+                            category,
+                            false,
+                        );
                     }}
                 >
                     close
@@ -129,7 +135,13 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     size={matchDownSm ? 'small' : undefined}
                     fullWidth
                     onClick={() => {
-                        changeHandler(status, minPrice, maxPrice, category, true);
+                        changeHandler(
+                            status,
+                            minPrice === undefined ? '0' : minPrice,
+                            maxPrice === undefined ? '0' : maxPrice,
+                            category,
+                            true,
+                        );
                     }}
                 >
                     apply
