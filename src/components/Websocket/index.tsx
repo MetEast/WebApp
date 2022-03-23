@@ -25,9 +25,10 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     };
 
-    function addMessage(message: TypeNotificationFSocket) {
+    const addMessage = (message: TypeNotificationFSocket) => {
         setMessages([...messages, message]);
-    }
+    };
+    
     useEffect(() => {
         if (waitingToReconnect) {
             return;

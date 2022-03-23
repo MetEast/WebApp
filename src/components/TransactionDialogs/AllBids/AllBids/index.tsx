@@ -38,6 +38,7 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 signInDlgState.walletAccounts[0],
                 1,
                 1000,
+                '',
                 // sortby?.value,
             );
             if (!unmounted) {
