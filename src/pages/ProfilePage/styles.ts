@@ -16,7 +16,7 @@ export const FilterItemTypography = styled(Typography)`
     line-height: 1rem;
 `;
 
-export const FilterButton = styled(Button)<{ selected: boolean }>`
+export const FilterButton = styled(Button)<{ selected: boolean; loading: boolean }>`
     flex-shrink: 0;
     height: 36px;
     padding: 0 16px;
@@ -28,11 +28,18 @@ export const FilterButton = styled(Button)<{ selected: boolean }>`
     :focus {
         background: #e8f4ff;
     }
-    p {
+    .itemcount__box {
+        width: 24px;
+        height: 24px;
         margin-left: 8px;
-        padding: 2px 8px;
+        justify-content: center;
+        align-items: center;
         border-radius: 8px;
-        background: ${({ selected }) => (selected ? '#1890FF' : '#E8F4FF')};
+        overflow: hidden;
+        background: ${({ selected, loading }) => (loading ? 'transparent' : selected ? '#1890FF' : '#E8F4FF')};
+    }
+    p {
+        margin: 0;
         color: ${({ selected }) => (selected ? 'white' : '#1890FF')};
     }
 `;
