@@ -19,11 +19,10 @@ import { reduceHexAddress } from 'src/services/common';
 
 export interface ComponentProps {
     token2Remove: AdminNFTItemType;
-    handleTokenUpdate: (value: AdminNFTItemType) => void;
     onClose: () => void;
 }
 
-const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, onClose }): JSX.Element => {
+const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -66,7 +65,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, handleTokenUpdate, 
                     ...dialogState,
                     waitingConfirmDlgOpened: false,
                 });
-                handleTokenUpdate(token2Remove);
+                window.location.reload();
             })
             .catch((error) => {
                 enqueueSnackbar(`Remove Token error!`, {

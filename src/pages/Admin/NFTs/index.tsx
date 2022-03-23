@@ -195,14 +195,6 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         setShowRemoveNFTDlg(true);
     };
 
-    const updateNFTList = (editedItem: AdminNFTItemType) => {
-        setTableData((prevState: AdminNFTItemType[]) => {
-            const nftList = [...prevState];
-            nftList[id2Remove] = editedItem;
-            return nftList;
-        });
-    };
-
     const showSnackBar = () => {
         enqueueSnackbar('Copied to Clipboard!', {
             variant: 'success',
@@ -283,7 +275,6 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             >
                 <RemoveNFT
                     token2Remove={tabledata.length === 0 ? blankAdminNFTItem : tabledata[id2Remove]}
-                    handleTokenUpdate={updateNFTList}
                     onClose={() => {
                         setShowRemoveNFTDlg(false);
                     }}
