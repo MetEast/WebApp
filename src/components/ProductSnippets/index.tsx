@@ -16,7 +16,7 @@ export interface ComponentProps {
 const ProductSnippets: React.FC<ComponentProps> = ({ nickname, sold, instock, likes, views, sx }): JSX.Element => {
     return (
         <Stack direction="row" alignItems="center" spacing={1} sx={{ ...sx }}>
-            {nickname !== undefined && (
+            {nickname !== undefined && nickname !== null && (
                 <Stack direction="row" alignItems="center" spacing={1}>
                     <Icon icon="ph:palette" />
                     <Typography fontWeight={500} fontSize={12}>
