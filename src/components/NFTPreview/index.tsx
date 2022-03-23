@@ -169,7 +169,6 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                         nickname={product.author}
                                         sold={product.sold}
                                         likes={product.likes}
-                                        views={product.views}
                                     />
                                 )}
                             </Box>
