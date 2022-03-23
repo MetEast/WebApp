@@ -46,6 +46,19 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     // const [saleEndsError, setSaleEndsError] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
+    useEffect(() => {
+        const getFetchData = async () => {
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '');
+            let count = 0;
+            for (let i = 0; i < _BBCandidatesList.length; i++) {
+                const itemObject: TypeProductFetch = _BBCandidatesList[i];
+                if (itemObject.status !== 'DELETED') count++;
+            }
+            setBlindboxPurchases(count);
+        };
+        getFetchData().catch(console.error);
+    }, [signInDlgState.walletAccounts]);
+
     const handleFileChange = (files: Array<File>) => {
         handleDropSingleFile(files);
         if (files !== null && files.length > 0) {
@@ -70,17 +83,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     }, [dialogState.crtBlindTokenIds]);
 
     useEffect(() => {
-        const getFetchData = async () => {
-            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '');
-            let count = 0;
-            for (let i = 0; i < _BBCandidatesList.length; i++) {
-                const itemObject: TypeProductFetch = _BBCandidatesList[i];
-                if (itemObject.status !== 'DELETED') count++;
-            }
-            setBlindboxPurchases(count);
-        };
-        getFetchData().catch(console.error);
-    }, [signInDlgState.walletAccounts]);
+        setBlindboxPurchases(blindboxPurchases > blindboxQuantity ? blindboxQuantity : blindboxPurchases);
+    }, [blindboxQuantity, blindboxPurchases]);
 
     return (
         <>
@@ -279,6 +283,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     blindboxQuantity > 0 &&
                                     blindboxPrice > 0 &&
                                     saleBegins !== '' &&
+                                    blindboxPurchases <= blindboxQuantity &&
                                     // saleEnds !== '' &&
                                     blindboxPurchases > 0
                                 ) {
