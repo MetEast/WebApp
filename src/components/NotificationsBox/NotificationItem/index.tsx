@@ -23,10 +23,10 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
                 notesList.splice(id, 1);
                 setNotificationState({
                     ...notificationState,
-                    notesUnreadCnt: data.isRead === true ? notificationState.notesUnreadCnt : notificationState.notesUnreadCnt - 1,
-                    notesList: notesList, 
+                    notesUnreadCnt:
+                        data.isRead === true ? notificationState.notesUnreadCnt : notificationState.notesUnreadCnt - 1,
+                    notesList: notesList,
                 });
-                    
             }
         };
         removeNote().catch(console.error);
@@ -59,7 +59,7 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
                     {data.date}
                 </Typography>
             </Stack>
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={4}>
                 <Typography fontSize={14} fontWeight={400}>
                     {data.content}
                 </Typography>

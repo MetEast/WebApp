@@ -31,7 +31,10 @@ export const NotificationsBoxContainer = styled(Box)<{ show: boolean }>`
     position: absolute;
     top: 40px;
     right: 0;
+    max-height: 70vh;
     padding-top: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
     ${(props) => props.theme.breakpoints.down('sm')} {
         /* position: fixed;
         width: 100vw;

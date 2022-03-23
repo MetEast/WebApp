@@ -13,6 +13,7 @@ import NotificationsBox from 'src/components/NotificationsBox';
 import { getNotificationList } from 'src/services/fetch';
 import { TypeNotification } from 'src/types/notification-types';
 import { useNotificationContext } from 'src/context/NotificationContext';
+import { dummyNotificationList } from 'src/constants/dummyData';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -33,7 +34,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
             const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
             if (!unmounted) {
-                setNotificationState({...notificationState, notesUnreadCnt: _unReadNotes.length, notesList: _notificationList});
+                setNotificationState({
+                    ...notificationState,
+                    notesUnreadCnt: _unReadNotes.length,
+                    notesList: _notificationList,
+                });
             }
         };
         if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
@@ -92,10 +97,13 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 >
                     <Icon icon="ph:chat-circle" fontSize={20} color="black" />
                 </MenuButton>
-                {notificationState.notesUnreadCnt !== 0 && <NotificationTypo>{notificationState.notesUnreadCnt}</NotificationTypo>}
+                {notificationState.notesUnreadCnt !== 0 && (
+                    <NotificationTypo>{notificationState.notesUnreadCnt}</NotificationTypo>
+                )}
                 <NotificationsBoxContainer show={showNotificationsBox}>
                     <NotificationsBox
                         notificationsList={notificationState.notesList}
+                        // notificationsList={dummyNotificationList}   // test data
                         onClose={() => setShowNotificationsBox(false)}
                     />
                 </NotificationsBoxContainer>
