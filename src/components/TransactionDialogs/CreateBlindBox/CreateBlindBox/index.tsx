@@ -164,9 +164,9 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     error={blindboxPurchasesError}
                                     errorText="Max number of Purchases cannot be empty"
                                     number={true}
-                                    changeHandler={(value: string) =>
-                                        setBlindboxPurchases(parseInt(value === '' ? '0' : value))
-                                    }
+                                    changeHandler={(value: string) => {
+                                        setBlindboxPurchases(parseInt(value === '' ? '0' : value));
+                                    }}
                                 />
                             </Stack>
                             <Stack spacing={1}>

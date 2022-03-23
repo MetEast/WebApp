@@ -46,7 +46,7 @@ import {
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
     'getOwnCollectible',
-    'getSelfCreateNotSoldCollectible',
+    'getSelfCreateCollectible',
     'getForSaleCollectible',
     'getSoldCollectibles',
     'getFavoritesCollectible',
