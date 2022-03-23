@@ -21,7 +21,7 @@ const LooksEmptyBox: React.FC<ComponentProps> = ({ bannerTitle, buttonLabel, sx,
             borderRadius={5}
             sx={{ background: '#E8F4FF', ...sx }}
         >
-            <Typography fontSize={32} fontWeight={700}>
+            <Typography fontSize={32} fontWeight={700} textAlign="center">
                 {bannerTitle}
             </Typography>
             <img src="/assets/images/profile/looks-empty-here.svg" alt="Looks Empty Here" style={{ marginTop: 16 }} />
