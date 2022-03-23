@@ -11,6 +11,7 @@ import {
     Checkbox,
     TableSortLabel,
     Typography,
+    Skeleton,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
@@ -87,15 +88,43 @@ interface ComponentProps {
     columns: AdminTableColumn[];
     checkable?: boolean;
     isLoading?: boolean;
+    tabTitle?: string;
 }
 
-const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true, isLoading = true }): JSX.Element => {
+const Table: React.FC<ComponentProps> = ({
+    tabledata,
+    columns,
+    checkable = true,
+    isLoading = true,
+    tabTitle,
+}): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<string>('');
     const [selected, setSelected] = useState<readonly number[]>([]);
+
+    let emptyString = '';
+    switch (tabTitle) {
+        case 'nft':
+            emptyString = 'No NFTs removed';
+            break;
+        case 'admin':
+            emptyString = 'No Listed Admins';
+            break;
+        case 'moderator':
+            emptyString = 'No Listed Moderators';
+            break;
+        case 'banned':
+            emptyString = 'No Banned Users';
+            break;
+        case 'banner':
+            emptyString = 'No Listed Banners';
+            break;
+        default:
+            break;
+    }
 
     const rowsPerPageOptions: Array<TypeSelectItem> = [
         {
@@ -171,130 +200,144 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
 
     return (
         <Stack height="100%">
-            <TableContainer component={Paper} sx={{ height: '70%' }}>
-                <DataTable aria-label="custom pagination table">
-                    <EnhancedTableHead
-                        numSelected={selected.length}
-                        order={order}
-                        orderBy={orderBy}
-                        onSelectAllClick={handleSelectAllClick}
-                        onRequestSort={handleRequestSort}
-                        rowCount={tabledata.length}
-                        columns={columns}
-                        checkable={checkable}
-                    />
-                    <TableBody>
-                        {!isLoading &&
-                            stableSort(tabledata, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(row.id);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
+            {isLoading ? (
+                <Skeleton variant="rectangular" animation="wave" width="100%" height="70%" sx={{ bgcolor: '#E8F4FF' }} />
+            ) : (
+                <>
+                    <TableContainer component={Paper} sx={{ height: '70%' }}>
+                        <DataTable aria-label="custom pagination table">
+                            <EnhancedTableHead
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={handleSelectAllClick}
+                                onRequestSort={handleRequestSort}
+                                rowCount={tabledata.length}
+                                columns={columns}
+                                checkable={checkable}
+                            />
+                            <TableBody>
+                                {tabledata.length === 0 && (
+                                    <Typography fontSize={16} fontWeight={400} ml={2} mt={2} width="100%">
+                                        {emptyString}
+                                    </Typography>
+                                )}
+                                {!isLoading &&
+                                    stableSort(tabledata, getComparator(order, orderBy))
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((row, index) => {
+                                            const isItemSelected = isSelected(row.id);
+                                            const labelId = `enhanced-table-checkbox-${index}`;
 
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) => handleClick(event, row.id)}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            key={row.id}
-                                            selected={isItemSelected}
-                                        >
-                                            {checkable && (
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={isItemSelected}
-                                                        inputProps={{
-                                                            'aria-labelledby': labelId,
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                            )}
-                                            {columns.map((column, index) => (
-                                                <TableCell
-                                                    key={`table-cell-${index}`}
-                                                    sx={{ fontSize: 16, fontWeight: 400 }}
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    onClick={(event) => handleClick(event, row.id)}
+                                                    role="checkbox"
+                                                    aria-checked={isItemSelected}
+                                                    key={row.id}
+                                                    selected={isItemSelected}
                                                 >
-                                                    {column.cell
-                                                        ? column.cell({ value: (row as any)[column.id], data: row })
-                                                        : (row as any)[column.id]}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    );
-                                })}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </DataTable>
-            </TableContainer>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={2}>
-                <Stack direction="row" alignItems="center" spacing={2}>
-                    <Box width={200}>
-                        <Select
-                            options={rowsPerPageOptions}
-                            selected={rowsPerPage}
-                            handleClick={handleRowsPerPageChange}
-                        />
-                    </Box>
-                    <Typography fontSize={14} fontWeight={400}>{`Tot.${tabledata.length}`}</Typography>
-                </Stack>
-                <Stack direction="row" alignItems="center" spacing={1}>
-                    <IconButton
-                        onClick={() => {
-                            setCurPage(curPaginationFirstPage - 1);
-                        }}
-                    >
-                        <Icon icon="ph:caret-left-bold" color="#1890FF" />
-                    </IconButton>
-                    {[...Array(10).keys()].map((item, index) => {
-                        let pagenum = curPaginationFirstPage + item;
-                        let enable = pagenum < totalPages;
-                        let active = pagenum === page;
-                        return (
-                            <PageButton
-                                key={`page-button-${index}`}
-                                active={active ? 1 : 0}
+                                                    {checkable && (
+                                                        <TableCell padding="checkbox">
+                                                            <Checkbox
+                                                                color="primary"
+                                                                checked={isItemSelected}
+                                                                inputProps={{
+                                                                    'aria-labelledby': labelId,
+                                                                }}
+                                                            />
+                                                        </TableCell>
+                                                    )}
+                                                    {columns.map((column, index) => (
+                                                        <TableCell
+                                                            key={`table-cell-${index}`}
+                                                            sx={{ fontSize: 16, fontWeight: 400 }}
+                                                        >
+                                                            {column.cell
+                                                                ? column.cell({
+                                                                      value: (row as any)[column.id],
+                                                                      data: row,
+                                                                  })
+                                                                : (row as any)[column.id]}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            );
+                                        })}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </DataTable>
+                    </TableContainer>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={2}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <Box width={200}>
+                                <Select
+                                    options={rowsPerPageOptions}
+                                    selected={rowsPerPage}
+                                    handleClick={handleRowsPerPageChange}
+                                />
+                            </Box>
+                            <Typography fontSize={14} fontWeight={400}>{`Tot.${tabledata.length}`}</Typography>
+                        </Stack>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <IconButton
                                 onClick={() => {
-                                    setCurPage(pagenum);
+                                    setCurPage(curPaginationFirstPage - 1);
                                 }}
-                                sx={{ display: enable ? 'auto' : 'none' }}
                             >
-                                {pagenum + 1}
-                            </PageButton>
-                        );
-                    })}
-                    <IconButton
-                        onClick={() => {
-                            setCurPage(curPaginationFirstPage + 10);
-                        }}
-                    >
-                        <Icon icon="ph:caret-right-bold" color="#1890FF" />
-                    </IconButton>
-                </Stack>
-                <Stack direction="row" alignItems="center" spacing={2}>
-                    <Typography fontSize={14} fontWeight={400}>
-                        page
-                    </Typography>
-                    <Typography
-                        fontSize={14}
-                        fontWeight={400}
-                        paddingX={2}
-                        paddingY={1}
-                        borderRadius={3}
-                        sx={{ background: '#F0F1F2' }}
-                    >
-                        {page + 1}
-                    </Typography>
-                    <Typography fontSize={14} fontWeight={400}>
-                        {`/ ${totalPages}`}
-                    </Typography>
-                </Stack>
-            </Stack>
+                                <Icon icon="ph:caret-left-bold" color="#1890FF" />
+                            </IconButton>
+                            {[...Array(10).keys()].map((item, index) => {
+                                let pagenum = curPaginationFirstPage + item;
+                                let enable = pagenum < totalPages;
+                                let active = pagenum === page;
+                                return (
+                                    <PageButton
+                                        key={`page-button-${index}`}
+                                        active={active ? 1 : 0}
+                                        onClick={() => {
+                                            setCurPage(pagenum);
+                                        }}
+                                        sx={{ display: enable ? 'auto' : 'none' }}
+                                    >
+                                        {pagenum + 1}
+                                    </PageButton>
+                                );
+                            })}
+                            <IconButton
+                                onClick={() => {
+                                    setCurPage(curPaginationFirstPage + 10);
+                                }}
+                            >
+                                <Icon icon="ph:caret-right-bold" color="#1890FF" />
+                            </IconButton>
+                        </Stack>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <Typography fontSize={14} fontWeight={400}>
+                                page
+                            </Typography>
+                            <Typography
+                                fontSize={14}
+                                fontWeight={400}
+                                paddingX={2}
+                                paddingY={1}
+                                borderRadius={3}
+                                sx={{ background: '#F0F1F2' }}
+                            >
+                                {page + 1}
+                            </Typography>
+                            <Typography fontSize={14} fontWeight={400}>
+                                {`/ ${totalPages}`}
+                            </Typography>
+                        </Stack>
+                    </Stack>
+                </>
+            )}
         </Stack>
     );
 };

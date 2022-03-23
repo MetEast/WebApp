@@ -138,7 +138,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                         {`New Banner`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading}  tabTitle='banner' />
             </Stack>
             <ModalDialog
                 open={showCreateBannerDlg}

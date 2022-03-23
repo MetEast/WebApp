@@ -130,7 +130,8 @@ export const getChartDateList = (date: Date, type: string) => {
         retDateList.push(today);
         retDateList.push(tomorrow);
     } else if (type === 'Weekly') {
-        let startDate = getMondayOfWeek(date);
+        let startDate = new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000);
+        // getMondayOfWeek(date);
         retDateList.push(new Date(startDate));
         let curDate = new Date(startDate);
         for (let i = 0; i < 6; i++) {
@@ -139,8 +140,10 @@ export const getChartDateList = (date: Date, type: string) => {
             curDate = new Date(nextDate);
         }
     } else if (type === 'Monthly') {
-        let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-        let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        // let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        // let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        let firstDay = new Date(date.getTime() - 30 * 24 * 60 * 60 * 1000);
+        let lastDay = date;
         retDateList.push(firstDay);
         let curDate = new Date(firstDay);
         while (curDate < lastDay) {

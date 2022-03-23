@@ -71,7 +71,12 @@ export const getWalletChainId = async (library: any) => {
 export const getWalletAccounts = async (library: any) => {
     if (!library) return [];
     const walletConnectWeb3 = new Web3(library.provider as any);
-    return await walletConnectWeb3.eth.getAccounts();
+    const walletAddresses = await walletConnectWeb3.eth.getAccounts();
+    const checkSumAddresses: string[] = [];
+    walletAddresses.forEach((address: string) => {
+        checkSumAddresses.push(walletConnectWeb3.utils.toChecksumAddress(address));
+    });
+    return checkSumAddresses;
 };
 
 export const getWalletBalance = async (library: any, account: string) => {

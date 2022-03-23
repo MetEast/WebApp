@@ -4,13 +4,13 @@ import { Stack, Grid, Typography, Skeleton } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
-import Select from 'src/components/Select';
-import { TypeSelectItem } from 'src/types/select-types';
-import { SelectTitleBtn } from './styles';
-import { Icon } from '@iconify/react';
+// import Select from 'src/components/Select';
+// import { TypeSelectItem } from 'src/types/select-types';
+// import { SelectTitleBtn } from './styles';
+// import { Icon } from '@iconify/react';
 import { TypeNFTTransaction } from 'src/types/product-types';
 import { useDialogContext } from 'src/context/DialogContext';
-import { viewAllDlgSortOptions } from 'src/constants/select-constants';
+// import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestTxs } from 'src/services/fetch';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import Username from 'src/components/Username';
@@ -22,17 +22,17 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [loadingData, setLoadingData] = useState(true);
     const [allTxsList, setAllTxsList] = useState<Array<TypeNFTTransaction>>([]);
-    const [sortby, setSortby] = React.useState<TypeSelectItem>();
-    const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
-    const handleSortbyChange = (value: string) => {
-        const item = viewAllDlgSortOptions.find((option) => option.value === value);
-        setSortby(item);
-    };
+    // const [sortby, setSortby] = React.useState<TypeSelectItem>();
+    // const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
+    // const handleSortbyChange = (value: string) => {
+    //     const item = viewAllDlgSortOptions.find((option) => option.value === value);
+    //     setSortby(item);
+    // };
 
     useEffect(() => {
         let unmounted = false;
         const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 1000, sortby?.value);
+            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 1000, ''); // sort?.value
             if (!unmounted) {
                 setAllTxsList(_NFTTxs.txs);
             }
@@ -42,7 +42,7 @@ const AllTransactions: React.FC<ComponentProps> = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [params.id, sortby]);
+    }, [params.id]); // sort
 
     return (
         <Stack

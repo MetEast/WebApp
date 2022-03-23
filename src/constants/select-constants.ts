@@ -35,10 +35,10 @@ export const sortOptions: Array<TypeSelectItem> = [
         label: 'Oldest',
         value: enmSortOptionValues.oldest,
     },
-    {
-        label: 'Ending Soon',
-        value: enmSortOptionValues.ending_soon,
-    },
+    // {
+    //     label: 'Ending Soon',
+    //     value: enmSortOptionValues.ending_soon,
+    // },
 ];
 
 export const mintNFTCategoryOptions: Array<TypeSelectItem> = [

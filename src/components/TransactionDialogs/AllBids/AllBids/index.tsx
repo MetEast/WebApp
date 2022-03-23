@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
-import { TypeSelectItem } from 'src/types/select-types';
+// import { TypeSelectItem } from 'src/types/select-types';
 import { SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
-import Select from 'src/components/Select';
-import { SelectTitleBtn } from './styles';
-import { Icon } from '@iconify/react';
+// import Select from 'src/components/Select';
+// import { SelectTitleBtn } from './styles';
+// import { Icon } from '@iconify/react';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeSingleNFTBid } from 'src/types/product-types';
-import { viewAllDlgSortOptions } from 'src/constants/select-constants';
+// import { viewAllDlgSortOptions } from 'src/constants/select-constants';
 import { getNFTLatestBids } from 'src/services/fetch';
 import { useParams } from 'react-router-dom';
 import Username from 'src/components/Username';
@@ -23,12 +23,12 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [sortby, setSortby] = useState<TypeSelectItem>();
-    const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
-    const handleSortbyChange = (value: string) => {
-        const item = viewAllDlgSortOptions.find((option) => option.value === value);
-        setSortby(item);
-    };
+    // const [sortby, setSortby] = useState<TypeSelectItem>();
+    // const [sortBySelectOpen, isSortBySelectOpen] = useState(false);
+    // const handleSortbyChange = (value: string) => {
+    //     const item = viewAllDlgSortOptions.find((option) => option.value === value);
+    //     setSortby(item);
+    // };
 
     useEffect(() => {
         let unmounted = false;
@@ -38,7 +38,8 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 signInDlgState.walletAccounts[0],
                 1,
                 1000,
-                sortby?.value,
+                '',
+                // sortby?.value,
             );
             if (!unmounted) {
                 setBidsList(_NFTBids.others);
@@ -49,13 +50,13 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts, params.id, sortby]);
+    }, [signInDlgState.walletAccounts, params.id]); // sortby
 
     return (
         <Stack spacing={5} width={520}>
             <Stack direction="row" justifyContent="space-between">
                 <DialogTitleTypo>All Bids</DialogTitleTypo>
-                <Select
+                {/* <Select
                     titlebox={
                         <SelectTitleBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
                             <Icon icon="ph:sort-ascending" fontSize={20} />
@@ -69,7 +70,7 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     setIsOpen={isSortBySelectOpen}
                     handleClick={handleSortbyChange}
                     width={160}
-                />
+                /> */}
             </Stack>
             <Stack spacing={3}>
                 {signInDlgState.isLoggedIn && myBidsList.length !== 0 && (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Box, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';

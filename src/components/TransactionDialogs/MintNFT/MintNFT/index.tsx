@@ -215,8 +215,8 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 setTitleError(title === '');
                                 setIntroductionError(introduction === '');
                                 setRoyaltiesError(isNaN(royalties) || royalties < 0 || royalties > 30);
-                                setCategoryError(category === undefined);
-                                setMintFileError(mintFile === undefined);
+                                setCategoryError(category.label === '' && category.value === '');
+                                setMintFileError(stateFile === null);
                             }
                         }}
                     >

@@ -92,7 +92,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
 
     const [chartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
-    const [productPriceList, setProductPriceList] = useState<Array<TypePriceHistoryFetch>>([]);
     const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(
         priceHistoryUnitSelectOptions[1],
     );
@@ -110,7 +109,20 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             .then((response) => {
                 response.json().then((jsonPriceList) => {
                     if (!unmounted) {
-                        setProductPriceList(jsonPriceList.data);
+                        const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
+                        const getPriceValue = (value: string) => {
+                            const nItem = productPriceList.findIndex((option) => option.onlyDate.startsWith(value));
+                            return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
+                        };
+                        const _latestPriceList: Array<TypeChartAxis> = [];
+                        let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
+                        for (let i = 0; i < _dateList.length; i++) {
+                            _latestPriceList.push({
+                                x: getTime((_dateList[i].getTime() / 1000).toString()).date,
+                                y: getPriceValue(getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')),
+                            });
+                        }
+                        setChartSeries([{ data: _latestPriceList }]);
                     }
                 });
             })
@@ -121,22 +133,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             unmounted = true;
         };
     }, [priceHistoryUnit, params.id]);
-
-    useEffect(() => {
-        const getPriceValue = (value: string) => {
-            const nItem = productPriceList.findIndex((option) => option.onlyDate.startsWith(value));
-            return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
-        };
-        let _latestPriceList: Array<TypeChartAxis> = [];
-        let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
-        for (let i = 0; i < _dateList.length; i++) {
-            _latestPriceList.push({
-                x: getTime((_dateList[i].getTime() / 1000).toString()).date,
-                y: getPriceValue(getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')),
-            });
-        }
-        setChartSeries([{ data: _latestPriceList }]);
-    }, [productPriceList, priceHistoryUnit]);
 
     return (
         <Stack spacing={2}>
