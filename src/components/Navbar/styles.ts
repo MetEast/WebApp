@@ -1,5 +1,20 @@
 import { styled, Typography, Box } from '@mui/material';
 import { BaseButton } from 'src/components/Buttons/styles';
+import { makeStyles } from '@mui/styles';
+
+export const useStyles = makeStyles((theme: any) => ({
+    container: {
+        '&::-webkit-scrollbar': {
+            width: 36,
+        },
+        '&::-webkit-scrollbar-thumb': {
+            border: '14px solid rgba(0, 0, 0, 0)',
+            backgroundClip: 'padding-box',
+            borderRadius: '9999px',
+            backgroundColor: '#AAAAAA',
+        },
+    },
+}));
 
 export const NotificationTypo = styled(Typography)`
     display: flex;
@@ -32,9 +47,12 @@ export const NotificationsBoxContainer = styled(Box)<{ show: boolean }>`
     top: 40px;
     right: 0;
     max-height: 70vh;
-    padding-top: 8px;
+    padding-top: 16px;
     overflow-y: auto;
     overflow-x: hidden;
+    background: white;
+    border-radius: 32px;
+    box-shadow: 0px 4px 40px -26px rgba(0, 20, 39, 0.8);
     ${(props) => props.theme.breakpoints.down('sm')} {
         /* position: fixed;
         width: 100vw;
