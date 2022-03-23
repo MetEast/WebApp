@@ -153,7 +153,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                         {`Search`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading}  tabTitle='moderator' />
             </Stack>
             <ModalDialog
                 open={showModeratorsDlg}

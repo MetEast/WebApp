@@ -97,7 +97,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
                 <Typography fontSize={42} fontWeight={700}>
                     ADMINS
                 </Typography>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} tabTitle='admin' />
             </Stack>
         </>
     );

@@ -87,15 +87,26 @@ interface ComponentProps {
     columns: AdminTableColumn[];
     checkable?: boolean;
     isLoading?: boolean;
+    tabTitle?: string;
 }
 
-const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true, isLoading = true }): JSX.Element => {
+const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true, isLoading = true, tabTitle }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<string>('');
     const [selected, setSelected] = useState<readonly number[]>([]);
+
+    let emptyString = '';
+    switch (tabTitle) {
+        case 'nft': emptyString = 'No NFTs removed'; break;
+        case 'admin': emptyString = 'No Listed Admins'; break;
+        case 'moderator': emptyString = 'No Listed Moderators'; break;
+        case 'banned': emptyString = 'No Banned Users'; break;
+        case 'banner': emptyString = 'No Listed Banners'; break;
+        default: break;
+    };
 
     const rowsPerPageOptions: Array<TypeSelectItem> = [
         {
@@ -184,6 +195,7 @@ const Table: React.FC<ComponentProps> = ({ tabledata, columns, checkable = true,
                         checkable={checkable}
                     />
                     <TableBody>
+                        {tabledata.length === 0 && <Typography fontSize={16} fontWeight={400} ml={2} mt={2} width="100%">{emptyString}</Typography>}
                         {!isLoading &&
                             stableSort(tabledata, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
