@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DismissCircle24Filled } from '@fluentui/react-icons';
-import { Box, Grid, Typography, Stack } from '@mui/material';
+import { Box, Grid, Typography, Stack, Skeleton } from '@mui/material';
 import { useSignInContext } from 'src/context/SignInContext';
 import MyNFTGalleryItem from 'src/components/MyNFTGalleryItem';
 import OptionsBar from 'src/components/OptionsBar';
@@ -482,6 +482,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 <FilterButton
                                     key={`filter-button-${index}`}
                                     selected={items.label === nftGalleryFilterBtnSelected}
+                                    loading={isLoadingAssets[index]}
                                     onClick={() => {
                                         setNftGalleryFilterBtnSelected(items.label);
                                         setLoadingState(index, true);
@@ -494,7 +495,24 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     }}
                                 >
                                     {items.label}
-                                    <p>{myNFTList[index].length}</p>
+                                    <Stack className="itemcount__box">
+                                        {isLoadingAssets[index] ? (
+                                            <Skeleton
+                                                variant="rectangular"
+                                                animation="wave"
+                                                width="100%"
+                                                height="100%"
+                                                sx={{
+                                                    bgcolor:
+                                                        items.label === nftGalleryFilterBtnSelected
+                                                            ? '#C8D4DF'
+                                                            : '#E8F4FF',
+                                                }}
+                                            />
+                                        ) : (
+                                            <p>{myNFTList[index].length}</p>
+                                        )}
+                                    </Stack>
                                 </FilterButton>
                             ))}
                         </Stack>
