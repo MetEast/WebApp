@@ -248,6 +248,19 @@ const ProfilePage: React.FC = (): JSX.Element => {
         }
     };
 
+    const onBannerBtnClick = () => {
+        if (keyWord === '') {
+            setDialogState({
+                ...dialogState,
+                createNFTDlgOpened: true,
+                createNFTDlgStep: 0,
+            });
+        } else {
+            setEmptyKeyword(emptyKeyword + 1);
+            handleKeyWordChange('');
+        }
+    };
+
     useEffect(() => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) setReload(!reload);
     }, [nftGalleryFilterBtnSelected]);
@@ -472,7 +485,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     onClick={() => {
                                         setNftGalleryFilterBtnSelected(items.label);
                                         setLoadingState(index, true);
-                                        setMyNFTData(index, [blankMyNFTItem, blankMyNFTItem, blankMyNFTItem, blankMyNFTItem]);
+                                        setMyNFTData(index, [
+                                            blankMyNFTItem,
+                                            blankMyNFTItem,
+                                            blankMyNFTItem,
+                                            blankMyNFTItem,
+                                        ]);
                                     }}
                                 >
                                     {items.label}
@@ -506,13 +524,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 )}
                 {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
                     <LooksEmptyBox
-                        bannerTitle="No Products Found For This Search"
-                        buttonLabel="Back to all Items"
+                        bannerTitle={keyWord === '' ? 'Looks Empty Here' : 'No Products Found For This Search'}
+                        buttonLabel={keyWord === '' ? 'GET YOUR FIRST NFT' : 'Back to all Items'}
                         sx={{ marginTop: 6 }}
-                        onBannerBtnClick={() => {
-                            setEmptyKeyword(emptyKeyword + 1);
-                            handleKeyWordChange('');
-                        }}
+                        onBannerBtnClick={onBannerBtnClick}
                     />
                 )}
                 <Grid container mt={{ xs: 2, md: 4 }} columnSpacing={4} rowGap={{ xs: 2, md: 4 }}>
