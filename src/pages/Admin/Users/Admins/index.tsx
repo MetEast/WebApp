@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Box, Typography, Skeleton } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';
@@ -10,7 +10,6 @@ import { useSignInContext } from 'src/context/SignInContext';
 
 const AdminUserAdmins: React.FC = (): JSX.Element => {
     const statusValues = [{ label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' }];
-
     const columns: AdminTableColumn[] = [
         {
             id: 'address',
@@ -21,7 +20,11 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
         {
             id: 'username',
             label: 'Username',
-            cell: (props) => <Typography fontSize={16}>{props.value.length > 10 ? reduceHexAddress(props.value, 4) : props.value}</Typography>,
+            cell: (props) => (
+                <Typography fontSize={16}>
+                    {props.value.length > 10 ? reduceHexAddress(props.value, 4) : props.value}
+                </Typography>
+            ),
             width: 80,
         },
         {
@@ -68,14 +71,14 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
 
     const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
             const _adminUserList = await getAdminUserList(
-                '', 
+                '',
                 getAdminSearchParams(undefined, undefined),
                 signInDlgState.walletAccounts[0],
                 0,
@@ -97,7 +100,13 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
                 <Typography fontSize={42} fontWeight={700}>
                     ADMINS
                 </Typography>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} tabTitle='admin' />
+                <Table
+                    tabledata={tabledata}
+                    columns={columns}
+                    checkable={false}
+                    isLoading={isLoading}
+                    tabTitle="admin"
+                />
             </Stack>
         </>
     );
