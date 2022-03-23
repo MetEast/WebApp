@@ -218,7 +218,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                             const user: UserTokenType = jwtDecode(token);
                             console.log('Sign in with EE: setting user to:', user);
-                            console.log(did);
                             _setSignInState((prevState: SignInState) => {
                                 const _state = { ...prevState };
                                 _state.isLoggedIn = true;
@@ -531,7 +530,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    // console.log('--------accounts: ', signInDlgState);
+    console.log('--------accounts: ', signInDlgState);
 
     return (
         <>
