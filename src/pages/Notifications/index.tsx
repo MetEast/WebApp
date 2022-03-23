@@ -4,6 +4,7 @@ import NotificationsBox from 'src/components/NotificationsBox';
 import { useSignInContext } from 'src/context/SignInContext';
 import { getNotificationList } from 'src/services/fetch';
 import { useNotificationContext } from 'src/context/NotificationContext';
+import { dummyNotificationList } from 'src/constants/dummyData';
 
 const NotificationsPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -25,7 +26,11 @@ const NotificationsPage: React.FC = (): JSX.Element => {
 
     return (
         <Stack direction="column">
-            <NotificationsBox notificationsList={notificationState.notesList} onClose={() => {}} />
+            <NotificationsBox
+                notificationsList={notificationState.notesList}
+                // notificationsList={dummyNotificationList} // test data
+                onClose={() => {}}
+            />
         </Stack>
     );
 };
