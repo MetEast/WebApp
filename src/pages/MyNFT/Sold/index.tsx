@@ -164,13 +164,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                         </>
                     ) : (
                         <>
-                            <Typography
-                                fontSize={56}
-                                fontWeight={700}
-                                lineHeight={1}
-                                sx={{ textTransform: 'capitalize' }}
-                            >
-                                Sculpting with the Heart
+                            <Typography fontSize={56} fontWeight={700} lineHeight={1}>
+                                {productDetail.name}
                             </Typography>
                             <ProductSnippets
                                 nickname={productDetail.author}
