@@ -72,11 +72,13 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             await activate(currentConnector);
         }
         const retAddress = await currentConnector?.getAccount();
-        if (retAddress !== undefined && retAddress !== null) {
+        const injectedWeb3 = new Web3(currentConnector.getProvider());
+        const checkSumAddress = injectedWeb3.utils.toChecksumAddress(retAddress);
+        if (checkSumAddress) {
             let unmounted = false;
             const reqBody = {
                 isMetaMask: 1,
-                did: retAddress,
+                did: checkSumAddress,
                 name: '',
                 avatar: '',
                 description: '',
@@ -108,7 +110,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 _state.isLoggedIn = true;
                                 _state.loginType = '2';
                                 _state.signInDlgOpened = false;
-                                _state.walletAccounts = [retAddress];
+                                _state.walletAccounts = [checkSumAddress];
                                 _state.token = token;
                                 _state.userDid = user.did;
                                 if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
