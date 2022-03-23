@@ -373,11 +373,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                         textAlign="center"
                                         lineHeight={1.1}
                                     >
-                                        {signInDlgState.userName === ''
-                                            ? reduceHexAddress(signInDlgState.walletAccounts[0], 4)
-                                            : signInDlgState.userName.length > 40
-                                            ? reduceUserName(signInDlgState.userName, 4)
-                                            : signInDlgState.userName}
+                                        {signInDlgState.userName
+                                            ? signInDlgState.userName.length > 40
+                                                ? reduceUserName(signInDlgState.userName, 4)
+                                                : signInDlgState.userName
+                                            : reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
                                     </Typography>
                                     <SecondaryButton
                                         sx={{
