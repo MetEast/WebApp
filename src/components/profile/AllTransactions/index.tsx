@@ -14,6 +14,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { getNFTLatestTxs } from 'src/services/fetch';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import Username from 'src/components/Username';
+import { nftTransactions } from 'src/constants/dummyData'; // test data
 
 export interface ComponentProps {}
 

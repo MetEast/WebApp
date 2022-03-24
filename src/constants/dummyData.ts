@@ -1,4 +1,4 @@
-import { TypeProduct, enumBlindBoxNFTType } from 'src/types/product-types';
+import { TypeProduct, TypeNFTTransaction, enumBlindBoxNFTType, enumTransactionType } from 'src/types/product-types';
 import { TypeNotification } from 'src/types/notification-types';
 import { TypeYourEarning } from 'src/types/product-types';
 import { enumBadgeType } from 'src/types/product-types';
@@ -81,6 +81,79 @@ export const dummyNotificationList: Array<TypeNotification> = [
         content: 'Your CryptoGirl#19 project has just been bid by a VKWR909981 user for E 100.00',
         date: '2021-09-03',
         isRead: true,
+    },
+];
+
+export const nftTransactions: Array<TypeNFTTransaction> = [
+    {
+        type: enumTransactionType.Bid,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.OnAuction,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.SoldTo,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.ForSale,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.CreatedBy,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.Bid,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.OnAuction,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.SoldTo,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.ForSale,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.CreatedBy,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
     },
 ];
 

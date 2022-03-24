@@ -18,19 +18,21 @@ const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Elem
     const classes = useStyles();
 
     return (
-        <Stack spacing={5} width={{ xs: 360, md: 520 }}>
+        <Stack
+            spacing={5}
+            width={{ xs: '100%', md: 520 }}
+            height={{ xs: '90vh', sm: 'auto' }}
+            maxHeight={{ sm: '70vh' }}
+            sx={{
+                overflowY: 'auto',
+                overflowX: 'hidden',
+            }}
+            className={classes.earnings_list__container}
+        >
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Your Earnings</DialogTitleTypo>
             </Stack>
-            <Stack
-                spacing={3}
-                maxHeight={{ xs: 400, md: '50vh' }}
-                sx={{
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                }}
-                className={classes.earnings_list__container}
-            >
+            <Stack spacing={3} marginBottom="auto !important">
                 {earnings.length === 0 ? (
                     <LooksEmptyBox bannerTitle="Looks Empty Here" />
                 ) : (
