@@ -52,6 +52,7 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         };
     }, [signInDlgState.walletAccounts, params.id]); // sortby
 
+    console.log(myBidsList)
     return (
         <Stack spacing={5} width={520}>
             <Stack direction="row" justifyContent="space-between">
