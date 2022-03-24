@@ -1077,7 +1077,7 @@ export const getAdminBannerList = async () => {
         _AdminBanner.url =
             itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image;
         _AdminBanner.sort = itemObject.sort;
-        _AdminBanner.location = itemObject.location === 1 ? 'home' : itemObject.location === 2 ? 'explore' : 'blindbox';
+        _AdminBanner.location = itemObject.location === '1' ? 'home' : itemObject.location === '2' ? 'explore' : 'blindbox';
         _AdminBanner.status = itemObject.status === 0 ? 'offline' : 'online';
         const createdTime =
             itemObject.createTime === '' || itemObject.createTime === undefined

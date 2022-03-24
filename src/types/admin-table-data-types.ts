@@ -116,7 +116,7 @@ export type AdminBannersItemFetchType = {
     _id: number;
     image: string;
     sort: number;
-    location: number;
+    location: string;
     status: number;
     createTime: string;
 };
