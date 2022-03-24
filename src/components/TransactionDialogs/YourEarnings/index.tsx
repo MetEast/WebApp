@@ -6,6 +6,8 @@ import ELAPrice from 'src/components/ELAPrice';
 import ProductBadge from 'src/components/ProductBadge';
 import { TypeYourEarning } from 'src/types/product-types';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import { dummyEarningsList } from 'src/constants/dummyData'; // test data
+import { useStyles } from './styles';
 
 export interface ComponentProps {
     earnings: Array<TypeYourEarning>;
@@ -13,12 +15,22 @@ export interface ComponentProps {
 }
 
 const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Element => {
+    const classes = useStyles();
+
     return (
         <Stack spacing={5} width={{ xs: 360, md: 520 }}>
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Your Earnings</DialogTitleTypo>
             </Stack>
-            <Stack spacing={3} maxHeight={{ xs: 400, md: '100%' }} sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
+            <Stack
+                spacing={3}
+                maxHeight={{ xs: 400, md: '50vh' }}
+                sx={{
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                }}
+                className={classes.earnings_list__container}
+            >
                 {earnings.length === 0 ? (
                     <LooksEmptyBox bannerTitle="Looks Empty Here" />
                 ) : (
@@ -35,7 +47,7 @@ const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Elem
                                         src={item.avatar}
                                         width={40}
                                         height={40}
-                                        style={{ borderRadius: '100px' }}
+                                        style={{ borderRadius: '100px', objectFit: 'cover' }}
                                         alt=""
                                     />
                                     <Box>
