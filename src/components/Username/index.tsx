@@ -22,7 +22,7 @@ const UsernameTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const Username: React.FC<ComponentProps> = ({ username, fontSize, fontWeight, maxLength = 16 }): JSX.Element => {
     let shortName = username;
-    if (username.length > maxLength) {
+    if (username && username.length > maxLength) {
         const len2 = Math.floor((maxLength - 3) / 2);
         const len1 = maxLength - 3 - len2;
         shortName = `${username.substring(0, len1)}...${username.substring(username.length - len2)}`;

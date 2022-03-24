@@ -146,7 +146,7 @@ export const getPageBannerList = async (location: number) => {
         FETCH_CONFIG_JSON,
     );
     const jsonPageBannerList = await resPageBannerList.json();
-    const arrPageBannerList = jsonPageBannerList.data === undefined ? [] : jsonPageBannerList.data;
+    const arrPageBannerList = jsonPageBannerList.data ? jsonPageBannerList.data : [];
     const _arrPageBannerList: Array<string> = [];
     for (let i = 0; i < arrPageBannerList.length; i++) {
         const itemObject: AdminBannersItemFetchType = arrPageBannerList[i];
@@ -164,7 +164,7 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
         FETCH_CONFIG_JSON,
     );
     const jsonNFTList = await resNFTList.json();
-    const arrNFTList = jsonNFTList.data === undefined ? [] : jsonNFTList.data.result;
+    const arrNFTList = jsonNFTList.data ? jsonNFTList.data.result : [];
 
     const _arrNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrNFTList.length; i++) {
@@ -175,8 +175,7 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
         _NFT.image = getImageFromAsset(itemObject.asset);
         _NFT.price_ela = itemObject.price / 1e18;
         _NFT.price_usd = _NFT.price_ela * ELA2USD;
-        _NFT.author =
-            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _NFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
         _NFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
         _NFT.likes = itemObject.likes;
         _NFT.views = itemObject.views;
@@ -275,8 +274,9 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
                 : enumBlindBoxNFTType.SaleEnds;
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
-        _BBItem.author =
-            itemObject.createdName === '' ? reduceHexAddress(itemObject.createdAddress, 4) : itemObject.createdName;
+        _BBItem.author = itemObject.createdName
+            ? itemObject.createdName
+            : reduceHexAddress(itemObject.createdAddress, 4);
         _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.isLike = loginState
             ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === did) === -1
@@ -323,13 +323,12 @@ export const getNFTItem = async (
                 ? false
                 : true;
         _NFTItem.description = itemObject.description;
-        _NFTItem.author =
-            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _NFTItem.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
         _NFTItem.authorDescription = itemObject.authorDescription || ' ';
-        _NFTItem.authorImg = itemObject.authorAvatar === null ? 'default' : getImageFromAsset(itemObject.authorAvatar);
+        _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject.holder;
-        _NFTItem.holderName = itemObject.holderName === '' ? itemObject.authorName : itemObject.holderName;
+        _NFTItem.holderName = itemObject.holderName ? itemObject.holderName : itemObject.authorName;
         _NFTItem.orderId = itemObject.orderId;
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -435,38 +434,38 @@ export const getNFTLatestTxs = async (
         switch (itemObject.event) {
             case 'Mint':
                 _NFTTx.type = enumTransactionType.CreatedBy;
-                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
                 break;
             case 'CreateOrderForSale':
                 _NFTTx.type = enumTransactionType.ForSale;
-                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
                 break;
             case 'CreateOrderForAuction':
                 _NFTTx.type = enumTransactionType.OnAuction;
-                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
                 break;
             case 'BidOrder':
                 _NFTTx.type = enumTransactionType.Bid;
-                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
                 break;
             case 'ChangeOrderPrice':
                 _NFTTx.type = enumTransactionType.PriceChanged;
-                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
                 break;
             case 'CancelOrder':
                 _NFTTx.type = enumTransactionType.SaleCanceled;
-                _NFTTx.user = itemObject.fromName === '' ? reduceHexAddress(itemObject.from, 4) : itemObject.fromName;
+                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
                 break;
             case 'BuyOrder':
                 _NFTTx.type = enumTransactionType.SoldTo;
-                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
                 break;
             // case 'Transfer':
             //     _NFTTx.type = enumTransactionType.Transfer;
             //     break;
             case 'SettleBidOrder':
                 _NFTTx.type = enumTransactionType.SettleBidOrder;
-                _NFTTx.user = itemObject.toName === '' ? reduceHexAddress(itemObject.to, 4) : itemObject.toName;
+                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
                 break;
         }
         _NFTTx.price = parseInt(itemObject.price) / 1e18;
@@ -482,12 +481,12 @@ export const getNFTLatestTxs = async (
             _NFTTxHistory.price = parseInt(itemObject.price) / 1e18;
             _NFTTxHistory.user =
                 _NFTTxHistory.type === 'Bought From'
-                    ? itemObject.fromName === ''
-                        ? reduceHexAddress(itemObject.from, 4)
-                        : itemObject.fromName
-                    : itemObject.toName === ''
-                    ? reduceHexAddress(itemObject.to, 4)
-                    : itemObject.toName;
+                    ? itemObject.fromName
+                        ? itemObject.fromName
+                        : reduceHexAddress(itemObject.from, 4)
+                    : itemObject.toName
+                    ? itemObject.toName
+                    : reduceHexAddress(itemObject.to, 4);
             const prodTransTimestamp = getTime(itemObject.timestamp.toString());
             _NFTTxHistory.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
             if (itemObject.event === 'BuyOrder')
@@ -536,8 +535,7 @@ export const getNFTLatestBids = async (
         for (let i = 0; i < arrNFTBids.others.length; i++) {
             const itemObject: TypeSingleNFTBidFetch = arrNFTBids.others[i];
             const _otherNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
-            _otherNFTBid.user =
-                itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
+            _otherNFTBid.user = itemObject.buyerName ? itemObject.buyerName : reduceHexAddress(itemObject.buyerAddr, 4);
             _otherNFTBid.price = parseFloat(itemObject.price) / 1e18;
             _otherNFTBid.orderId = itemObject.orderId;
             const timestamp = getTime(itemObject.timestamp);
@@ -551,8 +549,7 @@ export const getNFTLatestBids = async (
         for (let i = 0; i < arrNFTBids.yours.length; i++) {
             const itemObject: TypeSingleNFTBidFetch = arrNFTBids.yours[i];
             const _myNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
-            _myNFTBid.user =
-                itemObject.buyerName === '' ? reduceHexAddress(itemObject.buyerAddr, 4) : itemObject.buyerName;
+            _myNFTBid.user = itemObject.buyerName ? itemObject.buyerName : reduceHexAddress(itemObject.buyerAddr, 4);
             _myNFTBid.price = parseFloat(itemObject.price) / 1e18;
             _myNFTBid.orderId = itemObject.orderId;
             const timestamp = getTime(itemObject.timestamp);
@@ -591,7 +588,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.author = itemObject.createdName;
         _BBItem.royaltyOwner = itemObject.createdAddress;
         _BBItem.authorDescription = itemObject.createdDescription;
-        _BBItem.authorImg = itemObject.createdAvatar === null ? 'default' : getImageFromAsset(itemObject.createdAvatar);
+        _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default';
         _BBItem.isLike =
             itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
         _BBItem.description = itemObject.description;
@@ -666,8 +663,7 @@ export const getMyNFTItemList = async (
         _myNFT.image = getImageFromAsset(itemObject.asset);
         _myNFT.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
         _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
-        _myNFT.author =
-            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _myNFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
         _myNFT.types = [];
         if (nTabId === 0 || nTabId === 5) {
             // all & liked
@@ -836,14 +832,14 @@ export const getMyNFTItem = async (
                 ? false
                 : true;
         _MyNFTItem.description = itemObject.description;
-        _MyNFTItem.author =
-            itemObject.authorName === '' ? reduceHexAddress(itemObject.royaltyOwner, 4) : itemObject.authorName;
+        _MyNFTItem.author = itemObject.authorName
+            ? itemObject.authorName
+            : reduceHexAddress(itemObject.royaltyOwner, 4);
         _MyNFTItem.authorDescription = itemObject.authorDescription || ' ';
-        _MyNFTItem.authorImg =
-            itemObject.authorAvatar === null ? 'default' : getImageFromAsset(itemObject.authorAvatar);
+        _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
-            itemObject.holderName === '' || itemObject.holder === itemObject.royaltyOwner
+            !itemObject.holderName || itemObject.holder === itemObject.royaltyOwner
                 ? itemObject.authorName
                 : itemObject.holderName;
         _MyNFTItem.holder = itemObject.holder;
@@ -965,7 +961,7 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
     for (let i = 0; i < arrAdminNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrAdminNFTList[i];
         if (keyWord === '' && itemObject.status !== 'DELETED') continue;
-        else if (keyWord !== '' && itemObject.status === 'DELETED') continue; 
+        else if (keyWord !== '' && itemObject.status === 'DELETED') continue;
         const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
         _AdminNFT.id = i + 1;
         _AdminNFT.tokenId = itemObject.tokenId;
@@ -1006,8 +1002,7 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, add
         else if (status === 1) {
             if (keyWord === '' && parseInt(itemObject.role) !== 1) continue;
             else if (keyWord !== '' && parseInt(itemObject.role) !== 2) continue;
-        } 
-        else if (status === 2) {
+        } else if (status === 2) {
             if (keyWord === '' && parseInt(itemObject.role) !== 3) continue;
             else if (keyWord !== '' && parseInt(itemObject.role) !== 2) continue;
         }
@@ -1077,25 +1072,17 @@ export const getAdminBannerList = async () => {
         _AdminBanner.url =
             itemObject.image.split(':').length === 3 ? getImageFromAsset(itemObject.image) : itemObject.image;
         _AdminBanner.sort = itemObject.sort;
-        _AdminBanner.location = itemObject.location === '1' ? 'home' : itemObject.location === '2' ? 'explore' : 'blindbox';
+        _AdminBanner.location =
+            itemObject.location === '1' ? 'home' : itemObject.location === '2' ? 'explore' : 'blindbox';
         _AdminBanner.status = itemObject.status === 0 ? 'offline' : 'online';
-        const createdTime =
-            itemObject.createTime === '' || itemObject.createTime === undefined
-                ? { date: '', time: '' }
-                : getTime(itemObject.createTime);
+        const createdTime = itemObject.createTime ? getTime(itemObject.createTime) : { date: '', time: '' };
         _AdminBanner.created = createdTime.date + ' ' + createdTime.time;
         _arrAdminBannerList.push(_AdminBanner);
     }
     return _arrAdminBannerList;
 };
 
-export const addAdminBanner = (
-    token: string,
-    image: string,
-    location: number,
-    status: number,
-    sort: number,
-) =>
+export const addAdminBanner = (token: string, image: string, location: number, status: number, sort: number) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
         const reqBody = {
