@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -39,10 +39,17 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
+        setDialogState({
+            ...dialogState,
+            waitingConfirmDlgOpened: true,
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...dialogState,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
+            }, 120000),
+        });
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 2,
@@ -79,7 +86,6 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .finally(() => {
                 setOnProgress(false);
-                clearTimeout(timer);
             });
     };
 

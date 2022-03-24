@@ -32,10 +32,18 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleAcceptBid = () => {
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
+        setDialogState({
+            ...dialogState,
+            waitingConfirmDlgOpened: true,
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...dialogState,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
+            }, 120000),
+        });
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 2,
@@ -70,7 +78,6 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .finally(() => {
                 setOnProgress(false);
-                clearTimeout(timer);
             });
     };
 

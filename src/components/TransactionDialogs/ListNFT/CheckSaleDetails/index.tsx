@@ -40,10 +40,17 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
+        setDialogState({
+            ...dialogState,
+            waitingConfirmDlgOpened: true,
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...dialogState,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
+            }, 120000),
+        });
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
 
         walletConnectWeb3.eth.getBlock('latest').then((currentBlock: any) => {
@@ -126,7 +133,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 waitingConfirmDlgOpened: false,
                                 errorMessageDlgOpened: true,
                             });
-                        })
+                        });
                 })
                 .catch((error) => {
                     enqueueSnackbar(`Set approval error: ${error}!`, {
@@ -142,7 +149,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 })
                 .finally(() => {
                     setOnProgress(false);
-                    clearTimeout(timer);
                 });
         });
     };

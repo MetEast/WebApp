@@ -44,10 +44,18 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
             return;
         }
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
+        setDialogState({
+            ...dialogState,
+            waitingConfirmDlgOpened: true,
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...dialogState,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
+            }, 120000),
+        });
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 2,
@@ -80,7 +88,6 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
             })
             .finally(() => {
                 setOnProgress(false);
-                clearTimeout(timer);
             });
     };
 
@@ -102,7 +109,12 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
                 inputValue={token2Remove.nft_creator}
                 disabled
             />
-            <CustomTextField title="TOKEN ID" placeholder="TOKEN ID" inputValue={reduceHexAddress(token2Remove.token_id, 20)} disabled />
+            <CustomTextField
+                title="TOKEN ID"
+                placeholder="TOKEN ID"
+                inputValue={reduceHexAddress(token2Remove.token_id, 20)}
+                disabled
+            />
             <Stack direction="row" spacing={2}>
                 <SecondaryButton fullWidth onClick={onClose}>
                     close
