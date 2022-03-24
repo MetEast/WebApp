@@ -80,9 +80,9 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 return;
             }
             setOnProgress(true);
-            setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
+            setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 20 });
             const timer = setTimeout(() => {
-                setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
+                setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false, progressBar: 0 });
             }, 120000);
 
             callContractMethod(walletConnectWeb3, {
@@ -100,6 +100,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
                         });
                     }
+                    setDialogState({ ...dialogState, progressBar: 40 });
                     const _quoteToken = '0x0000000000000000000000000000000000000000';
                     const _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
                     const _inQuoteTokens: string[] = Array(_inTokenIds.length);
@@ -123,6 +124,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 variant: 'success',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
+                            setDialogState({ ...dialogState, progressBar: 60 });
                             resolve(txHash);
                         })
                         .catch((error) => {
@@ -135,6 +137,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 createBlindBoxDlgOpened: false,
                                 waitingConfirmDlgOpened: false,
                                 errorMessageDlgOpened: true,
+                                progressBar: 0,
                             });
                             reject('createOrderForSaleBatchError');
                         });
@@ -149,6 +152,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         createBlindBoxDlgOpened: false,
                         waitingConfirmDlgOpened: false,
                         errorMessageDlgOpened: true,
+                        progressBar: 0,
                     });
                     reject('setApprovalError');
                 })
@@ -166,6 +170,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 return uploadImage2Ipfs(dialogState.crtBlindImage);
             })
             .then((added: any) => {
+                setDialogState({ ...dialogState, progressBar: 80 });
                 const imgUri = `meteast:image:${added.path}`;
                 return uploadCreatedBlindBoxInfo(imgUri);
             })
@@ -181,6 +186,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         createBlindBoxDlgStep: 2,
                         crtBlindTxHash: transactionHash,
                         waitingConfirmDlgOpened: false,
+                        progressBar: 100,
                     });
                 } else {
                     enqueueSnackbar(`Create Mystery Box error!`, {

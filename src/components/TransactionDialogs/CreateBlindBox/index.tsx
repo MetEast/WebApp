@@ -14,7 +14,7 @@ const CreateBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
             <ModalDialog
                 open={dialogState.createBlindBoxDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, createBlindBoxDlgOpened: false });
+                    setDialogState({ ...dialogState, createBlindBoxDlgOpened: false, progressBar: 0 });
                 }}
             >
                 {dialogState.createBlindBoxDlgStep === 0 && <CreateBlindBox />}
