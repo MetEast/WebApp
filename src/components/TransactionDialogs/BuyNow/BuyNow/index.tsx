@@ -32,15 +32,20 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleBuyNow = () => {
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 50 });
-        const timer = setTimeout(() => {
-            setDialogState({
-                ...dialogState,
-                errorMessageDlgOpened: true,
-                waitingConfirmDlgOpened: false,
-                progressBar: 0,
-            });
-        }, 120000);
+        setDialogState({
+            ...dialogState,
+            waitingConfirmDlgOpened: true,
+            progressBar: 50,
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...dialogState,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                    progressBar: 0,
+                });
+            }, 120000),
+        });
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 2,
@@ -77,7 +82,6 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .finally(() => {
                 setOnProgress(false);
-                clearTimeout(timer);
             });
     };
 

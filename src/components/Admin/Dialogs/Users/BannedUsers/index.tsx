@@ -39,7 +39,6 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
 
-
     const handleUpdateUserRole = (methodName: string, state: boolean) => {
         if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
@@ -50,10 +49,20 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
         }
         let role = -1;
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 10 });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false, progressBar: 0 });
-        }, 120000);
+        setDialogState({
+            ...dialogState,
+            waitingConfirmDlgOpened: true,
+            progressBar: 10,
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...dialogState,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                    progressBar: 0,
+                });
+            }, 120000),
+        });
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 1,
@@ -113,7 +122,6 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
             })
             .finally(() => {
                 setOnProgress(false);
-                clearTimeout(timer);
                 onClose();
             });
     };
@@ -130,14 +138,38 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                     <img src={user2Edit.avatar} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
                 )}
             </Box>
-            <CustomTextField title="USEN NICKNAME" placeholder="JOHN" inputValue={user2Edit.username.length > 10 ? reduceHexAddress(user2Edit.username, 4) : user2Edit.username} disabled />
-            <CustomTextField title="USER ADDRESS" placeholder="0xcd681b9edcb...4e4ad5e58688168500c346" inputValue={reduceHexAddress(user2Edit.address, 15)} disabled />
-            <CustomTextField title="REMARKS" placeholder="Enter remarks" inputValue={remarks} multiline rows={3} changeHandler={(value: string) => setRemarks(value)} />
+            <CustomTextField
+                title="USEN NICKNAME"
+                placeholder="JOHN"
+                inputValue={
+                    user2Edit.username.length > 10 ? reduceHexAddress(user2Edit.username, 4) : user2Edit.username
+                }
+                disabled
+            />
+            <CustomTextField
+                title="USER ADDRESS"
+                placeholder="0xcd681b9edcb...4e4ad5e58688168500c346"
+                inputValue={reduceHexAddress(user2Edit.address, 15)}
+                disabled
+            />
+            <CustomTextField
+                title="REMARKS"
+                placeholder="Enter remarks"
+                inputValue={remarks}
+                multiline
+                rows={3}
+                changeHandler={(value: string) => setRemarks(value)}
+            />
             <Stack direction="row" spacing={2}>
                 <PrimaryButton btn_color="primary" fullWidth onClick={onClose}>
                     close
                 </PrimaryButton>
-                <PrimaryButton btn_color="pink" fullWidth disabled={onProgress} onClick={() => handleUpdateUserRole('setBlacklist', user2Edit.status === 0 ? true : false)}>
+                <PrimaryButton
+                    btn_color="pink"
+                    fullWidth
+                    disabled={onProgress}
+                    onClick={() => handleUpdateUserRole('setBlacklist', user2Edit.status === 0 ? true : false)}
+                >
                     confirm
                 </PrimaryButton>
             </Stack>

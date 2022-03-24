@@ -46,9 +46,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
             }, 120000),
         });
-        // const timer = setTimeout(() => {
-        //     setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        // }, 120000);
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 1,
@@ -90,7 +87,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .finally(() => {
-                if(dialogState.waitingConfirmDlgTimer) clearTimeout(dialogState.waitingConfirmDlgTimer);
+                if (dialogState.waitingConfirmDlgTimer) clearTimeout(dialogState.waitingConfirmDlgTimer);
             });
     };
 

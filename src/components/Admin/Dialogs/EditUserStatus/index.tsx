@@ -37,7 +37,13 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
     );
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [userStatus, setUserStatus] = useState<'user' | 'admin' | 'ban' | 'moderator'>(
-        user2Edit.status === 0 ? 'admin' : (user2Edit.status === 1 ? 'moderator' : (user2Edit.status === 2 ? 'user' : 'ban')),
+        user2Edit.status === 0
+            ? 'admin'
+            : user2Edit.status === 1
+            ? 'moderator'
+            : user2Edit.status === 2
+            ? 'user'
+            : 'ban',
     );
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
     const [type, setType] = useState<number>(-1);
@@ -65,10 +71,18 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
         }
         let role = -1;
         setOnProgress(true);
-        setDialogState({ ...dialogState, waitingConfirmDlgOpened: true });
-        const timer = setTimeout(() => {
-            setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-        }, 120000);
+        setDialogState({
+            ...dialogState,
+            waitingConfirmDlgOpened: true,
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...dialogState,
+                    errorMessageDlgOpened: true,
+                    waitingConfirmDlgOpened: false,
+                });
+            }, 120000),
+        });
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 1,
@@ -124,7 +138,6 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
             })
             .finally(() => {
                 setOnProgress(false);
-                clearTimeout(timer);
                 onClose();
             });
     };
