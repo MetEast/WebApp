@@ -52,7 +52,6 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         };
     }, [signInDlgState.walletAccounts, params.id]); // sortby
 
-    console.log(myBidsList)
     return (
         <Stack spacing={5} width={520}>
             <Stack direction="row" justifyContent="space-between">
@@ -75,24 +74,29 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             </Stack>
             <Stack spacing={3}>
                 {signInDlgState.isLoggedIn && myBidsList.length !== 0 && (
-                    <Grid container direction="column" alignItems="center">
-                        <Grid item alignItems="center">
-                            <Typography fontSize={16} fontWeight={700} marginTop={3}>
+                    <>
+                        <Grid item xs={12}>
+                            <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
                                 Your Bid
                             </Typography>
                         </Grid>
-                        {myBidsList.forEach((item) => {
-                            return (
-                                <Grid item direction="row" alignItems="center" justifyContent="space-between">
-                                    <Typography fontSize={14} fontWeight={400}>
-                                        {item.time}
-                                    </Typography>
-                                    <ELAPrice price_ela={item.price} alignRight={true} />
+                        <Grid container alignItems="center" rowSpacing={0} marginTop={0}>
+                            {myBidsList.map((item, index) => (
+                                <Grid container item key={index}>
+                                    <Grid item xs={6}>
+                                        <Typography fontSize={12} fontWeight={500}>
+                                            {item.time}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
+                                    </Grid>
                                 </Grid>
-                            );
-                        })}
-                    </Grid>
+                            ))}
+                        </Grid>
+                    </>
                 )}
+
                 {bidsList.length !== 0 && (
                     <Box>
                         <Grid container>
@@ -107,7 +111,12 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 </Typography>
                             </Grid>
                             <Grid item xs={4}>
-                                <Typography fontSize={14} fontWeight={700} sx={{ textTransform: 'uppercase' }}>
+                                <Typography
+                                    fontSize={14}
+                                    fontWeight={700}
+                                    sx={{ textTransform: 'uppercase' }}
+                                    align="right"
+                                >
                                     Price
                                 </Typography>
                             </Grid>
@@ -124,7 +133,7 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={4}>
-                                        <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
+                                        <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight={true} />
                                     </Grid>
                                 </Grid>
                             ))}
