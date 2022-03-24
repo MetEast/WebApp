@@ -80,11 +80,19 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 return;
             }
             setOnProgress(true);
-            setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 20 });
-            const timer = setTimeout(() => {
-                setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false, progressBar: 0 });
-            }, 120000);
-
+            setDialogState({
+                ...dialogState,
+                waitingConfirmDlgOpened: true,
+                progressBar: 20,
+                waitingConfirmDlgTimer: setTimeout(() => {
+                    setDialogState({
+                        ...dialogState,
+                        errorMessageDlgOpened: true,
+                        waitingConfirmDlgOpened: false,
+                        progressBar: 0,
+                    });
+                }, 120000),
+            });
             callContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,
                 contractType: 1,
@@ -155,10 +163,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         progressBar: 0,
                     });
                     reject('setApprovalError');
-                })
-                .finally(() => {
-                    setOnProgress(false);
-                    clearTimeout(timer);
                 });
         });
 
@@ -200,6 +204,9 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
+            })
+            .finally(() => {
+                setOnProgress(false);
             });
     };
 
