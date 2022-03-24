@@ -3,6 +3,7 @@ import { Stack, Typography, TextField } from '@mui/material';
 
 export interface ComponentProps {
     title?: string;
+    inputValue?: string;
     placeholder?: string;
     error?: boolean;
     errorText?: string;
@@ -11,6 +12,7 @@ export interface ComponentProps {
 
 const ELAPriceInput: React.FC<ComponentProps> = ({
     title,
+    inputValue,
     placeholder,
     error = false,
     errorText = '',
@@ -28,6 +30,11 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
         // setInput(isNaN(parseFloat(value)) ? 0 : parseFloat(value));
         // handleChange(isNaN(parseFloat(value)) ? 0 : parseFloat(value));
     };
+
+    React.useEffect(() => {
+        setInput(inputValue === undefined ? '' : inputValue);
+    }, [inputValue]);
+
     return (
         <Stack spacing={0.5}>
             {title && (

@@ -100,7 +100,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
                         });
                     }
-                    setDialogState({ ...dialogState, progressBar: 40 });
+                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 40 });
                     const _quoteToken = '0x0000000000000000000000000000000000000000';
                     const _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
                     const _inQuoteTokens: string[] = Array(_inTokenIds.length);
@@ -294,6 +294,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 ...dialogState,
                                 createBlindBoxDlgOpened: true,
                                 createBlindBoxDlgStep: 0,
+                                progressBar: 0,
                             });
                         }}
                     >

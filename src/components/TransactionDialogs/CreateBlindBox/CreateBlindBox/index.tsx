@@ -202,7 +202,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     </PrimaryButton>
                                 </Stack>
                             </Stack>
-                            <ELAPriceInput title="Price" handleChange={setBlindboxPrice} />
+                            <ELAPriceInput title="Price" inputValue={blindboxPrice.toString()} handleChange={setBlindboxPrice} />
                             {blindboxPriceError && (
                                 <Typography fontSize={12} fontWeight={500} color="#EB5757">
                                     Invalid Price
