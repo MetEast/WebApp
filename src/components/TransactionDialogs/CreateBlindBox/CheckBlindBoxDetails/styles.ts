@@ -19,7 +19,7 @@ export const InfoItemWrapper = styled(Stack)({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    '>:first-child': {
+    '>:first-of-type': {
         maxWidth: '35%',
     },
     '>:last-child': {

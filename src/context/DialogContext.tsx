@@ -6,6 +6,7 @@ interface DlgState {
     manageProfileDlgOpened: boolean;
     // confirm transaction
     waitingConfirmDlgOpened: boolean;
+    waitingConfirmDlgTimer: ReturnType<typeof setTimeout> | null;
     loadingDlgOpened: boolean;
     // error msg
     errorMessageDlgOpened: boolean;
@@ -127,6 +128,7 @@ export const defaultDlgState: DlgState = {
     manageProfileDlgOpened: false,
     // confirm transaction
     waitingConfirmDlgOpened: false,
+    waitingConfirmDlgTimer: null,
     loadingDlgOpened: false,
     // error msg
     errorMessageDlgOpened: false,
