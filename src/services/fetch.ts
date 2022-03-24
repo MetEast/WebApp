@@ -140,9 +140,9 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     } else return [];
 };
 
-export const getPageBannerList = async (address: string, location: number) => {
+export const getPageBannerList = async (location: number) => {
     const resPageBannerList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listBanner?owner=${address}&location=${location}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listBanner?location=${location}`,
         FETCH_CONFIG_JSON,
     );
     const jsonPageBannerList = await resPageBannerList.json();
@@ -1059,9 +1059,9 @@ export const updateUserRole = (_token: string, _address: string, _role: number, 
             });
     });
 
-export const getAdminBannerList = async (address: string) => {
+export const getAdminBannerList = async () => {
     const resAdminBannerList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?owner=${address}&pageNum=1&pageSize=${1000}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?pageNum=1&pageSize=${1000}`,
         FETCH_CONFIG_JSON,
     );
     const jsonAdminBannerList = await resAdminBannerList.json();
@@ -1091,7 +1091,6 @@ export const getAdminBannerList = async (address: string) => {
 
 export const addAdminBanner = (
     token: string,
-    address: string,
     image: string,
     location: number,
     status: number,
@@ -1101,7 +1100,6 @@ export const addAdminBanner = (
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
         const reqBody = {
             token: token,
-            owner: address,
             image: image,
             location: location.toString(),
             status: status.toString(),

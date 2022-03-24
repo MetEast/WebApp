@@ -36,16 +36,16 @@ const BlindBoxPage: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchBanners = async () => {
-            const _adBanners = await getPageBannerList(signInDlgState.walletAccounts[0], 3);
+            const _adBanners = await getPageBannerList(3);
             if (!unmounted) {
                 setAdBanners(_adBanners.length === 0 ? blankPageBanners : _adBanners);
             }
         };
-        if (signInDlgState.walletAccounts.length) fetchBanners().catch(console.error);
+        fetchBanners().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+    }, []);
 
     useEffect(() => {
         let unmounted = false;
