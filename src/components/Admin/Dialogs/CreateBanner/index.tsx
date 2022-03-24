@@ -65,7 +65,6 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                 url = `meteast:image:${added.path}`;
                 return addAdminBanner(
                     signInDlgState.token,
-                    signInDlgState.walletAccounts[0],
                     url,
                     pageLocation,
                     1,

@@ -99,7 +99,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminBannerList = await getAdminBannerList(signInDlgState.walletAccounts[0]);
+            const _adminBannerList = await getAdminBannerList();
             if (!unmounted) {
                 setTableData(_adminBannerList);
                 setIsLoading(false);
@@ -109,7 +109,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [reload, signInDlgState.walletAccounts]);
+    }, [reload]);
 
     const onEditBanner = (event: React.MouseEvent, data: AdminBannersItemType) => {
         event.stopPropagation();
