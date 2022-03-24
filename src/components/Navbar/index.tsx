@@ -27,6 +27,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     const isProfilePage = location.pathname === '/profile';
+    const isAdmin = !isNaN(signInDlgState.userRole) && signInDlgState.userRole < 2;
 
     const classes = useStyles();
 
@@ -135,7 +136,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     )}
                 </PrimaryButton>
             ) : (
-                !mobile && (
+                !mobile && !isAdmin && (
                     <>
                         <PrimaryButton
                             size="small"
@@ -175,7 +176,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     </>
                 )
             )}
-            {signInDlgState.userRole < 2 && (!mobile || !isProfilePage) && (
+            {isAdmin && (
                 <PrimaryButton
                     size="small"
                     sx={{ paddingX: 2 }}
