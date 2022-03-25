@@ -50,7 +50,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
                 borderRadius={3}
                 paddingRight={2}
                 overflow="hidden"
-                border={`1px solid ${error && invalid ? '#EB5757' : status === 'none' ? 'transparent' : '#1890FF'}`}
+                border={`2px solid ${error && invalid ? '#EB5757' : status === 'none' ? 'transparent' : '#1890FF'}`}
                 sx={{ background: '#F0F1F2' }}
             >
                 <TextField

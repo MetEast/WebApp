@@ -218,7 +218,9 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     value={saleBegins}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         setSaleBegins(event.target.value);
+                                        setSaleBeginsError(isNaN(Date.parse(event.target.value)));
                                     }}
+                                    sx={{ border: saleBeginsError ? '2px solid #EB5757' : 'none' }}
                                 ></DateTimeInput>
                                 {saleBeginsError && (
                                     <Typography fontSize={12} fontWeight={500} color="#EB5757">
@@ -226,23 +228,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     </Typography>
                                 )}
                             </Stack>
-                            {/* <Stack spacing={0.5}>
-                                <Typography fontSize={12} fontWeight={700}>
-                                    Sale Ends
-                                </Typography>
-                                <DateTimeInput
-                                    type="datetime-local"
-                                    value={saleEnds}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setSaleEnds(event.target.value);
-                                    }}
-                                ></DateTimeInput>
-                                {saleEndsError && (
-                                    <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                        Invalid Date Format
-                                    </Typography>
-                                )}
-                            </Stack> */}
                         </Grid>
                     </Grid>
                 </Box>
