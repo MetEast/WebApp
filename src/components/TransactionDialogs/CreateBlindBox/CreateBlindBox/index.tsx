@@ -156,20 +156,21 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                             <Stack direction="row" spacing={3}>
                                 <CustomTextField
                                     disabled
+                                    title="Number of NFT"
                                     inputValue={blindboxQuantity.toString() || ''}
+                                    number={true}
+                                    placeholder="es. 1000"
                                     error={blindboxQuantityError === 0}
                                     errorText="Select at least 1 NFT"
-                                    title="Number of NFT"
-                                    placeholder="es. 1000"
                                     changeHandler={(value: string) => setBlindboxQuantity(parseInt(value))}
                                 />
                                 <CustomTextField
                                     title="Max Num of Purchases"
                                     inputValue={blindboxPurchases.toString()}
+                                    number={true}
                                     placeholder="es. 1000"
                                     error={blindboxPurchasesError}
                                     errorText="Max number of Purchases cannot be empty"
-                                    number={true}
                                     changeHandler={(value: string) => {
                                         setBlindboxPurchases(parseInt(value === '' ? '0' : value));
                                     }}
@@ -268,11 +269,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     blindboxTitle !== '' &&
                                     blindboxDescription !== '' &&
                                     blindboxImage !== null &&
+                                    stateFile !== null &&
                                     blindboxQuantity > 0 &&
                                     blindboxPrice > 0 &&
                                     saleBegins !== '' &&
                                     blindboxPurchases <= blindboxQuantity &&
-                                    // saleEnds !== '' &&
                                     blindboxPurchases > 0
                                 ) {
                                     setDialogState({
@@ -285,7 +286,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         crtBlindQuantity: blindboxQuantity,
                                         crtBlindPrice: blindboxPrice,
                                         crtBlindSaleBegin: saleBegins,
-                                        // crtBlindSaleEnd: saleEnds,
                                         crtBlindPurchases: blindboxPurchases,
                                     });
                                 } else {
@@ -293,7 +293,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     setBlindboxDescriptionError(blindboxDescription === '');
                                     setBlindboxPurchasesError(blindboxPurchases === 0 || isNaN(blindboxPurchases));
                                     setSaleBeginsError(isNaN(Date.parse(saleBegins)));
-                                    // setSaleEndsError(isNaN(Date.parse(saleEnds)));
                                     setBlindboxImageError(stateFile === null);
                                     setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
                                     setBlindboxQuantityError(blindboxQuantity);
