@@ -13,8 +13,6 @@ export interface ComponentProps {
     fontSize?: number;
     fontWeight?: number;
     number?: boolean;
-    inputOnlyValid?: boolean;
-    enableEmpty?: boolean;
     error?: boolean;
     errorText?: string;
     limit?: number;
@@ -34,8 +32,6 @@ const CustomTextField: React.FC<ComponentProps> = ({
     fontWeight,
     number = false,
     error = false,
-    inputOnlyValid = false,
-    enableEmpty = false,
     errorText = '',
     limit,
     sx,
@@ -48,16 +44,20 @@ const CustomTextField: React.FC<ComponentProps> = ({
         const value = limit ? event.target.value.slice(0, limit) : event.target.value;
         let valid = false;
         if (number) {
-            valid = (enableEmpty && value === '') || (value !== '' && !isNaN(Number(value)));
+            valid = !isNaN(Number(value));
         } else {
-            valid = enableEmpty || value !== '';
+            valid = true;
         }
-        setInvalid(!valid);
-        if (!inputOnlyValid || valid) {
+
+        if (valid) {
             setText(value);
             changeHandler(value);
         }
     };
+
+    React.useEffect(() => {
+        setInvalid(number ? !isNaN(Number(text)) : !text);
+    }, [text]);
 
     React.useEffect(() => {
         setText(inputValue === undefined ? '' : inputValue);

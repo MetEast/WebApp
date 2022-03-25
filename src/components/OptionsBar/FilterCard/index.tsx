@@ -84,8 +84,6 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                 <CustomTextField
                     placeholder="Min"
                     number={true}
-                    inputOnlyValid={true}
-                    enableEmpty={true}
                     sx={{ width: '100%' }}
                     inputValue={minPrice}
                     changeHandler={(value: string) => setMinPrice(value)}
@@ -96,8 +94,6 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                 <CustomTextField
                     placeholder="Max"
                     number={true}
-                    inputOnlyValid={true}
-                    enableEmpty={true}
                     sx={{ width: '100%' }}
                     inputValue={maxPrice}
                     changeHandler={(value: string) => setMaxPrice(value)}

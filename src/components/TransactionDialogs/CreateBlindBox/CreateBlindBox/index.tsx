@@ -133,6 +133,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         marginTop: '1rem',
                                         borderRadius: '8px',
                                         cursor: 'pointer',
+                                        boxSizing: 'border-box',
+                                        border: blindboxImageError ? '2px solid #EB5757' : 'none',
                                     }}
                                 />
                                 {blindboxImageError && (
