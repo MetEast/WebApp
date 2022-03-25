@@ -24,6 +24,7 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import NFTPreview from 'src/components/NFTPreview';
 import { useSnackbar } from 'notistack';
 import SnackMessage from 'src/components/SnackMessage';
+import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -322,15 +323,18 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             </Grid>
                         </Grid>
                     )}
-                    {pageType === 'sold' && (
-                        <Grid container mt={2} spacing={4}>
-                            {nftSoldList.map((item, index) => (
-                                <Grid item xs={6} md={3} key={`explore-product-${index}`}>
-                                    <NFTPreview product={item} productType={3} index={index} />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    )}
+                    {pageType === 'sold' &&
+                        (nftSoldList.length === 0 ? (
+                            <LooksEmptyBox bannerTitle="Looks Empty Here" sx={{ marginTop: 2 }} />
+                        ) : (
+                            <Grid container mt={2} spacing={4}>
+                                {nftSoldList.map((item, index) => (
+                                    <Grid item xs={6} md={3} key={`explore-product-${index}`}>
+                                        <NFTPreview product={item} productType={3} index={index} />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        ))}
                 </>
             )}
             <ModalDialog
