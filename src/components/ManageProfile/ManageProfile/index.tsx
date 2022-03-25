@@ -165,6 +165,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 signInDlgState.isLoggedIn
                                     ? setSignInDlgState({ ...signInDlgState, signOut: true })
                                     : setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                onClose();
                             }}
                         >
                             {signInDlgState.isLoggedIn ? 'sign out' : 'sign in'}
