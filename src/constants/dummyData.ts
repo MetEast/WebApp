@@ -84,6 +84,79 @@ export const dummyNotificationList: Array<TypeNotification> = [
     },
 ];
 
+export const nftTransactions: Array<TypeNFTTransaction> = [
+    {
+        type: enumTransactionType.Bid,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.OnAuction,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.SoldTo,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.ForSale,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.CreatedBy,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.Bid,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.OnAuction,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.SoldTo,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.ForSale,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+    {
+        type: enumTransactionType.CreatedBy,
+        user: 'Nickname',
+        price: 199,
+        time: '2022/02/28 10:00',
+        txHash: '0x111111111111111111',
+    },
+];
+
 export const dummyEarningsList: Array<TypeYourEarning> = [
     {
         avatar: '/assets/images/avatar-template.png',
