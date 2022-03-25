@@ -74,10 +74,11 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Mint token error: ${error}!`, {
-                    variant: 'error',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
+                // enqueueSnackbar(`Mint token error: ${error}!`, {
+                //     variant: 'error',
+                //     anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                // });
+                console.log(`Mint token error: ${error}!`);
                 setDialogState({
                     ...dialogState,
                     createNFTDlgOpened: false,
