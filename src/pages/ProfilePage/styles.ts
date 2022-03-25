@@ -16,7 +16,7 @@ export const FilterItemTypography = styled(Typography)`
     line-height: 1rem;
 `;
 
-export const FilterButton = styled(Button)<{ selected: boolean; loading: boolean }>`
+export const FilterButton = styled(Button)<{ selected: boolean; loading: number }>`
     flex-shrink: 0;
     height: 36px;
     padding: 0 16px;
