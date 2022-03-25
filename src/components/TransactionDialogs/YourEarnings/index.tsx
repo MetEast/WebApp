@@ -32,15 +32,7 @@ const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Elem
             <Stack>
                 <DialogTitleTypo sx={{ textAlign: 'center' }}>Your Earnings</DialogTitleTypo>
             </Stack>
-            <Stack
-                spacing={3}
-                maxHeight={{ xs: 400, md: '50vh' }}
-                sx={{
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                }}
-                className={classes.earnings_list__container}
-            >
+            <Stack spacing={3} marginBottom="auto !important">
                 {earnings.length === 0 ? (
                     <LooksEmptyBox bannerTitle="Looks Empty Here" />
                 ) : (
