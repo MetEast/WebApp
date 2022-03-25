@@ -202,12 +202,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     </PrimaryButton>
                                 </Stack>
                             </Stack>
-                            <ELAPriceInput title="Price" inputValue={blindboxPrice.toString()} handleChange={setBlindboxPrice} />
-                            {blindboxPriceError && (
-                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                    Invalid Price
-                                </Typography>
-                            )}
+                            <ELAPriceInput
+                                title="Price"
+                                inputValue={blindboxPrice.toString()}
+                                error={blindboxPriceError}
+                                errorText="The price is invalid."
+                                handleChange={setBlindboxPrice}
+                            />
                             <Stack spacing={0.5}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Sale Begins
@@ -303,7 +304,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 } else {
                                     setBlindboxTitleError(blindboxTitle === '');
                                     setBlindboxDescriptionError(blindboxDescription === '');
-                                    setBlindboxPurchasesError(blindboxPurchases === 0);
+                                    setBlindboxPurchasesError(blindboxPurchases === 0 || isNaN(blindboxPurchases));
                                     setSaleBeginsError(isNaN(Date.parse(saleBegins)));
                                     // setSaleEndsError(isNaN(Date.parse(saleEnds)));
                                     setBlindboxImageError(stateFile === null);

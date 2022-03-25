@@ -18,22 +18,24 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
     errorText = '',
     handleChange = () => {},
 }): JSX.Element => {
-    const [input, setInput] = useState('0');
+    const [input, setInput] = useState<string>('0');
+    const [invalid, setInvalid] = useState<boolean>(true);
     const [status, setStatus] = useState<'none' | 'active'>('none');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        let valid = !isNaN(Number(value));
-        if (valid) setInput(value);
+        if (!isNaN(Number(value))) setInput(value);
 
         handleChange(parseFloat(value));
-        // setInput(isNaN(parseFloat(value)) ? 0 : parseFloat(value));
-        // handleChange(isNaN(parseFloat(value)) ? 0 : parseFloat(value));
     };
 
     React.useEffect(() => {
-        setInput(inputValue === undefined ? '' : inputValue);
+        setInput(inputValue && !isNaN(Number(inputValue)) ? inputValue : '');
     }, [inputValue]);
+
+    React.useEffect(() => {
+        setInvalid(Number(input) === 0);
+    }, [input]);
 
     return (
         <Stack spacing={0.5}>
@@ -48,7 +50,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
                 borderRadius={3}
                 paddingRight={2}
                 overflow="hidden"
-                border={`1px solid ${status === 'none' ? 'transparent' : '#1890FF'}`}
+                border={`1px solid ${error && invalid ? '#EB5757' : status === 'none' ? 'transparent' : '#1890FF'}`}
                 sx={{ background: '#F0F1F2' }}
             >
                 <TextField
@@ -79,7 +81,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
                     </Typography>
                 </Stack>
             </Stack>
-            {error && (
+            {error && invalid && (
                 <Typography fontSize={12} fontWeight={500} color="#EB5757">
                     {errorText}
                 </Typography>
