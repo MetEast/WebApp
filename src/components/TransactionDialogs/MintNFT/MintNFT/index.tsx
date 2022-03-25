@@ -117,6 +117,8 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 selectedItem={category}
                                 options={mintNFTCategoryOptions}
                                 isOpen={categorySelectOpen ? 1 : 0}
+                                error={categoryError}
+                                errorText="Category should be selected."
                                 handleClick={(value: string) => {
                                     const item = mintNFTCategoryOptions.find((option) => option.value === value);
                                     setCategory(item || { label: '', value: '' });
@@ -124,11 +126,6 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 }}
                                 setIsOpen={setCategorySelectOpen}
                             />
-                            {categoryError && (
-                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                    Category should be selected.
-                                </Typography>
-                            )}
                         </Stack>
                         <RoyaltyInput
                             title="Royalties"

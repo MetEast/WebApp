@@ -34,7 +34,6 @@ export const SelectBtn = styled(Button)<{ isopen: number }>`
     justify-content: center;
     align-items: center;
     background: #f0f1f2;
-    border-radius: 12px;
     font-size: 14px;
     font-weight: 500;
     color: #0a0b0c;

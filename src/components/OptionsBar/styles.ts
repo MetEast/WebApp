@@ -41,7 +41,7 @@ export const FiltersBox = styled(Box)`
 
 export const SortByBtn = styled(Button)<{ isopen: number }>`
     min-width: 40px;
-    height: 100%;
+    height: 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

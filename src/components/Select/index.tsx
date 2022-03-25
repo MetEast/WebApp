@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListItemsWrapper, ListItemsStack, ItemButton } from './styles';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { TypeSelectItem } from 'src/types/select-types';
 import { Icon } from '@iconify/react';
 
@@ -12,6 +12,8 @@ interface ComponentProps {
     width?: number;
     min_width?: number | string;
     listitemsbox_width?: number | string;
+    error?: boolean;
+    errorText?: string;
     setIsOpen: (value: boolean) => void;
     handleClick: (value: string) => void;
     onMouseLeave?: () => void;
@@ -25,6 +27,8 @@ const Select: React.FC<ComponentProps> = ({
     width,
     min_width,
     listitemsbox_width,
+    error,
+    errorText,
     setIsOpen,
     handleClick,
     onMouseLeave,
@@ -38,7 +42,14 @@ const Select: React.FC<ComponentProps> = ({
             sx={{ width: width ? width : 'auto', minWidth: min_width ? min_width : 'auto' }}
             onMouseLeave={onMouseLeave}
         >
-            {titlebox}
+            <Box borderRadius={2} overflow="hidden" border={error ? '2px solid #EB5757' : 'none'}>
+                {titlebox}
+            </Box>
+            {error && (
+                <Typography fontSize={12} fontWeight={500} color="#EB5757" marginTop={0.5}>
+                    {errorText}
+                </Typography>
+            )}
             <ListItemsWrapper width={listitemsbox_width ? listitemsbox_width : '100%'} isOpen={isOpen}>
                 <ListItemsStack>
                     {options.map((item, index) => (
