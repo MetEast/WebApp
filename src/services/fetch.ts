@@ -660,7 +660,7 @@ export const getMyNFTItemList = async (
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.tokenId = itemObject.tokenId;
         _myNFT.name = itemObject.name;
-        _myNFT.image = getImageFromAsset(itemObject.asset);
+        _myNFT.image = itemObject.asset ? getImageFromAsset(itemObject.asset) : '';
         _myNFT.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
         _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
         _myNFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);

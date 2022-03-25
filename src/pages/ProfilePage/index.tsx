@@ -145,7 +145,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length !== 0 && signInDlgState.userDid !== '') {
             if (firstLoading) fetchAllTab().catch(console.error);
             else fetchSingleTab().catch(console.error);
-        } else {
+        } else if (!signInDlgState.isLoggedIn) {
             navigate('/');
         }
         return () => {
@@ -483,7 +483,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                 <FilterButton
                                     key={`filter-button-${index}`}
                                     selected={items.label === nftGalleryFilterBtnSelected}
-                                    loading={isLoadingAssets[index]}
+                                    loading={isLoadingAssets[index] ? 1 : 0}
                                     onClick={() => {
                                         setNftGalleryFilterBtnSelected(items.label);
                                         setLoadingState(index, true);
