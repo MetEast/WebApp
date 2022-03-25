@@ -94,7 +94,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     />
                     <IconBtn
                         onClick={() => {
-                            dialogState.buyBlindMaxPurchases > amount && dialogState.buyBlindInstock >= amount && setAmount(amount + 1);
+                            dialogState.buyBlindMaxPurchases > amount && dialogState.buyBlindInstock > amount && setAmount(amount + 1);
                         }}
                     >
                         <Icon icon="ph:plus" color="#1890FF" />
