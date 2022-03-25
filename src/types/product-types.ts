@@ -275,7 +275,7 @@ export type TypeSingleNFTBidFetch = {
 };
 
 export type TypePriceHistoryFetch = {
-    onlyDate: string;
+    updateTime: string;
     price: number;
     tokenId: string;
 };
