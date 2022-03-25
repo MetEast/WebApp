@@ -28,7 +28,11 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [introductionError, setIntroductionError] = useState(false);
     const [mintFile, setMintFile] = useState<File>(dialogState.mintFile);
     const [mintFileError, setMintFileError] = useState(false);
-    const [stateFile, setStateFile] = useState(dialogState.mintTitle === '' ? null : {raw: dialogState.mintFile, preview: URL.createObjectURL(dialogState.mintFile)});
+    const [stateFile, setStateFile] = useState(
+        dialogState.mintTitle === ''
+            ? null
+            : { raw: dialogState.mintFile, preview: URL.createObjectURL(dialogState.mintFile) },
+    );
     const [royalties, setRoyalties] = useState<number>(
         dialogState.mintRoyalties === 0 ? 10 : dialogState.mintRoyalties,
     );
@@ -62,7 +66,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
         >
             <Stack alignItems="center">
                 <PageNumberTypo>1 of 2</PageNumberTypo>
-                <DialogTitleTypo>Mint NFT</DialogTitleTypo>
+                <DialogTitleTypo>Create NFT</DialogTitleTypo>
             </Stack>
             <Box>
                 <Grid container columnSpacing={4} rowGap={3}>
@@ -93,7 +97,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             <Select
                                 titlebox={
                                     <SelectBtn fullWidth isopen={categorySelectOpen ? 1 : 0}>
-                                        {category ? (
+                                        {!!category.label ? (
                                             <>
                                                 {category.icon && (
                                                     <Icon
