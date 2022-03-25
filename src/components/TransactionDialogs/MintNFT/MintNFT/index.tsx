@@ -152,8 +152,10 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                     height: { xs: '240px', sm: '100%' },
                                     marginTop: '1rem',
                                     borderRadius: '8px',
-                                    background: '#E8F4FF',
+                                    background: stateFile === null ? '#E8F4FF' : 'transparent',
                                     cursor: 'pointer',
+                                    boxSizing: 'border-box',
+                                    border: mintFileError ? '2px solid #EB5757' : 'none',
                                 }}
                             />
                             {mintFileError && (
