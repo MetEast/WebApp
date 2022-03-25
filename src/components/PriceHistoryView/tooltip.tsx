@@ -5,9 +5,10 @@ import ELAPrice from 'src/components/ELAPrice';
 interface ComponentProps {
     price: number;
     timestamp: number;
+    username: string;
 }
 
-const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp }): JSX.Element => {
+const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp, username }): JSX.Element => {
     const getDateString = (timestamp: number) => {
         const t = new Date(timestamp);
         const date = ('0' + t.getDate()).slice(-2);
@@ -27,7 +28,7 @@ const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp }): JS
                 {getDateString(timestamp)}
             </Typography>
             <Typography fontSize={12} fontWeight={700} alignSelf="flex-end">
-                Username
+                {username}
             </Typography>
         </Stack>
     );

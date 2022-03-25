@@ -840,7 +840,7 @@ export const getMyNFTItem = async (
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
             !itemObject.holderName || itemObject.holder === itemObject.royaltyOwner
-                ? itemObject.authorName
+                ? _MyNFTItem.author
                 : itemObject.holderName;
         _MyNFTItem.holder = itemObject.holder;
         _MyNFTItem.tokenIdHex = itemObject.tokenIdHex;

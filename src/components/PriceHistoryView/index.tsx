@@ -30,6 +30,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             <PriceHistoryToolTip
                 price={series[seriesIndex][dataPointIndex]}
                 timestamp={w.globals.seriesX[seriesIndex][dataPointIndex]}
+                username={''}
             />,
         );
     };
@@ -63,7 +64,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         xaxis: {
             type: 'datetime' as const,
             labels: {
-                format: 'MMM dd',
+                format: 'MMM ddTHH mm',
             },
         },
         tooltip: {
@@ -111,7 +112,10 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                     if (!unmounted) {
                         const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
                         const getPriceValue = (value: string) => {
-                            const nItem = productPriceList.findIndex((option) => option.onlyDate.startsWith(value));
+                            const nItem = productPriceList.findIndex((option) => {
+                                const dateTime = option.updateTime ? getTime(option.updateTime) : {date: '', time: ''};
+                                return value === (dateTime.date + ' ' + dateTime.time).replaceAll('/', '-').slice(0, 10);
+                            });
                             return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
                         };
                         const _latestPriceList: Array<TypeChartAxis> = [];
