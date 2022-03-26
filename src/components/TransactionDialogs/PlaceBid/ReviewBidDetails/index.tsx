@@ -109,12 +109,12 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.placeBidAmount} ELA</DetailedInfoLabelTypo>
                     </Grid>
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Expires in</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.placeBidExpire.value}</DetailedInfoLabelTypo>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
@@ -144,7 +144,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 placeBidDlgOpened: true,
                                 placeBidDlgStep: 0,
                                 placeBidAmount: 0,
-                                placeBidExpire: { label: '', value: '' },
+                                // placeBidExpire: { label: '', value: '' },
                                 placeBidTxHash: '',
                             });
                         }}

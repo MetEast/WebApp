@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
 import { TypeSelectItem } from 'src/types/select-types';
-import Select from 'src/components/Select';
-import { SelectBtn } from './styles';
-import { Icon } from '@iconify/react';
+// import Select from 'src/components/Select';
+// import { SelectBtn } from './styles';
+// import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
-import { auctionNFTExpirationOptions } from 'src/constants/select-constants';
+// import { auctionNFTExpirationOptions } from 'src/constants/select-constants';
 
 export interface ComponentProps {}
 
 const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-    const [expiration, setExpiration] = useState<TypeSelectItem>();
-    const [expirationSelectOpen, setExpirationSelectOpen] = useState(false);
-    const [expirationError, setExpirationError] = useState(false);
+    // const [expiration, setExpiration] = useState<TypeSelectItem>();
+    // const [expirationSelectOpen, setExpirationSelectOpen] = useState(false);
+    // const [expirationError, setExpirationError] = useState(false);
     const [bidAmount, setBidAmount] = useState(0);
     const [bidAmountError, setBidAmountError] = useState(false);
 
@@ -36,7 +36,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         setBidAmount(value);
                     }}
                 />
-                <Stack spacing={0.5}>
+                {/* <Stack spacing={0.5}>
                     <Typography fontSize={12} fontWeight={700}>
                         Bid Expiration
                     </Typography>
@@ -59,7 +59,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         }}
                         setIsOpen={setExpirationSelectOpen}
                     />
-                </Stack>
+                </Stack> */}
             </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
                 <SecondaryButton
@@ -68,7 +68,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         setDialogState({
                             ...dialogState,
                             placeBidAmount: 0,
-                            placeBidExpire: { label: '', value: '' },
+                            // placeBidExpire: { label: '', value: '' },
                             placeBidTxFee: 0,
                             placeBidDlgOpened: false,
                             placeBidName: '',
@@ -83,16 +83,16 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        if (bidAmount >= dialogState.placeBidMinLimit && expiration !== undefined) {
+                        if (bidAmount >= dialogState.placeBidMinLimit) {
                             setDialogState({
                                 ...dialogState,
                                 placeBidDlgOpened: true,
                                 placeBidDlgStep: 1,
                                 placeBidAmount: bidAmount,
-                                placeBidExpire: expiration,
+                                // placeBidExpire: expiration,
                             });
                         } else {
-                            setExpirationError(expiration === undefined);
+                            // setExpirationError(expiration === undefined);
                             setBidAmountError(isNaN(bidAmount) || bidAmount < dialogState.placeBidMinLimit);
                         }
                     }}
