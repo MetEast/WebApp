@@ -23,15 +23,15 @@ import {
     getMyTotalEarned,
     getMyEarnedList,
 } from 'src/services/fetch';
-import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from 'src/components/Container';
 import { blankMyNFTItem } from 'src/constants/init-constants';
 import { useNavigate } from 'react-router-dom';
-import EditProfileDlgContainer from 'src/components/TransactionDialogs/EditProfile';
-import YourEarningDlgContainer from 'src/components/TransactionDialogs/YourEarnings';
+import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
+import YourEarningDlgContainer from 'src/components/Profile/YourEarnings';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();

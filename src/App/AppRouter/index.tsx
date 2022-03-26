@@ -24,7 +24,7 @@ import AdminOrderBlindBoxes from 'src/pages/Admin/OrderBlindBoxes';
 import AdminBids from 'src/pages/Admin/Bids';
 import AdminBanners from 'src/pages/Admin/Banners';
 import AdminNotifications from 'src/pages/Admin/Notifications';
-import User from 'src/components/user';
+import User from 'src/components/User';
 import MyNFTPurchased from 'src/pages/MyNFT/Purchased';
 import NotificationsPage from 'src/pages/Notifications';
 import { useTheme } from '@mui/material/styles';

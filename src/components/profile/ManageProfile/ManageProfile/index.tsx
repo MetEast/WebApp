@@ -11,8 +11,8 @@ import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
 import { getMyTotalEarned, getMyTodayEarned, getMyEarnedList } from 'src/services/fetch';
 import { reduceHexAddress } from 'src/services/common';
-import EditProfileDlgContainer from 'src/components/TransactionDialogs/EditProfile';
-import YourEarningDlgContainer from 'src/components/TransactionDialogs/YourEarnings';
+import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
+import YourEarningDlgContainer from 'src/components/Profile/YourEarnings';
 
 export interface ComponentProps {
     onClose: () => void;

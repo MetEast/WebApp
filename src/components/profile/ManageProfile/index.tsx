@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
-import ManageProfile from 'src/components/ManageProfile/ManageProfile';
+import ManageProfile from './ManageProfile';
 
 export interface ComponentProps {}
 
