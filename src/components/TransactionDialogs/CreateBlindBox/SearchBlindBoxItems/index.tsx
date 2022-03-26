@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Stack, Box, Grid, Typography, Checkbox, Skeleton } from '@mui/material';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import SearchField from 'src/components/SearchField';
 import { TblHeaderTypo, TblBodyTypo, MobileImageBox, ImageBox } from './styles';
 import { useSignInContext } from 'src/context/SignInContext';

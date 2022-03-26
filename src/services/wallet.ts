@@ -90,7 +90,8 @@ export const isInAppBrowser = () => {
     return window.elastos !== undefined && window.elastos.name === 'essentialsiab';
 };
 
-export const getChainGasPrice = async (walletConnectWeb3: Web3) => {
-    return await walletConnectWeb3.eth.getGasPrice();
+export const getChainGasPrice = async (walletConnectWeb3: Web3, gas: number) => {
+    const gasPriceUnit = await walletConnectWeb3.eth.getGasPrice();
+    return parseInt(gasPriceUnit) * gas / 1e18;
 }
 

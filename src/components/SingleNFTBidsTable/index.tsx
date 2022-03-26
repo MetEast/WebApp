@@ -5,8 +5,8 @@ import { TypeSingleNFTBid } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import { useDialogContext } from 'src/context/DialogContext';
 import Username from 'src/components/Username';
-import CancelBidDlgContainer from '../TransactionDialogs/CancelBid';
-import UpdateBidDlgContainer from '../TransactionDialogs/UpdateBid';
+// import CancelBidDlgContainer from '../TransactionDialogs/CancelBid';
+// import UpdateBidDlgContainer from '../TransactionDialogs/UpdateBid';
 
 interface ComponentProps {
     isLoggedIn: boolean;
@@ -121,8 +121,8 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                     )}
                 </Stack>
             </Box>
-            <UpdateBidDlgContainer />
-            <CancelBidDlgContainer />
+            {/* <UpdateBidDlgContainer />
+            <CancelBidDlgContainer /> */}
         </>
     );
 };

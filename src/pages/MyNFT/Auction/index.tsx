@@ -26,10 +26,10 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
-import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
-import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
-import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
-import ReceivedBidsDlgContainer from 'src/components/TransactionDialogs/ReceivedBids';
+// import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
+// import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
+// import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
+// import ReceivedBidsDlgContainer from 'src/components/TransactionDialogs/ReceivedBids';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -359,10 +359,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <ChangePriceDlgContainer />
+            {/* <ChangePriceDlgContainer />
             <CancelSaleDlgContainer />
             <AcceptBidDlgContainer />
-            <ReceivedBidsDlgContainer / >
+            <ReceivedBidsDlgContainer /> */}
         </Container>
     );
 };

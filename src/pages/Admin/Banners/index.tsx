@@ -9,7 +9,6 @@ import CreateBanner from 'src/components/Admin/Dialogs/CreateBanner';
 import EditBanner from 'src/components/Admin/Dialogs/EditBanner';
 import DeleteBanner from 'src/components/Admin/Dialogs/DeleteBanner';
 import { getAdminBannerList } from 'src/services/fetch';
-import { useSignInContext } from 'src/context/SignInContext';
 import { blankAdminBannerItem } from 'src/constants/init-constants';
 
 const AdminBanners: React.FC = (): JSX.Element => {
@@ -86,7 +85,6 @@ const AdminBanners: React.FC = (): JSX.Element => {
 
     const data: AdminBannersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminBannerItem), []);
 
-    const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
     const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
     const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);

@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
-import { TypeSelectItem } from 'src/types/select-types';
+// import { TypeSelectItem } from 'src/types/select-types';
 // import Select from 'src/components/Select';
 // import { SelectBtn } from './styles';
 // import { Icon } from '@iconify/react';

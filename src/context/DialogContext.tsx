@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
-import { TypeYourEarning } from 'src/types/product-types';
+// import { TypeYourEarning } from 'src/types/product-types';
 import { TypeSelectItem } from 'src/types/select-types';
 
 interface DlgState {

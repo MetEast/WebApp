@@ -20,8 +20,8 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
-import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
-import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
+// import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
+// import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -277,8 +277,8 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <ChangePriceDlgContainer />
-            <CancelSaleDlgContainer />
+            {/* <ChangePriceDlgContainer />
+            <CancelSaleDlgContainer /> */}
         </Container>
     );
 };
