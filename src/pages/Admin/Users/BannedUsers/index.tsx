@@ -167,6 +167,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 open={showBannedUsersDlg}
                 onClose={() => {
                     setShowBannedUsersDlg(false);
+                    setDialogState({ ...dialogState, progressBar: 0 });
                 }}
             >
                 <BannedUsers

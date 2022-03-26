@@ -70,8 +70,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         if (signInDlgState.walletAccounts.length === 0) {
             setShowBuyNowBtn(true);
         } else {
-            if (signInDlgState.walletAccounts[0] === productDetail.holder)
-                setShowBuyNowBtn(false);
+            if (signInDlgState.walletAccounts[0] === productDetail.holder) setShowBuyNowBtn(false);
             else setShowBuyNowBtn(true);
         }
     }, [signInDlgState.walletAccounts, productDetail]);
@@ -309,7 +308,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.buyNowDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, buyNowDlgOpened: false, progressBar: 0 });
+                    setDialogState({
+                        ...dialogState,
+                        buyNowDlgOpened: false,
+                        buyNowDlgStep: 0,
+                        buyNowPrice: 0,
+                        buyNowName: '',
+                        buyNowOrderId: '',
+                        progressBar: 0,
+                    });
                 }}
             >
                 {dialogState.buyNowDlgStep === 0 && <BuyNow />}
@@ -318,7 +325,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.changePriceDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, changePriceDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        changePriceCurPrice: 0,
+                        changePriceTxFee: 0,
+                        changePriceOrderId: '',
+                        changePriceTxHash: '',
+                        changePriceDlgOpened: false,
+                        changePriceDlgStep: 0,
+                    });
                 }}
             >
                 {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
@@ -327,7 +342,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.cancelSaleDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        cancelSaleTxFee: 0,
+                        cancelSaleOrderId: '',
+                        cancelSaleTxHash: '',
+                        cancelSaleDlgOpened: false,
+                        cancelSaleDlgStep: 0,
+                    });
                 }}
             >
                 {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}

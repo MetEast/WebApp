@@ -283,7 +283,15 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.changePriceDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, changePriceDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        changePriceCurPrice: 0,
+                        changePriceTxFee: 0,
+                        changePriceOrderId: '',
+                        changePriceTxHash: '',
+                        changePriceDlgOpened: false,
+                        changePriceDlgStep: 0,
+                    });
                 }}
             >
                 {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
@@ -292,7 +300,14 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.cancelSaleDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        cancelSaleTxFee: 0,
+                        cancelSaleOrderId: '',
+                        cancelSaleTxHash: '',
+                        cancelSaleDlgOpened: false,
+                        cancelSaleDlgStep: 0,
+                    });
                 }}
             >
                 {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}

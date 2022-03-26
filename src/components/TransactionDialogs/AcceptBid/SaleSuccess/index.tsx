@@ -27,6 +27,7 @@ const SaleSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     fullWidth
                     onClick={() => {
                         setDialogState({ ...dialogState, acceptBidDlgOpened: false });
+                        window.location.reload();
                     }}
                 >
                     Close

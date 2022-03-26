@@ -340,7 +340,19 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.buyBlindBoxDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, buyBlindBoxDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        buyBlindBoxDlgOpened: false,
+                        buyBlindBoxDlgStep: 0,
+                        buyBlindName: '',
+                        buyBlindPriceEla: 0,
+                        buyBlindPriceUsd: 0,
+                        buyBlindAmount: 1,
+                        buyBlindBoxId: 0,
+                        buyBlindCreator: '',
+                        buyBlindMaxPurchases: 0,
+                        buyBlindInstock: 0,
+                    });
                 }}
             >
                 {dialogState.buyBlindBoxDlgStep === 0 && <BuyBlindBox />}
