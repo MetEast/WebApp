@@ -89,6 +89,7 @@ interface ComponentProps {
     checkable?: boolean;
     isLoading?: boolean;
     tabTitle?: string;
+    hasSearchString?: boolean;
 }
 
 const Table: React.FC<ComponentProps> = ({
@@ -97,6 +98,7 @@ const Table: React.FC<ComponentProps> = ({
     checkable = true,
     isLoading = true,
     tabTitle,
+    hasSearchString,
 }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
@@ -108,16 +110,16 @@ const Table: React.FC<ComponentProps> = ({
     let emptyString = '';
     switch (tabTitle) {
         case 'nft':
-            emptyString = 'No NFTs removed';
+            emptyString = hasSearchString ? 'No results found' : 'No NFTs removed';
             break;
         case 'admin':
             emptyString = 'No Listed Admins';
             break;
         case 'moderator':
-            emptyString = 'No Listed Moderators';
+            emptyString = hasSearchString ? 'No results found' : 'No Listed Moderators';
             break;
         case 'banned':
-            emptyString = 'No Banned Users';
+            emptyString = hasSearchString ? 'No results found' : 'No Banned Users';
             break;
         case 'banner':
             emptyString = 'No Listed Banners';
