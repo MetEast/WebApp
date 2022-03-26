@@ -9,11 +9,6 @@ import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import ModalDialog from 'src/components/ModalDialog';
-import BlindBoxContents from 'src/components/TransactionDialogs/BuyBlindBox/BlindBoxContents';
-import BuyBlindBox from 'src/components/TransactionDialogs/BuyBlindBox/BuyBlindBox';
-import OrderSummary from 'src/components/TransactionDialogs/BuyBlindBox/OrderSummary';
-import PurchaseSuccess from 'src/components/TransactionDialogs/BuyBlindBox/PurchaseSuccess';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
 import { getBBItem, getELA2USD, getMyFavouritesList, getNFTItems, updateBBStatus } from 'src/services/fetch';
 import { reduceHexAddress } from 'src/services/common';
@@ -25,6 +20,7 @@ import NFTPreview from 'src/components/NFTPreview';
 import { useSnackbar } from 'notistack';
 import SnackMessage from 'src/components/SnackMessage';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -337,29 +333,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                         ))}
                 </>
             )}
-            <ModalDialog
-                open={dialogState.buyBlindBoxDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        buyBlindBoxDlgOpened: false,
-                        buyBlindBoxDlgStep: 0,
-                        buyBlindName: '',
-                        buyBlindPriceEla: 0,
-                        buyBlindPriceUsd: 0,
-                        buyBlindAmount: 1,
-                        buyBlindBoxId: 0,
-                        buyBlindCreator: '',
-                        buyBlindMaxPurchases: 0,
-                        buyBlindInstock: 0,
-                    });
-                }}
-            >
-                {dialogState.buyBlindBoxDlgStep === 0 && <BuyBlindBox />}
-                {dialogState.buyBlindBoxDlgStep === 1 && <OrderSummary />}
-                {dialogState.buyBlindBoxDlgStep === 2 && <PurchaseSuccess />}
-                {dialogState.buyBlindBoxDlgStep === 3 && <BlindBoxContents />}
-            </ModalDialog>
+            <BuyBlindBoxDlgContainer />
         </Container>
     );
 };

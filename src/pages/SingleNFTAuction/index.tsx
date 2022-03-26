@@ -14,22 +14,16 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestBids, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import ModalDialog from 'src/components/ModalDialog';
-import PlaceBid from 'src/components/TransactionDialogs/PlaceBid/PlaceBid';
-import ReviewBidDetails from 'src/components/TransactionDialogs/PlaceBid/ReviewBidDetails';
-import BidPlaceSuccess from 'src/components/TransactionDialogs/PlaceBid/BidPlaceSuccess';
-import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
-import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
-import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
-import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
-import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
-import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import { getMintCategory } from 'src/services/common';
+import PlaceBidDlgContainer from 'src/components/TransactionDialogs/PlaceBid';
+import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
+import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
+import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -367,78 +361,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <ModalDialog
-                open={dialogState.placeBidDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        placeBidAmount: 0,
-                        // placeBidExpire: { label: '', value: '' },
-                        placeBidTxFee: 0,
-                        placeBidDlgOpened: false,
-                        placeBidDlgStep: 0,
-                        placeBidName: '',
-                        placeBidTxHash: '',
-                        placeBidOrderId: '',
-                        placeBidMinLimit: 0,
-                    });
-                }}
-            >
-                {dialogState.placeBidDlgStep === 0 && <PlaceBid />}
-                {dialogState.placeBidDlgStep === 1 && <ReviewBidDetails />}
-                {dialogState.placeBidDlgStep === 2 && <BidPlaceSuccess />}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.changePriceDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        changePriceCurPrice: 0,
-                        changePriceTxFee: 0,
-                        changePriceOrderId: '',
-                        changePriceTxHash: '',
-                        changePriceDlgOpened: false,
-                        changePriceDlgStep: 0,
-                    }); 
-                }}
-            >
-                {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
-                {dialogState.changePriceDlgStep === 1 && <PriceChangeSuccess />}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.cancelSaleDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        cancelSaleTxFee: 0,
-                        cancelSaleOrderId: '',
-                        cancelSaleTxHash: '',
-                        cancelSaleDlgOpened: false,
-                        cancelSaleDlgStep: 0,
-                    });
-                }}
-            >
-                {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
-                {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.acceptBidDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        acceptBidDlgOpened: false,
-                        acceptBidDlgStep: 0,
-                        acceptBidPrice: 0,
-                        acceptBidOrderId: '',
-                        acceptBidName: '',
-                        acceptBidTxFee: 0,
-                        acceptBidTxHash: '',
-                    });
-                }}
-            >
-                {dialogState.acceptBidDlgStep === 0 && <AcceptBid />}
-                {dialogState.acceptBidDlgStep === 1 && <SaleSuccess />}
-            </ModalDialog>
+            <PlaceBidDlgContainer />
+            <ChangePriceDlgContainer />
+            <CancelSaleDlgContainer />
+            <AcceptBidDlgContainer />
         </Container>
     );
 };

@@ -42,7 +42,7 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
                             mintDidUri: '',
                         });
                         navigate('/products');
-                        window.location.reload();
+                        // window.location.reload();
                     }}
                 >
                     Close

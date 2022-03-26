@@ -123,6 +123,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                             setDialogState({
                                 ...dialogState,
                                 buyNowDlgOpened: false,
+                                buyNowDlgStep: 0,
                                 buyNowPrice: 0,
                                 buyNowName: '',
                                 buyNowOrderId: '',
