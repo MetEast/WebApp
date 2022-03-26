@@ -5,7 +5,7 @@ import { SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductBadge from 'src/components/ProductBadge';
 import { TypeYourEarning } from 'src/types/product-types';
-import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import { useStyles } from './styles';
 
 export interface ComponentProps {

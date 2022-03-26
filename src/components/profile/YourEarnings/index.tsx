@@ -1,11 +1,14 @@
 import React from 'react';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
-import EditProfile from 'src/components/TransactionDialogs/EditProfile/EditProfile';
+import YourEarnings from './YourEarnings';
+import { TypeYourEarning } from 'src/types/product-types';
 
-export interface ComponentProps {}
+export interface ComponentProps {
+    earningList: TypeYourEarning[];
+}
 
-const EditProfileDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+const YourEarningDlgContainer: React.FC<ComponentProps> = ({ earningList }): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     return (
         <ModalDialog
@@ -14,7 +17,8 @@ const EditProfileDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setDialogState({ ...dialogState, editProfileDlgOpened: false });
             }}
         >
-            <EditProfile
+            <YourEarnings
+                earnings={earningList}
                 onClose={() => {
                     setDialogState({ ...dialogState, editProfileDlgOpened: false });
                 }}
@@ -23,4 +27,4 @@ const EditProfileDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     );
 };
 
-export default EditProfileDlgContainer;
+export default YourEarningDlgContainer;

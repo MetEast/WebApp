@@ -12,7 +12,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
-import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem, blankPageBanners } from 'src/constants/init-constants';
 

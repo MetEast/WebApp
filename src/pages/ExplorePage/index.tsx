@@ -19,7 +19,7 @@ import {
 } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem, blankPageBanners } from 'src/constants/init-constants';
-import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();

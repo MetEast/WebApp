@@ -19,7 +19,7 @@ import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import NFTPreview from 'src/components/NFTPreview';
 import { useSnackbar } from 'notistack';
 import SnackMessage from 'src/components/SnackMessage';
-import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
+import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
