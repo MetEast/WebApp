@@ -265,7 +265,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         </Stack>
                     </Stack>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} tabTitle='nft' />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} tabTitle='nft' hasSearchString={keyWord ? true : false} />
             </Stack>
             <ModalDialog
                 open={showRemoveNFTDlg}

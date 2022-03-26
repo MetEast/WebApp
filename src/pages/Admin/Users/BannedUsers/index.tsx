@@ -161,7 +161,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                         {`Search`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading}  tabTitle='banned' />
+                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading}  tabTitle='banned'  hasSearchString={keyWord ? true : false} />
             </Stack>
             <ModalDialog
                 open={showBannedUsersDlg}
