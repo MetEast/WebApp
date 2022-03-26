@@ -29,6 +29,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack spacing={2}>
                 <ELAPriceInput
                     title="Bid Amount"
+                    inputValue={bidAmount.toString()}
                     error={bidAmountError}
                     errorText={`Bid amount must be greater than ${dialogState.placeBidMinLimit}`}
                     handleChange={(value) => {
@@ -49,6 +50,8 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         selectedItem={expiration}
                         options={auctionNFTExpirationOptions}
                         isOpen={expirationSelectOpen ? 1 : 0}
+                        error={expirationError}
+                        errorText="Bid expiration should be selected."
                         handleClick={(value: string) => {
                             const item = auctionNFTExpirationOptions.find((option) => option.value === value);
                             setExpiration(item);
@@ -56,11 +59,6 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                         }}
                         setIsOpen={setExpirationSelectOpen}
                     />
-                    {expirationError && (
-                        <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                            Bid expiration should be selected.
-                        </Typography>
-                    )}
                 </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
