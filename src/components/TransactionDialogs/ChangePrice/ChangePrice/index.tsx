@@ -30,21 +30,26 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
+    const [newPriceError, setNewPriceError] = useState<boolean>(false);
 
     const handleChangePrice = () => {
+        setNewPriceError(isNaN(bidAmount) || bidAmount === 0);
+        if (isNaN(bidAmount) || bidAmount === 0) {
+            // enqueueSnackbar('Invalid price!', {
+            //     variant: 'error',
+            //     anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            // });
+            return;
+        }
+
         if (dialogState.changePriceTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
-        } else if (isNaN(bidAmount) || bidAmount <= 0) {
-            enqueueSnackbar('Invalid price!', {
-                variant: 'error',
-                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-            });
-            return;
         }
+
         setOnProgress(true);
         setDialogState({
             ...dialogState,
@@ -107,6 +112,9 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack spacing={2.5}>
                 <ELAPriceInput
                     title="New Price"
+                    inputValue={bidAmount.toString()}
+                    error={newPriceError}
+                    errorText="The price is invalid."
                     handleChange={(value: number) => {
                         setBidAmount(value);
                     }}
