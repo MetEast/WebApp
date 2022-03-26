@@ -4,15 +4,15 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
-import ModalDialog from 'src/components/ModalDialog';
-import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
-import EditProfile from 'src/components/TransactionDialogs/EditProfile';
+import { useDialogContext } from 'src/context/DialogContext';
 import { TypeYourEarning } from 'src/types/product-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
 import { getMyTotalEarned, getMyTodayEarned, getMyEarnedList } from 'src/services/fetch';
 import { reduceHexAddress } from 'src/services/common';
+import EditProfileDlgContainer from 'src/components/TransactionDialogs/EditProfile';
+import YourEarningDlgContainer from 'src/components/TransactionDialogs/YourEarnings';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -20,14 +20,16 @@ export interface ComponentProps {
 
 const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
-    const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
     const [toatlEarned, setTotalEarned] = useState<string>('0');
     const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
     const arrStrDid = signInDlgState.userDid.split(':').filter((value: string) => value.length > 0);
-    const strUserDid = arrStrDid.length === 3 ? `did:elastos:${reduceHexAddress(arrStrDid[2], 7)}` : reduceHexAddress(signInDlgState.userDid, 10); 
+    const strUserDid =
+        arrStrDid.length === 3
+            ? `did:elastos:${reduceHexAddress(arrStrDid[2], 7)}`
+            : reduceHexAddress(signInDlgState.userDid, 10);
 
     const showSnackBar = () => {
         enqueueSnackbar('Copied to Clipboard!', {
@@ -88,7 +90,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         size="small"
                         sx={{ paddingX: 2.5 }}
                         onClick={() => {
-                            setEarningsDlgOpen(true);
+                            setDialogState({ ...dialogState, earningDlgOpened: true });
                         }}
                     >
                         <Icon
@@ -103,7 +105,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         size="small"
                         sx={{ paddingX: 2.5 }}
                         onClick={() => {
-                            setEditProfileDlgOpen(true);
+                            setDialogState({ ...dialogState, editProfileDlgOpened: true });
                         }}
                     >
                         <Icon
@@ -128,23 +130,20 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                     </Stack>
                                 )}
                                 {/* {signInDlgState.loginType === '1' && ( */}
-                                    <Stack direction="row" spacing={0.5}>
-                                        <CopyToClipboard
-                                            text={signInDlgState.userDid}
-                                            onCopy={showSnackBar}
-                                        >
-                                            <CopyToClipboardButton>
-                                                <Icon
-                                                    icon="ph:copy"
-                                                    color="#1890FF"
-                                                    style={{ marginTop: '1px', cursor: 'pointer' }}
-                                                />
-                                            </CopyToClipboardButton>
-                                        </CopyToClipboard>
-                                        <Typography fontSize={14} fontWeight={400}>
-                                            {strUserDid}
-                                        </Typography>
-                                    </Stack>
+                                <Stack direction="row" spacing={0.5}>
+                                    <CopyToClipboard text={signInDlgState.userDid} onCopy={showSnackBar}>
+                                        <CopyToClipboardButton>
+                                            <Icon
+                                                icon="ph:copy"
+                                                color="#1890FF"
+                                                style={{ marginTop: '1px', cursor: 'pointer' }}
+                                            />
+                                        </CopyToClipboardButton>
+                                    </CopyToClipboard>
+                                    <Typography fontSize={14} fontWeight={400}>
+                                        {strUserDid}
+                                    </Typography>
+                                </Stack>
                                 {/* )} */}
                             </>
                         )}
@@ -198,31 +197,8 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     Close
                 </SecondaryButton>
             </Stack>
-            <ModalDialog
-                open={earningsDlgOpen}
-                onClose={() => {
-                    setEarningsDlgOpen(false);
-                }}
-            >
-                <YourEarnings
-                    earnings={earningList}
-                    onClose={() => {
-                        setEarningsDlgOpen(false);
-                    }}
-                />
-            </ModalDialog>
-            <ModalDialog
-                open={editProfileDlgOpen}
-                onClose={() => {
-                    setEditProfileDlgOpen(false);
-                }}
-            >
-                <EditProfile
-                    onClose={() => {
-                        setEditProfileDlgOpen(false);
-                    }}
-                />
-            </ModalDialog>
+            <YourEarningDlgContainer earningList={earningList} />
+            <EditProfileDlgContainer />
         </>
     );
 };

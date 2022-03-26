@@ -25,7 +25,7 @@ import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTL
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
-import ReceivedBids from 'src/components/profile/ReceivedBids';
+import ReceivedBids from 'src/components/TransactionDialogs/ReceivedBids';
 import NoBids from 'src/components/TransactionDialogs/AllBids/NoBids';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
@@ -223,7 +223,24 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                             {productDetail.status === 'HAS BIDS' && (
                                 <PrimaryButton
                                     sx={{ marginTop: 3, width: '100%' }}
-                                    onClick={() => setViewBidDlgOpened(true)}
+                                    onClick={() => {
+                                        setViewBidDlgOpened(true);
+                                        if (signInDlgState.isLoggedIn) {
+                                            if (bidsList.length) {
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    receivedBidDlgOpened: true,
+                                                });
+                                            } else {
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    noBidDlgOpened: true,
+                                                });
+                                            }
+                                        } else {
+                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                        }
+                                    }}
                                 >
                                     View Bids
                                 </PrimaryButton>
@@ -347,17 +364,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             <ChangePriceDlgContainer />
             <CancelSaleDlgContainer />
             <AcceptBidDlgContainer />
-            <ModalDialog
-                open={viewBidDlgOpened}
-                onClose={() => {
-                    setViewBidDlgOpened(false);
-                }}
-            >
-                {bidsList.length === 0 ? (
-                    <NoBids onClose={() => setViewBidDlgOpened(false)} />
-                ) : (
-                    <ReceivedBids closeDlg={() => setViewBidDlgOpened(false)} />
-                )}
+            <ModalDialog open={dialogState.receivedBidDlgOpened} onClose={() => {}}>
+                <ReceivedBids onClose={() => setViewBidDlgOpened(false)} />
             </ModalDialog>
         </Container>
     );

@@ -15,10 +15,10 @@ import { useParams } from 'react-router-dom';
 import Username from 'src/components/Username';
 
 export interface ComponentProps {
-    closeDlg: () => void;
+    onClose: () => void;
 }
 
-const ReceivedBids: React.FC<ComponentProps> = ({ closeDlg }): JSX.Element => {
+const ReceivedBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const params = useParams();
     const [signInDlgState] = useSignInContext();
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
@@ -108,7 +108,7 @@ const ReceivedBids: React.FC<ComponentProps> = ({ closeDlg }): JSX.Element => {
                     </Grid>
                 </Box>
             </Stack>
-            <SecondaryButton fullWidth onClick={closeDlg}>
+            <SecondaryButton fullWidth onClick={onClose}>
                 Close
             </SecondaryButton>
         </Stack>

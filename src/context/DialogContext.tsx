@@ -1,9 +1,13 @@
 import React, { createContext, useState, useContext } from 'react';
+import { TypeYourEarning } from 'src/types/product-types';
 import { TypeSelectItem } from 'src/types/select-types';
 
 interface DlgState {
-    // manage profile
+    // profile
     manageProfileDlgOpened: boolean;
+    editProfileDlgOpened: boolean;
+    earningDlgOpened: boolean;
+    // earningList: TypeYourEarning[];
     // confirm transaction
     waitingConfirmDlgOpened: boolean;
     waitingConfirmDlgTimer: ReturnType<typeof setTimeout> | null;
@@ -14,6 +18,7 @@ interface DlgState {
     allTxDlgOpened: boolean;
     // all bids
     allBidDlgOpened: boolean;
+    receivedBidDlgOpened: boolean;
     noBidDlgOpened: boolean;
     // progres bar
     progressBar: number;
@@ -124,8 +129,10 @@ interface DlgState {
 }
 
 export const defaultDlgState: DlgState = {
-    // manage profile
+    // profile
     manageProfileDlgOpened: false,
+    editProfileDlgOpened: false,
+    earningDlgOpened: false,
     // confirm transaction
     waitingConfirmDlgOpened: false,
     waitingConfirmDlgTimer: null,
@@ -136,6 +143,7 @@ export const defaultDlgState: DlgState = {
     allTxDlgOpened: false,
     // all bids
     allBidDlgOpened: false,
+    receivedBidDlgOpened: false,
     noBidDlgOpened: false,
     // progress bar
     progressBar: 0,
