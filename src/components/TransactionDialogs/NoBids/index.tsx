@@ -1,26 +1,26 @@
 import React from 'react';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
-import ReceivedBids from './ReceivedBids';
+import NoBids from './NoBids';
 
 export interface ComponentProps {}
 
-const ReceivedBidsDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+const NoBidsDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     return (
         <ModalDialog
-            open={dialogState.receivedBidDlgOpened}
+            open={dialogState.noBidDlgOpened}
             onClose={() => {
-                setDialogState({ ...dialogState, receivedBidDlgOpened: false });
+                setDialogState({ ...dialogState, noBidDlgOpened: false });
             }}
         >
-            <ReceivedBids
+            <NoBids
                 onClose={() => {
-                    setDialogState({ ...dialogState, receivedBidDlgOpened: false });
+                    setDialogState({ ...dialogState, noBidDlgOpened: false });
                 }}
             />
         </ModalDialog>
     );
 };
 
-export default ReceivedBidsDlgContainer;
+export default NoBidsDlgContainer;

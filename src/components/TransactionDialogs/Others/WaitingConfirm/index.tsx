@@ -1,28 +1,23 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
-import { DialogTitleTypo } from '../../styles';
+import { useDialogContext } from 'src/context/DialogContext';
+import ModalDialog from 'src/components/ModalDialog';
+import WaitingConfirm from './WaitingConfirm';
 
-export interface ComponentProps {
-    loadingDlg: boolean;
-}
+export interface ComponentProps {}
 
-const WaitingConfirm: React.FC<ComponentProps> = ({ loadingDlg }): JSX.Element => {
+const WaitingConfirmDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     return (
-        <Stack spacing={5} width={340}>
-            <Stack alignItems="center" spacing={3}>
-                <img src="/assets/images/loading.gif" alt="" />
-                {loadingDlg ? (
-                    <DialogTitleTypo>Loading...</DialogTitleTypo>
-                ) : (
-                    <>
-                        <Typography fontSize={16} fontWeight={400} textAlign="center">
-                            Please confirm this transaction with your wallet to continue.
-                        </Typography>
-                    </>
-                )}
-            </Stack>
-        </Stack>
+        <ModalDialog
+            open={dialogState.waitingConfirmDlgOpened}
+            onClose={() => {
+                if (dialogState.waitingConfirmDlgTimer) clearTimeout(dialogState.waitingConfirmDlgTimer);
+                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
+            }}
+        >
+            <WaitingConfirm loadingDlg={dialogState.loadingDlgOpened} />
+        </ModalDialog>
     );
 };
 
-export default WaitingConfirm;
+export default WaitingConfirmDlgContainer;
