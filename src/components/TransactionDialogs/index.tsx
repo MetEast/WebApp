@@ -6,7 +6,7 @@ import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';
 import ManageProfileDlgContainer from '../ManageProfile';
 import ErrorMessage from 'src/components/TransactionDialogs/Others/ErrorMessage';
 import WaitingConfirm from 'src/components/TransactionDialogs/Others/WaitingConfirm';
-import AllTransactions from 'src/components/profile/AllTransactions';
+import AllTransactions from 'src/components/TransactionDialogs/AllTransactions';
 import AllBids from './AllBids/AllBids';
 import NoBids from './AllBids/NoBids';
 

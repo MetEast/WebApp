@@ -1,80 +1,30 @@
 import React from 'react';
-import { Stack, Box, Typography } from '@mui/material';
-import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
-import { SecondaryButton } from 'src/components/Buttons/styles';
-import ELAPrice from 'src/components/ELAPrice';
-import ProductBadge from 'src/components/ProductBadge';
+import { useDialogContext } from 'src/context/DialogContext';
+import ModalDialog from 'src/components/ModalDialog';
+import YourEarnings from 'src/components/TransactionDialogs/YourEarnings/YourEarnings';
 import { TypeYourEarning } from 'src/types/product-types';
-import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
-import { dummyEarningsList } from 'src/constants/dummyData'; // test data
-import { useStyles } from './styles';
 
 export interface ComponentProps {
-    earnings: Array<TypeYourEarning>;
-    onClose: () => void;
+    earningList: TypeYourEarning[];
 }
 
-const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Element => {
-    const classes = useStyles();
-
+const YourEarningDlgContainer: React.FC<ComponentProps> = ({ earningList }): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     return (
-        <Stack
-            spacing={5}
-            width={{ xs: '100%', md: 520 }}
-            height={{ xs: '90vh', sm: 'auto' }}
-            maxHeight={{ sm: '70vh' }}
-            sx={{
-                overflowY: 'auto',
-                overflowX: 'hidden',
+        <ModalDialog
+            open={dialogState.editProfileDlgOpened}
+            onClose={() => {
+                setDialogState({ ...dialogState, editProfileDlgOpened: false });
             }}
-            className={classes.earnings_list__container}
         >
-            <Stack>
-                <DialogTitleTypo sx={{ textAlign: 'center' }}>Your Earnings</DialogTitleTypo>
-            </Stack>
-            <Stack spacing={3} marginBottom="auto !important">
-                {earnings.length === 0 ? (
-                    <LooksEmptyBox bannerTitle="Looks Empty Here" />
-                ) : (
-                    <>
-                        {earnings.map((item, index) => (
-                            <Stack
-                                direction="row"
-                                justifyContent="space-between"
-                                key={`earning-item-${index}`}
-                                spacing={3}
-                            >
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                    <img
-                                        src={item.avatar}
-                                        width={40}
-                                        height={40}
-                                        style={{ borderRadius: '100px', objectFit: 'cover' }}
-                                        alt=""
-                                    />
-                                    <Box>
-                                        <Typography fontSize={18} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
-                                            {item.title}
-                                        </Typography>
-                                        <Typography fontSize={14} fontWeight={500}>
-                                            {item.time}
-                                        </Typography>
-                                    </Box>
-                                </Stack>
-                                <Stack alignItems="flex-end">
-                                    <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
-                                    <ProductBadge badgeType={item.badge} />
-                                </Stack>
-                            </Stack>
-                        ))}
-                    </>
-                )}
-            </Stack>
-            <SecondaryButton fullWidth onClick={onClose}>
-                Close
-            </SecondaryButton>
-        </Stack>
+            <YourEarnings
+                earnings={earningList}
+                onClose={() => {
+                    setDialogState({ ...dialogState, editProfileDlgOpened: false });
+                }}
+            />
+        </ModalDialog>
     );
 };
 
-export default YourEarnings;
+export default YourEarningDlgContainer;

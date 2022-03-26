@@ -24,8 +24,7 @@ import {
     getMyEarnedList,
 } from 'src/services/fetch';
 import ModalDialog from 'src/components/ModalDialog';
-import YourEarnings from 'src/components/TransactionDialogs/YourEarnings';
-import EditProfile from 'src/components/TransactionDialogs/EditProfile';
+import YourEarnings from 'src/components/TransactionDialogs/YourEarnings/YourEarnings';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
@@ -33,6 +32,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from 'src/components/Container';
 import { blankMyNFTItem } from 'src/constants/init-constants';
 import { useNavigate } from 'react-router-dom';
+import EditProfileDlgContainer from 'src/components/TransactionDialogs/EditProfile';
+import YourEarningDlgContainer from 'src/components/TransactionDialogs/YourEarnings';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
@@ -324,7 +325,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             size="small"
                             sx={{ paddingX: 2.5 }}
                             onClick={() => {
-                                setEditProfileDlgOpen(true);
+                                setDialogState({ ...dialogState, editProfileDlgOpened: true });
                             }}
                         >
                             <Icon
@@ -569,32 +570,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     ))}
                 </Grid>
             </Container>
-            <ModalDialog
-                open={earningsDlgOpen}
-                onClose={() => {
-                    setEarningsDlgOpen(false);
-                }}
-            >
-                <YourEarnings
-                    earnings={earningList}
-                    onClose={() => {
-                        setEarningsDlgOpen(false);
-                    }}
-                />
-            </ModalDialog>
-            <ModalDialog
-                open={editProfileDlgOpen}
-                onClose={() => {
-                    setEditProfileDlgOpen(false);
-                    setDialogState({ ...dialogState, progressBar: 0 });
-                }}
-            >
-                <EditProfile
-                    onClose={() => {
-                        setEditProfileDlgOpen(false);
-                    }}
-                />
-            </ModalDialog>
+            <YourEarningDlgContainer earningList={earningList} />
+            <EditProfileDlgContainer />
         </>
     );
 };
