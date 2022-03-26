@@ -11,7 +11,7 @@ import { CopyToClipboardButton } from './styles';
 import { useSnackbar } from 'notistack';
 import { getMyTotalEarned, getMyTodayEarned, getMyEarnedList } from 'src/services/fetch';
 import { reduceHexAddress } from 'src/services/common';
-import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
+// import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
 import YourEarningDlgContainer from 'src/components/Profile/YourEarnings';
 
 export interface ComponentProps {
@@ -198,7 +198,7 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 </SecondaryButton>
             </Stack>
             <YourEarningDlgContainer earningList={earningList} />
-            <EditProfileDlgContainer />
+            {/* <EditProfileDlgContainer /> */}
         </>
     );
 };

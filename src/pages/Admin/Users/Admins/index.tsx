@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Stack, Box, Typography, Skeleton } from '@mui/material';
+import { Stack, Box, Typography } from '@mui/material';
 import { AdminTableColumn, AdminUsersItemType } from 'src/types/admin-table-data-types';
 import Table from 'src/components/Admin/Table';
 import { Icon } from '@iconify/react';

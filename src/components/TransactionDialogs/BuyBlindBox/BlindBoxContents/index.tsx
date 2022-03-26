@@ -8,13 +8,13 @@ import { EffectCards } from 'swiper';
 
 export interface ComponentProps {}
 
-const testImages = [
-    '/assets/images/blindbox/blindbox-nft-template1.png',
-    '/assets/images/blindbox/blindbox-nft-template2.png',
-    '/assets/images/blindbox/blindbox-nft-template3.png',
-    '/assets/images/blindbox/blindbox-nft-template4.png',
-    '/assets/images/avatar-template.png',
-];
+// const testImages = [
+//     '/assets/images/blindbox/blindbox-nft-template1.png',
+//     '/assets/images/blindbox/blindbox-nft-template2.png',
+//     '/assets/images/blindbox/blindbox-nft-template3.png',
+//     '/assets/images/blindbox/blindbox-nft-template4.png',
+//     '/assets/images/avatar-template.png',
+// ];
 
 const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState] = useDialogContext();

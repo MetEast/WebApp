@@ -20,9 +20,9 @@ import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
-import BuyNowDlgContainer from 'src/components/TransactionDialogs/BuyNow';
-import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
-import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
+// import BuyNowDlgContainer from 'src/components/TransactionDialogs/BuyNow';
+// import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
+// import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -301,9 +301,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <BuyNowDlgContainer />
+            {/* <BuyNowDlgContainer />
             <ChangePriceDlgContainer />
-            <CancelSaleDlgContainer />
+            <CancelSaleDlgContainer /> */}
         </Container>
     );
 };

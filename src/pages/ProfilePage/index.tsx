@@ -30,7 +30,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from 'src/components/Container';
 import { blankMyNFTItem } from 'src/constants/init-constants';
 import { useNavigate } from 'react-router-dom';
-import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
+// import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
 import YourEarningDlgContainer from 'src/components/Profile/YourEarnings';
 
 const ProfilePage: React.FC = (): JSX.Element => {
@@ -567,7 +567,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 </Grid>
             </Container>
             <YourEarningDlgContainer earningList={earningList} />
-            <EditProfileDlgContainer />
+            {/* <EditProfileDlgContainer /> */}
         </>
     );
 };

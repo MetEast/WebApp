@@ -20,10 +20,10 @@ import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescript
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import { getMintCategory } from 'src/services/common';
-import PlaceBidDlgContainer from 'src/components/TransactionDialogs/PlaceBid';
-import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
-import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
-import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
+// import PlaceBidDlgContainer from 'src/components/TransactionDialogs/PlaceBid';
+// import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
+// import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
+// import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
@@ -361,10 +361,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <PlaceBidDlgContainer />
+            {/* <PlaceBidDlgContainer />
             <ChangePriceDlgContainer />
             <CancelSaleDlgContainer />
-            <AcceptBidDlgContainer />
+            <AcceptBidDlgContainer /> */}
         </Container>
     );
 };

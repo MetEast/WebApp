@@ -5,7 +5,7 @@ import AllBids from './AllBids';
 
 export interface ComponentProps {}
 
-const AllBIdsDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+const AllBidsDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     return (
         <ModalDialog
@@ -23,4 +23,4 @@ const AllBIdsDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     );
 };
 
-export default AllBIdsDlgContainer;
+export default AllBidsDlgContainer;
