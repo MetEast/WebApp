@@ -7,6 +7,7 @@ export interface ComponentProps {
     placeholder?: string;
     error?: boolean;
     errorText?: string;
+    minValue?: number;
     handleChange?: (value: number) => void;
 }
 
@@ -16,6 +17,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
     placeholder,
     error = false,
     errorText = '',
+    minValue,
     handleChange = () => {},
 }): JSX.Element => {
     const [input, setInput] = useState<string>('0');
@@ -34,7 +36,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
     }, [inputValue]);
 
     React.useEffect(() => {
-        setInvalid(Number(input) === 0);
+        setInvalid(Number(input) === 0 || (!!minValue && Number(input) <= minValue));
     }, [input]);
 
     return (

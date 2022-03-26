@@ -32,6 +32,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                     inputValue={bidAmount.toString()}
                     error={bidAmountError}
                     errorText={`Bid amount must be greater than ${dialogState.placeBidMinLimit}`}
+                    minValue={dialogState.placeBidMinLimit}
                     handleChange={(value) => {
                         setBidAmount(value);
                     }}
