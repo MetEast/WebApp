@@ -462,77 +462,78 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         }
     }, [signInDlgState]);
 
-    // update wallet balance after every transactions
-    useEffect(() => {
-        if (linkType === '1') {
-            getEssentialsWalletBalance().then((balance: string) => {
-                _setSignInState((prevState: SignInState) => {
-                    const _state = { ...prevState };
-                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                    return _state;
-                });
-            });
-        } else {
-            _setSignInState((prevState: SignInState) => {
-                const _state = { ...prevState };
-                _state.chainId = chainId || 0;
-                if (!account) _state.walletBalance = 0;
-                else
-                    getWalletBalance(library, account).then((balance: string) => {
-                        _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                    });
-                return _state;
-            });
-        }
+    // // update wallet balance after every transactions
+    // useEffect(() => {
+    //     if (linkType === '1') {
+    //         getEssentialsWalletBalance().then((balance: string) => {
+    //             _setSignInState((prevState: SignInState) => {
+    //                 const _state = { ...prevState };
+    //                 _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+    //                 return _state;
+    //             });
+    //         });
+    //     } else {
+    //         _setSignInState((prevState: SignInState) => {
+    //             const _state = { ...prevState };
+    //             _state.chainId = chainId || 0;
+    //             if (!account) _state.walletBalance = 0;
+    //             else
+    //                 getWalletBalance(library, account).then((balance: string) => {
+    //                     _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+    //                 });
+    //             return _state;
+    //         });
+    //     }
 
-        if (linkType === '1' || (library && linkType === '2')) {
-            getChainGasPrice(
-                new Web3(linkType === '1' ? (walletConnectProvider as any) : (library?.provider as any)),
-            ).then((gasPriceUnit: string) => {
-                const estimatedFee: number = (parseFloat(gasPriceUnit) * 5000000) / 1e18;
-                setDialogState({
-                    ...dialogState,
-                    mintTxFee: estimatedFee,
-                    sellTxFee: estimatedFee,
-                    buyNowTxFee: estimatedFee,
-                    changePriceTxFee: estimatedFee,
-                    cancelSaleTxFee: estimatedFee,
-                    acceptBidTxFee: estimatedFee,
-                    placeBidTxFee: estimatedFee,
-                    updateBidTxFee: estimatedFee,
-                    cancelBidTxFee: estimatedFee,
-                    crtBlindTxFee: estimatedFee,
-                    buyBlindTxFee: estimatedFee,
-                });
-            });
-        }
-    }, [
-        library,
-        dialogState.createNFTDlgStep,
-        dialogState.buyNowDlgStep,
-        dialogState.changePriceDlgStep,
-        dialogState.cancelSaleDlgStep,
-        dialogState.acceptBidDlgStep,
-        dialogState.placeBidDlgStep,
-        dialogState.updateBidDlgStep,
-        dialogState.cancelBidDlgStep,
-        dialogState.createBlindBoxDlgStep,
-        dialogState.buyBlindBoxDlgStep,
-        dialogState.createNFTDlgOpened,
-        dialogState.buyNowDlgOpened,
-        dialogState.changePriceDlgOpened,
-        dialogState.cancelSaleDlgOpened,
-        dialogState.acceptBidDlgOpened,
-        dialogState.placeBidDlgOpened,
-        dialogState.updateBidDlgOpened,
-        dialogState.cancelBidDlgOpened,
-        dialogState.createBlindBoxDlgOpened,
-        dialogState.buyBlindBoxDlgOpened,
-    ]);
+    //     if (linkType === '1' || (library && linkType === '2')) {
+    //         getChainGasPrice(
+    //             new Web3(linkType === '1' ? (walletConnectProvider as any) : (library?.provider as any)),
+    //         ).then((gasPriceUnit: string) => {
+    //             const estimatedFee: number = (parseFloat(gasPriceUnit) * 5000000) / 1e18;
+    //             setDialogState({
+    //                 ...dialogState,
+    //                 mintTxFee: estimatedFee,
+    //                 sellTxFee: estimatedFee,
+    //                 buyNowTxFee: estimatedFee,
+    //                 changePriceTxFee: estimatedFee,
+    //                 cancelSaleTxFee: estimatedFee,
+    //                 acceptBidTxFee: estimatedFee,
+    //                 placeBidTxFee: estimatedFee,
+    //                 updateBidTxFee: estimatedFee,
+    //                 cancelBidTxFee: estimatedFee,
+    //                 crtBlindTxFee: estimatedFee,
+    //                 buyBlindTxFee: estimatedFee,
+    //             });
+    //         });
+    //     }
+    // }, [
+    //     library,
+    //     dialogState.createNFTDlgStep,
+    //     dialogState.buyNowDlgStep,
+    //     dialogState.changePriceDlgStep,
+    //     dialogState.cancelSaleDlgStep,
+    //     dialogState.acceptBidDlgStep,
+    //     dialogState.placeBidDlgStep,
+    //     dialogState.updateBidDlgStep,
+    //     dialogState.cancelBidDlgStep,
+    //     dialogState.createBlindBoxDlgStep,
+    //     dialogState.buyBlindBoxDlgStep,
+    //     dialogState.createNFTDlgOpened,
+    //     dialogState.buyNowDlgOpened,
+    //     dialogState.changePriceDlgOpened,
+    //     dialogState.cancelSaleDlgOpened,
+    //     dialogState.acceptBidDlgOpened,
+    //     dialogState.placeBidDlgOpened,
+    //     dialogState.updateBidDlgOpened,
+    //     dialogState.cancelBidDlgOpened,
+    //     dialogState.createBlindBoxDlgOpened,
+    //     dialogState.buyBlindBoxDlgOpened,
+    // ]);
 
     if (linkType === '1') initConnectivitySDK();
 
     // console.log('--------accounts: ', signInDlgState);
+    console.log('-------dlg', dialogState)
 
     return (
         <>
