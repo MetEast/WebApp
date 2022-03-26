@@ -4,11 +4,11 @@ import { ViewAllBtn } from './styles';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import { useDialogContext } from 'src/context/DialogContext';
-import ModalDialog from 'src/components/ModalDialog';
-import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
-import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
-import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
-import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
+// import ModalDialog from 'src/components/ModalDialog';
+// import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
+// import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
+// import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
+// import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
 import Username from 'src/components/Username';
 
 interface ComponentProps {
@@ -124,10 +124,18 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                     )}
                 </Stack>
             </Box>
-            <ModalDialog
+            {/* <ModalDialog
                 open={dialogState.updateBidDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, updateBidDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        updateBidPrice: 0,
+                        updateBidTxFee: 0,
+                        updateBidOrderId: '',
+                        updateBidTxHash: '',
+                        updateBidDlgOpened: false,
+                        updateBidDlgStep: 0,
+                    });
                 }}
             >
                 {dialogState.updateBidDlgStep === 0 && <UpdateBid />}
@@ -136,12 +144,19 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
             <ModalDialog
                 open={dialogState.cancelBidDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, cancelBidDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        cancelBidTxFee: 0,
+                        cancelBidOrderId: '',
+                        cancelBidTxHash: '',
+                        cancelBidDlgOpened: false,
+                        cancelBidDlgStep: 0,
+                    });
                 }}
             >
                 {dialogState.cancelBidDlgStep === 0 && <CancelBid />}
                 {dialogState.cancelBidDlgStep === 1 && <CancelBidSuccess />}
-            </ModalDialog>
+            </ModalDialog> */}
         </>
     );
 };

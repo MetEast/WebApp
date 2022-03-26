@@ -14,7 +14,22 @@ const CreateBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
             <ModalDialog
                 open={dialogState.createBlindBoxDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, createBlindBoxDlgOpened: false, progressBar: 0 });
+                    setDialogState({
+                        ...dialogState,
+                        createBlindBoxDlgOpened: false,
+                        createBlindBoxDlgStep: 0,
+                        crtBlindTitle: '',
+                        crtBlindDescription: '',
+                        crtBlindImage: new File([''], ''),
+                        crtBlindTokenIds: '',
+                        crtBlindStatus: 'offline',
+                        crtBlindQuantity: 0,
+                        crtBlindPrice: 0,
+                        crtBlindSaleBegin: '',
+                        // crtBlindSaleEnd: '',
+                        crtBlindPurchases: 0,
+                        progressBar: 0,
+                    });
                 }}
             >
                 {dialogState.createBlindBoxDlgStep === 0 && <CreateBlindBox />}

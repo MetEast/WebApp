@@ -24,7 +24,7 @@ const CancelBidSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     onClick={() => {
                         setDialogState({ ...dialogState, cancelBidDlgOpened: false });
                         navigate('/profile');
-                        window.location.reload();
+                        // window.location.reload();
                     }}
                 >
                     Close
