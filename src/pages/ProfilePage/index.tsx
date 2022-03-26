@@ -23,8 +23,6 @@ import {
     getMyTotalEarned,
     getMyEarnedList,
 } from 'src/services/fetch';
-import ModalDialog from 'src/components/ModalDialog';
-import YourEarnings from 'src/components/TransactionDialogs/YourEarnings/YourEarnings';
 import LooksEmptyBox from 'src/components/profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
@@ -49,8 +47,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
         nftGalleryFilterBtnTypes.All,
     );
-    const [earningsDlgOpen, setEarningsDlgOpen] = useState<boolean>(false);
-    const [editProfileDlgOpen, setEditProfileDlgOpen] = useState<boolean>(false);
     const [reload, setReload] = useState<boolean>(false);
     const [toatlEarned, setTotalEarned] = useState<string>('0');
     const [todayEarned, setTodayEarned] = useState<string>('0');
@@ -310,7 +306,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             size="small"
                             sx={{ paddingX: 2.5 }}
                             onClick={() => {
-                                setEarningsDlgOpen(true);
+                                setDialogState({ ...dialogState, earningDlgOpened: true });
                             }}
                         >
                             <Icon
