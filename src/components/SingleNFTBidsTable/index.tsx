@@ -4,12 +4,9 @@ import { ViewAllBtn } from './styles';
 import { TypeSingleNFTBid } from 'src/types/product-types';
 import ELAPrice from 'src/components/ELAPrice';
 import { useDialogContext } from 'src/context/DialogContext';
-// import ModalDialog from 'src/components/ModalDialog';
-// import UpdateBid from 'src/components/TransactionDialogs/UpdateBid/UpdateBid';
-// import BidUpdateSuccess from 'src/components/TransactionDialogs/UpdateBid/BidUpdateSuccess';
-// import CancelBid from 'src/components/TransactionDialogs/CancelBid/CancelBid';
-// import CancelBidSuccess from 'src/components/TransactionDialogs/CancelBid/CancelBidSuccess';
 import Username from 'src/components/Username';
+import CancelBidDlgContainer from '../TransactionDialogs/CancelBid';
+import UpdateBidDlgContainer from '../TransactionDialogs/UpdateBid';
 
 interface ComponentProps {
     isLoggedIn: boolean;
@@ -124,39 +121,8 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                     )}
                 </Stack>
             </Box>
-            {/* <ModalDialog
-                open={dialogState.updateBidDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        updateBidPrice: 0,
-                        updateBidTxFee: 0,
-                        updateBidOrderId: '',
-                        updateBidTxHash: '',
-                        updateBidDlgOpened: false,
-                        updateBidDlgStep: 0,
-                    });
-                }}
-            >
-                {dialogState.updateBidDlgStep === 0 && <UpdateBid />}
-                {dialogState.updateBidDlgStep === 1 && <BidUpdateSuccess />}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.cancelBidDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        cancelBidTxFee: 0,
-                        cancelBidOrderId: '',
-                        cancelBidTxHash: '',
-                        cancelBidDlgOpened: false,
-                        cancelBidDlgStep: 0,
-                    });
-                }}
-            >
-                {dialogState.cancelBidDlgStep === 0 && <CancelBid />}
-                {dialogState.cancelBidDlgStep === 1 && <CancelBidSuccess />}
-            </ModalDialog> */}
+            <UpdateBidDlgContainer />
+            <CancelBidDlgContainer />
         </>
     );
 };

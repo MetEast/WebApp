@@ -18,13 +18,10 @@ import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from '
 import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import ModalDialog from 'src/components/ModalDialog';
-import ChangePrice from 'src/components/TransactionDialogs/ChangePrice/ChangePrice';
-import PriceChangeSuccess from 'src/components/TransactionDialogs/ChangePrice/PriceChangeSuccess';
-import CancelSale from 'src/components/TransactionDialogs/CancelSale/CancelSale';
-import CancelSaleSuccess from 'src/components/TransactionDialogs/CancelSale/CancelSaleSuccess';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
+import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
+import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -280,39 +277,8 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     </Grid>
                 </Grid>
             )}
-            <ModalDialog
-                open={dialogState.changePriceDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        changePriceCurPrice: 0,
-                        changePriceTxFee: 0,
-                        changePriceOrderId: '',
-                        changePriceTxHash: '',
-                        changePriceDlgOpened: false,
-                        changePriceDlgStep: 0,
-                    });
-                }}
-            >
-                {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
-                {dialogState.changePriceDlgStep === 1 && <PriceChangeSuccess />}
-            </ModalDialog>
-            <ModalDialog
-                open={dialogState.cancelSaleDlgOpened}
-                onClose={() => {
-                    setDialogState({
-                        ...dialogState,
-                        cancelSaleTxFee: 0,
-                        cancelSaleOrderId: '',
-                        cancelSaleTxHash: '',
-                        cancelSaleDlgOpened: false,
-                        cancelSaleDlgStep: 0,
-                    });
-                }}
-            >
-                {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
-                {dialogState.cancelSaleDlgStep === 1 && <CancelSaleSuccess />}
-            </ModalDialog>
+            <ChangePriceDlgContainer />
+            <CancelSaleDlgContainer />
         </Container>
     );
 };
