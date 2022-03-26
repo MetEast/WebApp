@@ -73,7 +73,7 @@ interface DlgState {
     placeBidOrderId: string;
     placeBidMinLimit: number;
     placeBidAmount: number;
-    placeBidExpire: TypeSelectItem;
+    // placeBidExpire: TypeSelectItem;
     placeBidTxHash: string;
     placeBidTxFee: number;
     // update bid
@@ -194,7 +194,7 @@ export const defaultDlgState: DlgState = {
     placeBidName: '',
     placeBidMinLimit: 0,
     placeBidAmount: 0,
-    placeBidExpire: { label: '', value: '' },
+    // placeBidExpire: { label: '', value: '' },
     placeBidTxHash: '',
     placeBidTxFee: 0,
     placeBidOrderId: '',
