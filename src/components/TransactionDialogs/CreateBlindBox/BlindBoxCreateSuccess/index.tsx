@@ -27,7 +27,7 @@ const BlindBoxCreateSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     onClick={() => {
                         setDialogState({ ...dialogState, createBlindBoxDlgOpened: false });
                         navigate('/blind-box');
-                        window.location.reload();
+                        // window.location.reload();
                     }}
                 >
                     Close
