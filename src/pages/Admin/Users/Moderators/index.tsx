@@ -159,6 +159,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                 open={showModeratorsDlg}
                 onClose={() => {
                     setShowModeratorsDlg(false);
+                    setDialogState({ ...dialogState, progressBar: 0 });
                 }}
             >
                 <Moderators

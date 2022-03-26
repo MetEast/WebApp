@@ -29,6 +29,12 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     mintDidUri: '',
                     progressBar: 0,
                     createNFTDlgOpened: false,
+                    sellMinPrice: 0,
+                    sellSaleEnds: { label: '', value: '' },
+                    sellSaleType: 'buynow',
+                    sellTxFee: 0,
+                    sellTxHash: '',
+                    sellPrice: 0,
                 });
             }}
         >

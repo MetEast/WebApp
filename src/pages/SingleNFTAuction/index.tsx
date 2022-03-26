@@ -370,7 +370,18 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.placeBidDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, placeBidDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        placeBidAmount: 0,
+                        // placeBidExpire: { label: '', value: '' },
+                        placeBidTxFee: 0,
+                        placeBidDlgOpened: false,
+                        placeBidDlgStep: 0,
+                        placeBidName: '',
+                        placeBidTxHash: '',
+                        placeBidOrderId: '',
+                        placeBidMinLimit: 0,
+                    });
                 }}
             >
                 {dialogState.placeBidDlgStep === 0 && <PlaceBid />}
@@ -380,7 +391,15 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.changePriceDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, changePriceDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        changePriceCurPrice: 0,
+                        changePriceTxFee: 0,
+                        changePriceOrderId: '',
+                        changePriceTxHash: '',
+                        changePriceDlgOpened: false,
+                        changePriceDlgStep: 0,
+                    }); 
                 }}
             >
                 {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
@@ -389,7 +408,14 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.cancelSaleDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        cancelSaleTxFee: 0,
+                        cancelSaleOrderId: '',
+                        cancelSaleTxHash: '',
+                        cancelSaleDlgOpened: false,
+                        cancelSaleDlgStep: 0,
+                    });
                 }}
             >
                 {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}
@@ -398,7 +424,16 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             <ModalDialog
                 open={dialogState.acceptBidDlgOpened}
                 onClose={() => {
-                    setDialogState({ ...dialogState, acceptBidDlgOpened: false });
+                    setDialogState({
+                        ...dialogState,
+                        acceptBidDlgOpened: false,
+                        acceptBidDlgStep: 0,
+                        acceptBidPrice: 0,
+                        acceptBidOrderId: '',
+                        acceptBidName: '',
+                        acceptBidTxFee: 0,
+                        acceptBidTxHash: '',
+                    });
                 }}
             >
                 {dialogState.acceptBidDlgStep === 0 && <AcceptBid />}
