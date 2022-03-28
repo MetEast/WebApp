@@ -491,7 +491,7 @@ export const getNFTLatestTxs = async (
             _NFTTxHistory.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
             if (itemObject.event === 'BuyOrder')
                 _NFTTxHistory.saleType =
-                    arrNFTTxs[i + 2].event === 'CreateOrderForSale'
+                    arrNFTTxs[i + 1].event === 'CreateOrderForSale'
                         ? enumTransactionType.ForSale
                         : enumTransactionType.OnAuction;
             _NFTTxHistory.txHash = itemObject.tHash;
