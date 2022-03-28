@@ -16,6 +16,7 @@ import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
+    getEssentialsWalletAddress,
     getEssentialsWalletBalance,
     getDidUri,
     resetWalletConnector,
@@ -202,6 +203,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         if (presentation) {
             let unmounted = false;
             const did = presentation.getHolder().getMethodSpecificId() || '';
+            const walletAccounts = getEssentialsWalletAddress();
             fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
                 method: 'POST',
                 headers: {
