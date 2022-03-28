@@ -118,8 +118,8 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     onClick={() => {
                         changeHandler(
                             status,
-                            minPrice === undefined ? '0' : minPrice,
-                            maxPrice === undefined ? '0' : maxPrice,
+                            minPrice === undefined ? '' : minPrice,
+                            maxPrice === undefined ? '' : maxPrice,
                             category,
                             false,
                         );
@@ -133,8 +133,8 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     onClick={() => {
                         changeHandler(
                             status,
-                            minPrice === undefined ? '0' : minPrice,
-                            maxPrice === undefined ? '0' : maxPrice,
+                            minPrice === undefined ? '' : minPrice,
+                            maxPrice === undefined ? '' : maxPrice,
                             category,
                             true,
                         );
