@@ -76,6 +76,9 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
                     </ImageBox>
                 ) : (
                     <Stack justifyContent="center" alignItems="center">
+                        <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                            File types supported:PNG,JPEG,JPG,GIF
+                        </Typography>
                         <Icon icon="ph:cloud-arrow-up" fontSize={24} color="#1890FF" />
                         <Typography fontSize={14} fontWeight={500} color="#1890FF">
                             Upload Image

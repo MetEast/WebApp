@@ -60,15 +60,18 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     }, [signInDlgState.walletAccounts]);
 
     const handleFileChange = (files: Array<File>) => {
-        handleDropSingleFile(files);
-        if (files !== null && files.length > 0) {
-            setBlindboxImage(files[0]);
-            setBlindboxImageError(false);
-        }
+        if (files === null || files.length === 0) return;
+
+        const file = files[0];
+        if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/gif') return;
+
+        handleDropSingleFile(file);
+
+        setBlindboxImage(file);
+        setBlindboxImageError(false);
     };
 
-    const handleDropSingleFile = useCallback((acceptedFiles) => {
-        const file = acceptedFiles[0];
+    const handleDropSingleFile = useCallback((file) => {
         if (file) {
             setStateFile({ ...file, preview: URL.createObjectURL(file) });
         }
