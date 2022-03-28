@@ -22,7 +22,6 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-import { useSnackbar } from 'notistack';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { isInAppBrowser, getChainGasPrice } from 'src/services/wallet';
