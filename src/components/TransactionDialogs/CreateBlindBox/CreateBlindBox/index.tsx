@@ -219,7 +219,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 <DateTimeInput
                                     type="datetime-local"
                                     inputProps={{
-                                        step: 1,
+                                        step: 60,
                                     }}
                                     value={saleBegins}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
