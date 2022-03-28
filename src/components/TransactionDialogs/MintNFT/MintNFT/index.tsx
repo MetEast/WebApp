@@ -39,15 +39,18 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
     const [royaltiesError, setRoyaltiesError] = useState(false);
 
     const handleFileChange = (files: Array<File>) => {
-        handleDropSingleFile(files);
-        if (files !== null && files.length > 0) {
-            setMintFile(files[0]);
-            setMintFileError(false);
-        }
+        if (files === null || files.length === 0) return;
+
+        const file = files[0];
+        if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/gif') return;
+
+        handleDropSingleFile(file);
+
+        setMintFile(file);
+        setMintFileError(false);
     };
 
-    const handleDropSingleFile = useCallback((acceptedFiles) => {
-        const file = acceptedFiles[0];
+    const handleDropSingleFile = useCallback((file) => {
         if (file) {
             setStateFile({ ...file, preview: URL.createObjectURL(file) });
         }
