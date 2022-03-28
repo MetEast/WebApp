@@ -237,7 +237,7 @@ export const getSearchParams = (
         filters.forEach((item) => {
             if (item === 0) filterStatus += 'ON AUCTION,';
             else if (item === 1) filterStatus += 'BUY NOW,';
-            else if (item === 2) filterStatus += 'HAS BID,';
+            else if (item === 2) filterStatus += 'HAS BIDS,';
         });
         searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
     }
