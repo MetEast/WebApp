@@ -21,7 +21,6 @@ import {
     resetWalletConnector,
     getWalletBalance,
     isInAppBrowser,
-    // getChainGasPrice,
 } from 'src/services/wallet';
 import { UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -38,7 +37,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [dialogState, setDialogState] = useDialogContext();
+    const [dialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const { activate, active, library, chainId, account } = useWeb3React<Web3Provider>();
