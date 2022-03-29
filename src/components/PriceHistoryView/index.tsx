@@ -64,7 +64,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         xaxis: {
             type: 'datetime' as const,
             labels: {
-                format: 'MMM dd',
+                format: 'dd MMM',
             },
         },
         tooltip: {
