@@ -5,7 +5,7 @@ import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { IconBtn } from './styles';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { FacebookIcon, TwitterIcon } from 'react-share';
 import { getShorternUrl } from 'src/services/fetch';
 // import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
@@ -26,6 +26,7 @@ const ReportBtnTooltip = styled(({ className, ...props }: ReportBtnTooltipProps<
 const ProductPageHeader: React.FC = (): JSX.Element => {
     const param = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [showReportBtn, setShowReportBtn] = useState<boolean>(false);
     const [isOpenSharePopup, setOpenSharePopup] = useState(null);
     const [shortUrl, setShortUrl] = useState<string>('');
@@ -49,6 +50,9 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [param.id]);
+
+    let bShowDelBtn: boolean =
+        location.pathname.indexOf('/mynft/created') !== -1 || location.pathname.indexOf('/mynft/purchased') !== -1;
 
     return (
         <Stack direction="row" justifyContent="space-between">
@@ -129,29 +133,40 @@ const ProductPageHeader: React.FC = (): JSX.Element => {
                     <IconBtn onClick={() => setShowReportBtn(!showReportBtn)}>
                         <Icon icon="ph:dots-three-vertical-bold" color="#1890FF" />
                     </IconBtn>
-                    <Box
-                        display={showReportBtn ? 'block' : 'none'}
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        paddingTop={1}
+                        display={showReportBtn ? 'flex' : 'none'}
                         sx={{ position: 'absolute', right: 0, top: '100%' }}
                     >
-                        <ReportBtnTooltip title="Coming Soon" show={showReportBtn ? 1 : 0}>
-                            <span>
-                                <PrimaryButton
-                                    disabled
-                                    btn_color="pink"
-                                    size="small"
-                                    sx={{ paddingX: 2.5, marginTop: 0.5 }}
-                                >
-                                    <Icon
-                                        icon="ph:megaphone"
-                                        fontSize={20}
-                                        color="rgba(0, 0, 0, 0.26)"
-                                        style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
-                                    />
-                                    Report
-                                </PrimaryButton>
-                            </span>
-                        </ReportBtnTooltip>
-                    </Box>
+                        {!bShowDelBtn && (
+                            <ReportBtnTooltip title="Coming Soon" show={showReportBtn ? 1 : 0}>
+                                <span>
+                                    <PrimaryButton disabled btn_color="pink" size="small" sx={{ paddingX: 2.5 }}>
+                                        <Icon
+                                            icon="ph:megaphone"
+                                            fontSize={20}
+                                            color="rgba(0, 0, 0, 0.26)"
+                                            style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
+                                        />
+                                        Report
+                                    </PrimaryButton>
+                                </span>
+                            </ReportBtnTooltip>
+                        )}
+                        {bShowDelBtn && (
+                            <PrimaryButton size="small" btn_color="pink" sx={{ paddingX: 2.5 }}>
+                                <Icon
+                                    icon="ph:trash"
+                                    fontSize={20}
+                                    color="#EB5757"
+                                    style={{ marginLeft: -4, marginRight: 8, marginBottom: 2 }}
+                                />
+                                {'Delete'}
+                            </PrimaryButton>
+                        )}
+                    </Stack>
                 </Box>
             </Stack>
         </Stack>
