@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Stack, Typography } from '@mui/material';
-import Chart from 'react-apexcharts';
 import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
-import { TypePriceHistoryFetch, TypeChartAxis } from 'src/types/product-types';
+import { TypePriceHistoryFetch } from 'src/types/product-types';
 import { TypeSelectItem } from 'src/types/select-types';
-import { getChartDateList, getChartTimestampList, getTime } from 'src/services/common';
+import { getChartTimestampList } from 'src/services/common';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
@@ -36,46 +35,9 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         );
     };
 
-    // const options = {
-    //     chart: {
-    //         id: 'area-bar',
-    //         type:'area',
-    //         zoom: {
-    //             autoScaleYaxis: true
-    //         }
-    //     },
-    //     dataLabels: { enabled: false },
-    //     grid: {
-    //         show: true,
-    //         xaxis: {
-    //             lines: {
-    //                 show: true,
-    //             },
-    //         },
-    //         yaxis: {
-    //             lines: {
-    //                 show: true,
-    //             },
-    //         },
-    //     },
-    //     fill: {
-    //         type: 'gradient',
-    //         gradient: {
-    //             shadeIntensity: 1,
-    //             opacityFrom: 0.5,
-    //             opacityTo: 0.9,
-    //         },
-    //     },
-    //     xaxis: {
-    //         type: 'datetime' as const,
-    //         labels: {
-    //             format: 'MMM dd',
-    //         },
-    //     },
-    //     tooltip: {
-    //         custom: tooltipBox,
-    //     },
-    // };
+    const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(
+        priceHistoryUnitSelectOptions[1],
+    );
 
     const series = [
         {
@@ -135,11 +97,13 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         xaxis: {
             type: 'datetime' as const,
             labels: {
-                format: 'MMM dd',
+                format: 'MMM dd HH:mm',
             },
             min: new Date('01 Mar 2022').getTime(),
-            tickAmount: 6,
+            max: (new Date().getTime() + 10000000),
+            tickAmount: 6,            
         },
+
         tooltip: {
             x: {
                 format: 'dd MMM yyyy',
@@ -157,16 +121,18 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         },
     };
 
-    const [chartOptions] = useState(options);
+    const [chartOptions, setChartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
-    const [priceHistoryUnit, setPriceHistoryUnit] = useState<TypeSelectItem | undefined>(
-        priceHistoryUnitSelectOptions[1],
-    );
     const [priceHistoryUnitSelectOpen, setPriceHistoryUnitSelectOpen] = useState(false);
 
     const handlePriceHistoryUnitChange = (value: string) => {
         const item = priceHistoryUnitSelectOptions.find((option) => option.value === value);
         setPriceHistoryUnit(item);
+        // const prevOptions = { ...chartOptions };
+        // prevOptions.xaxis.labels.format = item?.value === 'Daily' ? 'HH:mm' : 'MMM dd';
+        // prevOptions.xaxis.min = new Date(new Date().setHours(0, 0, 0, 0)).getTime(); // start date
+        // prevOptions.xaxis.max = new Date(new Date().setHours(24, 0, 0, 0)).getTime(); // end date
+        // setChartOptions(prevOptions);
         const timeRange = getChartTimestampList(item?.value || '');
         ApexCharts.exec('area-datetime', 'zoomX', timeRange.start, timeRange.end);
     };
@@ -183,7 +149,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                         _latestPriceList.push([new Date('01 Jan 2022').getTime(), 0]);
                         if (productPriceList.length)
                             _latestPriceList.push([(parseInt(productPriceList[0].updateTime) - 100) * 1000, 0]);
-                        for (let i = 0; i < productPriceList.length; i++) {
+                        for (let i = 0; i < productPriceList.length; i ++) {
                             _latestPriceList.push([
                                 parseInt(productPriceList[i].updateTime) * 1000,
                                 productPriceList[i].price / 1e18,
@@ -226,8 +192,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 />
             </Stack>
             <Box zIndex={0}>
-                {/* <Chart options={chartOptions} series={chartSeries} type="area" /> */}
-                <ReactApexChart options={chartOptions} series={chartSeries} type="area" height={350} />
+                <ReactApexChart options={chartOptions} series={chartSeries} type="area" />
             </Box>
         </Stack>
     );
