@@ -26,11 +26,15 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         dataPointIndex: any;
         w: any;
     }) => {
+        // console.log('series:', series);
+        console.log('seriesIndex:', seriesIndex);
+        console.log('dataPointIndex:', dataPointIndex);
         return renderToString(
             <PriceHistoryToolTip
                 price={series[seriesIndex][dataPointIndex]}
                 timestamp={w.globals.seriesX[seriesIndex][dataPointIndex]}
-                username={''}
+                username={chartSeries[seriesIndex].data[dataPointIndex].username}
+                // username=""
             />,
         );
     };
@@ -75,18 +79,42 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const series = [
         {
             data: [
-                { x: '01/01/2021', y: 0 },
-                { x: '01/02/2021', y: 0 },
-                { x: '01/03/2021', y: 0 },
-                { x: '01/04/2021', y: 0 },
-                { x: '01/05/2021', y: 0 },
-                { x: '01/16/2021', y: 0 },
-                { x: '01/07/2021', y: 0 },
-                { x: '01/08/2021', y: 0 },
-                { x: '01/09/2021', y: 0 },
-                { x: '01/10/2021', y: 0 },
-                { x: '01/11/2021', y: 0 },
-                { x: '01/12/2021', y: 0 },
+                { x: '01/01/2021', y: 10, username: 'user3' },
+                { x: '01/02/2021', y: 40, username: 'user3' },
+                { x: '01/03/2021', y: 70, username: 'user3' },
+                { x: '01/04/2021', y: 20, username: 'user3' },
+                { x: '01/05/2021', y: 90, username: 'user3' },
+                { x: '01/06/2021', y: 40, username: 'user3' },
+                { x: '01/07/2021', y: 65, username: 'user3' },
+                { x: '01/08/2021', y: 30, username: 'user3' },
+                { x: '01/09/2021', y: 60, username: 'user3' },
+                { x: '01/10/2021', y: 80, username: 'user3' },
+                { x: '01/11/2021', y: 45, username: 'user3' },
+                { x: '01/12/2021', y: 50, username: 'user3' },
+                { x: '01/13/2021', y: 10, username: 'user3' },
+                { x: '01/14/2021', y: 40, username: 'user3' },
+                { x: '01/15/2021', y: 70, username: 'user3' },
+                { x: '01/16/2021', y: 20, username: 'user3' },
+                { x: '01/17/2021', y: 90, username: 'user3' },
+                { x: '01/18/2021', y: 40, username: 'user3' },
+                { x: '01/19/2021', y: 65, username: 'user3' },
+                { x: '01/20/2021', y: 30, username: 'user3' },
+                { x: '01/21/2021', y: 60, username: 'user3' },
+                { x: '01/22/2021', y: 80, username: 'user3' },
+                { x: '01/23/2021', y: 45, username: 'user3' },
+                { x: '01/24/2021', y: 50, username: 'user3' },
+                { x: '01/25/2021', y: 10, username: 'user3' },
+                { x: '01/26/2021', y: 40, username: 'user3' },
+                { x: '01/27/2021', y: 70, username: 'user3' },
+                { x: '01/28/2021', y: 20, username: 'user3' },
+                { x: '01/29/2021', y: 90, username: 'user3' },
+                { x: '01/30/2021', y: 40, username: 'user3' },
+                { x: '01/31/2021', y: 65, username: 'user3' },
+                { x: '02/01/2021', y: 30, username: 'user3' },
+                { x: '02/02/2021', y: 60, username: 'user3' },
+                { x: '02/03/2021', y: 80, username: 'user3' },
+                { x: '02/04/2021', y: 45, username: 'user3' },
+                { x: '02/05/2021', y: 50, username: 'user3' },
             ],
         },
     ];
@@ -113,8 +141,12 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                         const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
                         const getPriceValue = (value: string) => {
                             const nItem = productPriceList.findIndex((option) => {
-                                const dateTime = option.updateTime ? getTime(option.updateTime) : {date: '', time: ''};
-                                return value === (dateTime.date + ' ' + dateTime.time).replaceAll('/', '-').slice(0, 10);
+                                const dateTime = option.updateTime
+                                    ? getTime(option.updateTime)
+                                    : { date: '', time: '' };
+                                return (
+                                    value === (dateTime.date + ' ' + dateTime.time).replaceAll('/', '-').slice(0, 10)
+                                );
                             });
                             return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
                         };
@@ -123,9 +155,14 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                         for (let i = 0; i < _dateList.length; i++) {
                             _latestPriceList.push({
                                 x: getTime((_dateList[i].getTime() / 1000).toString()).date,
-                                y: getPriceValue(getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')),
+                                y: getPriceValue(
+                                    getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-'),
+                                ),
+                                username: `user${i}`,
                             });
                         }
+                        console.log('_dateList.length:', _dateList.length);
+                        console.log('_latestPriceList:', _latestPriceList);
                         setChartSeries([{ data: _latestPriceList }]);
                     }
                 });
