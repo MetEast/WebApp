@@ -1,3 +1,4 @@
+import { start } from 'repl';
 import { enumBadgeType, TypeFavouritesFetch } from 'src/types/product-types';
 
 // custome
@@ -120,15 +121,16 @@ export const getMondayOfWeek = (d: Date) => {
 export const getChartDateList = (date: Date, type: string) => {
     let retDateList: Array<Date> = [];
     if (type === 'Daily') {
-        const dayBeforeYesterday = new Date(date.setDate(date.getDate() - 2));
-        const yesterday = new Date(date.setDate(date.getDate() + 1));
+        // const dayBeforeYesterday = new Date(date.setDate(date.getDate() - 2));
+        const yesterday = new Date(date.setDate(date.getDate() - 1));
         const today = new Date(date.setDate(date.getDate() + 1));
         const tomorrow = new Date(date.setDate(date.getDate() + 1));
 
-        retDateList.push(dayBeforeYesterday);
+        // retDateList.push(dayBeforeYesterday);
         retDateList.push(yesterday);
         retDateList.push(today);
         retDateList.push(tomorrow);
+        // retDateList.push(date)
     } else if (type === 'Weekly') {
         // let startDate = new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000);
         let startDate = getMondayOfWeek(date);
@@ -153,4 +155,25 @@ export const getChartDateList = (date: Date, type: string) => {
         }
     }
     return retDateList;
+};
+
+export const getChartTimestampList = (type: string) => {
+    const date = new Date();
+    if (type === 'Daily') {
+        const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+        const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+        return {start: start.getTime(), end: end.getTime()};
+    } else if (type === 'Weekly') {
+        const start = getMondayOfWeek(date);
+        const temp = new Date(start);
+        const end = new Date(temp.setDate(temp.getDate() + 6));
+        return {start: start.getTime(), end: end.getTime()};
+    } else if (type === 'Monthly') {
+        const start = new Date(date.getFullYear(), date.getMonth(), 1);
+        const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        return {start: start.getTime(), end: end.getTime()};
+    }
+    else {
+        return {start: 0, end: 0};
+    }
 };

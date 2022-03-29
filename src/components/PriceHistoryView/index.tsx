@@ -6,11 +6,12 @@ import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
 import { TypePriceHistoryFetch, TypeChartAxis } from 'src/types/product-types';
 import { TypeSelectItem } from 'src/types/select-types';
-import { getChartDateList, getTime } from 'src/services/common';
+import { getChartDateList, getChartTimestampList, getTime } from 'src/services/common';
 import Select from 'src/components/Select';
 import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { priceHistoryUnitSelectOptions } from 'src/constants/select-constants';
+import ReactApexChart from 'react-apexcharts';
 
 interface ComponentProps {}
 
@@ -35,61 +36,126 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         );
     };
 
+    // const options = {
+    //     chart: {
+    //         id: 'area-bar',
+    //         type:'area',
+    //         zoom: {
+    //             autoScaleYaxis: true
+    //         }
+    //     },
+    //     dataLabels: { enabled: false },
+    //     grid: {
+    //         show: true,
+    //         xaxis: {
+    //             lines: {
+    //                 show: true,
+    //             },
+    //         },
+    //         yaxis: {
+    //             lines: {
+    //                 show: true,
+    //             },
+    //         },
+    //     },
+    //     fill: {
+    //         type: 'gradient',
+    //         gradient: {
+    //             shadeIntensity: 1,
+    //             opacityFrom: 0.5,
+    //             opacityTo: 0.9,
+    //         },
+    //     },
+    //     xaxis: {
+    //         type: 'datetime' as const,
+    //         labels: {
+    //             format: 'MMM dd',
+    //         },
+    //     },
+    //     tooltip: {
+    //         custom: tooltipBox,
+    //     },
+    // };
+
+    const series = [
+        {
+            data: [
+                [1640962800000, 0],
+                [1640963000000, 0],
+            ],
+        },
+    ];
+
     const options = {
         chart: {
-            id: 'area-bar',
-        },
-        dataLabels: { enabled: false },
-        grid: {
-            show: true,
-            xaxis: {
-                lines: {
-                    show: true,
-                },
-            },
-            yaxis: {
-                lines: {
-                    show: true,
-                },
+            id: 'area-datetime',
+            type: 'area' as const,
+            zoom: {
+                autoScaleYaxis: true,
             },
         },
-        fill: {
-            type: 'gradient',
-            gradient: {
-                shadeIntensity: 1,
-                opacityFrom: 0.5,
-                opacityTo: 0.9,
-            },
+        annotations: {
+            yaxis: [
+                {
+                    y: 30,
+                    borderColor: '#999',
+                    label: {
+                        show: true,
+                        text: 'Support',
+                        style: {
+                            color: '#fff',
+                            background: '#00E396',
+                        },
+                    },
+                },
+            ],
+            xaxis: [
+                {
+                    x: new Date('01 Jan 2022').getTime(),
+                    borderColor: '#999',
+                    yAxisIndex: 0,
+                    label: {
+                        show: true,
+                        text: 'Start',
+                        style: {
+                            color: '#fff',
+                            background: '#775DD0',
+                        },
+                    },
+                },
+            ],
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        markers: {
+            size: 0,
+            style: 'hollow',
         },
         xaxis: {
             type: 'datetime' as const,
             labels: {
                 format: 'MMM dd',
             },
+            min: new Date('01 Mar 2022').getTime(),
+            tickAmount: 6,
         },
         tooltip: {
+            x: {
+                format: 'dd MMM yyyy',
+            },
             custom: tooltipBox,
         },
-    };
-
-    const series = [
-        {
-            data: [
-                { x: '01/01/2021', y: 0 },
-                { x: '01/02/2021', y: 0 },
-                { x: '01/03/2021', y: 0 },
-                { x: '01/04/2021', y: 0 },
-                { x: '01/05/2021', y: 0 },
-                { x: '01/16/2021', y: 0 },
-                { x: '01/07/2021', y: 0 },
-                { x: '01/08/2021', y: 0 },
-                { x: '01/09/2021', y: 0 },
-                { x: '01/10/2021', y: 0 },
-                { x: '01/11/2021', y: 0 },
-                { x: '01/12/2021', y: 0 },
-            ],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.9,
+                stops: [0, 100],
+            },
         },
-    ];
+    };
 
     const [chartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
@@ -101,6 +167,8 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const handlePriceHistoryUnitChange = (value: string) => {
         const item = priceHistoryUnitSelectOptions.find((option) => option.value === value);
         setPriceHistoryUnit(item);
+        const timeRange = getChartTimestampList(item?.value || '');
+        ApexCharts.exec('area-datetime', 'zoomX', timeRange.start, timeRange.end);
     };
     const params = useParams();
 
@@ -111,24 +179,20 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 response.json().then((jsonPriceList) => {
                     if (!unmounted) {
                         const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
-                        const getPriceValue = (value: string) => {
-                            const nItem = productPriceList.findIndex((option) => {
-                                const dateTime = option.updateTime ? getTime(option.updateTime) : {date: '', time: ''};
-                                return value === (dateTime.date + ' ' + dateTime.time).replaceAll('/', '-').slice(0, 10);
-                            });
-                            return nItem === -1 ? 0 : productPriceList[nItem].price / 1e18;
-                        };
-                        const _latestPriceList: Array<TypeChartAxis> = [];
-                        let _dateList = getChartDateList(new Date(), priceHistoryUnit?.value || '');
-                        for (let i = 0; i < _dateList.length; i++) {
-                            const timestamp = getTime((_dateList[i].getTime() / 1000).toString());
-                            _latestPriceList.push({
-                                x: timestamp.date + ' ' + timestamp.time,
-                                y: getPriceValue(getTime((_dateList[i].getTime() / 1000).toString()).date.replaceAll('/', '-')),
-                            });
+                        const _latestPriceList: number[][] = [];
+                        _latestPriceList.push([new Date('01 Jan 2022').getTime(), 0]);
+                        if (productPriceList.length)
+                            _latestPriceList.push([(parseInt(productPriceList[0].updateTime) - 100) * 1000, 0]);
+                        for (let i = 0; i < productPriceList.length; i++) {
+                            _latestPriceList.push([
+                                parseInt(productPriceList[i].updateTime) * 1000,
+                                productPriceList[i].price / 1e18,
+                            ]);
                         }
-                        console.log(_latestPriceList)
+                        const lastValue = _latestPriceList[_latestPriceList.length - 1];
+                        _latestPriceList.push([new Date().getTime(), lastValue[1]]);
                         setChartSeries([{ data: _latestPriceList }]);
+                        handlePriceHistoryUnitChange('Weekly');
                     }
                 });
             })
@@ -138,7 +202,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [priceHistoryUnit, params.id]);
+    }, [params.id]);
 
     return (
         <Stack spacing={2}>
@@ -162,7 +226,8 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 />
             </Stack>
             <Box zIndex={0}>
-                <Chart options={chartOptions} series={chartSeries} type="area" />
+                {/* <Chart options={chartOptions} series={chartSeries} type="area" /> */}
+                <ReactApexChart options={chartOptions} series={chartSeries} type="area" height={350} />
             </Box>
         </Stack>
     );
