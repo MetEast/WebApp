@@ -26,15 +26,11 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
         dataPointIndex: any;
         w: any;
     }) => {
-        // console.log('series:', series);
-        console.log('seriesIndex:', seriesIndex);
-        console.log('dataPointIndex:', dataPointIndex);
         return renderToString(
             <PriceHistoryToolTip
                 price={series[seriesIndex][dataPointIndex]}
                 timestamp={w.globals.seriesX[seriesIndex][dataPointIndex]}
-                username={chartSeries[seriesIndex].data[dataPointIndex].username}
-                // username=""
+                username={w.globals.initialSeries[seriesIndex].data[dataPointIndex].username}
             />,
         );
     };
@@ -79,42 +75,15 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const series = [
         {
             data: [
-                { x: '01/01/2021', y: 10, username: 'user3' },
-                { x: '01/02/2021', y: 40, username: 'user3' },
+                { x: '01/01/2021', y: 10, username: 'user1' },
+                { x: '01/02/2021', y: 40, username: 'user2' },
                 { x: '01/03/2021', y: 70, username: 'user3' },
-                { x: '01/04/2021', y: 20, username: 'user3' },
-                { x: '01/05/2021', y: 90, username: 'user3' },
-                { x: '01/06/2021', y: 40, username: 'user3' },
-                { x: '01/07/2021', y: 65, username: 'user3' },
-                { x: '01/08/2021', y: 30, username: 'user3' },
-                { x: '01/09/2021', y: 60, username: 'user3' },
-                { x: '01/10/2021', y: 80, username: 'user3' },
-                { x: '01/11/2021', y: 45, username: 'user3' },
-                { x: '01/12/2021', y: 50, username: 'user3' },
-                { x: '01/13/2021', y: 10, username: 'user3' },
-                { x: '01/14/2021', y: 40, username: 'user3' },
-                { x: '01/15/2021', y: 70, username: 'user3' },
-                { x: '01/16/2021', y: 20, username: 'user3' },
-                { x: '01/17/2021', y: 90, username: 'user3' },
-                { x: '01/18/2021', y: 40, username: 'user3' },
-                { x: '01/19/2021', y: 65, username: 'user3' },
-                { x: '01/20/2021', y: 30, username: 'user3' },
-                { x: '01/21/2021', y: 60, username: 'user3' },
-                { x: '01/22/2021', y: 80, username: 'user3' },
-                { x: '01/23/2021', y: 45, username: 'user3' },
-                { x: '01/24/2021', y: 50, username: 'user3' },
-                { x: '01/25/2021', y: 10, username: 'user3' },
-                { x: '01/26/2021', y: 40, username: 'user3' },
-                { x: '01/27/2021', y: 70, username: 'user3' },
-                { x: '01/28/2021', y: 20, username: 'user3' },
-                { x: '01/29/2021', y: 90, username: 'user3' },
-                { x: '01/30/2021', y: 40, username: 'user3' },
-                { x: '01/31/2021', y: 65, username: 'user3' },
-                { x: '02/01/2021', y: 30, username: 'user3' },
-                { x: '02/02/2021', y: 60, username: 'user3' },
-                { x: '02/03/2021', y: 80, username: 'user3' },
-                { x: '02/04/2021', y: 45, username: 'user3' },
-                { x: '02/05/2021', y: 50, username: 'user3' },
+                { x: '01/04/2021', y: 20, username: 'user4' },
+                { x: '01/05/2021', y: 90, username: 'user5' },
+                { x: '01/06/2021', y: 40, username: 'user6' },
+                { x: '01/07/2021', y: 65, username: 'user7' },
+                { x: '01/08/2021', y: 30, username: 'user8' },
+                { x: '01/09/2021', y: 60, username: 'user9' },
             ],
         },
     ];
@@ -161,8 +130,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                                 username: `user${i}`,
                             });
                         }
-                        console.log('_dateList.length:', _dateList.length);
-                        console.log('_latestPriceList:', _latestPriceList);
                         setChartSeries([{ data: _latestPriceList }]);
                     }
                 });
