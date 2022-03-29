@@ -71,7 +71,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Cancel sale error: ${error}!`, {
+                enqueueSnackbar(`Cancel sale error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

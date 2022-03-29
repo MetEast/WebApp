@@ -76,7 +76,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
                 window.location.reload();
             })
             .catch((error) => {
-                enqueueSnackbar(`Remove Token error!`, {
+                enqueueSnackbar(`Remove Token error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

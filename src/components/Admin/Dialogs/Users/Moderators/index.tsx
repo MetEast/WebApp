@@ -106,7 +106,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(`Cancel sale error: ${error}!`, {
+                enqueueSnackbar(`Cancel sale error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

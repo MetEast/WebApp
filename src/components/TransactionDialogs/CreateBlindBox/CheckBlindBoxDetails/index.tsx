@@ -200,7 +200,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(`Create Mystery Box error: ${error}!`, {
+                enqueueSnackbar(`Create Mystery Box error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

@@ -73,7 +73,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Place bid error: ${error}!`, {
+                enqueueSnackbar(`Place bid error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
