@@ -75,15 +75,15 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const series = [
         {
             data: [
-                { x: '01/01/2021', y: 10, username: 'user1' },
-                { x: '01/02/2021', y: 40, username: 'user2' },
-                { x: '01/03/2021', y: 70, username: 'user3' },
-                { x: '01/04/2021', y: 20, username: 'user4' },
-                { x: '01/05/2021', y: 90, username: 'user5' },
-                { x: '01/06/2021', y: 40, username: 'user6' },
-                { x: '01/07/2021', y: 65, username: 'user7' },
-                { x: '01/08/2021', y: 30, username: 'user8' },
-                { x: '01/09/2021', y: 60, username: 'user9' },
+                { x: '01/01/2021', y: 0, username: 'user1' },
+                { x: '01/02/2021', y: 0, username: 'user2' },
+                { x: '01/03/2021', y: 0, username: 'user3' },
+                { x: '01/04/2021', y: 0, username: 'user4' },
+                { x: '01/05/2021', y: 0, username: 'user5' },
+                { x: '01/06/2021', y: 0, username: 'user6' },
+                { x: '01/07/2021', y: 0, username: 'user7' },
+                { x: '01/08/2021', y: 0, username: 'user8' },
+                { x: '01/09/2021', y: 0, username: 'user9' },
             ],
         },
     ];

@@ -27,9 +27,11 @@ const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp, usern
             <Typography fontSize={12} fontWeight={400}>
                 {getDateString(timestamp)}
             </Typography>
-            <Typography fontSize={12} fontWeight={700} alignSelf="flex-end">
-                {username}
-            </Typography>
+            {price > 0 && (
+                <Typography fontSize={12} fontWeight={700} alignSelf="flex-end">
+                    {username}
+                </Typography>
+            )}
         </Stack>
     );
 };
