@@ -100,18 +100,22 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
     const [keyWord, setKeyWord] = useState<string>('');
     const [id2Edit, setId2Edit] = useState<number>(0);
     const [showModeratorsDlg, setShowModeratorsDlg] = useState<boolean>(false);
+    const [emptyString, setEmptyString] = useState<string>('');
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminUserList = await getAdminUserList(
-                keyWord,
-                getAdminSearchParams(undefined, undefined),
-                1,
-            );
+            const _adminUserList = await getAdminUserList(keyWord, getAdminSearchParams(undefined, undefined), 1);
             if (!unmounted) {
-                setTableData(_adminUserList);
+                setEmptyString(
+                    _adminUserList.result === 0
+                        ? keyWord
+                            ? 'No results found'
+                            : 'No Listed Moderators'
+                        : 'This address has already been added as a moderator',
+                );
+                setTableData(_adminUserList.data);
                 setIsLoading(false);
             }
         };
@@ -163,9 +167,8 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                     columns={columns}
                     checkable={false}
                     isLoading={isLoading}
-                    tabTitle="moderator"
                     height="calc(100% - 62px - 32px)"
-                    hasSearchString={keyWord ? true : false}
+                    emptyString={emptyString}
                 />
             </Stack>
             <ModalDialog

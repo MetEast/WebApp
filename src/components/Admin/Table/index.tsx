@@ -88,9 +88,8 @@ interface ComponentProps {
     columns: AdminTableColumn[];
     checkable?: boolean;
     isLoading?: boolean;
-    tabTitle?: string;
-    hasSearchString?: boolean;
     height?: string;
+    emptyString?: string;
 }
 
 const Table: React.FC<ComponentProps> = ({
@@ -98,9 +97,8 @@ const Table: React.FC<ComponentProps> = ({
     columns,
     checkable = true,
     isLoading = true,
-    tabTitle,
-    hasSearchString,
     height = '100%',
+    emptyString = '',
 }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
@@ -109,26 +107,26 @@ const Table: React.FC<ComponentProps> = ({
     const [orderBy, setOrderBy] = useState<string>('');
     const [selected, setSelected] = useState<readonly number[]>([]);
 
-    let emptyString = '';
-    switch (tabTitle) {
-        case 'nft':
-            emptyString = hasSearchString ? 'No results found' : 'No NFTs removed';
-            break;
-        case 'admin':
-            emptyString = 'No Listed Admins';
-            break;
-        case 'moderator':
-            emptyString = hasSearchString ? 'No results found' : 'No Listed Moderators';
-            break;
-        case 'banned':
-            emptyString = hasSearchString ? 'No results found' : 'No Banned Users';
-            break;
-        case 'banner':
-            emptyString = 'No Listed Banners';
-            break;
-        default:
-            break;
-    }
+    // let emptyString = '';
+    // switch (tabTitle) {
+    //     case 'nft':
+    //         emptyString = hasSearchString ? 'No results found' : 'No NFTs removed';
+    //         break;
+    //     case 'admin':
+    //         emptyString = 'No Listed Admins';
+    //         break;
+    //     case 'moderator':
+    //         emptyString = hasSearchString ? 'No results found' : 'No Listed Moderators';
+    //         break;
+    //     case 'banned':
+    //         emptyString = hasSearchString ? 'No results found' : 'No Banned Users';
+    //         break;
+    //     case 'banner':
+    //         emptyString = 'No Listed Banners';
+    //         break;
+    //     default:
+    //         break;
+    // }
 
     const rowsPerPageOptions: Array<TypeSelectItem> = [
         {
@@ -202,6 +200,7 @@ const Table: React.FC<ComponentProps> = ({
         setCurPaginationFirstPage(Math.floor(page / 10) * 10);
     }, [page]);
 
+    console.log(emptyString, '---------');
     return (
         <Stack height={height}>
             {isLoading ? (
@@ -228,9 +227,9 @@ const Table: React.FC<ComponentProps> = ({
                             />
                             <TableBody>
                                 {tabledata.length === 0 && (
-                                    <Typography fontSize={16} fontWeight={400} ml={2} mt={2} width="100%">
-                                        {emptyString}
-                                    </Typography>
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <td style={{ fontSize: 16, fontWeight: 400, padding: '10px' }}>{emptyString}</td>
+                                    </TableRow>
                                 )}
                                 {!isLoading &&
                                     stableSort(tabledata, getComparator(order, orderBy))
@@ -283,6 +282,7 @@ const Table: React.FC<ComponentProps> = ({
                             </TableBody>
                         </DataTable>
                     </TableContainer>
+
                     <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={2}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Box width={200}>

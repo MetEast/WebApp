@@ -6,7 +6,6 @@ import { Icon } from '@iconify/react';
 import { reduceHexAddress } from 'src/services/common';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
 import { blankAdminUserItem } from 'src/constants/init-constants';
-import { useSignInContext } from 'src/context/SignInContext';
 
 const AdminUserAdmins: React.FC = (): JSX.Element => {
     const statusValues = [{ label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' }];
@@ -69,7 +68,6 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
 
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
-    const [signInDlgState] = useSignInContext();
     const [tabledata, setTableData] = useState(data);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -83,7 +81,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
                 0,
             );
             if (!unmounted) {
-                setTableData(_adminUserList);
+                setTableData(_adminUserList.data);
                 setIsLoading(false);
             }
         };
@@ -104,7 +102,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
                     columns={columns}
                     checkable={false}
                     isLoading={isLoading}
-                    tabTitle="admin"
+                    emptyString='No Listed Admins'
                 />
             </Stack>
         </>

@@ -162,6 +162,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const [id2Remove, setId2Remove] = useState<number>(0);
     const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [emptyString, setEmptyString] = useState<string>('');
 
     useEffect(() => {
         let unmounted = false;
@@ -169,6 +170,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             setIsLoading(true);
             const _adminNFTList = await getAdminNFTItemList(keyWord, getAdminSearchParams(nftState, saleType));
             if (!unmounted) {
+                setEmptyString(keyWord ? 'No results found' : 'No NFTs removed');
                 setTableData(_adminNFTList);
                 setIsLoading(false);
             }
@@ -265,7 +267,13 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         </Stack>
                     </Stack>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading} tabTitle='nft' hasSearchString={keyWord ? true : false} />
+                <Table
+                    tabledata={tabledata}
+                    columns={columns}
+                    checkable={false}
+                    isLoading={isLoading}
+                    emptyString={emptyString}
+                />
             </Stack>
             <ModalDialog
                 open={showRemoveNFTDlg}

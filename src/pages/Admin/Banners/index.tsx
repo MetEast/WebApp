@@ -151,8 +151,8 @@ const AdminBanners: React.FC = (): JSX.Element => {
                     columns={columns}
                     checkable={false}
                     isLoading={isLoading}
-                    tabTitle="banner"
                     height="calc(100% - 40px - 32px)"
+                    emptyString='No Listed Banners'
                 />
             </Stack>
             <ModalDialog

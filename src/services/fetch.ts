@@ -992,7 +992,9 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
         _AdminNFT.created_date = createdTime.date + ' ' + createdTime.time;
         if (itemObject.marketTime === undefined) _AdminNFT.listed_date = '';
         else {
-            const listedTime = getTime(itemObject.marketTime.toString());
+            const listedTime = itemObject.marketTime
+                ? getTime(itemObject.marketTime.toString())
+                : { date: '', time: '' };
             _AdminNFT.listed_date = listedTime.date + ' ' + listedTime.time;
         }
         _arrAdminNFTList.push(_AdminNFT);
@@ -1013,10 +1015,16 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
         if (status === 0 && parseInt(itemObject.role) !== 0) continue;
         else if (status === 1) {
             if (keyWord === '' && parseInt(itemObject.role) !== 1) continue;
-            else if (keyWord !== '' && parseInt(itemObject.role) !== 2) continue;
+            else if (keyWord !== '') {
+                if (parseInt(itemObject.role) === 1 && itemObject.address === keyWord) return { result: 1, data: [] };
+                else if (parseInt(itemObject.role) !== 2) continue;
+            }
         } else if (status === 2) {
             if (keyWord === '' && parseInt(itemObject.role) !== 3) continue;
-            else if (keyWord !== '' && parseInt(itemObject.role) !== 2) continue;
+            else if (keyWord !== '') {
+                if (parseInt(itemObject.role) === 3 && itemObject.address === keyWord) return { result: 1, data: [] };
+                else if (parseInt(itemObject.role) !== 2) continue;
+            }
         }
         const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
         _AdminUser.id = i + 1;
@@ -1034,7 +1042,7 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
         _AdminUser.remarks = status !== 2 ? '' : itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
-    return _arrAdminUserList;
+    return { result: 0, data: _arrAdminUserList };
 };
 
 export const updateUserRole = (_token: string, _address: string, _role: number, _remarks: string) =>

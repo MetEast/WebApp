@@ -10,7 +10,6 @@ import ModalDialog from 'src/components/ModalDialog';
 import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
 import { reduceHexAddress } from 'src/services/common';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
-import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
@@ -96,7 +95,6 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
     ];
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
-    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [tabledata, setTableData] = useState(data);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -104,18 +102,22 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
     const [keyWord, setKeyWord] = useState<string>('');
     const [id2Edit, setId2Edit] = useState<number>(0);
     const [showBannedUsersDlg, setShowBannedUsersDlg] = useState<boolean>(false);
+    const [emptyString, setEmptyString] = useState<string>('');
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminUserList = await getAdminUserList(
-                keyWord, 
-                getAdminSearchParams(undefined, undefined),
-                2,
-            );
+            const _adminUserList = await getAdminUserList(keyWord, getAdminSearchParams(undefined, undefined), 2);
             if (!unmounted) {
-                setTableData(_adminUserList);
+                setEmptyString(
+                    _adminUserList.result === 0
+                        ? keyWord
+                            ? 'No results found'
+                            : 'No Banned Users'
+                        : 'This address has already been banned',
+                );
+                setTableData(_adminUserList.data);
                 setIsLoading(false);
             }
         };
@@ -160,7 +162,13 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                         {`Search`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading}  tabTitle='banned'  hasSearchString={keyWord ? true : false} />
+                <Table
+                    tabledata={tabledata}
+                    columns={columns}
+                    checkable={false}
+                    isLoading={isLoading}
+                    emptyString={emptyString}
+                />
             </Stack>
             <ModalDialog
                 open={showBannedUsersDlg}
