@@ -38,9 +38,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW_3']);
+    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW_1']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
-        cookies.METEAST_PREVIEW_3 === '1' ? 'grid1' : 'grid2',
+        cookies.METEAST_PREVIEW_1 === '1' ? 'grid1' : 'grid2',
     );
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
@@ -530,7 +530,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             handleSortChange={handleChangeSortBy}
                             setProductViewMode={(value: 'grid1' | 'grid2') => {
                                 setProductViewMode(value);
-                                setCookies('METEAST_PREVIEW_3', value === 'grid1' ? '1' : '2', {
+                                setCookies('METEAST_PREVIEW_1', value === 'grid1' ? '1' : '2', {
                                     path: '/',
                                     sameSite: 'none',
                                     secure: true,
