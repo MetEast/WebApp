@@ -112,7 +112,6 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
             const _adminUserList = await getAdminUserList(
                 keyWord, 
                 getAdminSearchParams(undefined, undefined),
-                signInDlgState.walletAccounts[0],
                 2,
             );
             if (!unmounted) {
@@ -124,7 +123,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [keyWord, signInDlgState.walletAccounts]);
+    }, [keyWord]);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();

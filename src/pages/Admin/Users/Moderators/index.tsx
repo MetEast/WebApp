@@ -104,7 +104,6 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
             const _adminUserList = await getAdminUserList(
                 keyWord, 
                 getAdminSearchParams(undefined, undefined),
-                signInDlgState.walletAccounts[0],
                 1,
             );
             if (!unmounted) {
@@ -116,7 +115,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [keyWord, signInDlgState.walletAccounts]);
+    }, [keyWord]);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();

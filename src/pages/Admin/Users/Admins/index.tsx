@@ -80,7 +80,6 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
             const _adminUserList = await getAdminUserList(
                 '',
                 getAdminSearchParams(undefined, undefined),
-                signInDlgState.walletAccounts[0],
                 0,
             );
             if (!unmounted) {
@@ -92,7 +91,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+    }, []);
 
     return (
         <>

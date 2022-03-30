@@ -60,7 +60,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
                     errorMessageDlgOpened: true,
                     waitingConfirmDlgOpened: false,
                 });
-            }, 20000),
+            }, 120000),
         });
 
         callContractMethod(walletConnectWeb3, {

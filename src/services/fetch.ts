@@ -988,9 +988,9 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
     return _arrAdminNFTList;
 };
 
-export const getAdminUserList = async (keyWord: string, fetchParams: string, address: string, status: number) => {
+export const getAdminUserList = async (keyWord: string, fetchParams: string, status: number) => {
     const resAdminUserList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?address=${address}&keyword=${keyWord}&${fetchParams}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?keyword=${keyWord}&${fetchParams}`,
         FETCH_CONFIG_JSON,
     );
     const jsonAdminUserList = await resAdminUserList.json();
