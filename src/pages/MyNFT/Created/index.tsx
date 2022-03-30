@@ -36,6 +36,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
                 setProductDetail(_MyNFTItem);
+                setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
             }
         };
         if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
@@ -112,6 +113,12 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+
+    useEffect(() => {
+        if (productDetail.tokenId) {
+            setDialogState({ ...dialogState, burnTokenId: productDetail.tokenId });
+        }
+    }, [dialogState.burnNFTDlgOpened, productDetail.tokenId]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

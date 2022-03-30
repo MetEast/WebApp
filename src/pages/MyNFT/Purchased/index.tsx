@@ -40,6 +40,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
                 setProductDetail(_MyNFTItem);
+                setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
             }
         };
         if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
@@ -116,6 +117,10 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
         };
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
+    useEffect(() => {
+        if (productDetail.tokenId) setDialogState({ ...dialogState, burnTokenId: productDetail.tokenId });
+    }, [dialogState.burnNFTDlgOpened, productDetail.tokenId]);
+
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
             <ProductPageHeader />
@@ -191,15 +196,11 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                                 sx={{ marginTop: 3, width: '100%' }}
                                 onClick={() => {
                                     if (productDetail.status === 'DELETED') {
-                                        enqueueSnackbar(
-                                            `This NFT is taken down by admin!`,
-                                            {
-                                                variant: 'error',
-                                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                            },
-                                        );
-                                    }
-                                    else {
+                                        enqueueSnackbar(`This NFT is taken down by admin!`, {
+                                            variant: 'error',
+                                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                        });
+                                    } else {
                                         setDialogState({
                                             ...dialogState,
                                             mintTokenId: productDetail.tokenIdHex,

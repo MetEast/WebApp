@@ -13,12 +13,14 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {
     onClose: () => void;
 }
 
 const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+    const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -85,6 +87,7 @@ const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .finally(() => {
                 setOnProgress(false);
+                navigate('/profile');
             });
     };
 
