@@ -34,12 +34,14 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
     const [category, setCategory] = useState<TypeSelectItem>();
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
 
+    const isBlindBoxPage: boolean = location.pathname.indexOf('/blind-box') !== -1;
+
     return (
         <Container sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
             <Typography fontSize={32} fontWeight={700} sx={{ textTransform: 'none' }}>
                 Filters
             </Typography>
-            {location.pathname.indexOf('/blind-box') === -1 && (
+            {!isBlindBoxPage && (
                 <>
                     <Typography fontSize={16} fontWeight={700} marginTop={3} sx={{ textTransform: 'uppercase' }}>
                         Status
@@ -54,29 +56,29 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                             </Grid>
                         ))}
                     </Grid>
+                    <Stack spacing={0.5} marginTop={1}>
+                        <Typography fontSize={16} fontWeight={700}>
+                            CATEGORY
+                        </Typography>
+                        <Select
+                            titlebox={
+                                <SelectBtn fullWidth isopen={categorySelectOpen ? 1 : 0}>
+                                    {category ? category.label : 'Select'}
+                                    <Icon icon="ph:caret-down" className="arrow-icon" />
+                                </SelectBtn>
+                            }
+                            selectedItem={category}
+                            options={mintNFTCategoryOptions}
+                            isOpen={categorySelectOpen ? 1 : 0}
+                            handleClick={(value: string) => {
+                                const item = mintNFTCategoryOptions.find((option) => option.value === value);
+                                setCategory(item);
+                            }}
+                            setIsOpen={setCategorySelectOpen}
+                        />
+                    </Stack>
                 </>
             )}
-            <Stack spacing={0.5} marginTop={1}>
-                <Typography fontSize={16} fontWeight={700}>
-                    CATEGORY
-                </Typography>
-                <Select
-                    titlebox={
-                        <SelectBtn fullWidth isopen={categorySelectOpen ? 1 : 0}>
-                            {category ? category.label : 'Select'}
-                            <Icon icon="ph:caret-down" className="arrow-icon" />
-                        </SelectBtn>
-                    }
-                    selectedItem={category}
-                    options={mintNFTCategoryOptions}
-                    isOpen={categorySelectOpen ? 1 : 0}
-                    handleClick={(value: string) => {
-                        const item = mintNFTCategoryOptions.find((option) => option.value === value);
-                        setCategory(item);
-                    }}
-                    setIsOpen={setCategorySelectOpen}
-                />
-            </Stack>
             <Typography fontSize={16} fontWeight={700} marginTop={2} sx={{ textTransform: 'uppercase' }}>
                 price Range
             </Typography>
