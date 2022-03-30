@@ -109,7 +109,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(`Cancel sale error: ${error}!`, {
+                enqueueSnackbar(`Cancel sale error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

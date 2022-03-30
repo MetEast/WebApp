@@ -37,7 +37,7 @@ const DeleteBanner: React.FC<ComponentProps> = ({ bannerId, handleBannerUpdates,
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(error, {
+                enqueueSnackbar('Delete banner error.', {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

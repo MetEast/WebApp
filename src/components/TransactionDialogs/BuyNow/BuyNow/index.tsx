@@ -69,7 +69,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Buy now error: ${error}!`, {
+                enqueueSnackbar(`Buy now error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

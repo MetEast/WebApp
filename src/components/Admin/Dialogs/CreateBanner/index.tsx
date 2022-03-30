@@ -85,7 +85,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(error, {
+                enqueueSnackbar('Create banner error.', {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

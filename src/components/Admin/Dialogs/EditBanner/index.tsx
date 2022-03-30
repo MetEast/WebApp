@@ -92,7 +92,7 @@ const EditBanner: React.FC<ComponentProps> = ({
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(error, {
+                enqueueSnackbar('Edit banner error.', {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

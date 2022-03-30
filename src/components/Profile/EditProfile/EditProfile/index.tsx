@@ -138,7 +138,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 onClose();
             })
             .catch((error) => {
-                enqueueSnackbar(error, {
+                enqueueSnackbar('Update profile error.', {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

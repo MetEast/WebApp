@@ -16,12 +16,12 @@ import { useCookies } from 'react-cookie';
 import { useSnackbar } from 'notistack';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
+    getEssentialsWalletAddress,
     getEssentialsWalletBalance,
     getDidUri,
     resetWalletConnector,
     getWalletBalance,
     isInAppBrowser,
-    // getChainGasPrice,
 } from 'src/services/wallet';
 import { UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -38,7 +38,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const navigate = useNavigate();
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
-    const [dialogState, setDialogState] = useDialogContext();
+    const [dialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const { activate, active, library, chainId, account } = useWeb3React<Web3Provider>();
@@ -203,6 +203,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         if (presentation) {
             let unmounted = false;
             const did = presentation.getHolder().getMethodSpecificId() || '';
+            const walletAccounts = getEssentialsWalletAddress();
             fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
                 method: 'POST',
                 headers: {

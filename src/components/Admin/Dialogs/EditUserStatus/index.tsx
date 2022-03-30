@@ -126,7 +126,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
                 }
             })
             .catch((error) => {
-                enqueueSnackbar(`Cancel sale error: ${error}!`, {
+                enqueueSnackbar(`Cancel sale error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

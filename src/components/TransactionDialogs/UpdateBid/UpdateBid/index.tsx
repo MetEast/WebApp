@@ -86,7 +86,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Update bid error: ${error}!`, {
+                enqueueSnackbar(`Update bid error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

@@ -102,7 +102,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                 sendSoldBlindBoxTokenIds(txHash);
             })
             .catch((error) => {
-                enqueueSnackbar(`Buy Mystery Box error: ${error}!`, {
+                enqueueSnackbar(`Buy Mystery Box error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

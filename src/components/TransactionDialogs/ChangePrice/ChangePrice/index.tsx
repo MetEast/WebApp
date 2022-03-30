@@ -85,7 +85,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Change place error: ${error}!`, {
+                enqueueSnackbar(`Change place error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });

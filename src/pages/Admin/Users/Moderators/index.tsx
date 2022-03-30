@@ -130,6 +130,8 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
             userList[id2Edit] = editedItem;
             return userList;
         });
+        setInputString('');
+        setKeyWord('');
     };
 
     return (

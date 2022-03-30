@@ -12,15 +12,15 @@ const YourEarningDlgContainer: React.FC<ComponentProps> = ({ earningList }): JSX
     const [dialogState, setDialogState] = useDialogContext();
     return (
         <ModalDialog
-            open={dialogState.editProfileDlgOpened}
+            open={dialogState.earningDlgOpened}
             onClose={() => {
-                setDialogState({ ...dialogState, editProfileDlgOpened: false });
+                setDialogState({ ...dialogState, earningDlgOpened: false });
             }}
         >
             <YourEarnings
                 earnings={earningList}
                 onClose={() => {
-                    setDialogState({ ...dialogState, editProfileDlgOpened: false });
+                    setDialogState({ ...dialogState, earningDlgOpened: false });
                 }}
             />
         </ModalDialog>

@@ -71,7 +71,7 @@ const CancelBid: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Cancel bid error: ${error}!`, {
+                enqueueSnackbar(`Cancel bid error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
