@@ -32,6 +32,7 @@ import {
     blankAdminUserItem,
     blankAdminBannerItem,
     blankNotification,
+    blankUserInfo,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -42,6 +43,7 @@ import {
     AdminBannersItemType,
     AdminBannersItemFetchType,
 } from 'src/types/admin-table-data-types';
+import { UserInfoType } from 'src/types/auth-types';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -57,6 +59,16 @@ export const FETCH_CONFIG_JSON = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
     },
+};
+
+export const getUserRole = async (address: string) => {
+    const resUserRole = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/meteast/api/v1/getDidByAddress?address=${address}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonUserRole = await resUserRole.json();
+    const dataUserRole: UserInfoType = jsonUserRole.data ? jsonUserRole.data : blankUserInfo;
+    return dataUserRole.role;
 };
 
 export const getNotificationList = async (address: string) => {

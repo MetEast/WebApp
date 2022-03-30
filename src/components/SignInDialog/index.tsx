@@ -31,6 +31,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import Web3 from 'web3';
 import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
+import { getUserRole } from 'src/services/fetch';
 
 export interface ComponentProps {}
 
@@ -319,10 +320,16 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         // EE
         const handleEEAccountsChanged = (accounts: string[]) => {
-            // if (signInDlgState.walletAccounts.length && accounts.length && signInDlgState.walletAccounts[0] !== accounts[0]) {
-            //     const changedWalletAddress = accounts[0];
-                
-            // }
+            // change user role
+            if (signInDlgState.walletAccounts.length && accounts.length && signInDlgState.walletAccounts[0] !== accounts[0]) {
+                getUserRole(accounts[0]).then((userRole: number) => {
+                    _setSignInState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.userRole = userRole;
+                        return _state;
+                    });
+                });
+            }
             getEssentialsWalletBalance().then((balance: string) => {
                 _setSignInState((prevState: SignInState) => {
                     const _state = { ...prevState };
@@ -448,7 +455,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             cookies.METEAST_TOKEN === undefined
                 ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
                 : jwtDecode(cookies.METEAST_TOKEN);
-        getDidUri(user.did, '', user.name).then((didUri: string) => {
+        getDidUri(user.did, user.description, user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
                 token: cookies.METEAST_TOKEN,
