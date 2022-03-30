@@ -20,10 +20,12 @@ import {
 import Container from 'src/components/Container';
 import { blankNFTItem, blankPageBanners } from 'src/constants/init-constants';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
+import { useCookies } from 'react-cookie';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
+    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW_1']);
+    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(cookies.METEAST_PREVIEW_1 === '1' ? 'grid1' : 'grid2');
     const [sortBy, setSortBy] = useState<TypeSelectItem | undefined>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
@@ -37,7 +39,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
         blankNFTItem,
     ]);
     const [adBanners, setAdBanners] = useState<string[]>(blankPageBanners);
-
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
@@ -156,7 +157,10 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     handleKeyWordChange={handleKeyWordChange}
                     handlerFilterChange={handlerFilterChange}
                     handleSortChange={handleChangeSortBy}
-                    setProductViewMode={setProductViewMode}
+                    setProductViewMode={(value: 'grid1' | 'grid2') => {
+                        setProductViewMode(value);
+                        setCookies('METEAST_PREVIEW_1', value === 'grid1' ? '1' : '2', { path: '/', sameSite: 'none', secure: true });
+                    }}
                     marginTop={5}
                 />
                 {productList.length === 0 ? (
