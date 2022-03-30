@@ -15,10 +15,14 @@ import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 's
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem, blankPageBanners } from 'src/constants/init-constants';
+import { useCookies } from 'react-cookie';
 
 const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>('grid2');
+    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW_2']);
+    const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
+        cookies.METEAST_PREVIEW_2 === '1' ? 'grid1' : 'grid2',
+    );
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
@@ -153,7 +157,14 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                     handleKeyWordChange={handleKeyWordChange}
                     handlerFilterChange={handlerFilterChange}
                     handleSortChange={handleChangeSortBy}
-                    setProductViewMode={setProductViewMode}
+                    setProductViewMode={(value: 'grid1' | 'grid2') => {
+                        setProductViewMode(value);
+                        setCookies('METEAST_PREVIEW_2', value === 'grid1' ? '1' : '2', {
+                            path: '/',
+                            sameSite: 'none',
+                            secure: true,
+                        });
+                    }}
                     marginTop={5}
                 />
                 {blindBoxList.length === 0 ? (
