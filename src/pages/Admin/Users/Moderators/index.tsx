@@ -29,7 +29,11 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         {
             id: 'username',
             label: 'Username',
-            cell: (props) => <Typography fontSize={16}>{props.value.length > 10 ? reduceHexAddress(props.value, 4) : props.value}</Typography>,
+            cell: (props) => (
+                <Typography fontSize={16}>
+                    {props.value.length > 10 ? reduceHexAddress(props.value, 4) : props.value}
+                </Typography>
+            ),
             width: 80,
         },
         {
@@ -102,7 +106,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             setIsLoading(true);
             const _adminUserList = await getAdminUserList(
-                keyWord, 
+                keyWord,
                 getAdminSearchParams(undefined, undefined),
                 1,
             );
@@ -154,7 +158,15 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                         {`Search`}
                     </PrimaryButton>
                 </Stack>
-                <Table tabledata={tabledata} columns={columns} checkable={false} isLoading={isLoading}  tabTitle='moderator'  hasSearchString={keyWord ? true : false} />
+                <Table
+                    tabledata={tabledata}
+                    columns={columns}
+                    checkable={false}
+                    isLoading={isLoading}
+                    tabTitle="moderator"
+                    height="calc(100% - 62px - 32px)"
+                    hasSearchString={keyWord ? true : false}
+                />
             </Stack>
             <ModalDialog
                 open={showModeratorsDlg}

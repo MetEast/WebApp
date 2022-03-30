@@ -90,6 +90,7 @@ interface ComponentProps {
     isLoading?: boolean;
     tabTitle?: string;
     hasSearchString?: boolean;
+    height?: string;
 }
 
 const Table: React.FC<ComponentProps> = ({
@@ -99,6 +100,7 @@ const Table: React.FC<ComponentProps> = ({
     isLoading = true,
     tabTitle,
     hasSearchString,
+    height = '100%',
 }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
@@ -201,12 +203,18 @@ const Table: React.FC<ComponentProps> = ({
     }, [page]);
 
     return (
-        <Stack height="100%">
+        <Stack height={height}>
             {isLoading ? (
-                <Skeleton variant="rectangular" animation="wave" width="100%" height="70%" sx={{ bgcolor: '#E8F4FF' }} />
+                <Skeleton
+                    variant="rectangular"
+                    animation="wave"
+                    width="100%"
+                    height="100%"
+                    sx={{ bgcolor: '#E8F4FF' }}
+                />
             ) : (
                 <>
-                    <TableContainer component={Paper} sx={{ height: '70%' }}>
+                    <TableContainer component={Paper} sx={{ height: '100%' }}>
                         <DataTable aria-label="custom pagination table">
                             <EnhancedTableHead
                                 numSelected={selected.length}
