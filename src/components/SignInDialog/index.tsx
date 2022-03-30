@@ -319,6 +319,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         // EE
         const handleEEAccountsChanged = (accounts: string[]) => {
+            // if (signInDlgState.walletAccounts.length && accounts.length && signInDlgState.walletAccounts[0] !== accounts[0]) {
+            //     const changedWalletAddress = accounts[0];
+                
+            // }
             getEssentialsWalletBalance().then((balance: string) => {
                 _setSignInState((prevState: SignInState) => {
                     const _state = { ...prevState };
@@ -505,7 +509,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    // console.log('--------accounts: ', signInDlgState);
+    console.log('--------accounts: ', signInDlgState);
     // console.log('-------dlg', dialogState)
 
     return (
