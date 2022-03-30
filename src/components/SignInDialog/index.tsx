@@ -123,7 +123,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 _state.userRole = parseInt(user.role);
                                 return _state;
                             });
-                            showSucceedSnackBar();
+                            if (!signInDlgState.walletAccounts.length) showSucceedSnackBar();
                         }
                     } else {
                         console.log(data);
@@ -321,7 +321,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         // EE
         const handleEEAccountsChanged = (accounts: string[]) => {
             // change user role
-            if (signInDlgState.walletAccounts.length && accounts.length && signInDlgState.walletAccounts[0] !== accounts[0]) {
+            if (
+                signInDlgState.walletAccounts.length &&
+                accounts.length &&
+                signInDlgState.walletAccounts[0] !== accounts[0]
+            ) {
                 getUserRole(accounts[0]).then((userRole: number) => {
                     _setSignInState((prevState: SignInState) => {
                         const _state = { ...prevState };
@@ -353,7 +357,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         const handleEEError = (code: number, reason: string) => {
             console.error(code, reason);
         };
-
         if (isInAppBrowser()) {
             _setSignInState((prevState: SignInState) => {
                 const _state = { ...prevState };
@@ -383,6 +386,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             if (active) {
                 // alert('new sign in');
                 if (account) {
+                    // change user role
                     const timer = setTimeout(() => {
                         getWalletBalance(library, account).then((balance: string) => {
                             _setSignInState((prevState: SignInState) => {
@@ -425,6 +429,15 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         return _state;
                     });
                     if (account) {
+                        // change user role
+                        if (
+                            signInDlgState.walletAccounts.length &&
+                            account &&
+                            signInDlgState.walletAccounts[0] !== account
+                        ) {
+                            const _wallet = activatingConnector === injected ? 'MM' : 'WC';
+                            signInWithWallet(_wallet);
+                        }
                         // must be placed here
                         getWalletBalance(library, account).then((balance: string) => {
                             _setSignInState((prevState: SignInState) => {
