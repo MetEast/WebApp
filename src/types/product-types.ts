@@ -292,4 +292,5 @@ export type TypeYourEarningFetch = {
 export type TypeChartAxis = {
     x: string;
     y: number;
+    username: string;
 };

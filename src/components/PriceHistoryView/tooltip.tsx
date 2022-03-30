@@ -10,6 +10,7 @@ interface ComponentProps {
 
 const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp, username }): JSX.Element => {
     const getDateString = (timestamp: number) => {
+
         const t = new Date(timestamp);
         const date = ('0' + t.getDate()).slice(-2);
         const month = ('0' + (t.getMonth() + 1)).slice(-2);
@@ -18,6 +19,16 @@ const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp, usern
         const minutes = ('0' + t.getMinutes()).slice(-2);
         // const seconds = ('0' + t.getSeconds()).slice(-2);
         const time = `${year}-${month}-${date} ${hours}:${minutes}`;
+
+//         const date = new Date(timestamp);
+//         const day = date.toLocaleString('default', { day: '2-digit' });
+//         const month = date.toLocaleString('default', { month: 'short' });
+//         const year = date.toLocaleString('default', { year: 'numeric' });
+//         // const hours = ('0' + date.getHours()).slice(-2);
+//         // const minutes = ('0' + date.getMinutes()).slice(-2);
+//         // const seconds = ('0' + date.getSeconds()).slice(-2);
+//         const time = `${day} ${month} ${year}`;
+
         return time;
     };
 
@@ -27,9 +38,11 @@ const PriceHistoryToolTip: React.FC<ComponentProps> = ({ price, timestamp, usern
             <Typography fontSize={12} fontWeight={400}>
                 {getDateString(timestamp)}
             </Typography>
-            <Typography fontSize={12} fontWeight={700} alignSelf="flex-end">
-                {username}
-            </Typography>
+            {price > 0 && (
+                <Typography fontSize={12} fontWeight={700} alignSelf="flex-end">
+                    {username}
+                </Typography>
+            )}
         </Stack>
     );
 };

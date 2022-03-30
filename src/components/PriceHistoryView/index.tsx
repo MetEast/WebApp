@@ -30,7 +30,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
             <PriceHistoryToolTip
                 price={series[seriesIndex][dataPointIndex]}
                 timestamp={w.globals.seriesX[seriesIndex][dataPointIndex]}
-                username={''}
+                username={w.globals.initialSeries[seriesIndex].data[dataPointIndex].username}
             />,
         );
     };

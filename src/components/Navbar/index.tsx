@@ -136,7 +136,8 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                     )}
                 </PrimaryButton>
             ) : (
-                !mobile && !isAdmin && (
+                !mobile &&
+                !isAdmin && (
                     <>
                         <PrimaryButton
                             size="small"
