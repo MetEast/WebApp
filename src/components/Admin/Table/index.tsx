@@ -107,27 +107,6 @@ const Table: React.FC<ComponentProps> = ({
     const [orderBy, setOrderBy] = useState<string>('');
     const [selected, setSelected] = useState<readonly number[]>([]);
 
-    // let emptyString = '';
-    // switch (tabTitle) {
-    //     case 'nft':
-    //         emptyString = hasSearchString ? 'No results found' : 'No NFTs removed';
-    //         break;
-    //     case 'admin':
-    //         emptyString = 'No Listed Admins';
-    //         break;
-    //     case 'moderator':
-    //         emptyString = hasSearchString ? 'No results found' : 'No Listed Moderators';
-    //         break;
-    //     case 'banned':
-    //         emptyString = hasSearchString ? 'No results found' : 'No Banned Users';
-    //         break;
-    //     case 'banner':
-    //         emptyString = 'No Listed Banners';
-    //         break;
-    //     default:
-    //         break;
-    // }
-
     const rowsPerPageOptions: Array<TypeSelectItem> = [
         {
             label: '5 art./page',
@@ -200,7 +179,6 @@ const Table: React.FC<ComponentProps> = ({
         setCurPaginationFirstPage(Math.floor(page / 10) * 10);
     }, [page]);
 
-    console.log(emptyString, '---------');
     return (
         <Stack height={height}>
             {isLoading ? (
