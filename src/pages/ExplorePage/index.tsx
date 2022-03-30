@@ -24,9 +24,9 @@ import { useCookies } from 'react-cookie';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW_1']);
+    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
-        cookies.METEAST_PREVIEW_1 === '1' ? 'grid1' : 'grid2',
+        cookies.METEAST_PREVIEW === '1' ? 'grid1' : 'grid2',
     );
     const [sortBy, setSortBy] = useState<TypeSelectItem | undefined>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
@@ -161,7 +161,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     handleSortChange={handleChangeSortBy}
                     setProductViewMode={(value: 'grid1' | 'grid2') => {
                         setProductViewMode(value);
-                        setCookies('METEAST_PREVIEW_1', value === 'grid1' ? '1' : '2', {
+                        setCookies('METEAST_PREVIEW', value === 'grid1' ? '1' : '2', {
                             path: '/',
                             sameSite: 'none',
                             secure: true,
