@@ -204,12 +204,16 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             let unmounted = false;
             const did = presentation.getHolder().getMethodSpecificId() || '';
             const walletAccounts = getEssentialsWalletAddress();
+            const reqBody = {
+                address: walletAccounts[0],
+                presentation: presentation.toJSON(),
+            };
             fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(presentation.toJSON()),
+                body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {

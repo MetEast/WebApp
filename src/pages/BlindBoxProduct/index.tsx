@@ -215,42 +215,44 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             />
                             {(signInDlgState.walletAccounts.length === 0 ||
                                 (signInDlgState.walletAccounts.length !== 0 &&
-                                    blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0] &&
-                                    blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                                    blindBoxDetail.state === 'online' &&
-                                    blindBoxDetail.status === 'online')) && (
-                                <PrimaryButton
-                                    sx={{ marginTop: 3, width: '100%' }}
-                                    onClick={() => {
-                                        if (signInDlgState.isLoggedIn) {
-                                            setDialogState({
-                                                ...dialogState,
-                                                buyBlindBoxDlgOpened: true,
-                                                buyBlindBoxDlgStep: 0,
-                                                buyBlindName: blindBoxDetail.name,
-                                                buyBlindPriceEla: blindBoxDetail.price_ela,
-                                                buyBlindPriceUsd: blindBoxDetail.price_usd,
-                                                buyBlindAmount: 1,
-                                                buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                                buyBlindCreator:
-                                                    blindBoxDetail.author === ''
-                                                        ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
-                                                        : blindBoxDetail.author,
-                                                buyBlindMaxPurchases:
-                                                    blindBoxDetail.maxPurchases === undefined
-                                                        ? 0
-                                                        : blindBoxDetail.maxPurchases,
-                                                buyBlindInstock:
-                                                    blindBoxDetail.instock === undefined ? 0 : blindBoxDetail.instock,
-                                            });
-                                        } else {
-                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                        }
-                                    }}
-                                >
-                                    Buy Now
-                                </PrimaryButton>
-                            )}
+                                    blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0])) &&
+                                blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
+                                blindBoxDetail.state === 'online' &&
+                                blindBoxDetail.status === 'online' && (
+                                    <PrimaryButton
+                                        sx={{ marginTop: 3, width: '100%' }}
+                                        onClick={() => {
+                                            if (signInDlgState.isLoggedIn) {
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    buyBlindBoxDlgOpened: true,
+                                                    buyBlindBoxDlgStep: 0,
+                                                    buyBlindName: blindBoxDetail.name,
+                                                    buyBlindPriceEla: blindBoxDetail.price_ela,
+                                                    buyBlindPriceUsd: blindBoxDetail.price_usd,
+                                                    buyBlindAmount: 1,
+                                                    buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                                    buyBlindCreator:
+                                                        blindBoxDetail.author === ''
+                                                            ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                            : blindBoxDetail.author,
+                                                    buyBlindMaxPurchases:
+                                                        blindBoxDetail.maxPurchases === undefined
+                                                            ? 0
+                                                            : blindBoxDetail.maxPurchases,
+                                                    buyBlindInstock:
+                                                        blindBoxDetail.instock === undefined
+                                                            ? 0
+                                                            : blindBoxDetail.instock,
+                                                });
+                                            } else {
+                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                            }
+                                        }}
+                                    >
+                                        Buy Now
+                                    </PrimaryButton>
+                                )}
                             {signInDlgState.walletAccounts.length !== 0 &&
                                 blindBoxDetail.royaltyOwner === signInDlgState.walletAccounts[0] &&
                                 blindBoxDetail.status === 'offline' && (
