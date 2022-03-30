@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SelectBtn, ListItemsWrapper, ListItemsStack, ItemButton } from './styles';
 import { Box } from '@mui/material';
 import { Icon } from '@iconify/react';
@@ -12,6 +12,12 @@ interface ComponentProps {
 
 const Select: React.FC<ComponentProps> = ({ options, selected, handleClick }) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const endBoxRef = useRef(null);
+
+    useEffect(() => {
+        endBoxRef?.current.scrollIntoView({ behavior: 'smooth' });
+    }, [isOpen]);
 
     return (
         <Box
@@ -36,6 +42,7 @@ const Select: React.FC<ComponentProps> = ({ options, selected, handleClick }) =>
                     ))}
                 </ListItemsStack>
             </ListItemsWrapper>
+            <div ref={endBoxRef}></div>
         </Box>
     );
 };
