@@ -40,7 +40,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
 
     const handleUpdateUserRole = (methodName: string, state: boolean) => {
-        if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
+        if (dialogState.adminUserBannedTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },

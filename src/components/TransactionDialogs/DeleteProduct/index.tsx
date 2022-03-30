@@ -1,31 +1,36 @@
-import React, { useState } from 'react';
-import { Stack, Typography } from '@mui/material';
-import { DialogTitleTypo } from '../styles';
-import { PrimaryButton } from 'src/components/Buttons/styles';
+import React from 'react';
+import { useDialogContext } from 'src/context/DialogContext';
+import ModalDialog from 'src/components/ModalDialog';
+import DeleteProduct from 'src/components/TransactionDialogs/DeleteProduct/DeleteProduct';
 
-export interface ComponentProps {
-    onClose: () => void;
-}
+export interface ComponentProps {}
 
-const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+const BurnNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+    const [dialogState, setDialogState] = useDialogContext();
     return (
-        <Stack spacing={4} width={320}>
-            <Stack alignItems="center" spacing={2}>
-                <DialogTitleTypo>Are you Sure?</DialogTitleTypo>
-                <Typography fontSize={16} fontWeight={400}>
-                    Do you really want to delete this product?
-                </Typography>
-            </Stack>
-            <Stack direction="row" spacing={2}>
-                <PrimaryButton btn_color="secondary" fullWidth onClick={onClose}>
-                    Close
-                </PrimaryButton>
-                <PrimaryButton btn_color="pink" fullWidth>
-                    Confirm
-                </PrimaryButton>
-            </Stack>
-        </Stack>
+        <ModalDialog
+            open={dialogState.burnNFTDlgOpened}
+            onClose={() => {
+                setDialogState({
+                    ...dialogState,
+                    burnNFTDlgOpened: false,
+                    burnTokenId: '',
+                    burnTxFee: 0,
+                });
+            }}
+        >
+            <DeleteProduct
+                onClose={() => {
+                    setDialogState({
+                        ...dialogState,
+                        burnNFTDlgOpened: false,
+                        burnTokenId: '',
+                        burnTxFee: 0,
+                    });
+                }}
+            />
+        </ModalDialog>
     );
 };
 
-export default DeleteProduct;
+export default BurnNFTDlgContainer;

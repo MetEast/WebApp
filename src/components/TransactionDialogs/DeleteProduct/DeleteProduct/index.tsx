@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Stack, Box, Typography } from '@mui/material';
-import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
-import { PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
-import CustomTextField from 'src/components/TextField';
+import { Stack, Typography } from '@mui/material';
+import { DialogTitleTypo } from '../../styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
@@ -14,15 +13,12 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
-import { AdminNFTItemType } from 'src/types/admin-table-data-types';
-import { reduceHexAddress } from 'src/services/common';
 
 export interface ComponentProps {
-    token2Remove: AdminNFTItemType;
     onClose: () => void;
 }
 
-const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Element => {
+const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -35,14 +31,15 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
 
-    const handleRmoveToken = () => {
-        if (dialogState.adminTakedownTxFee > signInDlgState.walletBalance) {
+    const handleBurn = () => {
+        if (dialogState.burnTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
         }
+
         setOnProgress(true);
         setDialogState({
             ...dialogState,
@@ -58,30 +55,30 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 2,
-            method: 'takeDownOrder',
+            contractType: 1,
+            method: 'burn',
             price: '0',
-            orderId: token2Remove.orderId,
+            tokenId: dialogState.burnTokenId,
         })
             .then((txHash: string) => {
-                console.log(txHash);
-                enqueueSnackbar('Remove Token succeed!', {
+                enqueueSnackbar('Burn token succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
                     ...dialogState,
+                    burnNFTDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                 });
-                window.location.reload();
             })
             .catch((error) => {
-                enqueueSnackbar(`Remove Token error.`, {
+                enqueueSnackbar(`Burn token error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
                     ...dialogState,
+                    burnNFTDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,
                 });
@@ -92,39 +89,23 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
     };
 
     return (
-        <Stack spacing={4} width={520}>
-            <Stack alignItems="center">
+        <Stack spacing={4} width={320}>
+            <Stack alignItems="center" spacing={2}>
                 <DialogTitleTypo>Are you Sure?</DialogTitleTypo>
                 <Typography fontSize={16} fontWeight={400}>
-                    You are deleting the following NFT:
+                    Do you really want to delete this product?
                 </Typography>
             </Stack>
-            <Box borderRadius={2} width={180} height={120} overflow="hidden" alignSelf="center">
-                <img src={token2Remove.nft_image} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
-            </Box>
-            <CustomTextField title="NFT TITLE" placeholder="NFT TITLE" inputValue={token2Remove.nft_title} disabled />
-            <CustomTextField
-                title="NFT CREATOR"
-                placeholder="NFT CREATOR"
-                inputValue={token2Remove.nft_creator}
-                disabled
-            />
-            <CustomTextField
-                title="TOKEN ID"
-                placeholder="TOKEN ID"
-                inputValue={reduceHexAddress(token2Remove.token_id, 20)}
-                disabled
-            />
             <Stack direction="row" spacing={2}>
-                <SecondaryButton fullWidth onClick={onClose}>
-                    close
-                </SecondaryButton>
-                <PinkButton fullWidth disabled={onProgress} onClick={handleRmoveToken}>
+                <PrimaryButton btn_color="secondary" fullWidth onClick={onClose}>
+                    Close
+                </PrimaryButton>
+                <PrimaryButton btn_color="pink" fullWidth disabled={onProgress} onClick={handleBurn}>
                     Confirm
-                </PinkButton>
+                </PrimaryButton>
             </Stack>
         </Stack>
     );
 };
 
-export default RemoveNFT;
+export default DeleteProduct;

@@ -25,6 +25,7 @@ import Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { isInAppBrowser, getChainGasPrice } from 'src/services/wallet';
+import BurnNFTDlgContainer from './DeleteProduct';
 
 export interface ComponentProps {}
 
@@ -44,6 +45,7 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setDialogState({
                     ...dialogState,
                     mintTxFee: gasPrice,
+                    burnTxFee: gasPrice,
                     sellTxFee: gasPrice,
                     buyNowTxFee: gasPrice,
                     changePriceTxFee: gasPrice,
@@ -54,6 +56,9 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     cancelBidTxFee: gasPrice,
                     crtBlindTxFee: gasPrice,
                     buyBlindTxFee: gasPrice,
+                    adminTakedownTxFee: gasPrice,
+                    adminUserBannedTxFee: gasPrice,
+                    adminUserModeratorTxFee: gasPrice,
                 });
             });
         }
@@ -64,6 +69,7 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             {dialogState.waitingConfirmDlgOpened && <WaitingConfirmDlgContainer />}
             {dialogState.errorMessageDlgOpened && <ErrorMessageDlgContainer />}
             {dialogState.createNFTDlgOpened && <MintNFTDlgContainer />}
+            {dialogState.burnNFTDlgOpened && <BurnNFTDlgContainer />}
             {dialogState.buyNowDlgOpened && <BuyNowDlgContainer />}
             {dialogState.changePriceDlgOpened && <ChangePriceDlgContainer />}
             {dialogState.cancelSaleDlgOpened && <CancelSaleDlgContainer />}

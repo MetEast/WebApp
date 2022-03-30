@@ -62,7 +62,7 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
     }, [signInDlgState.userRole]);
 
     const handleUpdateUserRole = (methodName: string, state: boolean) => {
-        if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
+        if (dialogState.adminUserBannedTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },

@@ -39,7 +39,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
     const [onProgress, setOnProgress] = useState<boolean>(false);
 
     const handleUpdateUserRole = (methodName: string) => {
-        if (dialogState.cancelSaleTxFee > signInDlgState.walletBalance) {
+        if (dialogState.adminUserModeratorTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },

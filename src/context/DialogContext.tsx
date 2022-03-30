@@ -35,6 +35,10 @@ interface DlgState {
     mintDidUri: string;
     mintTxHash: string;
     mintTxFee: number;
+    // burn nft
+    burnNFTDlgOpened: boolean;
+    burnTxFee: number;
+    burnTokenId: string;
     // create order for sale/auction
     sellSaleType: 'buynow' | 'auction';
     sellSaleEnds: TypeSelectItem;
@@ -126,6 +130,10 @@ interface DlgState {
     buyBlindCreator: string;
     buyBlindMaxPurchases: number;
     buyBlindInstock: number;
+    // admin
+    adminTakedownTxFee: number;
+    adminUserBannedTxFee: number;
+    adminUserModeratorTxFee: number;
 }
 
 export const defaultDlgState: DlgState = {
@@ -160,6 +168,10 @@ export const defaultDlgState: DlgState = {
     mintDidUri: '',
     mintTxHash: '',
     mintTxFee: 0,
+    // burn nft
+    burnNFTDlgOpened: false,
+    burnTxFee: 0,
+    burnTokenId: '',
     // create order for sale/auction
     sellSaleType: 'buynow',
     sellSaleEnds: { label: '', value: '' },
@@ -251,6 +263,10 @@ export const defaultDlgState: DlgState = {
     buyBlindCreator: '',
     buyBlindMaxPurchases: 0,
     buyBlindInstock: 0,
+    // admin
+    adminTakedownTxFee: 0,
+    adminUserBannedTxFee: 0,
+    adminUserModeratorTxFee: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
