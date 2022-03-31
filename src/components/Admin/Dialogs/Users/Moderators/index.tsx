@@ -52,14 +52,14 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             ...dialogState,
             waitingConfirmDlgOpened: true,
             progressBar: 10,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...dialogState,
-                    errorMessageDlgOpened: true,
-                    waitingConfirmDlgOpened: false,
-                    progressBar: 0,
-                });
-            }, 120000),
+            // waitingConfirmDlgTimer: setTimeout(() => {
+            //     setDialogState({
+            //         ...dialogState,
+            //         errorMessageDlgOpened: true,
+            //         waitingConfirmDlgOpened: false,
+            //         progressBar: 0,
+            //     });
+            // }, 120000),
         });
 
         callContractMethod(walletConnectWeb3, {

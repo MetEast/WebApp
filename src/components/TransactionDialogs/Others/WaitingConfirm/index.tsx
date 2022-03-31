@@ -11,7 +11,7 @@ const WaitingConfirmDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
         <ModalDialog
             open={dialogState.waitingConfirmDlgOpened}
             onClose={() => {
-                if (dialogState.waitingConfirmDlgTimer) clearTimeout(dialogState.waitingConfirmDlgTimer);
+                // if (dialogState.waitingConfirmDlgTimer) clearTimeout(dialogState.waitingConfirmDlgTimer);
                 setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
             }}
         >

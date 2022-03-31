@@ -41,13 +41,13 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
         setDialogState({
             ...dialogState,
             waitingConfirmDlgOpened: true,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...dialogState,
-                    errorMessageDlgOpened: true,
-                    waitingConfirmDlgOpened: false,
-                });
-            }, 120000),
+            // waitingConfirmDlgTimer: setTimeout(() => {
+            //     setDialogState({
+            //         ...dialogState,
+            //         errorMessageDlgOpened: true,
+            //         waitingConfirmDlgOpened: false,
+            //     });
+            // }, 120000),
         });
 
         callContractMethod(walletConnectWeb3, {
