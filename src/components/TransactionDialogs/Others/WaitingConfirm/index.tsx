@@ -2,14 +2,17 @@ import React, { useEffect } from 'react';
 import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import WaitingConfirm from './WaitingConfirm';
+import usePrevious from 'src/hooks/usePrevious';
 
 export interface ComponentProps {}
 
 const WaitingConfirmDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
-
+    const dlgOpened = usePrevious(dialogState.waitingConfirmDlgOpened) ? true : false;
+    
     useEffect(() => {
-        if (dialogState.waitingConfirmDlgTimer) {
+        console.log(dialogState.waitingConfirmDlgTimer, '-------------', dialogState.waitingConfirmDlgOpened, '---------------', dlgOpened)
+        if (dialogState.waitingConfirmDlgTimer && !dialogState.waitingConfirmDlgOpened && dlgOpened) {
             console.log('+++++++++Timer: ', dialogState.waitingConfirmDlgTimer)
             clearTimeout(dialogState.waitingConfirmDlgTimer);
         }

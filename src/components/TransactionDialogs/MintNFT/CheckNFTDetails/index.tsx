@@ -38,17 +38,18 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             variant: 'success',
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
         });
-        setDialogState({
-            ...dialogState,
-            waitingConfirmDlgOpened: true,
-            progressBar: 70,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...defaultDlgState,
-                    errorMessageDlgOpened: true,
-                });
-            }, 120000),
-        });
+
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.progressBar = 70;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        setDialogState(updatedState);
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 1,
@@ -65,7 +66,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     createNFTDlgOpened: true,
                     createNFTDlgStep: 2,
                     mintTxHash: txHash,
@@ -82,7 +83,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     createNFTDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,
@@ -168,7 +169,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <ImageBox>
                         <img
                             src={!dialogState.mintFile ? '' : URL.createObjectURL(dialogState.mintFile)}
-                            // src="assets/images/blindbox/blindbox-nft-template5.png"
                             alt="file preview"
                         />
                     </ImageBox>
