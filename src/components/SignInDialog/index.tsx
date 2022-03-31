@@ -435,8 +435,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             account &&
                             signInDlgState.walletAccounts[0] !== account
                         ) {
-                            const _wallet = activatingConnector === injected ? 'MM' : 'WC';
-                            signInWithWallet(_wallet);
+                            signInWithWallet('MM');
                         }
                         // must be placed here
                         getWalletBalance(library, account).then((balance: string) => {
