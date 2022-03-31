@@ -6,7 +6,7 @@ import CustomTextField from 'src/components/TextField';
 import { AdminUsersItemType } from 'src/types/admin-table-data-types';
 import { updateUserRole } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
@@ -74,13 +74,12 @@ const EditUserStatus: React.FC<ComponentProps> = ({ user2Edit, handleUserUpdate,
         setDialogState({
             ...dialogState,
             waitingConfirmDlgOpened: true,
-            // waitingConfirmDlgTimer: setTimeout(() => {
-            //     setDialogState({
-            //         ...dialogState,
-            //         errorMessageDlgOpened: true,
-            //         waitingConfirmDlgOpened: false,
-            //     });
-            // }, 120000),
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...defaultDlgState,
+                    errorMessageDlgOpened: true,
+                });
+            }, 120000),
         });
 
         callContractMethod(walletConnectWeb3, {

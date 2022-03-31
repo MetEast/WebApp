@@ -8,7 +8,7 @@ import { Icon } from '@iconify/react';
 import { reduceHexAddress } from 'src/services/common';
 import { updateUserRole } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
@@ -53,14 +53,12 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
             ...dialogState,
             waitingConfirmDlgOpened: true,
             progressBar: 10,
-            // waitingConfirmDlgTimer: setTimeout(() => {
-            //     setDialogState({
-            //         ...dialogState,
-            //         errorMessageDlgOpened: true,
-            //         waitingConfirmDlgOpened: false,
-            //         progressBar: 0,
-            //     });
-            // }, 120000),
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...defaultDlgState,
+                    errorMessageDlgOpened: true,
+                });
+            }, 120000),
         });
 
         callContractMethod(walletConnectWeb3, {

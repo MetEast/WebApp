@@ -5,7 +5,7 @@ import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLab
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { uploadDidUri2Ipfs, uploadImage2Ipfs, uploadMetaData2Ipfs } from 'src/services/ipfs';
 import Web3 from 'web3';
@@ -42,9 +42,12 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             ...dialogState,
             waitingConfirmDlgOpened: true,
             progressBar: 70,
-            // waitingConfirmDlgTimer: setTimeout(() => {
-            //     setDialogState({ ...dialogState, errorMessageDlgOpened: true, waitingConfirmDlgOpened: false });
-            // }, 120000),
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...defaultDlgState,
+                    errorMessageDlgOpened: true,
+                });
+            }, 120000),
         });
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -74,11 +77,10 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .catch((error) => {
-                // enqueueSnackbar(`Mint token error: ${error}!`, {
-                //     variant: 'error',
-                //     anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                // });
-                console.log(`Mint token error: ${error}!`);
+                enqueueSnackbar(`Mint token error.`, {
+                    variant: 'error',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
                 setDialogState({
                     ...dialogState,
                     createNFTDlgOpened: false,
@@ -86,9 +88,6 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     errorMessageDlgOpened: true,
                     progressBar: 0,
                 });
-            })
-            .finally(() => {
-                // if (dialogState.waitingConfirmDlgTimer) clearTimeout(dialogState.waitingConfirmDlgTimer);
             });
     };
 
