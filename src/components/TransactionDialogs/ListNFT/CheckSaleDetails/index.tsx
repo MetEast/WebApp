@@ -40,16 +40,17 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-        setDialogState({
-            ...dialogState,
-            waitingConfirmDlgOpened: true,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...defaultDlgState,
-                    errorMessageDlgOpened: true,
-                });
-            }, 120000),
-        });
+
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        setDialogState(updatedState);
+
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
 
         walletConnectWeb3.eth.getBlock('latest').then((currentBlock: any) => {
@@ -112,7 +113,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 },
                             );
                             setDialogState({
-                                ...dialogState,
+                                ...updatedState,
                                 createNFTDlgOpened: true,
                                 createNFTDlgStep: 5,
                                 sellTxHash: txHash,
@@ -130,7 +131,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 },
                             );
                             setDialogState({
-                                ...dialogState,
+                                ...updatedState,
                                 createNFTDlgOpened: false,
                                 waitingConfirmDlgOpened: false,
                                 errorMessageDlgOpened: true,
@@ -143,7 +144,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                     setDialogState({
-                        ...dialogState,
+                        ...updatedState,
                         createNFTDlgOpened: false,
                         waitingConfirmDlgOpened: false,
                         errorMessageDlgOpened: true,
