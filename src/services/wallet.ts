@@ -92,7 +92,7 @@ export const isInAppBrowser = () => {
 
 export const getChainGasPrice = async (walletConnectWeb3: Web3, gas: number) => {
     const gasPriceUnit = await walletConnectWeb3.eth.getGasPrice();
-    // console.log(gasPriceUnit, '---------');
+    console.log(gasPriceUnit, '---------');
     return parseInt(gasPriceUnit) * gas / 1e18;
 }
 

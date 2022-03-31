@@ -10,7 +10,7 @@ import { METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
 import { isInAppBrowser } from 'src/services/wallet';
@@ -84,14 +84,12 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 ...dialogState,
                 waitingConfirmDlgOpened: true,
                 progressBar: 20,
-                // waitingConfirmDlgTimer: setTimeout(() => {
-                //     setDialogState({
-                //         ...dialogState,
-                //         errorMessageDlgOpened: true,
-                //         waitingConfirmDlgOpened: false,
-                //         progressBar: 0,
-                //     });
-                // }, 120000),
+                waitingConfirmDlgTimer: setTimeout(() => {
+                    setDialogState({
+                        ...defaultDlgState,
+                        errorMessageDlgOpened: true,
+                    });
+                }, 120000),
             });
             callContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,

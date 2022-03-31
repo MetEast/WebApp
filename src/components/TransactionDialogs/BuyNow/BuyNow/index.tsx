@@ -4,7 +4,7 @@ import { DialogTitleTypo, DetailedInfoTitleTypo, DetailedInfoLabelTypo } from '.
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
@@ -36,14 +36,12 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             ...dialogState,
             waitingConfirmDlgOpened: true,
             progressBar: 50,
-            // waitingConfirmDlgTimer: setTimeout(() => {
-            //     setDialogState({
-            //         ...dialogState,
-            //         errorMessageDlgOpened: true,
-            //         waitingConfirmDlgOpened: false,
-            //         progressBar: 0,
-            //     });
-            // }, 120000),
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...defaultDlgState,
+                    errorMessageDlgOpened: true,
+                });
+            }, 120000),
         });
 
         callContractMethod(walletConnectWeb3, {

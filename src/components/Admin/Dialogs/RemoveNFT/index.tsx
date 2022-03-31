@@ -4,7 +4,7 @@ import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -47,13 +47,12 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
         setDialogState({
             ...dialogState,
             waitingConfirmDlgOpened: true,
-            // waitingConfirmDlgTimer: setTimeout(() => {
-            //     setDialogState({
-            //         ...dialogState,
-            //         errorMessageDlgOpened: true,
-            //         waitingConfirmDlgOpened: false,
-            //     });
-            // }, 120000),
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...defaultDlgState,
+                    errorMessageDlgOpened: true,
+                });
+            }, 120000),
         });
 
         callContractMethod(walletConnectWeb3, {

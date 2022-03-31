@@ -9,7 +9,7 @@ import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { auctionNFTExpirationOptions } from 'src/constants/select-constants';
 import { useSignInContext } from 'src/context/SignInContext';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -56,13 +56,12 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
         setDialogState({
             ...dialogState,
             waitingConfirmDlgOpened: true,
-            // waitingConfirmDlgTimer: setTimeout(() => {
-            //     setDialogState({
-            //         ...dialogState,
-            //         errorMessageDlgOpened: true,
-            //         waitingConfirmDlgOpened: false,
-            //     });
-            // }, 120000),
+            waitingConfirmDlgTimer: setTimeout(() => {
+                setDialogState({
+                    ...defaultDlgState,
+                    errorMessageDlgOpened: true,
+                });
+            }, 120000),
         });
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
