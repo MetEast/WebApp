@@ -282,7 +282,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     backgroundColor: '#C3C5C8',
                 }}
             >
-                {signInDlgState.userCoverImage !== '' && (
+                {signInDlgState.userCoverImage && (
                     <img
                         src={getImageFromAsset(signInDlgState.userCoverImage)}
                         alt=""
@@ -293,7 +293,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             <Container sx={{ overflow: 'visible' }}>
                 <Stack alignItems="center">
                     <ProfileImageWrapper display={signInDlgState.userAvatar !== '' ? 'flex' : 'grid'}>
-                        {signInDlgState.userAvatar !== '' ? (
+                        {signInDlgState.userAvatar ? (
                             <ProfileImage src={getImageFromAsset(signInDlgState.userAvatar)} />
                         ) : (
                             <Icon icon="ph:user" fontSize={matchUpMd ? 80 : matchDownSm ? 40 : 60} color="#1890FF" />
