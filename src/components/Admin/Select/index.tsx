@@ -15,9 +15,9 @@ const Select: React.FC<ComponentProps> = ({ options, selected, handleClick }) =>
 
     const endBoxRef = useRef(null);
 
-    useEffect(() => {
-        endBoxRef?.current.scrollIntoView({ behavior: 'smooth' });
-    }, [isOpen]);
+    // useEffect(() => {
+    //     endBoxRef?.current.scrollIntoView({ behavior: 'smooth' });
+    // }, [isOpen]);
 
     return (
         <Box

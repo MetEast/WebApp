@@ -113,11 +113,11 @@ const AdminUsers: React.FC = (): JSX.Element => {
             const _adminUserList = await getAdminUserList(
                 keyWord,
                 getAdminSearchParams(undefined, undefined),
-                signInDlgState.walletAccounts[0],
+                // signInDlgState.walletAccounts[0],
                 0,
             );
             if (!unmounted) {
-                setTableData(_adminUserList);
+                setTableData(_adminUserList.data);
                 setIsLoading(false);
             }
         };
