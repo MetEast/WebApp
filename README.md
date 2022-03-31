@@ -1,4 +1,4 @@
-METEAST WEBSITE
+MetEast WebApp
 ================
 
 # Getting Started with Create React App
