@@ -42,8 +42,8 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const series = [
         {
             data: [
-                [1640962800000, 0],
-                [1640963000000, 0],
+                { x: 1640962800000, y: 10, username: 'user1' },
+                { x: 1640963000000, y: 5, username: 'user2' },
             ],
         },
     ];
@@ -100,8 +100,8 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 format: 'MMM dd HH:mm',
             },
             min: new Date('01 Mar 2022').getTime(),
-            max: (new Date().getTime() + 10000000),
-            tickAmount: 6,            
+            max: new Date().getTime() + 10000000,
+            tickAmount: 6,
         },
 
         tooltip: {
@@ -145,18 +145,22 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 response.json().then((jsonPriceList) => {
                     if (!unmounted) {
                         const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
-                        const _latestPriceList: number[][] = [];
-                        _latestPriceList.push([new Date('01 Jan 2022').getTime(), 0]);
+                        const _latestPriceList: Array<any> = [];
+                        _latestPriceList.push({ x: new Date('01 Jan 2022').getTime(), y: 0 });
                         if (productPriceList.length)
-                            _latestPriceList.push([(parseInt(productPriceList[0].updateTime) - 100) * 1000, 0]);
-                        for (let i = 0; i < productPriceList.length; i ++) {
-                            _latestPriceList.push([
-                                parseInt(productPriceList[i].updateTime) * 1000,
-                                productPriceList[i].price / 1e18,
-                            ]);
+                            _latestPriceList.push({
+                                x: (parseInt(productPriceList[0].updateTime) - 100) * 1000,
+                                y: 0,
+                            });
+                        for (let i = 0; i < productPriceList.length; i++) {
+                            _latestPriceList.push({
+                                x: parseInt(productPriceList[i].updateTime) * 1000,
+                                y: productPriceList[i].price / 1e18,
+                                username: `user${i}`,
+                            });
                         }
                         const lastValue = _latestPriceList[_latestPriceList.length - 1];
-                        _latestPriceList.push([new Date().getTime(), lastValue[1]]);
+                        _latestPriceList.push({ x: new Date().getTime(), y: lastValue[1], username: `user` });
                         setChartSeries([{ data: _latestPriceList }]);
                         handlePriceHistoryUnitChange('Weekly');
                     }
