@@ -13,11 +13,11 @@ interface ComponentProps {
 const Select: React.FC<ComponentProps> = ({ options, selected, handleClick }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const endBoxRef = useRef(null);
+    const endBoxRef = useRef<HTMLDivElement>(null);
 
-    // useEffect(() => {
-    //     endBoxRef?.current.scrollIntoView({ behavior: 'smooth' });
-    // }, [isOpen]);
+    useEffect(() => {
+        endBoxRef?.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [isOpen]);
 
     return (
         <Box
