@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Box, Stack, Typography } from '@mui/material';
 import PriceHistoryToolTip from './tooltip';
 import { renderToString } from 'react-dom/server';
-import { TypePriceHistoryFetch } from 'src/types/product-types';
+import { TypeChartAxis, TypePriceHistoryFetch } from 'src/types/product-types';
 import { TypeSelectItem } from 'src/types/select-types';
 import { getChartTimestampList } from 'src/services/common';
 import Select from 'src/components/Select';
@@ -128,11 +128,6 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const handlePriceHistoryUnitChange = (value: string) => {
         const item = priceHistoryUnitSelectOptions.find((option) => option.value === value);
         setPriceHistoryUnit(item);
-        // const prevOptions = { ...chartOptions };
-        // prevOptions.xaxis.labels.format = item?.value === 'Daily' ? 'HH:mm' : 'MMM dd';
-        // prevOptions.xaxis.min = new Date(new Date().setHours(0, 0, 0, 0)).getTime(); // start date
-        // prevOptions.xaxis.max = new Date(new Date().setHours(24, 0, 0, 0)).getTime(); // end date
-        // setChartOptions(prevOptions);
         const timeRange = getChartTimestampList(item?.value || '');
         ApexCharts.exec('area-datetime', 'zoomX', timeRange.start, timeRange.end);
     };
@@ -145,13 +140,8 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                 response.json().then((jsonPriceList) => {
                     if (!unmounted) {
                         const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
-                        const _latestPriceList: Array<any> = [];
-                        _latestPriceList.push({ x: new Date('01 Jan 2022').getTime(), y: 0 });
-                        if (productPriceList.length)
-                            _latestPriceList.push({
-                                x: (parseInt(productPriceList[0].updateTime) - 100) * 1000,
-                                y: 0,
-                            });
+                        const _latestPriceList: Array<TypeChartAxis> = [];
+                        _latestPriceList.push({ x: new Date('01 Jan 2022').getTime(), y: 0, username: 'user' });
                         for (let i = 0; i < productPriceList.length; i++) {
                             _latestPriceList.push({
                                 x: parseInt(productPriceList[i].updateTime) * 1000,
@@ -160,7 +150,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                             });
                         }
                         const lastValue = _latestPriceList[_latestPriceList.length - 1];
-                        _latestPriceList.push({ x: new Date().getTime(), y: lastValue[1], username: `user` });
+                        _latestPriceList.push({ x: new Date().getTime(), y: lastValue.y, username: `user` });
                         setChartSeries([{ data: _latestPriceList }]);
                         handlePriceHistoryUnitChange('Weekly');
                     }

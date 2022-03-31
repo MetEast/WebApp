@@ -290,7 +290,7 @@ export type TypeYourEarningFetch = {
 };
 
 export type TypeChartAxis = {
-    x: string;
+    x: number;
     y: number;
     username: string;
 };
