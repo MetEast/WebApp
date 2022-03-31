@@ -53,9 +53,9 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 5);
+            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 1000);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.txs);
+                setTransactionsList(_NFTTxs.txs.slice(0, 5));
                 setProdTransHistory(_NFTTxs.history);
             }
         };
