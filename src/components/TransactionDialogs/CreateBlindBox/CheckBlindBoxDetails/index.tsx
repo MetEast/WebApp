@@ -241,7 +241,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         {dialogState.crtBlindTitle}
                     </Typography>
                 </InfoItemWrapper>
-                <InfoItemWrapper>
+                {/* <InfoItemWrapper>
                     <DetailedInfoTitleTypo>Status</DetailedInfoTitleTypo>
                     <Typography
                         fontSize={14}
@@ -257,7 +257,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     >
                         {dialogState.crtBlindStatus}
                     </Typography>
-                </InfoItemWrapper>
+                </InfoItemWrapper> */}
                 <InfoItemWrapper>
                     <DetailedInfoTitleTypo># Of Nft</DetailedInfoTitleTypo>
                     <DetailedInfoLabelTypo>{dialogState.crtBlindQuantity}</DetailedInfoLabelTypo>

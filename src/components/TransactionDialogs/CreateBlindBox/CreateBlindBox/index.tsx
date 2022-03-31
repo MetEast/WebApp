@@ -179,7 +179,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     }}
                                 />
                             </Stack>
-                            <Stack spacing={1}>
+                            {/* <Stack spacing={1}>
                                 <Typography fontSize={12} fontWeight={700}>
                                     Status
                                 </Typography>
@@ -207,7 +207,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         Online
                                     </PrimaryButton>
                                 </Stack>
-                            </Stack>
+                            </Stack> */}
                             <ELAPriceInput
                                 title="Price"
                                 inputValue={blindboxPrice.toString()}
