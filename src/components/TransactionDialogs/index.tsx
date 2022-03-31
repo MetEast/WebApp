@@ -66,7 +66,7 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     return (
         <>
-            {dialogState.waitingConfirmDlgOpened && <WaitingConfirmDlgContainer />}
+            <WaitingConfirmDlgContainer />
             {dialogState.errorMessageDlgOpened && <ErrorMessageDlgContainer />}
             {dialogState.createNFTDlgOpened && <MintNFTDlgContainer />}
             {dialogState.burnNFTDlgOpened && <BurnNFTDlgContainer />}
