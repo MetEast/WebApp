@@ -4,11 +4,13 @@ import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const SaleSuccess: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const navigate = useNavigate();
 
     return (
         <Stack spacing={5} width={320}>
@@ -27,7 +29,7 @@ const SaleSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     fullWidth
                     onClick={() => {
                         setDialogState({ ...dialogState, acceptBidDlgOpened: false });
-                        window.location.reload();
+                        navigate('/products');
                     }}
                 >
                     Close

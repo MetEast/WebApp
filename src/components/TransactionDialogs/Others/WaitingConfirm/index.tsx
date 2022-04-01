@@ -11,9 +11,9 @@ const WaitingConfirmDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
     const dlgOpened = usePrevious(dialogState.waitingConfirmDlgOpened) ? true : false;
     
     useEffect(() => {
-        console.log(dialogState.waitingConfirmDlgTimer, '-------------', dialogState.waitingConfirmDlgOpened, '---------------', dlgOpened)
+        // console.log(dialogState.waitingConfirmDlgTimer, '-------------', dialogState.waitingConfirmDlgOpened, '---------------', dlgOpened)
         if (dialogState.waitingConfirmDlgTimer && !dialogState.waitingConfirmDlgOpened && dlgOpened) {
-            console.log('+++++++++Timer: ', dialogState.waitingConfirmDlgTimer)
+            // console.log('+++++++++Timer: ', dialogState.waitingConfirmDlgTimer)
             clearTimeout(dialogState.waitingConfirmDlgTimer);
         }
     }, [dialogState.waitingConfirmDlgOpened]);
