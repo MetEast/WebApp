@@ -72,6 +72,13 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     const handleBuyBlindBox = () => {
+        if (dialogState.buyBlindTxFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'error',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return;
+        }
         setOnProgress(true);
 
         const updatedState = { ...dialogState };

@@ -31,6 +31,13 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
     );
 
     const handleAcceptBid = () => {
+        if (dialogState.acceptBidTxFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'error',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return;
+        }
         setOnProgress(true);
         
         const updatedState = { ...dialogState };
