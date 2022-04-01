@@ -45,7 +45,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             formData.append('description', dialogState.crtBlindDescription);
             formData.append('asset', imgUri);
             formData.append('tokenIds', dialogState.crtBlindTokenIds);
-            formData.append('status', dialogState.crtBlindStatus);
+            // formData.append('status', dialogState.crtBlindStatus);
             formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
             formData.append('blindPrice', dialogState.crtBlindPrice.toString());
             formData.append('saleBegin', (new Date(dialogState.crtBlindSaleBegin).getTime() / 1e3).toString());

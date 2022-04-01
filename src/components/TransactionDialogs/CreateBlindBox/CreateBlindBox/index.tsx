@@ -33,7 +33,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             ? null
             : { raw: dialogState.crtBlindImage, preview: URL.createObjectURL(dialogState.crtBlindImage) },
     );
-    const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>(dialogState.crtBlindStatus);
+    // const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>(dialogState.crtBlindStatus);
     const [blindboxQuantity, setBlindboxQuantity] = useState<number>(dialogState.crtBlindQuantity);
     const [blindboxQuantityError, setBlindboxQuantityError] = useState(-1);
     const [blindboxPrice, setBlindboxPrice] = useState<number>(dialogState.crtBlindPrice);
@@ -256,7 +256,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     crtBlindDescription: '',
                                     crtBlindImage: new File([''], ''),
                                     crtBlindTokenIds: '',
-                                    crtBlindStatus: 'offline',
+                                    // crtBlindStatus: 'offline',
                                     crtBlindQuantity: 0,
                                     crtBlindPrice: 0,
                                     crtBlindSaleBegin: '',
@@ -288,7 +288,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         crtBlindTitle: blindboxTitle,
                                         crtBlindDescription: blindboxDescription,
                                         crtBlindImage: blindboxImage,
-                                        crtBlindStatus: blindboxStatus,
+                                        // crtBlindStatus: blindboxStatus,
                                         crtBlindQuantity: blindboxQuantity,
                                         crtBlindPrice: blindboxPrice,
                                         crtBlindSaleBegin: saleBegins,

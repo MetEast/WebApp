@@ -106,7 +106,7 @@ interface DlgState {
     crtBlindImage: File;
     crtBlindTokenIds: string;
     crtBlindTokenNames: string;
-    crtBlindStatus: 'offline' | 'online';
+    // crtBlindStatus: 'offline' | 'online';
     crtBlindQuantity: number;
     crtBlindPrice: number;
     crtBlindSaleBegin: string;
@@ -239,7 +239,7 @@ export const defaultDlgState: DlgState = {
     crtBlindImage: new File([''], ''),
     crtBlindTokenIds: '',
     crtBlindTokenNames: '',
-    crtBlindStatus: 'offline',
+    // crtBlindStatus: 'offline',
     crtBlindQuantity: 0,
     crtBlindPrice: 0,
     crtBlindSaleBegin: '',
