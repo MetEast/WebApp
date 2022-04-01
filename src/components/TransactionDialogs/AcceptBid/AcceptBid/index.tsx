@@ -49,7 +49,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        if(!unmounted) setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -63,7 +63,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                if(!unmounted) {
+                if (!unmounted) {
                     setDialogState({
                         ...updatedState,
                         acceptBidDlgOpened: true,
