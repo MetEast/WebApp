@@ -127,10 +127,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         isBlindBox: true,
                     })
                         .then((txHash: string) => {
-                            // enqueueSnackbar(`Create Mystery Box succeed!`, {
-                            //     variant: 'success',
-                            //     anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                            // });
                             setDialogState({ ...updatedState, progressBar: 60, waitingConfirmDlgOpened: false });
                             resolve(txHash);
                         })
@@ -166,6 +162,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         });
 
     const handleCreateBlindBox = () => {
+        let unmounted = false;
         let transactionHash = '';
         callCreateOrderForSaleBatch()
             .then((txHash: string) => {
@@ -173,7 +170,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 return uploadImage2Ipfs(dialogState.crtBlindImage);
             })
             .then((added: any) => {
-                setDialogState({ ...dialogState, progressBar: 80 });
+                if (!unmounted) setDialogState({ ...dialogState, progressBar: 80 });
                 const imgUri = `meteast:image:${added.path}`;
                 return uploadCreatedBlindBoxInfo(imgUri);
             })
@@ -183,13 +180,15 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    setDialogState({
-                        ...dialogState,
-                        createBlindBoxDlgOpened: true,
-                        createBlindBoxDlgStep: 2,
-                        crtBlindTxHash: transactionHash,
-                        progressBar: 100,
-                    });
+                    if (!unmounted) {
+                        setDialogState({
+                            ...dialogState,
+                            createBlindBoxDlgOpened: true,
+                            createBlindBoxDlgStep: 2,
+                            crtBlindTxHash: transactionHash,
+                            progressBar: 100,
+                        });
+                    }
                 } else {
                     enqueueSnackbar(`Create Mystery Box error!`, {
                         variant: 'error',
@@ -204,8 +203,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 });
             })
             .finally(() => {
-                setOnProgress(false);
+                if (!unmounted) setOnProgress(false);
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     const displayItemNames = (names: string) => {

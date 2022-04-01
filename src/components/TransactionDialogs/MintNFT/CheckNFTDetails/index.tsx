@@ -94,6 +94,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     const uploadData = () =>
         new Promise((resolve, reject) => {
+            let unmounted = false;
             let _id = '';
             let _uri = '';
             let _didUri = '';
@@ -102,7 +103,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((added: any) => {
                     // Hash of image path - tokenId
                     _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
-                    setDialogState({ ...dialogState, progressBar: 10 });
+                    if (!unmounted) setDialogState({ ...dialogState, progressBar: 10 });
                     return uploadMetaData2Ipfs(
                         added,
                         signInDlgState.userDid,
@@ -116,7 +117,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((metaRecv: any) => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
-                    setDialogState({ ...dialogState, progressBar: 30 });
+                    if (!unmounted) setDialogState({ ...dialogState, progressBar: 30 });
                     return uploadDidUri2Ipfs(
                         signInDlgState.userDid,
                         signInDlgState.userName,
@@ -126,12 +127,15 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((didRecv: any) => {
                     // didUri
                     _didUri = `meteast:json:${didRecv.path}`;
-                    setDialogState({ ...dialogState, progressBar: 50 });
+                    if (!unmounted) setDialogState({ ...dialogState, progressBar: 50 });
                     resolve({ _id, _uri, _didUri });
                 })
                 .catch((error) => {
                     reject(error);
                 });
+            return () => {
+                unmounted = true;
+            };
         });
 
     const handleMint = () => {

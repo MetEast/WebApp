@@ -31,6 +31,13 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
     );
 
     const handleBuyNow = () => {
+        if (dialogState.buyNowTxFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'error',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return;
+        }
         setOnProgress(true);
 
         const updatedState = { ...dialogState };

@@ -48,6 +48,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
         }
         let role = -1;
         setOnProgress(true);
+        let unmounted = false;
 
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
@@ -68,7 +69,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             address: user2Edit.address,
         })
             .then((txHash: string) => {
-                setDialogState({ ...updatedState, progressBar: 40 });
+                setDialogState({ ...dialogState, progressBar: 40 });
                 return callContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
                     contractType: 2,
@@ -79,7 +80,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             })
             .then((txHash: string) => {
                 console.log(txHash);
-                setDialogState({ ...updatedState, progressBar: 70 });
+                setDialogState({ ...dialogState, progressBar: 70 });
                 role = user2Edit.status === 0 ? 1 : 2;
                 return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
             })
@@ -89,11 +90,13 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    setDialogState({
-                        ...updatedState,
-                        waitingConfirmDlgOpened: false,
-                        progressBar: 100,
-                    });
+                    if (!unmounted) {
+                        setDialogState({
+                            ...updatedState,
+                            waitingConfirmDlgOpened: false,
+                            progressBar: 100,
+                        });
+                    }
                     const updatedUserInfo: AdminUsersItemType = {
                         ...user2Edit,
                         status: role === 1 ? 1 : 0,
@@ -107,17 +110,22 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                    progressBar: 0,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                        progressBar: 0,
+                    });
+                }
             })
             .finally(() => {
                 setOnProgress(false);
                 onClose();
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

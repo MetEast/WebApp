@@ -49,6 +49,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
         }
         let role = -1;
         setOnProgress(true);
+        let unmounted = false;
         
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
@@ -93,11 +94,13 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    setDialogState({
-                        ...updatedState,
-                        waitingConfirmDlgOpened: false,
-                        progressBar: 100,
-                    });
+                    if (!unmounted) {
+                        setDialogState({
+                            ...updatedState,
+                            waitingConfirmDlgOpened: false,
+                            progressBar: 100,
+                        });
+                    }
                     const updatedUserInfo: AdminUsersItemType = {
                         ...user2Edit,
                         status: role === 2 ? 0 : 1,
@@ -111,17 +114,22 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                    progressBar: 0,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                        progressBar: 0,
+                    });
+                }
             })
             .finally(() => {
                 setOnProgress(false);
                 onClose();
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (
