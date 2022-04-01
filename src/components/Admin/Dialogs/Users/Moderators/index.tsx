@@ -48,17 +48,17 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
         }
         let role = -1;
         setOnProgress(true);
-        setDialogState({
-            ...dialogState,
-            waitingConfirmDlgOpened: true,
-            progressBar: 10,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...defaultDlgState,
-                    errorMessageDlgOpened: true,
-                });
-            }, 120000),
-        });
+
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.progressBar = 10;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -68,8 +68,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             address: user2Edit.address,
         })
             .then((txHash: string) => {
-                console.log(txHash);
-                setDialogState({ ...dialogState, progressBar: 40 });
+                setDialogState({ ...updatedState, progressBar: 40 });
                 return callContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
                     contractType: 2,
@@ -80,7 +79,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             })
             .then((txHash: string) => {
                 console.log(txHash);
-                setDialogState({ ...dialogState, progressBar: 70 });
+                setDialogState({ ...updatedState, progressBar: 70 });
                 role = user2Edit.status === 0 ? 1 : 2;
                 return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
             })
@@ -91,7 +90,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                     setDialogState({
-                        ...dialogState,
+                        ...updatedState,
                         waitingConfirmDlgOpened: false,
                         progressBar: 100,
                     });
@@ -109,7 +108,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,
                     progressBar: 0,
