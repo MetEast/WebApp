@@ -26,7 +26,7 @@ const CreateBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
                         crtBlindDescription: '',
                         crtBlindImage: new File([''], ''),
                         crtBlindTokenIds: '',
-                        crtBlindStatus: 'offline',
+                        // crtBlindStatus: 'offline',
                         crtBlindQuantity: 0,
                         crtBlindPrice: 0,
                         crtBlindSaleBegin: '',

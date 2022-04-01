@@ -51,26 +51,26 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
 
-    const changeBBStatus = async () => {
-        let unmounted = false;
-        setOnProgress(true);
-        updateBBStatus(signInDlgState.token, parseInt(blindBoxDetail.tokenId), 'online').then((success: boolean) => {
-            if (!unmounted && success) {
-                const _BBItem = { ...blindBoxDetail };
-                _BBItem.status = 'online';
-                setBlindBoxDetail(_BBItem);
-                setOnProgress(false);
-                enqueueSnackbar('', {
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                    autoHideDuration: 3000,
-                    content: (key) => <SnackMessage id={key} message="Put online succeed." variant="success" />,
-                });
-            }
-        });
-        return () => {
-            unmounted = true;
-        };
-    };
+    // const changeBBStatus = async () => {
+    //     let unmounted = false;
+    //     setOnProgress(true);
+    //     updateBBStatus(signInDlgState.token, parseInt(blindBoxDetail.tokenId), 'online').then((success: boolean) => {
+    //         if (!unmounted && success) {
+    //             const _BBItem = { ...blindBoxDetail };
+    //             _BBItem.status = 'online';
+    //             setBlindBoxDetail(_BBItem);
+    //             setOnProgress(false);
+    //             enqueueSnackbar('', {
+    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    //                 autoHideDuration: 3000,
+    //                 content: (key) => <SnackMessage id={key} message="Put online succeed." variant="success" />,
+    //             });
+    //         }
+    //     });
+    //     return () => {
+    //         unmounted = true;
+    //     };
+    // };
 
     const updateBlindBoxLikes = (type: string) => {
         setBlindBoxDetail((prevState: TypeProduct) => {
@@ -213,47 +213,53 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 price_usd={blindBoxDetail.price_usd}
                                 marginTop={3}
                             />
-                            {(signInDlgState.walletAccounts.length === 0 ||
+                            {/* {(signInDlgState.walletAccounts.length === 0 ||
                                 (signInDlgState.walletAccounts.length !== 0 &&
                                     blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0])) &&
                                 blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                                blindBoxDetail.state === 'online' &&
-                                blindBoxDetail.status === 'online' && (
-                                    <PrimaryButton
-                                        sx={{ marginTop: 3, width: '100%' }}
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    buyBlindBoxDlgOpened: true,
-                                                    buyBlindBoxDlgStep: 0,
-                                                    buyBlindName: blindBoxDetail.name,
-                                                    buyBlindPriceEla: blindBoxDetail.price_ela,
-                                                    buyBlindPriceUsd: blindBoxDetail.price_usd,
-                                                    buyBlindAmount: 1,
-                                                    buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                                    buyBlindCreator:
-                                                        blindBoxDetail.author === ''
-                                                            ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
-                                                            : blindBoxDetail.author,
-                                                    buyBlindMaxPurchases:
-                                                        blindBoxDetail.maxPurchases === undefined
-                                                            ? 0
-                                                            : blindBoxDetail.maxPurchases,
-                                                    buyBlindInstock:
-                                                        blindBoxDetail.instock === undefined
-                                                            ? 0
-                                                            : blindBoxDetail.instock,
-                                                });
-                                            } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                            }
-                                        }}
-                                    >
-                                        Buy Now
-                                    </PrimaryButton>
-                                )}
-                            {signInDlgState.walletAccounts.length !== 0 &&
+                                blindBoxDetail.state === 'online' &&( */}
+                            <PrimaryButton
+                                disabled={
+                                    !(
+                                        (signInDlgState.walletAccounts.length === 0 ||
+                                            (signInDlgState.walletAccounts.length !== 0 &&
+                                                blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0])) &&
+                                        blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
+                                        blindBoxDetail.state === 'online'
+                                    )
+                                }
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            buyBlindBoxDlgOpened: true,
+                                            buyBlindBoxDlgStep: 0,
+                                            buyBlindName: blindBoxDetail.name,
+                                            buyBlindPriceEla: blindBoxDetail.price_ela,
+                                            buyBlindPriceUsd: blindBoxDetail.price_usd,
+                                            buyBlindAmount: 1,
+                                            buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                            buyBlindCreator:
+                                                blindBoxDetail.author === ''
+                                                    ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                    : blindBoxDetail.author,
+                                            buyBlindMaxPurchases:
+                                                blindBoxDetail.maxPurchases === undefined
+                                                    ? 0
+                                                    : blindBoxDetail.maxPurchases,
+                                            buyBlindInstock:
+                                                blindBoxDetail.instock === undefined ? 0 : blindBoxDetail.instock,
+                                        });
+                                    } else {
+                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                    }
+                                }}
+                            >
+                                Buy Now
+                            </PrimaryButton>
+                            {/* )} */}
+                            {/* {signInDlgState.walletAccounts.length !== 0 &&
                                 blindBoxDetail.royaltyOwner === signInDlgState.walletAccounts[0] &&
                                 blindBoxDetail.status === 'offline' && (
                                     <PrimaryButton
@@ -263,7 +269,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                     >
                                         Put online
                                     </PrimaryButton>
-                                )}
+                                )} */}
                         </>
                     )}
                 </Grid>
