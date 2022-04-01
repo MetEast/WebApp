@@ -44,7 +44,7 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                                 createNFTDlgOpened: false,
                             });
                             navigate('/profile');
-                            window.location.reload();
+                            // window.location.reload();
                         }}
                     >
                         Close

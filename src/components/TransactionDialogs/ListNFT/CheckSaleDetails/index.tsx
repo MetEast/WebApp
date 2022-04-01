@@ -122,9 +122,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         })
                         .catch((error) => {
                             enqueueSnackbar(
-                                `Order for ${
-                                    dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'
-                                } error: ${error}!`,
+                                `Order for ${dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'} error.`,
                                 {
                                     variant: 'error',
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -139,7 +137,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         });
                 })
                 .catch((error) => {
-                    enqueueSnackbar(`Set approval error: ${error}!`, {
+                    enqueueSnackbar(`Set approval error.`, {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
