@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
@@ -11,6 +11,7 @@ export interface ComponentProps {}
 const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <Stack spacing={5} width={320}>
@@ -37,14 +38,14 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
                                 mintTxFee: 0,
-                                mintTxHash: "",
-                                mintTokenId: "",
-                                mintTokenUri: "",
-                                mintDidUri: "",
+                                mintTxHash: '',
+                                mintTokenId: '',
+                                mintTokenUri: '',
+                                mintDidUri: '',
                                 createNFTDlgOpened: false,
                             });
-                            navigate('/profile');
-                            // window.location.reload();
+                            if (location.pathname.indexOf('/profile') !== -1) window.location.reload();
+                            else navigate('/profile');
                         }}
                     >
                         Close

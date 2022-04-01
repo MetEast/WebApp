@@ -25,6 +25,7 @@ const PlaceBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     placeBidOrderId: '',
                     placeBidMinLimit: 0,
                 });
+                if (dialogState.placeBidDlgStep === 2) window.location.reload();
             }}
         >
             {dialogState.placeBidDlgStep === 0 && <PlaceBid />}
