@@ -265,6 +265,14 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                                 width={140}
                             />
                         </Stack>
+                        <PrimaryButton
+                            size="small"
+                            btn_color="none"
+                            sx={{ width: 140, ':hover': { background: '#d8e4ef' } }}
+                            onClick={() => {}}
+                        >
+                            Clear all
+                        </PrimaryButton>
                     </Stack>
                 </Stack>
                 <Table
