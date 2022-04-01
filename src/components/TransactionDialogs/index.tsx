@@ -16,8 +16,8 @@ import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
 import PlaceBidDlgContainer from 'src/components/TransactionDialogs/PlaceBid';
 import BuyNowDlgContainer from 'src/components/TransactionDialogs/BuyNow';
 import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
-import CancelBidDlgContainer from '../TransactionDialogs/CancelBid';
-import UpdateBidDlgContainer from '../TransactionDialogs/UpdateBid';
+// import CancelBidDlgContainer from '../TransactionDialogs/CancelBid';
+// import UpdateBidDlgContainer from '../TransactionDialogs/UpdateBid';
 import { useSignInContext } from 'src/context/SignInContext';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -74,8 +74,8 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             {dialogState.changePriceDlgOpened && <ChangePriceDlgContainer />}
             {dialogState.cancelSaleDlgOpened && <CancelSaleDlgContainer />}
             {dialogState.placeBidDlgOpened && <PlaceBidDlgContainer />}
-            {dialogState.updateBidDlgOpened && <UpdateBidDlgContainer />}
-            {dialogState.cancelBidDlgOpened && <CancelBidDlgContainer />}
+            {/* {dialogState.updateBidDlgOpened && <UpdateBidDlgContainer />} */}
+            {/* {dialogState.cancelBidDlgOpened && <CancelBidDlgContainer />} */}
             {dialogState.acceptBidDlgOpened && <AcceptBidDlgContainer />}
             {dialogState.createBlindBoxDlgOpened && <CreateBlindBoxDlgContainer />}
             {dialogState.buyBlindBoxDlgOpened && <BuyBlindBoxDlgContainer />}

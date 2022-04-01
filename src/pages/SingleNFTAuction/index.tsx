@@ -213,31 +213,27 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                             />
                             {productDetail.status !== 'NEW' &&
                                 (productDetail.isExpired ? (
-                                    bidsList.length === 0 ? (
-                                        <></>
-                                    ) : (
-                                        <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                            <SecondaryButton
-                                                sx={{ width: '100%', height: 40 }}
-                                                onClick={() => {
-                                                    if (signInDlgState.isLoggedIn) {
-                                                        setDialogState({
-                                                            ...dialogState,
-                                                            acceptBidDlgOpened: true,
-                                                            acceptBidDlgStep: 0,
-                                                            acceptBidName: bidsList[0].user,
-                                                            acceptBidOrderId: bidsList[0].orderId || '',
-                                                            acceptBidPrice: bidsList[0].price,
-                                                        });
-                                                    } else {
-                                                        setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                                    }
-                                                }}
-                                            >
-                                                Settle Auction
-                                            </SecondaryButton>
-                                        </Stack>
-                                    )
+                                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                        <SecondaryButton
+                                            sx={{ width: '100%', height: 40 }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        acceptBidDlgOpened: true,
+                                                        acceptBidDlgStep: 0,
+                                                        acceptBidName: bidsList.length ? bidsList[0].user : productDetail.author,
+                                                        acceptBidOrderId: (bidsList.length ? bidsList[0].orderId : productDetail.orderId) || '',
+                                                        acceptBidPrice: bidsList.length ? bidsList[0].price : 0,
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Settle Auction
+                                        </SecondaryButton>
+                                    </Stack>
                                 ) : (
                                     <>
                                         {(signInDlgState.walletAccounts.length === 0 ||

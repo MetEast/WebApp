@@ -3,11 +3,14 @@ import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import AcceptBid from 'src/components/TransactionDialogs/AcceptBid/AcceptBid';
 import SaleSuccess from 'src/components/TransactionDialogs/AcceptBid/SaleSuccess';
+import { useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const AcceptBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const navigate = useNavigate();
+
     return (
         <ModalDialog
             open={dialogState.acceptBidDlgOpened}
@@ -22,7 +25,7 @@ const AcceptBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     acceptBidTxFee: 0,
                     acceptBidTxHash: '',
                 });
-                if (dialogState.acceptBidDlgStep === 1) window.location.reload();
+                if (dialogState.acceptBidDlgStep === 1) navigate('/products');
             }}
         >
             {dialogState.acceptBidDlgStep === 0 && <AcceptBid />}
