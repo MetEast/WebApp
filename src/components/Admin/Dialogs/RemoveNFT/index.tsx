@@ -44,7 +44,8 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
             return;
         }
         setOnProgress(true);
-        
+        let unmounted = false;
+
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.waitingConfirmDlgTimer = setTimeout(() => {
@@ -53,7 +54,7 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -68,26 +69,33 @@ const RemoveNFT: React.FC<ComponentProps> = ({ token2Remove, onClose }): JSX.Ele
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    waitingConfirmDlgOpened: false,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        waitingConfirmDlgOpened: false,
+                    });
+                }
             })
             .catch((error) => {
                 enqueueSnackbar(`Remove Token error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
             })
             .finally(() => {
                 setOnProgress(false);
                 onClose();
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

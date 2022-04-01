@@ -40,7 +40,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    const [viewBidDlgOpened, setViewBidDlgOpened] = useState<boolean>(false);
 
     useEffect(() => {
         let unmounted = false;
@@ -222,7 +221,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                 <PrimaryButton
                                     sx={{ marginTop: 3, width: '100%' }}
                                     onClick={() => {
-                                        setViewBidDlgOpened(true);
                                         if (signInDlgState.isLoggedIn) {
                                             if (bidsList.length) {
                                                 setDialogState({
@@ -243,46 +241,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                     View Bids
                                 </PrimaryButton>
                             )}
-                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                <PinkButton
-                                    disabled={productDetail.status === 'HAS BIDS'}
-                                    sx={{ width: '100%', height: 40 }}
-                                    onClick={() => {
-                                        if (signInDlgState.isLoggedIn) {
-                                            setDialogState({
-                                                ...dialogState,
-                                                cancelSaleDlgOpened: true,
-                                                cancelSaleDlgStep: 0,
-                                                cancelSaleOrderId: productDetail.orderId || '',
-                                            });
-                                        } else {
-                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                        }
-                                    }}
-                                >
-                                    Cancel Sale
-                                </PinkButton>
-                                <SecondaryButton
-                                    disabled={productDetail.status === 'HAS BIDS'}
-                                    sx={{ width: '100%', height: 40 }}
-                                    onClick={() => {
-                                        if (signInDlgState.isLoggedIn) {
-                                            setDialogState({
-                                                ...dialogState,
-                                                changePriceDlgOpened: true,
-                                                changePriceDlgStep: 0,
-                                                changePriceCurPrice: productDetail.price_ela,
-                                                changePriceOrderId: productDetail.orderId || '',
-                                            });
-                                        } else {
-                                            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                        }
-                                    }}
-                                >
-                                    Change Price
-                                </SecondaryButton>
-                            </Stack>
-                            {productDetail.isExpired && (
+                            {productDetail.isExpired ? (
                                 <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                     <SecondaryButton
                                         sx={{ width: '100%', height: 40 }}
@@ -292,9 +251,14 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                                     ...dialogState,
                                                     acceptBidDlgOpened: true,
                                                     acceptBidDlgStep: 0,
-                                                    acceptBidName: bidsList[0].user,
-                                                    acceptBidOrderId: bidsList[0].orderId || '',
-                                                    acceptBidPrice: bidsList[0].price,
+                                                    acceptBidName: bidsList.length
+                                                        ? bidsList[0].user
+                                                        : productDetail.author,
+                                                    acceptBidOrderId:
+                                                        (bidsList.length
+                                                            ? bidsList[0].orderId
+                                                            : productDetail.orderId) || '',
+                                                    acceptBidPrice: bidsList.length ? bidsList[0].price : 0,
                                                 });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
@@ -304,6 +268,48 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                         Settle Auction
                                     </SecondaryButton>
                                 </Stack>
+                            ) : (
+                                <>
+                                    <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                        <PinkButton
+                                            disabled={productDetail.status === 'HAS BIDS'}
+                                            sx={{ width: '100%', height: 40 }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        cancelSaleDlgOpened: true,
+                                                        cancelSaleDlgStep: 0,
+                                                        cancelSaleOrderId: productDetail.orderId || '',
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Cancel Sale
+                                        </PinkButton>
+                                        <SecondaryButton
+                                            disabled={productDetail.status === 'HAS BIDS'}
+                                            sx={{ width: '100%', height: 40 }}
+                                            onClick={() => {
+                                                if (signInDlgState.isLoggedIn) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        changePriceDlgOpened: true,
+                                                        changePriceDlgStep: 0,
+                                                        changePriceCurPrice: productDetail.price_ela,
+                                                        changePriceOrderId: productDetail.orderId || '',
+                                                    });
+                                                } else {
+                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                }
+                                            }}
+                                        >
+                                            Change Price
+                                        </SecondaryButton>
+                                    </Stack>
+                                </>
                             )}
                         </>
                     )}
