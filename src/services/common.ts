@@ -1,4 +1,3 @@
-import { start } from 'repl';
 import { enumBadgeType, TypeFavouritesFetch } from 'src/types/product-types';
 
 // custome
@@ -21,9 +20,9 @@ export const getTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);
     const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
 
-    let hours = date.getUTCHours().toString();
+    let hours = date.getHours().toString();
     hours = hours.toString().padStart(2, '0');
-    const min = date.getUTCMinutes().toString().padStart(2, '0');
+    const min = date.getMinutes().toString().padStart(2, '0');
     const timeStr = [hours, min].join(':');
     return { date: dateStr, time: timeStr };
 };
@@ -39,6 +38,30 @@ export const getUTCTime = (timestamp: string) => {
     const min = date.getUTCMinutes().toString().padStart(2, '0');
     const timeStr = ' at ' + [hours, min].join(':') + ' UTC';
     return { date: dateStr, time: timeStr };
+};
+
+export const getCustomTime = (timestamp: string) => {
+    const date = new Date(parseInt(timestamp) * 1000);
+    const pieces = date.toString().split(' ');
+    const [wd, m, d, y] = pieces;
+    const dateStr = [m, d, y].join('-');
+
+    let hours = date.getHours();
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    hours = hours > 12 ? hours - 12 : hours;
+    const hour = hours.toString().padStart(2, '0');
+    const min = date.getMinutes().toString().padStart(2, '0');
+    const sec = date.getSeconds().toString().padStart(2, '0');
+    const timeStr = [hour, min, sec]
+        .join(':')
+        .concat(' ')
+        .concat([suffix, `UTC${getTimeZone()}`].join(' '));
+    return { date: dateStr, time: timeStr };
+};
+
+export const getTimeZone = () => {
+    const e = String(-new Date().getTimezoneOffset() / 60);
+    return e.includes('-') ? e : '+'.concat(e);
 };
 
 // Get Abbrevation of hex addres //
@@ -161,18 +184,17 @@ export const getChartTimestampList = (type: string) => {
     if (type === 'Daily') {
         const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
         const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-        return {start: start.getTime(), end: end.getTime()};
+        return { start: start.getTime(), end: end.getTime() };
     } else if (type === 'Weekly') {
         const start = getMondayOfWeek(date);
         const temp = new Date(start);
         const end = new Date(temp.setDate(temp.getDate() + 6));
-        return {start: start.getTime(), end: end.getTime()};
+        return { start: start.getTime(), end: end.getTime() };
     } else if (type === 'Monthly') {
         const start = new Date(date.getFullYear(), date.getMonth(), 1);
         const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        return {start: start.getTime(), end: end.getTime()};
-    }
-    else {
-        return {start: 0, end: 0};
+        return { start: start.getTime(), end: end.getTime() };
+    } else {
+        return { start: 0, end: 0 };
     }
 };
