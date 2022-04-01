@@ -15,18 +15,6 @@ export const Container = styled(Stack)`
     }
 `;
 
-export const StatusButton = styled(SecondaryButton)<{ selected: boolean }>`
-    width: 100%;
-    background: ${({ selected }) => (selected ? '#1890ff' : '#e8f4ff')};
-    color: ${({ selected }) => (selected ? 'white' : '#1890ff')};
-    &:hover {
-        background: ${({ selected }) => (selected ? '#28a0ff' : '#d8e4ef')};
-    }
-    ${(props) => props.theme.breakpoints.down('sm')} {
-        font-size: 14px;
-    }
-`;
-
 export const SelectBtn = styled(Button)<{ isopen: number }>`
     height: 40px;
     display: flex;
