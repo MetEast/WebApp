@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
-import { Container, StatusButton, SelectBtn } from './styles';
+import { Container, SelectBtn } from './styles';
 import CustomTextField from 'src/components/TextField';
-import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PrimaryButton } from 'src/components/Buttons/styles';
 import { filterStatusButtons } from 'src/types/filter-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -49,10 +49,16 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     <Grid container columnSpacing={1} rowGap={1} marginTop={1}>
                         {filterStatusButtons.map((item, index) => (
                             <Grid item xs={6} key={`Profile-Optionbar-FilterCard-${index}`}>
-                                <StatusButton size="small" selected={index === status} onClick={() => setStatus(index)}>
+                                <PrimaryButton
+                                    size="small"
+                                    fullWidth
+                                    btn_color={index === status ? 'primary' : 'secondary'}
+                                    sx={{ fontSize: { xs: 14, sm: 16 } }}
+                                    onClick={() => setStatus(index)}
+                                >
                                     <Icon icon={item.icon} style={{ marginBottom: 2, marginRight: 4 }} />
                                     {item.title}
-                                </StatusButton>
+                                </PrimaryButton>
                             </Grid>
                         ))}
                     </Grid>
@@ -101,9 +107,10 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     changeHandler={(value: string) => setMaxPrice(value)}
                 />
             </Stack>
-            <SecondaryButton
+            <PrimaryButton
                 size="small"
-                sx={{ width: 142, background: 'transparent', marginTop: 3, alignSelf: 'center' }}
+                btn_color="none"
+                sx={{ width: 142, marginTop: 3, alignSelf: 'center' }}
                 onClick={() => {
                     setStatus(-1);
                     setMinPrice('');
@@ -112,10 +119,11 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                 }}
             >
                 Clear all
-            </SecondaryButton>
+            </PrimaryButton>
             <Stack direction="row" alignItems="center" width="100%" spacing={1} marginTop={2}>
-                <SecondaryButton
+                <PrimaryButton
                     size={matchDownSm ? 'small' : undefined}
+                    btn_color="secondary"
                     fullWidth
                     onClick={() => {
                         changeHandler(
@@ -128,7 +136,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
                     }}
                 >
                     close
-                </SecondaryButton>
+                </PrimaryButton>
                 <PrimaryButton
                     size={matchDownSm ? 'small' : undefined}
                     fullWidth
