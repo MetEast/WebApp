@@ -8,14 +8,6 @@ import { EffectCards } from 'swiper';
 
 export interface ComponentProps {}
 
-// const testImages = [
-//     '/assets/images/blindbox/blindbox-nft-template1.png',
-//     '/assets/images/blindbox/blindbox-nft-template2.png',
-//     '/assets/images/blindbox/blindbox-nft-template3.png',
-//     '/assets/images/blindbox/blindbox-nft-template4.png',
-//     '/assets/images/avatar-template.png',
-// ];
-
 const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState] = useDialogContext();
     const [imgIndex, setImgIndex] = useState<number>(0);
@@ -29,7 +21,6 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
             <Stack alignItems="center">
                 <PageNumberTypo>
                     {imgIndex + 1} of {dialogState.buyBlindAmount}
-                    {/* {imgIndex + 1} of {testImages.length} */}
                 </PageNumberTypo>
                 <Swiper
                     effect={'cards'}
@@ -44,15 +35,10 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                     className="mySwiper"
                     style={{ width: 240, height: 240 }}
                 >
-                    {/* {testImages.map((item, index) => (
-                        <SwiperSlide style={{ borderRadius: 16 }}>
-                            <img src={item} width="100%" height="100%" style={{ objectFit: 'cover' }} alt="" />
-                        </SwiperSlide>
-                    ))} */}
                     {dialogState.buyBlindImages.map((item, index) => (
-                        <SwiperSlide style={{ borderRadius: 16 }}>
+                        <SwiperSlide style={{ borderRadius: 16 }} key={index}>
                             <img
-                                src={dialogState.buyBlindImages[index]}
+                                src={item}
                                 width="100%"
                                 height="100%"
                                 style={{ objectFit: 'cover' }}

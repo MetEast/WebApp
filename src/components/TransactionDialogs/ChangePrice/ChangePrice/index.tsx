@@ -51,16 +51,16 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
         }
 
         setOnProgress(true);
-        setDialogState({
-            ...dialogState,
-            waitingConfirmDlgOpened: true,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...defaultDlgState,
-                    errorMessageDlgOpened: true,
-                });
-            }, 120000),
-        });
+
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -76,7 +76,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     changePriceDlgOpened: true,
                     changePriceDlgStep: 1,
                     changePriceTxHash: txHash,
@@ -89,7 +89,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     changePriceDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,

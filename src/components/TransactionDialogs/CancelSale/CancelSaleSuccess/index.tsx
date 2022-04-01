@@ -24,7 +24,6 @@ const CancelSaleSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     onClick={() => {
                         setDialogState({ ...dialogState, cancelSaleDlgOpened: false });
                         navigate('/profile');
-                        // window.location.reload();
                     }}
                 >
                     Close

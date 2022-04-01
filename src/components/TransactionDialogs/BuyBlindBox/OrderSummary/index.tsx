@@ -73,16 +73,16 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleBuyBlindBox = () => {
         setOnProgress(true);
-        setDialogState({
-            ...dialogState,
-            waitingConfirmDlgOpened: true,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...defaultDlgState,
-                    errorMessageDlgOpened: true,
-                });
-            }, 120000),
-        });
+
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -97,7 +97,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
+                setDialogState({ ...updatedState, waitingConfirmDlgOpened: false });
                 sendSoldBlindBoxTokenIds(txHash);
             })
             .catch((error) => {
@@ -106,7 +106,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     buyBlindBoxDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,

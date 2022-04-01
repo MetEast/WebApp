@@ -21,6 +21,7 @@ const ChangePriceDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     changePriceDlgOpened: false,
                     changePriceDlgStep: 0,
                 });
+                if (dialogState.changePriceDlgStep === 1) window.location.reload();
             }}
         >
             {dialogState.changePriceDlgStep === 0 && <ChangePrice />}
