@@ -104,7 +104,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 </Stack>
                 <Box>
                     <Grid container columnSpacing={4} rowGap={3}>
-                        <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={3}>
+                        <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={2}>
                             <CustomTextField
                                 title="Title"
                                 inputValue={blindboxTitle}
@@ -120,7 +120,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 error={blindboxDescriptionError}
                                 errorText="Description can not be empty."
                                 multiline
-                                rows={3}
+                                rows={4}
                                 changeHandler={(value: string) => setBlindboxDescription(value)}
                             />
                             <Stack height="100%" spacing={1}>
@@ -132,7 +132,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     onDrop={handleFileChange}
                                     sx={{
                                         width: '100%',
-                                        height: { xs: '200px', sm: '100%' },
+                                        height: { xs: '200px' },
                                         marginTop: '1rem',
                                         borderRadius: '8px',
                                         cursor: 'pointer',
