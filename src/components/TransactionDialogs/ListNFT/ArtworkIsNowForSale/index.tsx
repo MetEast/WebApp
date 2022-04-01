@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
@@ -10,6 +10,7 @@ export interface ComponentProps {}
 
 const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
 
     return (
@@ -41,8 +42,8 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
                             mintTokenUri: '',
                             mintDidUri: '',
                         });
-                        navigate('/products');
-                        // window.location.reload();
+                        if (location.pathname.indexOf('/products') !== -1) window.location.reload();
+                        else navigate('/products');
                     }}
                 >
                     Close

@@ -4,11 +4,15 @@ import ModalDialog from 'src/components/ModalDialog';
 import CreateBlindBox from 'src/components/TransactionDialogs/CreateBlindBox/CreateBlindBox';
 import CheckBlindBoxDetails from 'src/components/TransactionDialogs/CreateBlindBox/CheckBlindBoxDetails';
 import BlindBoxCreateSuccess from 'src/components/TransactionDialogs/CreateBlindBox/BlindBoxCreateSuccess';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const CreateBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const navigate = useNavigate();
+    const location = useLocation();
+    
     return (
         <>
             <ModalDialog
@@ -30,6 +34,10 @@ const CreateBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
                         crtBlindPurchases: 0,
                         progressBar: 0,
                     });
+                    if (dialogState.createBlindBoxDlgStep === 2) {
+                        if (location.pathname.indexOf('/blind-box') !== -1) window.location.reload();
+                        else navigate('/blind-box');
+                    }
                 }}
             >
                 {dialogState.createBlindBoxDlgStep === 0 && <CreateBlindBox />}
