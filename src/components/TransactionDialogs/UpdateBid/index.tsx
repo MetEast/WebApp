@@ -15,7 +15,7 @@ const UpdateBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setDialogState({
                     ...dialogState,
                     updateBidPrice: 0,
-                    updateBidTxFee: 0,
+                    // updateBidTxFee: 0,
                     updateBidOrderId: '',
                     updateBidTxHash: '',
                     updateBidDlgOpened: false,

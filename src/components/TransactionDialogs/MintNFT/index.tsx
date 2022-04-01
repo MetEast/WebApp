@@ -25,7 +25,7 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     mintIntroduction: '',
                     mintCategory: { label: '', value: '' },
                     mintFile: new File([''], ''),
-                    mintTxFee: 0,
+                    // mintTxFee: 0,
                     mintTxHash: '',
                     mintTokenId: '',
                     mintTokenUri: '',
@@ -35,7 +35,7 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     sellMinPrice: 0,
                     sellSaleEnds: { label: '', value: '' },
                     sellSaleType: 'buynow',
-                    sellTxFee: 0,
+                    // sellTxFee: 0,
                     sellTxHash: '',
                     sellPrice: 0,
                 });

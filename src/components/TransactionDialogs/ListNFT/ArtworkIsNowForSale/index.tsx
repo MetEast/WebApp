@@ -35,7 +35,7 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
                             sellMinPrice: 0,
                             sellSaleEnds: { label: '', value: '' },
                             sellSaleType: 'buynow',
-                            sellTxFee: 0,
+                            // sellTxFee: 0,
                             sellTxHash: '',
                             sellPrice: 0,
                             mintTokenId: '',

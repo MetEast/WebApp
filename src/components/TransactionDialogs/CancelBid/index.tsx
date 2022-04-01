@@ -14,7 +14,7 @@ const CancelBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             onClose={() => {
                 setDialogState({
                     ...dialogState,
-                    cancelBidTxFee: 0,
+                    // cancelBidTxFee: 0,
                     cancelBidOrderId: '',
                     cancelBidTxHash: '',
                     cancelBidDlgOpened: false,
