@@ -17,7 +17,7 @@ const PlaceBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     placeBidAmount: 0,
                     // placeBidExpire: { label: '', value: '' },
-                    placeBidTxFee: 0,
+                    // placeBidTxFee: 0,
                     placeBidDlgOpened: false,
                     placeBidDlgStep: 0,
                     placeBidName: '',

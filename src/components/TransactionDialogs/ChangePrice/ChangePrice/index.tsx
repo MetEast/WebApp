@@ -126,7 +126,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
                         setDialogState({
                             ...dialogState,
                             changePriceCurPrice: 0,
-                            changePriceTxFee: 0,
+                            // changePriceTxFee: 0,
                             changePriceOrderId: '',
                             changePriceTxHash: '',
                             changePriceDlgOpened: false,

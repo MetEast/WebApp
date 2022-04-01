@@ -17,7 +17,7 @@ const BurnNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     ...dialogState,
                     burnNFTDlgOpened: false,
                     burnTokenId: '',
-                    burnTxFee: 0,
+                    // burnTxFee: 0,
                 });
                 navigate('/profile');
             }}
@@ -28,7 +28,7 @@ const BurnNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         ...dialogState,
                         burnNFTDlgOpened: false,
                         burnTokenId: '',
-                        burnTxFee: 0,
+                        // burnTxFee: 0,
                     });
                 }}
             />

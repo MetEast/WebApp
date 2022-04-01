@@ -17,7 +17,7 @@ const CancelSaleDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             onClose={() => {
                 setDialogState({
                     ...dialogState,
-                    cancelSaleTxFee: 0,
+                    // cancelSaleTxFee: 0,
                     cancelSaleOrderId: '',
                     cancelSaleTxHash: '',
                     cancelSaleDlgOpened: false,

@@ -137,7 +137,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                                 acceptBidPrice: 0,
                                 acceptBidOrderId: '',
                                 acceptBidName: '',
-                                acceptBidTxFee: 0,
+                                // acceptBidTxFee: 0,
                                 acceptBidTxHash: '',
                             });
                         }}

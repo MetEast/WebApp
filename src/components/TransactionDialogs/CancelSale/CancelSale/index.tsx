@@ -100,7 +100,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                     onClick={() => {
                         setDialogState({
                             ...dialogState,
-                            cancelSaleTxFee: 0,
+                            // cancelSaleTxFee: 0,
                             cancelSaleOrderId: '',
                             cancelSaleTxHash: '',
                             cancelSaleDlgOpened: false,
