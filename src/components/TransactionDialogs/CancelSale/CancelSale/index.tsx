@@ -38,16 +38,16 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-        setDialogState({
-            ...dialogState,
-            waitingConfirmDlgOpened: true,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...defaultDlgState,
-                    errorMessageDlgOpened: true,
-                });
-            }, 120000),
-        });
+
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -62,7 +62,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     cancelSaleDlgOpened: true,
                     cancelSaleDlgStep: 1,
                     cancelSaleTxHash: txHash,
@@ -75,7 +75,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     cancelSaleDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,

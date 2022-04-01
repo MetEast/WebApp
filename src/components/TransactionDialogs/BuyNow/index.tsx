@@ -3,11 +3,14 @@ import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import BuyNow from 'src/components/TransactionDialogs/BuyNow/BuyNow';
 import PurchaseSuccess from 'src/components/TransactionDialogs/BuyNow/PurchaseSuccess';
+import { useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const BuyNowDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    const navigate = useNavigate();
+    
     return (
         <ModalDialog
             open={dialogState.buyNowDlgOpened}
@@ -21,6 +24,7 @@ const BuyNowDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     buyNowOrderId: '',
                     progressBar: 0,
                 });
+                if (dialogState.buyNowDlgStep === 1) navigate('/profile');
             }}
         >
             {dialogState.buyNowDlgStep === 0 && <BuyNow />}

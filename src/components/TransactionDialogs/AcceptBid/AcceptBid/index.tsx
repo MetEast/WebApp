@@ -32,16 +32,16 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleAcceptBid = () => {
         setOnProgress(true);
-        setDialogState({
-            ...dialogState,
-            waitingConfirmDlgOpened: true,
-            waitingConfirmDlgTimer: setTimeout(() => {
-                setDialogState({
-                    ...defaultDlgState,
-                    errorMessageDlgOpened: true,
-                });
-            }, 120000),
-        });
+        
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -51,25 +51,25 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
             orderId: dialogState.acceptBidOrderId,
         })
             .then((txHash: string) => {
-                enqueueSnackbar('Accept bid succeed!', {
+                enqueueSnackbar('Settle auction succeed!', {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     acceptBidDlgOpened: true,
-                    acceptBidDlgStep: 2,
+                    acceptBidDlgStep: 1,
                     acceptBidTxHash: txHash,
                     waitingConfirmDlgOpened: false,
                 });
             })
             .catch((error) => {
-                enqueueSnackbar(`Accept bid error.`, {
+                enqueueSnackbar(`Settle auction error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
                 setDialogState({
-                    ...dialogState,
+                    ...updatedState,
                     acceptBidDlgOpened: false,
                     waitingConfirmDlgOpened: false,
                     errorMessageDlgOpened: true,

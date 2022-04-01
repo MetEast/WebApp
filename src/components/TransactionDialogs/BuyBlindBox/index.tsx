@@ -27,6 +27,7 @@ const BuyBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     buyBlindMaxPurchases: 0,
                     buyBlindInstock: 0,
                 });
+                if (dialogState.buyBlindBoxDlgStep >= 2) window.location.reload();
             }}
         >
             {dialogState.buyBlindBoxDlgStep === 0 && <BuyBlindBox />}

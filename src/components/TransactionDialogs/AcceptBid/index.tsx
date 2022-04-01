@@ -22,6 +22,7 @@ const AcceptBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     acceptBidTxFee: 0,
                     acceptBidTxHash: '',
                 });
+                if (dialogState.acceptBidDlgStep === 1) window.location.reload();
             }}
         >
             {dialogState.acceptBidDlgStep === 0 && <AcceptBid />}
