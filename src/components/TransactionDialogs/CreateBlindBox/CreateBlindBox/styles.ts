@@ -3,7 +3,7 @@ import { styled, Button, TextField } from '@mui/material';
 
 export const useStyles = makeStyles((theme: any) => ({
     container: {
-        marginRight: -32,
+        // marginRight: -32,
         '&::-webkit-scrollbar': {
             width: 32,
         },
