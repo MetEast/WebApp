@@ -80,17 +80,18 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 return;
             }
             setOnProgress(true);
-            setDialogState({
-                ...dialogState,
-                waitingConfirmDlgOpened: true,
-                progressBar: 20,
-                waitingConfirmDlgTimer: setTimeout(() => {
-                    setDialogState({
-                        ...defaultDlgState,
-                        errorMessageDlgOpened: true,
-                    });
-                }, 120000),
-            });
+
+            const updatedState = { ...dialogState };
+            updatedState.waitingConfirmDlgOpened = true;
+            updatedState.progressBar = 20;
+            updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+                setDialogState({
+                    ...defaultDlgState,
+                    errorMessageDlgOpened: true,
+                });
+            }, 120000);
+            setDialogState(updatedState);
+
             callContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,
                 contractType: 1,
@@ -106,7 +107,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
                         });
                     }
-                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: true, progressBar: 40 });
+                    setDialogState({ ...updatedState, waitingConfirmDlgOpened: true, progressBar: 40 });
                     const _quoteToken = '0x0000000000000000000000000000000000000000';
                     const _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
                     const _inQuoteTokens: string[] = Array(_inTokenIds.length);
@@ -126,11 +127,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         isBlindBox: true,
                     })
                         .then((txHash: string) => {
-                            enqueueSnackbar(`Create Mystery Box succeed!`, {
-                                variant: 'success',
-                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                            });
-                            setDialogState({ ...dialogState, progressBar: 60 });
+                            // enqueueSnackbar(`Create Mystery Box succeed!`, {
+                            //     variant: 'success',
+                            //     anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            // });
+                            setDialogState({ ...updatedState, progressBar: 60, waitingConfirmDlgOpened: false });
                             resolve(txHash);
                         })
                         .catch((error) => {
@@ -139,7 +140,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
                             setDialogState({
-                                ...dialogState,
+                                ...updatedState,
                                 createBlindBoxDlgOpened: false,
                                 waitingConfirmDlgOpened: false,
                                 errorMessageDlgOpened: true,
@@ -154,7 +155,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                     setDialogState({
-                        ...dialogState,
+                        ...updatedState,
                         createBlindBoxDlgOpened: false,
                         waitingConfirmDlgOpened: false,
                         errorMessageDlgOpened: true,
@@ -187,7 +188,6 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         createBlindBoxDlgOpened: true,
                         createBlindBoxDlgStep: 2,
                         crtBlindTxHash: transactionHash,
-                        waitingConfirmDlgOpened: false,
                         progressBar: 100,
                     });
                 } else {

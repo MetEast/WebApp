@@ -7,10 +7,13 @@ import NFTMinted from 'src/components/TransactionDialogs/MintNFT/NFTMinted';
 import EnterSaleDetails from '../ListNFT/EnterSaleDetails';
 import CheckSaleDetails from '../ListNFT/CheckSaleDetails';
 import ArtworkIsNowForSale from '../ListNFT/ArtworkIsNowForSale';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface ComponentProps {}
 
 const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [dialogState, setDialogState] = useDialogContext();
     return (
         <ModalDialog
@@ -36,6 +39,13 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     sellTxHash: '',
                     sellPrice: 0,
                 });
+                if (dialogState.createNFTDlgStep >= 2 && dialogState.createNFTDlgStep < 5) {
+                    if (location.pathname.indexOf('/profile') !== -1) window.location.reload();
+                    else navigate('/profile');
+                } else if (dialogState.createNFTDlgStep == 5) {
+                    if (location.pathname.indexOf('/products') !== -1) window.location.reload();
+                    else navigate('/products');
+                }
             }}
         >
             {dialogState.createNFTDlgStep === 0 && <MintNFT />}
