@@ -42,8 +42,8 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
     const series = [
         {
             data: [
-                { x: 1640962800000, y: 10, username: 'user1' },
-                { x: 1640963000000, y: 5, username: 'user2' },
+                { x: 1640962800000, y: 10, username: '' },
+                { x: 1640963000000, y: 5, username: '' },
             ],
         },
     ];
