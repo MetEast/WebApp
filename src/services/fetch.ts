@@ -349,7 +349,7 @@ export const getNFTItem = async (
         _NFTItem.createTime = createTime.date + '' + createTime.time;
         _NFTItem.status = itemObject.status;
         if (itemObject.endTime) {
-            const endTime = getTime(itemObject.endTime); // no proper value
+            const endTime = getTime(itemObject.endTime);
             _NFTItem.endTime = endTime.date + ' ' + endTime.time;
         } else {
             _NFTItem.endTime = ' ';

@@ -86,7 +86,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Select
                                 titlebox={
-                                    <SelectBtn fullWidth isOpen={saleEndsSelectOpen ? 1 : 0}>
+                                    <SelectBtn fullWidth isopen={saleEndsSelectOpen ? 1 : 0}>
                                         {saleEnds ? saleEnds.label : 'Select'}
                                         <Icon icon="ph:caret-down" className="arrow-icon" />
                                     </SelectBtn>
