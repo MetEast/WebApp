@@ -56,10 +56,10 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
             </Stack>
             {dialogState.buyBlindAmount > 1 && (
                 <Stack direction="row" spacing={2}>
-                    <SecondaryButton fullWidth onClick={() => swiper?.slidePrev()}>
+                    <SecondaryButton fullWidth disabled={imgIndex === 0} onClick={() => swiper?.slidePrev()}>
                         Previous
                     </SecondaryButton>
-                    <PrimaryButton fullWidth onClick={() => swiper?.slideNext()}>
+                    <PrimaryButton fullWidth disabled={imgIndex + 1 === dialogState.buyBlindAmount} onClick={() => swiper?.slideNext()}>
                         Next
                     </PrimaryButton>
                 </Stack>
