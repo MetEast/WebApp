@@ -297,8 +297,8 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
             : false;
         _BBItem.sold = itemObject.sold || 0;
         _BBItem.instock = itemObject.instock || 0;
-        if (itemObject.saleEnd) {
-            const endTime = getTime(itemObject.saleEnd); // no proper value
+        if (itemObject.saleBegin) {
+            const endTime = getTime(itemObject.saleBegin);
             _BBItem.endTime = endTime.date + ' ' + endTime.time;
         } else {
             _BBItem.endTime = '';
@@ -606,8 +606,8 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.description = itemObject.description;
         _BBItem.instock = itemObject.instock || 0;
         _BBItem.sold = itemObject.sold || 0;
-        if (itemObject.saleEnd) {
-            const endTime = getTime(itemObject.saleEnd);
+        if (itemObject.saleBegin) {
+            const endTime = getTime(itemObject.saleBegin);
             _BBItem.endTime = endTime.date + ' ' + endTime.time;
         } else {
             _BBItem.endTime = '';

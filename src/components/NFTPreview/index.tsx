@@ -113,11 +113,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                             <img src={product.image} alt="" />
                             {productType !== 3 && (
                                 <LikeBtn onClick={changeLikeState}>
-                                    {likeState ? (
-                                        <Icon icon="ph:heart-fill" fontSize="2vw" color="red" />
-                                    ) : (
-                                        <Icon icon="ph:heart" fontSize="2vw" color="black" />
-                                    )}
+                                    <Icon icon={likeState ? "ph:heart-fill" : "ph:heart"} fontSize="2vw" color={likeState ? "red" : "black"} />
                                 </LikeBtn>
                             )}
                         </>
