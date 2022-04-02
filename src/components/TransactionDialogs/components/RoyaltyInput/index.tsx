@@ -25,8 +25,9 @@ const RoyaltyInput: React.FC<ComponentProps> = ({
     const [invalid, setInvalid] = useState<boolean>(true);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setText(value);
+        const t = event.target.value;
+        const value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+        if (!isNaN(Number(value))) setText(value);
         handleChange(value);
         setInvalid(value === '' || isNaN(Number(value)) || Number(value) < 0 || Number(value) > 30);
     };

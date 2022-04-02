@@ -25,7 +25,8 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
     const [status, setStatus] = useState<'none' | 'active'>('none');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+        const t = event.target.value;
+        const value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
         if (!isNaN(Number(value))) setInput(value);
 
         handleChange(parseFloat(value));
@@ -57,10 +58,11 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
             >
                 <TextField
                     placeholder={placeholder}
-                    value={input}
+                    value={(input)}
                     onChange={handleInputChange}
                     onFocus={() => setStatus('active')}
                     onBlur={() => setStatus('none')}
+                    InputProps={{ inputMode: 'numeric', inputProps: { min: 1 } }}
                     sx={{
                         width: '100%',
                         '& .MuiOutlinedInput-root': {
