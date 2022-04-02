@@ -141,16 +141,16 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                     if (!unmounted) {
                         const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
                         const _latestPriceList: Array<TypeChartAxis> = [];
-                        _latestPriceList.push({ x: new Date('01 Jan 2022').getTime(), y: 0, username: 'user' });
+                        _latestPriceList.push({ x: new Date('01 Jan 2022').getTime(), y: 0, username: '' });
                         for (let i = 0; i < productPriceList.length; i++) {
                             _latestPriceList.push({
                                 x: parseInt(productPriceList[i].updateTime) * 1000,
                                 y: productPriceList[i].price / 1e18,
-                                username: `user${i}`,
+                                username: productPriceList[i].name,
                             });
                         }
                         const lastValue = _latestPriceList[_latestPriceList.length - 1];
-                        _latestPriceList.push({ x: new Date().getTime(), y: lastValue.y, username: `user` });
+                        _latestPriceList.push({ x: new Date().getTime(), y: lastValue.y, username: lastValue.username });
                         setChartSeries([{ data: _latestPriceList }]);
                         handlePriceHistoryUnitChange('Weekly');
                     }

@@ -278,6 +278,7 @@ export type TypePriceHistoryFetch = {
     updateTime: string;
     price: number;
     tokenId: string;
+    name: string;
 };
 
 export type TypeYourEarningFetch = {
