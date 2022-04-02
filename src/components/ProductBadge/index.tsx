@@ -3,6 +3,7 @@ import { Container } from './styles';
 import { enumBadgeType } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
 import { Grid } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 
 interface ProductBadgeProps {
     badgeType: enumBadgeType;
@@ -10,6 +11,7 @@ interface ProductBadgeProps {
 }
 
 const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.Element => {
+    const location = useLocation();
     const styles = {
         [enumBadgeType.ComingSoon]: {
             background: '#C9F5DC',
@@ -127,7 +129,7 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
         <Container
             direction="row"
             alignItems="center"
-            display={badgeType === enumBadgeType.SaleEnds ? 'none' : 'flex'}
+            display={location.pathname.indexOf('/blind-box') !== -1 && badgeType === enumBadgeType.SaleEnds ? 'none' : 'flex'}
             spacing={1}
             sx={{ background: styles[badgeType].background, color: styles[badgeType].color }}
         >
