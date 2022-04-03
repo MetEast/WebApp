@@ -953,7 +953,7 @@ export const uploadUserProfile = (
 
 // admin NFT
 export const getAdminSearchParams = (status: TypeSelectItem | undefined, saleType: TypeSelectItem | undefined) => {
-    let searchParams = `pageNum=1&pageSize=${1000}`;
+    let searchParams = `pageNum=1&pageSize=${100}`;
     if (status !== undefined) {
         searchParams += status.value === 'online' ? '&status=online' : '&status=removed';
     }
@@ -964,13 +964,15 @@ export const getAdminSearchParams = (status: TypeSelectItem | undefined, saleTyp
 };
 
 export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) => {
-    const resAdminNFTList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/admin/api/v1/listMarketTokens?${fetchParams}&keyword=${keyWord}`,
-        FETCH_CONFIG_JSON,
-    );
+    let url = `${process.env.REACT_APP_SERVICE_URL}/admin/api/v1/listMarketTokens?${fetchParams}`;
+    if (keyWord !== '') url += `&keyword=${keyWord}`;
+
+    console.log('URL:', url);
+    const resAdminNFTList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminNFTList = await resAdminNFTList.json();
     const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
     const _arrAdminNFTList: Array<AdminNFTItemType> = [];
+    console.log('result count:', arrAdminNFTList.length);
     for (let i = 0; i < arrAdminNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrAdminNFTList[i];
         if (keyWord === '' && itemObject.status !== 'DELETED') continue;
@@ -1000,6 +1002,7 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
         }
         _arrAdminNFTList.push(_AdminNFT);
     }
+    console.log('filtered count:', _arrAdminNFTList.length);
     return _arrAdminNFTList;
 };
 
