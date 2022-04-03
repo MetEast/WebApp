@@ -206,7 +206,9 @@ const Table: React.FC<ComponentProps> = ({
                             <TableBody>
                                 {tabledata.length === 0 && (
                                     <TableRow style={{ height: 53 * emptyRows }}>
-                                        <td style={{ fontSize: 16, fontWeight: 400, padding: '10px' }}>{emptyString}</td>
+                                        <td style={{ fontSize: 16, fontWeight: 400, padding: '10px' }}>
+                                            {emptyString}
+                                        </td>
                                     </TableRow>
                                 )}
                                 {!isLoading &&
@@ -260,7 +262,6 @@ const Table: React.FC<ComponentProps> = ({
                             </TableBody>
                         </DataTable>
                     </TableContainer>
-
                     <Stack direction="row" alignItems="center" justifyContent="space-between" marginTop={2}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Box width={200}>
@@ -273,13 +274,15 @@ const Table: React.FC<ComponentProps> = ({
                             <Typography fontSize={14} fontWeight={400}>{`Tot.${tabledata.length}`}</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center" spacing={1}>
-                            <IconButton
-                                onClick={() => {
-                                    setCurPage(curPaginationFirstPage - 1);
-                                }}
-                            >
-                                <Icon icon="ph:caret-left-bold" color="#1890FF" />
-                            </IconButton>
+                            {curPaginationFirstPage > 0 && (
+                                <IconButton
+                                    onClick={() => {
+                                        setCurPage(curPaginationFirstPage - 1);
+                                    }}
+                                >
+                                    <Icon icon="ph:caret-left-bold" color="#1890FF" />
+                                </IconButton>
+                            )}
                             {[...Array(10).keys()].map((item, index) => {
                                 let pagenum = curPaginationFirstPage + item;
                                 let enable = pagenum < totalPages;
@@ -297,13 +300,15 @@ const Table: React.FC<ComponentProps> = ({
                                     </PageButton>
                                 );
                             })}
-                            <IconButton
-                                onClick={() => {
-                                    setCurPage(curPaginationFirstPage + 10);
-                                }}
-                            >
-                                <Icon icon="ph:caret-right-bold" color="#1890FF" />
-                            </IconButton>
+                            {totalPages > curPaginationFirstPage + 10 && (
+                                <IconButton
+                                    onClick={() => {
+                                        setCurPage(curPaginationFirstPage + 10);
+                                    }}
+                                >
+                                    <Icon icon="ph:caret-right-bold" color="#1890FF" />
+                                </IconButton>
+                            )}
                         </Stack>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography fontSize={14} fontWeight={400}>
