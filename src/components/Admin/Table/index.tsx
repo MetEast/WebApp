@@ -84,21 +84,27 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 interface ComponentProps {
+    totalCount?: number;
     tabledata: AdminTableItemType[];
     columns: AdminTableColumn[];
     checkable?: boolean;
     isLoading?: boolean;
     height?: string;
     emptyString?: string;
+    setPageNum?: (pageNum: number) => void;
+    setPageSize?: (pageSize: number) => void;
 }
 
 const Table: React.FC<ComponentProps> = ({
+    totalCount = 0,
     tabledata,
     columns,
     checkable = true,
     isLoading = true,
     height = '100%',
     emptyString = '',
+    setPageNum = (pageNum: number) => {},
+    setPageSize = (pageNum: number) => {},
 }): JSX.Element => {
     const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
@@ -122,20 +128,22 @@ const Table: React.FC<ComponentProps> = ({
         },
     ];
 
-    const totalPages = Math.ceil(tabledata.length / rowsPerPage);
+    const totalPages = Math.ceil(totalCount / rowsPerPage);
 
     const setCurPage = (page: number) => {
         if (page < 0 || page >= totalPages) return;
         setPage(page);
+        setPageNum(page);
     };
 
     const handleRowsPerPageChange = (value: string) => {
         setRowsPerPage(parseInt(value, 10));
-        setPage(0);
+        setPageSize(parseInt(value, 10));
+        setCurPage(0);
     };
 
     // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tabledata.length) : 0;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -204,7 +212,7 @@ const Table: React.FC<ComponentProps> = ({
                                 checkable={checkable}
                             />
                             <TableBody>
-                                {tabledata.length === 0 && (
+                                {totalCount === 0 && (
                                     <TableRow style={{ height: 53 * emptyRows }}>
                                         <td style={{ fontSize: 16, fontWeight: 400, padding: '10px' }}>
                                             {emptyString}
@@ -212,48 +220,49 @@ const Table: React.FC<ComponentProps> = ({
                                     </TableRow>
                                 )}
                                 {!isLoading &&
-                                    stableSort(tabledata, getComparator(order, orderBy))
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row, index) => {
-                                            const isItemSelected = isSelected(row.id);
-                                            const labelId = `enhanced-table-checkbox-${index}`;
+                                    // stableSort(tabledata, getComparator(order, orderBy))
+                                    //     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    //     .map((row, index) => {
+                                    tabledata.map((row, index) => {
+                                        const isItemSelected = isSelected(row.id);
+                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    onClick={(event) => handleClick(event, row.id)}
-                                                    role="checkbox"
-                                                    aria-checked={isItemSelected}
-                                                    key={row.id}
-                                                    selected={isItemSelected}
-                                                >
-                                                    {checkable && (
-                                                        <TableCell padding="checkbox">
-                                                            <Checkbox
-                                                                color="primary"
-                                                                checked={isItemSelected}
-                                                                inputProps={{
-                                                                    'aria-labelledby': labelId,
-                                                                }}
-                                                            />
-                                                        </TableCell>
-                                                    )}
-                                                    {columns.map((column, index) => (
-                                                        <TableCell
-                                                            key={`table-cell-${index}`}
-                                                            sx={{ fontSize: 16, fontWeight: 400 }}
-                                                        >
-                                                            {column.cell
-                                                                ? column.cell({
-                                                                      value: (row as any)[column.id],
-                                                                      data: row,
-                                                                  })
-                                                                : (row as any)[column.id]}
-                                                        </TableCell>
-                                                    ))}
-                                                </TableRow>
-                                            );
-                                        })}
+                                        return (
+                                            <TableRow
+                                                hover
+                                                onClick={(event) => handleClick(event, row.id)}
+                                                role="checkbox"
+                                                aria-checked={isItemSelected}
+                                                key={row.id}
+                                                selected={isItemSelected}
+                                            >
+                                                {checkable && (
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            color="primary"
+                                                            checked={isItemSelected}
+                                                            inputProps={{
+                                                                'aria-labelledby': labelId,
+                                                            }}
+                                                        />
+                                                    </TableCell>
+                                                )}
+                                                {columns.map((column, index) => (
+                                                    <TableCell
+                                                        key={`table-cell-${index}`}
+                                                        sx={{ fontSize: 16, fontWeight: 400 }}
+                                                    >
+                                                        {column.cell
+                                                            ? column.cell({
+                                                                  value: (row as any)[column.id],
+                                                                  data: row,
+                                                              })
+                                                            : (row as any)[column.id]}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        );
+                                    })}
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: 53 * emptyRows }}>
                                         <TableCell colSpan={6} />
@@ -271,7 +280,7 @@ const Table: React.FC<ComponentProps> = ({
                                     handleClick={handleRowsPerPageChange}
                                 />
                             </Box>
-                            <Typography fontSize={14} fontWeight={400}>{`Tot.${tabledata.length}`}</Typography>
+                            <Typography fontSize={14} fontWeight={400}>{`Tot.${totalCount}`}</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center" spacing={1}>
                             {curPaginationFirstPage > 0 && (

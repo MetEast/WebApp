@@ -984,6 +984,7 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
     console.log('URL:', url);
     const resAdminNFTList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminNFTList = await resAdminNFTList.json();
+    const totalCount = jsonAdminNFTList.data === undefined ? 0 : jsonAdminNFTList.data.total;
     const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
     const _arrAdminNFTList: Array<AdminNFTItemType> = [];
     console.log('result count:', arrAdminNFTList.length);
@@ -1017,7 +1018,7 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
         _arrAdminNFTList.push(_AdminNFT);
     }
     console.log('filtered count:', _arrAdminNFTList.length);
-    return _arrAdminNFTList;
+    return { totalCount: totalCount, arrAdminNFTList: _arrAdminNFTList };
 };
 
 export const getAdminUserList = async (keyWord: string, fetchParams: string, status: number) => {

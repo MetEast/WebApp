@@ -152,6 +152,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
 
     const data: AdminNFTItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminNFTItem), []);
     const { enqueueSnackbar } = useSnackbar();
+    const [totalCount, setTotalCount] = useState<number>(0);
     const [tabledata, setTableData] = useState<Array<AdminNFTItemType>>(data);
     const [inputString, setInputString] = useState<string>('');
     const [keyWord, setKeyWord] = useState<string>('');
@@ -163,15 +164,21 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [emptyString, setEmptyString] = useState<string>('');
+    const [pageNum, setPageNum] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(5);
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminNFTList = await getAdminNFTItemList(keyWord, getAdminSearchParams(nftState, saleType));
+            const result = await getAdminNFTItemList(
+                keyWord,
+                getAdminSearchParams(nftState, saleType, pageNum + 1, pageSize),
+            );
             if (!unmounted) {
                 setEmptyString(keyWord ? 'No results found' : 'No NFTs removed');
-                setTableData(_adminNFTList);
+                setTotalCount(result.totalCount);
+                setTableData(result.arrAdminNFTList);
                 setIsLoading(false);
             }
         };
@@ -179,7 +186,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [saleType, nftState, keyWord]);
+    }, [saleType, nftState, keyWord, pageNum, pageSize]);
 
     const handleNFTStateChange = (value: string) => {
         const item = adminNftStateOptions.find((option) => option.value === value);
@@ -276,11 +283,14 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                     </Stack>
                 </Stack>
                 <Table
+                    totalCount={totalCount}
                     tabledata={tabledata}
                     columns={columns}
                     checkable={false}
                     isLoading={isLoading}
                     emptyString={emptyString}
+                    setPageNum={setPageNum}
+                    setPageSize={setPageSize}
                 />
             </Stack>
             <ModalDialog
