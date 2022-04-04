@@ -284,6 +284,8 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                 </Stack>
                 <Table
                     totalCount={totalCount}
+                    pageNum={pageNum}
+                    pageSize={pageSize}
                     tabledata={tabledata}
                     columns={columns}
                     checkable={false}

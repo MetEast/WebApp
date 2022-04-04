@@ -85,6 +85,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface ComponentProps {
     totalCount?: number;
+    pageNum?: number;
+    pageSize?: number;
     tabledata: AdminTableItemType[];
     columns: AdminTableColumn[];
     checkable?: boolean;
@@ -97,6 +99,8 @@ interface ComponentProps {
 
 const Table: React.FC<ComponentProps> = ({
     totalCount = 0,
+    pageNum = 0,
+    pageSize = 5,
     tabledata,
     columns,
     checkable = true,
@@ -106,9 +110,7 @@ const Table: React.FC<ComponentProps> = ({
     setPageNum = (pageNum: number) => {},
     setPageSize = (pageNum: number) => {},
 }): JSX.Element => {
-    const [page, setPage] = useState(0);
     const [curPaginationFirstPage, setCurPaginationFirstPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<string>('');
     const [selected, setSelected] = useState<readonly number[]>([]);
@@ -128,22 +130,20 @@ const Table: React.FC<ComponentProps> = ({
         },
     ];
 
-    const totalPages = Math.ceil(totalCount / rowsPerPage);
+    const totalPages = Math.ceil(totalCount / pageSize);
 
     const setCurPage = (page: number) => {
         if (page < 0 || page >= totalPages) return;
-        setPage(page);
         setPageNum(page);
     };
 
     const handleRowsPerPageChange = (value: string) => {
-        setRowsPerPage(parseInt(value, 10));
         setPageSize(parseInt(value, 10));
         setCurPage(0);
     };
 
     // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalCount) : 0;
+    const emptyRows = pageNum > 0 ? Math.max(0, (1 + pageNum) * pageSize - totalCount) : 0;
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -184,8 +184,8 @@ const Table: React.FC<ComponentProps> = ({
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
     React.useEffect(() => {
-        setCurPaginationFirstPage(Math.floor(page / 10) * 10);
-    }, [page]);
+        setCurPaginationFirstPage(Math.floor(pageNum / 10) * 10);
+    }, [pageNum]);
 
     return (
         <Stack height={height}>
@@ -276,7 +276,7 @@ const Table: React.FC<ComponentProps> = ({
                             <Box width={200}>
                                 <Select
                                     options={rowsPerPageOptions}
-                                    selected={rowsPerPage}
+                                    selected={pageSize}
                                     handleClick={handleRowsPerPageChange}
                                 />
                             </Box>
@@ -295,7 +295,7 @@ const Table: React.FC<ComponentProps> = ({
                             {[...Array(10).keys()].map((item, index) => {
                                 let pagenum = curPaginationFirstPage + item;
                                 let enable = pagenum < totalPages;
-                                let active = pagenum === page;
+                                let active = pagenum === pageNum;
                                 return (
                                     <PageButton
                                         key={`page-button-${index}`}
@@ -331,7 +331,7 @@ const Table: React.FC<ComponentProps> = ({
                                 borderRadius={3}
                                 sx={{ background: '#F0F1F2' }}
                             >
-                                {page + 1}
+                                {pageNum + 1}
                             </Typography>
                             <Typography fontSize={14} fontWeight={400}>
                                 {`/ ${totalPages}`}
