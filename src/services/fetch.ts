@@ -952,14 +952,28 @@ export const uploadUserProfile = (
     });
 
 // admin NFT
-export const getAdminSearchParams = (status: TypeSelectItem | undefined, saleType: TypeSelectItem | undefined) => {
-    let searchParams = `pageNum=1&pageSize=${100}`;
+export const getAdminSearchParams = (
+    status?: TypeSelectItem,
+    saleType?: TypeSelectItem,
+    pageNum?: number,
+    pageSize?: number,
+) => {
+    let searchParams = ``;
+
+    if (pageNum === undefined) searchParams += `pageNum=1`;
+    else searchParams += `pageNum=${pageNum}`;
+
+    if (pageSize === undefined) searchParams += `&pageSize=100`;
+    else searchParams += `&pageSize=${pageSize}`;
+
     if (status !== undefined) {
         searchParams += status.value === 'online' ? '&status=online' : '&status=removed';
     }
+
     if (saleType !== undefined) {
         searchParams += `&filter_status=${saleType.value === 'Buy now' ? 'BUY NOW' : 'ON AUCTION'}`;
     }
+
     return searchParams;
 };
 
@@ -975,8 +989,8 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
     console.log('result count:', arrAdminNFTList.length);
     for (let i = 0; i < arrAdminNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrAdminNFTList[i];
-        if (keyWord === '' && itemObject.status !== 'DELETED') continue;
-        else if (keyWord !== '' && itemObject.status === 'DELETED') continue;
+        // if (keyWord === '' && itemObject.status !== 'DELETED') continue;
+        // else if (keyWord !== '' && itemObject.status === 'DELETED') continue;
         const _AdminNFT: AdminNFTItemType = { ...blankAdminNFTItem };
         _AdminNFT.id = i + 1;
         _AdminNFT.tokenId = itemObject.tokenId;
