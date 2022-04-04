@@ -107,7 +107,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminBannerList = await getAdminBannerList();
+            const _adminBannerList = await getAdminBannerList(1, 1000);
             if (!unmounted) {
                 setTableData(_adminBannerList);
                 setIsLoading(false);
@@ -152,7 +152,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
                     checkable={false}
                     isLoading={isLoading}
                     height="calc(100% - 40px - 32px)"
-                    emptyString='No Listed Banners'
+                    emptyString="No Listed Banners"
                 />
             </Stack>
             <ModalDialog

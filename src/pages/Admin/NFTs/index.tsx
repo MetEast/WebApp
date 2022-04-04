@@ -153,6 +153,8 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const data: AdminNFTItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminNFTItem), []);
     const { enqueueSnackbar } = useSnackbar();
     const [totalCount, setTotalCount] = useState<number>(0);
+    const [pageNum, setPageNum] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(5);
     const [tabledata, setTableData] = useState<Array<AdminNFTItemType>>(data);
     const [inputString, setInputString] = useState<string>('');
     const [keyWord, setKeyWord] = useState<string>('');
@@ -164,8 +166,6 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [emptyString, setEmptyString] = useState<string>('');
-    const [pageNum, setPageNum] = useState<number>(0);
-    const [pageSize, setPageSize] = useState<number>(5);
 
     useEffect(() => {
         let unmounted = false;

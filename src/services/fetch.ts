@@ -1022,10 +1022,11 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
 };
 
 export const getAdminUserList = async (keyWord: string, fetchParams: string, status: number) => {
-    const resAdminUserList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?keyword=${keyWord}&${fetchParams}`,
-        FETCH_CONFIG_JSON,
-    );
+    let url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?${fetchParams}`;
+    if (keyWord !== '') url += `&keyword=${keyWord}`;
+
+    console.log('URL:', url);
+    const resAdminUserList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminUserList = await resAdminUserList.json();
     const arrAdminUserList = jsonAdminUserList.data === undefined ? [] : jsonAdminUserList.data;
     const _arrAdminUserList: Array<AdminUsersItemType> = [];
@@ -1093,11 +1094,11 @@ export const updateUserRole = (_token: string, _address: string, _role: number, 
             });
     });
 
-export const getAdminBannerList = async () => {
-    const resAdminBannerList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?pageNum=1&pageSize=${1000}`,
-        FETCH_CONFIG_JSON,
-    );
+export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
+    let url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?pageNum=${pageNum}&pageSize=${pageSize}`;
+
+    console.log('URL:', url);
+    const resAdminBannerList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminBannerList = await resAdminBannerList.json();
     const arrAdminBannerList = jsonAdminBannerList.data === undefined ? [] : jsonAdminBannerList.data;
     const _arrAdminBannerList: Array<AdminBannersItemType> = [];
