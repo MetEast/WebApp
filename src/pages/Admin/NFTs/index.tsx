@@ -191,11 +191,13 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const handleNFTStateChange = (value: string) => {
         const item = adminNftStateOptions.find((option) => option.value === value);
         setNftState(item);
+        setPageNum(0);
     };
 
     const handleSaleTypeChange = (value: string) => {
         const item = adminNftSaleTypeOptions.find((option) => option.value === value);
         setSaleType(item);
+        setPageNum(0);
     };
 
     const onRemove = (event: React.MouseEvent, data: AdminNFTItemType) => {
