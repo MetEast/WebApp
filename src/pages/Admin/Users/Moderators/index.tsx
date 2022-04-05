@@ -94,6 +94,9 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
 
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [pageNum, setPageNum] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(5);
     const [tabledata, setTableData] = useState(data);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [inputString, setInputString] = useState<string>('');
@@ -108,7 +111,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
             setIsLoading(true);
             const _adminUserList = await getAdminUserList(
                 keyWord,
-                getAdminSearchParams(undefined, undefined),
+                getAdminSearchParams(undefined, undefined, pageNum + 1, pageSize),
                 1 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
             );
             if (!unmounted) {
@@ -127,7 +130,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [keyWord]);
+    }, [keyWord, pageNum, pageSize]);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();
@@ -167,12 +170,17 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                     </PrimaryButton>
                 </Stack>
                 <Table
+                    totalCount={totalCount}
+                    pageNum={pageNum}
+                    pageSize={pageSize}
                     tabledata={tabledata}
                     columns={columns}
                     checkable={false}
                     isLoading={isLoading}
                     height="calc(100% - 62px - 32px)"
                     emptyString={emptyString}
+                    setPageNum={setPageNum}
+                    setPageSize={setPageSize}
                 />
             </Stack>
             <ModalDialog

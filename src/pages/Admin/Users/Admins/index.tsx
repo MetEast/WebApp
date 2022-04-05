@@ -68,6 +68,9 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
 
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
 
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [pageNum, setPageNum] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(5);
     const [tabledata, setTableData] = useState(data);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -77,7 +80,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
             setIsLoading(true);
             const _adminUserList = await getAdminUserList(
                 '',
-                getAdminSearchParams(undefined, undefined),
+                getAdminSearchParams(undefined, undefined, pageNum + 1, pageSize),
                 0 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
             );
             if (!unmounted) {
@@ -89,7 +92,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, []);
+    }, [pageNum, pageSize]);
 
     return (
         <>
@@ -98,11 +101,16 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
                     ADMINS
                 </Typography>
                 <Table
+                    totalCount={totalCount}
+                    pageNum={pageNum}
+                    pageSize={pageSize}
                     tabledata={tabledata}
                     columns={columns}
                     checkable={false}
                     isLoading={isLoading}
                     emptyString="No Listed Admins"
+                    setPageNum={setPageNum}
+                    setPageSize={setPageSize}
                 />
             </Stack>
         </>

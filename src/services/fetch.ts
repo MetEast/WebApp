@@ -1030,6 +1030,8 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
     const jsonAdminUserList = await resAdminUserList.json();
     const arrAdminUserList = jsonAdminUserList.data === undefined ? [] : jsonAdminUserList.data;
     const _arrAdminUserList: Array<AdminUsersItemType> = [];
+
+    console.log('result count:', arrAdminUserList.length);
     for (let i = 0; i < arrAdminUserList.length; i++) {
         const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
         if (status === 0 && parseInt(itemObject.role) !== 0) continue;
@@ -1062,6 +1064,8 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
         _AdminUser.remarks = status !== 2 ? '' : itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
+    console.log('filtered count:', _arrAdminUserList.length);
+
     return { result: 0, data: _arrAdminUserList };
 };
 
