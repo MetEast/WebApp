@@ -1123,6 +1123,7 @@ export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
         _AdminBanner.created = createdTime.date + ' ' + createdTime.time;
         _arrAdminBannerList.push(_AdminBanner);
     }
+    console.log('result count:', _arrAdminBannerList.length);
     return _arrAdminBannerList;
 };
 

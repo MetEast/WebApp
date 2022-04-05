@@ -95,6 +95,9 @@ const AdminBanners: React.FC = (): JSX.Element => {
 
     const data: AdminBannersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminBannerItem), []);
 
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [pageNum, setPageNum] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(5);
     const [tabledata, setTableData] = useState(data);
     const [showCreateBannerDlg, setShowCreateBannerDlg] = useState<boolean>(false);
     const [showEditBannerDlg, setShowEditBannerDlg] = useState<boolean>(false);
@@ -107,7 +110,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminBannerList = await getAdminBannerList(1, 1000);
+            const _adminBannerList = await getAdminBannerList(pageNum + 1, pageSize);
             if (!unmounted) {
                 setTableData(_adminBannerList);
                 setIsLoading(false);
@@ -117,7 +120,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [reload]);
+    }, [reload, pageNum, pageSize]);
 
     const onEditBanner = (event: React.MouseEvent, data: AdminBannersItemType) => {
         event.stopPropagation();
@@ -147,12 +150,17 @@ const AdminBanners: React.FC = (): JSX.Element => {
                     </PrimaryButton>
                 </Stack>
                 <Table
+                    totalCount={totalCount}
+                    pageNum={pageNum}
+                    pageSize={pageSize}
                     tabledata={tabledata}
                     columns={columns}
                     checkable={false}
                     isLoading={isLoading}
                     height="calc(100% - 40px - 32px)"
                     emptyString="No Listed Banners"
+                    setPageNum={setPageNum}
+                    setPageSize={setPageSize}
                 />
             </Stack>
             <ModalDialog
