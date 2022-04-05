@@ -326,6 +326,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 accounts.length &&
                 signInDlgState.walletAccounts[0] !== accounts[0]
             ) {
+                // alert(1);
                 getUserRole(accounts[0]).then((userRole: number) => {
                     _setSignInState((prevState: SignInState) => {
                         const _state = { ...prevState };
