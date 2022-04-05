@@ -108,7 +108,11 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminUserList = await getAdminUserList(keyWord, getAdminSearchParams(undefined, undefined), 2);
+            const _adminUserList = await getAdminUserList(
+                keyWord,
+                getAdminSearchParams(undefined, undefined),
+                2 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
+            );
             if (!unmounted) {
                 setEmptyString(
                     _adminUserList.result === 0
