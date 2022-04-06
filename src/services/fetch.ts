@@ -44,6 +44,7 @@ import {
     AdminBannersItemFetchType,
 } from 'src/types/admin-table-data-types';
 import { UserInfoType } from 'src/types/auth-types';
+import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -60,6 +61,42 @@ export const FETCH_CONFIG_JSON = {
         Accept: 'application/json',
     },
 };
+
+export const login = (loginType: number, address: string, presentation?: VerifiablePresentation) =>
+    new Promise((resolve: (value: string) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/login`;
+        const reqBody =
+            loginType === 1
+                ? {
+                      address: address,
+                      presentation: presentation ? presentation.toJSON() : '',
+                  }
+                : {
+                      isMetaMask: 1,
+                      did: address,
+                      name: '',
+                      avatar: '',
+                      description: '',
+                  };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(data.token);
+                } else {
+                    resolve('');
+                }
+            })
+            .catch((error) => {
+                reject('');
+            });
+    });
 
 export const getUserRole = async (address: string) => {
     const resUserRole = await fetch(

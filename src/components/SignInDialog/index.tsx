@@ -31,7 +31,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import Web3 from 'web3';
 import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
-import { updateUserToken } from 'src/services/fetch';
+import { login, updateUserToken } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
@@ -48,9 +48,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         null,
     );
     const [walletConnectProvider] = useState<WalletConnectProvider>(essentialsConnector.getWalletConnectProvider());
-    // const [walletConnectProvider] = useState<WalletConnectProvider>(
-    //     isInAppBrowser() ? window.elastos.getWeb3Provider() : essentialsConnector.getWalletConnectProvider(),
-    // );
     let linkType = cookies.METEAST_LINK;
 
     const showSucceedSnackBar = () => {
@@ -77,56 +74,36 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         const checkSumAddress = injectedWeb3.utils.toChecksumAddress(retAddress);
         if (checkSumAddress) {
             let unmounted = false;
-            const reqBody = {
-                isMetaMask: 1,
-                did: checkSumAddress,
-                name: '',
-                avatar: '',
-                description: '',
-            };
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reqBody),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        if (!unmounted) {
-                            if (currentConnector === injected) {
-                                linkType = 2;
-                            } else if (currentConnector === walletconnect) {
-                                linkType = 3;
-                            }
-                            setActivatingConnector(currentConnector);
-                            const token = data.token;
-                            setCookies('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
-                            setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                            const user: UserTokenType = jwtDecode(token);
-                            console.log('Sign in with MM: setting user to:', user);
-                            setSignInDlgState((prevState: SignInState) => {
-                                const _state = { ...prevState };
-                                _state.isLoggedIn = true;
-                                _state.loginType = '2';
-                                _state.signInDlgOpened = false;
-                                _state.walletAccounts = [checkSumAddress];
-                                _state.token = token;
-                                _state.userDid = user.did;
-                                if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
-                                if (user.description !== '' && user.description !== undefined)
-                                    _state.userDescription = user.description;
-                                if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
-                                if (user.coverImage !== '' && user.coverImage !== undefined)
-                                    _state.userCoverImage = user.coverImage;
-                                _state.userRole = parseInt(user.role);
-                                return _state;
-                            });
-                            if (!signInDlgState.walletAccounts.length) showSucceedSnackBar();
+            login(2, checkSumAddress)
+                .then((token: string) => {
+                    if (!unmounted && token) {
+                        if (currentConnector === injected) {
+                            linkType = 2;
+                        } else if (currentConnector === walletconnect) {
+                            linkType = 3;
                         }
-                    } else {
-                        console.log(data);
+                        setActivatingConnector(currentConnector);
+                        setCookies('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
+                        setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                        const user: UserTokenType = jwtDecode(token);
+                        console.log('Sign in with MM: setting user to:', user);
+
+                        setSignInDlgState((prevState: SignInState) => {
+                            const _state = { ...prevState };
+                            _state.isLoggedIn = true;
+                            _state.loginType = '2';
+                            _state.signInDlgOpened = false;
+                            _state.walletAccounts = [checkSumAddress];
+                            _state.token = token;
+                            _state.userDid = user.did;
+                            if (user.name) _state.userName = user.name;
+                            if (user.description) _state.userDescription = user.description;
+                            if (user.avatar) _state.userAvatar = user.avatar;
+                            if (user.coverImage) _state.userCoverImage = user.coverImage;
+                            _state.userRole = parseInt(user.role);
+                            return _state;
+                        });
+                        if (!signInDlgState.walletAccounts.length) showSucceedSnackBar();
                     }
                 })
                 .catch((error) => {
@@ -203,60 +180,41 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
         if (presentation) {
             let unmounted = false;
-            const did = presentation.getHolder().getMethodSpecificId() || '';
+            // const did = presentation.getHolder().getMethodSpecificId() || '';
             const walletAccounts = getEssentialsWalletAddress();
-            const reqBody = {
-                address: walletAccounts[0],
-                presentation: presentation.toJSON(),
-            };
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reqBody),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        if (!unmounted) {
-                            const token = data.token;
-                            linkType = '1';
-                            setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
-                            setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                            const user: UserTokenType = jwtDecode(token);
-                            console.log('Sign in with EE: setting user to:', user);
-                            setSignInDlgState((prevState: SignInState) => {
-                                const _state = { ...prevState };
-                                _state.isLoggedIn = true;
-                                _state.loginType = '1';
-                                _state.userDid = user.did;
-                                if (user.name !== '' && user.name !== undefined) _state.userName = user.name;
-                                if (user.description !== '' && user.description !== undefined)
-                                    _state.userDescription = user.description;
-                                if (user.avatar !== '' && user.avatar !== undefined) _state.userAvatar = user.avatar;
-                                if (user.coverImage !== '' && user.coverImage !== undefined)
-                                    _state.userCoverImage = user.coverImage;
-                                _state.userRole = parseInt(user.role);
-                                _state.signInDlgOpened = false;
-                                if (isInAppBrowser()) {
-                                    const inAppProvider: any = window.elastos.getWeb3Provider();
-                                    _state.walletAccounts = [inAppProvider.address];
-                                    const inAppWeb3 = new Web3(inAppProvider as any);
-                                    inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
-                                        _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                                    });
-                                    inAppWeb3.eth.getChainId().then((chainId: number) => {
-                                        _state.chainId = chainId;
-                                    });
-                                }
-                                return _state;
+            login(1, walletAccounts[0], presentation)
+                .then((token: string) => {
+                    linkType = '1';
+                    setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
+                    setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                    const user: UserTokenType = jwtDecode(token);
+                    console.log('Sign in with EE: setting user to:', user);
+
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.isLoggedIn = true;
+                        _state.loginType = '1';
+                        _state.userDid = user.did;
+                        if (user.name) _state.userName = user.name;
+                        if (user.description) _state.userDescription = user.description;
+                        if (user.avatar) _state.userAvatar = user.avatar;
+                        if (user.coverImage) _state.userCoverImage = user.coverImage;
+                        _state.userRole = parseInt(user.role);
+                        _state.signInDlgOpened = false;
+                        if (isInAppBrowser()) {
+                            const inAppProvider: any = window.elastos.getWeb3Provider();
+                            _state.walletAccounts = [inAppProvider.address];
+                            const inAppWeb3 = new Web3(inAppProvider as any);
+                            inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
+                                _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
                             });
-                            showSucceedSnackBar();
+                            inAppWeb3.eth.getChainId().then((chainId: number) => {
+                                _state.chainId = chainId;
+                            });
                         }
-                    } else {
-                        console.log(data);
-                    }
+                        return _state;
+                    });
+                    showSucceedSnackBar();
                 })
                 .catch((error) => {
                     console.log(error);
