@@ -59,7 +59,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                 ...defaultDlgState,
                 errorMessageDlgOpened: true,
             });
-        }, 120000);
+        }, 60000);
         setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {

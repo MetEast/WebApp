@@ -32,7 +32,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import Web3 from 'web3';
 import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
-import { getUserRole } from 'src/services/fetch';
+import { getUserRole, getUserToken } from 'src/services/fetch';
 
 export interface ComponentProps {}
 
@@ -327,26 +327,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 accounts.length &&
                 signInDlgState.walletAccounts[0] !== accounts[0]
             ) {
-                getUserRole(accounts[0]).then((userRole: number) => {
-                    // update user tokens
-                    const newToken = jwt.sign(
-                        {
-                            did: _signInState.userDid,
-                            name: _signInState.userName,
-                            description: _signInState.userDescription,
-                            avatar: _signInState.userAvatar,
-                            coverImage: _signInState.userCoverImage,
-                            role: userRole.toString(),
-                        },
-                        'config.Auth.jwtSecret',
-                        { expiresIn: 60 * 60 * 24 * 7 },
-                    );
-                    setCookies('METEAST_TOKEN', newToken, { path: '/', sameSite: 'none', secure: true });
-                    // _setSignInState((prevState: SignInState) => {
-                    //     const _state = { ...prevState };
-                    //     _state.userRole = parseInt(updatedRole);
-                    //     return _state;
-                    // });
+                alert(1);
+                getUserToken(accounts[0]).then((token: string) => {
+                    setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                 });
             }
             getEssentialsWalletBalance().then((balance: string) => {
@@ -482,7 +465,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             cookies.METEAST_TOKEN === undefined
                 ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
                 : jwtDecode(cookies.METEAST_TOKEN);
-        // console.log("++++++", user)
+        console.log('++++++', user);
         getDidUri(user.did, user.description, user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
@@ -544,7 +527,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    // console.log('--------accounts: ', signInDlgState);
+    console.log('--------accounts: ', signInDlgState);
+    console.log('--------internal: ', _signInState);
     // console.log('-------dlg', dialogState)
 
     return (

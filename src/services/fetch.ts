@@ -71,6 +71,16 @@ export const getUserRole = async (address: string) => {
     return dataUserRole.role;
 };
 
+export const getUserToken = async (address: string) => {
+    const resUserToken = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/userByAddress=${address}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonUserToken = await resUserToken.json();
+    const dataUserToken: string = jsonUserToken.token ? jsonUserToken.token : '';
+    return dataUserToken;
+};
+
 export const getNotificationList = async (address: string) => {
     const resNotificationList = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNotifications?address=${address}`,
