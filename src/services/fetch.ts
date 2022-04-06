@@ -18,7 +18,7 @@ import {
     enumBadgeType,
 } from 'src/types/product-types';
 import { TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
-import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
+import { getImageFromAsset, reduceHexAddress, getTime } from 'src/services/common';
 import {
     blankNFTItem,
     blankNFTTxs,
@@ -392,8 +392,8 @@ export const getNFTItem = async (
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _NFTItem.category = itemObject.category;
-        const createTime = getUTCTime(itemObject.createTime);
-        _NFTItem.createTime = createTime.date + '' + createTime.time;
+        const createTime = getTime(itemObject.createTime);
+        _NFTItem.createTime = createTime.date + ' ' + createTime.time;
         _NFTItem.status = itemObject.status;
         if (itemObject.endTime) {
             const endTime = getTime(itemObject.endTime);
@@ -905,8 +905,8 @@ export const getMyNFTItem = async (
         _MyNFTItem.tokenIdHex = itemObject.tokenIdHex;
         _MyNFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _MyNFTItem.category = itemObject.category;
-        const createTime = getUTCTime(itemObject.createTime);
-        _MyNFTItem.createTime = createTime.date + '' + createTime.time;
+        const createTime = getTime(itemObject.createTime);
+        _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
         _MyNFTItem.holder = itemObject.holder;
         _MyNFTItem.orderId = itemObject.orderId;
         _MyNFTItem.status = itemObject.status;

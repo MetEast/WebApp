@@ -33,6 +33,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
 import { login, updateUserToken } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
+import usePrevious from 'src/hooks/usePrevious';
 
 export interface ComponentProps {}
 
@@ -49,6 +50,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     );
     const [walletConnectProvider] = useState<WalletConnectProvider>(essentialsConnector.getWalletConnectProvider());
     let linkType = cookies.METEAST_LINK;
+    const prev = usePrevious(signInDlgState.walletAccounts);
+    const previousAccounts:string[] = prev ? prev : [];
 
     const showSucceedSnackBar = () => {
         enqueueSnackbar('', {
@@ -279,12 +282,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         // EE
         const handleEEAccountsChanged = (accounts: string[]) => {
             // change user role
-            console.log('-------', signInDlgState);
-            console.log(signInDlgState.walletAccounts, '++++++', accounts);
+            console.log(previousAccounts, '++++++', accounts);
             if (
-                signInDlgState.walletAccounts.length &&
+                previousAccounts.length &&
                 accounts.length &&
-                signInDlgState.walletAccounts[0] !== accounts[0]
+                previousAccounts[0] !== accounts[0]
             ) {
                 alert(1);
                 updateUserToken(accounts[0], signInDlgState.userDid).then((token: string) => {
