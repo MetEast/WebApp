@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { UserTokenType } from 'src/types/auth-types';
 import jwtDecode from 'jwt-decode';
+import { blankUserToken } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
@@ -13,11 +14,8 @@ const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Ele
     const navigate = useNavigate();
     const [cookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
     useEffect(() => {
-        const user: UserTokenType =
-            cookies.METEAST_TOKEN === undefined
-                ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
-                : jwtDecode(cookies.METEAST_TOKEN);
-        if (user.role === '' || parseInt(user.role) >= 2)  navigate('/');
+        const user: UserTokenType = cookies.METEAST_TOKEN ? jwtDecode(cookies.METEAST_TOKEN) : blankUserToken;
+        if (user.role === '' || parseInt(user.role) >= 2 || isNaN(parseInt(user.role)))  navigate('/');
     }, [cookies]);
     
     return (

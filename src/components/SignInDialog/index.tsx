@@ -33,6 +33,7 @@ import Web3 from 'web3';
 import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
 import { getUserRole, getUserToken } from 'src/services/fetch';
+import { blankUserToken } from 'src/constants/init-constants';
 
 export interface ComponentProps {}
 
@@ -322,6 +323,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         // EE
         const handleEEAccountsChanged = (accounts: string[]) => {
             // change user role
+            console.log('-------', signInDlgState);
+            console.log(signInDlgState.walletAccounts, '++++++', accounts);
             if (
                 signInDlgState.walletAccounts.length &&
                 accounts.length &&
@@ -461,11 +464,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // signInDlgContext track
     useEffect(() => {
-        const user: UserTokenType =
-            cookies.METEAST_TOKEN === undefined
-                ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
-                : jwtDecode(cookies.METEAST_TOKEN);
-        console.log('++++++', user);
+        const user: UserTokenType = cookies.METEAST_TOKEN ? jwtDecode(cookies.METEAST_TOKEN) : blankUserToken;
+        // console.log('++++++', user);
         getDidUri(user.did, user.description, user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
@@ -528,7 +528,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     if (linkType === '1') initConnectivitySDK();
 
     console.log('--------accounts: ', signInDlgState);
-    console.log('--------internal: ', _signInState);
+    // console.log('--------internal: ', _signInState);
     // console.log('-------dlg', dialogState)
 
     return (

@@ -73,7 +73,7 @@ export const getUserRole = async (address: string) => {
 
 export const getUserToken = async (address: string) => {
     const resUserToken = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/userByAddress=${address}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/userByAddress?address=${address}`,
         FETCH_CONFIG_JSON,
     );
     const jsonUserToken = await resUserToken.json();
