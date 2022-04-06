@@ -71,9 +71,9 @@ export const getUserRole = async (address: string) => {
     return dataUserRole.role;
 };
 
-export const getUserToken = async (address: string) => {
+export const updateUserToken = async (address: string, did: string) => {
     const resUserToken = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/userByAddress?address=${address}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/userByAddress?address=${address}&did=${did}`,
         FETCH_CONFIG_JSON,
     );
     const jsonUserToken = await resUserToken.json();

@@ -1,3 +1,4 @@
+import { SigningOptions } from 'crypto';
 import React, { createContext, useState, useContext } from 'react';
 
 export interface SignInState {
@@ -52,7 +53,7 @@ const defaultState: SignInState = {
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];
 
-const defaultContextValue: ContextType<SignInState> = [defaultState, () => {}];
+const defaultContextValue: ContextType<any> = [defaultState, () => {}];
 
 export const SignInContext = createContext(defaultContextValue);
 
