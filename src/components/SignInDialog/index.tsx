@@ -465,7 +465,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     // signInDlgContext track
     useEffect(() => {
         const user: UserTokenType = cookies.METEAST_TOKEN ? jwtDecode(cookies.METEAST_TOKEN) : blankUserToken;
-        // console.log('++++++', user);
+        console.log('++++++', user);
         getDidUri(user.did, user.description, user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
@@ -527,7 +527,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    console.log('--------accounts: ', signInDlgState);
+    // console.log('--------accounts: ', signInDlgState);
     // console.log('--------internal: ', _signInState);
     // console.log('-------dlg', dialogState)
 

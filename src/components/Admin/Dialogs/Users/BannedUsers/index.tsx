@@ -59,7 +59,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                 ...defaultDlgState,
                 errorMessageDlgOpened: true,
             });
-        }, 60000);
+        }, 120000);
         setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
@@ -72,7 +72,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
         })
             .then((txHash: string) => {
                 console.log(txHash);
-                setDialogState({ ...dialogState, progressBar: 40 });
+                setDialogState({ ...updatedState, progressBar: 40 });
                 return callContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
                     contractType: 2,
@@ -84,7 +84,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
             })
             .then((txHash: string) => {
                 console.log(txHash);
-                setDialogState({ ...dialogState, progressBar: 70 });
+                setDialogState({ ...updatedState, progressBar: 70 });
                 role = user2Edit.status === 0 ? 3 : 2;
                 return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
             })

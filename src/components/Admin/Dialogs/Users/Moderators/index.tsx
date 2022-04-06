@@ -69,7 +69,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             address: user2Edit.address,
         })
             .then((txHash: string) => {
-                setDialogState({ ...dialogState, progressBar: 40 });
+                setDialogState({ ...updatedState, progressBar: 40 });
                 return callContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
                     contractType: 2,
@@ -80,7 +80,7 @@ const Moderators: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserUp
             })
             .then((txHash: string) => {
                 console.log(txHash);
-                setDialogState({ ...dialogState, progressBar: 70 });
+                setDialogState({ ...updatedState, progressBar: 70 });
                 role = user2Edit.status === 0 ? 1 : 2;
                 return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
             })
