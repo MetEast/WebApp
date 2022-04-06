@@ -3,6 +3,7 @@ import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/SignIn/ConnectDID';
 import DownloadEssentials from 'src/components/SignIn/DownloadEssentials';
+import jwt from 'jsonwebtoken';
 import jwtDecode from 'jwt-decode';
 import { DID } from '@elastosfoundation/elastos-connectivity-sdk-js';
 import {
@@ -326,13 +327,26 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 accounts.length &&
                 signInDlgState.walletAccounts[0] !== accounts[0]
             ) {
-                // alert(1);
                 getUserRole(accounts[0]).then((userRole: number) => {
-                    _setSignInState((prevState: SignInState) => {
-                        const _state = { ...prevState };
-                        _state.userRole = userRole;
-                        return _state;
-                    });
+                    // update user tokens
+                    const newToken = jwt.sign(
+                        {
+                            did: _signInState.userDid,
+                            name: _signInState.userName,
+                            description: _signInState.userDescription,
+                            avatar: _signInState.userAvatar,
+                            coverImage: _signInState.userCoverImage,
+                            role: userRole.toString(),
+                        },
+                        'config.Auth.jwtSecret',
+                        { expiresIn: 60 * 60 * 24 * 7 },
+                    );
+                    setCookies('METEAST_TOKEN', newToken, { path: '/', sameSite: 'none', secure: true });
+                    // _setSignInState((prevState: SignInState) => {
+                    //     const _state = { ...prevState };
+                    //     _state.userRole = parseInt(updatedRole);
+                    //     return _state;
+                    // });
                 });
             }
             getEssentialsWalletBalance().then((balance: string) => {
@@ -468,6 +482,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             cookies.METEAST_TOKEN === undefined
                 ? { did: '', name: '', description: '', avatar: '', coverImage: '', role: '', exp: 0, iat: 0 }
                 : jwtDecode(cookies.METEAST_TOKEN);
+        // console.log("++++++", user)
         getDidUri(user.did, user.description, user.name).then((didUri: string) => {
             setSignInDlgState({
                 ..._signInState,
@@ -481,7 +496,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 userRole: parseInt(user.role),
             });
         });
-    }, [_signInState]);
+    }, [_signInState, cookies.METEAST_TOKEN]);
 
     // listen for disconnect
     useEffect(() => {
