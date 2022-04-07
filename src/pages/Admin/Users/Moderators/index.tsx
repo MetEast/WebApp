@@ -122,6 +122,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                             : 'No Listed Moderators'
                         : 'This address has already been added as a moderator',
                 );
+                setTotalCount(_adminUserList.totalCount);
                 setTableData(_adminUserList.data);
                 setIsLoading(false);
             }
