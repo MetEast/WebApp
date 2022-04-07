@@ -124,6 +124,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                             : 'No Banned Users'
                         : 'This address has already been banned',
                 );
+                setTotalCount(_adminUserList.totalCount);
                 setTableData(_adminUserList.data);
                 setIsLoading(false);
             }
