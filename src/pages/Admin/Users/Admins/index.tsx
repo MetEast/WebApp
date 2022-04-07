@@ -84,6 +84,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
                 0 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
             );
             if (!unmounted) {
+                setTotalCount(_adminUserList.totalCount);
                 setTableData(_adminUserList.data);
                 setIsLoading(false);
             }

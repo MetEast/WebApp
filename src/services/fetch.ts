@@ -1030,6 +1030,7 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
     console.log('URL:', url);
     const resAdminUserList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminUserList = await resAdminUserList.json();
+    const totalCount = jsonAdminUserList.total;
     const arrAdminUserList = jsonAdminUserList.data === undefined ? [] : jsonAdminUserList.data;
     const _arrAdminUserList: Array<AdminUsersItemType> = [];
 
@@ -1040,13 +1041,15 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
         else if (status === 1) {
             if (keyWord === '' && parseInt(itemObject.role) !== 1) continue;
             else if (keyWord !== '') {
-                if (parseInt(itemObject.role) === 1 && itemObject.address === keyWord) return { result: 1, data: [] };
+                if (parseInt(itemObject.role) === 1 && itemObject.address === keyWord)
+                    return { result: 1, totalCount: 0, data: [] };
                 else if (parseInt(itemObject.role) !== 2) continue;
             }
         } else if (status === 2) {
             if (keyWord === '' && parseInt(itemObject.role) !== 3) continue;
             else if (keyWord !== '') {
-                if (parseInt(itemObject.role) === 3 && itemObject.address === keyWord) return { result: 1, data: [] };
+                if (parseInt(itemObject.role) === 3 && itemObject.address === keyWord)
+                    return { result: 1, totalCount: 0, data: [] };
                 else if (parseInt(itemObject.role) !== 2) continue;
             }
         }
@@ -1068,7 +1071,7 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
     }
     console.log('filtered count:', _arrAdminUserList.length);
 
-    return { result: 0, data: _arrAdminUserList };
+    return { result: 0, totalCount: totalCount, data: _arrAdminUserList };
 };
 
 export const updateUserRole = (_token: string, _address: string, _role: number, _remarks: string) =>
