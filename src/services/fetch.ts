@@ -345,8 +345,10 @@ export const getNFTItem = async (
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _NFTItem.category = itemObject.category;
-        const createTime = getUTCTime(itemObject.createTime);
-        _NFTItem.createTime = createTime.date + '' + createTime.time;
+        // const createTime = getUTCTime(itemObject.createTime);
+        // _NFTItem.createTime = createTime.date + '' + createTime.time;
+        const createTime = getTime(itemObject.createTime);
+        _NFTItem.createTime = createTime.date + ' ' + createTime.time;
         _NFTItem.status = itemObject.status;
         if (itemObject.endTime) {
             const endTime = getTime(itemObject.endTime);
