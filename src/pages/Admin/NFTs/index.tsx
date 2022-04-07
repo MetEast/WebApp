@@ -158,10 +158,10 @@ const AdminNFTs: React.FC = (): JSX.Element => {
     const [tabledata, setTableData] = useState<Array<AdminNFTItemType>>(data);
     const [inputString, setInputString] = useState<string>('');
     const [keyWord, setKeyWord] = useState<string>('');
-    const [nftState, setNftState] = useState<TypeSelectItem>();
-    const [nftStateSelectOpen, setNftStateSelectOpen] = useState<boolean>(false);
-    const [saleType, setSaleType] = useState<TypeSelectItem>();
-    const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState<boolean>(false);
+    // const [nftState, setNftState] = useState<TypeSelectItem>();
+    // const [nftStateSelectOpen, setNftStateSelectOpen] = useState<boolean>(false);
+    // const [saleType, setSaleType] = useState<TypeSelectItem>();
+    // const [saleTypeSelectOpen, setSaleTypeSelectOpen] = useState<boolean>(false);
     const [id2Remove, setId2Remove] = useState<number>(0);
     const [showRemoveNFTDlg, setShowRemoveNFTDlg] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -173,7 +173,8 @@ const AdminNFTs: React.FC = (): JSX.Element => {
             setIsLoading(true);
             const result = await getAdminNFTItemList(
                 keyWord,
-                getAdminSearchParams(nftState, saleType, pageNum + 1, pageSize),
+                // getAdminSearchParams(nftState, saleType, pageNum + 1, pageSize),
+                getAdminSearchParams(undefined, undefined, pageNum + 1, pageSize),
             );
             if (!unmounted) {
                 setEmptyString(keyWord ? 'No results found' : 'No NFTs removed');
@@ -186,19 +187,19 @@ const AdminNFTs: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [saleType, nftState, keyWord, pageNum, pageSize]);
+    }, [/*saleType, nftState,*/ keyWord, pageNum, pageSize]);
 
-    const handleNFTStateChange = (value: string) => {
-        const item = adminNftStateOptions.find((option) => option.value === value);
-        setNftState(item);
-        setPageNum(0);
-    };
+    // const handleNFTStateChange = (value: string) => {
+    //     const item = adminNftStateOptions.find((option) => option.value === value);
+    //     setNftState(item);
+    //     setPageNum(0);
+    // };
 
-    const handleSaleTypeChange = (value: string) => {
-        const item = adminNftSaleTypeOptions.find((option) => option.value === value);
-        setSaleType(item);
-        setPageNum(0);
-    };
+    // const handleSaleTypeChange = (value: string) => {
+    //     const item = adminNftSaleTypeOptions.find((option) => option.value === value);
+    //     setSaleType(item);
+    //     setPageNum(0);
+    // };
 
     const onRemove = (event: React.MouseEvent, data: AdminNFTItemType) => {
         event.stopPropagation();
@@ -235,7 +236,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                             {`Search`}
                         </PrimaryButton>
                     </Stack>
-                    <Stack direction="row" alignItems="flex-end" spacing={1}>
+                    {/* <Stack direction="row" alignItems="flex-end" spacing={1}>
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 NFT Status
@@ -282,7 +283,7 @@ const AdminNFTs: React.FC = (): JSX.Element => {
                         >
                             Clear all
                         </PrimaryButton>
-                    </Stack>
+                    </Stack> */}
                 </Stack>
                 <Table
                     totalCount={totalCount}
