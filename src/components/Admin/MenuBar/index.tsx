@@ -51,7 +51,7 @@ const MenuItem = (item: IMenuItem, index: number, depth: number): JSX.Element =>
 const MenuBar: React.FC = (): JSX.Element => {
     const menu: IMenuItem[] = [
         {
-            title: 'NFTS',
+            title: 'Banned NFTS',
             icon: <Icon icon="ph:image-square" fontSize={20} />,
             url: '/admin/nfts',
         },
