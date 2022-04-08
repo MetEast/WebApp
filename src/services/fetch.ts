@@ -1025,9 +1025,10 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
     return { totalCount: totalCount, arrAdminNFTList: _arrAdminNFTList };
 };
 
-export const getAdminUserList = async (keyWord: string, fetchParams: string, status: number) => {
+export const getAdminUserList = async (keyWord: string, fetchParams: string, type: number) => {
     let url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?${fetchParams}`;
     if (keyWord !== '') url += `&keyword=${keyWord}`;
+    url += `&type=${type}`;
 
     console.log('URL:', url);
     const resAdminUserList = await fetch(url, FETCH_CONFIG_JSON);
@@ -1039,36 +1040,36 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, sta
     console.log('result count:', arrAdminUserList.length);
     for (let i = 0; i < arrAdminUserList.length; i++) {
         const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
-        if (status === 0 && parseInt(itemObject.role) !== 0) continue;
-        else if (status === 1) {
-            if (keyWord === '' && parseInt(itemObject.role) !== 1) continue;
-            else if (keyWord !== '') {
-                if (parseInt(itemObject.role) === 1 && itemObject.address === keyWord)
-                    return { result: 1, totalCount: 0, data: [] };
-                else if (parseInt(itemObject.role) !== 2) continue;
-            }
-        } else if (status === 2) {
-            if (keyWord === '' && parseInt(itemObject.role) !== 3) continue;
-            else if (keyWord !== '') {
-                if (parseInt(itemObject.role) === 3 && itemObject.address === keyWord)
-                    return { result: 1, totalCount: 0, data: [] };
-                else if (parseInt(itemObject.role) !== 2) continue;
-            }
-        }
+        // if (type === 0 && parseInt(itemObject.role) !== 0) continue;
+        // else if (type === 1) {
+        //     if (keyWord === '' && parseInt(itemObject.role) !== 1) continue;
+        //     else if (keyWord !== '') {
+        //         if (parseInt(itemObject.role) === 1 && itemObject.address === keyWord)
+        //             return { result: 1, totalCount: 0, data: [] };
+        //         else if (parseInt(itemObject.role) !== 2) continue;
+        //     }
+        // } else if (type === 3) {
+        //     if (keyWord === '' && parseInt(itemObject.role) !== 3) continue;
+        //     else if (keyWord !== '') {
+        //         if (parseInt(itemObject.role) === 3 && itemObject.address === keyWord)
+        //             return { result: 1, totalCount: 0, data: [] };
+        //         else if (parseInt(itemObject.role) !== 2) continue;
+        //     }
+        // }
         const _AdminUser: AdminUsersItemType = { ...blankAdminUserItem };
         _AdminUser.id = i + 1;
         _AdminUser.address = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
-        if (status === 0) _AdminUser.status = 0;
-        else if (status === 1) {
+        if (type === 0) _AdminUser.status = 0;
+        else if (type === 1) {
             if (parseInt(itemObject.role) === 2) _AdminUser.status = 0;
             else if (parseInt(itemObject.role) === 1) _AdminUser.status = 1;
-        } else if (status === 2) {
+        } else if (type === 3) {
             if (parseInt(itemObject.role) === 2) _AdminUser.status = 0;
             else if (parseInt(itemObject.role) === 3) _AdminUser.status = 1;
         }
-        _AdminUser.remarks = status !== 2 ? '' : itemObject.remarks;
+        _AdminUser.remarks = type !== 3 ? '' : itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
     console.log('filtered count:', _arrAdminUserList.length);

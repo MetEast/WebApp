@@ -114,7 +114,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
             const _adminUserList = await getAdminUserList(
                 keyWord,
                 getAdminSearchParams(undefined, undefined, pageNum + 1, pageSize),
-                2 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
+                3 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
             );
             if (!unmounted) {
                 setEmptyString(
