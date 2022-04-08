@@ -53,7 +53,16 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                     <PrimaryButton
                         fullWidth
                         onClick={() => {
-                            setDialogState({ ...dialogState, createNFTDlgOpened: true, createNFTDlgStep: 3 });
+                            setDialogState({
+                                ...dialogState,
+                                mintTitle: '',
+                                mintIntroduction: '',
+                                mintCategory: { label: '', value: '' },
+                                mintFile: new File([''], ''),
+                                mintRoyalties: 0,
+                                createNFTDlgOpened: true,
+                                createNFTDlgStep: 3,
+                            });
                         }}
                     >
                         Sell
