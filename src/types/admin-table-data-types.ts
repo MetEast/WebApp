@@ -107,7 +107,7 @@ export type AdminUsersItemFetchType = {
     address: string;
     name: string;
     avatar: string;
-    role: string;   // 0: Admin, 1: Moderator, 2: Unbanned user, 3: Banned user
+    role: string;   // 0: Admin, 1: Moderator, 2: Normal user, 3: Banned user
     remarks: string;
 };
 
