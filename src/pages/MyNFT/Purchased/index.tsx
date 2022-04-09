@@ -39,15 +39,21 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
-                if (!(_MyNFTItem.status === "NEW" && _MyNFTItem.royaltyOwner !== signInDlgState.walletAccounts[0])) navigate(-1);
+                if (
+                    !(
+                        _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
+                        _MyNFTItem.status === 'NEW' &&
+                        _MyNFTItem.royaltyOwner !== signInDlgState.walletAccounts[0]
+                    )
+                )
+                    navigate(-1);
                 setProductDetail(_MyNFTItem);
                 setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
             }
         };
         if (signInDlgState.isLoggedIn) {
             if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
-        }
-        else navigate('/');
+        } else navigate('/');
         return () => {
             unmounted = true;
         };
@@ -262,7 +268,10 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <Stack spacing={10}>
-                            <PriceHistoryView createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800} creator={productDetail.author} />
+                            <PriceHistoryView
+                                createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
+                                creator={productDetail.author}
+                            />
                             <NFTTransactionTable transactionsList={transactionsList} />
                         </Stack>
                     </Grid>

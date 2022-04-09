@@ -48,15 +48,24 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
+                if (
+                    !(
+                        _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
+                        _MyNFTItem.status !== 'NEW' &&
+                        _MyNFTItem.endTime !== '0'
+                    )
+                )
+                    navigate(-1);
                 setProductDetail(_MyNFTItem);
             }
         };
-        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
-        else navigate('/');
+        if (signInDlgState.isLoggedIn) {
+            if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+        } else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, signInDlgState.userDid, params.id]);
 
     useEffect(() => {
         let unmounted = false;
