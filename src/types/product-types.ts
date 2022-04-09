@@ -86,7 +86,7 @@ export type TypeProduct = {
     tokenIndex?: string;
     quantity?: number;
     royaltyOwner?: string;
-    updateTime?: string;
+    timestamp?: number;
     thumbnail?: string;
     asset?: string;
     kind?: string;

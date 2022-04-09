@@ -358,7 +358,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                         <Stack spacing={10}>
                             {bidsList.length !== 0 && <NFTBidTable bidsList={bidsList} />}
                             <NFTTransactionTable transactionsList={transactionsList} />
-                            <PriceHistoryView />
+                            <PriceHistoryView createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800} creator={productDetail.author} />
                         </Stack>
                     </Grid>
                 </Grid>

@@ -259,7 +259,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <Stack spacing={10}>
-                            <PriceHistoryView />
+                            <PriceHistoryView createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800} creator={productDetail.author} />
                             <NFTTransactionTable transactionsList={transactionsList} />
                         </Stack>
                     </Grid>

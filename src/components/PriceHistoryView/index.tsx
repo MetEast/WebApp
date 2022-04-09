@@ -12,9 +12,12 @@ import { Icon } from '@iconify/react';
 import { priceHistoryUnitSelectOptions } from 'src/constants/select-constants';
 import ReactApexChart from 'react-apexcharts';
 
-interface ComponentProps {}
+interface ComponentProps {
+    createdTime: number;
+    creator: string;
+}
 
-const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
+const PriceHistoryView: React.FC<ComponentProps> = ({createdTime, creator}): JSX.Element => {
     const tooltipBox = ({
         series,
         seriesIndex,
@@ -141,7 +144,7 @@ const PriceHistoryView: React.FC<ComponentProps> = (): JSX.Element => {
                     if (!unmounted) {
                         const productPriceList: TypePriceHistoryFetch[] = jsonPriceList.data;
                         const _latestPriceList: Array<TypeChartAxis> = [];
-                        _latestPriceList.push({ x: new Date('01 Jan 2022').getTime(), y: 0, username: '' });
+                        _latestPriceList.push({ x: createdTime, y: 0, username: creator });
                         for (let i = 0; i < productPriceList.length; i++) {
                             _latestPriceList.push({
                                 x: parseInt(productPriceList[i].updateTime) * 1000,
