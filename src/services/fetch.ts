@@ -782,6 +782,7 @@ export const getMyNFTItemList = async (
             if (itemObject.status !== 'NEW')
                 _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
         }
+        // set type to navigate to detail page
         if (itemObject.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
         else {
             if (itemObject.status === 'NEW') {
@@ -908,6 +909,7 @@ export const getMyNFTItem = async (
                 ? _MyNFTItem.author
                 : itemObject.holderName;
         _MyNFTItem.holder = itemObject.holder;
+        _MyNFTItem.royaltyOwner = itemObject.royaltyOwner;
         _MyNFTItem.tokenIdHex = itemObject.tokenIdHex;
         _MyNFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _MyNFTItem.category = itemObject.category;
