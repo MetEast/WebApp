@@ -218,18 +218,31 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             sx={{ width: '100%', height: 40 }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
+                                                    let bidder = 0;
+                                                    let bidPrice = 0;
+                                                    let biderName = productDetail.holderName;
+                                                    let bidOrderId = productDetail.orderId || '';
+                                                    const topSelfBid = myBidsList.length ? myBidsList[myBidsList.length - 1].price : 0;
+                                                    const topOtherBid = bidsList.length ? bidsList[bidsList.length - 1].price : 0;
+                                                    if (topSelfBid > topOtherBid) bidder = 1;
+                                                    else if (topSelfBid < topOtherBid) bidder = 2;
+                                                    if (bidder === 1) {
+                                                        bidPrice = topSelfBid;
+                                                        biderName = myBidsList[myBidsList.length - 1].user;
+                                                        bidOrderId = myBidsList[myBidsList.length - 1].orderId;
+                                                    }
+                                                    else if (bidder === 2) {
+                                                        bidPrice = topOtherBid;
+                                                        biderName = bidsList[bidsList.length - 1].user;
+                                                        bidOrderId = bidsList[bidsList.length - 1].orderId;
+                                                    }              
                                                     setDialogState({
                                                         ...dialogState,
                                                         acceptBidDlgOpened: true,
                                                         acceptBidDlgStep: 0,
-                                                        acceptBidName: bidsList.length
-                                                            ? bidsList[0].user
-                                                            : productDetail.author,
-                                                        acceptBidOrderId:
-                                                            (bidsList.length
-                                                                ? bidsList[0].orderId
-                                                                : productDetail.orderId) || '',
-                                                        acceptBidPrice: bidsList.length ? bidsList[0].price : 0,
+                                                        acceptBidName: biderName,
+                                                        acceptBidOrderId: bidOrderId,
+                                                        acceptBidPrice: bidPrice,
                                                     });
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });

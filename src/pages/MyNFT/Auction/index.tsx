@@ -247,18 +247,17 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                         sx={{ width: '100%', height: 40 }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
+                                                const topBid = bidsList.length ? bidsList[bidsList.length - 1].price : 0;
+                                                const bidPrice = topBid > 0 ? topBid : 0;
+                                                const biderName = topBid > 0 ? bidsList[bidsList.length - 1].user : productDetail.holderName;
+                                                const bidOrderId = topBid > 0 ? bidsList[bidsList.length - 1].orderId : productDetail.orderId || '';
                                                 setDialogState({
                                                     ...dialogState,
                                                     acceptBidDlgOpened: true,
                                                     acceptBidDlgStep: 0,
-                                                    acceptBidName: bidsList.length
-                                                        ? bidsList[0].user
-                                                        : productDetail.author,
-                                                    acceptBidOrderId:
-                                                        (bidsList.length
-                                                            ? bidsList[0].orderId
-                                                            : productDetail.orderId) || '',
-                                                    acceptBidPrice: bidsList.length ? bidsList[0].price : 0,
+                                                    acceptBidName: biderName,
+                                                    acceptBidOrderId: bidOrderId,
+                                                    acceptBidPrice: bidPrice,
                                                 });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
@@ -358,7 +357,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                         <Stack spacing={10}>
                             {bidsList.length !== 0 && <NFTBidTable bidsList={bidsList} />}
                             <NFTTransactionTable transactionsList={transactionsList} />
-                            <PriceHistoryView createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800} creator={productDetail.author} />
+                            <PriceHistoryView
+                                createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
+                                creator={productDetail.author}
+                            />
                         </Stack>
                     </Grid>
                 </Grid>
