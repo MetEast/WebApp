@@ -374,7 +374,12 @@ export const getNFTItem = async (
         _NFTItem.image = getImageFromAsset(itemObject.asset);
         _NFTItem.price_ela = itemObject.price / 1e18;
         _NFTItem.price_usd = _NFTItem.price_ela * ELA2USD;
-        _NFTItem.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+        _NFTItem.type =
+            itemObject.status === 'NEW'
+                ? enumSingleNFTType.NotOnSale
+                : itemObject.endTime === '0'
+                ? enumSingleNFTType.BuyNow
+                : enumSingleNFTType.OnAuction;
         _NFTItem.likes = itemObject.likes;
         _NFTItem.views = itemObject.views;
         _NFTItem.isLike =

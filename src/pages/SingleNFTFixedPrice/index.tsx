@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { enumBadgeType } from 'src/types/product-types';
+import { enumBadgeType, enumSingleNFTType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -26,6 +26,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
+    const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
@@ -39,6 +40,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
+                if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
             }
         };

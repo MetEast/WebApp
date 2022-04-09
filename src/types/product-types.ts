@@ -6,6 +6,7 @@ export enum enumBlindBoxNFTType {
 }
 
 export enum enumSingleNFTType {
+    NotOnSale = 'SingleNFT - Not on Sale',
     BuyNow = 'SingleNFT - Buy Now',
     OnAuction = 'SingleNFT - On Auction',
 }
