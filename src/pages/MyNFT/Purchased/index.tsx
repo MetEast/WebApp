@@ -39,16 +39,19 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
+                if (!(_MyNFTItem.status === "NEW" && _MyNFTItem.royaltyOwner !== signInDlgState.walletAccounts[0])) navigate(-1);
                 setProductDetail(_MyNFTItem);
                 setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
             }
         };
-        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
+        if (signInDlgState.isLoggedIn) {
+            if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+        }
         else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, signInDlgState.walletAccounts, params.id]);
 
     useEffect(() => {
         let unmounted = false;

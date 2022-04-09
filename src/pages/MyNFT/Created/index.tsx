@@ -40,7 +40,9 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                 setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
             }
         };
-        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+        if (signInDlgState.isLoggedIn) {
+            if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+        }
         else navigate('/');
         return () => {
             unmounted = true;
