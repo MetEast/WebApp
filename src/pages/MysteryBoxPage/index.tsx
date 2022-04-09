@@ -66,7 +66,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 setBlindBoxList(_searchedBBList);
             }
         };
-        getFetchData().catch(console.error);
+        if (signInDlgState.userDid) getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };

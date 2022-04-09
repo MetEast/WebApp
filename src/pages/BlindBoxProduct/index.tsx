@@ -18,7 +18,7 @@ import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescript
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import NFTPreview from 'src/components/NFTPreview';
 import { useSnackbar } from 'notistack';
-import SnackMessage from 'src/components/SnackMessage';
+// import SnackMessage from 'src/components/SnackMessage';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 // import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
 
@@ -26,11 +26,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const { enqueueSnackbar } = useSnackbar();
+    // const { enqueueSnackbar } = useSnackbar();
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
     const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([]);
-    const [onProgress, setOnProgress] = useState<boolean>(false);
+    // const [onProgress, setOnProgress] = useState<boolean>(false);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -45,7 +45,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 setNftSoldList(_BBSoldNFTs);
             }
         };
-        getFetchData().catch(console.error);
+        if (signInDlgState.userDid) getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -87,40 +87,39 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateBlindBoxViews = (tokenId: string) => {
-            if (signInDlgState.isLoggedIn && tokenId) {
-                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-                const reqBody = {
-                    token: signInDlgState.token,
-                    blindBoxIndex: tokenId,
-                    did: signInDlgState.userDid,
-                };
-                fetch(reqUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reqBody),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            if (!unmounted) {
-                                setBlindBoxDetail((prevState: TypeProduct) => {
-                                    const blindDetail: TypeProduct = { ...prevState };
-                                    blindDetail.views += 1;
-                                    return blindDetail;
-                                });
-                            }
-                        } else {
-                            console.log(data);
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                blindBoxIndex: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (!unmounted) {
+                            setBlindBoxDetail((prevState: TypeProduct) => {
+                                const blindDetail: TypeProduct = { ...prevState };
+                                blindDetail.views += 1;
+                                return blindDetail;
+                            });
                         }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
-        updateBlindBoxViews(blindBoxDetail.tokenId);
+        if (blindBoxDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+            updateBlindBoxViews(blindBoxDetail.tokenId);
         return () => {
             unmounted = true;
         };
@@ -205,7 +204,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                             ? enumBadgeType.SaleEnds
                                             : enumBadgeType.SaleEnded
                                     }
-                                    content={blindBoxDetail.type === enumBlindBoxNFTType.ComingSoon ? blindBoxDetail.endTime : ''}
+                                    content={
+                                        blindBoxDetail.type === enumBlindBoxNFTType.ComingSoon
+                                            ? blindBoxDetail.endTime
+                                            : ''
+                                    }
                                 />
                             </Stack>
                             <ELAPrice
