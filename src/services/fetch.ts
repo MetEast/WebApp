@@ -911,6 +911,7 @@ export const getMyNFTItem = async (
         _MyNFTItem.orderId = itemObject.orderId;
         _MyNFTItem.status = itemObject.status;
         _MyNFTItem.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+        _MyNFTItem.isBlindbox = itemObject.isBlindbox;
     }
     return _MyNFTItem;
 };
