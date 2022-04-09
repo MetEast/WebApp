@@ -31,8 +31,16 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                     title="Bid Amount"
                     inputValue={bidAmount.toString()}
                     error={bidAmountError}
-                    errorText={`Bid amount must be greater than ${dialogState.placeBidMinLimit}`}
-                    minValue={dialogState.placeBidMinLimit}
+                    errorText={`Bid amount must be greater than ${
+                        dialogState.placeBidMinLimit >= dialogState.placeBidLastBid
+                            ? dialogState.placeBidMinLimit
+                            : dialogState.placeBidLastBid
+                    }`}
+                    minValue={
+                        dialogState.placeBidMinLimit >= dialogState.placeBidLastBid
+                            ? dialogState.placeBidMinLimit
+                            : dialogState.placeBidLastBid
+                    }
                     handleChange={(value) => {
                         setBidAmount(value);
                     }}
@@ -76,6 +84,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                             placeBidTxHash: '',
                             placeBidOrderId: '',
                             placeBidMinLimit: 0,
+                            placeBidLastBid: -1,
                         });
                     }}
                 >
@@ -84,7 +93,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        if (bidAmount >= dialogState.placeBidMinLimit) {
+                        if (bidAmount >= dialogState.placeBidMinLimit && bidAmount > dialogState.placeBidLastBid) {
                             setDialogState({
                                 ...dialogState,
                                 placeBidDlgOpened: true,
@@ -94,7 +103,11 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                             });
                         } else {
                             // setExpirationError(expiration === undefined);
-                            setBidAmountError(isNaN(bidAmount) || bidAmount < dialogState.placeBidMinLimit);
+                            setBidAmountError(
+                                isNaN(bidAmount) ||
+                                    bidAmount < dialogState.placeBidMinLimit ||
+                                    bidAmount <= dialogState.placeBidLastBid,
+                            );
                         }
                     }}
                 >

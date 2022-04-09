@@ -42,7 +42,7 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 if (dialogState.createNFTDlgStep >= 2 && dialogState.createNFTDlgStep < 5) {
                     if (location.pathname.indexOf('/profile') !== -1) window.location.reload();
                     else navigate('/profile');
-                } else if (dialogState.createNFTDlgStep == 5) {
+                } else if (dialogState.createNFTDlgStep === 5) {
                     if (location.pathname.indexOf('/products') !== -1) window.location.reload();
                     else navigate('/products');
                 }

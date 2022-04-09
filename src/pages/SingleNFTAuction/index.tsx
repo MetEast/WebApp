@@ -222,8 +222,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                         ...dialogState,
                                                         acceptBidDlgOpened: true,
                                                         acceptBidDlgStep: 0,
-                                                        acceptBidName: bidsList.length ? bidsList[0].user : productDetail.author,
-                                                        acceptBidOrderId: (bidsList.length ? bidsList[0].orderId : productDetail.orderId) || '',
+                                                        acceptBidName: bidsList.length
+                                                            ? bidsList[0].user
+                                                            : productDetail.author,
+                                                        acceptBidOrderId:
+                                                            (bidsList.length
+                                                                ? bidsList[0].orderId
+                                                                : productDetail.orderId) || '',
                                                         acceptBidPrice: bidsList.length ? bidsList[0].price : 0,
                                                     });
                                                 } else {
@@ -243,6 +248,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                 sx={{ marginTop: 3, width: '100%' }}
                                                 onClick={() => {
                                                     if (signInDlgState.isLoggedIn) {
+                                                        const topSelfBid = myBidsList.length ? myBidsList[myBidsList.length - 1].price : 0;
+                                                        const topOtherBid = bidsList.length ? bidsList[bidsList.length - 1].price : 0;
                                                         setDialogState({
                                                             ...dialogState,
                                                             placeBidDlgOpened: true,
@@ -250,6 +257,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                             placeBidName: productDetail.name,
                                                             placeBidOrderId: productDetail.orderId || '',
                                                             placeBidMinLimit: productDetail.price_ela,
+                                                            placeBidLastBid: topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
                                                         });
                                                     } else {
                                                         setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
@@ -351,7 +359,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 myBidsList={myBidsList}
                                 bidsList={bidsList}
                             />
-                            <PriceHistoryView createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800} creator={productDetail.author} />
+                            <PriceHistoryView
+                                createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
+                                creator={productDetail.author}
+                            />
                             <NFTTransactionTable transactionsList={transactionsList} />
                         </Stack>
                     </Grid>

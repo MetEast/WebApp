@@ -81,6 +81,7 @@ interface DlgState {
     placeBidName: string;
     placeBidOrderId: string;
     placeBidMinLimit: number;
+    placeBidLastBid: number;
     placeBidAmount: number;
     // placeBidExpire: TypeSelectItem;
     placeBidTxHash: string;
@@ -213,6 +214,7 @@ export const defaultDlgState: DlgState = {
     placeBidDlgStep: 0,
     placeBidName: '',
     placeBidMinLimit: 0,
+    placeBidLastBid: -1,
     placeBidAmount: 0,
     // placeBidExpire: { label: '', value: '' },
     placeBidTxHash: '',
