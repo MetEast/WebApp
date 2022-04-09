@@ -44,7 +44,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 setProductDetail(_NFTItem);
             }
         };
-        fetchNFTItem().catch(console.error);
+        if(signInDlgState.userDid) fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
