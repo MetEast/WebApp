@@ -68,59 +68,48 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        fetchLatestTxs().catch(console.error);
+        if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
     }, [params.id, signInDlgState.walletAccounts]);
 
-    const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...productDetail };
-        if (type === 'inc') {
-            prodDetail.likes += 1;
-        } else if (type === 'dec') {
-            prodDetail.likes -= 1;
-        }
-        setProductDetail(prodDetail);
-    };
-
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            if (signInDlgState.isLoggedIn && tokenId) {
-                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-                const reqBody = {
-                    token: signInDlgState.token,
-                    tokenId: tokenId,
-                    did: signInDlgState.userDid,
-                };
-                fetch(reqUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reqBody),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            if (!unmounted) {
-                                setProductDetail((prevState: TypeProduct) => {
-                                    const prodDetail: TypeProduct = { ...prevState };
-                                    prodDetail.views += 1;
-                                    return prodDetail;
-                                });
-                            }
-                        } else {
-                            console.log(data);
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (!unmounted) {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
+                                prodDetail.views += 1;
+                                return prodDetail;
+                            });
                         }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
-        updateProductViews(productDetail.tokenId);
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+            updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
@@ -153,7 +142,18 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                        <ProductImageContainer
+                            product={productDetail}
+                            updateLikes={(type: string) => {
+                                let prodDetail: TypeProduct = { ...productDetail };
+                                if (type === 'inc') {
+                                    prodDetail.likes += 1;
+                                } else if (type === 'dec') {
+                                    prodDetail.likes -= 1;
+                                }
+                                setProductDetail(prodDetail);
+                            }}
+                        />
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>

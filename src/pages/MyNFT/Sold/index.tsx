@@ -34,15 +34,17 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
+                if (_MyNFTItem.holder === signInDlgState.walletAccounts[0]) navigate(-1);
                 setProductDetail(_MyNFTItem);
             }
         };
-        if (signInDlgState.isLoggedIn) fetchMyNFTItem().catch(console.error);
-        else navigate('/');
+        if (signInDlgState.isLoggedIn) {
+            if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+        } else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, signInDlgState.userDid, params.id]);
 
     useEffect(() => {
         let unmounted = false;
@@ -53,21 +55,11 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        fetchLatestTxs().catch(console.error);
+        if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
     }, [params.id, signInDlgState.walletAccounts]);
-
-    const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...productDetail };
-        if (type === 'inc') {
-            prodDetail.likes += 1;
-        } else if (type === 'dec') {
-            prodDetail.likes -= 1;
-        }
-        setProductDetail(prodDetail);
-    };
 
     useEffect(() => {
         let unmounted = false;
@@ -105,7 +97,8 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     });
             }
         };
-        updateProductViews(productDetail.tokenId);
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+            updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
@@ -134,7 +127,18 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                        <ProductImageContainer
+                            product={productDetail}
+                            updateLikes={(type: string) => {
+                                let prodDetail: TypeProduct = { ...productDetail };
+                                if (type === 'inc') {
+                                    prodDetail.likes += 1;
+                                } else if (type === 'dec') {
+                                    prodDetail.likes -= 1;
+                                }
+                                setProductDetail(prodDetail);
+                            }}
+                        />
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -230,7 +234,10 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     <Grid item xs={12} md={8}>
                         <Stack spacing={10}>
                             <NFTTransactionTable transactionsList={transactionsList} />
-                            <PriceHistoryView createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800} creator={productDetail.author} />
+                            <PriceHistoryView
+                                createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
+                                creator={productDetail.author}
+                            />
                         </Stack>
                     </Grid>
                 </Grid>

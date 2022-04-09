@@ -76,7 +76,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 setProdTransHistory(_NFTTxs.history);
             }
         };
-        fetchLatestTxs().catch(console.error);
+        if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -90,59 +90,48 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 setBidsList(_NFTBids.others);
             }
         };
-        fetchNFTLatestBids().catch(console.error);
+        if (signInDlgState.walletAccounts.length) fetchNFTLatestBids().catch(console.error);
         return () => {
             unmounted = true;
         };
     }, [signInDlgState.walletAccounts, params.id]);
 
-    const updateProductLikes = (type: string) => {
-        let prodDetail: TypeProduct = { ...productDetail };
-        if (type === 'inc') {
-            prodDetail.likes += 1;
-        } else if (type === 'dec') {
-            prodDetail.likes -= 1;
-        }
-        setProductDetail(prodDetail);
-    };
-
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            if (signInDlgState.isLoggedIn && tokenId) {
-                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-                const reqBody = {
-                    token: signInDlgState.token,
-                    tokenId: tokenId,
-                    did: signInDlgState.userDid,
-                };
-                fetch(reqUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reqBody),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            if (!unmounted) {
-                                setProductDetail((prevState: TypeProduct) => {
-                                    const prodDetail: TypeProduct = { ...prevState };
-                                    prodDetail.views += 1;
-                                    return prodDetail;
-                                });
-                            }
-                        } else {
-                            console.log(data);
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (!unmounted) {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
+                                prodDetail.views += 1;
+                                return prodDetail;
+                            });
                         }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
-        updateProductViews(productDetail.tokenId);
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+            updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
@@ -171,7 +160,18 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                        <ProductImageContainer
+                            product={productDetail}
+                            updateLikes={(type: string) => {
+                                let prodDetail: TypeProduct = { ...productDetail };
+                                if (type === 'inc') {
+                                    prodDetail.likes += 1;
+                                } else if (type === 'dec') {
+                                    prodDetail.likes -= 1;
+                                }
+                                setProductDetail(prodDetail);
+                            }}
+                        />
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -256,10 +256,18 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                         sx={{ width: '100%', height: 40 }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
-                                                const topBid = bidsList.length ? bidsList[bidsList.length - 1].price : 0;
+                                                const topBid = bidsList.length
+                                                    ? bidsList[bidsList.length - 1].price
+                                                    : 0;
                                                 const bidPrice = topBid > 0 ? topBid : 0;
-                                                const biderName = topBid > 0 ? bidsList[bidsList.length - 1].user : productDetail.holderName;
-                                                const bidOrderId = topBid > 0 ? bidsList[bidsList.length - 1].orderId : productDetail.orderId || '';
+                                                const biderName =
+                                                    topBid > 0
+                                                        ? bidsList[bidsList.length - 1].user
+                                                        : productDetail.holderName;
+                                                const bidOrderId =
+                                                    topBid > 0
+                                                        ? bidsList[bidsList.length - 1].orderId
+                                                        : productDetail.orderId || '';
                                                 setDialogState({
                                                     ...dialogState,
                                                     acceptBidDlgOpened: true,
