@@ -30,15 +30,12 @@ import { getMintCategory } from 'src/services/common';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 // import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
-import { useSnackbar } from 'notistack';
-import SnackMessage from 'src/components/SnackMessage';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
@@ -131,16 +128,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
-
-    const showChainErrorSnackBar = () => {
-        enqueueSnackbar('', {
-            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-            autoHideDuration: 5000,
-            content: (key) => (
-                <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
-            ),
-        });
-    };
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -238,37 +225,35 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                         sx={{ width: '100%', height: 40 }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
-                                                if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21) {
-                                                    let bidder = 0;
-                                                    let bidPrice = 0;
-                                                    let biderName = productDetail.holderName;
-                                                    let bidOrderId = productDetail.orderId || '';
-                                                    const topSelfBid = myBidsList.length
-                                                        ? myBidsList[myBidsList.length - 1].price
-                                                        : 0;
-                                                    const topOtherBid = bidsList.length
-                                                        ? bidsList[bidsList.length - 1].price
-                                                        : 0;
-                                                    if (topSelfBid > topOtherBid) bidder = 1;
-                                                    else if (topSelfBid < topOtherBid) bidder = 2;
-                                                    if (bidder === 1) {
-                                                        bidPrice = topSelfBid;
-                                                        biderName = myBidsList[myBidsList.length - 1].user;
-                                                        bidOrderId = myBidsList[myBidsList.length - 1].orderId;
-                                                    } else if (bidder === 2) {
-                                                        bidPrice = topOtherBid;
-                                                        biderName = bidsList[bidsList.length - 1].user;
-                                                        bidOrderId = bidsList[bidsList.length - 1].orderId;
-                                                    }
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        acceptBidDlgOpened: true,
-                                                        acceptBidDlgStep: 0,
-                                                        acceptBidName: biderName,
-                                                        acceptBidOrderId: bidOrderId,
-                                                        acceptBidPrice: bidPrice,
-                                                    });
-                                                } else showChainErrorSnackBar();
+                                                let bidder = 0;
+                                                let bidPrice = 0;
+                                                let biderName = productDetail.holderName;
+                                                let bidOrderId = productDetail.orderId || '';
+                                                const topSelfBid = myBidsList.length
+                                                    ? myBidsList[myBidsList.length - 1].price
+                                                    : 0;
+                                                const topOtherBid = bidsList.length
+                                                    ? bidsList[bidsList.length - 1].price
+                                                    : 0;
+                                                if (topSelfBid > topOtherBid) bidder = 1;
+                                                else if (topSelfBid < topOtherBid) bidder = 2;
+                                                if (bidder === 1) {
+                                                    bidPrice = topSelfBid;
+                                                    biderName = myBidsList[myBidsList.length - 1].user;
+                                                    bidOrderId = myBidsList[myBidsList.length - 1].orderId;
+                                                } else if (bidder === 2) {
+                                                    bidPrice = topOtherBid;
+                                                    biderName = bidsList[bidsList.length - 1].user;
+                                                    bidOrderId = bidsList[bidsList.length - 1].orderId;
+                                                }
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    acceptBidDlgOpened: true,
+                                                    acceptBidDlgStep: 0,
+                                                    acceptBidName: biderName,
+                                                    acceptBidOrderId: bidOrderId,
+                                                    acceptBidPrice: bidPrice,
+                                                });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                             }
@@ -286,27 +271,22 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             sx={{ marginTop: 3, width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    if (
-                                                        signInDlgState.chainId === 20 ||
-                                                        signInDlgState.chainId === 21
-                                                    ) {
-                                                        const topSelfBid = myBidsList.length
-                                                            ? myBidsList[myBidsList.length - 1].price
-                                                            : 0;
-                                                        const topOtherBid = bidsList.length
-                                                            ? bidsList[bidsList.length - 1].price
-                                                            : 0;
-                                                        setDialogState({
-                                                            ...dialogState,
-                                                            placeBidDlgOpened: true,
-                                                            placeBidDlgStep: 0,
-                                                            placeBidName: productDetail.name,
-                                                            placeBidOrderId: productDetail.orderId || '',
-                                                            placeBidMinLimit: productDetail.price_ela,
-                                                            placeBidLastBid:
-                                                                topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
-                                                        });
-                                                    } else showChainErrorSnackBar();
+                                                    const topSelfBid = myBidsList.length
+                                                        ? myBidsList[myBidsList.length - 1].price
+                                                        : 0;
+                                                    const topOtherBid = bidsList.length
+                                                        ? bidsList[bidsList.length - 1].price
+                                                        : 0;
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        placeBidDlgOpened: true,
+                                                        placeBidDlgStep: 0,
+                                                        placeBidName: productDetail.name,
+                                                        placeBidOrderId: productDetail.orderId || '',
+                                                        placeBidMinLimit: productDetail.price_ela,
+                                                        placeBidLastBid:
+                                                            topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
+                                                    });
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                                 }
@@ -323,17 +303,12 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                     sx={{ width: '100%', height: 40 }}
                                                     onClick={() => {
                                                         if (signInDlgState.isLoggedIn) {
-                                                            if (
-                                                                signInDlgState.chainId === 20 ||
-                                                                signInDlgState.chainId === 21
-                                                            )
-                                                                setDialogState({
-                                                                    ...dialogState,
-                                                                    cancelSaleDlgOpened: true,
-                                                                    cancelSaleDlgStep: 0,
-                                                                    cancelSaleOrderId: productDetail.orderId || '',
-                                                                });
-                                                            else showChainErrorSnackBar();
+                                                            setDialogState({
+                                                                ...dialogState,
+                                                                cancelSaleDlgOpened: true,
+                                                                cancelSaleDlgStep: 0,
+                                                                cancelSaleOrderId: productDetail.orderId || '',
+                                                            });
                                                         } else {
                                                             setSignInDlgState({
                                                                 ...signInDlgState,
@@ -348,18 +323,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                     sx={{ width: '100%', height: 40 }}
                                                     onClick={() => {
                                                         if (signInDlgState.isLoggedIn) {
-                                                            if (
-                                                                signInDlgState.chainId === 20 ||
-                                                                signInDlgState.chainId === 21
-                                                            )
-                                                                setDialogState({
-                                                                    ...dialogState,
-                                                                    changePriceDlgOpened: true,
-                                                                    changePriceDlgStep: 0,
-                                                                    changePriceCurPrice: productDetail.price_ela,
-                                                                    changePriceOrderId: productDetail.orderId || '',
-                                                                });
-                                                            else showChainErrorSnackBar();
+                                                            setDialogState({
+                                                                ...dialogState,
+                                                                changePriceDlgOpened: true,
+                                                                changePriceDlgStep: 0,
+                                                                changePriceCurPrice: productDetail.price_ela,
+                                                                changePriceOrderId: productDetail.orderId || '',
+                                                            });
                                                         } else {
                                                             setSignInDlgState({
                                                                 ...signInDlgState,

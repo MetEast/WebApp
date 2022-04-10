@@ -17,8 +17,8 @@ import { blankBBItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import NFTPreview from 'src/components/NFTPreview';
-import { useSnackbar } from 'notistack';
-import SnackMessage from 'src/components/SnackMessage';
+// import { useSnackbar } from 'notistack';
+// import SnackMessage from 'src/components/SnackMessage';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 // import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
 
@@ -26,7 +26,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const { enqueueSnackbar } = useSnackbar();
+    // const { enqueueSnackbar } = useSnackbar();
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
     const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([]);
@@ -112,16 +112,6 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [blindBoxDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
-
-    const showChainErrorSnackBar = () => {
-        enqueueSnackbar('', {
-            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-            autoHideDuration: 5000,
-            content: (key) => (
-                <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
-            ),
-        });
-    };
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -233,30 +223,28 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
-                                                if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21)
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        buyBlindBoxDlgOpened: true,
-                                                        buyBlindBoxDlgStep: 0,
-                                                        buyBlindName: blindBoxDetail.name,
-                                                        buyBlindPriceEla: blindBoxDetail.price_ela,
-                                                        buyBlindPriceUsd: blindBoxDetail.price_usd,
-                                                        buyBlindAmount: 1,
-                                                        buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                                        buyBlindCreator:
-                                                            blindBoxDetail.author === ''
-                                                                ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
-                                                                : blindBoxDetail.author,
-                                                        buyBlindMaxPurchases:
-                                                            blindBoxDetail.maxPurchases === undefined
-                                                                ? 0
-                                                                : blindBoxDetail.maxPurchases,
-                                                        buyBlindInstock:
-                                                            blindBoxDetail.instock === undefined
-                                                                ? 0
-                                                                : blindBoxDetail.instock,
-                                                    });
-                                                else showChainErrorSnackBar();
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    buyBlindBoxDlgOpened: true,
+                                                    buyBlindBoxDlgStep: 0,
+                                                    buyBlindName: blindBoxDetail.name,
+                                                    buyBlindPriceEla: blindBoxDetail.price_ela,
+                                                    buyBlindPriceUsd: blindBoxDetail.price_usd,
+                                                    buyBlindAmount: 1,
+                                                    buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                                    buyBlindCreator:
+                                                        blindBoxDetail.author === ''
+                                                            ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                            : blindBoxDetail.author,
+                                                    buyBlindMaxPurchases:
+                                                        blindBoxDetail.maxPurchases === undefined
+                                                            ? 0
+                                                            : blindBoxDetail.maxPurchases,
+                                                    buyBlindInstock:
+                                                        blindBoxDetail.instock === undefined
+                                                            ? 0
+                                                            : blindBoxDetail.instock,
+                                                });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                             }

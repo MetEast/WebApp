@@ -314,7 +314,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 _state.chainId = chainId;
                 return _state;
             });
-            if(chainId && !(chainId === 20 || chainId === 21)) showChainErrorSnackBar();
+            if(chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
         };
         const handleEEDisconnect = (code: number, reason: string) => {
             console.log('Disconnect code: ', code, ', reason: ', reason);
@@ -335,7 +335,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 inAppWeb3.eth.getChainId().then((chainId: number) => {
                     _state.chainId = chainId;
-                    if(chainId && !(chainId === 20 || chainId === 21)) showChainErrorSnackBar();
+                    if(chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
                 });
                 return _state;
             });
@@ -419,7 +419,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }
             }
         }
-        if(chainId && !(chainId === 20 || chainId === 21)) showChainErrorSnackBar();
+        if(chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
         return () => {
             if (walletConnectProvider.removeListener) {
                 walletConnectProvider.removeListener('accountsChanged', handleEEAccountsChanged);

@@ -23,15 +23,12 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 // import BuyNowDlgContainer from 'src/components/TransactionDialogs/BuyNow';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
-import { useSnackbar } from 'notistack';
-import SnackMessage from 'src/components/SnackMessage';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [showBuyNowBtn, setShowBuyNowBtn] = useState<boolean>(false);
@@ -116,16 +113,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
-
-    const showChainErrorSnackBar = () => {
-        enqueueSnackbar('', {
-            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-            autoHideDuration: 5000,
-            content: (key) => (
-                <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
-            ),
-        });
-    };
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -218,16 +205,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
-                                                if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21)
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        buyNowDlgOpened: true,
-                                                        buyNowDlgStep: 0,
-                                                        buyNowPrice: productDetail.price_ela,
-                                                        buyNowName: productDetail.name,
-                                                        buyNowOrderId: productDetail.orderId || '',
-                                                    });
-                                                else showChainErrorSnackBar();
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    buyNowDlgOpened: true,
+                                                    buyNowDlgStep: 0,
+                                                    buyNowPrice: productDetail.price_ela,
+                                                    buyNowName: productDetail.name,
+                                                    buyNowOrderId: productDetail.orderId || '',
+                                                });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                             }
@@ -241,14 +226,12 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                             sx={{ width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21)
-                                                        setDialogState({
-                                                            ...dialogState,
-                                                            cancelSaleDlgOpened: true,
-                                                            cancelSaleDlgStep: 0,
-                                                            cancelSaleOrderId: productDetail.orderId || '',
-                                                        });
-                                                    else showChainErrorSnackBar();
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        cancelSaleDlgOpened: true,
+                                                        cancelSaleDlgStep: 0,
+                                                        cancelSaleOrderId: productDetail.orderId || '',
+                                                    });
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                                 }
@@ -260,15 +243,13 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                             sx={{ width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21)
-                                                        setDialogState({
-                                                            ...dialogState,
-                                                            changePriceDlgOpened: true,
-                                                            changePriceDlgStep: 0,
-                                                            changePriceCurPrice: productDetail.price_ela,
-                                                            changePriceOrderId: productDetail.orderId || '',
-                                                        });
-                                                    else showChainErrorSnackBar();
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        changePriceDlgOpened: true,
+                                                        changePriceDlgStep: 0,
+                                                        changePriceCurPrice: productDetail.price_ela,
+                                                        changePriceOrderId: productDetail.orderId || '',
+                                                    });
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                                 }
