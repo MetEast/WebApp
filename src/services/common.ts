@@ -1,4 +1,4 @@
-import { enumBadgeType, TypeFavouritesFetch } from 'src/types/product-types';
+import { enumBadgeType } from 'src/types/product-types';
 
 // custome
 export const getImageFromAsset = (id: string) => {
@@ -27,7 +27,7 @@ export const getTime = (timestamp: string) => {
     return { date: dateStr, time: timeStr };
 };
 
-// Get time from timestamp //
+// Get UTC time from timestamp
 export const getUTCTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);
     const pieces = date.toUTCString().split(' ');
@@ -79,22 +79,6 @@ export const reduceUserName = (username: string, nDigits: number) =>
         ? `${username.substring(0, nDigits)}...${username.substring(username.length - nDigits, username.length)}`
         : '';
 
-export const storeWithExpireTime = (key: string, value: string, ttl: number) => {
-    const now = new Date();
-    // `item` is an object which contains the original value
-    // as well as the time when it's supposed to expire
-    const item = {
-        value: value,
-        expiry: now.getTime() + ttl,
-    };
-
-    localStorage.setItem(key, JSON.stringify(item));
-};
-
-export const selectFromFavourites = (value: TypeFavouritesFetch, tokenId: string) => {
-    return value.tokenId === tokenId;
-};
-
 export const getMintCategory = (value: string | undefined) => {
     if (value === undefined) return enumBadgeType.Other;
     switch (value) {
@@ -116,20 +100,6 @@ export const getMintCategory = (value: string | undefined) => {
             return enumBadgeType.Star;
         default:
             return enumBadgeType.Other;
-    }
-};
-
-export const emptyCache = () => {
-    if ('caches' in window) {
-        caches.keys().then((names) => {
-            // Delete all the cache files
-            names.forEach((name) => {
-                caches.delete(name);
-            });
-        });
-
-        // Makes sure the page reloads. Changes are only visible after you refresh.
-        window.location.reload();
     }
 };
 

@@ -1,4 +1,3 @@
-import { SigningOptions } from 'crypto';
 import React, { createContext, useState, useContext } from 'react';
 
 export interface SignInState {

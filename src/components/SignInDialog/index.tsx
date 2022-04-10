@@ -33,7 +33,6 @@ import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
 import { login, updateUserToken } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
-import usePrevious from 'src/hooks/usePrevious';
 
 export interface ComponentProps {}
 
@@ -52,7 +51,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     let linkType = cookies.METEAST_LINK;
     const refAccount = useRef();
     useEffect(() => {
-        if(signInDlgState.walletAccounts.length) refAccount.current = signInDlgState.walletAccounts[0];
+        if (signInDlgState.walletAccounts.length) refAccount.current = signInDlgState.walletAccounts[0];
     }, [signInDlgState.walletAccounts]);
 
     const showSucceedSnackBar = () => {
@@ -60,6 +59,16 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
             autoHideDuration: 3000,
             content: (key) => <SnackMessage id={key} message="Login succeed." variant="success" />,
+        });
+    };
+
+    const showChainErrorSnackBar = () => {
+        enqueueSnackbar('', {
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            autoHideDuration: 5000,
+            content: (key) => (
+                <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
+            ),
         });
     };
 
@@ -285,11 +294,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         const handleEEAccountsChanged = (accounts: string[]) => {
             // change user role
             const previousAccount = refAccount.current;
-            if (
-                previousAccount &&
-                accounts.length &&
-                previousAccount !== accounts[0]
-            ) {
+            if (previousAccount && accounts.length && previousAccount !== accounts[0]) {
                 updateUserToken(accounts[0], signInDlgState.userDid).then((token: string) => {
                     setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                 });
@@ -309,6 +314,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 _state.chainId = chainId;
                 return _state;
             });
+            if(chainId && !(chainId === 20 || chainId === 21)) showChainErrorSnackBar();
         };
         const handleEEDisconnect = (code: number, reason: string) => {
             console.log('Disconnect code: ', code, ', reason: ', reason);
@@ -317,6 +323,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         const handleEEError = (code: number, reason: string) => {
             console.error(code, reason);
         };
+
         if (isInAppBrowser()) {
             setSignInDlgState((prevState: SignInState) => {
                 const _state = { ...prevState };
@@ -328,6 +335,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 inAppWeb3.eth.getChainId().then((chainId: number) => {
                     _state.chainId = chainId;
+                    if(chainId && !(chainId === 20 || chainId === 21)) showChainErrorSnackBar();
                 });
                 return _state;
             });
@@ -411,6 +419,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }
             }
         }
+        if(chainId && !(chainId === 20 || chainId === 21)) showChainErrorSnackBar();
         return () => {
             if (walletConnectProvider.removeListener) {
                 walletConnectProvider.removeListener('accountsChanged', handleEEAccountsChanged);
@@ -487,7 +496,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     if (linkType === '1') initConnectivitySDK();
 
     // console.log('--------accounts: ', signInDlgState);
-    // console.log('--------internal: ', _signInState);
     // console.log('-------dlg', dialogState)
 
     return (
@@ -500,7 +508,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             >
                 <ConnectDID
                     onConnect={async (wallet: string) => {
-                        // _setSignInState({ ..._signInState, signInDlgOpened: true });
                         if (wallet === 'EE') {
                             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
                                 await signOutWithEssentialsWithoutRefresh();
