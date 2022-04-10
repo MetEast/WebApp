@@ -39,7 +39,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-
+        let unmounted = false;
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.waitingConfirmDlgTimer = setTimeout(() => {
@@ -48,8 +48,8 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
-        
+        if (!unmounted) setDialogState(updatedState);
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 2,
@@ -64,29 +64,36 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    placeBidDlgOpened: true,
-                    placeBidDlgStep: 2,
-                    placeBidTxHash: txHash,
-                    waitingConfirmDlgOpened: false,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        placeBidDlgOpened: true,
+                        placeBidDlgStep: 2,
+                        placeBidTxHash: txHash,
+                        waitingConfirmDlgOpened: false,
+                    });
+                }
             })
             .catch((error) => {
                 enqueueSnackbar(`Place bid error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    placeBidDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        placeBidDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
             })
             .finally(() => {
                 setOnProgress(false);
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

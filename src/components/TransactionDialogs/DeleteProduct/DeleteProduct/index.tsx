@@ -43,7 +43,7 @@ const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         }
 
         setOnProgress(true);
-
+        let unmounted = false;
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.waitingConfirmDlgTimer = setTimeout(() => {
@@ -52,7 +52,7 @@ const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -66,28 +66,35 @@ const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    burnNFTDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        burnNFTDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                    });
+                }
             })
             .catch((error) => {
                 enqueueSnackbar(`Burn token error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    burnNFTDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        burnNFTDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
             })
             .finally(() => {
                 setOnProgress(false);
                 navigate('/profile');
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

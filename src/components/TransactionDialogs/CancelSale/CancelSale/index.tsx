@@ -38,7 +38,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-
+        let unmounted = false;
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.waitingConfirmDlgTimer = setTimeout(() => {
@@ -47,7 +47,7 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -61,29 +61,36 @@ const CancelSale: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    cancelSaleDlgOpened: true,
-                    cancelSaleDlgStep: 1,
-                    cancelSaleTxHash: txHash,
-                    waitingConfirmDlgOpened: false,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        cancelSaleDlgOpened: true,
+                        cancelSaleDlgStep: 1,
+                        cancelSaleTxHash: txHash,
+                        waitingConfirmDlgOpened: false,
+                    });
+                }
             })
             .catch((error) => {
                 enqueueSnackbar(`Cancel sale error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    cancelSaleDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        cancelSaleDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
             })
             .finally(() => {
                 setOnProgress(false);
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (
