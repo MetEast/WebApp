@@ -23,12 +23,15 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 // import BuyNowDlgContainer from 'src/components/TransactionDialogs/BuyNow';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
+import { useSnackbar } from 'notistack';
+import SnackMessage from 'src/components/SnackMessage';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [showBuyNowBtn, setShowBuyNowBtn] = useState<boolean>(false);
@@ -44,7 +47,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 setProductDetail(_NFTItem);
             }
         };
-        if(signInDlgState.userDid) fetchNFTItem().catch(console.error);
+        if (signInDlgState.userDid) fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -73,59 +76,56 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         }
     }, [signInDlgState.walletAccounts, productDetail]);
     // -------------- Likes & Views -------------- //
-    const updateProductLikes = (type: string) => {
-        setProductDetail((prevState: TypeProduct) => {
-            const prodDetail: TypeProduct = { ...prevState };
-            if (type === 'inc') {
-                prodDetail.likes++;
-            } else if (type === 'dec') {
-                prodDetail.likes--;
-            }
-            return prodDetail;
-        });
-    };
-
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            if (signInDlgState.isLoggedIn && tokenId) {
-                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-                const reqBody = {
-                    token: signInDlgState.token,
-                    tokenId: tokenId,
-                    did: signInDlgState.userDid,
-                };
-                fetch(reqUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reqBody),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            if (!unmounted) {
-                                setProductDetail((prevState: TypeProduct) => {
-                                    const prodDetail: TypeProduct = { ...prevState };
-                                    prodDetail.views += 1;
-                                    return prodDetail;
-                                });
-                            }
-                        } else {
-                            console.log(data);
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (!unmounted) {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
+                                prodDetail.views += 1;
+                                return prodDetail;
+                            });
                         }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
-        updateProductViews(productDetail.tokenId);
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+            updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+
+    const showChainErrorSnackBar = () => {
+        enqueueSnackbar('', {
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            autoHideDuration: 5000,
+            content: (key) => (
+                <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
+            ),
+        });
+    };
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -150,7 +150,17 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                        <ProductImageContainer product={productDetail} updateLikes={(type: string) => {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
+                                if (type === 'inc') {
+                                    prodDetail.likes++;
+                                } else if (type === 'dec') {
+                                    prodDetail.likes--;
+                                }
+                                return prodDetail;
+                            });
+                        }} />
                     )}
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -205,14 +215,16 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    buyNowDlgOpened: true,
-                                                    buyNowDlgStep: 0,
-                                                    buyNowPrice: productDetail.price_ela,
-                                                    buyNowName: productDetail.name,
-                                                    buyNowOrderId: productDetail.orderId || '',
-                                                });
+                                                if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21)
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        buyNowDlgOpened: true,
+                                                        buyNowDlgStep: 0,
+                                                        buyNowPrice: productDetail.price_ela,
+                                                        buyNowName: productDetail.name,
+                                                        buyNowOrderId: productDetail.orderId || '',
+                                                    });
+                                                else showChainErrorSnackBar();
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                             }
@@ -297,7 +309,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     </Grid>
                     <Grid item md={8} xs={12}>
                         <Stack spacing={10}>
-                            <PriceHistoryView createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800} creator={productDetail.author} />
+                            <PriceHistoryView
+                                createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
+                                creator={productDetail.author}
+                            />
                             <NFTTransactionTable transactionsList={transactionsList} />
                         </Stack>
                     </Grid>
