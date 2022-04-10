@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import ModalDialog from 'src/components/ModalDialog';
 import ConnectDID from 'src/components/SignIn/ConnectDID';
@@ -50,8 +50,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     );
     const [walletConnectProvider] = useState<WalletConnectProvider>(essentialsConnector.getWalletConnectProvider());
     let linkType = cookies.METEAST_LINK;
-    const prev = usePrevious(signInDlgState.walletAccounts);
-    const previousAccounts:string[] = prev ? prev : [];
+    const refAccount = useRef();
+    useEffect(() => {
+        if(signInDlgState.walletAccounts.length) refAccount.current = signInDlgState.walletAccounts[0];
+    }, [signInDlgState.walletAccounts]);
 
     const showSucceedSnackBar = () => {
         enqueueSnackbar('', {
@@ -282,13 +284,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         // EE
         const handleEEAccountsChanged = (accounts: string[]) => {
             // change user role
-            console.log(previousAccounts, '++++++', accounts);
+            const previousAccount = refAccount.current;
             if (
-                previousAccounts.length &&
+                previousAccount &&
                 accounts.length &&
-                previousAccounts[0] !== accounts[0]
+                previousAccount !== accounts[0]
             ) {
-                alert(1);
                 updateUserToken(accounts[0], signInDlgState.userDid).then((token: string) => {
                     setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                 });
@@ -297,7 +298,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 setSignInDlgState((prevState: SignInState) => {
                     const _state = { ...prevState };
                     _state.walletAccounts = accounts;
-                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                    _state.walletBalance = parseFloat((parseInt(balance) / 1e18).toFixed(2));
                     return _state;
                 });
             });
@@ -423,7 +424,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     // signInDlgContext track
     useEffect(() => {
         const user: UserTokenType = cookies.METEAST_TOKEN ? jwtDecode(cookies.METEAST_TOKEN) : blankUserToken;
-        console.log('***************************', user);
         getDidUri(user.did, user.description, user.name).then((didUri: string) => {
             setSignInDlgState((prevState: SignInState) => {
                 const _state = { ...prevState };
@@ -486,7 +486,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (linkType === '1') initConnectivitySDK();
 
-    console.log('--------accounts: ', signInDlgState);
+    // console.log('--------accounts: ', signInDlgState);
     // console.log('--------internal: ', _signInState);
     // console.log('-------dlg', dialogState)
 
