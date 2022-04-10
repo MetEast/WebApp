@@ -150,17 +150,20 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={(type: string) => {
-                            setProductDetail((prevState: TypeProduct) => {
-                                const prodDetail: TypeProduct = { ...prevState };
-                                if (type === 'inc') {
-                                    prodDetail.likes++;
-                                } else if (type === 'dec') {
-                                    prodDetail.likes--;
-                                }
-                                return prodDetail;
-                            });
-                        }} />
+                        <ProductImageContainer
+                            product={productDetail}
+                            updateLikes={(type: string) => {
+                                setProductDetail((prevState: TypeProduct) => {
+                                    const prodDetail: TypeProduct = { ...prevState };
+                                    if (type === 'inc') {
+                                        prodDetail.likes++;
+                                    } else if (type === 'dec') {
+                                        prodDetail.likes--;
+                                    }
+                                    return prodDetail;
+                                });
+                            }}
+                        />
                     )}
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -238,12 +241,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                             sx={{ width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        cancelSaleDlgOpened: true,
-                                                        cancelSaleDlgStep: 0,
-                                                        cancelSaleOrderId: productDetail.orderId || '',
-                                                    });
+                                                    if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21)
+                                                        setDialogState({
+                                                            ...dialogState,
+                                                            cancelSaleDlgOpened: true,
+                                                            cancelSaleDlgStep: 0,
+                                                            cancelSaleOrderId: productDetail.orderId || '',
+                                                        });
+                                                    else showChainErrorSnackBar();
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                                 }
@@ -255,13 +260,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                             sx={{ width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        changePriceDlgOpened: true,
-                                                        changePriceDlgStep: 0,
-                                                        changePriceCurPrice: productDetail.price_ela,
-                                                        changePriceOrderId: productDetail.orderId || '',
-                                                    });
+                                                    if (signInDlgState.chainId === 20 || signInDlgState.chainId === 21)
+                                                        setDialogState({
+                                                            ...dialogState,
+                                                            changePriceDlgOpened: true,
+                                                            changePriceDlgStep: 0,
+                                                            changePriceCurPrice: productDetail.price_ela,
+                                                            changePriceOrderId: productDetail.orderId || '',
+                                                        });
+                                                    else showChainErrorSnackBar();
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                                 }
