@@ -121,7 +121,7 @@ const HomePage: React.FC = (): JSX.Element => {
     return (
         <Stack direction="column" minHeight="75vh">
             <Box>
-                <Swiper autoplay={{ delay: 5000 }} spaceBetween={8}>
+                <Swiper autoplay={{ delay: 5000 }} spaceBetween={8} touchStartPreventDefault={false}>
                     {adBanners.map((item, index) => (
                         <SwiperSlide key={`banner-carousel-${index}`}>
                             <Box
@@ -130,7 +130,7 @@ const HomePage: React.FC = (): JSX.Element => {
                                 sx={{
                                     height: 330,
                                     maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
-                                    // cursor: 'pointer',
+                                    cursor: 'pointer',
                                     backgroundColor: '#C3C5C8',
                                 }}
                             >
