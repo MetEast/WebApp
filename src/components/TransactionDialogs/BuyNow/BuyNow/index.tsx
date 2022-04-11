@@ -116,12 +116,12 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.buyNowPrice || 0} ELA</DetailedInfoLabelTypo>
                     </Grid>
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.buyNowTxFee} ELA</DetailedInfoLabelTypo>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
