@@ -63,8 +63,12 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                     </Typography>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={0} columnGap={2}>
-                    <Button sx={{ fontSize: 12, fontWeight: 700, color: '#1890FF', padding: 1 }}>Docs</Button>
-                    <Button sx={{ fontSize: 12, fontWeight: 700, color: '#1890FF', padding: 1 }}>Privacy policy</Button>
+                    <Button sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}>
+                        Docs
+                    </Button>
+                    <Button sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}>
+                        Privacy policy
+                    </Button>
                 </Stack>
             </Stack>
         </Stack>
