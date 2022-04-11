@@ -724,7 +724,7 @@ export const getMyNFTItemList = async (
     const _arrMyNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrMyNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrMyNFTList[i];
-        if (itemObject.holder === "0x0000000000000000000000000000000000000000") continue;
+        if (itemObject.holder === '0x0000000000000000000000000000000000000000') continue;
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.tokenId = itemObject.tokenId;
         _myNFT.name = itemObject.name;
@@ -1083,30 +1083,39 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
     return { totalCount: totalCount, arrAdminNFTList: _arrAdminNFTList };
 };
 
-export const getAdminUserList = async (keyWord: string, fetchParams: string, type: number) => {
+export const getAdminUserList = async (keyWord: string, fetchParams: string, role: number) => {
     let url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?${fetchParams}`;
     if (keyWord !== '') url += `&keyword=${keyWord}`;
-    url += `&type=${type}`;
+    url += `&type=${role}`;
 
     console.log('URL:', url);
     const resAdminUserList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminUserList = await resAdminUserList.json();
     const totalCount = jsonAdminUserList.total;
     const arrAdminUserList = jsonAdminUserList.data === undefined ? [] : jsonAdminUserList.data;
-    const _arrAdminUserList: Array<AdminUsersItemType> = [];
 
     console.log('result count:', arrAdminUserList.length);
+
+    if (
+        totalCount === 1 &&
+        arrAdminUserList.length === 1 &&
+        arrAdminUserList[0].address === keyWord &&
+        parseInt(arrAdminUserList[0].role) === role
+    )
+        return { result: 1, totalCount: 0, data: [] };
+
+    const _arrAdminUserList: Array<AdminUsersItemType> = [];
     for (let i = 0; i < arrAdminUserList.length; i++) {
         const itemObject: AdminUsersItemFetchType = arrAdminUserList[i];
-        // if (type === 0 && parseInt(itemObject.role) !== 0) continue;
-        // else if (type === 1) {
+        // if (role === 0 && parseInt(itemObject.role) !== 0) continue;
+        // else if (role === 1) {
         //     if (keyWord === '' && parseInt(itemObject.role) !== 1) continue;
         //     else if (keyWord !== '') {
         //         if (parseInt(itemObject.role) === 1 && itemObject.address === keyWord)
         //             return { result: 1, totalCount: 0, data: [] };
         //         else if (parseInt(itemObject.role) !== 2) continue;
         //     }
-        // } else if (type === 3) {
+        // } else if (role === 3) {
         //     if (keyWord === '' && parseInt(itemObject.role) !== 3) continue;
         //     else if (keyWord !== '') {
         //         if (parseInt(itemObject.role) === 3 && itemObject.address === keyWord)
@@ -1119,15 +1128,15 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, typ
         _AdminUser.address = itemObject.address;
         _AdminUser.username = itemObject.name;
         _AdminUser.avatar = getImageFromAsset(itemObject.avatar);
-        if (type === 0) _AdminUser.status = 0;
-        else if (type === 1) {
+        if (role === 0) _AdminUser.status = 0;
+        else if (role === 1) {
             if (parseInt(itemObject.role) === 2) _AdminUser.status = 0;
             else if (parseInt(itemObject.role) === 1) _AdminUser.status = 1;
-        } else if (type === 3) {
+        } else if (role === 3) {
             if (parseInt(itemObject.role) === 2) _AdminUser.status = 0;
             else if (parseInt(itemObject.role) === 3) _AdminUser.status = 1;
         }
-        _AdminUser.remarks = type !== 3 ? '' : itemObject.remarks;
+        _AdminUser.remarks = role !== 3 ? '' : itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
     console.log('filtered count:', _arrAdminUserList.length);
