@@ -147,12 +147,12 @@ const HomePage: React.FC = (): JSX.Element => {
                 </Swiper>
             </Box>
             <Container sx={{ maxWidth: matchDownSm ? '100% !important' : 'auto' }}>
-                <Box mt={4}>
+                <Box mt={8}>
                     <Typography
                         fontSize={{ xs: 26, sm: 28, md: 32 }}
                         fontWeight={700}
                         lineHeight={1.1}
-                        marginBottom={1}
+                        marginBottom={1.5}
                         marginLeft={{ xs: 3, sm: 0 }}
                     >
                         New Products
@@ -179,7 +179,7 @@ const HomePage: React.FC = (): JSX.Element => {
                         fontSize={{ xs: 26, sm: 28, md: 32 }}
                         fontWeight={700}
                         lineHeight={1.1}
-                        marginBottom={1}
+                        marginBottom={1.5}
                         marginLeft={{ xs: 3, sm: 0 }}
                     >
                         Popular Collections
