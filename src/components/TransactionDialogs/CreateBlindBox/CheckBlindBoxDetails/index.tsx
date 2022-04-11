@@ -80,7 +80,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 return;
             }
             setOnProgress(true);
-
+            let unmounted = false;
             const updatedState = { ...dialogState };
             updatedState.waitingConfirmDlgOpened = true;
             updatedState.progressBar = 20;
@@ -90,7 +90,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     errorMessageDlgOpened: true,
                 });
             }, 120000);
-            setDialogState(updatedState);
+            if (!unmounted) setDialogState(updatedState);
 
             callContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,
@@ -107,7 +107,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
                         });
                     }
-                    setDialogState({ ...updatedState, waitingConfirmDlgOpened: true, progressBar: 40 });
+                    if (!unmounted) setDialogState({ ...updatedState, waitingConfirmDlgOpened: true, progressBar: 40 });
                     const _quoteToken = '0x0000000000000000000000000000000000000000';
                     const _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
                     const _inQuoteTokens: string[] = Array(_inTokenIds.length);
@@ -135,14 +135,16 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 variant: 'error',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
-                            setDialogState({
-                                ...updatedState,
-                                createBlindBoxDlgOpened: false,
-                                waitingConfirmDlgOpened: false,
-                                errorMessageDlgOpened: true,
-                                progressBar: 0,
-                            });
-                            reject('createOrderForSaleBatchError');
+                            if (!unmounted) {
+                                setDialogState({
+                                    ...updatedState,
+                                    createBlindBoxDlgOpened: false,
+                                    waitingConfirmDlgOpened: false,
+                                    errorMessageDlgOpened: true,
+                                    progressBar: 0,
+                                });
+                                reject('createOrderForSaleBatchError');
+                            }
                         });
                 })
                 .catch((error) => {
@@ -150,15 +152,20 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    setDialogState({
-                        ...updatedState,
-                        createBlindBoxDlgOpened: false,
-                        waitingConfirmDlgOpened: false,
-                        errorMessageDlgOpened: true,
-                        progressBar: 0,
-                    });
-                    reject('setApprovalError');
+                    if (!unmounted) {
+                        setDialogState({
+                            ...updatedState,
+                            createBlindBoxDlgOpened: false,
+                            waitingConfirmDlgOpened: false,
+                            errorMessageDlgOpened: true,
+                            progressBar: 0,
+                        });
+                        reject('setApprovalError');
+                    }
                 });
+            return () => {
+                unmounted = true;
+            };
         });
 
     const handleCreateBlindBox = () => {

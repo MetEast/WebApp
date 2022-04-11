@@ -9,7 +9,7 @@ export interface ComponentProps {}
 const WaitingConfirmDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const dlgOpened = usePrevious(dialogState.waitingConfirmDlgOpened) ? true : false;
-    
+
     useEffect(() => {
         // console.log(dialogState.waitingConfirmDlgTimer, '-------------', dialogState.waitingConfirmDlgOpened, '---------------', dlgOpened)
         if (dialogState.waitingConfirmDlgTimer && !dialogState.waitingConfirmDlgOpened && dlgOpened) {

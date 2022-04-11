@@ -40,7 +40,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-
+        let unmounted = false;
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.waitingConfirmDlgTimer = setTimeout(() => {
@@ -49,7 +49,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
 
@@ -112,13 +112,15 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                                 },
                             );
-                            setDialogState({
-                                ...updatedState,
-                                createNFTDlgOpened: true,
-                                createNFTDlgStep: 5,
-                                sellTxHash: txHash,
-                                waitingConfirmDlgOpened: false,
-                            });
+                            if (!unmounted) {
+                                setDialogState({
+                                    ...updatedState,
+                                    createNFTDlgOpened: true,
+                                    createNFTDlgStep: 5,
+                                    sellTxHash: txHash,
+                                    waitingConfirmDlgOpened: false,
+                                });
+                            }
                         })
                         .catch((error) => {
                             enqueueSnackbar(
@@ -128,12 +130,14 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                                 },
                             );
-                            setDialogState({
-                                ...updatedState,
-                                createNFTDlgOpened: false,
-                                waitingConfirmDlgOpened: false,
-                                errorMessageDlgOpened: true,
-                            });
+                            if (!unmounted) {
+                                setDialogState({
+                                    ...updatedState,
+                                    createNFTDlgOpened: false,
+                                    waitingConfirmDlgOpened: false,
+                                    errorMessageDlgOpened: true,
+                                });
+                            }
                         });
                 })
                 .catch((error) => {
@@ -141,17 +145,22 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    setDialogState({
-                        ...updatedState,
-                        createNFTDlgOpened: false,
-                        waitingConfirmDlgOpened: false,
-                        errorMessageDlgOpened: true,
-                    });
+                    if (!unmounted) {
+                        setDialogState({
+                            ...updatedState,
+                            createNFTDlgOpened: false,
+                            waitingConfirmDlgOpened: false,
+                            errorMessageDlgOpened: true,
+                        });
+                    }
                 })
                 .finally(() => {
                     setOnProgress(false);
                 });
         });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

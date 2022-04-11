@@ -39,7 +39,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-
+        let unmounted = false;
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.progressBar = 50;
@@ -49,7 +49,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -64,30 +64,37 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    waitingConfirmDlgOpened: false,
-                    buyNowDlgOpened: true,
-                    buyNowDlgStep: 1,
-                    buyNowTxHash: txHash,
-                    progressBar: 100,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        waitingConfirmDlgOpened: false,
+                        buyNowDlgOpened: true,
+                        buyNowDlgStep: 1,
+                        buyNowTxHash: txHash,
+                        progressBar: 100,
+                    });
+                }
             })
             .catch((error) => {
                 enqueueSnackbar(`Buy now error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    buyNowDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        buyNowDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
             })
             .finally(() => {
                 setOnProgress(false);
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

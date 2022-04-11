@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { enumBadgeType } from 'src/types/product-types';
+import { enumBadgeType, enumSingleNFTType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -26,6 +26,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
+    const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
@@ -39,10 +40,11 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
+                if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
             }
         };
-        fetchNFTItem().catch(console.error);
+        if (signInDlgState.userDid) fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -71,55 +73,42 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         }
     }, [signInDlgState.walletAccounts, productDetail]);
     // -------------- Likes & Views -------------- //
-    const updateProductLikes = (type: string) => {
-        setProductDetail((prevState: TypeProduct) => {
-            const prodDetail: TypeProduct = { ...prevState };
-            if (type === 'inc') {
-                prodDetail.likes++;
-            } else if (type === 'dec') {
-                prodDetail.likes--;
-            }
-            return prodDetail;
-        });
-    };
-
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            if (signInDlgState.isLoggedIn && tokenId) {
-                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-                const reqBody = {
-                    token: signInDlgState.token,
-                    tokenId: tokenId,
-                    did: signInDlgState.userDid,
-                };
-                fetch(reqUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reqBody),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            if (!unmounted) {
-                                setProductDetail((prevState: TypeProduct) => {
-                                    const prodDetail: TypeProduct = { ...prevState };
-                                    prodDetail.views += 1;
-                                    return prodDetail;
-                                });
-                            }
-                        } else {
-                            console.log(data);
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (!unmounted) {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
+                                prodDetail.views += 1;
+                                return prodDetail;
+                            });
                         }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
-        updateProductViews(productDetail.tokenId);
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+            updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
@@ -148,7 +137,20 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={updateProductLikes} />
+                        <ProductImageContainer
+                            product={productDetail}
+                            updateLikes={(type: string) => {
+                                setProductDetail((prevState: TypeProduct) => {
+                                    const prodDetail: TypeProduct = { ...prevState };
+                                    if (type === 'inc') {
+                                        prodDetail.likes++;
+                                    } else if (type === 'dec') {
+                                        prodDetail.likes--;
+                                    }
+                                    return prodDetail;
+                                });
+                            }}
+                        />
                     )}
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -295,7 +297,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     </Grid>
                     <Grid item md={8} xs={12}>
                         <Stack spacing={10}>
-                            <PriceHistoryView />
+                            <PriceHistoryView
+                                createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
+                                creator={productDetail.author}
+                            />
                             <NFTTransactionTable transactionsList={transactionsList} />
                         </Stack>
                     </Grid>

@@ -18,7 +18,7 @@ import {
     enumBadgeType,
 } from 'src/types/product-types';
 import { TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
-import { getImageFromAsset, reduceHexAddress, getTime, getUTCTime } from 'src/services/common';
+import { getImageFromAsset, reduceHexAddress, getTime } from 'src/services/common';
 import {
     blankNFTItem,
     blankNFTTxs,
@@ -44,6 +44,7 @@ import {
     AdminBannersItemFetchType,
 } from 'src/types/admin-table-data-types';
 import { UserInfoType } from 'src/types/auth-types';
+import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -61,6 +62,42 @@ export const FETCH_CONFIG_JSON = {
     },
 };
 
+export const login = (loginType: number, address: string, presentation?: VerifiablePresentation) =>
+    new Promise((resolve: (value: string) => void, reject: (value: string) => void) => {
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/login`;
+        const reqBody =
+            loginType === 1
+                ? {
+                      address: address,
+                      presentation: presentation ? presentation.toJSON() : '',
+                  }
+                : {
+                      isMetaMask: 1,
+                      did: address,
+                      name: '',
+                      avatar: '',
+                      description: '',
+                  };
+        fetch(reqUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    resolve(data.token);
+                } else {
+                    resolve('');
+                }
+            })
+            .catch((error) => {
+                reject('');
+            });
+    });
+
 export const getUserRole = async (address: string) => {
     const resUserRole = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/meteast/api/v1/getDidByAddress?address=${address}`,
@@ -69,6 +106,16 @@ export const getUserRole = async (address: string) => {
     const jsonUserRole = await resUserRole.json();
     const dataUserRole: UserInfoType = jsonUserRole.data ? jsonUserRole.data : blankUserInfo;
     return dataUserRole.role;
+};
+
+export const updateUserToken = async (address: string, did: string) => {
+    const resUserToken = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/userByAddress?address=${address}&did=${did}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonUserToken = await resUserToken.json();
+    const dataUserToken: string = jsonUserToken.token ? jsonUserToken.token : '';
+    return dataUserToken;
 };
 
 export const getNotificationList = async (address: string) => {
@@ -275,7 +322,7 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         _BBItem.tokenId = itemObject.blindBoxIndex.toString();
         _BBItem.name = itemObject.name;
         _BBItem.image = getImageFromAsset(itemObject.asset);
-        _BBItem.price_ela = parseInt(itemObject.blindPrice);
+        _BBItem.price_ela = parseFloat(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
         const curTimestamp = new Date().getTime() / 1000;
         _BBItem.type =
@@ -327,7 +374,12 @@ export const getNFTItem = async (
         _NFTItem.image = getImageFromAsset(itemObject.asset);
         _NFTItem.price_ela = itemObject.price / 1e18;
         _NFTItem.price_usd = _NFTItem.price_ela * ELA2USD;
-        _NFTItem.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+        _NFTItem.type =
+            itemObject.status === 'NEW'
+                ? enumSingleNFTType.NotOnSale
+                : itemObject.endTime === '0'
+                ? enumSingleNFTType.BuyNow
+                : enumSingleNFTType.OnAuction;
         _NFTItem.likes = itemObject.likes;
         _NFTItem.views = itemObject.views;
         _NFTItem.isLike =
@@ -345,6 +397,7 @@ export const getNFTItem = async (
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _NFTItem.category = itemObject.category;
+        _NFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         // const createTime = getUTCTime(itemObject.createTime);
         // _NFTItem.createTime = createTime.date + '' + createTime.time;
         const createTime = getTime(itemObject.createTime);
@@ -588,7 +641,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.tokenId = itemObject.blindBoxIndex.toString();
         _BBItem.name = itemObject.name;
         _BBItem.image = getImageFromAsset(itemObject.asset);
-        _BBItem.price_ela = parseInt(itemObject.blindPrice);
+        _BBItem.price_ela = parseFloat(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
         const curTimestamp = new Date().getTime() / 1000;
         _BBItem.type =
@@ -671,6 +724,7 @@ export const getMyNFTItemList = async (
     const _arrMyNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrMyNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrMyNFTList[i];
+        if (itemObject.holder === "0x0000000000000000000000000000000000000000") continue;
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.tokenId = itemObject.tokenId;
         _myNFT.name = itemObject.name;
@@ -731,6 +785,7 @@ export const getMyNFTItemList = async (
             if (itemObject.status !== 'NEW')
                 _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
         }
+        // set type to navigate to detail page
         if (itemObject.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
         else {
             if (itemObject.status === 'NEW') {
@@ -857,9 +912,11 @@ export const getMyNFTItem = async (
                 ? _MyNFTItem.author
                 : itemObject.holderName;
         _MyNFTItem.holder = itemObject.holder;
+        _MyNFTItem.royaltyOwner = itemObject.royaltyOwner;
         _MyNFTItem.tokenIdHex = itemObject.tokenIdHex;
         _MyNFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _MyNFTItem.category = itemObject.category;
+        _MyNFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         // const createTime = getUTCTime(itemObject.createTime);
         // _MyNFTItem.createTime = createTime.date + '' + createTime.time;
         const createTime = getTime(itemObject.createTime);
@@ -868,6 +925,7 @@ export const getMyNFTItem = async (
         _MyNFTItem.orderId = itemObject.orderId;
         _MyNFTItem.status = itemObject.status;
         _MyNFTItem.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+        _MyNFTItem.isBlindbox = itemObject.isBlindbox;
     }
     return _MyNFTItem;
 };

@@ -1,5 +1,5 @@
 import { AdminNFTItemType, AdminUsersItemType, AdminBannersItemType } from 'src/types/admin-table-data-types';
-import { UserInfoType } from 'src/types/auth-types';
+import { UserInfoType, UserTokenType } from 'src/types/auth-types';
 import { TypeContractMethodPram } from 'src/types/mint-types';
 import { TypeNotification } from 'src/types/notification-types';
 import {
@@ -191,6 +191,17 @@ export const blankNotification: TypeNotification = {
     title: '',
     content: '',
     date: '',
+};
+
+export const blankUserToken: UserTokenType = {
+    did: '',
+    name: '',
+    description: '',
+    avatar: '',
+    coverImage: '',
+    role: '',
+    exp: 0,
+    iat: 0,
 };
 
 export const blankUserInfo: UserInfoType = {

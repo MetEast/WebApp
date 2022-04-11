@@ -80,7 +80,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             return;
         }
         setOnProgress(true);
-
+        let unmounted = false;
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.waitingConfirmDlgTimer = setTimeout(() => {
@@ -89,7 +89,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -104,7 +104,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({ ...updatedState, waitingConfirmDlgOpened: false });
+                if (!unmounted) setDialogState({ ...updatedState, waitingConfirmDlgOpened: false });
                 sendSoldBlindBoxTokenIds(txHash);
             })
             .catch((error) => {
@@ -112,13 +112,18 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    buyBlindBoxDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        buyBlindBoxDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

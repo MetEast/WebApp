@@ -38,7 +38,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             variant: 'success',
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
         });
-
+        let unmounted = false;
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
         updatedState.progressBar = 70;
@@ -48,7 +48,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 errorMessageDlgOpened: true,
             });
         }, 120000);
-        setDialogState(updatedState);
+        if (!unmounted) setDialogState(updatedState);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -65,31 +65,38 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     variant: 'success',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    createNFTDlgOpened: true,
-                    createNFTDlgStep: 2,
-                    mintTxHash: txHash,
-                    mintTokenId: paramObj._id,
-                    mintTokenUri: paramObj._uri,
-                    mintDidUri: paramObj._didUri,
-                    progressBar: 100,
-                    waitingConfirmDlgOpened: false,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        createNFTDlgOpened: true,
+                        createNFTDlgStep: 2,
+                        mintTxHash: txHash,
+                        mintTokenId: paramObj._id,
+                        mintTokenUri: paramObj._uri,
+                        mintDidUri: paramObj._didUri,
+                        progressBar: 100,
+                        waitingConfirmDlgOpened: false,
+                    });
+                }
             })
             .catch((error) => {
                 enqueueSnackbar(`Mint token error.`, {
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-                setDialogState({
-                    ...updatedState,
-                    createNFTDlgOpened: false,
-                    waitingConfirmDlgOpened: false,
-                    errorMessageDlgOpened: true,
-                    progressBar: 0,
-                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        createNFTDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                        progressBar: 0,
+                    });
+                }
             });
+        return () => {
+            unmounted = true;
+        };
     };
 
     const uploadData = () =>

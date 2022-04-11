@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDialogContext } from 'src/context/DialogContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';
 import ManageProfileDlgContainer from '../Profile/ManageProfile';
@@ -26,12 +26,15 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { isInAppBrowser, getChainGasPrice } from 'src/services/wallet';
 import BurnNFTDlgContainer from './DeleteProduct';
+import { useSnackbar } from 'notistack';
+import SnackMessage from 'src/components/SnackMessage';
 
 export interface ComponentProps {}
 
 const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
         ? window.elastos.getWeb3Provider()
         : essentialsConnector.getWalletConnectProvider();
@@ -63,6 +66,48 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             });
         }
     }, [library, signInDlgState.loginType]);
+
+    const showChainErrorSnackBar = () => {
+        enqueueSnackbar('', {
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            autoHideDuration: 5000,
+            content: (key) => (
+                <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
+            ),
+        });
+    };
+
+    useEffect(() => {
+        if (
+            signInDlgState.chainId &&
+            signInDlgState.chainId !== 20 &&
+            signInDlgState.chainId !== 21 &&
+            (dialogState.errorMessageDlgOpened ||
+                dialogState.createNFTDlgOpened ||
+                dialogState.burnNFTDlgOpened ||
+                dialogState.buyNowDlgOpened ||
+                dialogState.changePriceDlgOpened ||
+                dialogState.cancelSaleDlgOpened ||
+                dialogState.placeBidDlgOpened ||
+                dialogState.acceptBidDlgOpened ||
+                dialogState.createBlindBoxDlgOpened ||
+                dialogState.buyBlindBoxDlgOpened)
+        ) {
+            showChainErrorSnackBar();
+            setDialogState({ ...defaultDlgState });
+        }
+    }, [
+        dialogState.errorMessageDlgOpened,
+        dialogState.createNFTDlgOpened,
+        dialogState.burnNFTDlgOpened,
+        dialogState.buyNowDlgOpened,
+        dialogState.changePriceDlgOpened,
+        dialogState.cancelSaleDlgOpened,
+        dialogState.placeBidDlgOpened,
+        dialogState.acceptBidDlgOpened,
+        dialogState.createBlindBoxDlgOpened,
+        dialogState.buyBlindBoxDlgOpened,
+    ]);
 
     return (
         <>

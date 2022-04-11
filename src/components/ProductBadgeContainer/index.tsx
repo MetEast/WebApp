@@ -60,6 +60,9 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
         [enumBlindBoxNFTType.SoldOut]: {
             element: badgeSoldOut,
         },
+        [enumSingleNFTType.NotOnSale]: {
+            element: badgeComingSoon,
+        },
         [enumSingleNFTType.BuyNow]: {
             element: badgeBuyNow,
         },
