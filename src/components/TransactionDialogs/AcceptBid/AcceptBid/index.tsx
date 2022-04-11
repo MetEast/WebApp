@@ -117,12 +117,12 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.acceptBidPrice} ELA</DetailedInfoLabelTypo>
                     </Grid>
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.acceptBidTxFee} ELA</DetailedInfoLabelTypo>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
