@@ -156,8 +156,10 @@ export const getChartTimestampList = (type: string) => {
         const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
         return { start: start.getTime(), end: end.getTime() };
     } else if (type === 'Weekly') {
-        const start = getMondayOfWeek(date);
-        const temp = new Date(start);
+        // const start = getMondayOfWeek(date);
+        const firstDay = getMondayOfWeek(date);
+        const temp = new Date(firstDay);
+        const start = new Date(firstDay.setHours(0, 0, 0, 0));
         const end = new Date(temp.setDate(temp.getDate() + 6));
         return { start: start.getTime(), end: end.getTime() };
     } else if (type === 'Monthly') {
