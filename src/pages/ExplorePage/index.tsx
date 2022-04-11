@@ -67,7 +67,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 setProductList(_searchedNFTList);
             }
         };
-        if (signInDlgState.userDid) getFetchData().catch(console.error);
+        getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
