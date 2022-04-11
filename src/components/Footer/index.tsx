@@ -36,9 +36,9 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 direction={{ xs: 'column-reverse', sm: 'row' }}
                 justifyContent="space-between"
                 alignItems="center"
-                rowGap={3}
+                rowGap={1}
             >
-                <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={1} position="relative">
+                <Stack direction="row" alignItems="center" spacing={1} position="relative">
                     <Stack direction="row" alignItems="center" spacing={0.5}>
                         <Typography fontSize={12} fontWeight={500}>
                             Powered by
@@ -49,9 +49,9 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                         </Typography>
                     </Stack>
                     <Typography
+                        fontSize={12}
+                        fontWeight={500}
                         sx={{
-                            fontSize: 12,
-                            fontWeight: 500,
                             color: '#1890FF',
                             paddingX: 1,
                             paddingY: 0.5,
@@ -62,9 +62,9 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                         v1 - {generatedGitInfo.gitCommitHash}
                     </Typography>
                 </Stack>
-                <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={1} columnGap={2}>
-                    <Button sx={{ fontSize: 16, fontWeight: 700, color: '#1890FF' }}>Docs</Button>
-                    <Button sx={{ fontSize: 16, fontWeight: 700, color: '#1890FF' }}>Privacy policy</Button>
+                <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={0} columnGap={2}>
+                    <Button sx={{ fontSize: 12, fontWeight: 700, color: '#1890FF', padding: 1 }}>Docs</Button>
+                    <Button sx={{ fontSize: 12, fontWeight: 700, color: '#1890FF', padding: 1 }}>Privacy policy</Button>
                 </Stack>
             </Stack>
         </Stack>

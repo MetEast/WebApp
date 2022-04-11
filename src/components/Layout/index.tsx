@@ -49,7 +49,7 @@ const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.
                         {children}
                         {showFooter && (
                             <Container>
-                                <Footer marginTop={5} />
+                                <Footer marginTop={6} />
                             </Container>
                         )}
                     </Box>
