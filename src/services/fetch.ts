@@ -1179,7 +1179,9 @@ export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
     console.log('URL:', url);
     const resAdminBannerList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminBannerList = await resAdminBannerList.json();
+    const totalCount = jsonAdminBannerList.total;
     const arrAdminBannerList = jsonAdminBannerList.data === undefined ? [] : jsonAdminBannerList.data;
+
     const _arrAdminBannerList: Array<AdminBannersItemType> = [];
     for (let i = 0; i < arrAdminBannerList.length; i++) {
         const itemObject: AdminBannersItemFetchType = arrAdminBannerList[i];
@@ -1199,7 +1201,7 @@ export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
         _arrAdminBannerList.push(_AdminBanner);
     }
     console.log('result count:', _arrAdminBannerList.length);
-    return _arrAdminBannerList;
+    return { totalCount: totalCount, data: _arrAdminBannerList };
 };
 
 export const addAdminBanner = (token: string, image: string, location: number, status: number, sort: number) =>

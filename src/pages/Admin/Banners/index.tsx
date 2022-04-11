@@ -112,7 +112,8 @@ const AdminBanners: React.FC = (): JSX.Element => {
             setIsLoading(true);
             const _adminBannerList = await getAdminBannerList(pageNum + 1, pageSize);
             if (!unmounted) {
-                setTableData(_adminBannerList);
+                setTotalCount(_adminBannerList.totalCount);
+                setTableData(_adminBannerList.data);
                 setIsLoading(false);
             }
         };
