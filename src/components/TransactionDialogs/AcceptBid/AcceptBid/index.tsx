@@ -43,6 +43,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
 
         const updatedState = { ...dialogState };
         updatedState.waitingConfirmDlgOpened = true;
+        updatedState.progressBar = 40;
         updatedState.waitingConfirmDlgTimer = setTimeout(() => {
             setDialogState({
                 ...defaultDlgState,
@@ -70,6 +71,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                         acceptBidDlgStep: 1,
                         acceptBidTxHash: txHash,
                         waitingConfirmDlgOpened: false,
+                        progressBar: 100,
                     });
                 }
             })
@@ -84,6 +86,7 @@ const AcceptBid: React.FC<ComponentProps> = (): JSX.Element => {
                         acceptBidDlgOpened: false,
                         waitingConfirmDlgOpened: false,
                         errorMessageDlgOpened: true,
+                        progressBar: 0,
                     });
                 }
             })

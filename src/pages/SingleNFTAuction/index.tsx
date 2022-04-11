@@ -253,6 +253,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                     acceptBidName: biderName,
                                                     acceptBidOrderId: bidOrderId,
                                                     acceptBidPrice: bidPrice,
+                                                    progressBar: 0,
                                                 });
                                             } else {
                                                 setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });

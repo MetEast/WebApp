@@ -24,6 +24,7 @@ const AcceptBidDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     acceptBidName: '',
                     // acceptBidTxFee: 0,
                     acceptBidTxHash: '',
+                    progressBar: 0,
                 });
                 if (dialogState.acceptBidDlgStep === 1) navigate('/products');
             }}
