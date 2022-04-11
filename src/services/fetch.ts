@@ -398,8 +398,6 @@ export const getNFTItem = async (
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
         _NFTItem.category = itemObject.category;
         _NFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
-        // const createTime = getUTCTime(itemObject.createTime);
-        // _NFTItem.createTime = createTime.date + '' + createTime.time;
         const createTime = getTime(itemObject.createTime);
         _NFTItem.createTime = createTime.date + ' ' + createTime.time;
         _NFTItem.status = itemObject.status;
@@ -919,7 +917,13 @@ export const getMyNFTItem = async (
         _MyNFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
         _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
-        _MyNFTItem.endTime = itemObject.endTime;
+        if (itemObject.endTime === "0") {
+            _MyNFTItem.endTime = "0";
+        }
+        else {
+            const endTime = getTime(itemObject.endTime);
+           _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
+        }
         _MyNFTItem.holder = itemObject.holder;
         _MyNFTItem.orderId = itemObject.orderId;
         _MyNFTItem.status = itemObject.status;
