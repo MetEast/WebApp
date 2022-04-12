@@ -18,7 +18,7 @@ import {
     getSearchParams,
 } from 'src/services/fetch';
 import Container from 'src/components/Container';
-import { blankNFTItem, blankPageBanners } from 'src/constants/init-constants';
+import { blankNFTItem } from 'src/constants/init-constants';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import { useCookies } from 'react-cookie';
 
@@ -40,14 +40,14 @@ const ExplorePage: React.FC = (): JSX.Element => {
         blankNFTItem,
         blankNFTItem,
     ]);
-    const [adBanners, setAdBanners] = useState<string[]>(blankPageBanners);
+    const [adBanners, setAdBanners] = useState<string[]>([]);
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(2);
             if (!unmounted) {
-                setAdBanners(_adBanners.length === 0 ? blankPageBanners : _adBanners);
+                setAdBanners(_adBanners);
             }
         };
         fetchBanners().catch(console.error);

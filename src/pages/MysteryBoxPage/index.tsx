@@ -14,7 +14,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
-import { blankBBItem, blankPageBanners } from 'src/constants/init-constants';
+import { blankBBItem } from 'src/constants/init-constants';
 import { useCookies } from 'react-cookie';
 
 const MysteryBoxPage: React.FC = (): JSX.Element => {
@@ -34,7 +34,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         blankBBItem,
         blankBBItem,
     ]);
-    const [adBanners, setAdBanners] = useState<string[]>(blankPageBanners);
+    const [adBanners, setAdBanners] = useState<string[]>([]);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -42,7 +42,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(3);
             if (!unmounted) {
-                setAdBanners(_adBanners.length === 0 ? blankPageBanners : _adBanners);
+                setAdBanners(_adBanners);
             }
         };
         fetchBanners().catch(console.error);
