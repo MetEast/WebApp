@@ -28,12 +28,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
-    const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([
-        blankBBItem,
-        blankBBItem,
-        blankBBItem,
-        blankBBItem,
-    ]);
+    const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>(Array(4).fill(blankBBItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);
 
     // -------------- Fetch Data -------------- //
@@ -76,7 +71,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
         setKeyWord(value);
-        setBlindBoxList([blankBBItem, blankBBItem, blankBBItem, blankBBItem]);
+        setBlindBoxList(Array(4).fill(blankBBItem));
     };
 
     const handleChangeSortBy = (value: string) => {
@@ -124,28 +119,45 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         <Box minHeight="75vh">
             <Box>
                 <Swiper autoplay={{ delay: 5000 }} spaceBetween={8} touchStartPreventDefault={false}>
-                    {adBanners.map((item, index) => (
-                        <SwiperSlide key={`banner-carousel-${index}`}>
-                            <Box
-                                overflow="hidden"
-                                onClick={() => {}}
-                                sx={{
-                                    height: 330,
-                                    maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
-                                    cursor: 'pointer',
-                                    backgroundColor: '#C3C5C8',
-                                }}
-                            >
-                                {item !== '' && (
-                                    <img
-                                        src={item}
-                                        alt=""
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', maxHeight: 330 }}
-                                    />
-                                )}
-                            </Box>
-                        </SwiperSlide>
-                    ))}
+                    {adBanners.length ? (
+                        adBanners.map((item, index) => (
+                            <SwiperSlide key={`banner-carousel-${index}`}>
+                                <Box
+                                    overflow="hidden"
+                                    onClick={() => {}}
+                                    sx={{
+                                        height: 330,
+                                        maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
+                                        cursor: 'pointer',
+                                        backgroundColor: '#C3C5C8',
+                                    }}
+                                >
+                                    {item !== '' && (
+                                        <img
+                                            src={item}
+                                            alt=""
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover',
+                                                maxHeight: 330,
+                                            }}
+                                        />
+                                    )}
+                                </Box>
+                            </SwiperSlide>
+                        ))
+                    ) : (
+                        <Box
+                            onClick={() => {}}
+                            sx={{
+                                height: 330,
+                                maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
+                                cursor: 'pointer',
+                                backgroundColor: '#C3C5C8',
+                            }}
+                        />
+                    )}
                 </Swiper>
             </Box>
             <Container>
