@@ -49,8 +49,8 @@ const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.
                         {children}
                         {showFooter && (
                             <Box
-                                marginTop={6}
-                                paddingY={{ xs: 2, sm: 6 }}
+                                marginTop={{ xs: 6, sm: 10 }}
+                                paddingY={{ xs: 0, sm: 6 }}
                                 sx={{ background: { xs: 'none', sm: '#E7E7E7' } }}
                             >
                                 <Container>
