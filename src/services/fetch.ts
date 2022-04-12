@@ -893,12 +893,12 @@ export const getMyNFTItem = async (
         _MyNFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
         _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
-        if (itemObject.endTime === "0") {
-            _MyNFTItem.endTime = "0";
+        if (itemObject.endTime && itemObject.endTime !== "0") {
+            const endTime = getTime(itemObject.endTime);
+            _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
         }
         else {
-            const endTime = getTime(itemObject.endTime);
-           _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
+            _MyNFTItem.endTime = "0";
         }
         _MyNFTItem.holder = itemObject.holder;
         _MyNFTItem.orderId = itemObject.orderId;
