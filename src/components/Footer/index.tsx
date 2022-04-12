@@ -19,9 +19,9 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 rowGap={3}
             >
                 <Link href="/">
-                    <Stack direction="row" alignItems="center" spacing={1.5}>
-                        <img src="/assets/images/header/logo.svg" alt="" />
-                        <img src="/assets/images/header/meteast_label.svg" alt="" />
+                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <img src="/assets/images/header/logo.svg" width={30} height={28} alt="" />
+                        <img src="/assets/images/header/meteast_label.svg" width={126} height={15} alt="" />
                     </Stack>
                 </Link>
                 <Stack direction="row" spacing={1}>
