@@ -69,7 +69,9 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     </SaleTypeButton>
                 </Stack>
                 <Typography fontSize={16} fontWeight={400} textAlign="center">
-                    Your item will be automatically sold to the first buyer
+                    {saleType === 'buynow'
+                        ? `Your item will be automatically sold to the first buyer.`
+                        : `Your item will be automatically sold to the highest bidder.`}
                 </Typography>
                 {saleType === 'buynow' && (
                     <>
