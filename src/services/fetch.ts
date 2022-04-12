@@ -392,7 +392,7 @@ export const getNFTItem = async (
         _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject.holder;
-        _NFTItem.holderName = itemObject.holderName ? itemObject.holderName : itemObject.authorName;
+        _NFTItem.holderName = itemObject.holderName ? itemObject.holderName : _NFTItem.author;
         _NFTItem.orderId = itemObject.orderId;
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -436,30 +436,6 @@ export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<
     }
     return _NFTItems;
 };
-
-// const getLatestTransaction = async () => {
-//     const resLatestTransaction = await fetch(
-//         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${params.id}&timeOrder=-1&pageNum=1&$pageSize=5`,
-//         FETCH_CONFIG_JSON
-//     );
-//     const dataLatestTransaction = await resLatestTransaction.json();
-//     const arrLatestTransaction = dataLatestTransaction.data;
-
-//     let _prodTransHistory: Array<TypeNFTHisotry> = [];
-//     for (let i = 0; i < arrLatestTransaction.length; i++) {
-//         let itemObject: TypeNFTTransactionFetch = arrLatestTransaction[i];
-//         if (itemObject.event !== 'Mint') continue;
-//         let _prodTrans: TypeNFTHisotry = { ...blankMyNFTHistory };
-//         _prodTrans.type = 'Created';
-//         _prodTrans.price = parseInt(itemObject.price) / 1e18;
-//         _prodTrans.user = reduceHexAddress(itemObject.from === burnAddress ? itemObject.to : itemObject.from, 4); // no proper data
-//         let timestamp = getTime(itemObject.timestamp.toString());
-//         _prodTrans.time = timestamp.date + ' ' + timestamp.time;
-//         _prodTrans.txHash = itemObject.tHash;
-//         _prodTransHistory.push(_prodTrans);
-//     }
-//     setProdTransHistory(_prodTransHistory);
-// };
 
 export const getNFTLatestTxs = async (
     tokenId: string | undefined,
