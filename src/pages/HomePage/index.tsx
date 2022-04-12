@@ -13,20 +13,8 @@ import Container from 'src/components/Container';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [productList, setProductList] = useState<Array<TypeProduct>>([
-        blankNFTItem,
-        blankNFTItem,
-        blankNFTItem,
-        blankNFTItem,
-        blankNFTItem,
-    ]);
-    const [collectionList, setCollectionList] = useState<Array<TypeProduct>>([
-        blankNFTItem,
-        blankNFTItem,
-        blankNFTItem,
-        blankNFTItem,
-        blankNFTItem,
-    ]);
+    const [productList, setProductList] = useState<Array<TypeProduct>>(Array(4).fill(blankNFTItem));
+    const [collectionList, setCollectionList] = useState<Array<TypeProduct>>(Array(4).fill(blankNFTItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);
 
     // -------------- Fetch Data -------------- //
