@@ -122,7 +122,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.placeBidExpire.value}</DetailedInfoLabelTypo>
                     </Grid> */}
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
@@ -135,7 +135,7 @@ const ReviewBidDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoLabelTypo sx={{ fontWeight: 700 }}>
                             {(dialogState.placeBidAmount + dialogState.placeBidTxFee).toFixed(2)} ELA
                         </DetailedInfoLabelTypo>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Stack>
             <Stack alignItems="center" spacing={1}>
