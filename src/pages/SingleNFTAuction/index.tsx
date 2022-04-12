@@ -230,21 +230,22 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                 let biderName = productDetail.holderName;
                                                 let bidOrderId = productDetail.orderId || '';
                                                 const topSelfBid = myBidsList.length
-                                                    ? myBidsList[myBidsList.length - 1].price
+                                                    ? myBidsList[0].price
                                                     : 0;
                                                 const topOtherBid = bidsList.length
-                                                    ? bidsList[bidsList.length - 1].price
+                                                    ? bidsList[0].price
                                                     : 0;
+                                                console.log(topSelfBid, topOtherBid)
                                                 if (topSelfBid > topOtherBid) bidder = 1;
                                                 else if (topSelfBid < topOtherBid) bidder = 2;
                                                 if (bidder === 1) {
                                                     bidPrice = topSelfBid;
-                                                    biderName = myBidsList[myBidsList.length - 1].user;
-                                                    bidOrderId = myBidsList[myBidsList.length - 1].orderId;
+                                                    biderName = myBidsList[0].user;
+                                                    bidOrderId = myBidsList[0].orderId;
                                                 } else if (bidder === 2) {
                                                     bidPrice = topOtherBid;
-                                                    biderName = bidsList[bidsList.length - 1].user;
-                                                    bidOrderId = bidsList[bidsList.length - 1].orderId;
+                                                    biderName = bidsList[0].user;
+                                                    bidOrderId = bidsList[0].orderId;
                                                 }
                                                 setDialogState({
                                                     ...dialogState,
