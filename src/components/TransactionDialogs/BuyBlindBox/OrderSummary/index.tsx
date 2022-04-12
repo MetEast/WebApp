@@ -160,22 +160,18 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                             {(dialogState.buyBlindPriceEla * dialogState.buyBlindAmount).toFixed(2)} ELA
                         </DetailedInfoLabelTypo>
                     </Grid>
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Tx Fees</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>{dialogState.buyBlindTxFee} ELA</DetailedInfoLabelTypo>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Total</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoLabelTypo>
-                            {(
-                                dialogState.buyBlindPriceEla * dialogState.buyBlindAmount +
-                                dialogState.buyBlindTxFee
-                            ).toFixed(2)}{' '}
-                            ELA
+                            {(dialogState.buyBlindPriceEla * dialogState.buyBlindAmount).toFixed(2)} ELA
                         </DetailedInfoLabelTypo>
                     </Grid>
                 </Grid>
