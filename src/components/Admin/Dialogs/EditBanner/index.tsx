@@ -85,7 +85,7 @@ const EditBanner: React.FC<ComponentProps> = ({
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
                 } else {
-                    enqueueSnackbar('Error', {
+                    enqueueSnackbar('Same sort exist!', {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });

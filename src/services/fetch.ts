@@ -1184,7 +1184,7 @@ export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
 };
 
 export const addAdminBanner = (token: string, image: string, location: number, status: number, sort: number) =>
-    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+    new Promise((resolve: (value: number) => void, reject: (value: string) => void) => {
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
         const reqBody = {
             token: token,
@@ -1202,11 +1202,7 @@ export const addAdminBanner = (token: string, image: string, location: number, s
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
-                    resolve(true);
-                } else {
-                    reject('error');
-                }
+                resolve(data.code);
             })
             .catch((error) => {
                 reject(error);
@@ -1243,7 +1239,7 @@ export const updateAdminBanner = (
                 if (data.code === 200) {
                     resolve(true);
                 } else {
-                    reject('error');
+                    reject(data.code);
                 }
             })
             .catch((error) => {
