@@ -13,6 +13,7 @@ import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { updateAdminBanner } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 import { getAssetFromImage } from 'src/services/common';
+import { ImageBox } from '../CreateBanner/styles';
 
 export interface ComponentProps {
     bannerList: AdminBannersItemType[];
@@ -128,23 +129,38 @@ const EditBanner: React.FC<ComponentProps> = ({
                             <Typography fontSize={12} fontWeight={700}>
                                 Image
                             </Typography>
-                            <label htmlFor="banner-image" style={{ width: '100%' }}>
-                                <img
-                                    src={
-                                        bannerImage.preview === ''
-                                            ? '/assets/images/blindbox/blindbox-nft-template2.png'
-                                            : bannerImage.preview
-                                    }
-                                    style={{ borderRadius: '18px' }}
-                                    alt=""
-                                />
-                            </label>
-                            <input
-                                type="file"
-                                id="banner-image"
-                                style={{ display: 'none' }}
-                                onChange={handleBannerImageChanged}
-                            />
+                            <Box
+                                position="relative"
+                                borderRadius={4.5}
+                                overflow="hidden"
+                                sx={{
+                                    width: '100%',
+                                    paddingTop: '75%',
+                                    height: { xs: '240px', sm: '100%' },
+                                    marginTop: '1rem',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    boxSizing: 'border-box',
+                                }}
+                            >
+                                <ImageBox htmlFor="banner-image">
+                                    <img
+                                        src={
+                                            bannerImage.preview === ''
+                                                ? '/assets/images/blindbox/blindbox-nft-template2.png'
+                                                : bannerImage.preview
+                                        }
+                                        style={{ borderRadius: '18px' }}
+                                        alt=""
+                                    />
+                                    <input
+                                        type="file"
+                                        id="banner-image"
+                                        style={{ display: 'none' }}
+                                        onChange={handleBannerImageChanged}
+                                    />
+                                </ImageBox>
+                            </Box>
                             <Stack direction="row" spacing={1}>
                                 <PrimaryButton
                                     btn_color="pink"
