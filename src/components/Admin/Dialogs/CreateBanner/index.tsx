@@ -118,7 +118,15 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                 position="relative"
                                 borderRadius={4.5}
                                 overflow="hidden"
-                                sx={{ width: '100%', paddingTop: '75%' }}
+                                sx={{
+                                    width: '100%',
+                                    paddingTop: '75%',
+                                    height: { xs: '240px', sm: '100%' },
+                                    marginTop: '1rem',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    boxSizing: 'border-box',
+                                }}
                             >
                                 <ImageBox htmlFor="banner-image">
                                     <img
