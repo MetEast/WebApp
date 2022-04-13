@@ -145,7 +145,6 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                                     />
                                 </ImageBox>
                             </Box>
-
                             <Stack direction="row" spacing={1}>
                                 <PrimaryButton
                                     btn_color="pink"
