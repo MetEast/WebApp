@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
 import ProductPageHeader from 'src/components/ProductPageHeader';
+import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
-import ELAPrice from 'src/components/ELAPrice';
+// import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
+import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
-import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { getMintCategory } from 'src/services/common';
 import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
-import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
+import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
@@ -29,8 +29,8 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
-    const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
+    const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
 
     useEffect(() => {
         let unmounted = false;
@@ -142,18 +142,17 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer
-                            product={productDetail}
-                            updateLikes={(type: string) => {
-                                let prodDetail: TypeProduct = { ...productDetail };
+                        <ProductImageContainer product={productDetail} updateLikes={(type: string) => {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
                                 if (type === 'inc') {
-                                    prodDetail.likes += 1;
+                                    prodDetail.likes++;
                                 } else if (type === 'dec') {
-                                    prodDetail.likes -= 1;
+                                    prodDetail.likes--;
                                 }
-                                setProductDetail(prodDetail);
-                            }}
-                        />
+                                return prodDetail;
+                            });
+                        }} />
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -196,11 +195,11 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                                 <ProductBadge badgeType={enumBadgeType.Purchased} />
                                 <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                             </Stack>
-                            <ELAPrice
+                            {/* <ELAPrice
                                 price_ela={productDetail.price_ela}
                                 price_usd={productDetail.price_usd}
                                 marginTop={3}
-                            />
+                            /> */}
                             <PrimaryButton
                                 sx={{ marginTop: 3, width: '100%' }}
                                 onClick={() => {

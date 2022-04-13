@@ -8,7 +8,14 @@ import generatedGitInfo from '../../generatedGitInfo.json';
 export interface ComponentProps extends SpacingProps {}
 
 const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
-    const socialButtonsList = ['ph:telegram-logo', 'ph:twitter-logo', 'ph:discord-logo', 'ph:github-logo'];
+    const socialButtonsList = [
+        { icon: 'ph:telegram-logo', url: 'https://t.me/MetEastofficial' },
+        { icon: 'ph:discord-logo', url: 'https://discord.gg/t9GqyN236C' },
+        { icon: 'ph:twitter-logo', url: 'https://twitter.com/Meteast2022' },
+        { icon: 'ph:instagram-logo', url: 'https://www.instagram.com/meteast2022/' },
+        { icon: 'carbon:logo-medium', url: 'https://medium.com/@Meteast2022' },
+        { icon: 'ph:github-logo', url: 'https://github.com/meteast' },
+    ];
 
     return (
         <Stack spacing={2} {...otherProps}>
@@ -26,9 +33,11 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 </Link>
                 <Stack direction="row" spacing={1}>
                     {socialButtonsList.map((item, index) => (
-                        <SocialButton size="small" key={`social-button-${index}`}>
-                            <Icon icon={item} fontSize={20} />
-                        </SocialButton>
+                        <Link href={item.url} target="blank">
+                            <SocialButton size="small" key={`social-button-${index}`}>
+                                <Icon icon={item.icon} fontSize={20} />
+                            </SocialButton>
+                        </Link>
                     ))}
                 </Stack>
             </Stack>

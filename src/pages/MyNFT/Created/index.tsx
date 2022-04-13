@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Stack, Grid, Typography, Skeleton, Box } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
 import ProductPageHeader from 'src/components/ProductPageHeader';
+import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -9,9 +9,11 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
+import NFTTransactionTable from 'src/components/NFTTransactionTable';
+import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import { getMintCategory } from 'src/services/common';
-import { enumBadgeType, TypeProduct, TypeNFTHisotry } from 'src/types/product-types';
+import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
 import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -27,6 +29,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
+    const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
 
     useEffect(() => {
         let unmounted = false;
@@ -60,6 +63,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
         const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 1000);
             if (!unmounted) {
+                setTransactionsList(_NFTTxs.txs.slice(0, 5));
                 setProdTransHistory(_NFTTxs.history);
             }
         };
@@ -111,9 +115,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     useEffect(() => {
-        if (productDetail.tokenId) {
-            setDialogState({ ...dialogState, burnTokenId: productDetail.tokenId });
-        }
+        if (productDetail.tokenId) setDialogState({ ...dialogState, burnTokenId: productDetail.tokenId });
     }, [dialogState.burnNFTDlgOpened, productDetail.tokenId]);
 
     return (
@@ -229,7 +231,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     </Box>
                 </Box>
             ) : (
-                <Grid container marginTop={5} columnSpacing={10}>
+                <Grid container marginTop={5} columnSpacing={10} rowGap={5}>
                     <Grid item xs={12} md={4}>
                         <Stack spacing={5}>
                             <ProductTransHistory historyList={prodTransHistory} />
@@ -258,7 +260,13 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                         </Stack>
                     </Grid>
                     <Grid item xs={12} md={8}>
-                        <Stack spacing={10}></Stack>
+                        <Stack spacing={10}>
+                            <PriceHistoryView
+                                createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
+                                creator={productDetail.author}
+                            />
+                            <NFTTransactionTable transactionsList={transactionsList} />
+                        </Stack>
                     </Grid>
                 </Grid>
             )}

@@ -128,7 +128,6 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                                     sx={{
                                         height: 330,
                                         maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
-                                        cursor: 'pointer',
                                         backgroundColor: '#C3C5C8',
                                     }}
                                 >
