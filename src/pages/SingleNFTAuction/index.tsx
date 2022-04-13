@@ -229,13 +229,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                 let bidPrice = 0;
                                                 let biderName = productDetail.holderName;
                                                 let bidOrderId = productDetail.orderId || '';
-                                                const topSelfBid = myBidsList.length
-                                                    ? myBidsList[0].price
-                                                    : 0;
-                                                const topOtherBid = bidsList.length
-                                                    ? bidsList[0].price
-                                                    : 0;
-                                                console.log(topSelfBid, topOtherBid)
+                                                const topSelfBid = myBidsList.length ? myBidsList[0].price : 0;
+                                                const topOtherBid = bidsList.length ? bidsList[0].price : 0;
+                                                console.log(topSelfBid, topOtherBid);
                                                 if (topSelfBid > topOtherBid) bidder = 1;
                                                 else if (topSelfBid < topOtherBid) bidder = 2;
                                                 if (bidder === 1) {
@@ -273,12 +269,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             sx={{ marginTop: 3, width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    const topSelfBid = myBidsList.length
-                                                        ? myBidsList[myBidsList.length - 1].price
-                                                        : 0;
-                                                    const topOtherBid = bidsList.length
-                                                        ? bidsList[bidsList.length - 1].price
-                                                        : 0;
+                                                    const topSelfBid = myBidsList.length ? myBidsList[0].price : 0;
+                                                    const topOtherBid = bidsList.length ? bidsList[0].price : 0;
                                                     setDialogState({
                                                         ...dialogState,
                                                         placeBidDlgOpened: true,

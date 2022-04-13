@@ -256,18 +256,12 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                         sx={{ width: '100%', height: 40 }}
                                         onClick={() => {
                                             if (signInDlgState.isLoggedIn) {
-                                                const topBid = bidsList.length
-                                                    ? bidsList[0].price
-                                                    : 0;
+                                                const topBid = bidsList.length ? bidsList[0].price : 0;
                                                 const bidPrice = topBid > 0 ? topBid : 0;
                                                 const biderName =
-                                                    topBid > 0
-                                                        ? bidsList[0].user
-                                                        : productDetail.holderName;
+                                                    topBid > 0 ? bidsList[0].user : productDetail.holderName;
                                                 const bidOrderId =
-                                                    topBid > 0
-                                                        ? bidsList[0].orderId
-                                                        : productDetail.orderId || '';
+                                                    topBid > 0 ? bidsList[0].orderId : productDetail.orderId || '';
                                                 setDialogState({
                                                     ...dialogState,
                                                     acceptBidDlgOpened: true,
