@@ -3,8 +3,8 @@ import { Box, Stack, Grid, Typography } from '@mui/material';
 import Container from 'src/components/Container';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { PrimaryButton } from 'src/components/Buttons/styles';
 import ClaimBox from 'src/components/Rewards/ClaimBox';
+import { Icon } from '@iconify/react';
 
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
@@ -66,9 +66,12 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     >
                         <Grid item xs={6}>
                             <img src="/assets/images/rewards/transaction-reward.png" width={32} height={32} alt="" />
-                            <Typography fontSize={40} fontWeight={500} color="#1890FF">
-                                Transaction reward
-                            </Typography>
+                            <Stack direction="row" alignItems="flex-end">
+                                <Typography fontSize={40} fontWeight={500} color="#1890FF">
+                                    Transaction reward
+                                </Typography>
+                                <Icon icon="ph:question" fontSize={18} color="#1890FF" style={{ marginBottom: 14 }} />
+                            </Stack>
                             <Typography fontSize={16} fontWeight={500} color="#1890FF">
                                 After self-trading NFT and the transaction is completed, you can get the number of
                                 tokens of [(number of tokens released on the day/total transaction volume of the
@@ -83,6 +86,26 @@ const RewardsPage: React.FC = (): JSX.Element => {
                                 </Typography>
                             </Typography>
                             <ClaimBox sx={{ marginTop: 1.5 }} />
+                            <Typography fontSize={14} fontWeight={500} color="#1890FF" marginTop={2.5}>
+                                You can claim rewards every day, or accumulate a one-time claim, your rewards will not
+                                disappear.
+                            </Typography>
+                            <Stack direction="row" justifyContent="space-between" marginTop={2}>
+                                <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                                    The most recent receipt:
+                                </Typography>
+                                <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                                    --
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
+                                <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                                    Received so far:
+                                </Typography>
+                                <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                                    --
+                                </Typography>
+                            </Stack>
                         </Grid>
                     </Grid>
                 </Stack>
