@@ -59,7 +59,8 @@ const EditBanner: React.FC<ComponentProps> = ({
         if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
         if (
             bannerList.findIndex(
-                (item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort) && item.id !== banner2Edit.id,
+                (item: AdminBannersItemType) =>
+                    item.location === location && item.sort === parseInt(sort) && item.id !== banner2Edit.id,
             ) !== -1
         ) {
             enqueueSnackbar('Same sort exist!', {
@@ -78,17 +79,21 @@ const EditBanner: React.FC<ComponentProps> = ({
                 url = imageChanged ? `meteast:image:${added.path}` : getAssetFromImage(banner2Edit.url);
                 return updateAdminBanner(signInDlgState.token, banner2Edit.id, url, pageLocation, 1, parseInt(sort));
             })
-            .then((success: boolean) => {
-                if (success) {
+            .then((returnCode: number) => {
+                if (returnCode === 200) {
                     enqueueSnackbar('Edited!', {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
+                    handleBannerUpdates();
+                    onClose();
                 } else {
                     enqueueSnackbar('Same sort exist!', {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
                 }
             })
             .catch((error) => {
@@ -96,12 +101,12 @@ const EditBanner: React.FC<ComponentProps> = ({
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-            })
-            .finally(() => {
                 setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
-                setOnProgress(false);
                 handleBannerUpdates();
                 onClose();
+            })
+            .finally(() => {
+                setOnProgress(false);
             });
     };
 

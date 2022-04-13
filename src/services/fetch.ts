@@ -1217,7 +1217,7 @@ export const updateAdminBanner = (
     status: number,
     sort: number,
 ) =>
-    new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
+    new Promise((resolve: (value: number) => void, reject: (value: string) => void) => {
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateBanner`;
         const reqBody = {
             token: token,
@@ -1236,11 +1236,7 @@ export const updateAdminBanner = (
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
-                    resolve(true);
-                } else {
-                    reject(data.code);
-                }
+                resolve(data.code);
             })
             .catch((error) => {
                 reject(error);
