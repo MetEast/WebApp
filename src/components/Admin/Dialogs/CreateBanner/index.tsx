@@ -63,25 +63,23 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
         uploadImage2Ipfs(bannerImage.raw)
             .then((added: any) => {
                 url = `meteast:image:${added.path}`;
-                return addAdminBanner(
-                    signInDlgState.token,
-                    url,
-                    pageLocation,
-                    1,
-                    parseInt(sort),
-                );
+                return addAdminBanner(signInDlgState.token, url, pageLocation, 1, parseInt(sort));
             })
-            .then((success: boolean) => {
-                if (success) {
+            .then((returnCode: number) => {
+                if (returnCode === 200) {
                     enqueueSnackbar('Added!', {
                         variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
+                    handleBannerUpdates();
+                    onClose();
                 } else {
-                    enqueueSnackbar('Error', {
+                    enqueueSnackbar('Same sort exist!', {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
+                    setDialogState({ ...dialogState, waitingConfirmDlgOpened: false });
                 }
             })
             .catch((error) => {
@@ -89,12 +87,12 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                     variant: 'error',
                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-            })
-            .finally(() => {
                 setDialogState({ ...dialogState, waitingConfirmDlgOpened: false, loadingDlgOpened: false });
-                setOnProgress(false);
                 handleBannerUpdates();
                 onClose();
+            })
+            .finally(() => {
+                setOnProgress(false);
             });
     };
 
