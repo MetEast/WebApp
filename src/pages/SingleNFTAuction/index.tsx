@@ -52,7 +52,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 setProductDetail(_NFTItem);
             }
         };
-        if (signInDlgState.userDid) fetchNFTItem().catch(console.error);
+        fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
