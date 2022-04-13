@@ -55,11 +55,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     }, [signInDlgState.walletAccounts]);
 
     const menuItemsList: Array<TypeMenuItem> = [
-        {
-            title: 'Home',
-            url: '/',
-            icon: <Icon icon="ph:house" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
-        },
+        // {
+        //     title: 'Home',
+        //     url: '/',
+        //     icon: <Icon icon="ph:house" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
+        // },
         {
             title: 'Products',
             url: '/products',
@@ -70,6 +70,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         {
             title: 'Mystery Boxes',
             url: '/blind-box',
+            icon: <Icon icon="ph:cube" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
+        },
+        {
+            title: 'Rewards',
+            url: '/rewards',
             icon: <Icon icon="ph:cube" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
         },
     ];
