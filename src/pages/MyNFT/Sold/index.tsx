@@ -6,15 +6,15 @@ import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import ProductTransHistory from 'src/components/ProductTransHistory';
-import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
+import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
+import ProductTransHistory from 'src/components/ProductTransHistory';
 import { getMintCategory } from 'src/services/common';
 import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
-import { getNFTLatestTxs, getELA2USD, getMyFavouritesList, getMyNFTItem } from 'src/services/fetch';
+import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
@@ -44,7 +44,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, signInDlgState.userDid, params.id]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, signInDlgState.walletAccounts, params.id]);
 
     useEffect(() => {
         let unmounted = false;
@@ -64,38 +64,36 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            if (signInDlgState.isLoggedIn && tokenId) {
-                const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
-                const reqBody = {
-                    token: signInDlgState.token,
-                    tokenId: tokenId,
-                    did: signInDlgState.userDid,
-                };
-                fetch(reqUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reqBody),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            if (!unmounted) {
-                                setProductDetail((prevState: TypeProduct) => {
-                                    const prodDetail: TypeProduct = { ...prevState };
-                                    prodDetail.views += 1;
-                                    return prodDetail;
-                                });
-                            }
-                        } else {
-                            console.log(data);
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqBody = {
+                token: signInDlgState.token,
+                tokenId: tokenId,
+                did: signInDlgState.userDid,
+            };
+            fetch(reqUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        if (!unmounted) {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
+                                prodDetail.views += 1;
+                                return prodDetail;
+                            });
                         }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
         if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
             updateProductViews(productDetail.tokenId);
@@ -127,18 +125,17 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer
-                            product={productDetail}
-                            updateLikes={(type: string) => {
-                                let prodDetail: TypeProduct = { ...productDetail };
+                        <ProductImageContainer product={productDetail} updateLikes={(type: string) => {
+                            setProductDetail((prevState: TypeProduct) => {
+                                const prodDetail: TypeProduct = { ...prevState };
                                 if (type === 'inc') {
-                                    prodDetail.likes += 1;
+                                    prodDetail.likes++;
                                 } else if (type === 'dec') {
-                                    prodDetail.likes -= 1;
+                                    prodDetail.likes--;
                                 }
-                                setProductDetail(prodDetail);
-                            }}
-                        />
+                                return prodDetail;
+                            });
+                        }} />
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>

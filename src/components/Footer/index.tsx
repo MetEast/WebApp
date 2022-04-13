@@ -10,10 +10,10 @@ export interface ComponentProps extends SpacingProps {}
 const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
     const socialButtonsList = [
         { icon: 'ph:telegram-logo', url: 'https://t.me/MetEastofficial' },
-        { icon: 'ph:discord-logo', url: '' },
+        // { icon: 'ph:discord-logo', url: '' },
         { icon: 'ph:twitter-logo', url: 'https://twitter.com/Meteast2022' },
         { icon: 'ph:instagram-logo', url: 'https://www.instagram.com/meteast2022/' },
-        { icon: 'ph:medium-logo', url: 'https://medium.com/@Meteast2022' },
+        { icon: 'carbon:logo-medium', url: 'https://medium.com/@Meteast2022' },
         { icon: 'ph:github-logo', url: 'https://github.com/meteast' },
     ];
 
