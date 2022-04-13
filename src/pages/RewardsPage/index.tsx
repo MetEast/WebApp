@@ -4,6 +4,7 @@ import Container from 'src/components/Container';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import TransactionReward from 'src/components/Rewards/TransactionReward';
+import GovernanceReward from 'src/components/Rewards/GovernanceReward';
 
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
@@ -55,6 +56,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
             <Container sx={{ marginTop: 12 }}>
                 <Stack spacing={14}>
                     <TransactionReward />
+                    <GovernanceReward />
                 </Stack>
             </Container>
         </Stack>
