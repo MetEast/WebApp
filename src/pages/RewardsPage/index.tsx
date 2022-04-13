@@ -1,8 +1,10 @@
 import React from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Grid, Typography } from '@mui/material';
 import Container from 'src/components/Container';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { PrimaryButton } from 'src/components/Buttons/styles';
+import ClaimBox from 'src/components/Rewards/ClaimBox';
 
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
@@ -51,6 +53,40 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     </Container>
                 </Box>
             </Box>
+            <Container sx={{ marginTop: 12 }}>
+                <Stack spacing={14}>
+                    <Grid
+                        container
+                        columns={10}
+                        paddingX={8}
+                        paddingY={7}
+                        borderRadius={3}
+                        columnSpacing={8}
+                        sx={{ background: '#E8F4FF' }}
+                    >
+                        <Grid item xs={6}>
+                            <img src="/assets/images/rewards/transaction-reward.png" width={32} height={32} alt="" />
+                            <Typography fontSize={40} fontWeight={500} color="#1890FF">
+                                Transaction reward
+                            </Typography>
+                            <Typography fontSize={16} fontWeight={500} color="#1890FF">
+                                After self-trading NFT and the transaction is completed, you can get the number of
+                                tokens of [(number of tokens released on the day/total transaction volume of the
+                                day)*corresponding to NFT transaction volume*05]
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Typography fontSize={20} fontWeight={500} color="#1890FF">
+                                MET{' '}
+                                <Typography fontSize={20} fontWeight={500} color="black" display="inline">
+                                    to be claimed
+                                </Typography>
+                            </Typography>
+                            <ClaimBox sx={{ marginTop: 1.5 }} />
+                        </Grid>
+                    </Grid>
+                </Stack>
+            </Container>
         </Stack>
     );
 };
