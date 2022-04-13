@@ -7,6 +7,7 @@ import SingleNFTFixedPrice from 'src/pages/SingleNFTFixedPrice';
 import SingleNFTAuction from 'src/pages/SingleNFTAuction';
 import MysteryBoxPage from 'src/pages/MysteryBoxPage';
 import BlindBoxProduct from 'src/pages/BlindBoxProduct';
+import RewardsPage from 'src/pages/RewardsPage';
 import ProfilePage from 'src/pages/ProfilePage';
 import MyNFTBuyNow from 'src/pages/MyNFT/BuyNow';
 import MyNFTAuction from 'src/pages/MyNFT/Auction';
@@ -82,6 +83,14 @@ const AppRouter: React.FC = (): JSX.Element => {
                     element={
                         <Layout>
                             <BlindBoxProduct />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/rewards"
+                    element={
+                        <Layout>
+                            <RewardsPage />
                         </Layout>
                     }
                 />
