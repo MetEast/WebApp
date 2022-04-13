@@ -91,6 +91,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
         }
     };
 
+    // console.log(product.image, '-----', product.tokenId)
     return (
         <GalleryItemContainer>
             <ProductImageContainer

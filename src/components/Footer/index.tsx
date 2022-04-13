@@ -33,8 +33,8 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 </Link>
                 <Stack direction="row" spacing={1}>
                     {socialButtonsList.map((item, index) => (
-                        <Link href={item.url} target="blank">
-                            <SocialButton size="small" key={`social-button-${index}`}>
+                        <Link href={item.url} target="blank" key={`social-link-${index}`}>
+                            <SocialButton size="small">
                                 <Icon icon={item.icon} fontSize={20} />
                             </SocialButton>
                         </Link>
