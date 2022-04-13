@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Stack, Grid, Typography, Skeleton, Box } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
 import ProductPageHeader from 'src/components/ProductPageHeader';
+import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -115,9 +115,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     useEffect(() => {
-        if (productDetail.tokenId) {
-            setDialogState({ ...dialogState, burnTokenId: productDetail.tokenId });
-        }
+        if (productDetail.tokenId) setDialogState({ ...dialogState, burnTokenId: productDetail.tokenId });
     }, [dialogState.burnNFTDlgOpened, productDetail.tokenId]);
 
     return (
@@ -233,7 +231,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     </Box>
                 </Box>
             ) : (
-                <Grid container marginTop={5} columnSpacing={10}>
+                <Grid container marginTop={5} columnSpacing={10} rowGap={5}>
                     <Grid item xs={12} md={4}>
                         <Stack spacing={5}>
                             <ProductTransHistory historyList={prodTransHistory} />
@@ -263,11 +261,11 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <Stack spacing={10}>
-                            <NFTTransactionTable transactionsList={transactionsList} />
                             <PriceHistoryView
                                 createdTime={productDetail.timestamp ? productDetail.timestamp : 1640962800}
                                 creator={productDetail.author}
                             />
+                            <NFTTransactionTable transactionsList={transactionsList} />
                         </Stack>
                     </Grid>
                 </Grid>
