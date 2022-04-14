@@ -33,10 +33,10 @@ const RewardsPage: React.FC = (): JSX.Element => {
                             </Stack>
                             <Stack marginLeft={1} marginTop={{ xs: 2, md: 0 }}>
                                 <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={600} color="white">
-                                    The total supply of mining pool
+                                    Mining Pool Total Supply:
                                 </Typography>
                                 <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={400} color="white">
-                                    1,000,000,000
+                                    250,000,000 MET
                                 </Typography>
                                 <Typography
                                     fontSize={{ xs: 16, sm: 36 }}
@@ -44,10 +44,10 @@ const RewardsPage: React.FC = (): JSX.Element => {
                                     color="white"
                                     marginTop={{ xs: 2, sm: 5 }}
                                 >
-                                    Unlocked 20%
+                                    20% Unlocked:
                                 </Typography>
                                 <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={400} color="white">
-                                    50,000,000
+                                    50,000,000 MET
                                 </Typography>
                             </Stack>
                         </Stack>
