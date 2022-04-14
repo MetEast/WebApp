@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
+    isLoading?: boolean;
     product: TypeProduct;
     productType: number; //0: from Home page, 1: from Products page, 2: from BlindBox page, 3: from BlindBox Product NFTSold
     index: number;
@@ -20,6 +21,7 @@ export interface ComponentProps {
 }
 
 const NFTPreview: React.FC<ComponentProps> = ({
+    isLoading,
     product,
     productType,
     index,
@@ -96,13 +98,31 @@ const NFTPreview: React.FC<ComponentProps> = ({
             <ProductImageContainer
                 sx={{ cursor: productType === 3 ? 'auto' : 'pointer' }}
                 onClick={() => {
-                    if (product.tokenId && productType !== 3) navigate(getUrl());
+                    if (!isLoading && product.tokenId && productType !== 3) navigate(getUrl());
                 }}
             >
-                <ImageBox loading={product.tokenId ? 0 : 1}>
-                    {product.tokenId ? (
+                <ImageBox loading={isLoading ? 1 : 0}>
+                    {isLoading ? (
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height="100%"
+                            sx={{ bgcolor: '#E8F4FF' }}
+                        />
+                    ) : (
                         <>
-                            <img src={product.image} alt="" />
+                            {/* <img src={product.image} alt="" /> */}
+                            <Box
+                                sx={{
+                                    background: `url(${product.image})`,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundSize: 'cover',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'center',
+                                }}
+                            />
                             {productType !== 3 && (
                                 <LikeBtn onClick={changeLikeState}>
                                     <Icon
@@ -113,20 +133,20 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 </LikeBtn>
                             )}
                         </>
-                    ) : (
-                        <Skeleton
-                            variant="rectangular"
-                            animation="wave"
-                            width="100%"
-                            height="100%"
-                            sx={{ bgcolor: '#E8F4FF' }}
-                        />
                     )}
                 </ImageBox>
             </ProductImageContainer>
             <Stack marginTop={1} height="100%">
                 <Box>
-                    {product.tokenId ? (
+                    {isLoading ? (
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            width="100%"
+                            height={24}
+                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
+                        />
+                    ) : (
                         <Box>
                             <Typography
                                 noWrap
@@ -165,14 +185,6 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 )}
                             </Box>
                         </Box>
-                    ) : (
-                        <Skeleton
-                            variant="rectangular"
-                            animation="wave"
-                            width="100%"
-                            height={24}
-                            sx={{ borderRadius: 2, bgcolor: '#E8F4FF' }}
-                        />
                     )}
                 </Box>
                 {productType !== 3 && (
@@ -183,24 +195,22 @@ const NFTPreview: React.FC<ComponentProps> = ({
                         marginTop={{ xs: 0.25, md: 1 }}
                         spacing={{ xs: 0.25, md: 1 }}
                     >
-                        {product.tokenId ? (
+                        {isLoading ? (
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width="100%"
+                                height={16}
+                                sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
+                            />
+                        ) : (
                             <ProductBadgeContainer
                                 nfttype={product.type}
                                 content={product.endTime}
                                 isReservedAuction={product.status === 'HAS BIDS'}
                             />
-                        ) : (
-                            <Skeleton
-                                variant="rectangular"
-                                animation="wave"
-                                width="100%"
-                                height={16}
-                                sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
-                            />
                         )}
-                        {product.tokenId ? (
-                            <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
-                        ) : (
+                        {isLoading ? (
                             <Skeleton
                                 variant="rectangular"
                                 animation="wave"
@@ -208,6 +218,8 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 height={16}
                                 sx={{ borderRadius: 1, bgcolor: '#E8F4FF' }}
                             />
+                        ) : (
+                            <ELAPrice price_ela={product.price_ela} price_usd={product.price_usd} />
                         )}
                     </Stack>
                 )}
