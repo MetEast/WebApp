@@ -33,47 +33,47 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                             <BecomeDAOBtn>Become DAO</BecomeDAOBtn>
                         </Stack>
                     </Stack>
-                    <Typography fontSize={16} fontWeight={500} color="white" marginTop={1}>
+                    <Typography fontSize={{ xs: 12, md: 16 }} fontWeight={500} color="white" marginTop={1}>
                         Those who participate in the governance of the platform or contribute to its construction will
                         receive an additional number of tokens on the following basis:
                     </Typography>
-                    <Typography fontSize={16} fontWeight={500} color="white" marginTop={2}>
+                    <Typography fontSize={{ xs: 12, md: 16 }} fontWeight={500} color="white" marginTop={2}>
                         Tokens to be Received = [(#Td/TTVd) X NFT Transaction Volume X 0.1]
                     </Typography>
                 </Grid>
                 <Grid item xs={10} md={4}>
-                    <Typography fontSize={20} fontWeight={500} color="#1890FF">
+                    <Typography fontSize={{ xs: 15, md: 20 }} fontWeight={500} color="#1890FF">
                         ME{' '}
-                        <Typography fontSize={20} fontWeight={500} color="white" display="inline">
+                        <Typography fontSize={{ xs: 15, md: 20 }} fontWeight={500} color="white" display="inline">
                             to be claimed
                         </Typography>
                     </Typography>
                     <ClaimBox sx={{ marginTop: 1.5 }} />
-                    <Typography fontSize={14} fontWeight={500} color="white" lineHeight={1.2} marginTop={2.5}>
+                    <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white" lineHeight={1.2} marginTop={2.5}>
                         Users can claim rewards every day, or accumulate a one-time claim. Rewards never disappear or
                         expire.
                     </Typography>
                     <Stack direction="row" justifyContent="space-between" marginTop={2}>
-                        <Typography fontSize={14} fontWeight={500} color="white">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             The most recent receipt received:
                         </Typography>
-                        <Typography fontSize={14} fontWeight={500} color="white">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             --
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
-                        <Typography fontSize={14} fontWeight={500} color="white">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             Received so far:
                         </Typography>
-                        <Typography fontSize={14} fontWeight={500} color="white">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             --
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
-                        <Typography fontSize={14} fontWeight={500} color="white">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             Lock up:
                         </Typography>
-                        <Typography fontSize={14} fontWeight={500} color="white">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             --
                         </Typography>
                     </Stack>

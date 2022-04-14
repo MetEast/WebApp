@@ -36,39 +36,45 @@ const TransactionReward: React.FC = (): JSX.Element => {
                             />
                         </Stack>
                     </Stack>
-                    <Typography fontSize={16} fontWeight={500} color="#1890FF" marginTop={1}>
+                    <Typography fontSize={{ xs: 12, md: 16 }} fontWeight={500} color="#1890FF" marginTop={1}>
                         After completing an NFT transaction, users are eligible to receive ME tokens on the following
                         basis:
                     </Typography>
-                    <Typography fontSize={16} fontWeight={500} color="#1890FF" marginTop={2}>
+                    <Typography fontSize={{ xs: 12, md: 16 }} fontWeight={500} color="#1890FF" marginTop={2}>
                         Tokens to be Received = [(#Td/TTVd) X (NFT Transaction Volume) X (0.5)]
                     </Typography>
                 </Grid>
                 <Grid item xs={10} md={4}>
-                    <Typography fontSize={20} fontWeight={500} color="#1890FF">
+                    <Typography fontSize={{ xs: 15, md: 20 }} fontWeight={500} color="#1890FF">
                         ME{' '}
-                        <Typography fontSize={20} fontWeight={500} color="black" display="inline">
+                        <Typography fontSize={{ xs: 15, md: 20 }} fontWeight={500} color="black" display="inline">
                             to be claimed
                         </Typography>
                     </Typography>
                     <ClaimBox sx={{ marginTop: 1.5 }} />
-                    <Typography fontSize={14} fontWeight={500} color="#1890FF" lineHeight={1.2} marginTop={2.5}>
+                    <Typography
+                        fontSize={{ xs: 12, md: 14 }}
+                        fontWeight={500}
+                        color="#1890FF"
+                        lineHeight={1.2}
+                        marginTop={2.5}
+                    >
                         Users can claim rewards every day, or accumulate a one-time claim. Rewards never disappear or
                         expire.
                     </Typography>
                     <Stack direction="row" justifyContent="space-between" marginTop={2}>
-                        <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
                             The most recent receipt received:
                         </Typography>
-                        <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
                             --
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
-                        <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
                             Received so far:
                         </Typography>
-                        <Typography fontSize={14} fontWeight={500} color="#1890FF">
+                        <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
                             --
                         </Typography>
                     </Stack>

@@ -27,7 +27,10 @@ const ClaimBox: React.FC<ComponentProps> = ({ sx }): JSX.Element => {
                     ~$4,10
                 </Typography>
             </Stack>
-            <PrimaryButton size="small" sx={{ width: 130, borderRadius: 0 }}>
+            <PrimaryButton
+                size="small"
+                sx={{ width: 130, borderRadius: 0, fontSize: { xs: 15, md: 18 }, fontWeight: { xs: 600, md: 700 } }}
+            >
                 claim
             </PrimaryButton>
         </Stack>
