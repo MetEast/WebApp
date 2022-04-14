@@ -36,7 +36,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                                     Mining Pool Total Supply:
                                 </Typography>
                                 <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={400} color="white">
-                                    250,000,000 MET
+                                    250,000,000 ME
                                 </Typography>
                                 <Typography
                                     fontSize={{ xs: 16, sm: 36 }}
@@ -47,7 +47,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                                     20% Unlocked:
                                 </Typography>
                                 <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={400} color="white">
-                                    50,000,000 MET
+                                    50,000,000 ME
                                 </Typography>
                             </Stack>
                         </Stack>

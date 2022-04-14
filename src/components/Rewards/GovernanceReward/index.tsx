@@ -43,7 +43,7 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={10} md={4}>
                     <Typography fontSize={20} fontWeight={500} color="#1890FF">
-                        MET{' '}
+                        ME{' '}
                         <Typography fontSize={20} fontWeight={500} color="white" display="inline">
                             to be claimed
                         </Typography>

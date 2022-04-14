@@ -37,7 +37,7 @@ const TransactionReward: React.FC = (): JSX.Element => {
                         </Stack>
                     </Stack>
                     <Typography fontSize={16} fontWeight={500} color="#1890FF" marginTop={1}>
-                        After completing an NFT transaction, users are eligible to receive MET tokens on the following
+                        After completing an NFT transaction, users are eligible to receive ME tokens on the following
                         basis:
                     </Typography>
                     <Typography fontSize={16} fontWeight={500} color="#1890FF" marginTop={2}>
@@ -46,7 +46,7 @@ const TransactionReward: React.FC = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={10} md={4}>
                     <Typography fontSize={20} fontWeight={500} color="#1890FF">
-                        MET{' '}
+                        ME{' '}
                         <Typography fontSize={20} fontWeight={500} color="black" display="inline">
                             to be claimed
                         </Typography>
