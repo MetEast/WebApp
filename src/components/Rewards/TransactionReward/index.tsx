@@ -37,9 +37,11 @@ const TransactionReward: React.FC = (): JSX.Element => {
                         </Stack>
                     </Stack>
                     <Typography fontSize={16} fontWeight={500} color="#1890FF" marginTop={1}>
-                        After self-trading NFT and the transaction is completed, you can get the number of tokens of
-                        [(number of tokens released on the day/total transaction volume of the day)*corresponding to NFT
-                        transaction volume*05]
+                        After completing an NFT transaction, users are eligible to receive MET tokens on the following
+                        basis:
+                    </Typography>
+                    <Typography fontSize={16} fontWeight={500} color="#1890FF" marginTop={2}>
+                        Tokens to be Received = [(#Td/TTVd) X (NFT Transaction Volume) X (0.5)]
                     </Typography>
                 </Grid>
                 <Grid item xs={10} md={4}>
@@ -50,13 +52,13 @@ const TransactionReward: React.FC = (): JSX.Element => {
                         </Typography>
                     </Typography>
                     <ClaimBox sx={{ marginTop: 1.5 }} />
-                    <Typography fontSize={14} fontWeight={500} color="#1890FF" marginTop={2.5}>
-                        You can claim rewards every day, or accumulate a one-time claim, your rewards will not
-                        disappear.
+                    <Typography fontSize={14} fontWeight={500} color="#1890FF" lineHeight={1.2} marginTop={2.5}>
+                        Users can claim rewards every day, or accumulate a one-time claim. Rewards never disappear or
+                        expire.
                     </Typography>
                     <Stack direction="row" justifyContent="space-between" marginTop={2}>
                         <Typography fontSize={14} fontWeight={500} color="#1890FF">
-                            The most recent receipt:
+                            The most recent receipt received:
                         </Typography>
                         <Typography fontSize={14} fontWeight={500} color="#1890FF">
                             --
