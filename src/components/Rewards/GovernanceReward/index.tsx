@@ -1,9 +1,10 @@
 import React from 'react';
-import { Stack, Box, Grid, Typography } from '@mui/material';
+import { Stack, Box, Grid, Button, Typography } from '@mui/material';
 import ClaimBox from '../ClaimBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { BecomeDAOBtn } from './styles';
 
 const GovernanceReward: React.FC = (): JSX.Element => {
     const theme = useTheme();
@@ -29,17 +30,7 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                                 color="white"
                                 style={{ marginTop: matchDownMd ? 2 : 14 }}
                             />
-                            <Typography
-                                fontSize={16}
-                                fontWeight={700}
-                                color="white"
-                                padding="6px 13px"
-                                marginLeft={2.5}
-                                borderRadius={4}
-                                sx={{ background: '#FFFFFF33' }}
-                            >
-                                Become DAO
-                            </Typography>
+                            <BecomeDAOBtn>Become DAO</BecomeDAOBtn>
                         </Stack>
                     </Stack>
                     <Typography fontSize={16} fontWeight={500} color="white" marginTop={1}>
