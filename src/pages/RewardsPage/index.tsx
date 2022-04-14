@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import TransactionReward from 'src/components/Rewards/TransactionReward';
 import GovernanceReward from 'src/components/Rewards/GovernanceReward';
+import Royalties from 'src/components/Rewards/Royalties';
 
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
@@ -57,6 +58,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                 <Stack spacing={14}>
                     <TransactionReward />
                     <GovernanceReward />
+                    <Royalties />
                 </Stack>
             </Container>
         </Stack>
