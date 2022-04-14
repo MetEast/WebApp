@@ -59,6 +59,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
             );
             if (!unmounted) {
                 setBlindBoxList(_searchedBBList);
+                // setKeyWord('?');
             }
         };
         getFetchData().catch(console.error);
@@ -70,8 +71,10 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
 
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
+        if (keyWord === value) return ;
         setKeyWord(value);
-        setBlindBoxList(Array(4).fill(blankBBItem));
+        setBlindBoxList([blankBBItem, blankBBItem, blankBBItem, blankBBItem]);
+        // setBlindBoxList(Array(4).fill(blankBBItem));
     };
 
     const handleChangeSortBy = (value: string) => {

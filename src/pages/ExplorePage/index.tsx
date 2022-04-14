@@ -71,8 +71,10 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
+        if (keyWord === value) return ;
         setKeyWord(value);
-        setProductList(Array(4).fill(blankNFTItem));
+        // setProductList(Array(4).fill(blankNFTItem));
+        setProductList([blankNFTItem, blankNFTItem, blankNFTItem, blankNFTItem]);
     };
 
     const handleChangeSortBy = (value: string) => {
