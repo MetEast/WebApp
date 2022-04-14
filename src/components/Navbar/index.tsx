@@ -14,6 +14,7 @@ import { getNotificationList } from 'src/services/fetch';
 import { TypeNotification } from 'src/types/notification-types';
 import { useNotificationContext } from 'src/context/NotificationContext';
 import { dummyNotificationList } from 'src/constants/dummyData';
+import RewardIcon from 'src/components/Assets/RewardIcon';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -76,6 +77,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             title: 'Rewards',
             url: '/rewards',
             icon: <Icon icon="ph:cube" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
+            // icon: <RewardIcon stroke="#1890FF" style={{ marginRight: mobile ? 0 : 2, marginBottom: 2 }} />,
         },
     ];
 
