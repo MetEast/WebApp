@@ -5,6 +5,7 @@ import { PinkButton } from 'src/components/Buttons/styles';
 import { TypeNotification } from 'src/types/notification-types';
 import { removeNotifications } from 'src/services/fetch';
 import { useNotificationContext } from 'src/context/NotificationContext';
+import { Markup } from 'interweave';
 
 interface ComponentProps {
     data: TypeNotification;
@@ -61,7 +62,7 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
             </Stack>
             <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={4}>
                 <Typography fontSize={14} fontWeight={400}>
-                    {data.content}
+                    <Markup content={data.content} />
                 </Typography>
                 <PinkButton sx={{ minWidth: 40, height: 32, borderRadius: 2.5 }} onClick={handleDelete}>
                     <Icon icon="ph:trash" color="#EB5757" />
