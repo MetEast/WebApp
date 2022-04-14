@@ -8,7 +8,7 @@ const Royalties: React.FC = (): JSX.Element => {
         <Box borderRadius={3} paddingX={8} paddingY={7} sx={{ background: '#E8F4FF' }}>
             <Grid container columns={10} columnSpacing={8}>
                 <Grid item xs={6}>
-                    <img src="/assets/images/rewards/wallet.svg" width={42} height={42} alt="" />
+                    <img src="/assets/images/rewards/royalties-icon.svg" width={42} height={42} alt="" />
                     <Stack direction="row" alignItems="flex-end">
                         <Typography fontSize={40} fontWeight={500} color="#1890FF">
                             Royalties
