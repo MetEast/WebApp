@@ -220,46 +220,59 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 marginTop={3}
                             />
                             {productDetail.isExpired ? (
-                                <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                    <SecondaryButton
-                                        sx={{ width: '100%', height: 40 }}
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                let bidder = 0;
-                                                let bidPrice = 0;
-                                                let biderName = productDetail.holderName;
-                                                let bidOrderId = productDetail.orderId || '';
-                                                const topSelfBid = myBidsList.length ? myBidsList[0].price : 0;
-                                                const topOtherBid = bidsList.length ? bidsList[0].price : 0;
-                                                console.log(topSelfBid, topOtherBid);
-                                                if (topSelfBid > topOtherBid) bidder = 1;
-                                                else if (topSelfBid < topOtherBid) bidder = 2;
-                                                if (bidder === 1) {
-                                                    bidPrice = topSelfBid;
-                                                    biderName = myBidsList[0].user;
-                                                    bidOrderId = myBidsList[0].orderId;
-                                                } else if (bidder === 2) {
-                                                    bidPrice = topOtherBid;
-                                                    biderName = bidsList[0].user;
-                                                    bidOrderId = bidsList[0].orderId;
-                                                }
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    acceptBidDlgOpened: true,
-                                                    acceptBidDlgStep: 0,
-                                                    acceptBidName: biderName,
-                                                    acceptBidOrderId: bidOrderId,
-                                                    acceptBidPrice: bidPrice,
-                                                    progressBar: 0,
-                                                });
-                                            } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
-                                            }
-                                        }}
-                                    >
-                                        Settle Auction
-                                    </SecondaryButton>
-                                </Stack>
+                                <>
+                                    {!!signInDlgState.walletAccounts.length &&
+                                        (signInDlgState.walletAccounts[0] === productDetail.holder ||
+                                            (myBidsList.length &&
+                                                signInDlgState.walletAccounts[0] === myBidsList[0].user) ||
+                                            (!myBidsList.length && !bidsList.length)) && (
+                                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                                <SecondaryButton
+                                                    sx={{ width: '100%', height: 40 }}
+                                                    onClick={() => {
+                                                        if (signInDlgState.isLoggedIn) {
+                                                            let bidder = 0;
+                                                            let bidPrice = 0;
+                                                            let biderName = productDetail.holderName;
+                                                            let bidOrderId = productDetail.orderId || '';
+                                                            const topSelfBid = myBidsList.length
+                                                                ? myBidsList[0].price
+                                                                : 0;
+                                                            const topOtherBid = bidsList.length ? bidsList[0].price : 0;
+                                                            console.log(topSelfBid, topOtherBid);
+                                                            if (topSelfBid > topOtherBid) bidder = 1;
+                                                            else if (topSelfBid < topOtherBid) bidder = 2;
+                                                            if (bidder === 1) {
+                                                                bidPrice = topSelfBid;
+                                                                biderName = myBidsList[0].user;
+                                                                bidOrderId = myBidsList[0].orderId;
+                                                            } else if (bidder === 2) {
+                                                                bidPrice = topOtherBid;
+                                                                biderName = bidsList[0].user;
+                                                                bidOrderId = bidsList[0].orderId;
+                                                            }
+                                                            setDialogState({
+                                                                ...dialogState,
+                                                                acceptBidDlgOpened: true,
+                                                                acceptBidDlgStep: 0,
+                                                                acceptBidName: biderName,
+                                                                acceptBidOrderId: bidOrderId,
+                                                                acceptBidPrice: bidPrice,
+                                                                progressBar: 0,
+                                                            });
+                                                        } else {
+                                                            setSignInDlgState({
+                                                                ...signInDlgState,
+                                                                signInDlgOpened: true,
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+                                                    Settle Auction
+                                                </SecondaryButton>
+                                            </Stack>
+                                        )}
+                                </>
                             ) : (
                                 <>
                                     {(!signInDlgState.walletAccounts.length ||
