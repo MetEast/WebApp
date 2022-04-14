@@ -121,7 +121,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
 
-    console.log('------rendered')
     return (
         <Box minHeight="75vh">
             <Box>

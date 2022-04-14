@@ -23,6 +23,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
         cookies.METEAST_PREVIEW === '1' ? 'grid1' : 'grid2',
     );
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
@@ -49,6 +50,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
+            if(!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, undefined);
             const _searchedBBList = await getBBItemList(
@@ -59,7 +61,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
             );
             if (!unmounted) {
                 setBlindBoxList(_searchedBBList);
-                // setKeyWord('?');
+                setIsLoading(false);
             }
         };
         getFetchData().catch(console.error);
@@ -73,8 +75,6 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const handleKeyWordChange = (value: string) => {
         if (keyWord === value) return ;
         setKeyWord(value);
-        setBlindBoxList([blankBBItem, blankBBItem, blankBBItem, blankBBItem]);
-        // setBlindBoxList(Array(4).fill(blankBBItem));
     };
 
     const handleChangeSortBy = (value: string) => {
@@ -202,6 +202,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                                 key={`explore-product-${index}`}
                             >
                                 <NFTPreview
+                                    isLoading={isLoading}
                                     product={item}
                                     productType={2}
                                     index={index}
