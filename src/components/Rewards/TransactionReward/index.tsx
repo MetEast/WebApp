@@ -24,7 +24,7 @@ const TransactionReward: React.FC = (): JSX.Element => {
                             height={matchDownMd ? 26 : 42}
                             alt=""
                         />
-                        <Stack direction="row" alignItems="flex-end">
+                        <Stack direction="row" alignItems="center" spacing={0.5}>
                             <Typography fontSize={{ xs: 20, md: 40 }} fontWeight={500} color="#1890FF">
                                 Transaction reward
                             </Typography>
@@ -32,7 +32,7 @@ const TransactionReward: React.FC = (): JSX.Element => {
                                 icon="ph:question"
                                 fontSize={18}
                                 color="#1890FF"
-                                style={{ marginBottom: matchDownMd ? 6 : 14 }}
+                                style={{ marginTop: matchDownMd ? 2 : 14 }}
                             />
                         </Stack>
                     </Stack>
