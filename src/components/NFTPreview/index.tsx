@@ -8,9 +8,10 @@ import { enumSingleNFTType, enumBlindBoxNFTType } from 'src/types/product-types'
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
+    isLoading: boolean;
     product: TypeProduct;
     productType: number; //0: from Home page, 1: from Products page, 2: from BlindBox page, 3: from BlindBox Product NFTSold
     index: number;
@@ -20,6 +21,7 @@ export interface ComponentProps {
 }
 
 const NFTPreview: React.FC<ComponentProps> = ({
+    isLoading,
     product,
     productType,
     index,
@@ -87,7 +89,11 @@ const NFTPreview: React.FC<ComponentProps> = ({
                     console.log(error);
                 });
         } else {
-            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+            setSignInDlgState((prevState: SignInState) => {
+                const _state = { ...prevState };
+                _state.signInDlgOpened = true;
+                return _state;
+            });
         }
     };
 
@@ -96,11 +102,11 @@ const NFTPreview: React.FC<ComponentProps> = ({
             <ProductImageContainer
                 sx={{ cursor: productType === 3 ? 'auto' : 'pointer' }}
                 onClick={() => {
-                    if (product.tokenId !== '' && productType !== 3) navigate(getUrl());
+                    if (!isLoading && product.tokenId && productType !== 3) navigate(getUrl());
                 }}
             >
-                <ImageBox loading={product.tokenId === '' ? 1 : 0}>
-                    {product.tokenId === '' ? (
+                <ImageBox loading={isLoading ? 1 : 0}>
+                    {isLoading ? (
                         <Skeleton
                             variant="rectangular"
                             animation="wave"
@@ -110,10 +116,24 @@ const NFTPreview: React.FC<ComponentProps> = ({
                         />
                     ) : (
                         <>
-                            <img src={product.image} alt="" />
+                            {/* <img src={product.image} alt="" /> */}
+                            <Box
+                                sx={{
+                                    background: `url(${product.image})`,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundSize: 'cover',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'center',
+                                }}
+                            />
                             {productType !== 3 && (
                                 <LikeBtn onClick={changeLikeState}>
-                                    <Icon icon={likeState ? "ph:heart-fill" : "ph:heart"} fontSize="2vw" color={likeState ? "red" : "black"} />
+                                    <Icon
+                                        icon={likeState ? 'ph:heart-fill' : 'ph:heart'}
+                                        fontSize="2vw"
+                                        color={likeState ? 'red' : 'black'}
+                                    />
                                 </LikeBtn>
                             )}
                         </>
@@ -122,7 +142,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
             </ProductImageContainer>
             <Stack marginTop={1} height="100%">
                 <Box>
-                    {product.tokenId === '' ? (
+                    {isLoading ? (
                         <Skeleton
                             variant="rectangular"
                             animation="wave"
@@ -179,7 +199,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                         marginTop={{ xs: 0.25, md: 1 }}
                         spacing={{ xs: 0.25, md: 1 }}
                     >
-                        {product.tokenId === '' ? (
+                        {isLoading ? (
                             <Skeleton
                                 variant="rectangular"
                                 animation="wave"
@@ -194,7 +214,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 isReservedAuction={product.status === 'HAS BIDS'}
                             />
                         )}
-                        {product.tokenId === '' ? (
+                        {isLoading ? (
                             <Skeleton
                                 variant="rectangular"
                                 animation="wave"

@@ -7,7 +7,7 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
 import { getBBItem, getELA2USD, getMyFavouritesList, getNFTItems, updateBBStatus } from 'src/services/fetch';
@@ -27,6 +27,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     // const { enqueueSnackbar } = useSnackbar();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
     const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([]);
@@ -36,6 +37,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
+            if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
             const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
@@ -43,6 +45,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
                 setNftSoldList(_BBSoldNFTs);
+                setIsLoading(false);
             }
         };
         getFetchData().catch(console.error);
@@ -246,7 +249,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                                             : blindBoxDetail.instock,
                                                 });
                                             } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                setSignInDlgState((prevState: SignInState) => {
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
                                             }
                                         }}
                                     >
@@ -328,7 +335,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             <Grid container mt={2} spacing={4}>
                                 {nftSoldList.map((item, index) => (
                                     <Grid item xs={6} md={3} key={`explore-product-${index}`}>
-                                        <NFTPreview product={item} productType={3} index={index} />
+                                        <NFTPreview
+                                            isLoading={isLoading}
+                                            product={item}
+                                            productType={3}
+                                            index={index}
+                                        />
                                     </Grid>
                                 ))}
                             </Grid>

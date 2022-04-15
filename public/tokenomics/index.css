@@ -1,0 +1,219 @@
+.h1, h1 {
+    font-size: 56px;
+}
+body{
+    min-width: 960px;
+    background-color: #121619;
+    color: white;
+    margin-bottom: 80px;
+}
+.container {
+    min-width: 960px;
+}
+.banner{
+    background-image: url(./banner.png);
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* background-color: #464646; */
+    -moz-background-size:100% 100%;  
+    /* background-size:100% auto; */
+    position: relative;
+}
+.banner::after{
+    content: "";
+    display: block;
+    padding-bottom: 56%;
+
+  }
+.banner .img-responsive{
+    width: 100%;
+}
+.banner .clouds{
+    color: #fff;
+    width: 40%;
+    height: 55%;
+    /* background-color: red; */
+    position: absolute;
+    margin: 100px auto 0;
+    left: 13%;
+}
+
+.banner .clouds .cloud1{
+    /* width: 40%; */
+    height: 30%;
+    /* background-color: red; */
+    margin: 30% auto 20px;
+}
+.banner .clouds .cloud1 h1{
+    font-size: 100px;
+}
+.banner .clouds .cloud2{
+    /* width: 70%; */
+    height: 40%;
+    /* background-color: red; */
+    margin: 0 auto;
+}
+.banner .clouds .cloud2 h1{
+    font-size: 80px;
+}
+/*nimation-delay:1s*/
+@keyframes cloud1{
+    0%{transform: translateY(-12px);} 
+    100%{transform: translateY(12px);}
+}
+
+@-webkit-keyframes cloud1{
+    0%{-webkit-transform: translateY(-12px);} 
+    100%{-webkit-transform: translateY(12px);}
+}
+
+@keyframes cloud2{
+    0%{transform: translateY(-5px);} 
+    100%{transform: translateY(5px);}
+}
+
+@-webkit-keyframes cloud2{
+    0%{-webkit-transform: translateY(-5px);} 
+    100%{-webkit-transform: translateY(5px);}
+}
+
+.cloud1{
+    animation: cloud1 2s infinite; 
+    -webkit-animation: cloud1 2s infinite;
+    animation-timing-function:ease-in-out;
+    -webkit-animation-timing-function:ease-in-out; 
+     
+    -webkit-animation-direction:alternate;
+    animation-direction:alternate;
+}
+.cloud2{
+    animation: cloud2 2s infinite; 
+    -webkit-animation: cloud2 2s infinite;
+    animation-timing-function:ease-in-out;
+    -webkit-animation-timing-function:ease-in-out; 
+     
+    -webkit-animation-direction:alternate;
+    animation-direction:alternate;
+}
+
+.fadeInDown {
+    animation: fadeInDown 1s;
+    -webkit-animation: fadeInDown 1s;
+}
+
+@keyframes fadeInDown {
+    0% {
+        margin-top: -200px;
+        opacity: 0;
+    }
+    100% {
+        margin-top: 0px;
+        opacity: 1;
+    }
+}
+@-webkit-keyframes fadeInDown{
+    0% {
+        margin-top: -200px;
+        opacity: 0;
+    }
+    100% {
+        margin-top: 0px;
+        opacity: 1;
+    }
+}
+
+.fadeInLeft {
+    animation: fadeInLeft 1s;
+    -webkit-animation: fadeInLeft 1s;
+}
+
+@keyframes fadeInLeft {
+    0% {
+        margin-left: -200px;
+        opacity: 0;
+    }
+    100% {
+        margin-left: 0px;
+        opacity: 1;
+    }
+}
+@-webkit-keyframes fadeInLeft{
+    0% {
+        margin-left: -200px;
+        opacity: 0;
+    }
+    100% {
+        margin-left: 0px;
+        opacity: 1;
+    }
+}
+
+.block1 {
+    margin-top: 30px;
+}
+
+.block1 table .active{
+    background-color: red;
+}
+
+.block1 h1,.block1 h3{
+    margin-bottom: 20px;
+    /* text-align: center; */
+}
+.block1 span, .block1 p {
+    font-size: 18px;
+}
+
+.block1 p img {
+    width: 100%;
+}
+
+.block1 span ul {
+    padding-inline-start: 10px;
+}
+.block1 span ul li{
+    margin-bottom: 8px;
+}
+
+.block1 .pie {
+    height: 600px;
+    /* background-color: red; */
+}
+
+/* pie */
+.right{
+    height:100px;
+}
+.right span{
+    float:left;
+}
+.right .des{
+    margin-top: 6%;
+}
+.right p, .right h2 {
+    margin: 0 30px;
+  }
+  /* ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'] */
+  #container0{
+      height:100%;
+      color:white;
+  }
+  .container1 {
+    color: #5470c6;
+  }
+  .container2 {
+    color: #91cc75;
+  }
+  .container3 {
+    color: #fac858;
+  }
+  .container4 {
+    color: #ee6666;
+  }
+  .container5 {
+    color: #73c0de;
+  }
+  .container6 {
+    color: #3ba272;
+  }

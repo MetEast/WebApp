@@ -18,5 +18,5 @@
         "baseUrl": "./",
         "downlevelIteration": true
     },
-    "include": ["src"]
+    "include": ["src", "public/tokenomics"]
 }

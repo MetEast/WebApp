@@ -16,7 +16,7 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { getMintCategory } from 'src/services/common';
 import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
 import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
@@ -209,7 +209,11 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                                                     cancelSaleOrderId: productDetail.orderId || '',
                                                 });
                                             } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                setSignInDlgState((prevState: SignInState) => {
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
                                             }
                                         }}
                                     >
@@ -227,7 +231,11 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                                                     changePriceOrderId: productDetail.orderId || '',
                                                 });
                                             } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                setSignInDlgState((prevState: SignInState) => {
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
                                             }
                                         }}
                                     >

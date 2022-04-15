@@ -191,6 +191,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
+        if (keyWord === value) return ;
         setKeyWord(value);
         setIsLoadingAssets(Array(6).fill(true));
         setMyNFTList(Array(6).fill(Array(4).fill(blankMyNFTItem)));
@@ -278,7 +279,6 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 sx={{
                     height: 330,
                     maxHeight: matchUpMd ? 330 : matchDownSm ? 178 : 330,
-                    cursor: 'pointer',
                     backgroundColor: '#C3C5C8',
                 }}
             >

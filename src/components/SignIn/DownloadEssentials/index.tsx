@@ -3,7 +3,7 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Typography, Stack, Button } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {}
 
@@ -42,10 +42,11 @@ const DownloadEssentials: React.FC<ComponentProps> = (): JSX.Element => {
             <Button
                 sx={{ fontSize: 14, fontWeight: 700, marginTop: 3, color: '#1890FF' }}
                 onClick={() => {
-                    setSignInDlgState({
-                        ...signInDlgState,
-                        signInDlgOpened: true,
-                        downloadEssentialsDlgOpened: false,
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.signInDlgOpened = true;
+                        _state.downloadEssentialsDlgOpened = false;
+                        return _state;
                     });
                 }}
             >

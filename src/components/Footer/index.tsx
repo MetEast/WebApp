@@ -33,8 +33,8 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 </Link>
                 <Stack direction="row" spacing={1}>
                     {socialButtonsList.map((item, index) => (
-                        <Link href={item.url} target="blank">
-                            <SocialButton size="small" key={`social-button-${index}`}>
+                        <Link href={item.url} target="blank" key={`social-link-${index}`}>
+                            <SocialButton size="small">
                                 <Icon icon={item.icon} fontSize={20} />
                             </SocialButton>
                         </Link>
@@ -72,9 +72,13 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                     </Typography>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={0} columnGap={2}>
-                    <Button sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}>
-                        Docs
-                    </Button>
+                    <Link href="../../tokenomics/index.html" target="blank" sx={{textDecoration: 'none'}}>
+                        <Button
+                            sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}
+                        >
+                            Tokenomics
+                        </Button>
+                    </Link>
                     <Button sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}>
                         Privacy policy
                     </Button>

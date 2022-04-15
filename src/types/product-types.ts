@@ -88,6 +88,7 @@ export type TypeProduct = {
     quantity?: number;
     royaltyOwner?: string;
     timestamp?: number;
+    endTimestamp?: number;
     thumbnail?: string;
     asset?: string;
     kind?: string;
@@ -125,6 +126,7 @@ export type TypeSingleNFTBid = {
     price: number;
     time: string;
     orderId: string;
+    address: string;
 };
 
 export type TypeYourEarning = {
