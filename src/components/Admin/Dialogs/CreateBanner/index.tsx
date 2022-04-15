@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-import { ImageBox } from './styles';
 import { DialogTitleTypo } from '../../../TransactionDialogs/styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
 import { Icon } from '@iconify/react';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeImageFile } from 'src/types/select-types';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { addAdminBanner } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
 import { AdminBannersItemType } from 'src/types/admin-table-data-types';
+import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 
 export interface ComponentProps {
     bannerList: AdminBannersItemType[];
@@ -28,26 +27,42 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
     // const [blindboxStatus, setBlindboxStatus] = useState<'offline' | 'online'>('offline');
     const [location, setLocation] = useState<'home' | 'explore' | 'blindbox'>('home');
     // const [bannerUrl, setBannerUrl] = useState<string>('');
-    const [sort, setSort] = useState<string>('10');
-    const [bannerImage, setBannerImage] = useState<TypeImageFile>({
-        preview: '',
-        raw: new File([''], ''),
-    });
-    const handleBannerImageChanged = (e: any) => {
-        if (e.target.files.length) {
-            setBannerImage({
-                preview: URL.createObjectURL(e.target.files[0]),
-                raw: e.target.files[0],
-            });
-        }
+    const [sort, setSort] = useState<number>(10);
+    const [sortError, setSortError] = useState(false);
+
+    const [stateFile, setStateFile] = useState(null);
+
+    const [bannerImgFile, setBannerImgFile] = useState<File>();
+    const [bannerImgFileError, setBannerImgFileError] = useState(false);
+
+    const handleFileChange = (files: Array<File>) => {
+        if (files === null || files.length === 0) return;
+
+        const file = files[0];
+        if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/gif') return;
+
+        handleDropSingleFile(file);
+
+        setBannerImgFile(file);
+        setBannerImgFileError(false);
     };
 
+    const handleDropSingleFile = useCallback((file) => {
+        if (file) {
+            setStateFile({ ...file, preview: URL.createObjectURL(file) });
+        }
+    }, []);
+
     const handleSubmit = () => {
-        if (bannerImage.preview === '' || isNaN(parseInt(sort))) return;
+        if (stateFile === null || isNaN(sort)) {
+            setBannerImgFileError(stateFile === null);
+            setSortError(isNaN(sort));
+            return;
+        }
+
         if (
-            bannerList.findIndex(
-                (item: AdminBannersItemType) => item.location === location && item.sort === parseInt(sort),
-            ) !== -1
+            bannerList.findIndex((item: AdminBannersItemType) => item.location === location && item.sort === sort) !==
+            -1
         ) {
             enqueueSnackbar('Same sort exist!', {
                 variant: 'error',
@@ -60,10 +75,10 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
         let url: string = '';
         const pageLocation = location === 'home' ? 1 : location === 'explore' ? 2 : 3;
         // const status = blindboxStatus === 'offline' ? 0 : 1;
-        uploadImage2Ipfs(bannerImage.raw)
+        uploadImage2Ipfs(bannerImgFile)
             .then((added: any) => {
                 url = `meteast:image:${added.path}`;
-                return addAdminBanner(signInDlgState.token, url, pageLocation, 1, parseInt(sort));
+                return addAdminBanner(signInDlgState.token, url, pageLocation, 1, sort);
             })
             .then((returnCode: number) => {
                 if (returnCode === 200) {
@@ -114,47 +129,33 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                             <Typography fontSize={12} fontWeight={700}>
                                 Image
                             </Typography>
-                            <Box
-                                position="relative"
-                                borderRadius={4.5}
-                                overflow="hidden"
+                            <UploadSingleFile
+                                file={stateFile}
+                                onDrop={handleFileChange}
                                 sx={{
                                     width: '100%',
-                                    paddingTop: '75%',
-                                    height: { xs: '240px', sm: '100%' },
+                                    height: { xs: '300px' },
                                     marginTop: '1rem',
                                     borderRadius: '8px',
+                                    background: stateFile === null ? '#E8F4FF' : 'transparent',
                                     cursor: 'pointer',
                                     boxSizing: 'border-box',
+                                    border: bannerImgFileError ? '2px solid #EB5757' : 'none',
                                 }}
-                            >
-                                <ImageBox htmlFor="banner-image">
-                                    <img
-                                        src={
-                                            bannerImage.preview === ''
-                                                ? '/assets/images/blindbox/blindbox-nft-template2.png'
-                                                : bannerImage.preview
-                                        }
-                                        alt=""
-                                    />
-                                    <input
-                                        type="file"
-                                        id="banner-image"
-                                        style={{ display: 'none' }}
-                                        onChange={handleBannerImageChanged}
-                                    />
-                                </ImageBox>
-                            </Box>
+                            />
+                            {bannerImgFileError && (
+                                <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                    Source file should be selected.
+                                </Typography>
+                            )}
                             <Stack direction="row" spacing={1}>
                                 <PrimaryButton
                                     btn_color="pink"
                                     fullWidth
                                     size="small"
                                     onClick={() => {
-                                        setBannerImage({
-                                            preview: '',
-                                            raw: new File([''], ''),
-                                        });
+                                        setBannerImgFile(new File([''], ''));
+                                        setStateFile(null);
                                     }}
                                 >
                                     <Icon icon="ph:trash" fontSize={20} style={{ marginBottom: 2, marginRight: 4 }} />
@@ -238,9 +239,12 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
                         </Stack> */}
                         <CustomTextField
                             title="Sort"
-                            inputValue={sort}
+                            inputValue={sort.toString()}
+                            number
+                            error={sortError}
+                            errorText="Sort value can not be empty."
                             placeholder="10"
-                            changeHandler={(value: string) => setSort(value)}
+                            changeHandler={(value: string) => setSort(value === '' ? NaN : parseInt(value))}
                         />
                     </Grid>
                 </Grid>

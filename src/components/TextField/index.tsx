@@ -56,11 +56,11 @@ const CustomTextField: React.FC<ComponentProps> = ({
     };
 
     React.useEffect(() => {
-        setInvalid(number ? !isNaN(Number(text)) : !text);
+        setInvalid(number ? text === '' || isNaN(Number(text)) : !text);
     }, [text]);
 
     React.useEffect(() => {
-        setText(inputValue === undefined ? '' : inputValue);
+        setText(inputValue === undefined || inputValue === 'NaN' ? '' : inputValue);
     }, [inputValue]);
 
     return (
