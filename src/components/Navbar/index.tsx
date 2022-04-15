@@ -103,7 +103,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                         }
                     }}
                 >
-                    <Icon icon="ph:chat-circle" fontSize={20} color="black" />
+                    <Icon icon="ph:chat-circle" fontSize={20} />
                 </MenuButton>
                 {notificationState.notesUnreadCnt !== 0 && (
                     <NotificationTypo>{notificationState.notesUnreadCnt}</NotificationTypo>
