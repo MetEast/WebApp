@@ -68,7 +68,7 @@ export const blankNFTTxs: TypeNFTTransaction = {
     txHash: '',
 };
 
-export const blankNFTBid: TypeSingleNFTBid = { user: '', price: 0, time: '', orderId: '' };
+export const blankNFTBid: TypeSingleNFTBid = { user: '', address: '', price: 0, time: '', orderId: '' };
 
 export const blankMyEarning: TypeYourEarning = {
     avatar: '',

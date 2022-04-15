@@ -40,6 +40,27 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
+    let lastBidder = 0;
+    let lastBidPrice = 0;
+    let lastBidderName = productDetail.holderName;
+    let lastBidderAddress = '';
+    let lastBidOrderId = productDetail.orderId || '';
+    // check for latest bidder and bid price
+    const topSelfBid = myBidsList.length ? myBidsList[0].price : 0;
+    const topOtherBid = bidsList.length ? bidsList[0].price : 0;
+    if (topSelfBid > topOtherBid) lastBidder = 1;
+    else if (topSelfBid < topOtherBid) lastBidder = 2;
+    if (lastBidder === 1) {
+        lastBidPrice = topSelfBid;
+        lastBidderName = signInDlgState.userName;
+        lastBidderAddress = myBidsList[0].address;
+        lastBidOrderId = myBidsList[0].orderId;
+    } else if (lastBidder === 2) {
+        lastBidPrice = topOtherBid;
+        lastBidderName = bidsList[0].user;
+        lastBidderAddress = bidsList[0].address;
+        lastBidOrderId = bidsList[0].orderId;
+    }
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
@@ -223,41 +244,19 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 <>
                                     {!!signInDlgState.walletAccounts.length &&
                                         (signInDlgState.walletAccounts[0] === productDetail.holder ||
-                                            (myBidsList.length &&
-                                                signInDlgState.walletAccounts[0] === myBidsList[0].user) ||
-                                            (!myBidsList.length && !bidsList.length)) && (
+                                            signInDlgState.walletAccounts[0] === lastBidderAddress) && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <SecondaryButton
                                                     sx={{ width: '100%', height: 40 }}
                                                     onClick={() => {
                                                         if (signInDlgState.isLoggedIn) {
-                                                            let bidder = 0;
-                                                            let bidPrice = 0;
-                                                            let biderName = productDetail.holderName;
-                                                            let bidOrderId = productDetail.orderId || '';
-                                                            const topSelfBid = myBidsList.length
-                                                                ? myBidsList[0].price
-                                                                : 0;
-                                                            const topOtherBid = bidsList.length ? bidsList[0].price : 0;
-                                                            console.log(topSelfBid, topOtherBid);
-                                                            if (topSelfBid > topOtherBid) bidder = 1;
-                                                            else if (topSelfBid < topOtherBid) bidder = 2;
-                                                            if (bidder === 1) {
-                                                                bidPrice = topSelfBid;
-                                                                biderName = myBidsList[0].user;
-                                                                bidOrderId = myBidsList[0].orderId;
-                                                            } else if (bidder === 2) {
-                                                                bidPrice = topOtherBid;
-                                                                biderName = bidsList[0].user;
-                                                                bidOrderId = bidsList[0].orderId;
-                                                            }
                                                             setDialogState({
                                                                 ...dialogState,
                                                                 acceptBidDlgOpened: true,
                                                                 acceptBidDlgStep: 0,
-                                                                acceptBidName: biderName,
-                                                                acceptBidOrderId: bidOrderId,
-                                                                acceptBidPrice: bidPrice,
+                                                                acceptBidName: lastBidderName,
+                                                                acceptBidOrderId: lastBidOrderId,
+                                                                acceptBidPrice: lastBidPrice,
                                                                 progressBar: 0,
                                                             });
                                                         } else {

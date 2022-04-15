@@ -125,6 +125,7 @@ export type TypeSingleNFTBid = {
     price: number;
     time: string;
     orderId: string;
+    address: string;
 };
 
 export type TypeYourEarning = {
