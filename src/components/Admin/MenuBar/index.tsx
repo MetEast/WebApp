@@ -94,8 +94,8 @@ const MenuBar: React.FC = (): JSX.Element => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" spacing={1}>
-                <img src="/assets/images/header/logo.svg" width={37} height={33} alt="" />
-                <img src="/assets/images/header/meteast_label.svg" width={153} height={18} alt="" />
+                <img src="/assets/images/header/logo-white.svg" width={33} height={30} alt="" />
+                <img src="/assets/images/header/meteast_label-white.svg" width={153} height={18} alt="" />
             </Stack>
             <BackToPublicBtn
                 onClick={() => {
