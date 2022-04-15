@@ -3,7 +3,7 @@ import { Stack, Typography, Grid } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeYourEarning } from 'src/types/product-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -161,9 +161,12 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             fullWidth
                             sx={{ height: 32, borderRadius: 2.5, fontSize: 14 }}
                             onClick={() => {
-                                signInDlgState.isLoggedIn
-                                    ? setSignInDlgState({ ...signInDlgState, signOut: true })
-                                    : setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                setSignInDlgState((prevState: SignInState) => {
+                                    const _state = { ...prevState };
+                                    if (signInDlgState.isLoggedIn) _state.signOut = true;
+                                    else _state.signInDlgOpened = true;
+                                    return _state;
+                                });
                                 onClose();
                             }}
                         >

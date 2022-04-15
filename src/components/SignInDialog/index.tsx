@@ -256,7 +256,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const signOutWithEssentialsWithoutRefresh = async () => {
         console.log('Signing out user. Deleting session info, auth token');
-        setSignInDlgState({ ...signInDlgState, isLoggedIn: false });
+        setSignInDlgState((prevState: SignInState) => {
+            const _state = { ...prevState };
+            _state.isLoggedIn = false;
+            return _state;
+        });
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
         try {
@@ -271,7 +275,13 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const signOutWithEssentials = async () => {
         console.log('Signing out user. Deleting session info, auth token');
-        setSignInDlgState({ ...signInDlgState, isLoggedIn: false, loginType: '', signOut: false });
+        setSignInDlgState((prevState: SignInState) => {
+            const _state = { ...prevState };
+            _state.isLoggedIn = false;
+            _state.loginType = '';
+            _state.signOut = false;
+            return _state;
+        });
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
         try {
@@ -314,7 +324,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 _state.chainId = chainId;
                 return _state;
             });
-            if(chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
+            if (chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
         };
         const handleEEDisconnect = (code: number, reason: string) => {
             console.log('Disconnect code: ', code, ', reason: ', reason);
@@ -335,7 +345,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 inAppWeb3.eth.getChainId().then((chainId: number) => {
                     _state.chainId = chainId;
-                    if(chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
+                    if (chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
                 });
                 return _state;
             });
@@ -419,7 +429,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }
             }
         }
-        if(chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
+        if (chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
         return () => {
             if (walletConnectProvider.removeListener) {
                 walletConnectProvider.removeListener('accountsChanged', handleEEAccountsChanged);
@@ -503,7 +513,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             <ModalDialog
                 open={signInDlgState.signInDlgOpened}
                 onClose={() => {
-                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.signInDlgOpened = false;
+                        return _state;
+                    });
                 }}
             >
                 <ConnectDID
@@ -522,7 +536,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             <ModalDialog
                 open={signInDlgState.downloadEssentialsDlgOpened}
                 onClose={() => {
-                    setSignInDlgState({ ...signInDlgState, downloadEssentialsDlgOpened: false });
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.downloadEssentialsDlgOpened = false;
+                        return _state;
+                    });
                 }}
             >
                 <DownloadEssentials />

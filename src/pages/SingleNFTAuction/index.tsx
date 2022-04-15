@@ -18,7 +18,7 @@ import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestBids, getNFTLatestTxs } from 'src/services/fetch';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import Container from 'src/components/Container';
@@ -262,9 +262,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                                 progressBar: 0,
                                                             });
                                                         } else {
-                                                            setSignInDlgState({
-                                                                ...signInDlgState,
-                                                                signInDlgOpened: true,
+                                                            setSignInDlgState((prevState: SignInState) => {
+                                                                const _state = { ...prevState };
+                                                                _state.signInDlgOpened = true;
+                                                                return _state;
                                                             });
                                                         }
                                                     }}
@@ -283,8 +284,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             sx={{ marginTop: 3, width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    const endTimeStamp = productDetail.endTimestamp ? productDetail.endTimestamp : 0;
-                                                    if(new Date().getTime() <= endTimeStamp) {
+                                                    const endTimeStamp = productDetail.endTimestamp
+                                                        ? productDetail.endTimestamp
+                                                        : 0;
+                                                    if (new Date().getTime() <= endTimeStamp) {
                                                         setDialogState({
                                                             ...dialogState,
                                                             placeBidDlgOpened: true,
@@ -295,8 +298,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                             placeBidLastBid:
                                                                 topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
                                                         });
-                                                    }
-                                                    else {
+                                                    } else {
                                                         enqueueSnackbar(`Auction has expired.`, {
                                                             variant: 'error',
                                                             anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -304,7 +306,11 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                         window.location.reload();
                                                     }
                                                 } else {
-                                                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                    setSignInDlgState((prevState: SignInState) => {
+                                                        const _state = { ...prevState };
+                                                        _state.signInDlgOpened = true;
+                                                        return _state;
+                                                    });
                                                 }
                                             }}
                                         >
@@ -326,9 +332,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                                 cancelSaleOrderId: productDetail.orderId || '',
                                                             });
                                                         } else {
-                                                            setSignInDlgState({
-                                                                ...signInDlgState,
-                                                                signInDlgOpened: true,
+                                                            setSignInDlgState((prevState: SignInState) => {
+                                                                const _state = { ...prevState };
+                                                                _state.signInDlgOpened = true;
+                                                                return _state;
                                                             });
                                                         }
                                                     }}
@@ -347,9 +354,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                                 changePriceOrderId: productDetail.orderId || '',
                                                             });
                                                         } else {
-                                                            setSignInDlgState({
-                                                                ...signInDlgState,
-                                                                signInDlgOpened: true,
+                                                            setSignInDlgState((prevState: SignInState) => {
+                                                                const _state = { ...prevState };
+                                                                _state.signInDlgOpened = true;
+                                                                return _state;
                                                             });
                                                         }
                                                     }}

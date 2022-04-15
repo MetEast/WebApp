@@ -3,7 +3,7 @@ import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { PrimaryButton, SecondaryButton, PinkButton } from 'src/components/Buttons/styles';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { getImageFromAsset } from 'src/services/common';
 import { ProfileImageWrapper, ProfileImage, BannerBox, useStyles } from './styles';
@@ -115,13 +115,14 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             .then((token: any) => {
                 setDialogState({ ...dialogState, progressBar: 100});
                 if (token) {
-                    setSignInDlgState({
-                        ...signInDlgState,
-                        token: token,
-                        userName: userName,
-                        userDescription: userDescription,
-                        userAvatar: urlAvatar,
-                        userCoverImage: urlCoverImage,
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.token = token;
+                        _state.userName = userName;
+                        _state.userDescription = userDescription;
+                        _state.userAvatar = urlAvatar;
+                        _state.userCoverImage = urlCoverImage;
+                        return _state;
                     });
                     setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                     enqueueSnackbar('Saved!', {
@@ -146,6 +147,8 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 onClose();
             });
     };
+
+    console.log(userCoverImageURL)
 
     return (
         <Stack

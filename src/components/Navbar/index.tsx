@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
 import PageButton from './PageButton';
 import { useNavigate } from 'react-router-dom';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 import { useDialogContext } from 'src/context/DialogContext';
 import { PrimaryButton } from 'src/components/Buttons/styles';
@@ -153,7 +153,12 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                                         createNFTDlgOpened: true,
                                         createNFTDlgStep: 0,
                                     });
-                                else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                else
+                                    setSignInDlgState((prevState: SignInState) => {
+                                        const _state = { ...prevState };
+                                        _state.signInDlgOpened = true;
+                                        return _state;
+                                    });
                             }}
                             sx={{ paddingX: mobile ? 0 : 2, minWidth: 40 }}
                         >
@@ -174,7 +179,12 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                                         createBlindBoxDlgOpened: true,
                                         createBlindBoxDlgStep: 0,
                                     });
-                                else setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                else
+                                    setSignInDlgState((prevState: SignInState) => {
+                                        const _state = { ...prevState };
+                                        _state.signInDlgOpened = true;
+                                        return _state;
+                                    });
                             }}
                         >
                             <Icon icon="ph:cube" fontSize={20} color="white" style={{ marginBottom: 2 }} />
@@ -205,7 +215,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
             size="small"
             sx={{ paddingX: 2 }}
             onClick={() => {
-                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                setSignInDlgState((prevState: SignInState) => {
+                    const _state = { ...prevState };
+                    _state.signInDlgOpened = true;
+                    return _state;
+                });
             }}
         >
             <Icon icon="ph:sign-in" fontSize={20} color="white" style={{ marginRight: 4, marginBottom: 2 }} />

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { Typography, Stack, Button } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
 
 export interface ComponentProps {
@@ -27,7 +27,11 @@ const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
             <SecondaryButton
                 size="small"
                 onClick={() => {
-                    setSignInDlgState({ ...signInDlgState, signInDlgOpened: false });
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.signInDlgOpened = false;
+                        return _state;
+                    });
                 }}
                 sx={{ width: 105, alignSelf: 'flex-start', display: { xs: 'flex', md: 'none' } }}
             >
@@ -55,10 +59,11 @@ const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
                 <Button
                     sx={{ fontSize: 14, fontWeight: 700 }}
                     onClick={() => {
-                        setSignInDlgState({
-                            ...signInDlgState,
-                            signInDlgOpened: false,
-                            downloadEssentialsDlgOpened: true,
+                        setSignInDlgState((prevState: SignInState) => {
+                            const _state = { ...prevState };
+                            _state.signInDlgOpened = false;
+                            _state.downloadEssentialsDlgOpened = true;
+                            return _state;
                         });
                     }}
                 >

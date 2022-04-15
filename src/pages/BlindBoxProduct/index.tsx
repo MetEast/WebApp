@@ -7,7 +7,7 @@ import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
 import { PrimaryButton } from 'src/components/Buttons/styles';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
 import { getBBItem, getELA2USD, getMyFavouritesList, getNFTItems, updateBBStatus } from 'src/services/fetch';
@@ -249,7 +249,11 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                                             : blindBoxDetail.instock,
                                                 });
                                             } else {
-                                                setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+                                                setSignInDlgState((prevState: SignInState) => {
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
                                             }
                                         }}
                                     >

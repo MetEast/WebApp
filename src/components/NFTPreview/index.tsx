@@ -8,7 +8,7 @@ import { enumSingleNFTType, enumBlindBoxNFTType } from 'src/types/product-types'
 import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
     isLoading: boolean;
@@ -89,7 +89,11 @@ const NFTPreview: React.FC<ComponentProps> = ({
                     console.log(error);
                 });
         } else {
-            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+            setSignInDlgState((prevState: SignInState) => {
+                const _state = { ...prevState };
+                _state.signInDlgOpened = true;
+                return _state;
+            });
         }
     };
 

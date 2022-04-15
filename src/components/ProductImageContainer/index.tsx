@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Container, LikeBtn } from './styles';
 import { Icon } from '@iconify/react';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-import { Box, Skeleton } from '@mui/material';
+// import { Box, Skeleton } from '@mui/material';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -58,7 +58,11 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
                     console.log(error);
                 });
         } else {
-            setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
+            setSignInDlgState((prevState: SignInState) => {
+                const _state = { ...prevState };
+                _state.signInDlgOpened = true;
+                return _state;
+            });
         }
     };
 
