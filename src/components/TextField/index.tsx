@@ -60,7 +60,7 @@ const CustomTextField: React.FC<ComponentProps> = ({
     }, [text]);
 
     React.useEffect(() => {
-        setText(inputValue === undefined || inputValue === 'NaN' ? '' : inputValue);
+        setText(inputValue === undefined || (number && inputValue === 'NaN') ? '' : inputValue);
     }, [inputValue]);
 
     return (
