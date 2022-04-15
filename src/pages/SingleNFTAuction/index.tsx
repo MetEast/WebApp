@@ -20,6 +20,7 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestBids, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
@@ -36,6 +37,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
@@ -281,18 +283,26 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             sx={{ marginTop: 3, width: '100%' }}
                                             onClick={() => {
                                                 if (signInDlgState.isLoggedIn) {
-                                                    const topSelfBid = myBidsList.length ? myBidsList[0].price : 0;
-                                                    const topOtherBid = bidsList.length ? bidsList[0].price : 0;
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        placeBidDlgOpened: true,
-                                                        placeBidDlgStep: 0,
-                                                        placeBidName: productDetail.name,
-                                                        placeBidOrderId: productDetail.orderId || '',
-                                                        placeBidMinLimit: productDetail.price_ela,
-                                                        placeBidLastBid:
-                                                            topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
-                                                    });
+                                                    const endTimeStamp = productDetail.endTimestamp ? productDetail.endTimestamp : 0;
+                                                    if(new Date().getTime() <= endTimeStamp) {
+                                                        setDialogState({
+                                                            ...dialogState,
+                                                            placeBidDlgOpened: true,
+                                                            placeBidDlgStep: 0,
+                                                            placeBidName: productDetail.name,
+                                                            placeBidOrderId: productDetail.orderId || '',
+                                                            placeBidMinLimit: productDetail.price_ela,
+                                                            placeBidLastBid:
+                                                                topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
+                                                        });
+                                                    }
+                                                    else {
+                                                        enqueueSnackbar(`Auction has expired.`, {
+                                                            variant: 'error',
+                                                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                                        });
+                                                        window.location.reload();
+                                                    }
                                                 } else {
                                                     setSignInDlgState({ ...signInDlgState, signInDlgOpened: true });
                                                 }

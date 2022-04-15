@@ -401,6 +401,7 @@ export const getNFTItem = async (
         const createTime = getTime(itemObject.createTime);
         _NFTItem.createTime = createTime.date + ' ' + createTime.time;
         _NFTItem.status = itemObject.status;
+        _NFTItem.endTimestamp = itemObject.endTime ? parseInt(itemObject.endTime) * 1000 : 0;
         if (itemObject.endTime) {
             const endTime = getTime(itemObject.endTime);
             _NFTItem.endTime = endTime.date + ' ' + endTime.time;

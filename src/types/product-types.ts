@@ -88,6 +88,7 @@ export type TypeProduct = {
     quantity?: number;
     royaltyOwner?: string;
     timestamp?: number;
+    endTimestamp?: number;
     thumbnail?: string;
     asset?: string;
     kind?: string;
