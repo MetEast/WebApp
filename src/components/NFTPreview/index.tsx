@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSignInContext } from 'src/context/SignInContext';
 
 export interface ComponentProps {
-    isLoading?: boolean;
+    isLoading: boolean;
     product: TypeProduct;
     productType: number; //0: from Home page, 1: from Products page, 2: from BlindBox page, 3: from BlindBox Product NFTSold
     index: number;

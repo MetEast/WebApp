@@ -13,6 +13,7 @@ import Container from 'src/components/Container';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [productList, setProductList] = useState<Array<TypeProduct>>(Array(4).fill(blankNFTItem));
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>(Array(4).fill(blankNFTItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);
@@ -35,6 +36,7 @@ const HomePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchCollections = async () => {
+            if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _newNFTList = await getNFTItemList('pageNum=1&pageSize=10', ELA2USD, likeList);
@@ -46,6 +48,7 @@ const HomePage: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 setProductList(_newNFTList);
                 setCollectionList(_popularNFTList);
+                setIsLoading(false);
             }
         };
         fetchCollections().catch(console.error);
@@ -169,6 +172,7 @@ const HomePage: React.FC = (): JSX.Element => {
                         {productList.map((product, index) => (
                             <SwiperSlide key={`new-product-${index}`} style={{ height: 'auto' }}>
                                 <NFTPreview
+                                    isLoading={isLoading}
                                     product={product}
                                     productType={0}
                                     index={index}
@@ -196,6 +200,7 @@ const HomePage: React.FC = (): JSX.Element => {
                         {collectionList.map((collection, index) => (
                             <SwiperSlide key={`popular-collection-${index}`} style={{ height: 'auto' }}>
                                 <NFTPreview
+                                    isLoading={isLoading}
                                     product={collection}
                                     productType={0}
                                     index={index}
