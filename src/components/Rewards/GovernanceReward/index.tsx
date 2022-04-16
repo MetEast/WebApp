@@ -5,10 +5,13 @@ import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { BecomeDAOBtn } from './styles';
+import { useDialogContext } from 'src/context/DialogContext';
 
 const GovernanceReward: React.FC = (): JSX.Element => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+
+    const [dialogState, setDialogState] = useDialogContext();
 
     return (
         <Box borderRadius={3} paddingX={{ xs: 4, md: 8 }} paddingY={{ xs: 4, md: 7 }} sx={{ background: '#185BFF' }}>
@@ -30,7 +33,13 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                                 color="white"
                                 style={{ marginTop: matchDownMd ? 2 : 14 }}
                             />
-                            <BecomeDAOBtn>Become DAO</BecomeDAOBtn>
+                            <BecomeDAOBtn
+                                onClick={() => {
+                                    setDialogState({ ...dialogState, becomeDAODlgOpened: true });
+                                }}
+                            >
+                                Become DAO
+                            </BecomeDAOBtn>
                         </Stack>
                     </Stack>
                     <Typography fontSize={{ xs: 12, md: 16 }} fontWeight={500} color="white" marginTop={1}>
@@ -49,7 +58,13 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                         </Typography>
                     </Typography>
                     <ClaimBox sx={{ marginTop: 1.5 }} />
-                    <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white" lineHeight={1.2} marginTop={2.5}>
+                    <Typography
+                        fontSize={{ xs: 12, md: 14 }}
+                        fontWeight={500}
+                        color="white"
+                        lineHeight={1.2}
+                        marginTop={2.5}
+                    >
                         Users can claim rewards every day, or accumulate a one-time claim. Rewards never disappear or
                         expire.
                     </Typography>

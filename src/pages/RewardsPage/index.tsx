@@ -28,7 +28,10 @@ const RewardsPage: React.FC = (): JSX.Element => {
                                     src="/assets/images/rewards/help.png"
                                     width={matchDownSm ? 12 : 28}
                                     alt=""
-                                    style={{ marginLeft: matchDownSm ? -4 : -12, marginBottom: matchDownSm ? 12 : 28 }}
+                                    style={{
+                                        marginLeft: matchDownSm ? -4 : -12,
+                                        marginBottom: matchDownSm ? 12 : 28,
+                                    }}
                                 />
                             </Stack>
                             <Stack marginLeft={1} marginTop={{ xs: 2, md: 0 }}>
