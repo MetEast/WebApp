@@ -17,6 +17,7 @@ import PlaceBidDlgContainer from 'src/components/TransactionDialogs/PlaceBid';
 import BuyNowDlgContainer from 'src/components/TransactionDialogs/BuyNow';
 import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
 import BecomeDAODlgContainer from 'src/components/TransactionDialogs/Rewards/BecomeDAO';
+import RemoveDAODlgContainer from 'src/components/TransactionDialogs/Rewards/RemoveDAO';
 // import CancelBidDlgContainer from '../TransactionDialogs/CancelBid';
 // import UpdateBidDlgContainer from '../TransactionDialogs/UpdateBid';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -132,7 +133,7 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             {dialogState.manageProfileDlgOpened && <ManageProfileDlgContainer />}
             {dialogState.editProfileDlgOpened && <EditProfileDlgContainer />}
             {dialogState.becomeDAODlgOpened && <BecomeDAODlgContainer />}
-            
+            {dialogState.removeDAODlgOpened && <RemoveDAODlgContainer />}
         </>
     );
 };
