@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TypeProduct } from 'src/types/product-types';
+import { enumMyNFTType, TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
 import { Typography, Stack, Box, Skeleton } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
@@ -49,6 +49,8 @@ const NFTPreview: React.FC<ComponentProps> = ({
             return `/blind-box/product/${product.tokenId}`;
         else return `/`;
     };
+
+    const endedAuctionTypes = product.type === enumSingleNFTType.OnAuction && product.isExpired ? [enumSingleNFTType.OnAuction, enumBlindBoxNFTType.SaleEnded] : undefined;
 
     const changeLikeState = (event: React.MouseEvent) => {
         event.preventDefault(); //
@@ -211,6 +213,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                             <ProductBadgeContainer
                                 nfttype={product.type}
                                 content={product.endTime}
+                                myNftTypes={endedAuctionTypes}
                                 isReservedAuction={product.status === 'HAS BIDS'}
                             />
                         )}
