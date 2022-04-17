@@ -4,12 +4,14 @@ import { Stack, Typography, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@material-ui/core/styles';
+import { Markup } from 'interweave';
 
 export interface ComponentProps {
     id: string | number;
     title?: string;
     message: string | React.ReactNode;
     variant: 'success' | 'warning' | 'error' | 'info';
+    isMarkup?: boolean;
 }
 
 const variantStyles = {
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, message, variant }, ref) => {
+const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, message, variant, isMarkup }, ref) => {
     const classes = useStyles();
     const { closeSnackbar } = useSnackbar();
 
@@ -64,7 +66,7 @@ const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, me
                         </Typography>
                     )}
                     <Typography fontSize={14} fontWeight={500} color="white">
-                        {message}
+                        {isMarkup ? <Markup content={message?.toString()} /> : message}
                     </Typography>
                 </Stack>
                 <IconButton onClick={handleDismiss}>

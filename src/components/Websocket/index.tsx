@@ -14,14 +14,14 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const clientRef: any = useRef(null);
     const [waitingToReconnect, setWaitingToReconnect] = useState<boolean>(false);
-    const [messages, setMessages] = useState<Array<TypeNotificationFSocket>>([]);
+    // const [messages, setMessages] = useState<Array<TypeNotificationFSocket>>([]);
     // const [isOpen, setIsOpen] = useState(false);
 
-    const showSucceedSnackBar = (title: string, context: string) => {
+    const showNotificationSnackBar = (title: string, context: string) => {
         enqueueSnackbar('', {
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
             autoHideDuration: 3000,
-            content: (key) => <SnackMessage id={key} title={title} message={context} variant="info" />,
+            content: (key) => <SnackMessage id={key} title={title} message={context} variant="info" isMarkup={true} />,
         });
     };
 
@@ -80,7 +80,7 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 if (msgData.type === 'alert') {
                     const note: TypeNotificationFSocket = { ...msgData };
                     if (note.to !== undefined && note.to === userAddress) {
-                        showSucceedSnackBar(note.title || '', note.context || '');
+                        showNotificationSnackBar(note.title || '', note.context || '');
                         setNotificationState({
                             ...notificationState,
                             notesUnreadCnt: notificationState.notesUnreadCnt + 1,
