@@ -40,13 +40,21 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
     const [remarks, setRemarks] = useState<string>(user2Edit.remarks);
 
     const handleUpdateUserRole = (methodName: string, state: boolean) => {
-        if (dialogState.adminUserBannedTxFee > signInDlgState.walletBalance) {
+        if (!remarks) {
+            enqueueSnackbar('Remarks must be set!', {
+                variant: 'error',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return;
+        }
+        else if (dialogState.adminUserBannedTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
         }
+        
         let role = -1;
         setOnProgress(true);
         let unmounted = false;
@@ -86,7 +94,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                 console.log(txHash);
                 if (!unmounted) setDialogState({ ...updatedState, progressBar: 70 });
                 role = user2Edit.status === 0 ? 3 : 2;
-                return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
+                return updateUserRole(signInDlgState.token, user2Edit.address, role, remarks);
             })
             .then((success: boolean) => {
                 if (success) {
@@ -104,7 +112,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                     const updatedUserInfo: AdminUsersItemType = {
                         ...user2Edit,
                         status: role === 2 ? 0 : 1,
-                        remarks: '',
+                        remarks: remarks,
                     };
                     handleUserUpdate(updatedUserInfo);
                 }
