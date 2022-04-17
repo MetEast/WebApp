@@ -160,6 +160,7 @@ export const blankAdminBannerItem: AdminBannersItemType = {
 
 export const blankContractMethodParam: TypeContractMethodPram = {
     contractType: 1,
+    callType: 1,
     method: '',
     price: '0',
     tokenId: '',

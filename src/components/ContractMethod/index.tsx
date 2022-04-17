@@ -3,6 +3,11 @@ import { AbiItem } from 'web3-utils';
 import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
 import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { TypeContractMethodPram } from 'src/types/mint-types';
+import {
+    METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI,
+    METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS,
+} from 'src/contracts/METokenMiningReward';
+import { METEAST_STAKING_TOKEN_CONTRACT_ABI, METEAST_STAKING_TOKEN_CONTRACT_ADDRESS } from 'src/contracts/METokenStaking';
 
 export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractMethodPram) =>
     new Promise((resolve: (value: string) => void, reject: (error: string) => void) => {
@@ -138,6 +143,71 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                         .once('transactionHash', handleTxEvent)
                         .once('receipt', handleReceiptEvent)
                         .on('error', handleErrorEvent);
+                }
+            });
+    });
+
+export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: TypeContractMethodPram) =>
+    new Promise((resolve: (value: string) => void, reject: (error: string) => void) => {
+        const contractAbi = param.contractType === 1 ? METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI : METEAST_STAKING_TOKEN_CONTRACT_ABI;
+        const contractAddress = param.contractType === 1 ? METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS : METEAST_STAKING_TOKEN_CONTRACT_ADDRESS;
+        const smartContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
+        let accounts: string[] = [];
+        let gasPrice: string = '';
+        let txHash: string = '';
+        const handleTxEvent = (hash: string) => {
+            console.log('transactionHash', hash);
+            txHash = hash;
+        };
+        const handleReceiptEvent = (receipt: any) => {
+            console.log('receipt', receipt);
+            resolve(txHash);
+        };
+        const handleErrorEvent = (error: any) => {
+            console.error('error', error);
+            reject(error);
+        };
+
+        walletConnectWeb3.eth
+            .getAccounts()
+            .then((_accounts: string[]) => {
+                accounts = _accounts;
+                return walletConnectWeb3.eth.getGasPrice();
+            })
+            .then((_gasPrice: string) => {
+                gasPrice = _gasPrice;
+                const transactionParams = {
+                    from: accounts[0],
+                    gasPrice: gasPrice,
+                    gas: 5000000,
+                    value: param.price,
+                };
+
+                let contractMethod = null;
+                switch (param.method) {
+                    case 'getTotalRewardAsBuyer':
+                        contractMethod = smartContract.methods.getTotalRewardAsBuyer(accounts[0]);
+                        break;
+                    case 'getTotalRewardAsCreator':
+                        contractMethod = smartContract.methods.getTotalRewardAsCreator(accounts[0]);
+                        break;
+                    case 'getTotalRewardAsStaker':
+                        contractMethod = smartContract.methods.getTotalRewardAsStaker(accounts[0]);
+                        break;
+                    default:
+                        resolve('no action');
+                        break;
+                }
+                if (param.callType === 1) {
+                    contractMethod
+                        .send(transactionParams)
+                        .once('transactionHash', handleTxEvent)
+                        .once('receipt', handleReceiptEvent)
+                        .on('error', handleErrorEvent);
+                } else {
+                    contractMethod.call().then((res: string) => {
+                        resolve(res);
+                    });
                 }
             });
     });
