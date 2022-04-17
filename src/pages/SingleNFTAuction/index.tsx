@@ -317,7 +317,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             Place Bid
                                         </PrimaryButton>
                                     )}
-                                    {!signInDlgState.walletAccounts.length &&
+                                    {!!signInDlgState.walletAccounts.length &&
                                         productDetail.holder === signInDlgState.walletAccounts[0] &&
                                         !bidsList.length && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
