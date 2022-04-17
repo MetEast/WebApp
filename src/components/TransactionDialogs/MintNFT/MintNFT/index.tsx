@@ -204,7 +204,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintFile !== null &&
                                 stateFile !== null &&
                                 royalties > 0 &&
-                                royalties < 100 &&
+                                royalties <= 30 &&
                                 isNaN(royalties) !== true
                             ) {
                                 setDialogState({
