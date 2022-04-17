@@ -239,6 +239,7 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
         _NFT.likes = itemObject.likes;
         _NFT.views = itemObject.views;
         _NFT.status = itemObject.status;
+        _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
         _NFT.isLike =
             likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
                 ? false

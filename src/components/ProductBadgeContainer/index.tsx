@@ -9,7 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ProductBadgeContainerProps extends SpacingProps {
     nfttype: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
-    myNftTypes?: Array<enumMyNFTType>;
+    myNftTypes?: Array<enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType>;
     content?: string;
     isReservedAuction: boolean;
 }
