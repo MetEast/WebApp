@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { enumMyNFTType, TypeProduct } from 'src/types/product-types';
+import { TypeProduct } from 'src/types/product-types';
 import { GalleryItemContainer, ProductImageContainer, ImageBox, LikeBtn } from './styles';
 import { Typography, Stack, Box, Skeleton } from '@mui/material';
 import ProductBadgeContainer from '../ProductBadgeContainer';
@@ -9,6 +9,8 @@ import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export interface ComponentProps {
     isLoading: boolean;
@@ -50,7 +52,12 @@ const NFTPreview: React.FC<ComponentProps> = ({
         else return `/`;
     };
 
-    const endedAuctionTypes = product.type === enumSingleNFTType.OnAuction && product.isExpired ? [enumSingleNFTType.OnAuction, enumBlindBoxNFTType.SaleEnded] : undefined;
+    const theme = useTheme();
+    const matchDownSm = useMediaQuery(theme.breakpoints.up('sm'));
+    const endedAuctionTypes =
+        matchDownSm && product.type === enumSingleNFTType.OnAuction && product.isExpired
+            ? [enumSingleNFTType.OnAuction, enumBlindBoxNFTType.SaleEnded]
+            : undefined;
 
     const changeLikeState = (event: React.MouseEvent) => {
         event.preventDefault(); //
