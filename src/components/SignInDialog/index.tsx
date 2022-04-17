@@ -76,8 +76,52 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     };
 
+    const addNetworkForMM = async() => {
+        // Check if MetaMask is installed
+        // MetaMask injects the global API into window.ethereum
+        if (window.ethereum) {
+            try {
+                // check if the chain to connect to is installed
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0x15' }], // chainId must be in hexadecimal numbers
+                });
+            } catch (error: any) {
+                // This error code indicates that the chain has not been added to MetaMask
+                // if it is not, then install it into the user MetaMask
+                if (error.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [
+                                {
+                                    chainId: '0x15',
+                                    chainName: 'Elastos Test Network',
+                                    nativeCurrency: {
+                                        name: 'ELASTOS',
+                                        symbol: 'ELA', // 2-6 characters long
+                                        decimals: 18,
+                                    },
+                                    rpcUrls: ['https://api-testnet.elastos.io/eth'],
+                                    blockExplorerUrls: ['https://eth-testnet.elastos.io'],
+                                },
+                            ],
+                        });
+                    } catch (addError) {
+                        console.error(addError);
+                    }
+                }
+                console.error(error);
+            }
+        } else {
+            // if no window.ethereum then MetaMask is not installed
+            alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
+        }
+    };
+
     // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
+        await addNetworkForMM();
         let currentConnector: any = null;
         if (wallet === 'MM') {
             currentConnector = injected;
