@@ -62,13 +62,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     };
 
-    const showChainErrorSnackBar = () => {
+    const showChainErrorSnackBar = async () => {
         enqueueSnackbar('', {
             anchorOrigin: { horizontal: 'right', vertical: 'top' },
             autoHideDuration: 5000,
             content: (key) => (
                 <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
             ),
+        });
+        await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x15' }], // chainId must be in hexadecimal numbers
         });
     };
 
