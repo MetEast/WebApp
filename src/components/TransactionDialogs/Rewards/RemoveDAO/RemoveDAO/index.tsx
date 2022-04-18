@@ -14,7 +14,7 @@ const RemoveDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         <Stack spacing={5} width={420}>
             <Stack alignItems="center" spacing={1}>
                 <DialogTitleTypo>Remove DAO</DialogTitleTypo>
-                <Typography fontSize={15} fontWeight={400} color="black">
+                <Typography fontSize={15} fontWeight={400} color="black" textAlign="center">
                     By removing your locked 10,000{' '}
                     <Typography fontSize={15} fontWeight={500} color="#1890FF" display="inline">
                         ME
