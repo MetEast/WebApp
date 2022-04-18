@@ -21,10 +21,10 @@ export const NotificationTypo = styled(Typography)`
     justify-content: center;
     align-items: center;
     position: absolute;
-    right: 2px;
-    top: 2px;
-    width: 20px;
-    height: 20px;
+    right: 0px;
+    top: 0px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     font-size: 10px;
     font-weight: 700;
