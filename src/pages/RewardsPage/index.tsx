@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import Container from 'src/components/Container';
 import { useTheme } from '@mui/material/styles';
@@ -15,7 +15,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import { callContractMethod, callTokenomicsContractMethod } from 'src/components/ContractMethod';
+import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam, blankMiningReward } from 'src/constants/init-constants';
 import { TypeMiningReward } from 'src/types/product-types';
 
@@ -44,93 +44,194 @@ const RewardsPage: React.FC = (): JSX.Element => {
             callType: 2,
             method: 'balanceOf',
             price: '0',
-        }).then((balance: string) => {
-            if (!unmounted) {
-                setSignInDlgState((prevState: SignInState) => {
-                    const _state = { ...prevState };
-                    _state.meTokenBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                    return _state;
+        })
+            .then((balance: string) => {
+                if (!unmounted) {
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.meTokenBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                        return _state;
+                    });
+                }
+                return callTokenomicsContractMethod(walletConnectWeb3, {
+                    ...blankContractMethodParam,
+                    contractType: 3, // staking
+                    callType: 2,
+                    method: 'isStakeholder',
+                    price: '0',
                 });
-            }
-            return callTokenomicsContractMethod(walletConnectWeb3, {
-                ...blankContractMethodParam,
-                contractType: 3, // staking
-                callType: 2,
-                method: 'isStakeholder',
-                price: '0',
+            })
+            .then((isStakeHolder: string) => {
+                if (!unmounted) {
+                    setSignInDlgState((prevState: SignInState) => {
+                        const _state = { ...prevState };
+                        _state.isStakeHolder = Boolean(isStakeHolder);
+                        return _state;
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
             });
-        }).then((isStakeHolder: string) => {
-            if (!unmounted) {
-                setSignInDlgState((prevState: SignInState) => {
-                    const _state = { ...prevState };
-                    _state.isStakeHolder = Boolean(isStakeHolder);
-                    return _state;
-                });
-            }
-        }).catch((error) => {
-            console.log(error);
-        });
         return () => {
             unmounted = true;
         };
     }, [dialogState.becomeDAODlgOpened, dialogState.removeDAODlgOpened]);
-    
+
     useEffect(() => {
         let unmounted = false;
         callTokenomicsContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 1, // token
-            callType: 2,
-            method: 'balanceOf',
-            price: '0',
-        }).then((balance: string) => {
-            if (!unmounted) {
-                setSignInDlgState((prevState: SignInState) => {
-                    const _state = { ...prevState };
-                    _state.meTokenBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                    return _state;
-                });
-            }
-            return callTokenomicsContractMethod(walletConnectWeb3, {
-                ...blankContractMethodParam,
-                contractType: 3, // staking
-                callType: 2,
-                method: 'isStakeholder',
-                price: '0',
-            });
-        }).then((isStakeHolder: string) => {
-            if (!unmounted) {
-                setSignInDlgState((prevState: SignInState) => {
-                    const _state = { ...prevState };
-                    _state.isStakeHolder = Boolean(isStakeHolder);
-                    return _state;
-                });
-            }
-        });
-
-        callTokenomicsContractMethod(walletConnectWeb3, {
-            ...blankContractMethodParam,
-            contractType: 1,
+            contractType: 4,
             callType: 2,
             method: 'getTotalRewardAsBuyer',
-        }).then((_lastReward: string) => {
-            // if (!unmounted) setLastRewards(_lastReward);
-            return callTokenomicsContractMethod(walletConnectWeb3, {
-                ...blankContractMethodParam,
-                contractType: 1,
-                callType: 2,
-                method: 'getTotalRewardAsBuyer',
+        })
+            .then((_receivedReward: string) => {
+                if (!unmounted) {
+                    setBuyerRewards((prevState: TypeMiningReward) => {
+                        const _state = { ...prevState };
+                        _state.receivedReward = parseFloat(parseFloat(_receivedReward).toFixed(2));
+                        return _state;
+                    });
+                }
+                return callTokenomicsContractMethod(walletConnectWeb3, {
+                    ...blankContractMethodParam,
+                    contractType: 4,
+                    callType: 2,
+                    method: 'getTotalRewardAsBuyer',
+                });
+            })
+            .then((_availableReward: string) => {
+                if (!unmounted) {
+                    setBuyerRewards((prevState: TypeMiningReward) => {
+                        const _state = { ...prevState };
+                        _state.availableToken = parseFloat(parseFloat(_availableReward).toFixed(2));
+                        return _state;
+                    });
+                }
+                return callTokenomicsContractMethod(walletConnectWeb3, {
+                    ...blankContractMethodParam,
+                    contractType: 4,
+                    callType: 2,
+                    method: 'getTotalRewardAsBuyer',
+                });
+            })
+            .then((_receivedReward: string) => {
+                if (!unmounted) {
+                    setCreatorRewards((prevState: TypeMiningReward) => {
+                        const _state = { ...prevState };
+                        _state.receivedReward = parseFloat(parseFloat(_receivedReward).toFixed(2));
+                        return _state;
+                    });
+                }
+                return callTokenomicsContractMethod(walletConnectWeb3, {
+                    ...blankContractMethodParam,
+                    contractType: 4,
+                    callType: 2,
+                    method: 'getTotalRewardAsBuyer',
+                });
+            })
+            .then((_availableReward: string) => {
+                if (!unmounted) {
+                    setCreatorRewards((prevState: TypeMiningReward) => {
+                        const _state = { ...prevState };
+                        _state.availableToken = parseFloat(parseFloat(_availableReward).toFixed(2));
+                        return _state;
+                    });
+                }
+                return callTokenomicsContractMethod(walletConnectWeb3, {
+                    ...blankContractMethodParam,
+                    contractType: 4,
+                    callType: 2,
+                    method: 'getTotalRewardAsBuyer',
+                });
+            })
+            .then((_receivedReward: string) => {
+                if (!unmounted) {
+                    setStakerRewards((prevState: TypeMiningReward) => {
+                        const _state = { ...prevState };
+                        _state.receivedReward = parseFloat(parseFloat(_receivedReward).toFixed(2));
+                        return _state;
+                    });
+                }
+                return callTokenomicsContractMethod(walletConnectWeb3, {
+                    ...blankContractMethodParam,
+                    contractType: 4,
+                    callType: 2,
+                    method: 'getTotalRewardAsBuyer',
+                });
+            })
+            .then((_availableReward: string) => {
+                if (!unmounted) {
+                    setStakerRewards((prevState: TypeMiningReward) => {
+                        const _state = { ...prevState };
+                        _state.availableToken = parseFloat(parseFloat(_availableReward).toFixed(2));
+                        return _state;
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
             });
-        }).then((_receivedReward: string) => {
-            // if (!unmounted) setReceivedRewards(_receivedReward);
-        });
         return () => {
             unmounted = true;
         };
     }, []);
 
     const withdrawReward = (rewardType: number) => {
+        if (dialogState.withdrawRewardTxFee > signInDlgState.walletBalance) {
+            enqueueSnackbar('Insufficient balance!', {
+                variant: 'error',
+                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            });
+            return;
+        }
+        let unmounted = false;
+        const updatedState = { ...dialogState };
+        updatedState.waitingConfirmDlgOpened = true;
+        updatedState.waitingConfirmDlgTimer = setTimeout(() => {
+            setDialogState({
+                ...defaultDlgState,
+                errorMessageDlgOpened: true,
+            });
+        }, 120000);
+        if (!unmounted) setDialogState(updatedState);
 
+        const methodName = rewardType === 1 ? 'withdrawBuyerReward' : (rewardType === 2 ? 'withdrawCreatorReward' : 'withdrawStakerReward')
+        callTokenomicsContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 4,
+            callType: 1,
+            method: methodName,
+        })
+            .then((txHash: string) => {
+                enqueueSnackbar('Withdraw succeed!', {
+                    variant: 'success',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        waitingConfirmDlgOpened: false,
+                    });
+                }
+            })
+            .catch((error) => {
+                enqueueSnackbar(`Withdraw error.`, {
+                    variant: 'error',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
+            });
+        return () => {
+            unmounted = true;
+        };
     };
 
     return (

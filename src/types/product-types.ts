@@ -304,5 +304,4 @@ export type TypeMiningReward = {
     availableToken: number;
     availablePrice: number;
     receivedReward: number;
-    stakedAmount: number;
 };

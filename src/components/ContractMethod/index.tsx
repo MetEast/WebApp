@@ -230,6 +230,15 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
                     case 'getTotalRewardAsStaker':
                         contractMethod = smartContract.methods.getTotalRewardAsStaker(accounts[0]);
                         break;
+                    case 'withdrawBuyerReward':
+                        contractMethod = smartContract.methods.withdrawBuyerReward();
+                        break;
+                    case 'withdrawCreatorReward':
+                        contractMethod = smartContract.methods.withdrawCreatorReward();
+                        break;
+                    case 'withdrawStakerReward':
+                        contractMethod = smartContract.methods.withdrawStakerReward();
+                        break;
                     default:
                         resolve('no action');
                         break;

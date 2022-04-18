@@ -213,5 +213,4 @@ export const blankMiningReward: TypeMiningReward = {
     availableToken: 0,
     availablePrice: 0,
     receivedReward: 0,
-    stakedAmount: 0,
 };

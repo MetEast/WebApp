@@ -110,7 +110,7 @@ const GovernanceReward: React.FC<ComponentProps> = ({ rewards, withdrawReward })
                             Lock up:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
-                            {rewards.stakedAmount}
+                            {signInDlgState.isStakeHolder ? '10,000' : '0'}
                         </Typography>
                     </Stack>
                 </Grid>

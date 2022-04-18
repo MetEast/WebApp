@@ -33,6 +33,7 @@ const ClaimBox: React.FC<ComponentProps> = ({ sx, rewardToken, rewardPrice, hand
             <PrimaryButton
                 size="small"
                 sx={{ width: 130, borderRadius: 0, fontSize: { xs: 15, md: 18 }, fontWeight: { xs: 600, md: 700 } }}
+                disabled={rewardToken ? false : true}
                 onClick={handleReceiveReward}
             >
                 claim
