@@ -4,11 +4,12 @@ import { Stack, Typography, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@material-ui/core/styles';
+import { Markup } from 'interweave';
 
 export interface ComponentProps {
     id: string | number;
     title?: string;
-    message: string | React.ReactNode;
+    message: string;
     variant: 'success' | 'warning' | 'error' | 'info';
 }
 
@@ -64,7 +65,7 @@ const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, me
                         </Typography>
                     )}
                     <Typography fontSize={14} fontWeight={500} color="white">
-                        {message}
+                        <Markup content={message} />
                     </Typography>
                 </Stack>
                 <IconButton onClick={handleDismiss}>
