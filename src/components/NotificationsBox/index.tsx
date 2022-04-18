@@ -1,10 +1,9 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { Container } from './styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import NotificationItem from './NotificationItem';
 import { TypeNotification } from 'src/types/notification-types';
-import useOnClickOutside from 'src/hooks/useOnClickOutside';
 import { useSignInContext } from 'src/context/SignInContext';
 import { markNotificationsAsRead } from 'src/services/fetch';
 import { useNotificationContext } from 'src/context/NotificationContext';
@@ -19,8 +18,6 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
     const [notificationState, setNotificationState] = useNotificationContext();
     const emptyNotifications = notificationsList.length === 0;
     const unReadNotes = notificationsList.filter((item: TypeNotification) => item.isRead === false);
-    const node = useRef<HTMLDivElement>();
-    useOnClickOutside(node, onClose);
 
     const handleMarkAsUnread = async () => {
         let unmounted = false;
@@ -50,7 +47,6 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
             alignItems={emptyNotifications ? 'center' : 'auto'}
             spacing={6}
             sx={{ overflowY: 'auto', overflowX: 'hidden' }}
-            ref={node}
         >
             {emptyNotifications ? (
                 <>
