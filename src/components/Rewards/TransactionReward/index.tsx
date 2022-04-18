@@ -1,141 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import ClaimBox from '../ClaimBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useSignInContext } from 'src/context/SignInContext';
-import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
-import { useSnackbar } from 'notistack';
-import Web3 from 'web3';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import { isInAppBrowser } from 'src/services/wallet';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
-import { callContractMethod, callTokenomicsContractMethod } from 'src/components/ContractMethod';
-import { blankContractMethodParam } from 'src/constants/init-constants';
+import { TypeMiningReward } from 'src/types/product-types';
 
-const TransactionReward: React.FC = (): JSX.Element => {
+interface ComponentProps {
+    rewards: TypeMiningReward;
+    withdrawReward: (index: number) => void;
+}
+
+const TransactionReward: React.FC<ComponentProps> = ({ rewards, withdrawReward }): JSX.Element => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-    const [signInDlgState] = useSignInContext();
-    const [dialogState, setDialogState] = useDialogContext();
-    const { enqueueSnackbar } = useSnackbar();
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
-    const [totalRewards, setTotalRewards] = useState<string>('0');
-    useEffect(() => {
-        let unmounted = false;
-        callTokenomicsContractMethod(walletConnectWeb3, {
-            ...blankContractMethodParam,
-            contractType: 1,
-            callType: 2,
-            method: "getTotalRewardAsBuyer",
-        }).then((result: string) => {
-            alert(result)
-           if(!unmounted) setTotalRewards(result); 
-        });
-        return () => {
-            unmounted = true;
-        };
-    }, []);
 
-    // const handleUpdateUserRole = (methodName: string) => {
-    //     if (dialogState.adminUserModeratorTxFee > signInDlgState.walletBalance) {
-    //         enqueueSnackbar('Insufficient balance!', {
-    //             variant: 'error',
-    //             anchorOrigin: { horizontal: 'right', vertical: 'top' },
-    //         });
-    //         return;
-    //     }
-    //     let role = -1;
-    //     setOnProgress(true);
-    //     let unmounted = false;
-
-    //     const updatedState = { ...dialogState };
-    //     updatedState.waitingConfirmDlgOpened = true;
-    //     updatedState.progressBar = 10;
-    //     updatedState.waitingConfirmDlgTimer = setTimeout(() => {
-    //         setDialogState({
-    //             ...defaultDlgState,
-    //             errorMessageDlgOpened: true,
-    //         });
-    //     }, 120000);
-    //     if (!unmounted) setDialogState(updatedState);
-
-    //     callContractMethod(walletConnectWeb3, {
-    //         ...blankContractMethodParam,
-    //         contractType: 1,
-    //         method: methodName,
-    //         price: '0',
-    //         address: user2Edit.address,
-    //     })
-    //         .then((txHash: string) => {
-    //             if (!unmounted) setDialogState({ ...updatedState, progressBar: 40 });
-    //             return callContractMethod(walletConnectWeb3, {
-    //                 ...blankContractMethodParam,
-    //                 contractType: 2,
-    //                 method: methodName,
-    //                 price: '0',
-    //                 address: user2Edit.address,
-    //             });
-    //         })
-    //         .then((txHash: string) => {
-    //             console.log(txHash);
-    //             if (!unmounted) setDialogState({ ...updatedState, progressBar: 70 });
-    //             role = user2Edit.status === 0 ? 1 : 2;
-    //             return updateUserRole(signInDlgState.token, user2Edit.address, role, '');
-    //         })
-    //         .then((success: boolean) => {
-    //             if (success) {
-    //                 enqueueSnackbar(`${user2Edit.status === 0 ? 'Add Moderator' : 'Remove Moderator'} succeed!`, {
-    //                     variant: 'success',
-    //                     anchorOrigin: { horizontal: 'right', vertical: 'top' },
-    //                 });
-    //                 if (!unmounted) {
-    //                     setDialogState({
-    //                         ...updatedState,
-    //                         waitingConfirmDlgOpened: false,
-    //                         progressBar: 100,
-    //                     });
-    //                 }
-    //                 const updatedUserInfo: AdminUsersItemType = {
-    //                     ...user2Edit,
-    //                     status: role === 1 ? 1 : 0,
-    //                     remarks: '',
-    //                 };
-    //                 handleUserUpdate(updatedUserInfo);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             enqueueSnackbar(`Cancel sale error.`, {
-    //                 variant: 'error',
-    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
-    //             });
-    //             if (!unmounted) {
-    //                 setDialogState({
-    //                     ...updatedState,
-    //                     waitingConfirmDlgOpened: false,
-    //                     errorMessageDlgOpened: true,
-    //                     progressBar: 0,
-    //                 });
-    //             }
-    //         })
-    //         .finally(() => {
-    //             setOnProgress(false);
-    //             onClose();
-    //         });
-    //     return () => {
-    //         unmounted = true;
-    //     };
-    // };
-    
     return (
         <Box borderRadius={3} paddingX={{ xs: 4, md: 8 }} paddingY={{ xs: 4, md: 7 }} sx={{ background: '#E8F4FF' }}>
             <Grid container columns={10} columnSpacing={8} rowGap={2.5}>
@@ -178,7 +57,12 @@ const TransactionReward: React.FC = (): JSX.Element => {
                             to be claimed
                         </Typography>
                     </Typography>
-                    <ClaimBox sx={{ marginTop: 1.5 }} />
+                    <ClaimBox
+                        sx={{ marginTop: 1.5 }}
+                        rewardToken={rewards.availableToken}
+                        rewardPrice={rewards.availablePrice}
+                        handleReceiveReward={() => withdrawReward(1)}
+                    />
                     <Typography
                         fontSize={{ xs: 12, md: 14 }}
                         fontWeight={500}
@@ -194,7 +78,7 @@ const TransactionReward: React.FC = (): JSX.Element => {
                             The most recent receipt received:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
-                            --
+                            {rewards.lastReceipt}
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
@@ -202,7 +86,7 @@ const TransactionReward: React.FC = (): JSX.Element => {
                             Received so far:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
-                            {totalRewards}
+                            {rewards.receivedReward}
                         </Typography>
                     </Stack>
                 </Grid>

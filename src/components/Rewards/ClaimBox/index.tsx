@@ -5,9 +5,12 @@ import { SxProps } from '@mui/system';
 
 interface ComponentProps {
     sx?: SxProps;
+    rewardToken: number;
+    rewardPrice: number;
+    handleReceiveReward: () => void;
 }
 
-const ClaimBox: React.FC<ComponentProps> = ({ sx }): JSX.Element => {
+const ClaimBox: React.FC<ComponentProps> = ({ sx, rewardToken, rewardPrice, handleReceiveReward }): JSX.Element => {
     return (
         <Stack direction="row" borderRadius={3} sx={{ overflow: 'hidden', ...sx }}>
             <Stack
@@ -21,15 +24,16 @@ const ClaimBox: React.FC<ComponentProps> = ({ sx }): JSX.Element => {
                 sx={{ background: 'white', borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }}
             >
                 <Typography fontSize={16} fontWeight={600} color="#0A0B0C">
-                    1000
+                    {rewardToken}
                 </Typography>
                 <Typography fontSize={10} fontWeight={400} color="#0A0B0C" marginLeft={1} marginRight="auto">
-                    ~$4,10
+                    ~${rewardPrice}
                 </Typography>
             </Stack>
             <PrimaryButton
                 size="small"
                 sx={{ width: 130, borderRadius: 0, fontSize: { xs: 15, md: 18 }, fontWeight: { xs: 600, md: 700 } }}
+                onClick={handleReceiveReward}
             >
                 claim
             </PrimaryButton>

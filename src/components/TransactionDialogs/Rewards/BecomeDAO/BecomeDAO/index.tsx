@@ -30,7 +30,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     </Typography>{' '}
                     to lock-up.
                 </Typography>
-                <CustomTextField number={true} />
+                <CustomTextField number={true} inputValue={'10,000'} disabled />
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
@@ -40,7 +40,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     </Typography>
                 </Typography>
                 <Stack direction="row" width="100%" spacing={2}>
-                    <PrimaryButton fullWidth btn_color="secondary">
+                    <PrimaryButton fullWidth btn_color="secondary" onClick={onClose}>
                         Close
                     </PrimaryButton>
                     <PrimaryButton fullWidth>Lock-up</PrimaryButton>

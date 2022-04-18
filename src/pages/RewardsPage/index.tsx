@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import Container from 'src/components/Container';
 import { useTheme } from '@mui/material/styles';
@@ -6,10 +6,62 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import TransactionReward from 'src/components/Rewards/TransactionReward';
 import GovernanceReward from 'src/components/Rewards/GovernanceReward';
 import Royalties from 'src/components/Rewards/Royalties';
+import { useSignInContext } from 'src/context/SignInContext';
+import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
+import { useSnackbar } from 'notistack';
+import Web3 from 'web3';
+import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import { isInAppBrowser } from 'src/services/wallet';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+import { callContractMethod, callTokenomicsContractMethod } from 'src/components/ContractMethod';
+import { blankContractMethodParam, blankMiningReward } from 'src/constants/init-constants';
+import { TypeMiningReward } from 'src/types/product-types';
 
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
+    const { library } = useWeb3React<Web3Provider>();
+    const walletConnectWeb3 = new Web3(
+        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    );
+    const [creatorRewards, setCreatorRewards] = useState<TypeMiningReward>(blankMiningReward);
+    const [buyerRewards, setBuyerRewards] = useState<TypeMiningReward>(blankMiningReward);
+    const [stakerRewards, setStakerRewards] = useState<TypeMiningReward>(blankMiningReward);
+
+    useEffect(() => {
+        let unmounted = false;
+        callTokenomicsContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 1,
+            callType: 2,
+            method: 'getTotalRewardAsBuyer',
+        }).then((_lastReward: string) => {
+            // if (!unmounted) setLastRewards(_lastReward);
+            return callTokenomicsContractMethod(walletConnectWeb3, {
+                ...blankContractMethodParam,
+                contractType: 1,
+                callType: 2,
+                method: 'getTotalRewardAsBuyer',
+            });
+        }).then((_receivedReward: string) => {
+            // if (!unmounted) setReceivedRewards(_receivedReward);
+        });
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
+    const withdrawReward = (rewardType: number) => {
+
+    };
 
     return (
         <Stack>
@@ -59,9 +111,9 @@ const RewardsPage: React.FC = (): JSX.Element => {
             </Box>
             <Container sx={{ marginTop: 12 }}>
                 <Stack spacing={14}>
-                    <TransactionReward />
-                    <GovernanceReward />
-                    <Royalties />
+                    <TransactionReward rewards={buyerRewards} withdrawReward={withdrawReward} />
+                    <GovernanceReward rewards={stakerRewards} withdrawReward={withdrawReward} />
+                    <Royalties rewards={creatorRewards} withdrawReward={withdrawReward} />
                 </Stack>
             </Container>
         </Stack>

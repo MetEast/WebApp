@@ -4,8 +4,14 @@ import ClaimBox from '../ClaimBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { TypeMiningReward } from 'src/types/product-types';
 
-const Royalties: React.FC = (): JSX.Element => {
+interface ComponentProps {
+    rewards: TypeMiningReward;
+    withdrawReward: (index: number) => void;
+}
+
+const Royalties: React.FC<ComponentProps> = ({ rewards, withdrawReward }): JSX.Element => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -50,8 +56,19 @@ const Royalties: React.FC = (): JSX.Element => {
                             to be claimed
                         </Typography>
                     </Typography>
-                    <ClaimBox sx={{ marginTop: 1.5 }} />
-                    <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF" lineHeight={1.2} marginTop={2.5}>
+                    <ClaimBox
+                        sx={{ marginTop: 1.5 }}
+                        rewardToken={rewards.availableToken}
+                        rewardPrice={rewards.availablePrice}
+                        handleReceiveReward={() => withdrawReward(2)}
+                    />
+                    <Typography
+                        fontSize={{ xs: 12, md: 14 }}
+                        fontWeight={500}
+                        color="#1890FF"
+                        lineHeight={1.2}
+                        marginTop={2.5}
+                    >
                         Users can claim rewards every day, or accumulate a one-time claim. Rewards never disappear or
                         expire.
                     </Typography>
@@ -60,7 +77,7 @@ const Royalties: React.FC = (): JSX.Element => {
                             The most recent receipt received:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
-                            --
+                            {rewards.lastReceipt}
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
@@ -68,7 +85,7 @@ const Royalties: React.FC = (): JSX.Element => {
                             Received so far:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
-                            --
+                            {rewards.receivedReward}
                         </Typography>
                     </Stack>
                 </Grid>
