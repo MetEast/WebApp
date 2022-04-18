@@ -72,6 +72,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <>
                         <ELAPriceInput
                             title="Price"
+                            inputValue={price.toString()}
                             error={buyNowPriceError}
                             errorText="The price can't be empty."
                             handleChange={(value) => setPrice(value)}
@@ -83,6 +84,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     <>
                         <ELAPriceInput
                             title="Minimum Price"
+                            inputValue={minPrice.toString()}
                             error={auctionMinumPriceError}
                             errorText="Minumum price can't be empty."
                             handleChange={(value) => setMinPrice(value)}
