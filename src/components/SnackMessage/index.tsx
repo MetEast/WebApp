@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import { useSnackbar, SnackbarContent } from 'notistack';
 import { Stack, Typography, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';

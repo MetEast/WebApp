@@ -66,6 +66,7 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     adminUserModeratorTxFee: gasPrice,
                     becomeDAOTxFee: gasPrice,
                     removeDAOTxFee: gasPrice,
+                    withdrawRewardTxFee: gasPrice,
                 });
             });
         }
