@@ -12,7 +12,7 @@ const BecomeDAODlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         <ModalDialog
             open={dialogState.becomeDAODlgOpened}
             onClose={() => {
-                setDialogState({ ...dialogState, becomeDAODlgOpened: false });
+                setDialogState({ ...dialogState, becomeDAODlgOpened: false, progressBar: 0 });
             }}
         >
             <BecomeDAO

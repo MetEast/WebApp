@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo } from '../../../styles';
 import { PrimaryButton } from 'src/components/Buttons/styles';
@@ -33,26 +33,9 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
-    const [meTokenBalance, setMeTokenBalance] = useState<number>(0);
-
-    useEffect(() => {
-        let unmounted = false;
-        callTokenomicsContractMethod(walletConnectWeb3, {
-            ...blankContractMethodParam,
-            contractType: 1, // token
-            callType: 2,
-            method: 'balanceOf',
-            price: '0',
-        }).then((balance: string) => {
-            if (!unmounted) setMeTokenBalance(parseFloat((parseFloat(balance) / 1e18).toFixed(2)));
-        });
-        return () => {
-            unmounted = true;
-        };
-    }, [dialogState.becomeDAODlgOpened, dialogState.removeDAODlgOpened]);
 
     const handleStake = () => {
-        if (!(dialogState.becomeDAOTxFee <= signInDlgState.walletBalance && meTokenBalance >= 10000)) {
+        if (!(dialogState.becomeDAOTxFee <= signInDlgState.walletBalance && signInDlgState.meTokenBalance >= 10000)) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -189,7 +172,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             </Stack>
             <Stack alignItems="center" spacing={1}>
                 <Typography fontSize={14} fontWeight={600}>
-                    Available: {`${meTokenBalance} `}
+                    Available: {`${signInDlgState.meTokenBalance} `}
                     <Typography fontSize={14} fontWeight={600} color="#1890FF" display="inline">
                         ME
                     </Typography>
