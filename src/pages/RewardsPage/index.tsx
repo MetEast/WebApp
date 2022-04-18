@@ -6,7 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import TransactionReward from 'src/components/Rewards/TransactionReward';
 import GovernanceReward from 'src/components/Rewards/GovernanceReward';
 import Royalties from 'src/components/Rewards/Royalties';
-import { useSignInContext } from 'src/context/SignInContext';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import Web3 from 'web3';
@@ -22,7 +22,7 @@ import { TypeMiningReward } from 'src/types/product-types';
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
-    const [signInDlgState] = useSignInContext();
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
     const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
@@ -38,6 +38,37 @@ const RewardsPage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
+        callTokenomicsContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 1, // token
+            callType: 2,
+            method: 'balanceOf',
+            price: '0',
+        }).then((balance: string) => {
+            if (!unmounted) {
+                setSignInDlgState((prevState: SignInState) => {
+                    const _state = { ...prevState };
+                    _state.meTokenBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                    return _state;
+                });
+            }
+            return callTokenomicsContractMethod(walletConnectWeb3, {
+                ...blankContractMethodParam,
+                contractType: 3, // staking
+                callType: 2,
+                method: 'isStakeholder',
+                price: '0',
+            });
+        }).then((isStakeHolder: string) => {
+            if (!unmounted) {
+                setSignInDlgState((prevState: SignInState) => {
+                    const _state = { ...prevState };
+                    _state.isStakeHolder = Boolean(isStakeHolder);
+                    return _state;
+                });
+            }
+        });
+        
         callTokenomicsContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 1,

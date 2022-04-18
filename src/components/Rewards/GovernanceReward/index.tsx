@@ -7,6 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { BecomeDAOBtn } from './styles';
 import { useDialogContext } from 'src/context/DialogContext';
 import { TypeMiningReward } from 'src/types/product-types';
+import { useSignInContext } from 'src/context/SignInContext';
 
 interface ComponentProps {
     rewards: TypeMiningReward;
@@ -16,7 +17,7 @@ interface ComponentProps {
 const GovernanceReward: React.FC<ComponentProps> = ({ rewards, withdrawReward }): JSX.Element => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
 
     return (
@@ -41,11 +42,11 @@ const GovernanceReward: React.FC<ComponentProps> = ({ rewards, withdrawReward })
                             />
                             <BecomeDAOBtn
                                 onClick={() => {
-                                    setDialogState({ ...dialogState, becomeDAODlgOpened: true });
-                                    // setDialogState({ ...dialogState, removeDAODlgOpened: true });
+                                    if (signInDlgState.isStakeHolder) setDialogState({ ...dialogState, removeDAODlgOpened: true });
+                                    else setDialogState({ ...dialogState, becomeDAODlgOpened: true });
                                 }}
                             >
-                                Become DAO
+                                {signInDlgState.isStakeHolder ? 'Remove DAO' : 'Become DAO'}
                             </BecomeDAOBtn>
                         </Stack>
                     </Stack>
