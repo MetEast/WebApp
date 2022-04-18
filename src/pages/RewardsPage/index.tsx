@@ -46,7 +46,6 @@ const RewardsPage: React.FC = (): JSX.Element => {
             price: '0',
         })
             .then((balance: string) => {
-                console.log(balance, '----------')
                 if (!unmounted) {
                     setSignInDlgState((prevState: SignInState) => {
                         const _state = { ...prevState };
