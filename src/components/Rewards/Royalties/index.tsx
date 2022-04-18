@@ -72,14 +72,14 @@ const Royalties: React.FC<ComponentProps> = ({ rewards, withdrawReward }): JSX.E
                         Users can claim rewards every day, or accumulate a one-time claim. Rewards never disappear or
                         expire.
                     </Typography>
-                    <Stack direction="row" justifyContent="space-between" marginTop={2}>
+                    {/* <Stack direction="row" justifyContent="space-between" marginTop={2}>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
                             The most recent receipt received:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
                             {rewards.lastReceipt}
                         </Typography>
-                    </Stack>
+                    </Stack> */}
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="#1890FF">
                             Received so far:
