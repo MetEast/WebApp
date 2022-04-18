@@ -9,7 +9,7 @@ import { Markup } from 'interweave';
 export interface ComponentProps {
     id: string | number;
     title?: string;
-    message: string | React.ReactNode;
+    message: string;
     variant: 'success' | 'warning' | 'error' | 'info';
     isMarkup?: boolean;
 }
@@ -66,7 +66,7 @@ const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, me
                         </Typography>
                     )}
                     <Typography fontSize={14} fontWeight={500} color="white">
-                        {isMarkup ? <Markup content={message?.toString()} /> : message}
+                        <Markup content={message} />
                     </Typography>
                 </Stack>
                 <IconButton onClick={handleDismiss}>
