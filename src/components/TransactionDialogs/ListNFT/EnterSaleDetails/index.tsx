@@ -22,35 +22,30 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     // const [royalty, setRoyalty] = useState<string>('');
     const [minPrice, setMinPrice] = useState<number>(0);
     const { enqueueSnackbar } = useSnackbar();
+    const [buyNowPriceError, setBuyNowPriceError] = useState<boolean>(false);
+    const [auctionMinumPriceError, setAuctionMinumPriceError] = useState<boolean>(false);
+    const [saleEndsError, setSaleEndsError] = useState(false);
 
     const handleNextStep = () => {
         if (
-            (saleType === 'buynow' && price !== null) ||
-            (saleType === 'auction' && minPrice !== null && saleEnds?.value !== undefined && saleEnds.value !== '')
+            (saleType === 'buynow' && price > 0) ||
+            (saleType === 'auction' && minPrice > 0 && saleEnds && saleEnds.value !== '')
         ) {
-            if (
-                (saleType === 'buynow' && (isNaN(price) || price === 0)) ||
-                (saleType === 'auction' && (isNaN(minPrice) || minPrice === 0))
-            ) {
-                enqueueSnackbar('Invalid number!', {
-                    variant: 'error',
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                });
-            } else {
-                setDialogState({
-                    ...dialogState,
-                    sellPrice: price,
-                    sellMinPrice: minPrice,
-                    sellSaleEnds: saleEnds || { label: '', value: '' },
-                    sellSaleType: saleType,
-                    createNFTDlgStep: 4,
-                });
-            }
-        } else
-            enqueueSnackbar('Form validation failed!', {
-                variant: 'error',
-                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            setDialogState({
+                ...dialogState,
+                sellPrice: price,
+                sellMinPrice: minPrice,
+                sellSaleEnds: saleEnds || { label: '', value: '' },
+                sellSaleType: saleType,
+                createNFTDlgStep: 4,
             });
+        } else {
+            if (saleType === 'buynow') setBuyNowPriceError(isNaN(price) || price <= 0);
+            else if (saleType === 'auction') {
+                setAuctionMinumPriceError(isNaN(minPrice) || minPrice <= 0);
+                setSaleEndsError(saleEnds === undefined || saleEnds.value === '');
+            }
+        }
     };
 
     return (
@@ -75,13 +70,23 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 </Typography>
                 {saleType === 'buynow' && (
                     <>
-                        <ELAPriceInput title="Price" handleChange={(value) => setPrice(value)} />
+                        <ELAPriceInput
+                            title="Price"
+                            error={buyNowPriceError}
+                            errorText="The price can't be empty."
+                            handleChange={(value) => setPrice(value)}
+                        />
                         {/* <ELAPriceInput title="Royalties" handleChange={(value) => setRoyalty(value)} /> */}
                     </>
                 )}
                 {saleType === 'auction' && (
                     <>
-                        <ELAPriceInput title="Minimum Price" handleChange={(value) => setMinPrice(value)} />
+                        <ELAPriceInput
+                            title="Minimum Price"
+                            error={auctionMinumPriceError}
+                            errorText="Minumum price can't be empty."
+                            handleChange={(value) => setMinPrice(value)}
+                        />
                         <Stack spacing={0.5}>
                             <Typography fontSize={12} fontWeight={700}>
                                 Sale Ends
@@ -96,9 +101,12 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 selectedItem={saleEnds}
                                 options={sellNFTSaleEndsOptions}
                                 isOpen={saleEndsSelectOpen ? 1 : 0}
+                                error={saleEndsError}
+                                errorText="Sale Ends should be selected."
                                 handleClick={(value: string) => {
                                     const item = sellNFTSaleEndsOptions.find((option) => option.value === value);
                                     setSaleEnds(item);
+                                    setSaleEndsError(false);
                                 }}
                                 setIsOpen={setSaleEndsSelectOpen}
                             />
