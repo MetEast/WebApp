@@ -35,8 +35,8 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                             />
                             <BecomeDAOBtn
                                 onClick={() => {
-                                    setDialogState({ ...dialogState, becomeDAODlgOpened: true });
-                                    // setDialogState({ ...dialogState, removeDAODlgOpened: true });
+                                    // setDialogState({ ...dialogState, becomeDAODlgOpened: true });
+                                    setDialogState({ ...dialogState, removeDAODlgOpened: true });
                                 }}
                             >
                                 Become DAO
