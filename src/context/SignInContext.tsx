@@ -18,6 +18,9 @@ export interface SignInState {
     userAvatar: string;
     userCoverImage: string;
     userRole: number;
+    //
+    meTokenBalance: number;
+    isStakeHolder: boolean;
 }
 
 const defaultState: SignInState = {
@@ -48,6 +51,9 @@ const defaultState: SignInState = {
     userAvatar: '',
     userCoverImage: '',
     userRole: 2,
+    //
+    meTokenBalance: 0,
+    isStakeHolder: false,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

@@ -64,6 +64,8 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     adminTakedownTxFee: gasPrice,
                     adminUserBannedTxFee: gasPrice,
                     adminUserModeratorTxFee: gasPrice,
+                    becomeDAOTxFee: gasPrice,
+                    removeDAOTxFee: gasPrice,
                 });
             });
         }
@@ -93,7 +95,9 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 dialogState.placeBidDlgOpened ||
                 dialogState.acceptBidDlgOpened ||
                 dialogState.createBlindBoxDlgOpened ||
-                dialogState.buyBlindBoxDlgOpened)
+                dialogState.buyBlindBoxDlgOpened ||
+                dialogState.becomeDAODlgOpened ||
+                dialogState.removeDAODlgOpened)
         ) {
             showChainErrorSnackBar();
             setDialogState({ ...defaultDlgState });
@@ -109,6 +113,8 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         dialogState.acceptBidDlgOpened,
         dialogState.createBlindBoxDlgOpened,
         dialogState.buyBlindBoxDlgOpened,
+        dialogState.becomeDAODlgOpened,
+        dialogState.removeDAODlgOpened,
     ]);
 
     return (

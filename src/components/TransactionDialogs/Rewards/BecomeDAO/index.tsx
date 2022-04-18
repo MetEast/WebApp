@@ -1,12 +1,13 @@
 import React from 'react';
-import { useDialogContext } from 'src/context/DialogContext';
 import ModalDialog from 'src/components/ModalDialog';
 import BecomeDAO from './BecomeDAO';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {}
 
 const BecomeDAODlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
+    
     return (
         <ModalDialog
             open={dialogState.becomeDAODlgOpened}
