@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Box, Typography, Stack, Link } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
@@ -14,6 +14,7 @@ import { getNotificationList } from 'src/services/fetch';
 import { TypeNotification } from 'src/types/notification-types';
 import { useNotificationContext } from 'src/context/NotificationContext';
 import { dummyNotificationList } from 'src/constants/dummyData';
+import useOnClickOutside from 'src/hooks/useOnClickOutside';
 
 interface ComponentProps {
     mobile?: boolean;
@@ -28,6 +29,9 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     const isProfilePage = location.pathname === '/profile';
     const isAdmin = !isNaN(signInDlgState.userRole) && signInDlgState.userRole < 2;
+
+    const notificationsBoxContainerNode = useRef<HTMLDivElement>();
+    useOnClickOutside(notificationsBoxContainerNode, () => setShowNotificationsBox(false));
 
     const classes = useStyles();
 
@@ -90,7 +94,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
 
     const menuButtons = signInDlgState.isLoggedIn ? (
         <>
-            <Box position="relative">
+            <Box position="relative" ref={notificationsBoxContainerNode}>
                 <MenuButton
                     size="small"
                     selected={location.pathname === '/notifications'}
