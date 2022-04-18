@@ -26,9 +26,9 @@ const ClaimBox: React.FC<ComponentProps> = ({ sx, rewardToken, rewardPrice, hand
                 <Typography fontSize={16} fontWeight={600} color="#0A0B0C">
                     {rewardToken}
                 </Typography>
-                <Typography fontSize={10} fontWeight={400} color="#0A0B0C" marginLeft={1} marginRight="auto">
+                {/* <Typography fontSize={10} fontWeight={400} color="#0A0B0C" marginLeft={1} marginRight="auto">
                     ~${rewardPrice}
-                </Typography>
+                </Typography> */}
             </Stack>
             <PrimaryButton
                 size="small"
