@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import { useSnackbar, SnackbarContent } from 'notistack';
 import { Stack, Typography, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
@@ -11,6 +11,7 @@ export interface ComponentProps {
     title?: string;
     message: string;
     variant: 'success' | 'warning' | 'error' | 'info';
+    isMarkup?: boolean;
 }
 
 const variantStyles = {
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, message, variant }, ref) => {
+const SnackMessage = forwardRef<HTMLDivElement, ComponentProps>(({ id, title, message, variant, isMarkup }, ref) => {
     const classes = useStyles();
     const { closeSnackbar } = useSnackbar();
 

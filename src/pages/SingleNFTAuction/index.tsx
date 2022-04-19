@@ -242,6 +242,36 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 detail_page={true}
                                 marginTop={3}
                             />
+                            {!!signInDlgState.walletAccounts.length &&
+                                productDetail.holder === signInDlgState.walletAccounts[0] &&
+                                productDetail.status === 'HAS BIDS' && (
+                                    <PrimaryButton
+                                        sx={{ marginTop: 3, width: '100%' }}
+                                        onClick={() => {
+                                            if (signInDlgState.isLoggedIn) {
+                                                if (bidsList.length) {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        receivedBidDlgOpened: true,
+                                                    });
+                                                } else {
+                                                    setDialogState({
+                                                        ...dialogState,
+                                                        noBidDlgOpened: true,
+                                                    });
+                                                }
+                                            } else {
+                                                setSignInDlgState((prevState: SignInState) => {
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        View Bids
+                                    </PrimaryButton>
+                                )}
                             {productDetail.isExpired ? (
                                 <>
                                     {!!signInDlgState.walletAccounts.length &&
@@ -317,7 +347,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             Place Bid
                                         </PrimaryButton>
                                     )}
-                                    {!signInDlgState.walletAccounts.length &&
+                                    {!!signInDlgState.walletAccounts.length &&
                                         productDetail.holder === signInDlgState.walletAccounts[0] &&
                                         !bidsList.length && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>

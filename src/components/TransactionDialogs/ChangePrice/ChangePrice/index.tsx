@@ -18,7 +18,6 @@ import { blankContractMethodParam } from 'src/constants/init-constants';
 export interface ComponentProps {}
 
 const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
-    const [bidAmount, setBidAmount] = useState<number>(0);
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -30,6 +29,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
+    const [bidAmount, setBidAmount] = useState<number>(0);
     const [newPriceError, setNewPriceError] = useState<boolean>(false);
 
     const handleChangePrice = () => {

@@ -137,7 +137,10 @@ interface DlgState {
     adminUserModeratorTxFee: number;
     // rewards
     becomeDAODlgOpened: boolean;
+    becomeDAOTxFee: number;
     removeDAODlgOpened: boolean;
+    removeDAOTxFee: number;
+    withdrawRewardTxFee: number;
 }
 
 export const defaultDlgState: DlgState = {
@@ -274,7 +277,10 @@ export const defaultDlgState: DlgState = {
     adminUserModeratorTxFee: 0,
     // rewards
     becomeDAODlgOpened: false,
+    becomeDAOTxFee: 0,
     removeDAODlgOpened: false,
+    removeDAOTxFee: 0,
+    withdrawRewardTxFee: 0,
 };
 
 type ContextType<TValue> = [TValue, (newValue: TValue) => void];

@@ -1,16 +1,23 @@
 import React from 'react';
-import { Stack, Box, Grid, Button, Typography } from '@mui/material';
+import { Stack, Box, Grid, Typography } from '@mui/material';
 import ClaimBox from '../ClaimBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { BecomeDAOBtn } from './styles';
 import { useDialogContext } from 'src/context/DialogContext';
+import { TypeMiningReward } from 'src/types/product-types';
+import { SignInState, useSignInContext } from 'src/context/SignInContext';
 
-const GovernanceReward: React.FC = (): JSX.Element => {
+interface ComponentProps {
+    rewards: TypeMiningReward;
+    withdrawReward: (index: number) => void;
+}
+
+const GovernanceReward: React.FC<ComponentProps> = ({ rewards, withdrawReward }): JSX.Element => {
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
 
     return (
@@ -35,11 +42,19 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                             />
                             <BecomeDAOBtn
                                 onClick={() => {
-                                    setDialogState({ ...dialogState, becomeDAODlgOpened: true });
-                                    // setDialogState({ ...dialogState, removeDAODlgOpened: true });
+                                    if (signInDlgState.isLoggedIn) {
+                                        if (signInDlgState.isStakeHolder) setDialogState({ ...dialogState, removeDAODlgOpened: true });
+                                        else setDialogState({ ...dialogState, becomeDAODlgOpened: true });
+                                    } else {
+                                        setSignInDlgState((prevState: SignInState) => {
+                                            const _state = { ...prevState };
+                                            _state.signInDlgOpened = true;
+                                            return _state;
+                                        });
+                                    }
                                 }}
                             >
-                                Become DAO
+                                {signInDlgState.isStakeHolder ? 'Remove DAO' : 'Become DAO'}
                             </BecomeDAOBtn>
                         </Stack>
                     </Stack>
@@ -58,7 +73,12 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                             to be claimed
                         </Typography>
                     </Typography>
-                    <ClaimBox sx={{ marginTop: 1.5 }} />
+                    <ClaimBox
+                        sx={{ marginTop: 1.5 }}
+                        rewardToken={rewards.availableToken}
+                        rewardPrice={rewards.availablePrice}
+                        handleReceiveReward={() => withdrawReward(3)}
+                    />
                     <Typography
                         fontSize={{ xs: 12, md: 14 }}
                         fontWeight={500}
@@ -69,20 +89,20 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                         Users can claim rewards every day, or accumulate a one-time claim. Rewards never disappear or
                         expire.
                     </Typography>
-                    <Stack direction="row" justifyContent="space-between" marginTop={2}>
+                    {/* <Stack direction="row" justifyContent="space-between" marginTop={2}>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             The most recent receipt received:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
-                            --
+                            {rewards.lastReceipt}
                         </Typography>
-                    </Stack>
+                    </Stack> */}
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
                             Received so far:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
-                            --
+                            {rewards.receivedReward}
                         </Typography>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" marginTop={0.5}>
@@ -90,7 +110,7 @@ const GovernanceReward: React.FC = (): JSX.Element => {
                             Lock up:
                         </Typography>
                         <Typography fontSize={{ xs: 12, md: 14 }} fontWeight={500} color="white">
-                            --
+                            {signInDlgState.isStakeHolder ? '10,000' : '0'}
                         </Typography>
                     </Stack>
                 </Grid>

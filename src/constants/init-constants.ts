@@ -14,6 +14,7 @@ import {
     enumMyNFTType,
     enumTransactionType,
     enumBadgeType,
+    TypeMiningReward,
 } from 'src/types/product-types';
 
 export const blankNFTItem: TypeProduct = {
@@ -160,6 +161,7 @@ export const blankAdminBannerItem: AdminBannersItemType = {
 
 export const blankContractMethodParam: TypeContractMethodPram = {
     contractType: 1,
+    callType: 1,
     method: '',
     price: '0',
     tokenId: '',
@@ -204,4 +206,11 @@ export const blankUserInfo: UserInfoType = {
     remarks: '',
     role: 2,
     _id: '',
+};
+
+export const blankMiningReward: TypeMiningReward = {
+    lastReceipt: 0,
+    availableToken: 0,
+    availablePrice: 0,
+    receivedReward: 0,
 };

@@ -31,11 +31,11 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [userAvatarURL, setUserAvatarURL] = useState<TypeImageFile>({
-        preview: signInDlgState.userAvatar === '' ? '' : getImageFromAsset(signInDlgState.userAvatar),
+        preview: signInDlgState.userAvatar ? getImageFromAsset(signInDlgState.userAvatar) : '',
         raw: new File([''], ''),
     });
     const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({
-        preview: signInDlgState.userCoverImage === '' ? '' : getImageFromAsset(signInDlgState.userCoverImage),
+        preview: signInDlgState.userCoverImage ? getImageFromAsset(signInDlgState.userCoverImage) : '',
         raw: new File([''], ''),
     });
     const [userName, setUserName] = useState<string>(signInDlgState.userName);
@@ -53,7 +53,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleSelectAvatar = (e: any) => {
         if (e.target.files.length) {
-            if (avatarChanged === false) setAvatarChanged(true);
+            if (!avatarChanged) setAvatarChanged(true);
             setUserAvatarURL({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0],
@@ -63,7 +63,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
     const handleChangeCoverImage = (e: any) => {
         if (e.target.files.length) {
-            if (coverImageChanged === false) setCoverImageChanged(true);
+            if (!coverImageChanged) setCoverImageChanged(true);
             setUserCoverImageURL({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0],
@@ -90,17 +90,17 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         let urlCoverImage: string = '';
         uploadImage2Ipfs(avatarChanged ? userAvatarURL.raw : undefined)
             .then((added: any) => {
-                setDialogState({ ...dialogState, progressBar: 20});
+                setDialogState({ ...dialogState, progressBar: 20 });
                 urlAvatar = avatarChanged ? `meteast:image:${added.path}` : signInDlgState.userAvatar;
                 return uploadImage2Ipfs(coverImageChanged ? userCoverImageURL.raw : undefined);
             })
             .then((added: any) => {
-                setDialogState({ ...dialogState, progressBar: 40});
-                urlCoverImage = coverImageChanged ? `meteast:image:${added.path}` : signInDlgState.userCoverImage;
+                setDialogState({ ...dialogState, progressBar: 40 });
+                urlCoverImage = coverImageChanged ? (userCoverImageURL.preview ? `meteast:image:${added.path}` : ' ') : signInDlgState.userCoverImage;
                 return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
             })
             .then((signature: string) => {
-                setDialogState({ ...dialogState, progressBar: 70});
+                setDialogState({ ...dialogState, progressBar: 70 });
                 return uploadUserProfile(
                     signInDlgState.token,
                     signInDlgState.walletAccounts[0],
@@ -113,7 +113,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 );
             })
             .then((token: any) => {
-                setDialogState({ ...dialogState, progressBar: 100});
+                setDialogState({ ...dialogState, progressBar: 100 });
                 if (token) {
                     setSignInDlgState((prevState: SignInState) => {
                         const _state = { ...prevState };
@@ -147,8 +147,6 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 onClose();
             });
     };
-
-    console.log(userCoverImageURL)
 
     return (
         <Stack
@@ -221,7 +219,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         Cover Picture
                     </Typography>
                     <BannerBox sx={{ backgroundColor: '#C3C5C8' }}>
-                        {userCoverImageURL.preview !== '' && (
+                        {userCoverImageURL.preview && userCoverImageURL.preview !== ' ' && (
                             <img
                                 src={userCoverImageURL.preview}
                                 width="100%"
@@ -241,7 +239,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 size="small"
                                 sx={{ width: 120 }}
                                 onClick={() => {
-                                    if (coverImageChanged === false) setCoverImageChanged(true);
+                                    if (!coverImageChanged) setCoverImageChanged(true);
                                     setUserCoverImageURL({
                                         preview: '',
                                         raw: new File([''], ''),

@@ -60,7 +60,8 @@ export type TypeIpfsUploadInfo = {
 }
 
 export type TypeContractMethodPram = {
-    contractType: number;
+    contractType: number; // Tokenomics- 1: Token, 2: Vesting, 3: Staking, 4: Reward  NFT Contract- 1: MET, 2: MARKET
+    callType: number; // 1: send, 2: call
     method: string;
     price: string;
     tokenId: string;
