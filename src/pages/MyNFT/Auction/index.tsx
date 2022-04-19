@@ -50,13 +50,14 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (
                     !(
+                        signInDlgState.walletAccounts.length &&
                         _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
                         _MyNFTItem.status !== 'NEW' &&
                         _MyNFTItem.endTime !== '0'
                     )
-                )
+                ) {
                     navigate(-1);
-                setProductDetail(_MyNFTItem);
+                } else setProductDetail(_MyNFTItem);
             }
         };
         if (signInDlgState.isLoggedIn) {
@@ -277,10 +278,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                                 });
                                             } else {
                                                 setSignInDlgState((prevState: SignInState) => {
-                                                const _state = { ...prevState };
-                                                _state.signInDlgOpened = true;
-                                                return _state;
-                                            });
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
                                             }
                                         }}
                                     >
@@ -302,10 +303,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                                 });
                                             } else {
                                                 setSignInDlgState((prevState: SignInState) => {
-                                                const _state = { ...prevState };
-                                                _state.signInDlgOpened = true;
-                                                return _state;
-                                            });
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
                                             }
                                         }}
                                     >
@@ -325,10 +326,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                                 });
                                             } else {
                                                 setSignInDlgState((prevState: SignInState) => {
-                                                const _state = { ...prevState };
-                                                _state.signInDlgOpened = true;
-                                                return _state;
-                                            });
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
                                             }
                                         }}
                                     >

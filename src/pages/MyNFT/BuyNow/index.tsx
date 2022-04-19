@@ -41,13 +41,14 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (
                     !(
+                        signInDlgState.walletAccounts.length &&
                         _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
                         _MyNFTItem.status !== 'NEW' &&
                         _MyNFTItem.endTime === '0'
                     )
-                )
-                    navigate(-1);
-                setProductDetail(_MyNFTItem);
+                ) {
+                    navigate('/');
+                } else setProductDetail(_MyNFTItem);
             }
         };
         if (signInDlgState.isLoggedIn) {
