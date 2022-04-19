@@ -5,6 +5,7 @@ import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
 import { EffectCards } from 'swiper';
+import { reduceUserName } from 'src/services/common';
 
 export interface ComponentProps {}
 
@@ -48,10 +49,10 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                     ))}
                 </Swiper>
                 <Typography fontSize={18} fontWeight={700} marginTop={2}>
-                    {dialogState.buyBlindName}
+                    {dialogState.buyBlindNames[imgIndex]}
                 </Typography>
                 <Typography fontSize={14} fontWeight={400}>
-                    created by {dialogState.buyBlindCreator}
+                    created by {reduceUserName(dialogState.buyBlindCreator, 4)}
                 </Typography>
             </Stack>
             {dialogState.buyBlindAmount > 1 && (
