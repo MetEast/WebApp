@@ -126,6 +126,7 @@ interface DlgState {
     buyBlindOrderIds: string[];
     buyBlindTokenIds: string[];
     buyBlindImages: string[];
+    buyBlindNames: string[];
     buyBlindTxFee: number;
     buyBlindTxHash: string;
     buyBlindCreator: string;
@@ -266,6 +267,7 @@ export const defaultDlgState: DlgState = {
     buyBlindOrderIds: [],
     buyBlindTokenIds: [],
     buyBlindImages: [],
+    buyBlindNames: [],
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
     buyBlindCreator: '',

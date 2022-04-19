@@ -151,6 +151,7 @@ export type TypeBlindBoxCandidate = {
     tokenId: string;
     orderId: string;
     asset: string;
+    name: string;
 };
 
 // ---

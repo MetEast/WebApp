@@ -144,7 +144,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Unit Price</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{(dialogState.buyBlindPriceEla).toFixed(2)} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Amount</DetailedInfoTitleTypo>
