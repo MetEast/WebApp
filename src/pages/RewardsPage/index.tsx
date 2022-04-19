@@ -18,10 +18,13 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam, blankMiningReward } from 'src/constants/init-constants';
 import { TypeMiningReward } from 'src/types/product-types';
+import { Icon } from '@iconify/react';
 
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
@@ -197,7 +200,12 @@ const RewardsPage: React.FC = (): JSX.Element => {
         }, 120000);
         if (!unmounted) setDialogState(updatedState);
 
-        const methodName = rewardType === 1 ? 'withdrawBuyerReward' : (rewardType === 2 ? 'withdrawCreatorReward' : 'withdrawStakerReward')
+        const methodName =
+            rewardType === 1
+                ? 'withdrawBuyerReward'
+                : rewardType === 2
+                ? 'withdrawCreatorReward'
+                : 'withdrawStakerReward';
         callTokenomicsContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
             contractType: 4,
@@ -237,42 +245,42 @@ const RewardsPage: React.FC = (): JSX.Element => {
     return (
         <Stack>
             <Box position="relative">
-                <img src="/assets/images/rewards/banner.png" width="100%" height="100%" alt="" />
+                <img src="/assets/images/rewards/banner.jpg" width="100%" height="100%" alt="" />
                 <Box position="absolute" sx={{ inset: 0 }}>
-                    <Container sx={{ height: '100%' }}>
+                    <Container sx={{ height: '100%', overflow: 'visible' }}>
                         <Stack height="100%" justifyContent="center" alignItems="flex-start">
-                            <Stack direction="row" alignItems="flex-end">
+                            <Stack direction="row" alignItems="center" marginLeft={{ xs: -3, sm: -4, md: -6 }}>
                                 <img
                                     src="/assets/images/rewards/met-erc20-token-label.png"
-                                    width={matchDownSm ? '70%' : '100%'}
+                                    width={matchDownSm ? '70%' : matchDownMd ? '75%' : '100%'}
                                     alt=""
                                 />
-                                <img
-                                    src="/assets/images/rewards/help.png"
-                                    width={matchDownSm ? 12 : 28}
-                                    alt=""
+                                <Icon
+                                    icon="ph:question"
+                                    fontSize={matchDownSm ? 20 : matchDownMd ? 26 : 36}
+                                    color="white"
                                     style={{
-                                        marginLeft: matchDownSm ? -4 : -12,
-                                        marginBottom: matchDownSm ? 12 : 28,
+                                        marginLeft: matchDownSm ? -20 : matchDownMd ? -32 : -36,
+                                        marginTop: matchDownSm ? 20 : matchDownMd ? 32 : 36,
                                     }}
                                 />
                             </Stack>
-                            <Stack marginLeft={1} marginTop={{ xs: 2, md: 0 }}>
-                                <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={600} color="white">
+                            <Stack marginLeft={0} marginTop={{ xs: 2, sm: 0 }}>
+                                <Typography fontSize={{ xs: 16, sm: 28, md: 36 }} fontWeight={600} color="white">
                                     Mining Pool Total Supply:
                                 </Typography>
-                                <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={400} color="white">
+                                <Typography fontSize={{ xs: 16, sm: 28, md: 36 }} fontWeight={400} color="white">
                                     250,000,000 ME
                                 </Typography>
                                 <Typography
-                                    fontSize={{ xs: 16, sm: 36 }}
+                                    fontSize={{ xs: 16, sm: 28, md: 36 }}
                                     fontWeight={600}
                                     color="white"
-                                    marginTop={{ xs: 2, sm: 5 }}
+                                    marginTop={{ xs: 2, md: 5 }}
                                 >
                                     20% Unlocked:
                                 </Typography>
-                                <Typography fontSize={{ xs: 16, sm: 36 }} fontWeight={400} color="white">
+                                <Typography fontSize={{ xs: 16, sm: 28, md: 36 }} fontWeight={400} color="white">
                                     50,000,000 ME
                                 </Typography>
                             </Stack>
