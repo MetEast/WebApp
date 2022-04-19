@@ -191,7 +191,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
-        if (keyWord === value) return ;
+        if (keyWord === value) return;
         setKeyWord(value);
         setIsLoadingAssets(Array(6).fill(true));
         setMyNFTList(Array(6).fill(Array(4).fill(blankMyNFTItem)));
@@ -282,7 +282,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     backgroundColor: '#C3C5C8',
                 }}
             >
-                {signInDlgState.userCoverImage && (
+                {signInDlgState.userCoverImage && signInDlgState.userCoverImage !== ' ' && (
                     <img
                         src={getImageFromAsset(signInDlgState.userCoverImage)}
                         alt=""
