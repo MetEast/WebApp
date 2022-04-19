@@ -1,4 +1,4 @@
-export const METEAST_BASE_TOKEN_CONTRACT_ADDRESS = '0xA2027C4032AA1062442D1a0b4Ae48FDF277fD5fa';
+export const METEAST_BASE_TOKEN_CONTRACT_ADDRESS = '0x22A991dd3421deD6139CA32464C08b8d334cD56c';
 export const METEAST_BASE_TOKEN_CONTRACT_ABI = [
     {
         inputs: [],
@@ -51,8 +51,15 @@ export const METEAST_BASE_TOKEN_CONTRACT_ABI = [
     },
     {
         anonymous: false,
-        inputs: [],
-        name: 'Pause',
+        inputs: [
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'Paused',
         type: 'event',
     },
     {
@@ -82,8 +89,15 @@ export const METEAST_BASE_TOKEN_CONTRACT_ABI = [
     },
     {
         anonymous: false,
-        inputs: [],
-        name: 'Unpause',
+        inputs: [
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'Unpaused',
         type: 'event',
     },
     {
@@ -328,7 +342,7 @@ export const METEAST_BASE_TOKEN_CONTRACT_ABI = [
         inputs: [
             {
                 internalType: 'address',
-                name: 'to',
+                name: 'recipient',
                 type: 'address',
             },
             {
@@ -352,12 +366,12 @@ export const METEAST_BASE_TOKEN_CONTRACT_ABI = [
         inputs: [
             {
                 internalType: 'address',
-                name: 'from',
+                name: 'sender',
                 type: 'address',
             },
             {
                 internalType: 'address',
-                name: 'to',
+                name: 'recipient',
                 type: 'address',
             },
             {

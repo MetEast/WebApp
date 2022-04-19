@@ -1,4 +1,4 @@
-export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS = '0x3B2F405C2BFE0B9A1364148f21fEa50e28C310E5';
+export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS = '0x9277f45FF70B1484d462c574d6454dD67092f43d';
 export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI = [
     {
         inputs: [
@@ -164,6 +164,82 @@ export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI = [
             },
         ],
         name: 'getDailyTotalTxAmount',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'getReceivedReward',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'getReceivedRewardAsBuyer',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'getReceivedRewardAsCreator',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'getReceivedRewardAsStaker',
         outputs: [
             {
                 internalType: 'uint256',
