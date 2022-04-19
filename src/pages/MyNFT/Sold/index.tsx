@@ -34,9 +34,19 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
-                if (signInDlgState.walletAccounts.length && _MyNFTItem.holder === signInDlgState.walletAccounts[0])
+                if (signInDlgState.walletAccounts.length && _MyNFTItem.holder === signInDlgState.walletAccounts[0]) {
                     navigate(-1);
-                else setProductDetail(_MyNFTItem);
+                    // detect previous path is null
+                    const timer = setTimeout(() => {
+                        clearTimeout(timer);
+                        if (
+                            signInDlgState.walletAccounts.length &&
+                            _MyNFTItem.holder === signInDlgState.walletAccounts[0]
+                        ) {
+                            navigate('/');
+                        }
+                    }, 100);
+                } else setProductDetail(_MyNFTItem);
             }
         };
         if (signInDlgState.isLoggedIn) {

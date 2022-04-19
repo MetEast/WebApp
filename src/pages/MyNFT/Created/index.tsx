@@ -47,6 +47,20 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     )
                 ) {
                     navigate(-1);
+                    // detect previous path is null
+                    const timer = setTimeout(() => {
+                        clearTimeout(timer);
+                        if (
+                            !(
+                                signInDlgState.walletAccounts.length &&
+                                _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
+                                _MyNFTItem.status === 'NEW' &&
+                                _MyNFTItem.royaltyOwner === signInDlgState.walletAccounts[0]
+                            )
+                        ) {
+                            navigate('/');
+                        }
+                    }, 100);
                 } else {
                     setProductDetail(_MyNFTItem);
                     setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
