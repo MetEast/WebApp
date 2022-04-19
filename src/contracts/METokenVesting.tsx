@@ -1,4 +1,4 @@
-export const METEAST_VESTING_TOKEN_CONTRACT_ADDRESS = '0x8F998086823DE4023b27d8b5a748d7E467FF8fe2';
+export const METEAST_VESTING_TOKEN_CONTRACT_ADDRESS = '0x4F6bf04FFA734864A80981e4bf4e2e1275093a1D';
 export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
     {
         inputs: [
@@ -32,6 +32,19 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
     },
     {
         anonymous: false,
+        inputs: [
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'Paused',
+        type: 'event',
+    },
+    {
+        anonymous: false,
         inputs: [],
         name: 'Released',
         type: 'event',
@@ -43,26 +56,21 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
         type: 'event',
     },
     {
-        stateMutability: 'payable',
-        type: 'fallback',
-    },
-    {
+        anonymous: false,
         inputs: [
             {
-                internalType: 'string',
-                name: 'beneficiaryString',
-                type: 'string',
-            },
-            {
-                internalType: 'uint256',
-                name: 'amount',
-                type: 'uint256',
+                indexed: false,
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
             },
         ],
-        name: 'createVestingSchedule',
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
+        name: 'Unpaused',
+        type: 'event',
+    },
+    {
+        stateMutability: 'payable',
+        type: 'fallback',
     },
     {
         inputs: [
@@ -213,6 +221,36 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
                 name: 'startTime_',
                 type: 'uint256',
             },
+            {
+                internalType: 'address',
+                name: 'miningPoolAddr_',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'marketerAddr_',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'daoAddr_',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'foundationAddr_',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'ecoAddr_',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'teamAddr_',
+                type: 'address',
+            },
         ],
         name: 'initialize',
         outputs: [],
@@ -227,6 +265,26 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
                 internalType: 'address',
                 name: '',
                 type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'pause',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'paused',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
             },
         ],
         stateMutability: 'view',
@@ -318,13 +376,6 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
         type: 'function',
     },
     {
-        inputs: [],
-        name: 'revoke',
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
-    },
-    {
         inputs: [
             {
                 internalType: 'address',
@@ -371,6 +422,13 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
             },
         ],
         name: 'transferOwnership',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'unpause',
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
