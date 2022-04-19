@@ -103,11 +103,11 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                         <>
                             <img src={product.image} alt="" />
                             <LikeBtn onClick={changeLikeState}>
-                                {likeState ? (
-                                    <Icon icon="ph:heart-fill" fontSize={20} color="red" />
-                                ) : (
-                                    <Icon icon="ph:heart" fontSize={20} color="black" />
-                                )}
+                                <Icon
+                                    icon={likeState ? 'ph:heart-fill' : 'ph:heart'}
+                                    fontSize={28}
+                                    color={likeState ? 'red' : 'black'}
+                                />
                             </LikeBtn>
                         </>
                     )}

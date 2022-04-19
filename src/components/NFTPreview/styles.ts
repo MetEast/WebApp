@@ -32,12 +32,26 @@ export const ImageBox = styled(Box)<{ loading: number }>`
     }
 `;
 
+export const LikeBtnBox = styled(Box)`
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 10%;
+    padding-top: 10%;
+    border-radius: 100%;
+    background: #ffffffcc;
+    display: none;
+    ${(props) => props.theme.breakpoints.up('sm')} {
+        display: grid;
+    }
+`;
+
 export const LikeBtn = styled(Box)`
     position: absolute;
-    top: 0.8vw;
-    right: 0.8vw;
-    width: 2.5vw;
-    height: 2.5vw;
+    top: 12px;
+    right: 12px;
+    width: 48px;
+    height: 48px;
     border-radius: 100%;
     background: #ffffffcc;
     display: none;

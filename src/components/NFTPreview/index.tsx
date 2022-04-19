@@ -140,7 +140,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 <LikeBtn onClick={changeLikeState}>
                                     <Icon
                                         icon={likeState ? 'ph:heart-fill' : 'ph:heart'}
-                                        fontSize="2vw"
+                                        fontSize={28}
                                         color={likeState ? 'red' : 'black'}
                                     />
                                 </LikeBtn>
