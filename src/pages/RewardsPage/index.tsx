@@ -87,7 +87,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
             ...blankContractMethodParam,
             contractType: 4,
             callType: 2,
-            method: 'getTotalRewardAsBuyer',
+            method: 'getReceivedRewardAsBuyer',
         })
             .then((_receivedReward: string) => {
                 if (!unmounted) {
@@ -101,7 +101,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     ...blankContractMethodParam,
                     contractType: 4,
                     callType: 2,
-                    method: 'getTotalRewardAsBuyer',
+                    method: 'getAvailableRewardAsBuyer',
                 });
             })
             .then((_availableReward: string) => {
@@ -116,7 +116,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     ...blankContractMethodParam,
                     contractType: 4,
                     callType: 2,
-                    method: 'getTotalRewardAsBuyer',
+                    method: 'getReceivedRewardAsCreator',
                 });
             })
             .then((_receivedReward: string) => {
@@ -131,7 +131,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     ...blankContractMethodParam,
                     contractType: 4,
                     callType: 2,
-                    method: 'getTotalRewardAsBuyer',
+                    method: 'getAvailableRewardAsCreator',
                 });
             })
             .then((_availableReward: string) => {
@@ -146,7 +146,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     ...blankContractMethodParam,
                     contractType: 4,
                     callType: 2,
-                    method: 'getTotalRewardAsBuyer',
+                    method: 'getReceivedRewardAsStaker',
                 });
             })
             .then((_receivedReward: string) => {
@@ -161,7 +161,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     ...blankContractMethodParam,
                     contractType: 4,
                     callType: 2,
-                    method: 'getTotalRewardAsBuyer',
+                    method: 'getAvailableRewardAsStaker',
                 });
             })
             .then((_availableReward: string) => {
