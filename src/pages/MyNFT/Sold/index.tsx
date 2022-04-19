@@ -34,8 +34,9 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
             if (!unmounted) {
-                if (_MyNFTItem.holder === signInDlgState.walletAccounts[0]) navigate(-1);
-                setProductDetail(_MyNFTItem);
+                if (signInDlgState.walletAccounts.length && _MyNFTItem.holder === signInDlgState.walletAccounts[0])
+                    navigate(-1);
+                else setProductDetail(_MyNFTItem);
             }
         };
         if (signInDlgState.isLoggedIn) {
@@ -125,17 +126,20 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={(type: string) => {
-                            setProductDetail((prevState: TypeProduct) => {
-                                const prodDetail: TypeProduct = { ...prevState };
-                                if (type === 'inc') {
-                                    prodDetail.likes++;
-                                } else if (type === 'dec') {
-                                    prodDetail.likes--;
-                                }
-                                return prodDetail;
-                            });
-                        }} />
+                        <ProductImageContainer
+                            product={productDetail}
+                            updateLikes={(type: string) => {
+                                setProductDetail((prevState: TypeProduct) => {
+                                    const prodDetail: TypeProduct = { ...prevState };
+                                    if (type === 'inc') {
+                                        prodDetail.likes++;
+                                    } else if (type === 'dec') {
+                                        prodDetail.likes--;
+                                    }
+                                    return prodDetail;
+                                });
+                            }}
+                        />
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>

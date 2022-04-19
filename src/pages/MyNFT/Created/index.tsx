@@ -40,14 +40,17 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (
                     !(
+                        signInDlgState.walletAccounts.length &&
                         _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
                         _MyNFTItem.status === 'NEW' &&
                         _MyNFTItem.royaltyOwner === signInDlgState.walletAccounts[0]
                     )
-                )
+                ) {
                     navigate(-1);
-                setProductDetail(_MyNFTItem);
-                setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
+                } else {
+                    setProductDetail(_MyNFTItem);
+                    setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
+                }
             }
         };
         if (signInDlgState.isLoggedIn) {
@@ -141,17 +144,20 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                             </Box>
                         </Box>
                     ) : (
-                        <ProductImageContainer product={productDetail} updateLikes={(type: string) => {
-                            setProductDetail((prevState: TypeProduct) => {
-                                const prodDetail: TypeProduct = { ...prevState };
-                                if (type === 'inc') {
-                                    prodDetail.likes++;
-                                } else if (type === 'dec') {
-                                    prodDetail.likes--;
-                                }
-                                return prodDetail;
-                            });
-                        }} />
+                        <ProductImageContainer
+                            product={productDetail}
+                            updateLikes={(type: string) => {
+                                setProductDetail((prevState: TypeProduct) => {
+                                    const prodDetail: TypeProduct = { ...prevState };
+                                    if (type === 'inc') {
+                                        prodDetail.likes++;
+                                    } else if (type === 'dec') {
+                                        prodDetail.likes--;
+                                    }
+                                    return prodDetail;
+                                });
+                            }}
+                        />
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>
