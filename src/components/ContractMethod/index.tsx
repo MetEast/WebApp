@@ -221,14 +221,23 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
                     case 'withdraw':
                         contractMethod = smartContract.methods.withdraw();
                         break;
-                    case 'getTotalRewardAsBuyer':
-                        contractMethod = smartContract.methods.getTotalRewardAsBuyer(accounts[0]);
+                    case 'getAvailableRewardAsBuyer':
+                        contractMethod = smartContract.methods.getAvailableRewardAsBuyer(accounts[0]);
                         break;
-                    case 'getTotalRewardAsCreator':
-                        contractMethod = smartContract.methods.getTotalRewardAsCreator(accounts[0]);
+                    case 'getAvailableRewardAsCreator':
+                        contractMethod = smartContract.methods.getAvailableRewardAsCreator(accounts[0]);
                         break;
-                    case 'getTotalRewardAsStaker':
-                        contractMethod = smartContract.methods.getTotalRewardAsStaker(accounts[0]);
+                    case 'getAvailableRewardAsStaker':
+                        contractMethod = smartContract.methods.getAvailableRewardAsStaker(accounts[0]);
+                        break;
+                    case 'getReceivedRewardAsBuyer':
+                        contractMethod = smartContract.methods.getReceivedRewardAsBuyer(accounts[0]);
+                        break;
+                    case 'getReceivedRewardAsCreator':
+                        contractMethod = smartContract.methods.getReceivedRewardAsCreator(accounts[0]);
+                        break;
+                    case 'getReceivedRewardAsStaker':
+                        contractMethod = smartContract.methods.getReceivedRewardAsStaker(accounts[0]);
                         break;
                     case 'withdrawBuyerReward':
                         contractMethod = smartContract.methods.withdrawBuyerReward();
