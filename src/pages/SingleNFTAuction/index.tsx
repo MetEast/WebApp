@@ -31,6 +31,7 @@ import { getMintCategory } from 'src/services/common';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 // import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
+import { reduceUserName } from 'src/services/common';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -219,7 +220,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     ) : (
                         <>
                             <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700} lineHeight={1}>
-                                {productDetail.name}
+                                {productDetail.name.length > 40
+                                    ? reduceUserName(productDetail.name, 20)
+                                    : productDetail.name}
                             </Typography>
                             <ProductSnippets
                                 nickname={productDetail.author}

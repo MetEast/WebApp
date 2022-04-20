@@ -20,6 +20,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
+import { reduceUserName } from 'src/services/common';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -202,7 +203,9 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     ) : (
                         <>
                             <Typography fontSize={56} fontWeight={700} lineHeight={1}>
-                                {productDetail.name}
+                                {productDetail.name.length > 40
+                                    ? reduceUserName(productDetail.name, 20)
+                                    : productDetail.name}
                             </Typography>
                             <ProductSnippets
                                 nickname={productDetail.author}

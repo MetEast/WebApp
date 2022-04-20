@@ -30,6 +30,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 // import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
 // import ReceivedBidsDlgContainer from 'src/components/TransactionDialogs/ReceivedBids';
+import { reduceUserName } from 'src/services/common';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -217,7 +218,9 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     ) : (
                         <>
                             <Typography fontSize={56} fontWeight={700} lineHeight={1}>
-                                {productDetail.name}
+                                {productDetail.name.length > 40
+                                    ? reduceUserName(productDetail.name, 20)
+                                    : productDetail.name}
                             </Typography>
                             <ProductSnippets
                                 nickname={productDetail.author}
