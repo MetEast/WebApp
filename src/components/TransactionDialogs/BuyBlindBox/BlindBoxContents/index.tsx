@@ -52,7 +52,7 @@ const BlindBoxContents: React.FC<ComponentProps> = (): JSX.Element => {
                     {dialogState.buyBlindNames[imgIndex]}
                 </Typography>
                 <Typography fontSize={14} fontWeight={400}>
-                    created by {reduceUserName(dialogState.buyBlindCreator, 4)}
+                    created by {reduceUserName(dialogState.buyBlindCreators[imgIndex], 4)}
                 </Typography>
             </Stack>
             {dialogState.buyBlindAmount > 1 && (

@@ -152,6 +152,7 @@ export type TypeBlindBoxCandidate = {
     orderId: string;
     asset: string;
     name: string;
+    creator: string;
 };
 
 // ---

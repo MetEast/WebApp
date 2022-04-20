@@ -125,11 +125,11 @@ interface DlgState {
     buyBlindAmount: number;
     buyBlindOrderIds: string[];
     buyBlindTokenIds: string[];
+    buyBlindCreators: string[];
     buyBlindImages: string[];
     buyBlindNames: string[];
     buyBlindTxFee: number;
     buyBlindTxHash: string;
-    buyBlindCreator: string;
     buyBlindMaxPurchases: number;
     buyBlindInstock: number;
     // admin
@@ -270,7 +270,7 @@ export const defaultDlgState: DlgState = {
     buyBlindNames: [],
     buyBlindTxFee: 0,
     buyBlindTxHash: '',
-    buyBlindCreator: '',
+    buyBlindCreators: [],
     buyBlindMaxPurchases: 0,
     buyBlindInstock: 0,
     // admin
