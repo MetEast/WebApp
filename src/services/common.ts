@@ -74,9 +74,15 @@ export const reduceHexAddress = (strAddress: string, nDigits: number) =>
         : '';
 
 // Get Abbrevation of user name //
+// export const reduceUserName = (username: string, nDigits: number) =>
+//     username
+//         ? `${username.substring(0, nDigits)}...${username.substring(username.length - nDigits, username.length)}`
+//         : '';
 export const reduceUserName = (username: string, nDigits: number) =>
     username
-        ? `${username.substring(0, nDigits)}...${username.substring(username.length - nDigits, username.length)}`
+        ? username.length > nDigits * 2
+            ? `${username.substring(0, nDigits)}...${username.substring(username.length - nDigits, username.length)}`
+            : username
         : '';
 
 export const getMintCategory = (value: string | undefined) => {
