@@ -23,6 +23,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 // import BuyNowDlgContainer from 'src/components/TransactionDialogs/BuyNow';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
+import { reduceUserName } from 'src/services/common';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -180,8 +181,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                         </>
                     ) : (
                         <>
-                            <Typography noWrap fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700} lineHeight={1}>
-                                {productDetail.name}
+                            <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700} lineHeight={1}>
+                                {productDetail.name.length > 40
+                                    ? reduceUserName(productDetail.name, 20)
+                                    : productDetail.name}
                             </Typography>
                             <ProductSnippets
                                 nickname={productDetail.author}

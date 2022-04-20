@@ -21,6 +21,7 @@ import NFTPreview from 'src/components/NFTPreview';
 // import SnackMessage from 'src/components/SnackMessage';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 // import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
+import { reduceUserName } from 'src/services/common';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -184,7 +185,9 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     ) : (
                         <>
                             <Typography fontSize={{ md: 56, sm: 42, xs: 32 }} fontWeight={700} lineHeight={1}>
-                                {blindBoxDetail.name}
+                                {blindBoxDetail.name.length > 40
+                                    ? reduceUserName(blindBoxDetail.name, 20)
+                                    : blindBoxDetail.name}
                             </Typography>
                             <ProductSnippets
                                 nickname={

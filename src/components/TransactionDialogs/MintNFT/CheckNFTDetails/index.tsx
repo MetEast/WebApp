@@ -17,6 +17,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { ImageBox } from './styles';
+import { reduceUserName } from 'src/services/common';
 
 export interface ComponentProps {}
 
@@ -189,7 +190,11 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Item</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{dialogState.mintTitle}</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>
+                            {dialogState.mintTitle.length > 40
+                                ? reduceUserName(dialogState.mintTitle, 20)
+                                : dialogState.mintTitle}
+                        </DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Collection</DetailedInfoTitleTypo>
