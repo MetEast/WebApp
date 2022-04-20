@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
@@ -27,24 +27,33 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <DialogTitleTypo>Place Bid</DialogTitleTypo>
             </Stack>
             <Stack spacing={2}>
-                <ELAPriceInput
-                    title="Bid Amount"
-                    inputValue={bidAmount.toString()}
-                    error={bidAmountError}
-                    errorText={`Bid amount must be greater than ${
-                        dialogState.placeBidMinLimit >= dialogState.placeBidLastBid
-                            ? dialogState.placeBidMinLimit
-                            : dialogState.placeBidLastBid
-                    }`}
-                    minValue={
-                        dialogState.placeBidMinLimit >= dialogState.placeBidLastBid
-                            ? dialogState.placeBidMinLimit
-                            : dialogState.placeBidLastBid
-                    }
-                    handleChange={(value) => {
-                        setBidAmount(value);
-                    }}
-                />
+                <Stack spacing={1}>
+                    <ELAPriceInput
+                        title="Bid Amount"
+                        inputValue={bidAmount.toString()}
+                        error={bidAmountError}
+                        // errorText={`Bid amount must be greater than ${
+                        //     dialogState.placeBidMinLimit >= dialogState.placeBidLastBid
+                        //         ? dialogState.placeBidMinLimit
+                        //         : dialogState.placeBidLastBid
+                        // }`}
+                        minValue={
+                            dialogState.placeBidMinLimit >= dialogState.placeBidLastBid
+                                ? dialogState.placeBidMinLimit
+                                : dialogState.placeBidLastBid
+                        }
+                        handleChange={(value) => {
+                            setBidAmount(value);
+                        }}
+                    />
+                    <Typography fontSize={14} fontWeight={500}>
+                        {`Bid amount must be greater than ${
+                            dialogState.placeBidMinLimit >= dialogState.placeBidLastBid
+                                ? dialogState.placeBidMinLimit
+                                : dialogState.placeBidLastBid
+                        }.`}
+                    </Typography>
+                </Stack>
                 {/* <Stack spacing={0.5}>
                     <Typography fontSize={12} fontWeight={700}>
                         Bid Expiration
