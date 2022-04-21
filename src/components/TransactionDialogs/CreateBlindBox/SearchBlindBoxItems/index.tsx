@@ -52,20 +52,12 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     // -------------- Fetch Data -------------- //
 
     useEffect(() => {
-        let unmounted = false;
-
         const _BBCandidates = getBBCandiates(bbCandidateLists, selectedTokenIds);
-        if (!unmounted) {
-            setItemList(_BBCandidates.candidates);
-            setLoadingItemsList(false);
-            setItemChecked(_BBCandidates.itemChecked);
-            setAllChecked(_BBCandidates.allChecked);
-            setIndeterminateChecked(_BBCandidates.indeterminateChecked);
-        }
-
-        return () => {
-            unmounted = true;
-        };
+        setItemList(_BBCandidates.candidates);
+        setLoadingItemsList(false);
+        setItemChecked(_BBCandidates.itemChecked);
+        setAllChecked(_BBCandidates.allChecked);
+        setIndeterminateChecked(_BBCandidates.indeterminateChecked);
     }, [bbCandidateLists, selectedTokenIds]);
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
