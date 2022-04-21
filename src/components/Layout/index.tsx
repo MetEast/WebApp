@@ -36,7 +36,7 @@ const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.
                             paddingY: 3,
                             position: 'fixed',
                             top: 0,
-                            background: '#FFFFFF',
+                            background: 'white',
                             zIndex: 20,
                             display: { xs: 'none', sm: 'block' },
                         }}
@@ -45,13 +45,13 @@ const Layout: React.FC<ComponentProps> = ({ children, showFooter = true }): JSX.
                             <TopNavbar />
                         </Container>
                     </Box>
-                    <Box paddingTop={{ xs: 0, sm: 12 }} paddingBottom={{ xs: 9, sm: 0 }}>
+                    <Box paddingTop={{ xs: 0, sm: 12 }} paddingBottom={{ xs: 9, sm: 0 }} sx={{ background: 'white' }}>
                         {children}
                         {showFooter && (
                             <Box
                                 marginTop={{ xs: 6, sm: 10 }}
                                 paddingY={{ xs: 0, sm: 6 }}
-                                sx={{ background: { xs: 'none', sm: '#E7E7E7' } }}
+                                sx={{ background: { xs: 'white', sm: '#E7E7E7' } }}
                             >
                                 <Container>
                                     <Footer />
