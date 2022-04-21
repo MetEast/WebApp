@@ -127,8 +127,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         isBlindBox: true,
                     })
                         .then((txHash: string) => {
-                            setDialogState({ ...updatedState, progressBar: 60, waitingConfirmDlgOpened: false });
-                            resolve(txHash);
+                            if (!unmounted) {
+                                setDialogState({ ...updatedState, progressBar: 60, waitingConfirmDlgOpened: false });
+                                resolve(txHash);
+                            }
                         })
                         .catch((error) => {
                             enqueueSnackbar(`Create Mystery Box error: ${error}!`, {

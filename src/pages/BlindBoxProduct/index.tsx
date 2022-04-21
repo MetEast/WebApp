@@ -238,10 +238,10 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                                     buyBlindPriceUsd: blindBoxDetail.price_usd,
                                                     buyBlindAmount: 1,
                                                     buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                                    buyBlindCreator:
-                                                        blindBoxDetail.author === ''
-                                                            ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
-                                                            : blindBoxDetail.author,
+                                                    // buyBlindCreator:
+                                                    //     blindBoxDetail.author === ''
+                                                    //         ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
+                                                    //         : blindBoxDetail.author,
                                                     buyBlindMaxPurchases:
                                                         blindBoxDetail.maxPurchases === undefined
                                                             ? 0

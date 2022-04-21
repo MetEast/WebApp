@@ -23,7 +23,7 @@ const BuyBlindBoxDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     buyBlindPriceUsd: 0,
                     buyBlindAmount: 1,
                     buyBlindBoxId: 0,
-                    buyBlindCreator: '',
+                    // buyBlindCreator: '',
                     buyBlindMaxPurchases: 0,
                     buyBlindInstock: 0,
                 });

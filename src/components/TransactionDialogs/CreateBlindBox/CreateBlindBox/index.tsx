@@ -27,6 +27,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxDescriptionError, setBlindboxDescriptionError] = useState(false);
     const [blindboxImage, setBlindboxImage] = useState<File>(dialogState.crtBlindImage);
     const [blindboxImageError, setBlindboxImageError] = useState(false);
+    const [blindboxCandidateCount, setBlindboxCandidateCount] = useState<number>(0);
+    const [blindboxCandidateError, setBlindboxCandidateError] = useState(false);
 
     const [stateFile, setStateFile] = useState(
         dialogState.crtBlindTitle === ''
@@ -47,6 +49,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
 
     useEffect(() => {
+        let unmounted = false;
         const getFetchData = async () => {
             const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '');
             let count = 0;
@@ -54,9 +57,15 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 const itemObject: TypeProductFetch = _BBCandidatesList[i];
                 if (itemObject.status !== 'DELETED') count++;
             }
-            setBlindboxPurchases(count);
+            if (!unmounted) {
+                setBlindboxPurchases(count);
+                setBlindboxCandidateCount(count);
+            }
         };
-        getFetchData().catch(console.error);
+        if(signInDlgState.walletAccounts.length) getFetchData().catch(console.error);
+        return () => {
+            unmounted = true;
+        };
     }, [signInDlgState.walletAccounts]);
 
     const handleFileChange = (files: Array<File>) => {
@@ -152,9 +161,23 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 <Typography fontSize={12} fontWeight={700}>
                                     Items
                                 </Typography>
-                                <PrimaryButton fullWidth size="small" onClick={() => setSelectDlgOpened(true)}>
+                                <PrimaryButton
+                                    fullWidth
+                                    size="small"
+                                    onClick={() => {
+                                        if (blindboxCandidateCount) {
+                                            setBlindboxCandidateError(false);
+                                            setSelectDlgOpened(true);
+                                        } else setBlindboxCandidateError(true);
+                                    }}
+                                >
                                     Choose NFTs to add
                                 </PrimaryButton>
+                                {blindboxCandidateError && (
+                                    <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                        No NFT to select
+                                    </Typography>
+                                )}
                             </Stack>
                             <Stack direction="row" spacing={3}>
                                 <CustomTextField

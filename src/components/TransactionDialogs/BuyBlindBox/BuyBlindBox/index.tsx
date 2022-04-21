@@ -28,11 +28,13 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         const arrTokenIds: string[] = [];
         const arrAssets: string[] = [];
         const arrNames: string[] = [];
+        const arrCreators: string[] = [];
         selectedTokens.forEach((item: TypeBlindBoxCandidate) => {
             arrOrderIds.push(item.orderId);
             arrTokenIds.push(item.tokenId);
             arrAssets.push(getImageFromAsset(item.asset));
             arrNames.push(item.name);
+            arrCreators.push(item.creator);
         });
         if (!unmounted) {
             setDialogState({
@@ -44,6 +46,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 buyBlindImages: arrAssets,
                 buyBlindNames: arrNames,
                 buyBlindTokenIds: arrTokenIds,
+                buyBlindCreators: arrCreators,
             });
         }
         return () => {
