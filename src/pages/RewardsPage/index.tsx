@@ -245,42 +245,54 @@ const RewardsPage: React.FC = (): JSX.Element => {
     return (
         <Stack>
             <Box position="relative">
-                <img src="/assets/images/rewards/banner.jpg" width="100%" height="100%" alt="" />
+                <img src="/assets/images/rewards/banner.png" width="100%" height="100%" alt="" />
                 <Box position="absolute" sx={{ inset: 0 }}>
                     <Container sx={{ height: '100%', overflow: 'visible' }}>
                         <Stack height="100%" justifyContent="center" alignItems="flex-start">
-                            <Stack direction="row" alignItems="center" marginLeft={{ xs: -3, sm: -4, md: -6 }}>
-                                <img
-                                    src="/assets/images/rewards/met-erc20-token-label.png"
-                                    width={matchDownSm ? '70%' : matchDownMd ? '75%' : '100%'}
-                                    alt=""
-                                />
+                            <Stack direction="row" alignItems="flex-end">
+                                <Typography
+                                    fontSize={{ xs: 32, sm: 48, md: 62 }}
+                                    fontWeight={600}
+                                    lineHeight={1}
+                                    color="#1890FF"
+                                >
+                                    ME ERC20{` `}
+                                    <Typography
+                                        fontSize={{ xs: 32, sm: 48, md: 62 }}
+                                        fontWeight={600}
+                                        lineHeight={1}
+                                        color="#4BBFE0"
+                                        display="inline"
+                                    >
+                                        Token
+                                    </Typography>
+                                </Typography>
                                 <Icon
                                     icon="ph:question"
-                                    fontSize={matchDownSm ? 20 : matchDownMd ? 26 : 36}
-                                    color="white"
+                                    fontSize={matchDownSm ? 16 : matchDownMd ? 24 : 28}
+                                    color="#4BBFE0"
                                     style={{
-                                        marginLeft: matchDownSm ? -20 : matchDownMd ? -32 : -36,
-                                        marginTop: matchDownSm ? 20 : matchDownMd ? 32 : 36,
+                                        marginBottom: matchDownSm ? 4 : 6,
+                                        marginLeft: matchDownSm ? 6 : 12,
                                     }}
                                 />
                             </Stack>
-                            <Stack marginLeft={0} marginTop={{ xs: 2, sm: 0 }}>
-                                <Typography fontSize={{ xs: 16, sm: 28, md: 36 }} fontWeight={600} color="white">
+                            <Stack marginLeft={0} marginTop={{ xs: 1.5, sm: 3, md: 4.5 }}>
+                                <Typography fontSize={{ xs: 16, sm: 24, md: 36 }} fontWeight={600} color="#757575">
                                     Mining Pool Total Supply:
                                 </Typography>
-                                <Typography fontSize={{ xs: 16, sm: 28, md: 36 }} fontWeight={400} color="white">
+                                <Typography fontSize={{ xs: 16, sm: 24, md: 36 }} fontWeight={600} color="black">
                                     250,000,000 ME
                                 </Typography>
                                 <Typography
-                                    fontSize={{ xs: 16, sm: 28, md: 36 }}
+                                    fontSize={{ xs: 16, sm: 24, md: 36 }}
                                     fontWeight={600}
-                                    color="white"
-                                    marginTop={{ xs: 2, md: 5 }}
+                                    color="#757575"
+                                    marginTop={{ xs: 1, md: 3.5 }}
                                 >
                                     20% Unlocked:
                                 </Typography>
-                                <Typography fontSize={{ xs: 16, sm: 28, md: 36 }} fontWeight={400} color="white">
+                                <Typography fontSize={{ xs: 16, sm: 24, md: 36 }} fontWeight={600} color="black">
                                     50,000,000 ME
                                 </Typography>
                             </Stack>
