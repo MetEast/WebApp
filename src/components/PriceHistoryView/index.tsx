@@ -17,7 +17,7 @@ interface ComponentProps {
     creator: string;
 }
 
-const PriceHistoryView: React.FC<ComponentProps> = ({createdTime, creator}): JSX.Element => {
+const PriceHistoryView: React.FC<ComponentProps> = ({ createdTime, creator }): JSX.Element => {
     const tooltipBox = ({
         series,
         seriesIndex,
@@ -153,7 +153,11 @@ const PriceHistoryView: React.FC<ComponentProps> = ({createdTime, creator}): JSX
                             });
                         }
                         const lastValue = _latestPriceList[_latestPriceList.length - 1];
-                        _latestPriceList.push({ x: new Date().getTime(), y: lastValue.y, username: lastValue.username });
+                        _latestPriceList.push({
+                            x: new Date().getTime(),
+                            y: lastValue.y,
+                            username: lastValue.username,
+                        });
                         setChartSeries([{ data: _latestPriceList }]);
                         handlePriceHistoryUnitChange('Weekly');
                     }
@@ -168,30 +172,34 @@ const PriceHistoryView: React.FC<ComponentProps> = ({createdTime, creator}): JSX
     }, [params.id]);
 
     return (
-        <Stack spacing={2}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" zIndex={10}>
-                <Typography fontSize={22} fontWeight={700}>
-                    Price History
-                </Typography>
-                <Select
-                    titlebox={
-                        <SelectBtn fullWidth isopen={priceHistoryUnitSelectOpen ? 1 : 0}>
-                            {priceHistoryUnit ? priceHistoryUnit.label : 'Select'}
-                            <Icon icon="ph:caret-down" className="arrow-icon" />
-                        </SelectBtn>
-                    }
-                    selectedItem={priceHistoryUnit}
-                    options={priceHistoryUnitSelectOptions}
-                    isOpen={priceHistoryUnitSelectOpen ? 1 : 0}
-                    handleClick={handlePriceHistoryUnitChange}
-                    setIsOpen={setPriceHistoryUnitSelectOpen}
-                    width={120}
-                />
-            </Stack>
-            <Box zIndex={0}>
-                <ReactApexChart options={chartOptions} series={chartSeries} type="area" />
-            </Box>
-        </Stack>
+        <>
+            {chartSeries[0].data.length > 2 && (
+                <Stack spacing={2}>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between" zIndex={10}>
+                        <Typography fontSize={22} fontWeight={700}>
+                            Price History
+                        </Typography>
+                        <Select
+                            titlebox={
+                                <SelectBtn fullWidth isopen={priceHistoryUnitSelectOpen ? 1 : 0}>
+                                    {priceHistoryUnit ? priceHistoryUnit.label : 'Select'}
+                                    <Icon icon="ph:caret-down" className="arrow-icon" />
+                                </SelectBtn>
+                            }
+                            selectedItem={priceHistoryUnit}
+                            options={priceHistoryUnitSelectOptions}
+                            isOpen={priceHistoryUnitSelectOpen ? 1 : 0}
+                            handleClick={handlePriceHistoryUnitChange}
+                            setIsOpen={setPriceHistoryUnitSelectOpen}
+                            width={120}
+                        />
+                    </Stack>
+                    <Box zIndex={0}>
+                        <ReactApexChart options={chartOptions} series={chartSeries} type="area" />
+                    </Box>
+                </Stack>
+            )}
+        </>
     );
 };
 
