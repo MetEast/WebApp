@@ -245,8 +245,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
     return (
         <Stack>
             <Box position="relative">
-                <img src="/assets/images/rewards/banner.png" width="100%" height="100%" alt="" />
-                <Box position="absolute" sx={{ inset: 0 }}>
+                <img src="/assets/images/rewards/banner.jpg" width="100%" height="100%" alt="" />
+                <Box position="absolute" sx={{ inset: 0 }} display="none">
                     <Container sx={{ height: '100%', overflow: 'visible' }}>
                         <Stack height="100%" justifyContent="center" alignItems="flex-start">
                             <Stack direction="row" alignItems="flex-end">
