@@ -27,6 +27,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxDescriptionError, setBlindboxDescriptionError] = useState(false);
     const [blindboxImage, setBlindboxImage] = useState<File>(dialogState.crtBlindImage);
     const [blindboxImageError, setBlindboxImageError] = useState(false);
+    const [blindboxCandidateError, setBlindboxCandidateError] = useState(false);
 
     const [stateFile, setStateFile] = useState(
         dialogState.crtBlindTitle === ''
@@ -152,9 +153,20 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 <Typography fontSize={12} fontWeight={700}>
                                     Items
                                 </Typography>
-                                <PrimaryButton fullWidth size="small" onClick={() => setSelectDlgOpened(true)}>
+                                <PrimaryButton fullWidth size="small" onClick={() => {
+                                    if (blindboxPurchases) {
+                                        setBlindboxCandidateError(false);
+                                        setSelectDlgOpened(true)
+                                    }
+                                    else setBlindboxCandidateError(true);
+                                }}>
                                     Choose NFTs to add
                                 </PrimaryButton>
+                                {blindboxCandidateError && (
+                                    <Typography fontSize={12} fontWeight={500} color="#EB5757">
+                                        No NFT to select
+                                    </Typography>
+                                )}
                             </Stack>
                             <Stack direction="row" spacing={3}>
                                 <CustomTextField
