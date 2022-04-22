@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
+import { Markup } from 'interweave';
 
 interface ComponentProps {
     description: string;
@@ -12,7 +13,7 @@ const ProjectDescription: React.FC<ComponentProps> = ({ description }): JSX.Elem
                 Description
             </Typography>
             <Typography fontSize={16} fontWeight={400}>
-                {description}
+                <Markup content={description} />
             </Typography>
         </Stack>
     );
