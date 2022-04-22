@@ -5,8 +5,6 @@ import { useSnackbar } from 'notistack';
 import SnackMessage from '../SnackMessage';
 import { useNotificationContext } from 'src/context/NotificationContext';
 
-const URL = 'wss://assist-test.meteast.io/socket';
-
 export interface ComponentProps {}
 const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -35,7 +33,7 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
         }
         // Only set up the websocket once
         if (!clientRef.current) {
-            const client = new WebSocket(URL);
+            const client = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || '');
             clientRef.current = client;
             window.client = client;
 
