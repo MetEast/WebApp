@@ -51,7 +51,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 setIsLoading(false);
             }
         };
-        fetchCollections().catch(console.error);
+        if(signInDlgState.isLoggedIn && signInDlgState.userDid || !signInDlgState.isLoggedIn) fetchCollections().catch(console.error);
         return () => {
             unmounted = true;
         };

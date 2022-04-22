@@ -144,7 +144,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 setLoadingState(nTabId, false);
             }
         };
-        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length !== 0 && signInDlgState.userDid !== '') {
+        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length && signInDlgState.userDid) {
             if (firstLoading) fetchAllTab().catch(console.error);
             else fetchSingleTab().catch(console.error);
         } else if (!signInDlgState.isLoggedIn) {

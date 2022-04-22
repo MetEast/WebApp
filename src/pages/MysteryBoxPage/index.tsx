@@ -64,7 +64,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 setIsLoading(false);
             }
         };
-        getFetchData().catch(console.error);
+        if(signInDlgState.isLoggedIn && signInDlgState.userDid || !signInDlgState.isLoggedIn) getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
