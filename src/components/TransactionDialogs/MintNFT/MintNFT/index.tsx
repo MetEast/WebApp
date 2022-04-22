@@ -86,6 +86,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                             title="Project Introduction"
                             inputValue={introduction}
                             placeholder="Enter Introduction"
+                            limit={450}
                             multiline
                             rows={3}
                             error={introductionError}

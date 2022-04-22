@@ -126,6 +126,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 title="Description"
                                 inputValue={blindboxDescription}
                                 placeholder="Enter Description"
+                                limit={450}
                                 error={blindboxDescriptionError}
                                 errorText="Description can not be empty."
                                 multiline
