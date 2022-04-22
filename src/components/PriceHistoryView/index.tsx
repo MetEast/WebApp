@@ -159,7 +159,7 @@ const PriceHistoryView: React.FC<ComponentProps> = ({ createdTime, creator }): J
                             username: lastValue.username,
                         });
                         setChartSeries([{ data: _latestPriceList }]);
-                        handlePriceHistoryUnitChange('Weekly');
+                        if (_latestPriceList.length > 2) handlePriceHistoryUnitChange('Weekly');
                     }
                 });
             })
