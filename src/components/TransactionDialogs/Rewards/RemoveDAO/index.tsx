@@ -54,11 +54,11 @@ const RemoveDAODlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             ...blankContractMethodParam,
             contractType: 3, // staking
             callType: 2,
-            method: 'isStakeholder',
+            method: 'stakedAmount',
             price: '0',
         })
             .then((result: string) => {
-                if (Boolean(result) === false) {
+                if (parseInt(result) < 10000) {
                     enqueueSnackbar('You are not a stakeholder.', {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
