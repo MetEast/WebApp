@@ -33,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 // import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
 import YourEarningDlgContainer from 'src/components/Profile/YourEarnings';
 import { useCookies } from 'react-cookie';
+import { Markup } from 'interweave';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
@@ -410,7 +411,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     textAlign="center"
                                     marginTop={1}
                                 >
-                                    {signInDlgState.userDescription}
+                                    <Markup content={signInDlgState.userDescription} />
                                 </Typography>
                                 <Stack direction="row" alignItems="center" spacing={{ xs: 1, sm: 2 }} marginTop={3.5}>
                                     <SecondaryButton
