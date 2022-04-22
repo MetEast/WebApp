@@ -212,11 +212,11 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
                     case 'approve':
                         contractMethod = smartContract.methods.approve(param.address, param._price);
                         break;
-                    case 'isStakeholder':
-                        contractMethod = smartContract.methods.isStakeholder(accounts[0]);
+                    case 'stakedAmount':
+                        contractMethod = smartContract.methods.stakedAmount(accounts[0]);
                         break;
                     case 'stake':
-                        contractMethod = smartContract.methods.stake();
+                        contractMethod = smartContract.methods.stake(param._price);
                         break;
                     case 'withdraw':
                         contractMethod = smartContract.methods.withdraw();

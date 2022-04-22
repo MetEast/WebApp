@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import MintNFTDlgContainer from 'src/components/TransactionDialogs/MintNFT';
 import CreateBlindBoxDlgContainer from '../TransactionDialogs/CreateBlindBox';

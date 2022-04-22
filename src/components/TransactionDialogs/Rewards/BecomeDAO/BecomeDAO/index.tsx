@@ -59,11 +59,11 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             ...blankContractMethodParam,
             contractType: 3, // staking
             callType: 2,
-            method: 'isStakeholder',
+            method: 'stakedAmount',
             price: '0',
         })
             .then((result: string) => {
-                if (Boolean(result) === true) {
+                if (parseInt(result)) {
                     enqueueSnackbar('Can not stake more than once.', {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -108,6 +108,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         callType: 1,
                         method: 'stake',
                         price: '0',
+                        _price: '10000',
                     });
                 })
                 .then(() => {
