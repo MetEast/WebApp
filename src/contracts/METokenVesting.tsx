@@ -1,4 +1,4 @@
-export const METEAST_VESTING_TOKEN_CONTRACT_ADDRESS = '0x4F6bf04FFA734864A80981e4bf4e2e1275093a1D';
+export const METEAST_VESTING_TOKEN_CONTRACT_ADDRESS = '0x82507F62C112046D4A5d4d4b6F76a5682313a83a';
 export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
     {
         inputs: [
@@ -45,14 +45,21 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
     },
     {
         anonymous: false,
-        inputs: [],
+        inputs: [
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'beneficiaryAddress',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'amount',
+                type: 'uint256',
+            },
+        ],
         name: 'Released',
-        type: 'event',
-    },
-    {
-        anonymous: false,
-        inputs: [],
-        name: 'Revoked',
         type: 'event',
     },
     {
@@ -67,10 +74,6 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
         ],
         name: 'Unpaused',
         type: 'event',
-    },
-    {
-        stateMutability: 'payable',
-        type: 'fallback',
     },
     {
         inputs: [
@@ -445,9 +448,5 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
-    },
-    {
-        stateMutability: 'payable',
-        type: 'receive',
     },
 ];

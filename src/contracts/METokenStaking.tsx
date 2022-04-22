@@ -1,4 +1,4 @@
-export const METEAST_STAKING_TOKEN_CONTRACT_ADDRESS = '0x171bCA4E078f5EA44Bd4Ea5e8e07c5154726bd48';
+export const METEAST_STAKING_TOKEN_CONTRACT_ADDRESS = '0x935B77368c92F0c6b16b1a184ACE56F1f78d1874';
 export const METEAST_STAKING_TOKEN_CONTRACT_ABI = [
     {
         inputs: [
@@ -9,7 +9,7 @@ export const METEAST_STAKING_TOKEN_CONTRACT_ABI = [
             },
             {
                 internalType: 'uint256',
-                name: 'stakeAmount_',
+                name: 'minStakeAmount_',
                 type: 'uint256',
             },
         ],
@@ -36,19 +36,26 @@ export const METEAST_STAKING_TOKEN_CONTRACT_ABI = [
         type: 'event',
     },
     {
-        inputs: [
+        inputs: [],
+        name: 'getToken',
+        outputs: [
             {
                 internalType: 'address',
-                name: 'account',
+                name: '',
                 type: 'address',
             },
         ],
-        name: 'isStakeholder',
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'minStakeAmount',
         outputs: [
             {
-                internalType: 'bool',
+                internalType: 'uint256',
                 name: '',
-                type: 'bool',
+                type: 'uint256',
             },
         ],
         stateMutability: 'view',
@@ -75,10 +82,35 @@ export const METEAST_STAKING_TOKEN_CONTRACT_ABI = [
         type: 'function',
     },
     {
-        inputs: [],
+        inputs: [
+            {
+                internalType: 'uint256',
+                name: '_amount',
+                type: 'uint256',
+            },
+        ],
         name: 'stake',
         outputs: [],
         stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+        ],
+        name: 'stakedAmount',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
         type: 'function',
     },
     {
