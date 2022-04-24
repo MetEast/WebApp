@@ -91,31 +91,31 @@ export const mintNFTCategoryOptions: Array<TypeSelectItem> = [
 
 export const sellNFTSaleEndsOptions: Array<TypeSelectItem> = [
     // test data
-    {
-        label: '30 mins',
-        value: '30 mins',
-    },
-    {
-        label: '1 hour',
-        value: '1 hour',
-    },
-    {
-        label: '2 hours',
-        value: '2 hours',
-    },
+    // {
+    //     label: '30 mins',
+    //     value: '30 mins',
+    // },
+    // {
+    //     label: '1 hour',
+    //     value: '1 hour',
+    // },
+    // {
+    //     label: '2 hours',
+    //     value: '2 hours',
+    // },
     // real data
-    // {
-    //     label: '1 day',
-    //     value: '1 day',
-    // },
-    // {
-    //     label: '1 week',
-    //     value: '1 week',
-    // },
-    // {
-    //     label: '1 month',
-    //     value: '1 month',
-    // },
+    {
+        label: '1 day',
+        value: '1 day',
+    },
+    {
+        label: '1 week',
+        value: '1 week',
+    },
+    {
+        label: '1 month',
+        value: '1 month',
+    },
 ];
 
 export const auctionNFTExpirationOptions: Array<TypeSelectItem> = [
