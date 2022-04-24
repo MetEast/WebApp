@@ -1,4 +1,4 @@
-export const METEAST_CONTRACT_ADDRESS = '0xf3C7F093daBe7AD75964Aa6ad2D4260e0A7aC317';
+export const METEAST_CONTRACT_ADDRESS = '0x15319c02e6f6b4FcB90b465c135c63dc84B9afFC';
 export const METEAST_CONTRACT_ABI = [
     {
         anonymous: false,
