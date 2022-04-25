@@ -1,4 +1,4 @@
-export const METEAST_MARKET_CONTRACT_ADDRESS = '0x2Ac890bE6864e06774B34fb075d60CC2E03d286e';
+export const METEAST_MARKET_CONTRACT_ADDRESS = '0x525805f96CEf178AD8d4Ca37E4a2c29262f7ae93';
 export const METEAST_MARKET_CONTRACT_ABI = [
     {
         anonymous: false,
@@ -1366,6 +1366,19 @@ export const METEAST_MARKET_CONTRACT_ABI = [
         type: 'function',
     },
     {
+        inputs: [],
+        name: 'getMiningAddress',
+        outputs: [
+            {
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
         inputs: [
             {
                 internalType: 'uint256',
@@ -2721,7 +2734,17 @@ export const METEAST_MARKET_CONTRACT_ABI = [
         inputs: [
             {
                 internalType: 'address',
+                name: '_libraryAddress',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
                 name: '_tokenAddress',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: '_miningAddress',
                 type: 'address',
             },
         ],
@@ -2882,6 +2905,19 @@ export const METEAST_MARKET_CONTRACT_ABI = [
             },
         ],
         name: 'setLibraryContract',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: '_miningAddress',
+                type: 'address',
+            },
+        ],
+        name: 'setMiningAddress',
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
