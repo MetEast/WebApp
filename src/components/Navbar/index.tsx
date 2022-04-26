@@ -59,11 +59,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     }, [signInDlgState.walletAccounts]);
 
     const menuItemsList: Array<TypeMenuItem> = [
-        // {
-        //     title: 'Home',
-        //     url: '/',
-        //     icon: <Icon icon="ph:house" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
-        // },
+        {
+            title: 'Home',
+            url: '/',
+            icon: <Icon icon="ph:house" fontSize={20} style={{ marginRight: mobile ? 0 : 6, marginBottom: 2 }} />,
+        },
         {
             title: 'Products',
             url: '/products',
@@ -83,7 +83,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         },
     ];
 
-    const pageButtons = menuItemsList.map((item, index) => (
+    const pageButtons = (mobile ? menuItemsList : menuItemsList.slice(1)).map((item, index) => (
         <PageButton
             key={`navbaritem-${index}`}
             data={item}
@@ -237,7 +237,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                paddingTop={mobile ? 0.5 : 0}
+                paddingTop={mobile ? 1.5 : 0}
                 paddingBottom={mobile ? 1.5 : 0}
             >
                 {!mobile && (
