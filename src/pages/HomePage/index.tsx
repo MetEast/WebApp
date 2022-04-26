@@ -51,7 +51,8 @@ const HomePage: React.FC = (): JSX.Element => {
                 setIsLoading(false);
             }
         };
-        if(signInDlgState.isLoggedIn && signInDlgState.userDid || !signInDlgState.isLoggedIn) fetchCollections().catch(console.error);
+        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+            fetchCollections().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -154,7 +155,7 @@ const HomePage: React.FC = (): JSX.Element => {
                 </Swiper>
             </Box>
             <Container sx={{ maxWidth: matchDownSm ? '100% !important' : 'auto' }}>
-                <Box mt={8}>
+                <Box mt={{ xs: 4, md: 8 }}>
                     <Typography
                         fontSize={{ xs: 26, sm: 28, md: 32 }}
                         fontWeight={700}
