@@ -304,8 +304,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     </Container>
                 </Box>
             </Box>
-            <Container sx={{ marginTop: 12 }}>
-                <Stack spacing={14}>
+            <Container sx={{ marginTop: { xs: 4, sm: 8, md: 14 } }}>
+                <Stack spacing={{ xs: 4, sm: 8, md: 14 }}>
                     <TransactionReward rewards={buyerRewards} withdrawReward={withdrawReward} />
                     <GovernanceReward rewards={stakerRewards} withdrawReward={withdrawReward} />
                     <Royalties rewards={creatorRewards} withdrawReward={withdrawReward} />
