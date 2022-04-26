@@ -4,6 +4,7 @@ export const ListItemsWrapper = styled(Box)<{ isOpen: number }>`
     display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
     position: absolute;
     padding-top: 8px;
+    right: 0;
     z-index: 10;
 `;
 
