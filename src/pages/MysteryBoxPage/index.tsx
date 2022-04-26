@@ -50,7 +50,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
-            if(!unmounted) setIsLoading(true);
+            if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, undefined);
             const _searchedBBList = await getBBItemList(
@@ -64,7 +64,8 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 setIsLoading(false);
             }
         };
-        if(signInDlgState.isLoggedIn && signInDlgState.userDid || !signInDlgState.isLoggedIn) getFetchData().catch(console.error);
+        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+            getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -73,7 +74,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
 
     // -------------- Option Bar -------------- //
     const handleKeyWordChange = (value: string) => {
-        if (keyWord === value) return ;
+        if (keyWord === value) return;
         setKeyWord(value);
     };
 
@@ -179,20 +180,20 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                             secure: true,
                         });
                     }}
-                    marginTop={5}
+                    marginTop={{ xs: 3, md: 5 }}
                 />
                 {blindBoxList.length === 0 ? (
                     <LooksEmptyBox
                         bannerTitle="No Products Found For This Search"
                         buttonLabel="Back to all Items"
-                        sx={{ marginTop: 6 }}
+                        sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
                             setEmptyKeyword(emptyKeyword + 1);
                             handleKeyWordChange('');
                         }}
                     />
                 ) : (
-                    <Grid container mt={2} spacing={4}>
+                    <Grid container marginTop={{ xs: 3, md: 5 }} columnSpacing={4} rowGap={4}>
                         {blindBoxList.map((item, index) => (
                             <Grid
                                 item
