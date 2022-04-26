@@ -71,8 +71,8 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                         v1 - {generatedGitInfo.gitCommitHash}
                     </Typography>
                 </Stack>
-                <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={0} columnGap={2}>
-                    <Link href="../../tokenomics/index.html" target="blank" sx={{textDecoration: 'none'}}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" rowGap={0} columnGap={2}>
+                    <Link href="../../tokenomics/index.html" target="blank" sx={{ textDecoration: 'none' }}>
                         <Button
                             sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}
                         >
