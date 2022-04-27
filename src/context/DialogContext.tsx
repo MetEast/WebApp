@@ -170,7 +170,7 @@ export const defaultDlgState: DlgState = {
     mintCategory: { label: '', value: '' },
     mintIntroduction: '',
     mintFile: new File([''], ''),
-    mintRoyalties: 0,
+    mintRoyalties: -1,
     mintTokenId: '',
     mintTokenUri: '',
     mintDidUri: '',
