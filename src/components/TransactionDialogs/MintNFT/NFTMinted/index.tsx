@@ -59,7 +59,7 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintIntroduction: '',
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
-                                mintRoyalties: 0,
+                                mintRoyalties: -1,
                                 createNFTDlgOpened: true,
                                 createNFTDlgStep: 3,
                             });

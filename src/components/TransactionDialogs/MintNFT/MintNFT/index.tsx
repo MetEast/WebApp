@@ -34,7 +34,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
             : { raw: dialogState.mintFile, preview: URL.createObjectURL(dialogState.mintFile) },
     );
     const [royalties, setRoyalties] = useState<number>(
-        dialogState.mintRoyalties === 0 ? 10 : dialogState.mintRoyalties,
+        dialogState.mintRoyalties === -1 ? 10 : dialogState.mintRoyalties,
     );
     const [royaltiesError, setRoyaltiesError] = useState(false);
 
@@ -185,7 +185,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintIntroduction: '',
                                 mintCategory: { label: '', value: '' },
                                 mintFile: new File([''], ''),
-                                mintRoyalties: 0,
+                                mintRoyalties: -1,
                                 // mintTxFee: 0,
                                 createNFTDlgOpened: false,
                             });
@@ -204,7 +204,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                                 category.value !== '' &&
                                 mintFile !== null &&
                                 stateFile !== null &&
-                                royalties > 0 &&
+                                royalties >= 0 &&
                                 royalties <= 30 &&
                                 isNaN(royalties) !== true
                             ) {
