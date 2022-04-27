@@ -194,6 +194,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
                             if (keyWord) {
+                                setIsLoading(true);
+                                setProductList(Array(4).fill(blankNFTItem));
                                 setEmptyKeyword(emptyKeyword + 1);
                                 handleKeyWordChange('');
                             } else {
