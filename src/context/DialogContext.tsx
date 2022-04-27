@@ -41,7 +41,7 @@ interface DlgState {
     burnTokenId: string;
     // create order for sale/auction
     sellSaleType: 'buynow' | 'auction';
-    sellSaleEnds: TypeSelectItem;
+    sellSaleEnds: number;
     sellPrice: number;
     sellMinPrice: number;
     sellTxHash: string;
@@ -182,7 +182,7 @@ export const defaultDlgState: DlgState = {
     burnTokenId: '',
     // create order for sale/auction
     sellSaleType: 'buynow',
-    sellSaleEnds: { label: '', value: '' },
+    sellSaleEnds: 0,
     sellPrice: 0,
     sellMinPrice: 0,
     sellTxHash: '',

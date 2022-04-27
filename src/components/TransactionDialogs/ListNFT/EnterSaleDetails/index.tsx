@@ -4,8 +4,6 @@ import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { SaleTypeButton, SelectBtn, DateTimeInput } from './styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
-import { TypeSelectItem } from 'src/types/select-types';
-import { useSnackbar } from 'notistack';
 import { useDialogContext } from 'src/context/DialogContext';
 import Select from 'src/components/Select';
 import { Icon } from '@iconify/react';
@@ -21,30 +19,9 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [price, setPrice] = useState<number>(0);
     // const [royalty, setRoyalty] = useState<string>('');
     const [minPrice, setMinPrice] = useState<number>(0);
-    const { enqueueSnackbar } = useSnackbar();
     const [buyNowPriceError, setBuyNowPriceError] = useState<boolean>(false);
     const [auctionMinumPriceError, setAuctionMinumPriceError] = useState<boolean>(false);
     const [saleEndsError, setSaleEndsError] = useState(false);
-
-    const handleNextStep = () => {
-        if ((saleType === 'buynow' && price > 0) || (saleType === 'auction' && minPrice > 0 && saleEnds)) {
-            setDialogState({
-                ...dialogState,
-                sellPrice: price,
-                sellMinPrice: minPrice,
-                // sellSaleEnds: saleEnds || { label: '', value: '' },
-                sellSaleType: saleType,
-                createNFTDlgStep: 4,
-            });
-        } else {
-            if (saleType === 'buynow') {
-                setBuyNowPriceError(isNaN(price) || price <= 0);
-            } else if (saleType === 'auction') {
-                setAuctionMinumPriceError(isNaN(minPrice) || minPrice <= 0);
-                setSaleEndsError(!saleEnds);
-            }
-        }
-    };
 
     const handleSaleEndsDropdownClick = (value: string) => {
         let datetime = new Date().getTime();
@@ -56,9 +33,28 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             datetime += 30 * 24 * 3600 * 1000;
         }
 
-        // console.log('sale ends datetime:', new Date(datetime).toISOString().slice(0, 16));
         setSaleEnds(new Date(datetime).toISOString().slice(0, 16));
         setSaleEndsError(false);
+    };
+
+    const handleNextStep = () => {
+        if ((saleType === 'buynow' && price > 0) || (saleType === 'auction' && minPrice > 0 && saleEnds && new Date(saleEnds).getTime() >= new Date().getTime())) {
+            setDialogState({
+                ...dialogState,
+                sellPrice: price,
+                sellMinPrice: minPrice,
+                sellSaleEnds: parseInt(((new Date(saleEnds).getTime()) / 1000).toString()),
+                sellSaleType: saleType,
+                createNFTDlgStep: 4,
+            });
+        } else {
+            if (saleType === 'buynow') {
+                setBuyNowPriceError(isNaN(price) || price <= 0);
+            } else if (saleType === 'auction') {
+                setAuctionMinumPriceError(isNaN(minPrice) || minPrice <= 0);
+                setSaleEndsError(!saleEnds || new Date(saleEnds).getTime() < new Date().getTime());
+            }
+        }
     };
 
     return (
@@ -152,7 +148,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             sellSaleType: 'buynow',
                             sellPrice: 0,
                             sellMinPrice: 0,
-                            sellSaleEnds: { label: '', value: '' },
+                            sellSaleEnds: 0,
                             createNFTDlgOpened: false,
                         });
                     }}
