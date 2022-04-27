@@ -11,6 +11,7 @@ import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
@@ -19,6 +20,7 @@ import { useCookies } from 'react-cookie';
 
 const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_PREVIEW']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
         cookies.METEAST_PREVIEW === '1' ? 'grid1' : 'grid2',
@@ -184,12 +186,20 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 />
                 {blindBoxList.length === 0 ? (
                     <LooksEmptyBox
-                        bannerTitle="No Products Found For This Search"
-                        buttonLabel="Back to all Items"
+                        bannerTitle={keyWord ? 'No Products Found For This Search' : 'Looks Empty Here'}
+                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST NFT'}
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
-                            setEmptyKeyword(emptyKeyword + 1);
-                            handleKeyWordChange('');
+                            if (keyWord) {
+                                setEmptyKeyword(emptyKeyword + 1);
+                                handleKeyWordChange('');
+                            } else {
+                                setDialogState({
+                                    ...dialogState,
+                                    createNFTDlgOpened: true,
+                                    createNFTDlgStep: 0,
+                                });
+                            }
                         }}
                     />
                 ) : (
