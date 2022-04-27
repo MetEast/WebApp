@@ -15,6 +15,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { getTime } from 'src/services/common';
 
 export interface ComponentProps {}
 
@@ -30,7 +31,6 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const walletConnectWeb3 = new Web3(
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
-
     const handleSell = () => {
         if (dialogState.sellTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
@@ -53,111 +53,100 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
 
-        walletConnectWeb3.eth.getBlock('latest').then((currentBlock: any) => {
-            let auctionTime: number =
-                typeof currentBlock.timestamp === 'string' ? parseInt(currentBlock.timestamp) : currentBlock.timestamp;
-            if (dialogState.sellSaleEnds.value === '30 mins') auctionTime += 0.5 * 3600;
-            else if (dialogState.sellSaleEnds.value === '1 hour') auctionTime += 1 * 3600;
-            else if (dialogState.sellSaleEnds.value === '2 hours') auctionTime += 2 * 3600;
-            else if (dialogState.sellSaleEnds.value === '1 month') auctionTime += 30 * 24 * 3600;
-            else if (dialogState.sellSaleEnds.value === '1 week') auctionTime += 7 * 24 * 3600;
-            else if (dialogState.sellSaleEnds.value === '1 day') auctionTime += 24 * 3600;
-
-            callContractMethod(walletConnectWeb3, {
-                ...blankContractMethodParam,
-                contractType: 1,
-                method: 'setApprovalForAll',
-                price: '0',
-                operator: METEAST_MARKET_CONTRACT_ADDRESS,
-                approved: true,
-            })
-                .then((result: string) => {
-                    if (result === 'success') {
-                        enqueueSnackbar(`Set approval succeed!`, {
-                            variant: 'success',
-                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                        });
-                    }
-                    callContractMethod(
-                        walletConnectWeb3,
-                        dialogState.sellSaleType === 'buynow'
-                            ? {
-                                  ...blankContractMethodParam,
-                                  contractType: 2,
-                                  method: 'createOrderForSale',
-                                  price: '0',
-                                  tokenId: dialogState.mintTokenId,
-                                  quoteToken: _quoteToken,
-                                  _price: BigInt(dialogState.sellPrice * 1e18).toString(),
-                                  didUri: signInDlgState.didUri,
-                                  isBlindBox: false,
-                              }
-                            : {
-                                  ...blankContractMethodParam,
-                                  contractType: 2,
-                                  method: 'createOrderForAuction',
-                                  price: '0',
-                                  tokenId: dialogState.mintTokenId,
-                                  quoteToken: _quoteToken,
-                                  _price: BigInt(dialogState.sellMinPrice * 1e18).toString(),
-                                  endTime: auctionTime.toString(),
-                                  didUri: signInDlgState.didUri,
-                              },
-                    )
-                        .then((txHash: string) => {
-                            enqueueSnackbar(
-                                `Order for ${dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'} succeed!`,
-                                {
-                                    variant: 'success',
-                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                },
-                            );
-                            if (!unmounted) {
-                                setDialogState({
-                                    ...updatedState,
-                                    createNFTDlgOpened: true,
-                                    createNFTDlgStep: 5,
-                                    sellTxHash: txHash,
-                                    waitingConfirmDlgOpened: false,
-                                });
-                            }
-                        })
-                        .catch((error) => {
-                            enqueueSnackbar(
-                                `Order for ${dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'} error.`,
-                                {
-                                    variant: 'error',
-                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                },
-                            );
-                            if (!unmounted) {
-                                setDialogState({
-                                    ...updatedState,
-                                    createNFTDlgOpened: false,
-                                    waitingConfirmDlgOpened: false,
-                                    errorMessageDlgOpened: true,
-                                });
-                            }
-                        });
-                })
-                .catch((error) => {
-                    enqueueSnackbar(`Set approval error.`, {
-                        variant: 'error',
+        callContractMethod(walletConnectWeb3, {
+            ...blankContractMethodParam,
+            contractType: 1,
+            method: 'setApprovalForAll',
+            price: '0',
+            operator: METEAST_MARKET_CONTRACT_ADDRESS,
+            approved: true,
+        })
+            .then((result: string) => {
+                if (result === 'success') {
+                    enqueueSnackbar(`Set approval succeed!`, {
+                        variant: 'success',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
-                    if (!unmounted) {
-                        setDialogState({
-                            ...updatedState,
-                            createNFTDlgOpened: false,
-                            waitingConfirmDlgOpened: false,
-                            errorMessageDlgOpened: true,
-                        });
-                    }
-                })
-                .finally(() => {
-                    setOnProgress(false);
+                }
+                callContractMethod(
+                    walletConnectWeb3,
+                    dialogState.sellSaleType === 'buynow'
+                        ? {
+                              ...blankContractMethodParam,
+                              contractType: 2,
+                              method: 'createOrderForSale',
+                              price: '0',
+                              tokenId: dialogState.mintTokenId,
+                              quoteToken: _quoteToken,
+                              _price: BigInt(dialogState.sellPrice * 1e18).toString(),
+                              didUri: signInDlgState.didUri,
+                              isBlindBox: false,
+                          }
+                        : {
+                              ...blankContractMethodParam,
+                              contractType: 2,
+                              method: 'createOrderForAuction',
+                              price: '0',
+                              tokenId: dialogState.mintTokenId,
+                              quoteToken: _quoteToken,
+                              _price: BigInt(dialogState.sellMinPrice * 1e18).toString(),
+                              endTime: dialogState.sellSaleEnds.toString(),
+                              didUri: signInDlgState.didUri,
+                          },
+                )
+                    .then((txHash: string) => {
+                        enqueueSnackbar(
+                            `Order for ${dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'} succeed!`,
+                            {
+                                variant: 'success',
+                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            },
+                        );
+                        if (!unmounted) {
+                            setDialogState({
+                                ...updatedState,
+                                createNFTDlgOpened: true,
+                                createNFTDlgStep: 5,
+                                sellTxHash: txHash,
+                                waitingConfirmDlgOpened: false,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        enqueueSnackbar(
+                            `Order for ${dialogState.sellSaleType === 'buynow' ? 'sale' : 'auction'} error.`,
+                            {
+                                variant: 'error',
+                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            },
+                        );
+                        if (!unmounted) {
+                            setDialogState({
+                                ...updatedState,
+                                createNFTDlgOpened: false,
+                                waitingConfirmDlgOpened: false,
+                                errorMessageDlgOpened: true,
+                            });
+                        }
+                    });
+            })
+            .catch((error) => {
+                enqueueSnackbar(`Set approval error.`, {
+                    variant: 'error',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
                 });
-        });
+                if (!unmounted) {
+                    setDialogState({
+                        ...updatedState,
+                        createNFTDlgOpened: false,
+                        waitingConfirmDlgOpened: false,
+                        errorMessageDlgOpened: true,
+                    });
+                }
+            })
+            .finally(() => {
+                setOnProgress(false);
+            });
         return () => {
             unmounted = true;
         };
@@ -189,7 +178,12 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
                             </Grid>
                             <Grid item xs={6}>
-                                <DetailedInfoLabelTypo>in {dialogState.sellSaleEnds.value}</DetailedInfoLabelTypo>
+                                <DetailedInfoLabelTypo>
+                                    in{' '}
+                                    {getTime(dialogState.sellSaleEnds.toString()).date +
+                                        ' ' +
+                                        getTime(dialogState.sellSaleEnds.toString()).time}
+                                </DetailedInfoLabelTypo>
                             </Grid>
                         </>
                     )}
