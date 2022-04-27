@@ -187,17 +187,19 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 {blindBoxList.length === 0 ? (
                     <LooksEmptyBox
                         bannerTitle={keyWord ? 'No Products Found For This Search' : 'Looks Empty Here'}
-                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST NFT'}
+                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST MysteryBox'}
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
                             if (keyWord) {
+                                setIsLoading(true);
+                                setBlindBoxList(Array(4).fill(blankBBItem));
                                 setEmptyKeyword(emptyKeyword + 1);
                                 handleKeyWordChange('');
                             } else {
                                 setDialogState({
                                     ...dialogState,
-                                    createNFTDlgOpened: true,
-                                    createNFTDlgStep: 0,
+                                    createBlindBoxDlgOpened: true,
+                                    createBlindBoxDlgStep: 0,
                                 });
                             }
                         }}
