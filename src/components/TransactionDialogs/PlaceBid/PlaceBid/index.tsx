@@ -102,7 +102,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        if (bidAmount >= dialogState.placeBidMinLimit && bidAmount > dialogState.placeBidLastBid) {
+                        if (bidAmount > dialogState.placeBidMinLimit && bidAmount > dialogState.placeBidLastBid) {
                             setDialogState({
                                 ...dialogState,
                                 placeBidDlgOpened: true,
@@ -114,7 +114,7 @@ const PlaceBid: React.FC<ComponentProps> = (): JSX.Element => {
                             // setExpirationError(expiration === undefined);
                             setBidAmountError(
                                 isNaN(bidAmount) ||
-                                    bidAmount < dialogState.placeBidMinLimit ||
+                                    bidAmount <= dialogState.placeBidMinLimit ||
                                     bidAmount <= dialogState.placeBidLastBid,
                             );
                         }
