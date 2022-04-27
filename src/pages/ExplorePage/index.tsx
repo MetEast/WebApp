@@ -1,5 +1,5 @@
-import { Box, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import { Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,6 +10,7 @@ import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
+import { useDialogContext } from 'src/context/DialogContext';
 import {
     getELA2USD,
     getMyFavouritesList,
@@ -24,6 +25,7 @@ import { useCookies } from 'react-cookie';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
+    const [dialogState, setDialogState] = useDialogContext();
     const [cookies, setCookies] = useCookies(['METEAST_PREVIEW']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
         cookies.METEAST_PREVIEW === '1' ? 'grid1' : 'grid2',
@@ -187,12 +189,20 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 />
                 {productList.length === 0 ? (
                     <LooksEmptyBox
-                        bannerTitle="No Products Found For This Search"
-                        buttonLabel="Back to all Items"
+                        bannerTitle={keyWord ? 'No Products Found For This Search' : 'Looks Empty Here'}
+                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST NFT'}
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
-                            setEmptyKeyword(emptyKeyword + 1);
-                            handleKeyWordChange('');
+                            if (keyWord) {
+                                setEmptyKeyword(emptyKeyword + 1);
+                                handleKeyWordChange('');
+                            } else {
+                                setDialogState({
+                                    ...dialogState,
+                                    createNFTDlgOpened: true,
+                                    createNFTDlgStep: 0,
+                                });
+                            }
                         }}
                     />
                 ) : (
