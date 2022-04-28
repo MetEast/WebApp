@@ -45,6 +45,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
 
     const [sortBySelectOpen, setSortBySelectOpen] = useState(false);
     const [showFiltersCard, setShowFiltersCard] = useState<boolean>(false);
+    const [searchFieldFocus, setSearchFieldFocus] = useState(false);
 
     return (
         <Stack direction="row" spacing={{ xs: 1, md: 2 }} sx={{ height: 40 }} {...otherProps}>
@@ -52,74 +53,79 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                 placeholder="Search name, description, address"
                 emptyKeyword={emptyKeyword}
                 handleChange={handleKeyWordChange}
+                setSearchFieldFocus={setSearchFieldFocus}
             />
-            <Select
-                titlebox={
-                    <SortByBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
-                        <Icon icon="ph:sort-ascending" fontSize={24} />
-                        {!onlyShowIcon && (
-                            <>
-                                {sortSelected ? sortSelected.label : 'SORT BY'}
-                                <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
-                            </>
-                        )}
-                    </SortByBtn>
-                }
-                selectedItem={sortSelected}
-                options={sortOptions}
-                isOpen={sortBySelectOpen ? 1 : 0}
-                setIsOpen={setSortBySelectOpen}
-                handleClick={handleSortChange}
-                // width={260}
-                min_width={onlyShowIcon ? 'auto' : 240}
-                listitemsbox_width={onlyShowIcon ? 160 : 240}
-                onMouseLeave={() => setSortBySelectOpen(false)}
-            />
-            <Box
-                position="relative"
-                onMouseEnter={matchDownSm ? undefined : () => setShowFiltersCard(true)}
-                onMouseLeave={() => setShowFiltersCard(false)}
-            >
-                <FilterButton onClick={() => setShowFiltersCard(!showFiltersCard)}>
-                    <Icon
-                        icon="ph:funnel"
-                        fontSize={20}
-                        color="#1890FF"
-                        style={{ marginRight: onlyShowIcon ? 0 : 4 }}
+            {!(matchDownSm && searchFieldFocus) && (
+                <>
+                    <Select
+                        titlebox={
+                            <SortByBtn fullWidth isopen={sortBySelectOpen ? 1 : 0}>
+                                <Icon icon="ph:sort-ascending" fontSize={24} />
+                                {!onlyShowIcon && (
+                                    <>
+                                        {sortSelected ? sortSelected.label : 'SORT BY'}
+                                        <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
+                                    </>
+                                )}
+                            </SortByBtn>
+                        }
+                        selectedItem={sortSelected}
+                        options={sortOptions}
+                        isOpen={sortBySelectOpen ? 1 : 0}
+                        setIsOpen={setSortBySelectOpen}
+                        handleClick={handleSortChange}
+                        // width={260}
+                        min_width={onlyShowIcon ? 'auto' : 240}
+                        listitemsbox_width={onlyShowIcon ? 160 : 240}
+                        onMouseLeave={() => setSortBySelectOpen(false)}
                     />
-                    {!onlyShowIcon && `Filter`}
-                </FilterButton>
-                <FiltersBox display={showFiltersCard ? 'flex' : 'none'}>
-                    <FilterCard
-                        changeHandler={(
-                            status: number,
-                            minPrice: string,
-                            maxPrice: string,
-                            category: TypeSelectItem | undefined,
-                            opened: boolean,
-                        ) => {
-                            handlerFilterChange(status, minPrice, maxPrice, category, opened);
-                            if (!opened) setShowFiltersCard(opened);
-                        }}
-                    />
-                </FiltersBox>
-            </Box>
-            <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
-                <GridButton
-                    size="small"
-                    selected={productViewMode === 'grid2'}
-                    onClick={() => setProductViewMode('grid2')}
-                >
-                    <Icon icon="ph:dots-nine" fontSize={20} />
-                </GridButton>
-                <GridButton
-                    size="small"
-                    selected={productViewMode === 'grid1'}
-                    onClick={() => setProductViewMode('grid1')}
-                >
-                    <Icon icon="ph:squares-four" fontSize={20} />
-                </GridButton>
-            </Box>
+                    <Box
+                        position="relative"
+                        onMouseEnter={matchDownSm ? undefined : () => setShowFiltersCard(true)}
+                        onMouseLeave={() => setShowFiltersCard(false)}
+                    >
+                        <FilterButton onClick={() => setShowFiltersCard(!showFiltersCard)}>
+                            <Icon
+                                icon="ph:funnel"
+                                fontSize={20}
+                                color="#1890FF"
+                                style={{ marginRight: onlyShowIcon ? 0 : 4 }}
+                            />
+                            {!onlyShowIcon && `Filter`}
+                        </FilterButton>
+                        <FiltersBox display={showFiltersCard ? 'flex' : 'none'}>
+                            <FilterCard
+                                changeHandler={(
+                                    status: number,
+                                    minPrice: string,
+                                    maxPrice: string,
+                                    category: TypeSelectItem | undefined,
+                                    opened: boolean,
+                                ) => {
+                                    handlerFilterChange(status, minPrice, maxPrice, category, opened);
+                                    if (!opened) setShowFiltersCard(opened);
+                                }}
+                            />
+                        </FiltersBox>
+                    </Box>
+                    <Box display="flex" borderRadius={3} sx={{ background: '#E8F4FF' }}>
+                        <GridButton
+                            size="small"
+                            selected={productViewMode === 'grid2'}
+                            onClick={() => setProductViewMode('grid2')}
+                        >
+                            <Icon icon="ph:dots-nine" fontSize={20} />
+                        </GridButton>
+                        <GridButton
+                            size="small"
+                            selected={productViewMode === 'grid1'}
+                            onClick={() => setProductViewMode('grid1')}
+                        >
+                            <Icon icon="ph:squares-four" fontSize={20} />
+                        </GridButton>
+                    </Box>
+                </>
+            )}
         </Stack>
     );
 };
