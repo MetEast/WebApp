@@ -33,17 +33,35 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             datetime += 30 * 24 * 3600 * 1000;
         }
 
-        setSaleEnds(new Date(datetime).toISOString().slice(0, 16));
+        let dateObject = new Date(datetime);
+        const localDateTimeString = dateObject
+            .toLocaleString('sv-SE', {
+                // timeZone: 'America/Los_Angeles',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+            })
+            .replace(' ', 'T');
+        console.log('localDateTimeString', localDateTimeString);
+
+        // format: 2022-04-30T08:05
+        setSaleEnds(localDateTimeString);
+
         setSaleEndsError(false);
     };
 
     const handleNextStep = () => {
-        if ((saleType === 'buynow' && price > 0) || (saleType === 'auction' && minPrice > 0 && saleEnds && new Date(saleEnds).getTime() >= new Date().getTime())) {
+        if (
+            (saleType === 'buynow' && price > 0) ||
+            (saleType === 'auction' && minPrice > 0 && saleEnds && new Date(saleEnds).getTime() >= new Date().getTime())
+        ) {
             setDialogState({
                 ...dialogState,
                 sellPrice: price,
                 sellMinPrice: minPrice,
-                sellSaleEnds: parseInt(((new Date(saleEnds).getTime()) / 1000).toString()),
+                sellSaleEnds: parseInt((new Date(saleEnds).getTime() / 1000).toString()),
                 sellSaleType: saleType,
                 createNFTDlgStep: 4,
             });
