@@ -1,4 +1,4 @@
-export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS = '0x1C3b0785d786AC82505Be8BeC1A6B6d03634738c';
+export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS = '0xe1ce0551FF7a0aE95b3DD904C20235cAd992e70C';
 export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI = [
     {
         inputs: [
@@ -240,6 +240,19 @@ export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI = [
             },
         ],
         name: 'getReceivedRewardAsStaker',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'getStartTime',
         outputs: [
             {
                 internalType: 'uint256',
