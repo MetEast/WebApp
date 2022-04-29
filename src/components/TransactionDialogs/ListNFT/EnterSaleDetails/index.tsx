@@ -32,7 +32,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         } else if (value === '1 month') {
             datetime += 30 * 24 * 3600 * 1000;
         }
-        
+
         let dateObject = new Date(datetime);
         const localDateTimeString = dateObject
             .toLocaleString('sv-SE', {
@@ -128,7 +128,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                         setSaleEnds(event.target.value);
                                         setSaleEndsError(0);
                                     }}
-                                    sx={{ border: saleEndsError ? '2px solid #EB5757' : 'none' }}
+                                    sx={{ border: saleEndsError > 0 ? '2px solid #EB5757' : 'none' }}
                                 />
                                 <Select
                                     titlebox={
@@ -149,7 +149,9 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             </Stack>
                             {saleEndsError > 0 && (
                                 <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                    {saleEndsError === 1 ? 'Sale Ends should be selected.' : 'Sale Ends is invalid.'}
+                                    {saleEndsError === 1
+                                        ? 'Sale Ends should be selected.'
+                                        : 'Sale Ends should be selected after the current time.'}
                                 </Typography>
                             )}
                         </Stack>
