@@ -1,4 +1,4 @@
-export const METEAST_VESTING_TOKEN_CONTRACT_ADDRESS = '0x6053e9A50E07ADacfD7Fd5ecF7E7F35095c67381';
+export const METEAST_VESTING_TOKEN_CONTRACT_ADDRESS = '0x918f4e3C8F5B0Bea1F4350617A4eBCfCe769cb5e';
 export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
     {
         inputs: [
@@ -110,7 +110,7 @@ export const METEAST_VESTING_TOKEN_CONTRACT_ABI = [
                 type: 'uint256',
             },
         ],
-        stateMutability: 'nonpayable',
+        stateMutability: 'view',
         type: 'function',
     },
     {
