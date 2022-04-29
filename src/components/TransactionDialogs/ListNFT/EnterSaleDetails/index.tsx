@@ -21,7 +21,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [minPrice, setMinPrice] = useState<number>(0);
     const [buyNowPriceError, setBuyNowPriceError] = useState<boolean>(false);
     const [auctionMinumPriceError, setAuctionMinumPriceError] = useState<boolean>(false);
-    const [saleEndsError, setSaleEndsError] = useState(false);
+    const [saleEndsError, setSaleEndsError] = useState<number>(0); // 0: no error, 1: not selected, 2: not valid
 
     const handleSaleEndsDropdownClick = (value: string) => {
         let datetime = new Date().getTime();
@@ -32,7 +32,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         } else if (value === '1 month') {
             datetime += 30 * 24 * 3600 * 1000;
         }
-
+        
         let dateObject = new Date(datetime);
         const localDateTimeString = dateObject
             .toLocaleString('sv-SE', {
@@ -48,14 +48,13 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         // format: 2022-04-30T08:05
         setSaleEnds(localDateTimeString);
-
-        setSaleEndsError(false);
+        setSaleEndsError(0);
     };
 
     const handleNextStep = () => {
         if (
             (saleType === 'buynow' && price > 0) ||
-            (saleType === 'auction' && minPrice > 0 && saleEnds && new Date(saleEnds).getTime() >= new Date().getTime())
+            (saleType === 'auction' && minPrice > 0 && saleEnds && new Date(saleEnds).getTime() > new Date().getTime())
         ) {
             setDialogState({
                 ...dialogState,
@@ -70,7 +69,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 setBuyNowPriceError(isNaN(price) || price <= 0);
             } else if (saleType === 'auction') {
                 setAuctionMinumPriceError(isNaN(minPrice) || minPrice <= 0);
-                setSaleEndsError(!saleEnds || new Date(saleEnds).getTime() < new Date().getTime());
+                setSaleEndsError(!saleEnds ? 1 : new Date(saleEnds).getTime() <= new Date().getTime() ? 2 : 0);
             }
         }
     };
@@ -127,7 +126,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         // console.log('Sale Ends:', event.target.value);
                                         setSaleEnds(event.target.value);
-                                        setSaleEndsError(false);
+                                        setSaleEndsError(0);
                                     }}
                                     sx={{ border: saleEndsError ? '2px solid #EB5757' : 'none' }}
                                 />
@@ -148,9 +147,9 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                     setIsOpen={setSaleEndsSelectOpen}
                                 />
                             </Stack>
-                            {saleEndsError && (
+                            {saleEndsError > 0 && (
                                 <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                    Sale Ends should be selected.
+                                    {saleEndsError === 1 ? 'Sale Ends should be selected.' : 'Sale Ends is invalid.'}
                                 </Typography>
                             )}
                         </Stack>
