@@ -43,7 +43,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxPurchases, setBlindboxPurchases] = useState<number>(dialogState.crtBlindPurchases);
     const [blindboxPurchasesError, setBlindboxPurchasesError] = useState(false);
     const [saleBegins, setSaleBegins] = React.useState<string>(dialogState.crtBlindSaleBegin);
-    const [saleBeginsError, setSaleBeginsError] = useState(false);
+    const [saleBeginsError, setSaleBeginsError] = useState<number>(0); // 0: no error, 1: not selected, 2: not valid
     // const [saleEnds, setSaleEnds] = useState<string>(dialogState.crtBlindEnd);
     // const [saleEndsError, setSaleEndsError] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
@@ -62,7 +62,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 setBlindboxCandidateCount(count);
             }
         };
-        if(signInDlgState.walletAccounts.length) getFetchData().catch(console.error);
+        if (signInDlgState.walletAccounts.length) getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -251,13 +251,15 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     value={saleBegins}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         setSaleBegins(event.target.value);
-                                        setSaleBeginsError(isNaN(Date.parse(event.target.value)));
+                                        setSaleBeginsError(0);
                                     }}
-                                    sx={{ border: saleBeginsError ? '2px solid #EB5757' : 'none' }}
+                                    sx={{ border: saleBeginsError > 0 ? '2px solid #EB5757' : 'none' }}
                                 ></DateTimeInput>
-                                {saleBeginsError && (
+                                {saleBeginsError > 0 && (
                                     <Typography fontSize={12} fontWeight={500} color="#EB5757">
-                                        Invalid Date Format
+                                        {saleBeginsError === 1
+                                            ? 'Sale Begins should be selected.'
+                                            : 'Sale Begins should be selected after the current time.'}
                                     </Typography>
                                 )}
                             </Stack>
@@ -302,7 +304,8 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     stateFile !== null &&
                                     blindboxQuantity > 0 &&
                                     blindboxPrice > 0 &&
-                                    saleBegins !== '' &&
+                                    saleBegins &&
+                                    new Date(saleBegins).getTime() > new Date().getTime() &&
                                     blindboxPurchases <= blindboxQuantity &&
                                     blindboxPurchases > 0
                                 ) {
@@ -322,7 +325,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     setBlindboxTitleError(blindboxTitle === '');
                                     setBlindboxDescriptionError(blindboxDescription === '');
                                     setBlindboxPurchasesError(blindboxPurchases === 0 || isNaN(blindboxPurchases));
-                                    setSaleBeginsError(isNaN(Date.parse(saleBegins)));
+                                    setSaleBeginsError(
+                                        !saleBegins
+                                            ? 1
+                                            : new Date(saleBegins).getTime() <= new Date().getTime()
+                                            ? 2
+                                            : 0,
+                                    );
                                     setBlindboxImageError(stateFile === null);
                                     setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
                                     setBlindboxQuantityError(blindboxQuantity);
