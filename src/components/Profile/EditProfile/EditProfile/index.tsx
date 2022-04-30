@@ -105,8 +105,8 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     signInDlgState.token,
                     signInDlgState.walletAccounts[0],
                     signInDlgState.userDid,
-                    userName,
-                    userDescription,
+                    userName === '' ? ' ' : userName,  // temp
+                    userDescription === '' ? ' ' : userDescription,  // temp
                     urlAvatar,
                     urlCoverImage,
                     signature,
@@ -147,7 +147,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 onClose();
             });
     };
-
+    console.log(signInDlgState, '--------')
     return (
         <Stack
             spacing={4}

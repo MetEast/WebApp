@@ -11,12 +11,12 @@ const EditProfileDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         <ModalDialog
             open={dialogState.editProfileDlgOpened}
             onClose={() => {
-                setDialogState({ ...dialogState, editProfileDlgOpened: false });
+                setDialogState({ ...dialogState, editProfileDlgOpened: false, progressBar: 0 });
             }}
         >
             <EditProfile
                 onClose={() => {
-                    setDialogState({ ...dialogState, editProfileDlgOpened: false });
+                    setDialogState({ ...dialogState, editProfileDlgOpened: false, progressBar: 0 });
                 }}
             />
         </ModalDialog>
