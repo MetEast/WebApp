@@ -53,7 +53,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setSignInDlgState((prevState: SignInState) => {
                             const _state = { ...prevState };
-                            _state.meTokenBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                            _state.meTokenBalance = parseFloat((parseInt(balance) / 1e18).toFixed(2));
                             return _state;
                         });
                     }
@@ -69,7 +69,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setSignInDlgState((prevState: SignInState) => {
                             const _state = { ...prevState };
-                            _state.isStakeHolder = parseInt(stakedAmount) >= 10000 ? true : false;
+                            _state.isStakeHolder = parseFloat((parseInt(stakedAmount) / 1e18).toFixed(2)) >= 10000 ? true : false;
                             return _state;
                         });
                     }
@@ -96,7 +96,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setBuyerRewards((prevState: TypeMiningReward) => {
                             const _state = { ...prevState };
-                            _state.receivedReward = parseFloat(parseFloat(_receivedReward).toFixed(2));
+                            _state.receivedReward = parseFloat((parseInt(_receivedReward) / 1e18).toFixed(2));
                             return _state;
                         });
                     }
@@ -111,7 +111,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setBuyerRewards((prevState: TypeMiningReward) => {
                             const _state = { ...prevState };
-                            _state.availableToken = parseFloat(parseFloat(_availableReward).toFixed(2));
+                            _state.availableToken = parseFloat((parseInt(_availableReward) / 1e18).toFixed(2));
                             return _state;
                         });
                     }
@@ -126,7 +126,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setCreatorRewards((prevState: TypeMiningReward) => {
                             const _state = { ...prevState };
-                            _state.receivedReward = parseFloat(parseFloat(_receivedReward).toFixed(2));
+                            _state.receivedReward = parseFloat((parseInt(_receivedReward) / 1e18).toFixed(2));
                             return _state;
                         });
                     }
@@ -141,7 +141,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setCreatorRewards((prevState: TypeMiningReward) => {
                             const _state = { ...prevState };
-                            _state.availableToken = parseFloat(parseFloat(_availableReward).toFixed(2));
+                            _state.availableToken = parseFloat((parseInt(_availableReward) / 1e18).toFixed(2));
                             return _state;
                         });
                     }
@@ -156,7 +156,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setStakerRewards((prevState: TypeMiningReward) => {
                             const _state = { ...prevState };
-                            _state.receivedReward = parseFloat(parseFloat(_receivedReward).toFixed(2));
+                            _state.receivedReward = parseFloat((parseInt(_receivedReward) / 1e18).toFixed(2));
                             return _state;
                         });
                     }
@@ -171,7 +171,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setStakerRewards((prevState: TypeMiningReward) => {
                             const _state = { ...prevState };
-                            _state.availableToken = parseFloat(parseFloat(_availableReward).toFixed(2));
+                            _state.availableToken = parseFloat((parseInt(_availableReward) / 1e18).toFixed(2));
                             return _state;
                         });
                     }

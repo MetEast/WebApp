@@ -88,7 +88,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
                 }).then((allowance: string) => {
                     if (!unmounted) setDialogState({...updatedState, progressBar: 50});
-                    if (parseInt(allowance) < 10000) {
+                    if ((parseInt(allowance) / 1e18) < 10000) {
                         return callTokenomicsContractMethod(walletConnectWeb3, {
                             ...blankContractMethodParam,
                             contractType: 1, // token 
@@ -96,7 +96,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                             method: 'approve',
                             price: '0',
                             address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
-                            _price: '10000',
+                            _price: BigInt(10000 * 1e18).toString(),
                         });
                     }
                     return 'pass';
@@ -108,7 +108,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         callType: 1,
                         method: 'stake',
                         price: '0',
-                        _price: '10000',
+                        _price: BigInt(10000 * 1e18).toString(),
                     });
                 })
                 .then(() => {
