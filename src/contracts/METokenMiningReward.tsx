@@ -1,4 +1,4 @@
-export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS = '0xe1ce0551FF7a0aE95b3DD904C20235cAd992e70C';
+export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS = '0x388f65b5D15016A81A4264C16114Bc3DC86a82cB';
 export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI = [
     {
         inputs: [
@@ -44,12 +44,12 @@ export const METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI = [
         inputs: [
             {
                 internalType: 'address',
-                name: 'seller',
+                name: 'buyer',
                 type: 'address',
             },
             {
                 internalType: 'address',
-                name: 'buyer',
+                name: 'seller',
                 type: 'address',
             },
             {

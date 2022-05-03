@@ -15,7 +15,6 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
-import { METEAST_STAKING_TOKEN_CONTRACT_ADDRESS } from 'src/contracts/METokenStaking';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -63,7 +62,7 @@ const RemoveDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             price: '0',
         })
             .then((result: string) => {
-                if (parseInt(result) < 10000) {
+                if (parseFloat((parseInt(result) / 1e18).toFixed(2)) < 10000) {
                     enqueueSnackbar('You are not a stakeholder.', {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
