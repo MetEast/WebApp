@@ -38,6 +38,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
     const [creatorRewards, setCreatorRewards] = useState<TypeMiningReward>(blankMiningReward);
     const [buyerRewards, setBuyerRewards] = useState<TypeMiningReward>(blankMiningReward);
     const [stakerRewards, setStakerRewards] = useState<TypeMiningReward>(blankMiningReward);
+    const [reload, setReload] = useState<boolean>(false);
 
     useEffect(() => {
         let unmounted = false;
@@ -184,7 +185,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [library, signInDlgState.loginType]);
+    }, [library, signInDlgState.loginType, reload]);
 
     const withdrawReward = (rewardType: number) => {
         if (dialogState.withdrawRewardTxFee > signInDlgState.walletBalance) {
@@ -227,7 +228,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                         ...updatedState,
                         waitingConfirmDlgOpened: false,
                     });
-                    window.location.reload();
+                    setReload(!reload);
                 }
             })
             .catch((error) => {

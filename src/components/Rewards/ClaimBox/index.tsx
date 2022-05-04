@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { PrimaryButton } from 'src/components/Buttons/styles';
 import { SxProps } from '@mui/system';
+import useAnimateNumber from 'react-hook-animate-number'
 
 interface ComponentProps {
     sx?: SxProps;
@@ -11,6 +12,8 @@ interface ComponentProps {
 }
 
 const ClaimBox: React.FC<ComponentProps> = ({ sx, rewardToken, rewardPrice, handleReceiveReward }): JSX.Element => {
+    const animatedNumber = useAnimateNumber({ number: rewardToken })
+
     return (
         <Stack direction="row" borderRadius={3} sx={{ overflow: 'hidden', ...sx }}>
             <Stack
@@ -24,7 +27,7 @@ const ClaimBox: React.FC<ComponentProps> = ({ sx, rewardToken, rewardPrice, hand
                 sx={{ background: 'white', borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }}
             >
                 <Typography fontSize={16} fontWeight={600} color="#0A0B0C">
-                    {rewardToken}
+                    {animatedNumber.number}
                 </Typography>
                 {/* <Typography fontSize={10} fontWeight={400} color="#0A0B0C" marginLeft={1} marginRight="auto">
                     ~${rewardPrice}
