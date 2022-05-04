@@ -13,7 +13,7 @@ import Container from 'src/components/Container';
 
 const HomePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [productList, setProductList] = useState<Array<TypeProduct>>(Array(5).fill(blankNFTItem));
     const [collectionList, setCollectionList] = useState<Array<TypeProduct>>(Array(5).fill(blankNFTItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);

@@ -30,7 +30,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
         cookies.METEAST_PREVIEW === '1' ? 'grid1' : 'grid2',
     );
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [sortBy, setSortBy] = useState<TypeSelectItem | undefined>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
