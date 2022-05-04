@@ -33,7 +33,7 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 </Link>
                 <Stack direction="row" spacing={1}>
                     {socialButtonsList.map((item, index) => (
-                        <Link href={item.url} target="blank" key={`social-link-${index}`}>
+                        <Link href={item.url} target="_blank" key={`social-link-${index}`}>
                             <SocialButton size="small">
                                 <Icon icon={item.icon} fontSize={20} />
                             </SocialButton>
@@ -72,16 +72,20 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                     </Typography>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" rowGap={0} columnGap={2}>
-                    <Link href="../../tokenomics/index.html" target="blank" sx={{ textDecoration: 'none' }}>
+                    <Link href="../../tokenomics/index.html" target="_blank" sx={{ textDecoration: 'none' }}>
                         <Button
                             sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}
                         >
                             Tokenomics
                         </Button>
                     </Link>
-                    <Button sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}>
-                        Privacy policy
-                    </Button>
+                    <Link href="../../policy/policy.pdf" target='_blank' rel='noopener noreferrer' sx={{ textDecoration: 'none' }}>
+                        <Button
+                            sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}
+                        >
+                            Privacy policy
+                        </Button>
+                    </Link>
                 </Stack>
             </Stack>
         </Stack>
