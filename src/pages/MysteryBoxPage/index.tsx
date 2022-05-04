@@ -187,7 +187,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 {blindBoxList.length === 0 ? (
                     <LooksEmptyBox
                         bannerTitle={keyWord ? 'No Boxes Found For This Search' : 'Looks Empty Here'}
-                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST MysteryBox'}
+                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST Mystery Box'}
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
                             if (keyWord) {
