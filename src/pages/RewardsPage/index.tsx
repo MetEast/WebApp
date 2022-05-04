@@ -69,7 +69,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     if (!unmounted) {
                         setSignInDlgState((prevState: SignInState) => {
                             const _state = { ...prevState };
-                            _state.isStakeHolder = parseFloat((parseInt(stakedAmount) / 1e18).toFixed(2)) >= 10000 ? true : false;
+                            _state.isStakeHolder =
+                                parseFloat((parseInt(stakedAmount) / 1e18).toFixed(2)) >= 10000 ? true : false;
                             return _state;
                         });
                     }
@@ -226,6 +227,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                         ...updatedState,
                         waitingConfirmDlgOpened: false,
                     });
+                    window.location.reload();
                 }
             })
             .catch((error) => {
