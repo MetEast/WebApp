@@ -18,8 +18,10 @@ export const getAssetFromImage = (url: string) => {
 // Get time from timestamp // yyyy/MM/dd hh:mm
 export const getTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);
-    const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
-
+    // const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
+    const dateString = date.toLocaleDateString("en-US");
+    const dateStrs = dateString.split("/");
+    const dateStr = dateStrs[2] + '/' + dateStrs[1] + '/' + dateStrs[0];
     let hours = date.getHours().toString();
     hours = hours.toString().padStart(2, '0');
     const min = date.getMinutes().toString().padStart(2, '0');
