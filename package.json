@@ -51,6 +51,7 @@
     "react-cookie": "^4.1.1",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.2",
+    "react-hook-animate-number": "^1.0.2",
     "react-modal": "^3.14.4",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
@@ -88,5 +89,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "animated-number-react": "^0.1.2"
   }
 }
