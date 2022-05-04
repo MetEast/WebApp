@@ -79,11 +79,11 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                             Tokenomics
                         </Button>
                     </Link>
-                    <Link href="../../policy/policy.pdf" target='_blank' rel='noopener noreferrer' sx={{ textDecoration: 'none' }}>
+                    <Link href="../../TermsOfService/TermsOfService.pdf" target='_blank' rel='noopener noreferrer' sx={{ textDecoration: 'none' }}>
                         <Button
                             sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}
                         >
-                            Privacy policy
+                            Terms of Service
                         </Button>
                     </Link>
                 </Stack>
