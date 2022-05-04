@@ -134,7 +134,7 @@ export const getNotificationList = async (address: string) => {
         _Note.title = itemObject.title;
         _Note.content = itemObject.context;
         const timestamp = getTime(itemObject.date.toString());
-        _Note.title = timestamp.date + ' ' + timestamp.time;
+        _Note.date = timestamp.date + ' ' + timestamp.time;
         _Note.isRead = itemObject.isRead === 1 ? true : false;
         _arrNotificationList.push(_Note);
     }
