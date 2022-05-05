@@ -63,7 +63,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
             const _searchedNFTList = await getNFTItemList(searchParams, ELA2USD, likeList);
             if (!unmounted) {
-                setProductList(_searchedNFTList);
+                // setProductList(_searchedNFTList);
+                setProductList([]);
                 setIsLoading(false);
             }
         };
@@ -189,8 +190,28 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 />
                 {productList.length === 0 ? (
                     <LooksEmptyBox
-                        bannerTitle={keyWord ? 'No Products Found For This Search' : 'Looks Empty Here'}
-                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST NFT'}
+                        bannerTitle={
+                            !(
+                                !keyWord &&
+                                filterRange.min === undefined &&
+                                filterRange.max === undefined &&
+                                !filters.length &&
+                                !category?.value
+                            )
+                                ? 'No Products Found For This Search'
+                                : 'Looks Empty Here'
+                        }
+                        buttonLabel={
+                            !(
+                                !keyWord &&
+                                filterRange.min === undefined &&
+                                filterRange.max === undefined &&
+                                !filters.length &&
+                                !category?.value
+                            )
+                                ? 'Back to all Items'
+                                : 'GET YOUR FIRST NFT'
+                        }
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
                             if (keyWord) {

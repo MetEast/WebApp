@@ -27,7 +27,6 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
-    const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
@@ -54,7 +53,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, undefined);
+            const searchParams = getSearchParams(keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
                 searchParams,
                 ELA2USD,
@@ -71,7 +70,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filterRange, keyWord]); //, productViewMode
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //
@@ -93,11 +92,6 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         opened: boolean,
     ) => {
         if (opened) {
-            let filters: Array<enumFilterOption> = [];
-            if (status === 0) filters.push(enumFilterOption.buyNow);
-            else if (status === 1) filters.push(enumFilterOption.onAuction);
-            else if (status === 2) filters.push(enumFilterOption.hasBids);
-            setFilters(filters);
             setFilterRange({
                 min: minPrice === '' ? undefined : parseFloat(minPrice),
                 max: maxPrice === '' ? undefined : parseFloat(maxPrice),
@@ -186,15 +180,24 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 />
                 {blindBoxList.length === 0 ? (
                     <LooksEmptyBox
-                        bannerTitle={keyWord ? 'No Boxes Found For This Search' : 'Looks Empty Here'}
-                        buttonLabel={keyWord ? 'Back to all Items' : 'GET YOUR FIRST Mystery Box'}
+                        bannerTitle={
+                            !(!keyWord && filterRange.min === undefined && filterRange.max === undefined)
+                                ? 'No Boxes Found For This Search'
+                                : 'Looks Empty Here'
+                        }
+                        buttonLabel={
+                            !(!keyWord && filterRange.min === undefined && filterRange.max === undefined)
+                                ? 'Back to all Items'
+                                : 'GET YOUR FIRST Mystery Box'
+                        }
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
-                            if (keyWord) {
+                            if (!(!keyWord && filterRange.min === undefined && filterRange.max === undefined)) {
                                 setIsLoading(true);
                                 setBlindBoxList(Array(4).fill(blankBBItem));
                                 setEmptyKeyword(emptyKeyword + 1);
                                 handleKeyWordChange('');
+                                handlerFilterChange(0, '', '', undefined, true);
                             } else {
                                 setDialogState({
                                     ...dialogState,
