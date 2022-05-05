@@ -34,6 +34,7 @@ export const getUTCTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);
     const pieces = date.toUTCString().split(' ');
     const [wd, d, m, y] = pieces;
+    console.log(wd);
     const dateStr = [m, d, y].join(' ');
     let hours = date.getUTCHours().toString();
     hours = hours.toString().padStart(2, '0');
@@ -46,8 +47,8 @@ export const getCustomTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);
     const pieces = date.toString().split(' ');
     const [wd, m, d, y] = pieces;
+    console.log(wd);
     const dateStr = [m, d, y].join('-');
-
     let hours = date.getHours();
     const suffix = hours >= 12 ? 'PM' : 'AM';
     hours = hours > 12 ? hours - 12 : hours;

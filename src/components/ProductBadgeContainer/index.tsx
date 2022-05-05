@@ -4,8 +4,8 @@ import { enumBlindBoxNFTType, enumSingleNFTType, enumMyNFTType, enumBadgeType } 
 import ProductBadge from 'src/components/ProductBadge';
 import { SpacingProps } from '@mui/system';
 import { Grid } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+// import { useTheme } from '@mui/material/styles';
+// import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ProductBadgeContainerProps extends SpacingProps {
     nfttype: enumBlindBoxNFTType | enumSingleNFTType | enumMyNFTType;
@@ -21,8 +21,8 @@ const ProductBadgeContainer: React.FC<ProductBadgeContainerProps> = ({
     isReservedAuction,
     ...otherProps
 }): JSX.Element => {
-    const theme = useTheme();
-    const matchUpXl = useMediaQuery(theme.breakpoints.up('xl'));
+    // const theme = useTheme();
+    // const matchUpXl = useMediaQuery(theme.breakpoints.up('xl'));
 
     const badgeComingSoon = <ProductBadge badgeType={enumBadgeType.ComingSoon} content={content} />;
     const badgeSaleEnds = <ProductBadge badgeType={enumBadgeType.SaleEnds} content={content} />;

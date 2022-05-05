@@ -21,7 +21,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { Order } from 'src/types/order';
 import { Icon } from '@iconify/react';
 import { AdminTableItemType, AdminTableColumn } from 'src/types/admin-table-data-types';
-import { stableSort, getComparator } from './comparefunc';
+// import { stableSort, getComparator } from './comparefunc';
 
 interface EnhancedTableProps {
     numSelected: number;

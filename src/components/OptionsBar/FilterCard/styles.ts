@@ -1,5 +1,4 @@
 import { styled, Stack, Button } from '@mui/material';
-import { SecondaryButton } from 'src/components/Buttons/styles';
 
 export const Container = styled(Stack)`
     width: 300px;

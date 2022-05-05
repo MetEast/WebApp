@@ -124,7 +124,7 @@ const PriceHistoryView: React.FC<ComponentProps> = ({ createdTime, creator }): J
         },
     };
 
-    const [chartOptions, setChartOptions] = useState(options);
+    const [chartOptions] = useState(options);
     const [chartSeries, setChartSeries] = useState(series);
     const [priceHistoryUnitSelectOpen, setPriceHistoryUnitSelectOpen] = useState(false);
 
