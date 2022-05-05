@@ -128,7 +128,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                         setSaleEnds(event.target.value);
                                         setSaleEndsError(0);
                                     }}
-                                    sx={{ border: saleEndsError > 0 ? '2px solid #EB5757' : 'none', flex: "1" }}
+                                    sx={{ border: saleEndsError > 0 ? '2px solid #EB5757' : 'none', flex: '1' }}
                                 />
                                 <Select
                                     titlebox={
