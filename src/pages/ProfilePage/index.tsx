@@ -49,6 +49,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [category, setCategory] = useState<TypeSelectItem>();
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
+    const [clearOption, setClearOption] = useState<boolean>(false);
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
         nftGalleryFilterBtnTypes.All,
     );
@@ -211,11 +212,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
         opened: boolean,
     ) => {
         if (opened) {
-            let filters: Array<enumFilterOption> = [];
-            if (status === 0) filters.push(enumFilterOption.buyNow);
-            else if (status === 1) filters.push(enumFilterOption.onAuction);
-            else if (status === 2) filters.push(enumFilterOption.hasBids);
-            setFilters(filters);
+            if (clearOption) setClearOption(false);
+            let _filters: Array<enumFilterOption> = [];
+            if (status === 0) _filters.push(enumFilterOption.buyNow);
+            else if (status === 1) _filters.push(enumFilterOption.onAuction);
+            else if (status === 2) _filters.push(enumFilterOption.hasBids);
+            setFilters(_filters);
             setFilterRange({
                 min: minPrice === '' ? undefined : parseFloat(minPrice),
                 max: maxPrice === '' ? undefined : parseFloat(maxPrice),
@@ -253,7 +255,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
 
     const onBannerBtnClick = () => {
-        if (keyWord === '') {
+        if (
+            !keyWord &&
+            filterRange.min === undefined &&
+            filterRange.max === undefined &&
+            !filters.length &&
+            !category?.value
+        ) {
             setDialogState({
                 ...dialogState,
                 createNFTDlgOpened: true,
@@ -262,6 +270,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         } else {
             setEmptyKeyword(emptyKeyword + 1);
             handleKeyWordChange('');
+            setClearOption(true);
         }
     };
 
@@ -526,6 +535,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             sortSelected={sortBy}
                             productViewMode={productViewMode}
                             emptyKeyword={emptyKeyword}
+                            clearOption={clearOption}
                             handleKeyWordChange={handleKeyWordChange}
                             handlerFilterChange={handlerFilterChange}
                             handleSortChange={handleChangeSortBy}
