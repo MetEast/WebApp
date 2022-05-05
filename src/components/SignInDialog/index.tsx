@@ -76,7 +76,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
     };
 
-    const addNetworkForMM = async() => {
+    const addNetworkForMM = async () => {
         // Check if MetaMask is installed
         // MetaMask injects the global API into window.ethereum
         if (window.ethereum) {
@@ -246,37 +246,38 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             const walletAccounts = getEssentialsWalletAddress();
             login(1, walletAccounts[0], presentation)
                 .then((token: string) => {
-                    linkType = '1';
-                    setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
-                    setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                    const user: UserTokenType = jwtDecode(token);
-                    console.log('Sign in with EE: setting user to:', user);
-
-                    setSignInDlgState((prevState: SignInState) => {
-                        const _state = { ...prevState };
-                        _state.isLoggedIn = true;
-                        _state.loginType = '1';
-                        _state.userDid = user.did;
-                        if (user.name) _state.userName = user.name;
-                        if (user.description) _state.userDescription = user.description;
-                        if (user.avatar) _state.userAvatar = user.avatar;
-                        if (user.coverImage) _state.userCoverImage = user.coverImage;
-                        _state.userRole = parseInt(user.role);
-                        _state.signInDlgOpened = false;
-                        if (isInAppBrowser()) {
-                            const inAppProvider: any = window.elastos.getWeb3Provider();
-                            _state.walletAccounts = [inAppProvider.address];
-                            const inAppWeb3 = new Web3(inAppProvider as any);
-                            inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
-                                _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
-                            });
-                            inAppWeb3.eth.getChainId().then((chainId: number) => {
-                                _state.chainId = chainId;
-                            });
-                        }
-                        return _state;
-                    });
-                    showSucceedSnackBar();
+                    if (!unmounted && token) {
+                        linkType = '1';
+                        setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
+                        setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
+                        const user: UserTokenType = jwtDecode(token);
+                        console.log('Sign in with EE: setting user to:', user);
+                        setSignInDlgState((prevState: SignInState) => {
+                            const _state = { ...prevState };
+                            _state.isLoggedIn = true;
+                            _state.loginType = '1';
+                            _state.userDid = user.did;
+                            if (user.name) _state.userName = user.name;
+                            if (user.description) _state.userDescription = user.description;
+                            if (user.avatar) _state.userAvatar = user.avatar;
+                            if (user.coverImage) _state.userCoverImage = user.coverImage;
+                            _state.userRole = parseInt(user.role);
+                            _state.signInDlgOpened = false;
+                            if (isInAppBrowser()) {
+                                const inAppProvider: any = window.elastos.getWeb3Provider();
+                                _state.walletAccounts = [inAppProvider.address];
+                                const inAppWeb3 = new Web3(inAppProvider as any);
+                                inAppWeb3.eth.getBalance(inAppProvider.address).then((balance: string) => {
+                                    _state.walletBalance = parseFloat((parseFloat(balance) / 1e18).toFixed(2));
+                                });
+                                inAppWeb3.eth.getChainId().then((chainId: number) => {
+                                    _state.chainId = chainId;
+                                });
+                            }
+                            return _state;
+                        });
+                        showSucceedSnackBar();
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
@@ -552,9 +553,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     ]);
 
     if (linkType === '1') initConnectivitySDK();
-
-    // console.log('--------accounts: ', signInDlgState);
-    // console.log('-------dlg', dialogState)
 
     return (
         <>
