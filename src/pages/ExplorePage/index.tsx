@@ -37,6 +37,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [category, setCategory] = useState<TypeSelectItem>();
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
+    const [clearOption, setClearOption] = useState<boolean>(false);
     const [productList, setProductList] = useState<Array<TypeProduct>>(Array(4).fill(blankNFTItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);
     // -------------- Fetch Data -------------- //
@@ -63,8 +64,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
             const _searchedNFTList = await getNFTItemList(searchParams, ELA2USD, likeList);
             if (!unmounted) {
-                // setProductList(_searchedNFTList);
-                setProductList([]);
+                setProductList(_searchedNFTList);
                 setIsLoading(false);
             }
         };
@@ -96,16 +96,17 @@ const ExplorePage: React.FC = (): JSX.Element => {
         opened: boolean,
     ) => {
         if (opened) {
-            let filters: Array<enumFilterOption> = [];
-            if (status === 0) filters.push(enumFilterOption.buyNow);
-            else if (status === 1) filters.push(enumFilterOption.onAuction);
-            else if (status === 2) filters.push(enumFilterOption.hasBids);
-            setFilters(filters);
+            let _filters: Array<enumFilterOption> = [];
+            if (status === 0) _filters.push(enumFilterOption.buyNow);
+            else if (status === 1) _filters.push(enumFilterOption.onAuction);
+            else if (status === 2) _filters.push(enumFilterOption.hasBids);
+            setFilters(_filters);
             setFilterRange({
                 min: minPrice === '' ? undefined : parseFloat(minPrice),
                 max: maxPrice === '' ? undefined : parseFloat(maxPrice),
             });
             setCategory(category);
+            if (clearOption) setClearOption(false);
         }
     };
     // -------------- Option Bar -------------- //
@@ -175,6 +176,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     sortSelected={sortBy}
                     productViewMode={productViewMode}
                     emptyKeyword={emptyKeyword}
+                    clearOption={clearOption}
                     handleKeyWordChange={handleKeyWordChange}
                     handlerFilterChange={handlerFilterChange}
                     handleSortChange={handleChangeSortBy}
@@ -214,11 +216,20 @@ const ExplorePage: React.FC = (): JSX.Element => {
                         }
                         sx={{ marginTop: { xs: 3, md: 5 } }}
                         onBannerBtnClick={() => {
-                            if (keyWord) {
+                            if (
+                                !(
+                                    !keyWord &&
+                                    filterRange.min === undefined &&
+                                    filterRange.max === undefined &&
+                                    !filters.length &&
+                                    !category?.value
+                                )
+                            ) {
                                 setIsLoading(true);
                                 setProductList(Array(4).fill(blankNFTItem));
                                 setEmptyKeyword(emptyKeyword + 1);
                                 handleKeyWordChange('');
+                                setClearOption(true);
                             } else {
                                 setDialogState({
                                     ...dialogState,

@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import 'swiper/swiper-bundle.css';
-import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
+import { TypeFilterRange } from 'src/types/filter-types';
 import NFTPreview from 'src/components/NFTPreview';
 import OptionsBar from 'src/components/OptionsBar';
 import { sortOptions } from 'src/constants/select-constants';
@@ -30,6 +30,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [filterRange, setFilterRange] = useState<TypeFilterRange>({ min: undefined, max: undefined });
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
+    const [clearOption, setClearOption] = useState<boolean>(false);
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>(Array(4).fill(blankBBItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);
 
@@ -92,6 +93,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         opened: boolean,
     ) => {
         if (opened) {
+            if (clearOption) setClearOption(false);
             setFilterRange({
                 min: minPrice === '' ? undefined : parseFloat(minPrice),
                 max: maxPrice === '' ? undefined : parseFloat(maxPrice),
@@ -165,6 +167,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                     sortSelected={sortBy}
                     productViewMode={productViewMode}
                     emptyKeyword={emptyKeyword}
+                    clearOption={clearOption}
                     handleKeyWordChange={handleKeyWordChange}
                     handlerFilterChange={handlerFilterChange}
                     handleSortChange={handleChangeSortBy}
@@ -197,7 +200,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                                 setBlindBoxList(Array(4).fill(blankBBItem));
                                 setEmptyKeyword(emptyKeyword + 1);
                                 handleKeyWordChange('');
-                                handlerFilterChange(0, '', '', undefined, true);
+                                setClearOption(true);
                             } else {
                                 setDialogState({
                                     ...dialogState,

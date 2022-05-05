@@ -25,6 +25,7 @@ interface OptionsBarProps extends SpacingProps {
     productViewMode: string;
     setProductViewMode: (value: 'grid1' | 'grid2') => void;
     emptyKeyword?: number;
+    clearOption: boolean;
 }
 
 const OptionsBar: React.FC<OptionsBarProps> = ({
@@ -36,6 +37,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
     productViewMode,
     setProductViewMode,
     emptyKeyword,
+    clearOption,
     ...otherProps
 }): JSX.Element => {
     const theme = useTheme();
@@ -105,6 +107,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                                     handlerFilterChange(status, minPrice, maxPrice, category, opened);
                                     if (!opened) setShowFiltersCard(opened);
                                 }}
+                                clearOption={clearOption}
                             />
                         </FiltersBox>
                     </Box>

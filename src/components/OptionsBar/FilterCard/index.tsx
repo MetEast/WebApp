@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { Container, SelectBtn } from './styles';
@@ -20,9 +20,10 @@ interface ComponentProps {
         category: TypeSelectItem | undefined,
         opened: boolean,
     ) => void;
+    clearOption: boolean;
 }
 
-const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element => {
+const FilterCard: React.FC<ComponentProps> = ({ changeHandler, clearOption }): JSX.Element => {
     const location = useLocation();
     const [status, setStatus] = useState<number>(-1);
     const [minPrice, setMinPrice] = useState<string>();
@@ -35,6 +36,16 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler }): JSX.Element =>
     const [categorySelectOpen, setCategorySelectOpen] = useState(false);
 
     const isBlindBoxPage: boolean = location.pathname.indexOf('/blind-box') !== -1;
+
+    useEffect(() => {
+        if (clearOption) {
+            setStatus(-1);
+            setMinPrice('');
+            setMaxPrice('');
+            setCategory(undefined);
+            changeHandler(-1, '', '', undefined, true);
+        }
+    }, [clearOption]);
 
     return (
         <Container sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
