@@ -552,8 +552,24 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 )}
                 {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
                     <LooksEmptyBox
-                        bannerTitle={keyWord === '' ? 'Looks Empty Here' : 'No Products Found For This Search'}
-                        buttonLabel={keyWord === '' ? 'GET YOUR FIRST NFT' : 'Back to all Items'}
+                        bannerTitle={
+                            !keyWord &&
+                            filterRange.min === undefined &&
+                            filterRange.max === undefined &&
+                            !filters.length &&
+                            !category?.value
+                                ? 'Looks Empty Here'
+                                : 'No Products Found For This Search'
+                        }
+                        buttonLabel={
+                            !keyWord &&
+                            filterRange.min === undefined &&
+                            filterRange.max === undefined &&
+                            !filters.length &&
+                            !category?.value
+                                ? 'GET YOUR FIRST NFT'
+                                : 'Back to all Items'
+                        }
                         sx={{ marginTop: 6 }}
                         onBannerBtnClick={onBannerBtnClick}
                     />
