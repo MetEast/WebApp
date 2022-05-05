@@ -67,7 +67,7 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
                 // This will trigger another re-run, and because it is false,
                 // the socket will be set up again
-                setTimeout(() => setWaitingToReconnect(false), 1000);
+                setTimeout(() => setWaitingToReconnect(false), 100);
             };
 
             client.onmessage = (message: any) => {

@@ -13,7 +13,6 @@ import NotificationsBox from 'src/components/NotificationsBox';
 import { getNotificationList } from 'src/services/fetch';
 import { TypeNotification } from 'src/types/notification-types';
 import { useNotificationContext } from 'src/context/NotificationContext';
-import { dummyNotificationList } from 'src/constants/dummyData';
 import useOnClickOutside from 'src/hooks/useOnClickOutside';
 
 interface ComponentProps {
@@ -29,6 +28,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const [showNotificationsBox, setShowNotificationsBox] = useState<boolean>(false);
     const isProfilePage = location.pathname === '/profile';
     const isAdmin = !isNaN(signInDlgState.userRole) && signInDlgState.userRole < 2;
+    const [refetch, setRefetch] = useState<boolean>(false);
 
     const notificationsBoxContainerNode = useRef<HTMLDivElement>();
     useOnClickOutside(notificationsBoxContainerNode, () => setShowNotificationsBox(false));
@@ -38,6 +38,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const getUnReadNotes = useCallback(() => {
         let unmounted = false;
         const fetchNotifications = async () => {
+            // console.log(new Date(), "--------------")
             const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
             const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
             if (!unmounted) {
@@ -56,7 +57,10 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
 
     useEffect(() => {
         getUnReadNotes();
-    }, [signInDlgState.walletAccounts]);
+        setTimeout(() => {
+            setRefetch(!refetch);
+        }, 10 * 60 * 1000);
+    }, [signInDlgState.walletAccounts, refetch]);
 
     const menuItemsList: Array<TypeMenuItem> = [
         {
