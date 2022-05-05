@@ -119,7 +119,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             <Typography fontSize={12} fontWeight={700}>
                                 Sale Ends
                             </Typography>
-                            <Stack direction="row" spacing={1}>
+                            <Stack direction="row" spacing={1} justifyContent="space-between" display="flex">
                                 <DateTimeInput
                                     type="datetime-local"
                                     value={saleEnds}
@@ -128,7 +128,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                         setSaleEnds(event.target.value);
                                         setSaleEndsError(0);
                                     }}
-                                    sx={{ border: saleEndsError > 0 ? '2px solid #EB5757' : 'none' }}
+                                    sx={{ border: saleEndsError > 0 ? '2px solid #EB5757' : 'none', flex: "1" }}
                                 />
                                 <Select
                                     titlebox={
