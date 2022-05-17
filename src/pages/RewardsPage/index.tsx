@@ -83,7 +83,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [library, signInDlgState.loginType, dialogState.becomeDAODlgOpened, dialogState.removeDAODlgOpened]);
+    }, [library, signInDlgState.loginType, signInDlgState.walletAccounts, dialogState.becomeDAODlgOpened, dialogState.removeDAODlgOpened]);
 
     useEffect(() => {
         let unmounted = false;
@@ -185,7 +185,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [library, signInDlgState.loginType, reload]);
+    }, [library, signInDlgState.loginType, signInDlgState.walletAccounts, reload]);
 
     const withdrawReward = (rewardType: number) => {
         if (dialogState.withdrawRewardTxFee > signInDlgState.walletBalance) {
