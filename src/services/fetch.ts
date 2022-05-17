@@ -141,15 +141,6 @@ export const getNotificationList = async (address: string) => {
     return _arrNotificationList;
 };
 
-// export const markNotificationsAsRead = async (ids: string) => {
-//     const resRead = await fetch(
-//         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/readNotifications?ids=${ids}`,
-//         FETCH_CONFIG_JSON,
-//     );
-//     const jsonRead = await resRead.json();
-//     return jsonRead.code === 200;
-// };
-
 export const markNotificationsAsRead = (token: string, ids: string) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
         const reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/readNotifications`;
