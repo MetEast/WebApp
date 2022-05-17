@@ -30,7 +30,7 @@ const Username: React.FC<ComponentProps> = ({ username, fontSize, fontWeight, ma
     return (
         <Box>
             <UsernameTooltip title={username} placement="bottom-start">
-                <Typography fontSize={fontSize} fontWeight={fontWeight}>
+                <Typography fontSize={fontSize} fontWeight={fontWeight} sx={{ display: 'inline' }}>
                     {shortName}
                 </Typography>
             </UsernameTooltip>
