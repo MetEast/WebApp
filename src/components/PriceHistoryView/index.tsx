@@ -100,13 +100,18 @@ const PriceHistoryView: React.FC<ComponentProps> = ({ createdTime, creator }): J
         xaxis: {
             type: 'datetime' as const,
             labels: {
-                format: 'MMM dd HH:mm',
+                datetimeUTC: false,
+                datetimeFormatter: {
+                    year: 'yyyy',
+                    month: 'dd MMM',
+                    day: 'dd MMM',
+                    hour: 'HH:mm'
+                }
             },
             min: new Date('01 Mar 2022').getTime(),
             max: new Date().getTime() + 10000000,
             tickAmount: 6,
         },
-
         tooltip: {
             x: {
                 format: 'dd MMM yyyy',
