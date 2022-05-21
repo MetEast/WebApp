@@ -70,14 +70,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
             ),
         });
-        const targetChainId = process.env.REACT_APP_PUBLIC_ENV !== 'development' ? '0x14' : '0x15';
-        await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: targetChainId }], // chainId must be in hexadecimal numbers
-        });
+        await switchNetworkForMM();
     };
 
-    const addNetworkForMM = async () => {
+    const switchNetworkForMM = async () => {
         // Check if MetaMask is installed
         // MetaMask injects the global API into window.ethereum
         if (window.ethereum) {
@@ -87,6 +83,13 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: targetChainId }], // chainId must be in hexadecimal numbers
+                });
+                enqueueSnackbar('', {
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                    autoHideDuration: 5000,
+                    content: (key) => (
+                        <SnackMessage id={key} message="Switch to Elastos Smart Chain succeed" variant="success" />
+                    ),
                 });
             } catch (error: any) {
                 // This error code indicates that the chain has not been added to MetaMask
@@ -103,7 +106,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                             ? 'Elastos Main Network'
                                             : 'Elastos Test Network',
                                     nativeCurrency: {
-                                        name: 'ELASTOS',
+                                        name: 'Elastos',
                                         symbol: 'ELA', // 2-6 characters long
                                         decimals: 18,
                                     },
@@ -120,6 +123,13 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                 },
                             ],
                         });
+                        enqueueSnackbar('', {
+                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            autoHideDuration: 5000,
+                            content: (key) => (
+                                <SnackMessage id={key} message="Add Elastos Smart Chain succeed" variant="success" />
+                            ),
+                        });
                     } catch (addError) {
                         console.error(addError);
                     }
@@ -134,7 +144,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     // ------------------------------ MM Connection ------------------------------ //
     const signInWithWallet = async (wallet: string) => {
-        await addNetworkForMM();
+        await switchNetworkForMM();
         let currentConnector: any = null;
         if (wallet === 'MM') {
             currentConnector = injected;
