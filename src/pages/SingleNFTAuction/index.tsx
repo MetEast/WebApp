@@ -26,7 +26,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
-import { getMintCategory } from 'src/services/common';
+import { getMintCategory, reduceHexAddress } from 'src/services/common';
 // import PlaceBidDlgContainer from 'src/components/TransactionDialogs/PlaceBid';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
@@ -45,7 +45,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     let lastBidder = 0;
     let lastBidPrice = 0;
-    let lastBidderName = productDetail.holderName;
+    let lastBidderName = productDetail.holderName
+        ? productDetail.holderName
+        : reduceHexAddress(productDetail.holder, 4);
     let lastBidderAddress = '';
     let lastBidOrderId = productDetail.orderId || '';
     // check for latest bidder and bid price

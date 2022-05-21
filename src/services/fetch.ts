@@ -411,7 +411,7 @@ export const getNFTItem = async (
         _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject.holder;
-        _NFTItem.holderName = itemObject.holderName ? itemObject.holderName : _NFTItem.author;
+        _NFTItem.holderName = itemObject.holder === itemObject.royaltyOwner ? _NFTItem.author : itemObject.holderName;
         _NFTItem.orderId = itemObject.orderId;
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -904,9 +904,7 @@ export const getMyNFTItem = async (
         _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
-            !itemObject.holderName || itemObject.holder === itemObject.royaltyOwner
-                ? _MyNFTItem.author
-                : itemObject.holderName;
+            itemObject.holder === itemObject.royaltyOwner ? _MyNFTItem.author : itemObject.holderName;
         _MyNFTItem.holder = itemObject.holder;
         _MyNFTItem.royaltyOwner = itemObject.royaltyOwner;
         _MyNFTItem.tokenIdHex = itemObject.tokenIdHex;
@@ -915,12 +913,11 @@ export const getMyNFTItem = async (
         _MyNFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
         _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
-        if (itemObject.endTime && itemObject.endTime !== "0") {
+        if (itemObject.endTime && itemObject.endTime !== '0') {
             const endTime = getTime(itemObject.endTime);
             _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
-        }
-        else {
-            _MyNFTItem.endTime = "0";
+        } else {
+            _MyNFTItem.endTime = '0';
         }
         _MyNFTItem.holder = itemObject.holder;
         _MyNFTItem.orderId = itemObject.orderId;

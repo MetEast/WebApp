@@ -30,7 +30,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 // import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
 // import ReceivedBidsDlgContainer from 'src/components/TransactionDialogs/ReceivedBids';
-import { reduceUserName } from 'src/services/common';
+import { reduceHexAddress, reduceUserName } from 'src/services/common';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -281,7 +281,11 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                                 const topBid = bidsList.length ? bidsList[0].price : 0;
                                                 const bidPrice = topBid > 0 ? topBid : 0;
                                                 const biderName =
-                                                    topBid > 0 ? bidsList[0].user : productDetail.holderName;
+                                                    topBid > 0
+                                                        ? bidsList[0].user
+                                                        : productDetail.holderName
+                                                        ? productDetail.holderName
+                                                        : reduceHexAddress(productDetail.holder, 4);
                                                 const bidOrderId =
                                                     topBid > 0 ? bidsList[0].orderId : productDetail.orderId || '';
                                                 setDialogState({
