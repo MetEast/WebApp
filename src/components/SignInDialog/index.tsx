@@ -112,7 +112,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                     },
                                     rpcUrls: [
                                         process.env.REACT_APP_PUBLIC_ENV !== 'development'
-                                            ? 'https://api.elastos.io/eth'
+                                            ? 'https://api.elastos.io/esc'
                                             : 'https://api-testnet.elastos.io/eth',
                                     ],
                                     blockExplorerUrls: [
