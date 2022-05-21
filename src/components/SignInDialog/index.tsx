@@ -70,9 +70,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 <SnackMessage id={key} message="Wrong network, only Elastos Smart Chain is supported" variant="error" />
             ),
         });
+        const targetChainId = process.env.REACT_APP_PUBLIC_ENV !== 'development' ? '0x14' : '0x15';
         await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x15' }], // chainId must be in hexadecimal numbers
+            params: [{ chainId: targetChainId }], // chainId must be in hexadecimal numbers
         });
     };
 
@@ -80,11 +81,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         // Check if MetaMask is installed
         // MetaMask injects the global API into window.ethereum
         if (window.ethereum) {
+            const targetChainId = process.env.REACT_APP_PUBLIC_ENV !== 'development' ? '0x14' : '0x15';
             try {
                 // check if the chain to connect to is installed
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x15' }], // chainId must be in hexadecimal numbers
+                    params: [{ chainId: targetChainId }], // chainId must be in hexadecimal numbers
                 });
             } catch (error: any) {
                 // This error code indicates that the chain has not been added to MetaMask
@@ -95,15 +97,26 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             method: 'wallet_addEthereumChain',
                             params: [
                                 {
-                                    chainId: '0x15',
-                                    chainName: 'Elastos Test Network',
+                                    chainId: process.env.REACT_APP_PUBLIC_ENV !== 'development' ? '0x14' : '0x15',
+                                    chainName:
+                                        process.env.REACT_APP_PUBLIC_ENV !== 'development'
+                                            ? 'Elastos Main Network'
+                                            : 'Elastos Test Network',
                                     nativeCurrency: {
                                         name: 'ELASTOS',
                                         symbol: 'ELA', // 2-6 characters long
                                         decimals: 18,
                                     },
-                                    rpcUrls: ['https://api-testnet.elastos.io/eth'],
-                                    blockExplorerUrls: ['https://eth-testnet.elastos.io'],
+                                    rpcUrls: [
+                                        process.env.REACT_APP_PUBLIC_ENV !== 'development'
+                                            ? 'https://api.elastos.io/eth'
+                                            : 'https://api-testnet.elastos.io/eth',
+                                    ],
+                                    blockExplorerUrls: [
+                                        process.env.REACT_APP_PUBLIC_ENV !== 'development'
+                                            ? 'https://api.elastos.io/'
+                                            : 'https://eth-testnet.elastos.io',
+                                    ],
                                 },
                             ],
                         });
@@ -373,7 +386,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 _state.chainId = chainId;
                 return _state;
             });
-            if (chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
+            if (
+                chainId &&
+                ((process.env.REACT_APP_PUBLIC_ENV !== 'development' && chainId !== 20) ||
+                    (process.env.REACT_APP_PUBLIC_ENV === 'development' && chainId !== 21))
+            )
+                showChainErrorSnackBar();
         };
         const handleEEDisconnect = (code: number, reason: string) => {
             console.log('Disconnect code: ', code, ', reason: ', reason);
@@ -394,7 +412,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 });
                 inAppWeb3.eth.getChainId().then((chainId: number) => {
                     _state.chainId = chainId;
-                    if (chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
+                    if (
+                        chainId &&
+                        ((process.env.REACT_APP_PUBLIC_ENV !== 'development' && chainId !== 20) ||
+                            (process.env.REACT_APP_PUBLIC_ENV === 'development' && chainId !== 21))
+                    )
+                        showChainErrorSnackBar();
                 });
                 return _state;
             });
@@ -478,7 +501,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }
             }
         }
-        if (chainId && chainId !== 20 && chainId !== 21) showChainErrorSnackBar();
+        if (
+            chainId &&
+            ((process.env.REACT_APP_PUBLIC_ENV !== 'development' && chainId !== 20) ||
+                (process.env.REACT_APP_PUBLIC_ENV === 'development' && chainId !== 21))
+        )
+            showChainErrorSnackBar();
         return () => {
             if (walletConnectProvider.removeListener) {
                 walletConnectProvider.removeListener('accountsChanged', handleEEAccountsChanged);

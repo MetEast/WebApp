@@ -85,8 +85,8 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         if (
             signInDlgState.chainId &&
-            signInDlgState.chainId !== 20 &&
-            signInDlgState.chainId !== 21 &&
+            ((process.env.REACT_APP_PUBLIC_ENV !== 'development' && signInDlgState.chainId !== 20) ||
+                (process.env.REACT_APP_PUBLIC_ENV === 'development' && signInDlgState.chainId !== 21)) &&
             (dialogState.errorMessageDlgOpened ||
                 dialogState.createNFTDlgOpened ||
                 dialogState.burnNFTDlgOpened ||
