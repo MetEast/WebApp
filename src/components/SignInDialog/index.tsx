@@ -84,13 +84,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: targetChainId }], // chainId must be in hexadecimal numbers
                 });
-                enqueueSnackbar('', {
-                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                    autoHideDuration: 5000,
-                    content: (key) => (
-                        <SnackMessage id={key} message="Switch to Elastos Smart Chain succeed" variant="success" />
-                    ),
-                });
             } catch (error: any) {
                 // This error code indicates that the chain has not been added to MetaMask
                 // if it is not, then install it into the user MetaMask
@@ -122,13 +115,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                                     ],
                                 },
                             ],
-                        });
-                        enqueueSnackbar('', {
-                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                            autoHideDuration: 5000,
-                            content: (key) => (
-                                <SnackMessage id={key} message="Add Elastos Smart Chain succeed" variant="success" />
-                            ),
                         });
                     } catch (addError) {
                         console.error(addError);
