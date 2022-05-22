@@ -21,7 +21,7 @@ export const getTime = (timestamp: string) => {
     // const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
     const dateString = date.toLocaleDateString("en-US");
     const dateStrs = dateString.split("/");
-    const dateStr = dateStrs[2] + '/' + dateStrs[1] + '/' + dateStrs[0];
+    const dateStr = dateStrs[2] + '/' + dateStrs[0] + '/' + dateStrs[1];
     let hours = date.getHours().toString();
     hours = hours.toString().padStart(2, '0');
     const min = date.getMinutes().toString().padStart(2, '0');
