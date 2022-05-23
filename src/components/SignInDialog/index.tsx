@@ -206,6 +206,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         if (activatingConnector !== null) activatingConnector.deactivate();
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
         setActivatingConnector(null);
         if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
             navigate('/');
@@ -321,6 +322,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
         try {
             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
                 await essentialsConnector.getWalletConnectProvider().disconnect();
@@ -342,6 +344,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         });
         document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
         document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
         try {
             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
                 await essentialsConnector.getWalletConnectProvider().disconnect();

@@ -32,16 +32,19 @@ import { blankMyNFTItem } from 'src/constants/init-constants';
 import { useNavigate } from 'react-router-dom';
 // import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
 import YourEarningDlgContainer from 'src/components/Profile/YourEarnings';
-import { useCookies } from 'react-cookie';
 import { Markup } from 'interweave';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW', 'METEAST_PROFILE']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
-        cookies.METEAST_PREVIEW === '1' ? 'grid1' : 'grid2',
+        (document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('METEAST_PROFILE='))
+            ?.split('=')[1] || '') === '1'
+            ? 'grid1'
+            : 'grid2',
     );
     const [sortBy, setSortBy] = useState<TypeSelectItem>();
     const [filters, setFilters] = useState<Array<enumFilterOption>>([]);
@@ -564,11 +567,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             handleSortChange={handleChangeSortBy}
                             setProductViewMode={(value: 'grid1' | 'grid2') => {
                                 setProductViewMode(value);
-                                setCookies('METEAST_PREVIEW', value === 'grid1' ? '1' : '2', {
-                                    path: '/',
-                                    sameSite: 'none',
-                                    secure: true,
-                                });
+                                document.cookie = `METEAST_PREVIEW=${
+                                    value === 'grid1' ? '1' : '2'
+                                }; Path=/; SameSite=None; Secure`;
                             }}
                         />
                     </Grid>
