@@ -300,11 +300,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                                 ) : (
                                     <Grid item xs={5}>
                                         <ImageBox>
-                                            <img
-                                                src={item.url}
-                                                // src="assets/images/blindbox/blindbox-nft-template5.png"
-                                                alt=""
-                                            />
+                                            <img src={item.url} alt="" />
                                         </ImageBox>
                                     </Grid>
                                 )}

@@ -118,7 +118,6 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 <NotificationsBoxContainer show={showNotificationsBox} className={classes.container}>
                     <NotificationsBox
                         notificationsList={notificationState.notesList}
-                        // notificationsList={dummyNotificationList} // test data
                         onClose={() => setShowNotificationsBox(false)}
                     />
                 </NotificationsBoxContainer>
@@ -127,6 +126,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 size="small"
                 selected={isProfilePage}
                 onClick={() => {
+                    document.cookie = 'METEAST_PROFILE=All; Path=/; SameSite=None; Secure';
                     navigate('/profile');
                 }}
             >

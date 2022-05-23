@@ -24,7 +24,10 @@ const BuyNowDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     buyNowOrderId: '',
                     progressBar: 0,
                 });
-                if (dialogState.buyNowDlgStep === 1) navigate('/profile');
+                if (dialogState.buyNowDlgStep === 1) {
+                    document.cookie = 'METEAST_PROFILE=Owned; Path=/; SameSite=None; Secure';
+                    navigate('/profile');
+                }
             }}
         >
             {dialogState.buyNowDlgStep === 0 && <BuyNow />}

@@ -19,6 +19,7 @@ const BurnNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     burnTokenId: '',
                     // burnTxFee: 0,
                 });
+                document.cookie = 'METEAST_PROFILE=All; Path=/; SameSite=None; Secure';
                 navigate('/profile');
             }}
         >
