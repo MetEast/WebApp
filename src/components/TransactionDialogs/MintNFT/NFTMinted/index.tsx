@@ -44,6 +44,7 @@ const NFTMinted: React.FC<ComponentProps> = (): JSX.Element => {
                                 mintDidUri: '',
                                 createNFTDlgOpened: false,
                             });
+                            document.cookie = 'METEAST_PROFILE=Created; Path=/; SameSite=None; Secure';
                             if (location.pathname.indexOf('/profile') !== -1) window.location.reload();
                             else navigate('/profile');
                         }}

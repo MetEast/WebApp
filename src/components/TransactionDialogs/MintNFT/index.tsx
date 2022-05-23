@@ -40,6 +40,7 @@ const MintNFTDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     sellPrice: 0,
                 });
                 if (dialogState.createNFTDlgStep >= 2 && dialogState.createNFTDlgStep < 5) {
+                    document.cookie = 'METEAST_PROFILE=Created; Path=/; SameSite=None; Secure';
                     if (location.pathname.indexOf('/profile') !== -1) window.location.reload();
                     else navigate('/profile');
                 } else if (dialogState.createNFTDlgStep === 5) {

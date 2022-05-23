@@ -23,7 +23,10 @@ const CancelSaleDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     cancelSaleDlgOpened: false,
                     cancelSaleDlgStep: 0,
                 });
-                if (dialogState.cancelSaleDlgStep === 1) navigate('/profile');
+                if (dialogState.cancelSaleDlgStep === 1) {
+                    document.cookie = 'METEAST_PROFILE=Owned; Path=/; SameSite=None; Secure';
+                    navigate('/profile');
+                }
             }}
         >
             {dialogState.cancelSaleDlgStep === 0 && <CancelSale />}

@@ -39,7 +39,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW']);
+    const [cookies, setCookies] = useCookies(['METEAST_PREVIEW', 'METEAST_PROFILE']);
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
         cookies.METEAST_PREVIEW === '1' ? 'grid1' : 'grid2',
     );
@@ -50,8 +50,30 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
     const [clearOption, setClearOption] = useState<boolean>(false);
+    const selectedTab = () => {
+        switch (
+            document.cookie
+                .split('; ')
+                .find((row) => row.startsWith('METEAST_PROFILE='))
+                ?.split('=')[1] ||
+            ''
+        ) {
+            case 'Owned':
+                return nftGalleryFilterBtnTypes.Acquired;
+            case 'Created':
+                return nftGalleryFilterBtnTypes.Created;
+            case 'For Sale':
+                return nftGalleryFilterBtnTypes.ForSale;
+            case 'Sold':
+                return nftGalleryFilterBtnTypes.Sold;
+            case 'Liked':
+                return nftGalleryFilterBtnTypes.Liked;
+            default:
+                return nftGalleryFilterBtnTypes.All;
+        }
+    };
     const [nftGalleryFilterBtnSelected, setNftGalleryFilterBtnSelected] = useState<nftGalleryFilterBtnTypes>(
-        nftGalleryFilterBtnTypes.All,
+        selectedTab(),
     );
     const [reload, setReload] = useState<boolean>(false);
     const [toatlEarned, setTotalEarned] = useState<string>('0');
@@ -497,6 +519,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     loading={isLoadingAssets[index] ? 1 : 0}
                                     onClick={() => {
                                         setNftGalleryFilterBtnSelected(items.label);
+                                        document.cookie = `METEAST_PROFILE=${items.label}; Path=/; SameSite=None; Secure`;
                                         setLoadingState(index, true);
                                         setMyNFTData(index, [
                                             blankMyNFTItem,

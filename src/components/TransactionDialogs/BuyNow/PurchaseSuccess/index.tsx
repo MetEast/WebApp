@@ -29,6 +29,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     fullWidth
                     onClick={() => {
                         setDialogState({ ...dialogState, buyNowDlgOpened: false });
+                        document.cookie = 'METEAST_PROFILE=Owned; Path=/; SameSite=None; Secure';
                         navigate('/profile');
                     }}
                 >

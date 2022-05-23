@@ -90,6 +90,7 @@ const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .finally(() => {
                 setOnProgress(false);
+                document.cookie = 'METEAST_PROFILE=All; Path=/; SameSite=None; Secure';
                 navigate('/profile');
             });
         return () => {
