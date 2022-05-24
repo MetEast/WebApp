@@ -721,7 +721,6 @@ export const getMyNFTItemList = async (
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.tokenId = itemObject.tokenId;
         _myNFT.name = itemObject.name;
-        console.log("Profile Page ------", itemObject.thumbnail)
         _myNFT.image = itemObject.thumbnail ? getImageFromAsset(itemObject.thumbnail) : '';
         _myNFT.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
         _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
@@ -951,7 +950,6 @@ export const getBBCandiates = (arrBBCandidateList: Array<any>, selectedTokenIds:
         _BBCandidate.nftIdentity = itemObject.tokenIdHex;
         _BBCandidate.projectTitle = itemObject.name;
         _BBCandidate.projectType = itemObject.category;
-        console.log("BB candidates -----", itemObject.thumbnail)
         _BBCandidate.url = getImageFromAsset(itemObject.thumbnail);
         _BBCandidateList.push(_BBCandidate);
         _itemCheckedList.push(selectedTokenIds.includes(_BBCandidate.tokenId));
