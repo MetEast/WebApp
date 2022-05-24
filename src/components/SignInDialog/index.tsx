@@ -525,10 +525,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 _state.token = cookies.METEAST_TOKEN;
                 _state.didUri = didUri;
                 _state.userDid = user.did;
-                _state.userName = user.name === ' ' ? '' : user.name; // temp
-                _state.userDescription = user.description === ' ' ? '' : user.description; // temp
-                _state.userAvatar = user.avatar;
-                _state.userCoverImage = user.coverImage;
+                _state.userName = user.name ? user.name : '';
+                _state.userDescription = user.description ? user.description : '';
+                _state.userAvatar = user.avatar ? user.avatar : '';
+                _state.userCoverImage = user.coverImage ? user.coverImage : '';
                 _state.userRole = parseInt(user.role);
                 return _state;
             });
