@@ -10,7 +10,7 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
-import { getBBItem, getELA2USD, getMyFavouritesList, getNFTItems } from 'src/services/fetch';
+import { getBBItem, getELA2USD, getNFTItems } from 'src/services/fetch';
 // import { reduceHexAddress } from 'src/services/common';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -189,9 +189,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                     : blindBoxDetail.name}
                             </Typography>
                             <ProductSnippets
-                                nickname={
-                                    blindBoxDetail.author === '' ? blindBoxDetail.royaltyOwner : blindBoxDetail.author
-                                }
+                                nickname={blindBoxDetail.author}
                                 sold={blindBoxDetail.sold}
                                 instock={blindBoxDetail.instock}
                                 likes={blindBoxDetail.likes}

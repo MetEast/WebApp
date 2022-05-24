@@ -645,9 +645,11 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
                 : enumBlindBoxNFTType.SaleEnds;
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
-        _BBItem.author = itemObject.createdName;
+        _BBItem.author = itemObject.createdName
+            ? itemObject.createdName
+            : reduceHexAddress(itemObject.createdAddress, 4);
         _BBItem.royaltyOwner = itemObject.createdAddress;
-        _BBItem.authorDescription = itemObject.createdDescription;
+        _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : '';
         _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default';
         _BBItem.isLike =
             itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
