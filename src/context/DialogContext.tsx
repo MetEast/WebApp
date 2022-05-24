@@ -32,7 +32,7 @@ interface DlgState {
     mintRoyalties: number;
     mintTokenId: string;
     mintTokenUri: string;
-    mintDidUri: string;
+    // mintDidUri: string;
     mintTxHash: string;
     mintTxFee: number;
     // burn nft
@@ -173,7 +173,7 @@ export const defaultDlgState: DlgState = {
     mintRoyalties: -1,
     mintTokenId: '',
     mintTokenUri: '',
-    mintDidUri: '',
+    // mintDidUri: '',
     mintTxHash: '',
     mintTxFee: 0,
     // burn nft

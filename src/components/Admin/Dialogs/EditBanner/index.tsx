@@ -77,7 +77,7 @@ const EditBanner: React.FC<ComponentProps> = ({
         // const status = blindboxStatus === 'offline' ? 0 : 1;
         uploadImage2Ipfs(imageChanged ? bannerImage.raw : undefined)
             .then((added: any) => {
-                url = imageChanged ? `meteast:image:${added.path}` : getAssetFromImage(banner2Edit.url);
+                url = imageChanged ? `meteast:image:${added.origin.path}` : getAssetFromImage(banner2Edit.url);
                 return updateAdminBanner(signInDlgState.token, banner2Edit.id, url, pageLocation, 1, parseInt(sort));
             })
             .then((returnCode: number) => {

@@ -91,12 +91,12 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         uploadImage2Ipfs(avatarChanged ? userAvatarURL.raw : undefined)
             .then((added: any) => {
                 setDialogState({ ...dialogState, progressBar: 20 });
-                urlAvatar = avatarChanged ? `meteast:image:${added.path}` : signInDlgState.userAvatar;
+                urlAvatar = avatarChanged ? `meteast:image:${added.origin.path}` : signInDlgState.userAvatar;
                 return uploadImage2Ipfs(coverImageChanged ? userCoverImageURL.raw : undefined);
             })
             .then((added: any) => {
                 setDialogState({ ...dialogState, progressBar: 40 });
-                urlCoverImage = coverImageChanged ? (userCoverImageURL.preview ? `meteast:image:${added.path}` : ' ') : signInDlgState.userCoverImage;
+                urlCoverImage = coverImageChanged ? (userCoverImageURL.preview ? `meteast:image:${added.origin.path}` : ' ') : signInDlgState.userCoverImage;
                 return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
             })
             .then((signature: string) => {

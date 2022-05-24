@@ -35,7 +35,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
 
-    const uploadCreatedBlindBoxInfo = (imgUri: string) =>
+    const uploadCreatedBlindBoxInfo = (asset: string, thumbnail: string) =>
         new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
             const formData = new FormData();
             formData.append('token', signInDlgState.token);
@@ -43,7 +43,8 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             formData.append('address', signInDlgState.walletAccounts[0]);
             formData.append('name', dialogState.crtBlindTitle);
             formData.append('description', dialogState.crtBlindDescription);
-            formData.append('asset', imgUri);
+            formData.append('asset', asset);
+            formData.append('thumbnail', thumbnail);
             formData.append('tokenIds', dialogState.crtBlindTokenIds);
             // formData.append('status', dialogState.crtBlindStatus);
             formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
@@ -180,8 +181,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .then((added: any) => {
                 if (!unmounted) setDialogState({ ...dialogState, progressBar: 80 });
-                const imgUri = `meteast:image:${added.path}`;
-                return uploadCreatedBlindBoxInfo(imgUri);
+                return uploadCreatedBlindBoxInfo(`meteast:image:${added.origin.path}`, `meteast:image:${added.thumbnail.path}`);
             })
             .then((success: boolean) => {
                 if (success) {
