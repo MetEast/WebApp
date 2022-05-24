@@ -44,7 +44,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 minute: '2-digit',
             })
             .replace(' ', 'T');
-        console.log('localDateTimeString', localDateTimeString);
+        // console.log('localDateTimeString', localDateTimeString);
 
         // format: 2022-04-30T08:05
         setSaleEnds(localDateTimeString);

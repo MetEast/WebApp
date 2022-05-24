@@ -62,7 +62,6 @@ export const convert = (file: File, maxWidth: number, maxHeight: number, quality
 
                     const canvas = document.createElement('canvas');
                     [canvas.width, canvas.height] = canvasSize;
-                    // console.log(canvas.width,"-",canvas.height)
 
                     const ctx: any = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -110,11 +109,8 @@ export const uploadImage2Ipfs = (f: File | undefined) =>
                     const added = await client.add(fileContent);
                     if (thumbnail.success === 0) {
                         const addedThumbnail = await client.add(thumbnail.fileContent);
-                        console.log(addedThumbnail);
                         resolve({ origin: { ...added }, thumbnail: { ...addedThumbnail }, type: f.type } as any);
-                        // console.log("----thumbnail----", addedThumbnail.path);
                     }
-                    // console.log("----image----", added.path);
                     resolve({ origin: { ...added }, thumbnail: { ...added }, type: f.type } as any);
                 } catch (error) {
                     reject(error);
