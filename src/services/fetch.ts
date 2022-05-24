@@ -435,7 +435,7 @@ export const getNFTItem = async (
 };
 
 // BB sold product
-export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<TypeFavouritesFetch>) => {
+export const getNFTItems = async (tokenIds: string | undefined) => {
     const resNFTItems = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?ids=${tokenIds}`,
         FETCH_CONFIG_JSON,
@@ -448,13 +448,7 @@ export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<
         const _NFT: TypeProduct = { ...blankNFTItem };
         _NFT.tokenId = itemObject.tokenId;
         _NFT.name = itemObject.name;
-        // ------
-        console.log("BB sold products-----", itemObject.thumbnail)
-        _NFT.image = getImageFromAsset(itemObject.thumbnail ? itemObject.thumbnail : itemObject.asset);
-        _NFT.isLike =
-            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-                ? false
-                : true;
+        _NFT.image = getImageFromAsset(itemObject.thumbnail);
         _NFTItems.push(_NFT);
     }
     return _NFTItems;
