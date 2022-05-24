@@ -96,7 +96,11 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
             })
             .then((added: any) => {
                 setDialogState({ ...dialogState, progressBar: 40 });
-                urlCoverImage = coverImageChanged ? (userCoverImageURL.preview ? `meteast:image:${added.origin.path}` : ' ') : signInDlgState.userCoverImage;
+                urlCoverImage = coverImageChanged
+                    ? userCoverImageURL.preview
+                        ? `meteast:image:${added.origin.path}`
+                        : ' '
+                    : signInDlgState.userCoverImage;
                 return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
             })
             .then((signature: string) => {
@@ -105,8 +109,8 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     signInDlgState.token,
                     signInDlgState.walletAccounts[0],
                     signInDlgState.userDid,
-                    userName === '' ? ' ' : userName,  // temp
-                    userDescription === '' ? ' ' : userDescription,  // temp
+                    userName === '' ? ' ' : userName, // temp
+                    userDescription === '' ? ' ' : userDescription, // temp
                     urlAvatar,
                     urlCoverImage,
                     signature,
@@ -147,7 +151,6 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 onClose();
             });
     };
-    console.log(signInDlgState, '--------')
     return (
         <Stack
             spacing={4}

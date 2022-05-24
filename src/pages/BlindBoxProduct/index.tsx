@@ -41,8 +41,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
             const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','), likeList);
+            const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','));
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
                 setNftSoldList(_BBSoldNFTs);
@@ -53,7 +52,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
+    }, [signInDlgState.userDid, params.id]);
 
     // const changeBBStatus = async () => {
     //     let unmounted = false;
