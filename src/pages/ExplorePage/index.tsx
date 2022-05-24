@@ -28,7 +28,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [productViewMode, setProductViewMode] = useState<'grid1' | 'grid2'>(
         (document.cookie
             .split('; ')
-            .find((row) => row.startsWith('METEAST_PROFILE='))
+            .find((row) => row.startsWith('METEAST_PREVIEW='))
             ?.split('=')[1] || '') === '1'
             ? 'grid1'
             : 'grid2',
