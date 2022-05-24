@@ -7,7 +7,7 @@ import WarningTypo from '../../components/WarningTypo';
 import { useSignInContext } from 'src/context/SignInContext';
 import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { uploadDidUri2Ipfs, uploadImage2Ipfs, uploadMetaData2Ipfs } from 'src/services/ipfs';
+import { uploadImage2Ipfs, uploadMetaData2Ipfs } from 'src/services/ipfs';
 import Web3 from 'web3';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -58,7 +58,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             price: '0',
             tokenId: paramObj._id,
             tokenUri: paramObj._uri,
-            didUri: paramObj._didUri,
+            // didUri: paramObj._didUri,
             royaltyFee: dialogState.mintRoyalties * 1e4,
         })
             .then((txHash: string) => {
@@ -74,7 +74,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         mintTxHash: txHash,
                         mintTokenId: paramObj._id,
                         mintTokenUri: paramObj._uri,
-                        mintDidUri: paramObj._didUri,
+                        // mintDidUri: paramObj._didUri,
                         progressBar: 100,
                         waitingConfirmDlgOpened: false,
                     });
@@ -105,13 +105,12 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
             let unmounted = false;
             let _id = '';
             let _uri = '';
-            let _didUri = '';
             if (!dialogState.mintFile) return;
             uploadImage2Ipfs(dialogState.mintFile)
                 .then((added: any) => {
                     // Hash of image path - tokenId
-                    _id = `0x${createHash('sha256').update(added.path).digest('hex')}`;
-                    if (!unmounted) setDialogState({ ...dialogState, progressBar: 10 });
+                    _id = `0x${createHash('sha256').update(added.origin.path).digest('hex')}`;
+                    if (!unmounted) setDialogState({ ...dialogState, progressBar: 25 });
                     return uploadMetaData2Ipfs(
                         added,
                         signInDlgState.userDid,
@@ -125,18 +124,8 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 .then((metaRecv: any) => {
                     // tokenUri
                     _uri = `meteast:json:${metaRecv.path}`;
-                    if (!unmounted) setDialogState({ ...dialogState, progressBar: 30 });
-                    return uploadDidUri2Ipfs(
-                        signInDlgState.userDid,
-                        signInDlgState.userName,
-                        signInDlgState.userDescription,
-                    );
-                })
-                .then((didRecv: any) => {
-                    // didUri
-                    _didUri = `meteast:json:${didRecv.path}`;
                     if (!unmounted) setDialogState({ ...dialogState, progressBar: 50 });
-                    resolve({ _id, _uri, _didUri });
+                    resolve({ _id, _uri });
                 })
                 .catch((error) => {
                     reject(error);

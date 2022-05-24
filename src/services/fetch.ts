@@ -249,7 +249,7 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
         const _NFT: TypeProduct = { ...blankNFTItem };
         _NFT.tokenId = itemObject.tokenId;
         _NFT.name = itemObject.name;
-        _NFT.image = getImageFromAsset(itemObject.asset);
+        _NFT.image = getImageFromAsset(itemObject.thumbnail);
         _NFT.price_ela = itemObject.price / 1e18;
         _NFT.price_usd = _NFT.price_ela * ELA2USD;
         _NFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
@@ -340,7 +340,7 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         const _BBItem: TypeProduct = { ...blankBBItem };
         _BBItem.tokenId = itemObject.blindBoxIndex.toString();
         _BBItem.name = itemObject.name;
-        _BBItem.image = getImageFromAsset(itemObject.asset);
+        _BBItem.image = getImageFromAsset(itemObject.thumbnail ? itemObject.thumbnail : itemObject.asset);
         _BBItem.price_ela = parseFloat(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
         const curTimestamp = new Date().getTime() / 1000;
@@ -411,7 +411,8 @@ export const getNFTItem = async (
         _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject.holder;
-        _NFTItem.holderName = itemObject.holder === itemObject.royaltyOwner ? itemObject.authorName : itemObject.holderName;
+        _NFTItem.holderName =
+            itemObject.holder === itemObject.royaltyOwner ? itemObject.authorName : itemObject.holderName;
         _NFTItem.orderId = itemObject.orderId;
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -447,7 +448,9 @@ export const getNFTItems = async (tokenIds: string | undefined, likeList: Array<
         const _NFT: TypeProduct = { ...blankNFTItem };
         _NFT.tokenId = itemObject.tokenId;
         _NFT.name = itemObject.name;
-        _NFT.image = getImageFromAsset(itemObject.asset);
+        // ------
+        console.log("BB sold products-----", itemObject.thumbnail)
+        _NFT.image = getImageFromAsset(itemObject.thumbnail ? itemObject.thumbnail : itemObject.asset);
         _NFT.isLike =
             likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
                 ? false
@@ -724,7 +727,8 @@ export const getMyNFTItemList = async (
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.tokenId = itemObject.tokenId;
         _myNFT.name = itemObject.name;
-        _myNFT.image = itemObject.asset ? getImageFromAsset(itemObject.asset) : '';
+        console.log("Profile Page ------", itemObject.thumbnail)
+        _myNFT.image = itemObject.thumbnail ? getImageFromAsset(itemObject.thumbnail) : '';
         _myNFT.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
         _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
         _myNFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
@@ -953,7 +957,8 @@ export const getBBCandiates = (arrBBCandidateList: Array<any>, selectedTokenIds:
         _BBCandidate.nftIdentity = itemObject.tokenIdHex;
         _BBCandidate.projectTitle = itemObject.name;
         _BBCandidate.projectType = itemObject.category;
-        _BBCandidate.url = getImageFromAsset(itemObject.asset);
+        console.log("BB candidates -----", itemObject.thumbnail)
+        _BBCandidate.url = getImageFromAsset(itemObject.thumbnail);
         _BBCandidateList.push(_BBCandidate);
         _itemCheckedList.push(selectedTokenIds.includes(_BBCandidate.tokenId));
     }

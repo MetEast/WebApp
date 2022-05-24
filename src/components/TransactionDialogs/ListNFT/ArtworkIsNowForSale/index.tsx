@@ -40,7 +40,7 @@ const ArtworkIsNowForSale: React.FC<ComponentProps> = (): JSX.Element => {
                             sellPrice: 0,
                             mintTokenId: '',
                             mintTokenUri: '',
-                            mintDidUri: '',
+                            // mintDidUri: '',
                         });
                         if (location.pathname.indexOf('/products') !== -1) window.location.reload();
                         else navigate('/products');

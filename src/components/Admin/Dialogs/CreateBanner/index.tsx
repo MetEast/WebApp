@@ -77,7 +77,7 @@ const CreateBanner: React.FC<ComponentProps> = ({ bannerList, handleBannerUpdate
         // const status = blindboxStatus === 'offline' ? 0 : 1;
         uploadImage2Ipfs(bannerImgFile)
             .then((added: any) => {
-                url = `meteast:image:${added.path}`;
+                url = `meteast:image:${added.origin.path}`;
                 return addAdminBanner(signInDlgState.token, url, pageLocation, 1, sort);
             })
             .then((returnCode: number) => {
