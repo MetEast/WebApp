@@ -317,7 +317,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     backgroundColor: '#C3C5C8',
                 }}
             >
-                {signInDlgState.userCoverImage && signInDlgState.userCoverImage !== ' ' && (
+                {signInDlgState.userCoverImage && (
                     <img
                         src={getImageFromAsset(signInDlgState.userCoverImage)}
                         alt=""

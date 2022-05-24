@@ -2,7 +2,7 @@ import { enumBadgeType } from 'src/types/product-types';
 
 // custome
 export const getImageFromAsset = (id: string) => {
-    if (id === undefined || id === null) return '';
+    if (!id) return '';
     const prefixLen = id.split(':', 2).join(':').length;
     if (prefixLen >= id.length) return '';
     const uri = id.substring(prefixLen + 1);
@@ -10,7 +10,7 @@ export const getImageFromAsset = (id: string) => {
 };
 
 export const getAssetFromImage = (url: string) => {
-    if (url === undefined || url === null || url === '') return '';
+    if (!url) return '';
     const asset = url.replace(`${process.env.REACT_APP_IPFS_NODE_URL}/`, '');
     return `meteast:image:${asset}`;
 };

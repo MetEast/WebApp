@@ -31,11 +31,11 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
     const [userAvatarURL, setUserAvatarURL] = useState<TypeImageFile>({
-        preview: signInDlgState.userAvatar ? getImageFromAsset(signInDlgState.userAvatar) : '',
+        preview: getImageFromAsset(signInDlgState.userAvatar),
         raw: new File([''], ''),
     });
     const [userCoverImageURL, setUserCoverImageURL] = useState<TypeImageFile>({
-        preview: signInDlgState.userCoverImage ? getImageFromAsset(signInDlgState.userCoverImage) : '',
+        preview: getImageFromAsset(signInDlgState.userCoverImage),
         raw: new File([''], ''),
     });
     const [userName, setUserName] = useState<string>(signInDlgState.userName);
@@ -50,7 +50,6 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
     );
     const classes = useStyles();
-
     const handleSelectAvatar = (e: any) => {
         if (e.target.files.length) {
             if (!avatarChanged) setAvatarChanged(true);
@@ -99,7 +98,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 urlCoverImage = coverImageChanged
                     ? userCoverImageURL.preview
                         ? `meteast:image:${added.origin.path}`
-                        : ' '
+                        : ''
                     : signInDlgState.userCoverImage;
                 return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
             })
@@ -109,10 +108,10 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     signInDlgState.token,
                     signInDlgState.walletAccounts[0],
                     signInDlgState.userDid,
-                    userName === '' ? ' ' : userName, // temp
-                    userDescription === '' ? ' ' : userDescription, // temp
-                    urlAvatar,
-                    urlCoverImage,
+                    userName ? userName : null,
+                    userDescription ? userDescription : null,
+                    urlAvatar ? urlAvatar : '',
+                    urlCoverImage ? urlCoverImage : '',
                     signature,
                 );
             })
@@ -122,10 +121,10 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     setSignInDlgState((prevState: SignInState) => {
                         const _state = { ...prevState };
                         _state.token = token;
-                        _state.userName = userName;
-                        _state.userDescription = userDescription;
-                        _state.userAvatar = urlAvatar;
-                        _state.userCoverImage = urlCoverImage;
+                        _state.userName = userName ? userName : '';
+                        _state.userDescription = userDescription ? userDescription : '';
+                        _state.userAvatar = urlAvatar ? urlAvatar : '';
+                        _state.userCoverImage = urlCoverImage ? urlCoverImage : '';
                         return _state;
                     });
                     setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
@@ -222,7 +221,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         Cover Picture
                     </Typography>
                     <BannerBox sx={{ backgroundColor: '#C3C5C8' }}>
-                        {userCoverImageURL.preview && userCoverImageURL.preview !== ' ' && (
+                        {userCoverImageURL.preview && (
                             <img
                                 src={userCoverImageURL.preview}
                                 width="100%"
