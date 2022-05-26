@@ -21,12 +21,12 @@ import RemoveDAODlgContainer from 'src/components/TransactionDialogs/Rewards/Rem
 // import CancelBidDlgContainer from '../TransactionDialogs/CancelBid';
 // import UpdateBidDlgContainer from '../TransactionDialogs/UpdateBid';
 import { useSignInContext } from 'src/context/SignInContext';
-import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import Web3 from 'web3';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
-import { isInAppBrowser, getChainGasPrice } from 'src/services/wallet';
+// import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
+// import WalletConnectProvider from '@walletconnect/web3-provider';
+// import Web3 from 'web3';
+// import { useWeb3React } from '@web3-react/core';
+// import { Web3Provider } from '@ethersproject/providers';
+// import { isInAppBrowser, getChainGasPrice } from 'src/services/wallet';
 import BurnNFTDlgContainer from './DeleteProduct';
 import { useSnackbar } from 'notistack';
 import SnackMessage from 'src/components/SnackMessage';
@@ -37,40 +37,40 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
-        ? window.elastos.getWeb3Provider()
-        : essentialsConnector.getWalletConnectProvider();
-    const { library } = useWeb3React<Web3Provider>();
-    const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
-    );
-    useEffect(() => {
-        if (signInDlgState.loginType === '1' || (library && signInDlgState.loginType === '2')) {
-            getChainGasPrice(walletConnectWeb3, 5000000).then((gasPrice: number) => {
-                setDialogState({
-                    ...dialogState,
-                    mintTxFee: gasPrice,
-                    burnTxFee: gasPrice,
-                    sellTxFee: gasPrice,
-                    buyNowTxFee: gasPrice,
-                    changePriceTxFee: gasPrice,
-                    cancelSaleTxFee: gasPrice,
-                    acceptBidTxFee: gasPrice,
-                    placeBidTxFee: gasPrice,
-                    updateBidTxFee: gasPrice,
-                    cancelBidTxFee: gasPrice,
-                    crtBlindTxFee: gasPrice,
-                    buyBlindTxFee: gasPrice,
-                    adminTakedownTxFee: gasPrice,
-                    adminUserBannedTxFee: gasPrice,
-                    adminUserModeratorTxFee: gasPrice,
-                    becomeDAOTxFee: gasPrice,
-                    removeDAOTxFee: gasPrice,
-                    withdrawRewardTxFee: gasPrice,
-                });
-            });
-        }
-    }, [library, signInDlgState.loginType]);
+    // const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+    //     ? window.elastos.getWeb3Provider()
+    //     : essentialsConnector.getWalletConnectProvider();
+    // const { library } = useWeb3React<Web3Provider>();
+    // const walletConnectWeb3 = new Web3(
+    //     signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    // );
+    // useEffect(() => {
+    //     if (signInDlgState.loginType === '1' || (library && signInDlgState.loginType === '2')) {
+    //         getChainGasPrice(walletConnectWeb3, 5000000).then((gasPrice: number) => {
+    //             setDialogState({
+    //                 ...dialogState,
+    //                 mintTxFee: gasPrice,
+    //                 burnTxFee: gasPrice,
+    //                 sellTxFee: gasPrice,
+    //                 buyNowTxFee: gasPrice,
+    //                 changePriceTxFee: gasPrice,
+    //                 cancelSaleTxFee: gasPrice,
+    //                 acceptBidTxFee: gasPrice,
+    //                 placeBidTxFee: gasPrice,
+    //                 updateBidTxFee: gasPrice,
+    //                 cancelBidTxFee: gasPrice,
+    //                 crtBlindTxFee: gasPrice,
+    //                 buyBlindTxFee: gasPrice,
+    //                 adminTakedownTxFee: gasPrice,
+    //                 adminUserBannedTxFee: gasPrice,
+    //                 adminUserModeratorTxFee: gasPrice,
+    //                 becomeDAOTxFee: gasPrice,
+    //                 removeDAOTxFee: gasPrice,
+    //                 withdrawRewardTxFee: gasPrice,
+    //             });
+    //         });
+    //     }
+    // }, [library, signInDlgState.loginType]);
 
     const showChainErrorSnackBar = () => {
         enqueueSnackbar('', {
