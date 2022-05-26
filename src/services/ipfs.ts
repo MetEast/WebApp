@@ -143,7 +143,7 @@ export const uploadMetaData2Ipfs = (
             data: {
                 image: `meteast:image:${added.origin.path}`,
                 kind: added.type.replace('image/', ''),
-                size: added.size,
+                size: added.origin.size,
                 thumbnail: `meteast:image:${added.thumbnail.path}`,
             },
             category: nftCategory,

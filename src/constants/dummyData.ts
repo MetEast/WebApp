@@ -1,4 +1,4 @@
-import { TypeProduct, TypeNFTTransaction, enumBlindBoxNFTType, enumTransactionType } from 'src/types/product-types';
+import { TypeNFTTransaction, enumTransactionType } from 'src/types/product-types';
 import { TypeNotification } from 'src/types/notification-types';
 import { TypeYourEarning } from 'src/types/product-types';
 import { enumBadgeType } from 'src/types/product-types';
