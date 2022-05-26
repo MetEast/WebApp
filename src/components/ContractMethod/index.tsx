@@ -182,6 +182,58 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
             reject(error);
         };
 
+        let contractMethod: any = null;
+        switch (param.method) {
+            case 'balanceOf':
+                contractMethod = smartContract.methods.balanceOf(accounts[0]);
+                break;
+            case 'allowance':
+                contractMethod = smartContract.methods.allowance(accounts[0], param.address);
+                break;
+            case 'approve':
+                contractMethod = smartContract.methods.approve(param.address, param._price);
+                break;
+            case 'stakedAmount':
+                contractMethod = smartContract.methods.stakedAmount(accounts[0]);
+                break;
+            case 'stake':
+                contractMethod = smartContract.methods.stake(param._price);
+                break;
+            case 'withdraw':
+                contractMethod = smartContract.methods.withdraw();
+                break;
+            case 'getAvailableRewardAsBuyer':
+                contractMethod = smartContract.methods.getAvailableRewardAsBuyer(accounts[0]);
+                break;
+            case 'getAvailableRewardAsCreator':
+                contractMethod = smartContract.methods.getAvailableRewardAsCreator(accounts[0]);
+                break;
+            case 'getAvailableRewardAsStaker':
+                contractMethod = smartContract.methods.getAvailableRewardAsStaker(accounts[0]);
+                break;
+            case 'getReceivedRewardAsBuyer':
+                contractMethod = smartContract.methods.getReceivedRewardAsBuyer(accounts[0]);
+                break;
+            case 'getReceivedRewardAsCreator':
+                contractMethod = smartContract.methods.getReceivedRewardAsCreator(accounts[0]);
+                break;
+            case 'getReceivedRewardAsStaker':
+                contractMethod = smartContract.methods.getReceivedRewardAsStaker(accounts[0]);
+                break;
+            case 'withdrawBuyerReward':
+                contractMethod = smartContract.methods.withdrawBuyerReward();
+                break;
+            case 'withdrawCreatorReward':
+                contractMethod = smartContract.methods.withdrawCreatorReward();
+                break;
+            case 'withdrawStakerReward':
+                contractMethod = smartContract.methods.withdrawStakerReward();
+                break;
+            default:
+                resolve('no action');
+                break;
+        }
+
         walletConnectWeb3.eth
             .getAccounts()
             .then((_accounts: string[]) => {
@@ -190,64 +242,16 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
             })
             .then((_gasPrice: string) => {
                 gasPrice = _gasPrice;
+                return contractMethod.estimateGas({ from: accounts[0] });
+            })
+            .then((_estimatedGas: number) => {
                 const transactionParams = {
                     from: accounts[0],
                     gasPrice: gasPrice,
-                    gas: 5000000,
+                    gas: parseInt((_estimatedGas * 1.5).toString()),
                     value: param.price,
                 };
-
-                let contractMethod = null;
-                switch (param.method) {
-                    case 'balanceOf':
-                        contractMethod = smartContract.methods.balanceOf(accounts[0]);
-                        break;
-                    case 'allowance':
-                        contractMethod = smartContract.methods.allowance(accounts[0], param.address);
-                        break;
-                    case 'approve':
-                        contractMethod = smartContract.methods.approve(param.address, param._price);
-                        break;
-                    case 'stakedAmount':
-                        contractMethod = smartContract.methods.stakedAmount(accounts[0]);
-                        break;
-                    case 'stake':
-                        contractMethod = smartContract.methods.stake(param._price);
-                        break;
-                    case 'withdraw':
-                        contractMethod = smartContract.methods.withdraw();
-                        break;
-                    case 'getAvailableRewardAsBuyer':
-                        contractMethod = smartContract.methods.getAvailableRewardAsBuyer(accounts[0]);
-                        break;
-                    case 'getAvailableRewardAsCreator':
-                        contractMethod = smartContract.methods.getAvailableRewardAsCreator(accounts[0]);
-                        break;
-                    case 'getAvailableRewardAsStaker':
-                        contractMethod = smartContract.methods.getAvailableRewardAsStaker(accounts[0]);
-                        break;
-                    case 'getReceivedRewardAsBuyer':
-                        contractMethod = smartContract.methods.getReceivedRewardAsBuyer(accounts[0]);
-                        break;
-                    case 'getReceivedRewardAsCreator':
-                        contractMethod = smartContract.methods.getReceivedRewardAsCreator(accounts[0]);
-                        break;
-                    case 'getReceivedRewardAsStaker':
-                        contractMethod = smartContract.methods.getReceivedRewardAsStaker(accounts[0]);
-                        break;
-                    case 'withdrawBuyerReward':
-                        contractMethod = smartContract.methods.withdrawBuyerReward();
-                        break;
-                    case 'withdrawCreatorReward':
-                        contractMethod = smartContract.methods.withdrawCreatorReward();
-                        break;
-                    case 'withdrawStakerReward':
-                        contractMethod = smartContract.methods.withdrawStakerReward();
-                        break;
-                    default:
-                        resolve('no action');
-                        break;
-                }
+                
                 if (param.callType === 1) {
                     contractMethod
                         .send(transactionParams)
