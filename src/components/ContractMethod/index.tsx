@@ -25,19 +25,8 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
         let accounts: string[] = [];
         let gasPrice: string = '';
         let txHash: string = '';
-        const handleTxEvent = (hash: string) => {
-            console.log('transactionHash', hash);
-            txHash = hash;
-        };
-        const handleReceiptEvent = (receipt: any) => {
-            console.log('receipt', receipt);
-            resolve(txHash);
-        };
-        const handleErrorEvent = (error: any) => {
-            console.error('error', error);
-            reject(error);
-        };
         let contractMethod: any = null;
+
         switch (param.method) {
             case 'mint':
                 contractMethod = smartContract.methods.mint(param.tokenId, param.tokenUri, param.royaltyFee);
@@ -109,6 +98,20 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                 resolve('no action');
                 break;
         }
+
+        const handleTxEvent = (hash: string) => {
+            console.log('transactionHash', hash);
+            txHash = hash;
+        };
+        const handleReceiptEvent = (receipt: any) => {
+            console.log('receipt', receipt);
+            resolve(txHash);
+        };
+        const handleErrorEvent = (error: any) => {
+            console.error('error', error);
+            reject(error);
+        };
+
         walletConnectWeb3.eth
             .getAccounts()
             .then((_accounts: string[]) => {
@@ -117,13 +120,19 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
             })
             .then((_gasPrice: string) => {
                 gasPrice = _gasPrice;
-                return contractMethod.estimateGas({ from: accounts[0] });
+                return contractMethod.estimateGas(
+                    { from: accounts[0], gas: 5000000, value: param.price }, (error: string, gasAmount: number) => {
+                        if (gasAmount == 5000000) console.log('Method ran out of gas');
+                        console.error(error);
+                    },
+                );
             })
             .then((_estimatedGas: number) => {
+                const gasLimit = parseInt((_estimatedGas * 1.5).toString());
                 const transactionParams = {
                     from: accounts[0],
                     gasPrice: gasPrice,
-                    gas: parseInt((_estimatedGas * 1.5).toString()),
+                    gas: gasLimit > 8000000 ? 8000000 : gasLimit,
                     value: param.price,
                 };
 
@@ -169,20 +178,8 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
         let accounts: string[] = [];
         let gasPrice: string = '';
         let txHash: string = '';
-        const handleTxEvent = (hash: string) => {
-            console.log('transactionHash', hash);
-            txHash = hash;
-        };
-        const handleReceiptEvent = (receipt: any) => {
-            console.log('receipt', receipt);
-            resolve(txHash);
-        };
-        const handleErrorEvent = (error: any) => {
-            console.error('error', error);
-            reject(error);
-        };
-
         let contractMethod: any = null;
+
         switch (param.method) {
             case 'balanceOf':
                 contractMethod = smartContract.methods.balanceOf(accounts[0]);
@@ -233,6 +230,18 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
                 resolve('no action');
                 break;
         }
+        const handleTxEvent = (hash: string) => {
+            console.log('transactionHash', hash);
+            txHash = hash;
+        };
+        const handleReceiptEvent = (receipt: any) => {
+            console.log('receipt', receipt);
+            resolve(txHash);
+        };
+        const handleErrorEvent = (error: any) => {
+            console.error('error', error);
+            reject(error);
+        };
 
         walletConnectWeb3.eth
             .getAccounts()
@@ -242,16 +251,22 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
             })
             .then((_gasPrice: string) => {
                 gasPrice = _gasPrice;
-                return contractMethod.estimateGas({ from: accounts[0] });
+                return contractMethod.estimateGas(
+                    { from: accounts[0], gas: 5000000, value: param.price }, (error: string, gasAmount: number) => {
+                        if (gasAmount == 5000000) console.log('Method ran out of gas');
+                        console.error(error);
+                    },
+                );
             })
             .then((_estimatedGas: number) => {
+                const gasLimit = parseInt((_estimatedGas * 1.5).toString());
                 const transactionParams = {
                     from: accounts[0],
                     gasPrice: gasPrice,
-                    gas: parseInt((_estimatedGas * 1.5).toString()),
+                    gas: gasLimit > 8000000 ? 8000000 : gasLimit,
                     value: param.price,
                 };
-                
+
                 if (param.callType === 1) {
                     contractMethod
                         .send(transactionParams)

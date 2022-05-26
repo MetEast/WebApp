@@ -48,7 +48,6 @@ const RewardsPage: React.FC = (): JSX.Element => {
                 contractType: 1, // token
                 callType: 2,
                 method: 'balanceOf',
-                price: '0',
             })
                 .then((balance: string) => {
                     if (!unmounted) {
@@ -63,7 +62,6 @@ const RewardsPage: React.FC = (): JSX.Element => {
                         contractType: 3, // staking
                         callType: 2,
                         method: 'stakedAmount',
-                        price: '0',
                     });
                 })
                 .then((stakedAmount: string) => {
