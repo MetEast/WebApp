@@ -120,12 +120,7 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
             })
             .then((_gasPrice: string) => {
                 gasPrice = _gasPrice;
-                return contractMethod.estimateGas(
-                    { from: accounts[0], gas: 5000000, value: param.price }, (error: string, gasAmount: number) => {
-                        if (gasAmount == 5000000) console.log('Method ran out of gas');
-                        console.error(error);
-                    },
-                );
+                return contractMethod.estimateGas({ from: accounts[0], gas: 5000000, value: param.price });
             })
             .then((_estimatedGas: number) => {
                 const gasLimit = parseInt((_estimatedGas * 1.5).toString());
@@ -180,56 +175,6 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
         let txHash: string = '';
         let contractMethod: any = null;
 
-        switch (param.method) {
-            case 'balanceOf':
-                contractMethod = smartContract.methods.balanceOf(accounts[0]);
-                break;
-            case 'allowance':
-                contractMethod = smartContract.methods.allowance(accounts[0], param.address);
-                break;
-            case 'approve':
-                contractMethod = smartContract.methods.approve(param.address, param._price);
-                break;
-            case 'stakedAmount':
-                contractMethod = smartContract.methods.stakedAmount(accounts[0]);
-                break;
-            case 'stake':
-                contractMethod = smartContract.methods.stake(param._price);
-                break;
-            case 'withdraw':
-                contractMethod = smartContract.methods.withdraw();
-                break;
-            case 'getAvailableRewardAsBuyer':
-                contractMethod = smartContract.methods.getAvailableRewardAsBuyer(accounts[0]);
-                break;
-            case 'getAvailableRewardAsCreator':
-                contractMethod = smartContract.methods.getAvailableRewardAsCreator(accounts[0]);
-                break;
-            case 'getAvailableRewardAsStaker':
-                contractMethod = smartContract.methods.getAvailableRewardAsStaker(accounts[0]);
-                break;
-            case 'getReceivedRewardAsBuyer':
-                contractMethod = smartContract.methods.getReceivedRewardAsBuyer(accounts[0]);
-                break;
-            case 'getReceivedRewardAsCreator':
-                contractMethod = smartContract.methods.getReceivedRewardAsCreator(accounts[0]);
-                break;
-            case 'getReceivedRewardAsStaker':
-                contractMethod = smartContract.methods.getReceivedRewardAsStaker(accounts[0]);
-                break;
-            case 'withdrawBuyerReward':
-                contractMethod = smartContract.methods.withdrawBuyerReward();
-                break;
-            case 'withdrawCreatorReward':
-                contractMethod = smartContract.methods.withdrawCreatorReward();
-                break;
-            case 'withdrawStakerReward':
-                contractMethod = smartContract.methods.withdrawStakerReward();
-                break;
-            default:
-                resolve('no action');
-                break;
-        }
         const handleTxEvent = (hash: string) => {
             console.log('transactionHash', hash);
             txHash = hash;
@@ -251,12 +196,59 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
             })
             .then((_gasPrice: string) => {
                 gasPrice = _gasPrice;
-                return contractMethod.estimateGas(
-                    { from: accounts[0], gas: 5000000, value: param.price }, (error: string, gasAmount: number) => {
-                        if (gasAmount == 5000000) console.log('Method ran out of gas');
-                        console.error(error);
-                    },
-                );
+
+                switch (param.method) {
+                    case 'balanceOf':
+                        contractMethod = smartContract.methods.balanceOf(accounts[0]);
+                        break;
+                    case 'allowance':
+                        contractMethod = smartContract.methods.allowance(accounts[0], param.address);
+                        break;
+                    case 'approve':
+                        contractMethod = smartContract.methods.approve(param.address, param._price);
+                        break;
+                    case 'stakedAmount':
+                        contractMethod = smartContract.methods.stakedAmount(accounts[0]);
+                        break;
+                    case 'stake':
+                        contractMethod = smartContract.methods.stake(param._price);
+                        break;
+                    case 'withdraw':
+                        contractMethod = smartContract.methods.withdraw();
+                        break;
+                    case 'getAvailableRewardAsBuyer':
+                        contractMethod = smartContract.methods.getAvailableRewardAsBuyer(accounts[0]);
+                        break;
+                    case 'getAvailableRewardAsCreator':
+                        contractMethod = smartContract.methods.getAvailableRewardAsCreator(accounts[0]);
+                        break;
+                    case 'getAvailableRewardAsStaker':
+                        contractMethod = smartContract.methods.getAvailableRewardAsStaker(accounts[0]);
+                        break;
+                    case 'getReceivedRewardAsBuyer':
+                        contractMethod = smartContract.methods.getReceivedRewardAsBuyer(accounts[0]);
+                        break;
+                    case 'getReceivedRewardAsCreator':
+                        contractMethod = smartContract.methods.getReceivedRewardAsCreator(accounts[0]);
+                        break;
+                    case 'getReceivedRewardAsStaker':
+                        contractMethod = smartContract.methods.getReceivedRewardAsStaker(accounts[0]);
+                        break;
+                    case 'withdrawBuyerReward':
+                        contractMethod = smartContract.methods.withdrawBuyerReward();
+                        break;
+                    case 'withdrawCreatorReward':
+                        contractMethod = smartContract.methods.withdrawCreatorReward();
+                        break;
+                    case 'withdrawStakerReward':
+                        contractMethod = smartContract.methods.withdrawStakerReward();
+                        break;
+                    default:
+                        resolve('no action');
+                        break;
+                }
+
+                return contractMethod.estimateGas({ from: accounts[0], gas: 5000000, value: param.price });
             })
             .then((_estimatedGas: number) => {
                 const gasLimit = parseInt((_estimatedGas * 1.5).toString());
