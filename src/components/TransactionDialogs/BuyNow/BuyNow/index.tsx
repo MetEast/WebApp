@@ -139,6 +139,7 @@ const BuyNow: React.FC<ComponentProps> = (): JSX.Element => {
                                 buyNowPrice: 0,
                                 buyNowName: '',
                                 buyNowOrderId: '',
+                                progressBar: 0,
                             });
                         }}
                     >
