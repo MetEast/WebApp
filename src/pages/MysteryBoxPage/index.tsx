@@ -16,6 +16,7 @@ import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 's
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -34,8 +35,14 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
     const [clearOption, setClearOption] = useState<boolean>(false);
-    const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>(Array(4).fill(blankBBItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);
+    const [pageNum, setPageNum] = useState<number>(1);
+    const [pageSize] = useState<number>(5);
+    const [hasMore, setHasMore] = useState<boolean>(false);
+    const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
+    const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([]);
+    const fillerItem = Array(pageSize).fill(blankBBItem);
+    let ELA2USD: number = 0;
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -54,10 +61,15 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
+        // reset pageNum when search param has changed
+        if (!unmounted && !isLoadingNext) {
+            setPageNum(1);
+            setBlindBoxList([]);
+        }
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
-            const ELA2USD = await getELA2USD();
-            const searchParams = getSearchParams(1, 1000, keyWord, sortBy, filterRange, [], undefined);
+            if (pageNum === 1) ELA2USD = await getELA2USD();
+            const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
                 searchParams,
                 ELA2USD,
@@ -65,8 +77,11 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 signInDlgState.userDid,
             );
             if (!unmounted) {
-                setBlindBoxList(_searchedBBList);
+                if (pageNum === 1) setBlindBoxList(_searchedBBList.data);
+                else setBlindBoxList([...blindBoxList, ..._searchedBBList.data]);
                 setIsLoading(false);
+                setIsLoadingNext(false);
+                if (Math.ceil(_searchedBBList.total / pageSize) > pageNum) setHasMore(true);
             }
         };
         if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
@@ -74,7 +89,15 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filterRange, keyWord]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filterRange, keyWord, pageNum]); //, productViewMode
+
+    const fetchMoreData = () => {
+        if (!isLoadingNext) {
+            setIsLoadingNext(true);
+            setPageNum(pageNum + 1);
+            setHasMore(false);
+        }
+    };
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //
@@ -105,7 +128,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     };
     // -------------- Option Bar -------------- //
 
-    // -------------- Views -------------- //
+    // -------------- Likes -------------- //
     const updateBlindBoxLikes = (id: number, type: string) => {
         let bbList: Array<TypeProduct> = [...blindBoxList];
         if (type === 'inc') {
@@ -181,38 +204,55 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                     }}
                     marginTop={{ xs: 3, md: 5 }}
                 />
-                {blindBoxList.length === 0 ? (
-                    <LooksEmptyBox
-                        bannerTitle={
-                            !(!keyWord && filterRange.min === undefined && filterRange.max === undefined)
-                                ? 'No Boxes Found For This Search'
-                                : 'Looks Empty Here'
-                        }
-                        buttonLabel={
-                            !(!keyWord && filterRange.min === undefined && filterRange.max === undefined)
-                                ? 'Back to all Items'
-                                : 'GET YOUR FIRST Mystery Box'
-                        }
-                        sx={{ marginTop: { xs: 3, md: 5 } }}
-                        onBannerBtnClick={() => {
-                            if (!(!keyWord && filterRange.min === undefined && filterRange.max === undefined)) {
-                                setIsLoading(true);
-                                setBlindBoxList(Array(4).fill(blankBBItem));
-                                setEmptyKeyword(emptyKeyword + 1);
-                                handleKeyWordChange('');
-                                setClearOption(true);
-                            } else {
-                                setDialogState({
-                                    ...dialogState,
-                                    createBlindBoxDlgOpened: true,
-                                    createBlindBoxDlgStep: 0,
-                                });
-                            }
-                        }}
-                    />
-                ) : (
+
+                <InfiniteScroll
+                    dataLength={blindBoxList.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<></>}
+                    endMessage={
+                        <>
+                            {!blindBoxList.length && !isLoading && (
+                                <LooksEmptyBox
+                                    bannerTitle={
+                                        !(!keyWord && filterRange.min === undefined && filterRange.max === undefined)
+                                            ? 'No Boxes Found For This Search'
+                                            : 'Looks Empty Here'
+                                    }
+                                    buttonLabel={
+                                        !(!keyWord && filterRange.min === undefined && filterRange.max === undefined)
+                                            ? 'Back to all Items'
+                                            : 'GET YOUR FIRST Mystery Box'
+                                    }
+                                    // sx={{ marginTop: { xs: 3, md: 5 } }}
+                                    onBannerBtnClick={() => {
+                                        if (
+                                            !(
+                                                !keyWord &&
+                                                filterRange.min === undefined &&
+                                                filterRange.max === undefined
+                                            )
+                                        ) {
+                                            setIsLoading(true);
+                                            setBlindBoxList([]);
+                                            setEmptyKeyword(emptyKeyword + 1);
+                                            handleKeyWordChange('');
+                                            setClearOption(true);
+                                        } else {
+                                            setDialogState({
+                                                ...dialogState,
+                                                createBlindBoxDlgOpened: true,
+                                                createBlindBoxDlgStep: 0,
+                                            });
+                                        }
+                                    }}
+                                />
+                            )}
+                        </>
+                    }
+                >
                     <Grid container marginTop={{ xs: 3, md: 5 }} columnSpacing={4} rowGap={4}>
-                        {blindBoxList.map((item, index) => (
+                        {(isLoading ? [...blindBoxList, ...fillerItem] : blindBoxList).map((item, index) => (
                             <Grid
                                 item
                                 xs={productViewMode === 'grid1' ? 12 : 6}
@@ -221,7 +261,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                                 key={`explore-product-${index}`}
                             >
                                 <NFTPreview
-                                    isLoading={isLoading}
+                                    isLoading={isLoading && index >= blindBoxList.length}
                                     product={item}
                                     productType={2}
                                     index={index}
@@ -232,7 +272,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                             </Grid>
                         ))}
                     </Grid>
-                )}
+                </InfiniteScroll>
             </Container>
         </Box>
     );
