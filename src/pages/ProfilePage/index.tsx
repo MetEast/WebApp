@@ -33,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 // import EditProfileDlgContainer from 'src/components/Profile/EditProfile';
 import YourEarningDlgContainer from 'src/components/Profile/YourEarnings';
 import { Markup } from 'interweave';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const ProfilePage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
@@ -82,10 +83,17 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [toatlEarned, setTotalEarned] = useState<string>('0');
     const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
-    const [myNFTList, setMyNFTList] = useState<Array<Array<TypeProduct>>>(Array(6).fill(Array(4).fill(blankMyNFTItem)));
-    const [isLoadingAssets, setIsLoadingAssets] = useState<Array<boolean>>(Array(6).fill(true));
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
-    let firstLoading = true;
+    const [pageNum, setPageNum] = useState<number>(1);
+    const [pageSize] = useState<number>(5);
+    const [hasMore, setHasMore] = useState<boolean>(false);
+    const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
+    const [myNFTList, setMyNFTList] = useState<Array<Array<TypeProduct>>>(Array(6).fill([]));
+    const [myNFTCount, setMyNFTCount] = useState<Array<number>>(Array(6).fill(0));
+    const [isLoadingAssets, setIsLoadingAssets] = useState<Array<boolean>>(Array(6).fill(true));
+    const fillerItem = Array(pageSize).fill(blankMyNFTItem);
+    let ELA2USD: number = 0;
+    let likeList: any = [];
 
     // -------------- Fetch Data -------------- //
     const setLoadingState = (id: number, state: boolean) => {
@@ -102,6 +110,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
             const _myNFTList = [...prevState];
             _myNFTList[id] = myNFT;
             return _myNFTList;
+        });
+    };
+
+    const setMyNFTTotal = (id: number, count: number) => {
+        setMyNFTCount((prevState) => {
+            const _myNFTCount = [...prevState];
+            _myNFTCount[id] = count;
+            return _myNFTCount;
         });
     };
 
@@ -124,55 +140,55 @@ const ProfilePage: React.FC = (): JSX.Element => {
     //-------------- get My NFT List -------------- //
     useEffect(() => {
         let unmounted = false;
-        const fetchAllTab = async () => {
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const searchParams = getSearchParams(1, 1000, keyWord, sortBy, filterRange, filters, category);
+        const nTabId = getSelectedTabIndex();
+        // reset pageNum when search param has changed
+        if (!unmounted && !isLoadingNext) {
+            setPageNum(1);
+            setMyNFTData(nTabId, []);
+        }
+        const getFetchData = async () => {
             Array(6)
                 .fill(0)
                 .forEach(async (_, i: number) => {
-                    if (!unmounted) {
-                        setLoadingState(i, true);
-                    }
-                    const _searchedMyNFTList = await getMyNFTItemList(
-                        searchParams,
-                        ELA2USD,
-                        likeList,
-                        i,
-                        signInDlgState.walletAccounts[0],
-                        signInDlgState.userDid,
-                    );
-                    if (!unmounted) {
-                        setMyNFTData(i, _searchedMyNFTList);
-                        setLoadingState(i, false);
-                        if (i === 5) firstLoading = false;
+                    if (!(pageNum !== 1 && i !== nTabId)) {
+                        if (!unmounted) {
+                            setLoadingState(i, true);
+                        }
+                        if (pageNum === 1 && i === nTabId) {
+                            ELA2USD = await getELA2USD();
+                            likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+                        }
+                        const searchParams = getSearchParams(
+                            i === nTabId ? pageNum : 1,
+                            i === nTabId ? pageSize : 1,
+                            keyWord,
+                            sortBy,
+                            filterRange,
+                            filters,
+                            category,
+                        );
+                        const _searchedMyNFTList = await getMyNFTItemList(
+                            searchParams,
+                            i === nTabId ? ELA2USD : 1,
+                            i === nTabId ? likeList : [],
+                            i,
+                            signInDlgState.walletAccounts[0],
+                            signInDlgState.userDid,
+                        );
+                        if (!unmounted) {
+                            if (pageNum === 1) setMyNFTData(i, _searchedMyNFTList.data);
+                            else setMyNFTData(i, [...myNFTList[i], ..._searchedMyNFTList.data]);
+                            setMyNFTTotal(i, _searchedMyNFTList.total);
+                            setLoadingState(i, false);
+                            setIsLoadingNext(false);
+                            if (i === nTabId && Math.ceil(_searchedMyNFTList.total / pageSize) > pageNum)
+                                setHasMore(true);
+                        }
                     }
                 });
         };
-        const fetchSingleTab = async () => {
-            const nTabId = getSelectedTabIndex();
-            // if (!unmounted) {
-            //     setLoadingState(nTabId, true);
-            // }
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const searchParams = getSearchParams(1, 1000, keyWord, sortBy, filterRange, filters, category);
-            const _searchedMyNFTList = await getMyNFTItemList(
-                searchParams,
-                ELA2USD,
-                likeList,
-                nTabId,
-                signInDlgState.walletAccounts[0],
-                signInDlgState.userDid,
-            );
-            if (!unmounted) {
-                setMyNFTData(nTabId, _searchedMyNFTList);
-                setLoadingState(nTabId, false);
-            }
-        };
         if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length && signInDlgState.userDid) {
-            if (firstLoading) fetchAllTab().catch(console.error);
-            else fetchSingleTab().catch(console.error);
+            getFetchData().catch(console.error);
         } else if (!signInDlgState.isLoggedIn) {
             navigate('/');
         }
@@ -190,6 +206,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         category,
         nftGalleryFilterBtnSelected,
         reload,
+        pageNum,
     ]); //, productViewMode
 
     //-------------- today earned, totoal earned, earned list -------------- //
@@ -214,6 +231,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts]);
+
+    const fetchMoreData = () => {
+        if (!isLoadingNext) {
+            setIsLoadingNext(true);
+            setPageNum(pageNum + 1);
+            setHasMore(false);
+        }
+    };
     // -------------- Fetch Data -------------- //
 
     // -------------- Option Bar -------------- //
@@ -256,7 +281,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     };
     // -------------- Option Bar -------------- //
 
-    // -------------- Views -------------- //
+    // -------------- Likes -------------- //
     const updateProductLikes = (id: number, type: string) => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) {
             setReload(!reload);
@@ -524,12 +549,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                         setNftGalleryFilterBtnSelected(items.label);
                                         document.cookie = `METEAST_PROFILE=${items.label}; Path=/; SameSite=None; Secure`;
                                         setLoadingState(index, true);
-                                        setMyNFTData(index, [
-                                            blankMyNFTItem,
-                                            blankMyNFTItem,
-                                            blankMyNFTItem,
-                                            blankMyNFTItem,
-                                        ]);
+                                        setMyNFTData(index, []);
                                     }}
                                 >
                                     {items.label}
@@ -548,7 +568,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                                 }}
                                             />
                                         ) : (
-                                            <p>{myNFTList[index].length}</p>
+                                            <p>{myNFTCount[index]}</p>
                                         )}
                                     </Stack>
                                 </FilterButton>
@@ -584,49 +604,67 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         ))}
                     </Box>
                 )}
-                {!isLoadingAssets[getSelectedTabIndex()] && myNFTList[getSelectedTabIndex()].length === 0 && (
-                    <LooksEmptyBox
-                        bannerTitle={
-                            !keyWord &&
-                            filterRange.min === undefined &&
-                            filterRange.max === undefined &&
-                            !filters.length &&
-                            !category?.value
-                                ? 'Looks Empty Here'
-                                : 'No Products Found For This Search'
-                        }
-                        buttonLabel={
-                            !keyWord &&
-                            filterRange.min === undefined &&
-                            filterRange.max === undefined &&
-                            !filters.length &&
-                            !category?.value
-                                ? 'GET YOUR FIRST NFT'
-                                : 'Back to all Items'
-                        }
-                        sx={{ marginTop: 6 }}
-                        onBannerBtnClick={onBannerBtnClick}
-                    />
-                )}
-                <Grid container mt={{ xs: 2, md: 4 }} columnSpacing={4} rowGap={{ xs: 2, md: 4 }}>
-                    {myNFTList[getSelectedTabIndex()].map((item, index) => (
-                        <Grid
-                            item
-                            xs={productViewMode === 'grid1' ? 12 : 6}
-                            md={productViewMode === 'grid1' ? 6 : 4}
-                            lg={productViewMode === 'grid1' ? 6 : 3}
-                            key={`profile-product-${index}`}
-                        >
-                            <MyNFTGalleryItem
-                                product={item}
-                                index={index}
-                                productViewMode={productViewMode}
-                                updateLikes={updateProductLikes}
-                                isLoading={isLoadingAssets[getSelectedTabIndex()]}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
+                <InfiniteScroll
+                    dataLength={myNFTList[getSelectedTabIndex()].length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<></>}
+                    endMessage={
+                        <>
+                            {!isLoadingAssets[getSelectedTabIndex()] &&
+                                myNFTList[getSelectedTabIndex()].length === 0 && (
+                                    <LooksEmptyBox
+                                        bannerTitle={
+                                            !keyWord &&
+                                            filterRange.min === undefined &&
+                                            filterRange.max === undefined &&
+                                            !filters.length &&
+                                            !category?.value
+                                                ? 'Looks Empty Here'
+                                                : 'No Products Found For This Search'
+                                        }
+                                        buttonLabel={
+                                            !keyWord &&
+                                            filterRange.min === undefined &&
+                                            filterRange.max === undefined &&
+                                            !filters.length &&
+                                            !category?.value
+                                                ? 'GET YOUR FIRST NFT'
+                                                : 'Back to all Items'
+                                        }
+                                        sx={{ marginTop: 2 }}
+                                        onBannerBtnClick={onBannerBtnClick}
+                                    />
+                                )}
+                        </>
+                    }
+                >
+                    <Grid container mt={{ xs: 2, md: 4 }} columnSpacing={4} rowGap={{ xs: 2, md: 4 }}>
+                        {(isLoadingAssets[getSelectedTabIndex()]
+                            ? [...myNFTList[getSelectedTabIndex()], ...fillerItem]
+                            : myNFTList[getSelectedTabIndex()]
+                        ).map((item, index) => (
+                            <Grid
+                                item
+                                xs={productViewMode === 'grid1' ? 12 : 6}
+                                md={productViewMode === 'grid1' ? 6 : 4}
+                                lg={productViewMode === 'grid1' ? 6 : 3}
+                                key={`profile-product-${index}`}
+                            >
+                                <MyNFTGalleryItem
+                                    product={item}
+                                    index={index}
+                                    productViewMode={productViewMode}
+                                    updateLikes={updateProductLikes}
+                                    isLoading={
+                                        isLoadingAssets[getSelectedTabIndex()] &&
+                                        index >= myNFTList[getSelectedTabIndex()].length
+                                    }
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </InfiniteScroll>
             </Container>
             <YourEarningDlgContainer earningList={earningList} />
             {/* <EditProfileDlgContainer /> */}
