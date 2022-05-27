@@ -46,8 +46,8 @@ const HomePage: React.FC = (): JSX.Element => {
                 likeList,
             );
             if (!unmounted) {
-                setProductList(_newNFTList);
-                setCollectionList(_popularNFTList);
+                setProductList(_newNFTList.data);
+                setCollectionList(_popularNFTList.data);
                 setIsLoading(false);
             }
         };
