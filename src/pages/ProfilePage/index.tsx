@@ -288,19 +288,23 @@ const ProfilePage: React.FC = (): JSX.Element => {
         } else {
             const _myNFTList: Array<Array<TypeProduct>> = [...myNFTList];
             const prodList: Array<TypeProduct> = _myNFTList[getSelectedTabIndex()];
-            const likedList: Array<TypeProduct> = _myNFTList[5];
+            let change = 0;
+            // const likedList: Array<TypeProduct> = _myNFTList[5];
             if (type === 'inc') {
                 prodList[id].likes += 1;
                 prodList[id].isLike = true;
-                likedList.push(prodList[id]);
+                // likedList.push(prodList[id]);
+                change ++;
             } else if (type === 'dec') {
-                const idx = likedList.indexOf(prodList[id]);
-                likedList.splice(idx, 1);
+                // const idx = likedList.indexOf(prodList[id]);
+                // likedList.splice(idx, 1);
                 prodList[id].isLike = false;
                 prodList[id].likes -= 1;
+                change --;
             }
             setMyNFTData(id, prodList);
-            setMyNFTData(5, likedList);
+            setMyNFTTotal(5, myNFTCount[5] + change);
+            // setMyNFTData(5, likedList);
         }
     };
 
