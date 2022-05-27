@@ -241,8 +241,9 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
         FETCH_CONFIG_JSON,
     );
     const jsonNFTList = await resNFTList.json();
+    const totalCount: number = jsonNFTList.data.total;
     const arrNFTList = jsonNFTList.data ? jsonNFTList.data.result : [];
-
+     
     const _arrNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrNFTList[i];
@@ -264,18 +265,20 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
                 : true;
         _arrNFTList.push(_NFT);
     }
-    return _arrNFTList;
+    return { total: totalCount, data: _arrNFTList };
 };
 
 // Product Page
 export const getSearchParams = (
+    pageNum: number,
+    pageSize: number,
     keyWord: string,
     sortBy: TypeSelectItem | undefined,
     filterRange: TypeFilterRange,
     filters: Array<enumFilterOption>,
     category: TypeSelectItem | undefined,
 ) => {
-    let searchParams = `pageNum=1&pageSize=${1000}&keyword=${keyWord}`;
+    let searchParams = `pageNum=${pageNum}&pageSize=${pageSize}&keyword=${keyWord}`;
     if (sortBy !== undefined) {
         switch (sortBy.value) {
             case 'low_to_high':

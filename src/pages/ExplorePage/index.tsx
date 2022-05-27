@@ -21,6 +21,7 @@ import {
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const ExplorePage: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
@@ -41,8 +42,16 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [keyWord, setKeyWord] = useState<string>('');
     const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
     const [clearOption, setClearOption] = useState<boolean>(false);
-    const [productList, setProductList] = useState<Array<TypeProduct>>(Array(4).fill(blankNFTItem));
     const [adBanners, setAdBanners] = useState<string[]>([]);
+    const [pageNum, setPageNum] = useState<number>(1);
+    const [pageSize] = useState<number>(5);
+    const [hasMore, setHasMore] = useState<boolean>(false);
+    const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
+    const [productList, setProductList] = useState<Array<TypeProduct>>([]);
+    const fillerItem = Array(pageSize).fill(blankNFTItem);
+    let ELA2USD: number = 0;
+    let likeList: any = [];
+    
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
@@ -60,15 +69,27 @@ const ExplorePage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
+        // reset pageNum when search param has changed
+        if (!unmounted && !isLoadingNext) {
+            // console.log('called')
+            setPageNum(1);
+            setProductList([]);
+        }
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
+            if (pageNum === 1) {
+                ELA2USD = await getELA2USD();
+                likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            }
+            const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
             const _searchedNFTList = await getNFTItemList(searchParams, ELA2USD, likeList);
             if (!unmounted) {
-                setProductList(_searchedNFTList);
+                if (pageNum === 1) setProductList(_searchedNFTList.data);
+                else setProductList([...productList, ..._searchedNFTList.data]);
                 setIsLoading(false);
+                setIsLoadingNext(false);
+                // console.log(_searchedNFTList.total, Math.ceil(_searchedNFTList.total / pageSize), pageNum);
+                if (Math.ceil(_searchedNFTList.total / pageSize) > pageNum) setHasMore(true);
             }
         };
         if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
@@ -76,7 +97,16 @@ const ExplorePage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord, category]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord, category, pageNum]); //, productViewMode
+
+    // console.log('+++++++', isLoadingNext, pageNum, productList.length);
+    const fetchMoreData = () => {
+        if (!isLoadingNext) {
+            setIsLoadingNext(true);
+            setPageNum(pageNum + 1);
+            setHasMore(false);
+        }
+    };
 
     // -------------- Fetch Data -------------- //
 
@@ -190,58 +220,68 @@ const ExplorePage: React.FC = (): JSX.Element => {
                     }}
                     marginTop={{ xs: 3, md: 5 }}
                 />
-                {productList.length === 0 ? (
-                    <LooksEmptyBox
-                        bannerTitle={
-                            !(
-                                !keyWord &&
-                                filterRange.min === undefined &&
-                                filterRange.max === undefined &&
-                                !filters.length &&
-                                !category?.value
-                            )
-                                ? 'No Products Found For This Search'
-                                : 'Looks Empty Here'
-                        }
-                        buttonLabel={
-                            !(
-                                !keyWord &&
-                                filterRange.min === undefined &&
-                                filterRange.max === undefined &&
-                                !filters.length &&
-                                !category?.value
-                            )
-                                ? 'Back to all Items'
-                                : 'GET YOUR FIRST NFT'
-                        }
-                        sx={{ marginTop: { xs: 3, md: 5 } }}
-                        onBannerBtnClick={() => {
-                            if (
-                                !(
-                                    !keyWord &&
-                                    filterRange.min === undefined &&
-                                    filterRange.max === undefined &&
-                                    !filters.length &&
-                                    !category?.value
-                                )
-                            ) {
-                                setIsLoading(true);
-                                setProductList(Array(4).fill(blankNFTItem));
-                                setEmptyKeyword(emptyKeyword + 1);
-                                handleKeyWordChange('');
-                                setClearOption(true);
-                            } else {
-                                setDialogState({
-                                    ...dialogState,
-                                    createNFTDlgOpened: true,
-                                    createNFTDlgStep: 0,
-                                });
-                            }
-                        }}
-                    />
-                ) : (
+                <InfiniteScroll
+                    dataLength={productList.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<></>}
+                    endMessage={
+                        <>
+                            {!productList.length && !isLoading && (
+                                <LooksEmptyBox
+                                    bannerTitle={
+                                        !(
+                                            !keyWord &&
+                                            filterRange.min === undefined &&
+                                            filterRange.max === undefined &&
+                                            !filters.length &&
+                                            !category?.value
+                                        )
+                                            ? 'No Products Found For This Search'
+                                            : 'Looks Empty Here'
+                                    }
+                                    buttonLabel={
+                                        !(
+                                            !keyWord &&
+                                            filterRange.min === undefined &&
+                                            filterRange.max === undefined &&
+                                            !filters.length &&
+                                            !category?.value
+                                        )
+                                            ? 'Back to all Items'
+                                            : 'GET YOUR FIRST NFT'
+                                    }
+                                    // sx={{ marginTop: { xs: 3, md: 5 } }}
+                                    onBannerBtnClick={() => {
+                                        if (
+                                            !(
+                                                !keyWord &&
+                                                filterRange.min === undefined &&
+                                                filterRange.max === undefined &&
+                                                !filters.length &&
+                                                !category?.value
+                                            )
+                                        ) {
+                                            setIsLoading(true);
+                                            setProductList([]);
+                                            setEmptyKeyword(emptyKeyword + 1);
+                                            handleKeyWordChange('');
+                                            setClearOption(true);
+                                        } else {
+                                            setDialogState({
+                                                ...dialogState,
+                                                createNFTDlgOpened: true,
+                                                createNFTDlgStep: 0,
+                                            });
+                                        }
+                                    }}
+                                />
+                            )}
+                        </>
+                    }
+                >
                     <Grid container marginTop={{ xs: 3, md: 5 }} columnSpacing={4} rowGap={4}>
-                        {productList.map((item, index) => (
+                        {(isLoading ? [...productList, ...fillerItem] : productList).map((item, index) => (
                             <Grid
                                 item
                                 xs={productViewMode === 'grid1' ? 12 : 6}
@@ -250,7 +290,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                                 key={`explore-product-${index}`}
                             >
                                 <NFTPreview
-                                    isLoading={isLoading}
+                                    isLoading={isLoading && index >= productList.length}
                                     product={item}
                                     productType={1}
                                     index={index}
@@ -260,7 +300,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
                             </Grid>
                         ))}
                     </Grid>
-                )}
+                </InfiniteScroll>
             </Container>
         </Box>
     );

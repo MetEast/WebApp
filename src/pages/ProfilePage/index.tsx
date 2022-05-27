@@ -127,7 +127,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         const fetchAllTab = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
+            const searchParams = getSearchParams(1, 1000, keyWord, sortBy, filterRange, filters, category);
             Array(6)
                 .fill(0)
                 .forEach(async (_, i: number) => {
@@ -156,7 +156,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             // }
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, filters, category);
+            const searchParams = getSearchParams(1, 1000, keyWord, sortBy, filterRange, filters, category);
             const _searchedMyNFTList = await getMyNFTItemList(
                 searchParams,
                 ELA2USD,

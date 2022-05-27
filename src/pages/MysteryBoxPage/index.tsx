@@ -57,7 +57,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
-            const searchParams = getSearchParams(keyWord, sortBy, filterRange, [], undefined);
+            const searchParams = getSearchParams(1, 1000, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
                 searchParams,
                 ELA2USD,
