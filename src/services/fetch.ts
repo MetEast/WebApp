@@ -243,7 +243,7 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
     const jsonNFTList = await resNFTList.json();
     const totalCount: number = jsonNFTList.data.total;
     const arrNFTList = jsonNFTList.data ? jsonNFTList.data.result : [];
-     
+
     const _arrNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrNFTList[i];
@@ -335,7 +335,8 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         FETCH_CONFIG_JSON,
     );
     const jsonBBList = await resBBList.json();
-    const arrBBList = jsonBBList.data === undefined ? [] : jsonBBList.data.result;
+    const totalCount: number = jsonBBList.data.total;
+    const arrBBList = jsonBBList.data ? jsonBBList.data.result : [];
 
     const _arrBBList: Array<TypeProduct> = [];
     for (let i = 0; i < arrBBList.length; i++) {
@@ -374,7 +375,7 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         }
         _arrBBList.push(_BBItem);
     }
-    return _arrBBList;
+    return { total: 10, data: _arrBBList };
 };
 
 // SingleNFTFixedPrice & SingleNFTAuction
