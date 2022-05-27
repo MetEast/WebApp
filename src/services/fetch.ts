@@ -719,7 +719,8 @@ export const getMyNFTItemList = async (
         `&${fetchParams}`;
     const resMyNFTList = await fetch(fetchUrl, FETCH_CONFIG_JSON);
     const jsonMyNFTList = await resMyNFTList.json();
-    const arrMyNFTList = jsonMyNFTList.data === undefined ? [] : jsonMyNFTList.data.result;
+    const totalCount: number = jsonMyNFTList.data.total;
+    const arrMyNFTList = jsonMyNFTList.data ? jsonMyNFTList.data.result : [];
     const _arrMyNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrMyNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrMyNFTList[i];
@@ -805,7 +806,7 @@ export const getMyNFTItemList = async (
                 : true;
         _arrMyNFTList.push(_myNFT);
     }
-    return _arrMyNFTList;
+    return { total: totalCount, data: _arrMyNFTList };
 };
 
 export const getMyTotalEarned = async (address: string) => {
