@@ -223,7 +223,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             }
         };
         if (signInDlgState.isLoggedIn) {
-            fetchUserProfit().catch(console.error);
+            if (signInDlgState.walletAccounts.length) fetchUserProfit().catch(console.error);
         } else {
             navigate('/');
         }
