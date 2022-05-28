@@ -23,13 +23,13 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const handleNextStep = () => {
         if (
             (saleType === 'buynow' && price > 0) ||
-            (saleType === 'auction' && minPrice > 0 && saleEnds && new Date(saleEnds).getTime() > new Date().getTime())
+            (saleType === 'auction' && minPrice > 0 && saleEnds && parseInt(saleEnds) * 1e3 > new Date().getTime())
         ) {
             setDialogState({
                 ...dialogState,
                 sellPrice: price,
                 sellMinPrice: minPrice,
-                sellSaleEnds: parseInt((new Date(saleEnds).getTime() / 1000).toString()),
+                sellSaleEnds: parseInt(saleEnds),
                 sellSaleType: saleType,
                 createNFTDlgStep: 4,
             });
@@ -38,7 +38,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 setBuyNowPriceError(isNaN(price) || price <= 0);
             } else if (saleType === 'auction') {
                 setAuctionMinumPriceError(isNaN(minPrice) || minPrice <= 0);
-                setSaleEndsError(!saleEnds ? 1 : new Date(saleEnds).getTime() <= new Date().getTime() ? 2 : 0);
+                setSaleEndsError(!saleEnds ? 1 : parseInt(saleEnds) * 1e3 <= new Date().getTime() ? 2 : 0);
             }
         }
     };
@@ -91,9 +91,10 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             <Stack direction="row" spacing={1} justifyContent="space-between" display="flex">
                                 <DateTimePicker
                                     onChangeDate={(value: Date) => {
-                                        setSaleEnds(value.toString());
+                                        setSaleEnds(parseInt((value.getTime() / 1e3).toString()).toString());
                                         setSaleEndsError(0);
                                     }}
+                                    value={!isNaN(parseInt(saleEnds)) ? parseInt(saleEnds) : 0}
                                     sx={{
                                         mr: 1,
                                         fontSize: 14,
