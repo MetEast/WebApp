@@ -95,20 +95,7 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                         setSaleEndsError(0);
                                     }}
                                     value={!isNaN(parseInt(saleEnds)) ? parseInt(saleEnds) : 0}
-                                    sx={{
-                                        mr: 1,
-                                        fontSize: 14,
-                                        width: '100%',
-                                        '& .MuiSelect-select': {
-                                            py: 2,
-                                        },
-                                        // '.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper': {
-                                        //     borderRadius: '12px',
-                                        // },
-                                        border: saleEndsError > 0 ? '2px solid #EB5757' : 'none',
-                                        flex: '1',
-                                        borderRadius: '12px',
-                                    }}
+                                    error={saleEndsError > 0}
                                 />
                             </Stack>
                             {saleEndsError > 0 && (
