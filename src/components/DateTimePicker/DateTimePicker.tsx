@@ -32,13 +32,19 @@ const CalendarBoxStyle = styled(Box)(({ theme }) => ({
     },
 }));
 
+const MenuItemStyle = styled(MenuItem)(() => ({
+    '&:hover': {
+        background: '#e8f4ff',
+    },
+}));
+
 export interface ComponentProps {
     onChangeDate: (value: Date) => void;
     value?: number;
-    sx: SxProps;
+    error: boolean;
 }
 
-const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, sx }): JSX.Element => {
+const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }): JSX.Element => {
     const [selected, setSelected] = useState<number>(-1);
     const [dateValue, setDateValue] = useState<Date>(value ? new Date(value * 1e3) : new Date());
     const [timeValue, setTimeValue] = useState<string>(
@@ -66,7 +72,7 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, sx }): 
     const renderValue = (option: number) => {
         // if (option === pickDateIndex) return <span>{getDateTimeString(dateValue)}</span>;
         // return <span>{menuItems[option]}</span>;
-        if (value === 0) return <span></span>
+        if (value === 0) return <span></span>;
         return <span>{getDateTimeString(dateValue)}</span>;
     };
 
@@ -106,23 +112,38 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, sx }): 
         <>
             <Select
                 // defaultValue={0}
-                variant="standard"
+                variant="outlined"
                 value={selected}
                 onChange={handleChange}
                 onClick={handleSpecificPicker}
                 inputProps={{ 'aria-label': 'Without label' }}
                 size="small"
-                sx={sx}
+                sx={{
+                    mr: 1,
+                    width: '100%',
+                    height: '40px',
+                    borderRadius: '12px',
+                    alignItems: 'center',
+                    border: error ? '2px solid #EB5757' : 'none',
+                }}
                 renderValue={renderValue}
                 // MenuProps={MenuProps}
             >
                 {menuItems.map((type, i) => (
-                    <MenuItem key={i} value={i} autoFocus={selected === i}>
+                    <MenuItemStyle key={i} value={i} autoFocus={selected === i}>
                         {type}
-                    </MenuItem>
+                    </MenuItemStyle>
                 ))}
             </Select>
-            <Dialog open={isOpenPicker} onClose={handleClosePicker}>
+            <Dialog
+                open={isOpenPicker}
+                onClose={handleClosePicker}
+                sx={{
+                    '& .MuiPaper-root': {
+                        borderRadius: '12px',
+                    },
+                }}
+            >
                 <DialogContent>
                     <CalendarBoxStyle>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>

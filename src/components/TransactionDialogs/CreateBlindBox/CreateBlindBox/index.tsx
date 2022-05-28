@@ -249,20 +249,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                         setSaleBeginsError(0);
                                     }}
                                     value={!isNaN(parseInt(saleBegins)) ? parseInt(saleBegins) : 0}
-                                    sx={{
-                                        mr: 1,
-                                        fontSize: 14,
-                                        width: '100%',
-                                        '& .MuiSelect-select': {
-                                            py: 2,
-                                        },
-                                        // '.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper': {
-                                        //     borderRadius: '12px',
-                                        // },
-                                        border: saleBeginsError > 0 ? '2px solid #EB5757' : 'none',
-                                        flex: '1',
-                                        borderRadius: '12px',
-                                    }}
+                                    error={saleBeginsError > 0}
                                 />
                                 {saleBeginsError > 0 && (
                                     <Typography fontSize={12} fontWeight={500} color="#EB5757">

@@ -34,14 +34,7 @@ const ChangePrice: React.FC<ComponentProps> = (): JSX.Element => {
 
     const handleChangePrice = () => {
         setNewPriceError(isNaN(bidAmount) || bidAmount === 0);
-        if (isNaN(bidAmount) || bidAmount === 0) {
-            // enqueueSnackbar('Invalid price!', {
-            //     variant: 'error',
-            //     anchorOrigin: { horizontal: 'right', vertical: 'top' },
-            // });
-            return;
-        }
-
+        if (isNaN(bidAmount) || bidAmount === 0) return;
         if (dialogState.changePriceTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
