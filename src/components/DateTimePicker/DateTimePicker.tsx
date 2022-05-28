@@ -34,12 +34,13 @@ const CalendarBoxStyle = styled(Box)(({ theme }) => ({
 
 export interface ComponentProps {
     onChangeDate: (value: Date) => void;
+    value?: number;
     sx: SxProps;
 }
 
-const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, sx }): JSX.Element => {
+const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, sx }): JSX.Element => {
     const [selected, setSelected] = useState<number>(-1);
-    const [dateValue, setDateValue] = useState<Date>(new Date());
+    const [dateValue, setDateValue] = useState<Date>(value ? new Date(value * 1e3) : new Date());
     const [timeValue, setTimeValue] = useState<string>(
         `${dateValue.getHours().toString().padStart(2, '0')}:${dateValue.getMinutes().toString().padStart(2, '0')}`,
     );
@@ -51,7 +52,11 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, sx }): JSX.Ele
             typeof event.target.value === 'string' ? parseInt(event.target.value) : event.target.value;
         setSelected(selectedIndex);
         if (selectedIndex === pickDateIndex) onChangeDate(dateValue);
-        else onChangeDate(addDays(new Date(), (selectedIndex === 0 ? 1 : selectedIndex === 1 ? 7 : 30)));
+        // else onChangeDate(addDays(new Date(), (selectedIndex === 0 ? 1 : selectedIndex === 1 ? 7 : 30)));
+        else {
+            const newDate = addDays(new Date(), selectedIndex === 0 ? 1 : selectedIndex === 1 ? 7 : 30);
+            handleDateChange(newDate);
+        }
     };
 
     const handleSpecificPicker = (event: any) => {
@@ -59,8 +64,10 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, sx }): JSX.Ele
     };
 
     const renderValue = (option: number) => {
-        if (option === pickDateIndex) return <span>{getDateTimeString(dateValue)}</span>;
-        return <span>{menuItems[option]}</span>;
+        // if (option === pickDateIndex) return <span>{getDateTimeString(dateValue)}</span>;
+        // return <span>{menuItems[option]}</span>;
+        if (value === 0) return <span></span>
+        return <span>{getDateTimeString(dateValue)}</span>;
     };
 
     const handleSpecificDate = () => {

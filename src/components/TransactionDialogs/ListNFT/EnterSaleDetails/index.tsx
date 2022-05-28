@@ -43,11 +43,6 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         }
     };
 
-    const handleSaleEndsChanged = (value: Date) => {
-        setSaleEnds(value.toString());
-        setSaleEndsError(0);
-    };
-
     return (
         <Stack spacing={5} width={320}>
             <Stack alignItems="center">
@@ -95,7 +90,10 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             </Typography>
                             <Stack direction="row" spacing={1} justifyContent="space-between" display="flex">
                                 <DateTimePicker
-                                    onChangeDate={handleSaleEndsChanged}
+                                    onChangeDate={(value: Date) => {
+                                        setSaleEnds(value.toString());
+                                        setSaleEndsError(0);
+                                    }}
                                     sx={{
                                         mr: 1,
                                         fontSize: 14,
@@ -111,7 +109,6 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                         borderRadius: '12px',
                                     }}
                                 />
-                                
                             </Stack>
                             {saleEndsError > 0 && (
                                 <Typography fontSize={12} fontWeight={500} color="#EB5757">

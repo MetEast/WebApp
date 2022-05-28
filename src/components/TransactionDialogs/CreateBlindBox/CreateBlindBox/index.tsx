@@ -13,6 +13,7 @@ import ModalDialog from 'src/components/ModalDialog';
 import SearchBlindBoxItems from '../SearchBlindBoxItems';
 import { getBBCandiatesList } from 'src/services/fetch';
 import { TypeProductFetch } from 'src/types/product-types';
+import DateTimePicker from 'src/components/DateTimePicker/DateTimePicker';
 
 export interface ComponentProps {}
 
@@ -58,7 +59,6 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 if (itemObject.status !== 'DELETED') count++;
             }
             if (!unmounted) {
-                setBlindboxPurchases(count);
                 setBlindboxCandidateCount(count);
             }
         };
@@ -199,7 +199,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     error={blindboxPurchasesError}
                                     errorText="Max number of Purchases cannot be empty"
                                     changeHandler={(value: string) => {
-                                        setBlindboxPurchases(parseInt(value === '' ? '0' : value));
+                                        setBlindboxPurchases(isNaN(parseInt(value)) ? 0 : parseInt(value));
                                     }}
                                 />
                             </Stack>
@@ -243,18 +243,27 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                 <Typography fontSize={12} fontWeight={700}>
                                     Sale Begins
                                 </Typography>
-                                <DateTimeInput
-                                    type="datetime-local"
-                                    // inputProps={{
-                                    //     step: 60,
-                                    // }}
-                                    value={saleBegins}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setSaleBegins(event.target.value);
+                                <DateTimePicker
+                                    onChangeDate={(value: Date) => {
+                                        setSaleBegins(parseInt((value.getTime() / 1e3).toString()).toString());
                                         setSaleBeginsError(0);
                                     }}
-                                    sx={{ border: saleBeginsError > 0 ? '2px solid #EB5757' : 'none' }}
-                                ></DateTimeInput>
+                                    value={!isNaN(parseInt(saleBegins)) ? parseInt(saleBegins) : 0}
+                                    sx={{
+                                        mr: 1,
+                                        fontSize: 14,
+                                        width: '100%',
+                                        '& .MuiSelect-select': {
+                                            py: 2,
+                                        },
+                                        // '.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper': {
+                                        //     borderRadius: '12px',
+                                        // },
+                                        border: saleBeginsError > 0 ? '2px solid #EB5757' : 'none',
+                                        flex: '1',
+                                        borderRadius: '12px',
+                                    }}
+                                />
                                 {saleBeginsError > 0 && (
                                     <Typography fontSize={12} fontWeight={500} color="#EB5757">
                                         {saleBeginsError === 1
@@ -305,7 +314,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     blindboxQuantity > 0 &&
                                     blindboxPrice > 0 &&
                                     saleBegins &&
-                                    new Date(saleBegins).getTime() > new Date().getTime() &&
+                                    parseInt(saleBegins) * 1e3 > new Date().getTime() &&
                                     blindboxPurchases <= blindboxQuantity &&
                                     blindboxPurchases > 0
                                 ) {
@@ -326,11 +335,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     setBlindboxDescriptionError(blindboxDescription === '');
                                     setBlindboxPurchasesError(blindboxPurchases === 0 || isNaN(blindboxPurchases));
                                     setSaleBeginsError(
-                                        !saleBegins
-                                            ? 1
-                                            : new Date(saleBegins).getTime() <= new Date().getTime()
-                                            ? 2
-                                            : 0,
+                                        !saleBegins ? 1 : parseInt(saleBegins) * 1e3 <= new Date().getTime() ? 2 : 0,
                                     );
                                     setBlindboxImageError(stateFile === null);
                                     setBlindBoxPriceError(isNaN(blindboxPrice) || blindboxPrice === 0);
