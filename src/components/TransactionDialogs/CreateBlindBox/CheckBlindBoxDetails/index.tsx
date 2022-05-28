@@ -19,6 +19,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { getTime } from 'src/services/common';
 
 export interface ComponentProps {}
 
@@ -49,7 +50,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             // formData.append('status', dialogState.crtBlindStatus);
             formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
             formData.append('blindPrice', dialogState.crtBlindPrice.toString());
-            formData.append('saleBegin', (new Date(dialogState.crtBlindSaleBegin).getTime() / 1e3).toString());
+            formData.append('saleBegin', dialogState.crtBlindSaleBegin);
             // formData.append('saleEnd', (new Date(dialogState.crtBlindSaleEnd).getTime() / 1e3).toString());
             formData.append('maxPurchases', dialogState.crtBlindPurchases.toString());
             const config = {
@@ -181,7 +182,10 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             })
             .then((added: any) => {
                 if (!unmounted) setDialogState({ ...dialogState, progressBar: 80 });
-                return uploadCreatedBlindBoxInfo(`meteast:image:${added.origin.path}`, `meteast:image:${added.thumbnail.path}`);
+                return uploadCreatedBlindBoxInfo(
+                    `meteast:image:${added.origin.path}`,
+                    `meteast:image:${added.thumbnail.path}`,
+                );
             })
             .then((success: boolean) => {
                 if (success) {
@@ -277,7 +281,11 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 </InfoItemWrapper>
                 <InfoItemWrapper>
                     <DetailedInfoTitleTypo>Sale Begins</DetailedInfoTitleTypo>
-                    <DetailedInfoLabelTypo>{dialogState.crtBlindSaleBegin.replace('T', ' ')}</DetailedInfoLabelTypo>
+                    <DetailedInfoLabelTypo>
+                        {`${getTime(dialogState.crtBlindSaleBegin).date} ${
+                            getTime(dialogState.crtBlindSaleBegin).time
+                        }`}
+                    </DetailedInfoLabelTypo>
                 </InfoItemWrapper>
                 {/* <InfoItemWrapper>
                         <DetailedInfoTitleTypo>Sale Ends</DetailedInfoTitleTypo>
