@@ -85,7 +85,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
     const nftGalleryFilterButtonsList = nftGalleryFilterButtons;
     const [pageNum, setPageNum] = useState<number>(1);
-    const [pageSize] = useState<number>(5);
+    const [pageSize] = useState<number>(20);
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [myNFTList, setMyNFTList] = useState<Array<Array<TypeProduct>>>(Array(6).fill([]));

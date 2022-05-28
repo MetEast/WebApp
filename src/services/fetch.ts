@@ -375,7 +375,7 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         }
         _arrBBList.push(_BBItem);
     }
-    return { total: 10, data: _arrBBList };
+    return { total: totalCount, data: _arrBBList };
 };
 
 // SingleNFTFixedPrice & SingleNFTAuction
