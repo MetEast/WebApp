@@ -256,6 +256,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                         <Stack height="100%" justifyContent="center" alignItems="flex-start">
                             <Stack direction="row" alignItems="flex-end">
                                 <Typography
+                                    component='div'
                                     fontSize={{ xs: 32, sm: 48, md: 62 }}
                                     fontWeight={600}
                                     lineHeight={1}

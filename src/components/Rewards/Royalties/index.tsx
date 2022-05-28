@@ -50,7 +50,7 @@ const Royalties: React.FC<ComponentProps> = ({ rewards, withdrawReward }): JSX.E
                     </Typography>
                 </Grid>
                 <Grid item xs={10} md={4}>
-                    <Typography fontSize={{ xs: 15, md: 20 }} fontWeight={500} color="#1890FF">
+                    <Typography component="div" fontSize={{ xs: 15, md: 20 }} fontWeight={500} color="#1890FF">
                         ME{' '}
                         <Typography fontSize={{ xs: 15, md: 20 }} fontWeight={500} color="black" display="inline">
                             to be claimed
