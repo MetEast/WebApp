@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
-import { SaleTypeButton, SelectBtn, DateTimeInput } from './styles';
+import { SaleTypeButton } from './styles';
 import ELAPriceInput from '../../components/ELAPriceInput';
 import { useDialogContext } from 'src/context/DialogContext';
-import Select from 'src/components/Select';
-import { Icon } from '@iconify/react';
-import { sellNFTSaleEndsOptions } from 'src/constants/select-constants';
+import DateTimePicker from 'src/components/DateTimePicker/DateTimePicker';
 
 export interface ComponentProps {}
 
@@ -15,41 +13,12 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
     const [saleType, setSaleType] = useState<'buynow' | 'auction'>('buynow');
     const [saleEnds, setSaleEnds] = useState<string>('');
-    const [saleEndsSelectOpen, setSaleEndsSelectOpen] = useState(false);
     const [price, setPrice] = useState<number>(0);
     // const [royalty, setRoyalty] = useState<string>('');
     const [minPrice, setMinPrice] = useState<number>(0);
     const [buyNowPriceError, setBuyNowPriceError] = useState<boolean>(false);
     const [auctionMinumPriceError, setAuctionMinumPriceError] = useState<boolean>(false);
     const [saleEndsError, setSaleEndsError] = useState<number>(0); // 0: no error, 1: not selected, 2: not valid
-
-    const handleSaleEndsDropdownClick = (value: string) => {
-        let datetime = new Date().getTime();
-        if (value === '1 day') {
-            datetime += 24 * 3600 * 1000;
-        } else if (value === '1 week') {
-            datetime += 7 * 24 * 3600 * 1000;
-        } else if (value === '1 month') {
-            datetime += 30 * 24 * 3600 * 1000;
-        }
-
-        let dateObject = new Date(datetime);
-        const localDateTimeString = dateObject
-            .toLocaleString('sv-SE', {
-                // timeZone: 'America/Los_Angeles',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-            })
-            .replace(' ', 'T');
-        // console.log('localDateTimeString', localDateTimeString);
-
-        // format: 2022-04-30T08:05
-        setSaleEnds(localDateTimeString);
-        setSaleEndsError(0);
-    };
 
     const handleNextStep = () => {
         if (
@@ -72,6 +41,11 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 setSaleEndsError(!saleEnds ? 1 : new Date(saleEnds).getTime() <= new Date().getTime() ? 2 : 0);
             }
         }
+    };
+
+    const handleSaleEndsChanged = (value: Date) => {
+        setSaleEnds(value.toString());
+        setSaleEndsError(0);
     };
 
     return (
@@ -120,32 +94,24 @@ const EnterSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                                 Sale Ends
                             </Typography>
                             <Stack direction="row" spacing={1} justifyContent="space-between" display="flex">
-                                <DateTimeInput
-                                    type="datetime-local"
-                                    value={saleEnds}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        // console.log('Sale Ends:', event.target.value);
-                                        setSaleEnds(event.target.value);
-                                        setSaleEndsError(0);
+                                <DateTimePicker
+                                    onChangeDate={handleSaleEndsChanged}
+                                    sx={{
+                                        mr: 1,
+                                        fontSize: 14,
+                                        width: '100%',
+                                        '& .MuiSelect-select': {
+                                            py: 2,
+                                        },
+                                        // '.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper': {
+                                        //     borderRadius: '12px',
+                                        // },
+                                        border: saleEndsError > 0 ? '2px solid #EB5757' : 'none',
+                                        flex: '1',
+                                        borderRadius: '12px',
                                     }}
-                                    sx={{ border: saleEndsError > 0 ? '2px solid #EB5757' : 'none', flex: '1' }}
                                 />
-                                <Select
-                                    titlebox={
-                                        <SelectBtn fullWidth isopen={saleEndsSelectOpen ? 1 : 0}>
-                                            {/* {saleEnds ? saleEnds.label : 'Select'} */}
-                                            <Icon icon="ph:caret-down" className="arrow-icon" />
-                                        </SelectBtn>
-                                    }
-                                    // selectedItem={saleEnds}
-                                    options={sellNFTSaleEndsOptions}
-                                    isOpen={saleEndsSelectOpen ? 1 : 0}
-                                    listitemsbox_width={180}
-                                    // error={saleEndsError}
-                                    // errorText="Sale Ends should be selected."
-                                    handleClick={handleSaleEndsDropdownClick}
-                                    setIsOpen={setSaleEndsSelectOpen}
-                                />
+                                
                             </Stack>
                             {saleEndsError > 0 && (
                                 <Typography fontSize={12} fontWeight={500} color="#EB5757">

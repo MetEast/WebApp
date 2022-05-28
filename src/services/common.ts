@@ -62,6 +62,8 @@ export const getCustomTime = (timestamp: string) => {
     return { date: dateStr, time: timeStr };
 };
 
+export const getDateTimeString = (date: Date) => `${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
+
 export const getTimeZone = () => {
     const e = String(-new Date().getTimezoneOffset() / 60);
     return e.includes('-') ? e : '+'.concat(e);
