@@ -37,7 +37,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [clearOption, setClearOption] = useState<boolean>(false);
     const [adBanners, setAdBanners] = useState<string[]>([]);
     const [pageNum, setPageNum] = useState<number>(1);
-    const [pageSize] = useState<number>(5);
+    const [pageSize] = useState<number>(20);
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([]);
