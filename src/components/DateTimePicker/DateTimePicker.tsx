@@ -9,7 +9,6 @@ import { useSnackbar } from 'notistack';
 import { PrimaryButton } from '../Buttons/styles';
 import { getDateTimeString, getTimeZone } from 'src/services/common';
 import { SelectChangeEvent } from '@mui/material';
-import { SxProps } from '@mui/system';
 
 const MenuProps = {
     anchorOrigin: {
@@ -22,8 +21,8 @@ const MenuProps = {
     },
     variant: 'menu',
 };
-const menuItems = ['1 DAY', '1 WEEK', '1 MONTH', 'Pick a specific date'];
-const pickDateIndex = 3;
+const menuItems = ['', '1 DAY', '1 WEEK', '1 MONTH', 'Pick a specific date'];
+const pickDateIndex = 4;
 
 const CalendarBoxStyle = styled(Box)(({ theme }) => ({
     '& .MuiCalendarPicker-root button.Mui-selected': {
@@ -45,7 +44,7 @@ export interface ComponentProps {
 }
 
 const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }): JSX.Element => {
-    const [selected, setSelected] = useState<number>(-1);
+    const [selected, setSelected] = useState<number>(0);
     const [dateValue, setDateValue] = useState<Date>(value ? new Date(value * 1e3) : new Date());
     const [timeValue, setTimeValue] = useState<string>(
         `${dateValue.getHours().toString().padStart(2, '0')}:${dateValue.getMinutes().toString().padStart(2, '0')}`,
@@ -57,10 +56,11 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
         const selectedIndex =
             typeof event.target.value === 'string' ? parseInt(event.target.value) : event.target.value;
         setSelected(selectedIndex);
-        if (selectedIndex === pickDateIndex) onChangeDate(dateValue);
+        if (selectedIndex === 0) onChangeDate(new Date(0));
+        else if (selectedIndex === pickDateIndex) onChangeDate(dateValue);
         // else onChangeDate(addDays(new Date(), (selectedIndex === 0 ? 1 : selectedIndex === 1 ? 7 : 30)));
         else {
-            const newDate = addDays(new Date(), selectedIndex === 0 ? 1 : selectedIndex === 1 ? 7 : 30);
+            const newDate = addDays(new Date(), selectedIndex === 1 ? 1 : selectedIndex === 2 ? 7 : 30);
             handleDateChange(newDate);
         }
     };
@@ -111,7 +111,7 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
     return (
         <>
             <Select
-                // defaultValue={0}
+                defaultValue={undefined}
                 variant="outlined"
                 value={selected}
                 onChange={handleChange}
@@ -119,7 +119,7 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
                 inputProps={{ 'aria-label': 'Without label' }}
                 size="small"
                 sx={{
-                    mr: 1,
+                    mr: 0,
                     width: '100%',
                     height: '40px',
                     borderRadius: '12px',
@@ -130,7 +130,12 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
                 // MenuProps={MenuProps}
             >
                 {menuItems.map((type, i) => (
-                    <MenuItemStyle key={i} value={i} autoFocus={selected === i}>
+                    <MenuItemStyle
+                        key={i}
+                        value={i}
+                        autoFocus={selected === i}
+                        sx={{ display: i === 0 ? 'none' : 'block' }}
+                    >
                         {type}
                     </MenuItemStyle>
                 ))}
