@@ -71,7 +71,7 @@ const UploadSingleFile: React.FC<ComponentProps> = ({ error, file, sx, ...other 
             >
                 <input name="imgFile" {...getInputProps()} />
                 {file ? (
-                    <ImageBox>
+                    <ImageBox sx={{ justifyContent: 'center' }}>
                         <img src={file.preview} alt="" />
                     </ImageBox>
                 ) : (
