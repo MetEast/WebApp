@@ -153,6 +153,7 @@ export type TypeBlindBoxCandidate = {
     asset: string;
     name: string;
     creator: string;
+    creatorAddress: string;
 };
 
 // ---

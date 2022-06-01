@@ -34,7 +34,7 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             arrTokenIds.push(item.tokenId);
             arrAssets.push(getImageFromAsset(item.asset));
             arrNames.push(item.name);
-            arrCreators.push(item.creator);
+            arrCreators.push(item.creator ? item.creator : item.creatorAddress);
         });
         if (!unmounted) {
             setDialogState({
