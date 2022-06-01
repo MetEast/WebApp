@@ -120,7 +120,7 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
             })
             .then((_gasPrice: string) => {
                 gasPrice = _gasPrice;
-                return contractMethod.estimateGas({ from: accounts[0], gas: 5000000, value: param.price });
+                return contractMethod.estimateGas({ from: accounts[0], gas: 8000000, value: param.price });
             })
             .then((_estimatedGas: number) => {
                 const gasLimit = parseInt((_estimatedGas * 1.5).toString());
@@ -152,6 +152,10 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                         .once('receipt', handleReceiptEvent)
                         .on('error', handleErrorEvent);
                 }
+            })
+            .catch((error: any) => {
+                console.error(error);
+                reject(error);
             });
     });
 
@@ -248,7 +252,7 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
                         break;
                 }
 
-                return contractMethod.estimateGas({ from: accounts[0], gas: 5000000, value: param.price });
+                return contractMethod.estimateGas({ from: accounts[0], gas: 8000000, value: param.price });
             })
             .then((_estimatedGas: number) => {
                 const gasLimit = parseInt((_estimatedGas * 1.5).toString());
@@ -270,5 +274,9 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
                         resolve(res);
                     });
                 }
+            })
+            .catch((error: any) => {
+                console.error(error);
+                reject(error);
             });
     });
