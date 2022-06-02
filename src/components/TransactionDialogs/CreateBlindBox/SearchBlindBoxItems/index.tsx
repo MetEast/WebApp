@@ -12,6 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
 import { getBBCandiatesList, getBBCandiates } from 'src/services/fetch';
 import { useSnackbar } from 'notistack';
+import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 
 export interface ComponentProps {
     maxSelect: number;
@@ -45,7 +46,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): 
             if (!unmounted) setLoadingItemsList(true);
             const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], keyWord);
             if (!unmounted) {
-                setBBCandidateLists([]);
+                setBBCandidateLists(_BBCandidatesList);
                 setLoadingItemsList(false);
             }
         };
@@ -317,6 +318,18 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): 
                             </Grid>
                         ))}
                     </Grid>
+                )}
+                {!itemList.length && !loadingItemsList && (
+                    <LooksEmptyBox
+                        bannerTitle={keyWord ? 'No Products Found For This Search' : 'Looks Empty Here'}
+                        buttonLabel={keyWord ? 'Back to all Items' : ''}
+                        sx={{ marginTop: { xs: 3, md: 5 } }}
+                        onBannerBtnClick={() => {
+                            // only with keyword
+                            setEmptyKeyword(emptyKeyword + 1);
+                            setKeyWord('');
+                        }}
+                    />
                 )}
             </Box>
             <Stack direction="row" spacing={2}>
