@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
-import { useStyles, DateTimeInput } from './styles';
+import { useStyles } from './styles';
 import { DialogTitleTypo, PageNumberTypo } from '../../styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import CustomTextField from 'src/components/TextField';
@@ -42,12 +42,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const [blindboxPrice, setBlindboxPrice] = useState<number>(dialogState.crtBlindPrice);
     const [blindboxPriceError, setBlindBoxPriceError] = useState(false);
     const [blindboxPurchases, setBlindboxPurchases] = useState<number>(dialogState.crtBlindPurchases);
-    const [blindboxPurchasesError, setBlindboxPurchasesError] = useState(false);
+    const [blindboxPurchasesError, setBlindboxPurchasesError] = useState<boolean>(false);
     const [saleBegins, setSaleBegins] = React.useState<string>(dialogState.crtBlindSaleBegin);
     const [saleBeginsError, setSaleBeginsError] = useState<number>(0); // 0: no error, 1: not selected, 2: not valid
     // const [saleEnds, setSaleEnds] = useState<string>(dialogState.crtBlindEnd);
     // const [saleEndsError, setSaleEndsError] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
+    const [maxLimit] = useState<number>(15);
 
     useEffect(() => {
         let unmounted = false;
@@ -187,8 +188,12 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     inputValue={blindboxQuantity.toString() || ''}
                                     number={true}
                                     placeholder="es. 1000"
-                                    error={blindboxQuantityError === 0}
-                                    errorText="Select at least 1 NFT"
+                                    error={blindboxQuantityError === 0 || blindboxQuantityError > maxLimit}
+                                    errorText={
+                                        blindboxQuantityError === 0
+                                            ? 'Select at least 1 NFT'
+                                            : `Cannot select NFTs more than ${maxLimit}`
+                                    }
                                     changeHandler={(value: string) => setBlindboxQuantity(parseInt(value))}
                                 />
                                 <CustomTextField
@@ -299,6 +304,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     blindboxImage !== null &&
                                     stateFile !== null &&
                                     blindboxQuantity > 0 &&
+                                    blindboxQuantity <= maxLimit &&
                                     blindboxPrice > 0 &&
                                     saleBegins &&
                                     parseInt(saleBegins) * 1e3 > new Date().getTime() &&
@@ -345,6 +351,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 }}
             >
                 <SearchBlindBoxItems
+                    maxSelect={maxLimit}
                     onClose={() => {
                         setSelectDlgOpened(false);
                     }}

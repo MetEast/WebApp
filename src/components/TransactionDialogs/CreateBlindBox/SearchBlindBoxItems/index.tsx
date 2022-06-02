@@ -11,18 +11,22 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Icon } from '@iconify/react';
 import { getBBCandiatesList, getBBCandiates } from 'src/services/fetch';
+import { useSnackbar } from 'notistack';
 
 export interface ComponentProps {
+    maxSelect: number;
     onClose: () => void;
 }
 
-const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
+const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    const { enqueueSnackbar } = useSnackbar();
     const [loadingItemsList, setLoadingItemsList] = useState<boolean>(true);
     const [bbCandidateLists, setBBCandidateLists] = useState<Array<any>>([]);
     const [itemList, setItemList] = useState<Array<TypeBlindBoxSelectItem>>([]);
     const [keyWord, setKeyWord] = useState<string>('');
+    const [emptyKeyword, setEmptyKeyword] = useState<number>(0);
     const [allChecked, setAllChecked] = useState<boolean>(false);
     const [itemChecked, setItemChecked] = useState<Array<boolean>>([]);
     const [indeterminateChecked, setIndeterminateChecked] = useState<boolean>(false);
@@ -34,13 +38,14 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     for (let i = 0; i < itemList.length; i++) allTokenIds.push(itemList[i].tokenId);
 
     // -------------- Fetch Data -------------- //
+    console.log(loadingItemsList);
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
             if (!unmounted) setLoadingItemsList(true);
             const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], keyWord);
             if (!unmounted) {
-                setBBCandidateLists(_BBCandidatesList);
+                setBBCandidateLists([]);
                 setLoadingItemsList(false);
             }
         };
@@ -54,7 +59,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
     useEffect(() => {
         const _BBCandidates = getBBCandiates(bbCandidateLists, selectedTokenIds);
         setItemList(_BBCandidates.candidates);
-        setLoadingItemsList(false);
+        // setLoadingItemsList(false);
         setItemChecked(_BBCandidates.itemChecked);
         setAllChecked(_BBCandidates.allChecked);
         setIndeterminateChecked(_BBCandidates.indeterminateChecked);
@@ -73,36 +78,19 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
         setAllChecked(event.target.checked);
     };
 
-    const handleSelect = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        let checkState: Array<boolean> = [...itemChecked];
-        let selTokenIds: Array<string> = [...selectedTokenIds];
-        checkState[index] = event.target.checked;
-        if (event.target.checked) {
-            selTokenIds.push(itemList[index].tokenId);
-        } else {
-            const id = selTokenIds.indexOf(itemList[index].tokenId);
-            selTokenIds.splice(id, 1);
-        }
-        setItemChecked(checkState);
-        setSelectedTokenIds(selTokenIds);
-
-        if (selTokenIds.length === itemList.length) {
-            // all selected
-            setIndeterminateChecked(false);
-            setAllChecked(true);
-        } else {
-            if (selTokenIds.length === 0) setIndeterminateChecked(false);
-            else setIndeterminateChecked(true);
-            setAllChecked(false);
-        }
-    };
-
-    const handleSelectChange = (index: number) => {
+    const handleSelectSingle = (index: number) => {
         let checkState: Array<boolean> = [...itemChecked];
         let selTokenIds: Array<string> = [...selectedTokenIds];
         checkState[index] = !itemChecked[index];
         if (!itemChecked[index]) {
-            selTokenIds.push(itemList[index].tokenId);
+            if (selectedTokenIds.length < maxSelect) selTokenIds.push(itemList[index].tokenId);
+            else {
+                enqueueSnackbar(`Can not select more than ${maxSelect}`, {
+                    variant: 'error',
+                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                });
+                return;
+            }
         } else {
             const id = selTokenIds.indexOf(itemList[index].tokenId);
             selTokenIds.splice(id, 1);
@@ -142,6 +130,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <SearchField
+                        emptyKeyword={emptyKeyword}
                         handleChange={(value: string) => setKeyWord(value)}
                         sx={{ width: { xs: 200, md: 300 } }}
                     />
@@ -197,7 +186,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                                     ) : (
                                         <MobileImageBox
                                             selected={itemChecked[index] === undefined ? false : itemChecked[index]}
-                                            onClick={() => handleSelectChange(index)}
+                                            onClick={() => handleSelectSingle(index)}
                                         >
                                             <Box className="image_box">
                                                 <img src={item.url} alt="" />
@@ -277,9 +266,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                                                 sx={{ padding: 0 }}
                                                 value="off"
                                                 checked={itemChecked[index] === undefined ? false : itemChecked[index]}
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                    handleSelect(event, index);
-                                                }}
+                                                onClick={() => handleSelectSingle(index)}
                                             />
                                         </Grid>
                                         <Grid item xs={4}>
@@ -339,20 +326,28 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ onClose }): JSX.Element
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        let selectedTokenNames: Array<string> = [];
-                        selectedTokenIds.forEach((item: string) => {
-                            selectedTokenNames.push(
-                                itemList[itemList.findIndex((value: TypeBlindBoxSelectItem) => value.tokenId === item)]
-                                    .projectTitle,
-                            );
-                        });
+                        if (selectedTokenIds.length > maxSelect) {
+                            enqueueSnackbar(`Can not select more than ${maxSelect}`, {
+                                variant: 'error',
+                                anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                            });
+                        } else {
+                            const selectedTokenNames: Array<string> = [];
+                            selectedTokenIds.forEach((item: string) => {
+                                selectedTokenNames.push(
+                                    itemList[
+                                        itemList.findIndex((value: TypeBlindBoxSelectItem) => value.tokenId === item)
+                                    ].projectTitle,
+                                );
+                            });
 
-                        setDialogState({
-                            ...dialogState,
-                            crtBlindTokenIds: selectedTokenIds.join(';'),
-                            crtBlindTokenNames: selectedTokenNames.join(';'),
-                        });
-                        onClose();
+                            setDialogState({
+                                ...dialogState,
+                                crtBlindTokenIds: selectedTokenIds.join(';'),
+                                crtBlindTokenNames: selectedTokenNames.join(';'),
+                            });
+                            onClose();
+                        }
                     }}
                 >
                     Confirm

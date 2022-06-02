@@ -135,7 +135,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                             }
                         })
                         .catch((error) => {
-                            enqueueSnackbar(`Create Mystery Box error: ${error}!`, {
+                            enqueueSnackbar(`Create Mystery Box error.`, {
                                 variant: 'error',
                                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
                             });
@@ -152,7 +152,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         });
                 })
                 .catch((error) => {
-                    enqueueSnackbar(`Set approval error: ${error}!`, {
+                    enqueueSnackbar(`Set approval error.`, {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });
@@ -203,7 +203,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         });
                     }
                 } else {
-                    enqueueSnackbar(`Create Mystery Box error!`, {
+                    enqueueSnackbar(`Create Mystery Box error.`, {
                         variant: 'error',
                         anchorOrigin: { horizontal: 'right', vertical: 'top' },
                     });

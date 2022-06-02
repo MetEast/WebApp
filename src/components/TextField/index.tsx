@@ -63,6 +63,10 @@ const CustomTextField: React.FC<ComponentProps> = ({
         setText(inputValue === undefined || (number && inputValue === 'NaN') ? '' : inputValue);
     }, [inputValue]);
 
+    React.useEffect(() => {
+        if (error) setInvalid(true);
+    },[error])
+
     return (
         <Stack spacing={0.5} sx={{ ...sx }}>
             {title && (
