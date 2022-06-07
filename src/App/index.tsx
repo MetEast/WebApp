@@ -5,7 +5,6 @@ import AppRouter from './AppRouter';
 import SwiperCore, { Autoplay } from 'swiper';
 import { AppContextProvider } from 'src/context/AppContext';
 import { DialogContextProvider } from 'src/context/DialogContext';
-// import Web3 from 'web3'
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { SnackbarProvider } from 'notistack';
