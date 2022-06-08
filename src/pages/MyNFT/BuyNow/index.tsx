@@ -80,7 +80,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 1000);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.txs.slice(0, 5));
-                setProdTransHistory(_NFTTxs.history);
+                setProdTransHistory(_NFTTxs.history.slice(0, 5));
             }
         };
         if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
