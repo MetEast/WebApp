@@ -4,6 +4,7 @@ import Web3 from 'web3';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { create } from 'ipfs-http-client';
 import axios from 'axios';
+import { isProductEnv } from './common';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
@@ -18,19 +19,24 @@ declare global {
 
 export const addressZero = '0x0000000000000000000000000000000000000000';
 
+export const isSupportedNetwork = (chainId: number) => {
+    return (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
+};
+
 export const getEssentialsWalletAddress = () => {
     if (isInAppBrowser()) {
         const inAppProvider: any = window.elastos.getWeb3Provider();
         return [inAppProvider.address];
-    }
-    else {
+    } else {
         const walletConnectProvider: WalletConnectProvider = essentialsConnector.getWalletConnectProvider();
         return walletConnectProvider.wc.accounts;
     }
 };
 
 export const getEssentialsWalletBalance = async () => {
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser() ? window.elastos.getWeb3Provider() : essentialsConnector.getWalletConnectProvider();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     const accounts = await walletConnectWeb3.eth.getAccounts();
     if (accounts.length === 0) return '0';
@@ -39,7 +45,9 @@ export const getEssentialsWalletBalance = async () => {
 };
 
 export const getEssentialsChainId = async () => {
-    const walletConnectProvider: WalletConnectProvider = isInAppBrowser() ? window.elastos.getWeb3Provider() : essentialsConnector.getWalletConnectProvider();
+    const walletConnectProvider: WalletConnectProvider = isInAppBrowser()
+        ? window.elastos.getWeb3Provider()
+        : essentialsConnector.getWalletConnectProvider();
     const walletConnectWeb3 = new Web3(walletConnectProvider as any);
     const chainId = await walletConnectWeb3.eth.getChainId();
     return chainId;
@@ -95,8 +103,8 @@ export const isInAppBrowser = () => {
 
 export const getChainGasPrice = async (walletConnectWeb3: Web3, gas: number) => {
     const gasPriceUnit = await walletConnectWeb3.eth.getGasPrice();
-    return parseInt(gasPriceUnit) * gas / 1e18;
-}
+    return (parseInt(gasPriceUnit) * gas) / 1e18;
+};
 
 export const getELA2USDRate = async () => {
     try {
@@ -117,10 +125,7 @@ export const getELA2USDRate = async () => {
 
 export const getERC20TokenPrice = async (tokenAddress: string, connectProvider = null) => {
     let walletConnectWeb3;
-    const rpcURL: string =
-        (process.env.REACT_APP_PUBLIC_ENV !== 'development'
-            ? process.env.REACT_APP_ELASTOS_ESC_MAIN_NET
-            : process.env.REACT_APP_ELASTOS_ESC_TEST_NET) || '';
+    const rpcURL: string = isProductEnv() ? 'https://api.elastos.io/esc' : 'https://api-testnet.elastos.io/eth';
     if (connectProvider) walletConnectWeb3 = new Web3(connectProvider);
     else if (Web3.givenProvider || window.ethereum) walletConnectWeb3 = new Web3(Web3.givenProvider || window.ethereum);
     else walletConnectWeb3 = new Web3(new Web3.providers.HttpProvider(rpcURL));

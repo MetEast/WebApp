@@ -1,6 +1,10 @@
 import { enumBadgeType } from 'src/types/product-types';
 
 // custome
+export const isProductEnv = () => {
+    return process.env.REACT_APP_PUBLIC_ENV !== 'development';
+};
+
 export const getImageFromAsset = (id: string) => {
     if (!id) return '';
     const prefixLen = id.split(':', 2).join(':').length;

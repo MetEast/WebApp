@@ -11,6 +11,7 @@ import { SnackbarProvider } from 'notistack';
 import { CookiesProvider } from 'react-cookie';
 import { SignInContextProvider } from 'src/context/SignInContext';
 import { NotificationContextProvider } from 'src/context/NotificationContext';
+import { isProductEnv } from 'src/services/common';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any): Web3Provider => {
@@ -21,7 +22,7 @@ const getLibrary = (provider: any): Web3Provider => {
 
 const App: React.FC = (): JSX.Element => {
     SwiperCore.use([Autoplay]);
-    if (process.env.REACT_APP_PUBLIC_ENV !== 'development') {
+    if (isProductEnv()) {
         if (document.addEventListener) {
             document.addEventListener('contextmenu', (event) => {
                 event.preventDefault();
