@@ -23,6 +23,12 @@ export const isSupportedNetwork = (chainId: number) => {
     return (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
 };
 
+export const getESCExploreUrl = (chainId: number, txHash: string) => {
+    if (chainId === 20) return `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`;
+    if (chainId === 21) return `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`;
+    return '';
+};
+
 export const getEssentialsWalletAddress = () => {
     if (isInAppBrowser()) {
         const inAppProvider: any = window.elastos.getWeb3Provider();

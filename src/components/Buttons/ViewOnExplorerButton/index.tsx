@@ -3,22 +3,18 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { Button } from './styles';
 import { Icon } from '@iconify/react';
 import { Link } from '@mui/material';
+import { getESCExploreUrl } from 'src/services/wallet';
 
 export interface ComponentProps {
     txHash: string;
 }
 
-const ViewOnExplorerButton: React.FC<ComponentProps> = ({txHash}): JSX.Element => {
+const ViewOnExplorerButton: React.FC<ComponentProps> = ({ txHash }): JSX.Element => {
     const [signInDlgState] = useSignInContext();
-    let initUrl = '';
-    if (signInDlgState.chainId === 20) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`;
-    else if (signInDlgState.chainId === 21) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`; 
-    const [txHashUrl, setTxHashUrl] = useState<string>(initUrl);
+    const [txHashUrl, setTxHashUrl] = useState<string>(getESCExploreUrl(signInDlgState.chainId, txHash));
+
     useEffect(() => {
-        let _url = '';
-        if (signInDlgState.chainId === 20) _url = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`;
-        else if (signInDlgState.chainId === 21) _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`; 
-        setTxHashUrl(_url);
+        setTxHashUrl(getESCExploreUrl(signInDlgState.chainId, txHash));
     }, [signInDlgState.chainId, txHash]);
 
     return (

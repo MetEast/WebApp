@@ -3,6 +3,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { enumTransactionType } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
 import { Typography, Stack, Link } from '@mui/material';
+import { getESCExploreUrl } from 'src/services/wallet';
 
 interface ComponentProps {
     transactionType: enumTransactionType;
@@ -44,19 +45,10 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
     };
 
     const [signInDlgState] = useSignInContext();
-
-    let initUrl = '';
-    if (signInDlgState.chainId === 20) initUrl = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${transactionHash}`;
-    else if (signInDlgState.chainId === 21)
-        initUrl = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`;
-    const [txHashUrl, setTxHashUrl] = useState<string>(initUrl);
+    const [txHashUrl, setTxHashUrl] = useState<string>(getESCExploreUrl(signInDlgState.chainId, transactionHash));
 
     useEffect(() => {
-        let _url = '';
-        if (signInDlgState.chainId === 20) _url = `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${transactionHash}`;
-        else if (signInDlgState.chainId === 21)
-            _url = `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${transactionHash}`;
-        setTxHashUrl(_url);
+        setTxHashUrl(getESCExploreUrl(signInDlgState.chainId, transactionHash));
     }, [signInDlgState.chainId, transactionHash]);
 
     return (
