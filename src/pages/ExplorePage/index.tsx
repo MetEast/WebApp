@@ -8,7 +8,7 @@ import OptionsBar from 'src/components/OptionsBar';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
-import { TypeProduct } from 'src/types/product-types';
+import { TypeProduct, TypeFavouritesFetch } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
@@ -48,10 +48,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
+    const [ELA2USD, setELA2USD] = useState<number>(0);
+    const [myFavorList, setMyFavorList] = useState<Array<TypeFavouritesFetch>>([]);
     const fillerItem = Array(pageSize).fill(blankNFTItem);
-    let ELA2USD: number = 0;
-    let likeList: any = [];
-    
+    let ELA2USDRate: number = 0;
+    let likeList: Array<TypeFavouritesFetch> = [];
+
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
@@ -71,24 +73,28 @@ const ExplorePage: React.FC = (): JSX.Element => {
         let unmounted = false;
         // reset pageNum when search param has changed
         if (!unmounted && !isLoadingNext) {
-            // console.log('called')
             setPageNum(1);
             setProductList([]);
         }
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
             if (pageNum === 1) {
-                ELA2USD = await getELA2USD();
+                ELA2USDRate = await getELA2USD();
+                setELA2USD(ELA2USDRate);
                 likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+                setMyFavorList(likeList);
             }
             const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
-            const _searchedNFTList = await getNFTItemList(searchParams, ELA2USD, likeList);
+            const _searchedNFTList = await getNFTItemList(
+                searchParams,
+                ELA2USDRate ? ELA2USDRate : ELA2USD,
+                likeList.length ? likeList : myFavorList,
+            );
             if (!unmounted) {
                 if (pageNum === 1) setProductList(_searchedNFTList.data);
                 else setProductList([...productList, ..._searchedNFTList.data]);
                 setIsLoading(false);
                 setIsLoadingNext(false);
-                // console.log(_searchedNFTList.total, Math.ceil(_searchedNFTList.total / pageSize), pageNum);
                 if (Math.ceil(_searchedNFTList.total / pageSize) > pageNum) setHasMore(true);
             }
         };
@@ -99,7 +105,6 @@ const ExplorePage: React.FC = (): JSX.Element => {
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord, category, pageNum]); //, productViewMode
 
-    // console.log('+++++++', isLoadingNext, pageNum, productList.length);
     const fetchMoreData = () => {
         if (!isLoadingNext) {
             setIsLoadingNext(true);
