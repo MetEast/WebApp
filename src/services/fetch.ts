@@ -45,6 +45,7 @@ import {
 } from 'src/types/admin-table-data-types';
 import { UserInfoType } from 'src/types/auth-types';
 import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
+import { addressZero } from './wallet';
 
 const fetchMyNFTAPIs = [
     'getAllCollectibleByAddress',
@@ -724,7 +725,7 @@ export const getMyNFTItemList = async (
     const _arrMyNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrMyNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrMyNFTList[i];
-        if (itemObject.holder === '0x0000000000000000000000000000000000000000') continue;
+        if (itemObject.holder === addressZero) continue;
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.tokenId = itemObject.tokenId;
         _myNFT.name = itemObject.name;

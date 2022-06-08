@@ -13,7 +13,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
-import { isInAppBrowser } from 'src/services/wallet';
+import { addressZero, isInAppBrowser } from 'src/services/wallet';
 import { uploadImage2Ipfs } from 'src/services/ipfs';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
@@ -110,7 +110,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                         });
                     }
                     if (!unmounted) setDialogState({ ...updatedState, waitingConfirmDlgOpened: true, progressBar: 40 });
-                    const _quoteToken = '0x0000000000000000000000000000000000000000';
+                    const _quoteToken = addressZero; // ELA
                     const _inTokenIds: string[] = dialogState.crtBlindTokenIds.split(';');
                     const _inQuoteTokens: string[] = Array(_inTokenIds.length);
                     const _inPrices: string[] = Array(_inTokenIds.length);

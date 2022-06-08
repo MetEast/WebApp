@@ -19,8 +19,8 @@ export const getAssetFromImage = (url: string) => {
 export const getTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);
     // const dateStr = date.toISOString().slice(0, 10).replaceAll('-', '/');
-    const dateString = date.toLocaleDateString("en-US");
-    const dateStrs = dateString.split("/");
+    const dateString = date.toLocaleDateString('en-US');
+    const dateStrs = dateString.split('/');
     const dateStr = dateStrs[2] + '/' + dateStrs[0] + '/' + dateStrs[1];
     let hours = date.getHours().toString();
     hours = hours.toString().padStart(2, '0');
@@ -62,7 +62,8 @@ export const getCustomTime = (timestamp: string) => {
     return { date: dateStr, time: timeStr };
 };
 
-export const getDateTimeString = (date: Date) => `${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
+export const getDateTimeString = (date: Date) =>
+    `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
 export const getTimeZone = () => {
     const e = String(-new Date().getTimezoneOffset() / 60);
@@ -78,11 +79,6 @@ export const reduceHexAddress = (strAddress: string, nDigits: number) =>
           )}`
         : '';
 
-// Get Abbrevation of user name //
-// export const reduceUserName = (username: string, nDigits: number) =>
-//     username
-//         ? `${username.substring(0, nDigits)}...${username.substring(username.length - nDigits, username.length)}`
-//         : '';
 export const reduceUserName = (username: string, nDigits: number) =>
     username
         ? username.length > nDigits * 2
