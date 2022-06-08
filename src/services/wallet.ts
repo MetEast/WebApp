@@ -3,6 +3,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { create } from 'ipfs-http-client';
+import axios from 'axios';
 
 const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
 
@@ -97,3 +98,53 @@ export const getChainGasPrice = async (walletConnectWeb3: Web3, gas: number) => 
     return parseInt(gasPriceUnit) * gas / 1e18;
 }
 
+export const getELA2USDRate = async () => {
+    try {
+        const result: any = await getERC20TokenPrice(addressZero);
+        return result.bundle.elaPrice ? parseFloat(result.bundle.elaPrice) : 0;
+    } catch (error) {
+        return 0;
+    }
+    // try {
+    //     const resCoinPrice = await fetch('https://esc.elastos.io/api?module=stats&action=coinprice');
+    //     const jsonData = await resCoinPrice.json();
+    //     if (jsonData && jsonData.result.coin_usd) return jsonData.result.coin_usd;
+    //     return 0;
+    // } catch (error) {
+    //     return 0;
+    // }
+};
+
+export const getERC20TokenPrice = async (tokenAddress: string, connectProvider = null) => {
+    let walletConnectWeb3;
+    const rpcURL: string =
+        (process.env.REACT_APP_PUBLIC_ENV !== 'development'
+            ? process.env.REACT_APP_ELASTOS_ESC_MAIN_NET
+            : process.env.REACT_APP_ELASTOS_ESC_TEST_NET) || '';
+    if (connectProvider) walletConnectWeb3 = new Web3(connectProvider);
+    else if (Web3.givenProvider || window.ethereum) walletConnectWeb3 = new Web3(Web3.givenProvider || window.ethereum);
+    else walletConnectWeb3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
+
+    try {
+        const blockNumber = await walletConnectWeb3.eth.getBlockNumber();
+        const graphQLParams = {
+            query: `query tokenPriceData { token(id: "${tokenAddress.toLowerCase()}", block: {number: ${blockNumber}}) { derivedELA } bundle(id: "1", block: {number: ${blockNumber}}) { elaPrice } }`,
+            variables: null,
+            operationName: 'tokenPriceData',
+        };
+        const response: any = await axios({
+            method: 'POST',
+            url: 'https://api.glidefinance.io/subgraphs/name/glide/exchange',
+            headers: {
+                'content-type': 'application/json',
+                // "x-rapidapi-host": "reddit-graphql-proxy.p.rapidapi.com",
+                // "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+                accept: 'application/json',
+            },
+            data: graphQLParams,
+        });
+        return response.data.data ? response.data.data : 0;
+    } catch (error) {
+        return 0;
+    }
+};
