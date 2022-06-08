@@ -30,6 +30,7 @@ import { useSignInContext } from 'src/context/SignInContext';
 import BurnNFTDlgContainer from './DeleteProduct';
 import { useSnackbar } from 'notistack';
 import SnackMessage from 'src/components/SnackMessage';
+import { isSupportedNetwork } from 'src/services/wallet';
 
 export interface ComponentProps {}
 
@@ -85,8 +86,7 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         if (
             signInDlgState.chainId &&
-            ((process.env.REACT_APP_PUBLIC_ENV !== 'development' && signInDlgState.chainId !== 20) ||
-                (process.env.REACT_APP_PUBLIC_ENV === 'development' && signInDlgState.chainId !== 21)) &&
+            !isSupportedNetwork(signInDlgState.chainId) &&
             (dialogState.errorMessageDlgOpened ||
                 dialogState.createNFTDlgOpened ||
                 dialogState.burnNFTDlgOpened ||
