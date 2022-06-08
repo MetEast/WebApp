@@ -12,7 +12,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, NotificationTypo } from './styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, TypeYourEarning } from 'src/types/product-types';
+import { TypeProduct, TypeYourEarning, TypeFavouritesFetch } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, reduceUserName } from 'src/services/common';
 import {
     getELA2USD,
@@ -91,9 +91,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [myNFTList, setMyNFTList] = useState<Array<Array<TypeProduct>>>(Array(6).fill([]));
     const [myNFTCount, setMyNFTCount] = useState<Array<number>>(Array(6).fill(0));
     const [isLoadingAssets, setIsLoadingAssets] = useState<Array<boolean>>(Array(6).fill(true));
+    const [ELA2USD, setELA2USD] = useState<number>(0);
+    const [myFavorList, setMyFavorList] = useState<Array<TypeFavouritesFetch>>([]);
     const fillerItem = Array(pageSize).fill(blankMyNFTItem);
-    let ELA2USD: number = 0;
-    let likeList: any = [];
+    let ELA2USDRate: number = 0;
+    let likeList: Array<TypeFavouritesFetch> = [];
 
     // -------------- Fetch Data -------------- //
     const setLoadingState = (id: number, state: boolean) => {
@@ -155,8 +157,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             setLoadingState(i, true);
                         }
                         if (pageNum === 1 && i === nTabId) {
-                            ELA2USD = await getELA2USD();
+                            ELA2USDRate = await getELA2USD();
+                            setELA2USD(ELA2USDRate);
                             likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+                            setMyFavorList(likeList);
                         }
                         const searchParams = getSearchParams(
                             i === nTabId ? pageNum : 1,
@@ -169,8 +173,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         );
                         const _searchedMyNFTList = await getMyNFTItemList(
                             searchParams,
-                            i === nTabId ? ELA2USD : 1,
-                            i === nTabId ? likeList : [],
+                            // i === nTabId ? ELA2USD : 1,
+                            // i === nTabId ? likeList : [],
+                            ELA2USDRate ? ELA2USDRate : ELA2USD,
+                            likeList.length ? likeList : myFavorList,
                             i,
                             signInDlgState.walletAccounts[0],
                             signInDlgState.userDid,
@@ -294,13 +300,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
                 prodList[id].likes += 1;
                 prodList[id].isLike = true;
                 // likedList.push(prodList[id]);
-                change ++;
+                change++;
             } else if (type === 'dec') {
                 // const idx = likedList.indexOf(prodList[id]);
                 // likedList.splice(idx, 1);
                 prodList[id].isLike = false;
                 prodList[id].likes -= 1;
-                change --;
+                change--;
             }
             setMyNFTData(id, prodList);
             setMyNFTTotal(5, myNFTCount[5] + change);
