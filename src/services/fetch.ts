@@ -417,7 +417,11 @@ export const getNFTItem = async (
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject.holder;
         _NFTItem.holderName =
-            itemObject.holder === itemObject.royaltyOwner ? itemObject.authorName : itemObject.holderName;
+            itemObject.holder === itemObject.royaltyOwner
+                ? _NFTItem.author
+                : itemObject.holderName
+                ? itemObject.holderName
+                : reduceHexAddress(itemObject.holder, 4);
         _NFTItem.orderId = itemObject.orderId;
         _NFTItem.tokenIdHex = itemObject.tokenIdHex;
         _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
@@ -909,7 +913,11 @@ export const getMyNFTItem = async (
         _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
-            itemObject.holder === itemObject.royaltyOwner ? itemObject.authorName : itemObject.holderName;
+            itemObject.holder === itemObject.royaltyOwner
+                ? _MyNFTItem.author
+                : itemObject.holderName
+                ? itemObject.holderName
+                : reduceHexAddress(itemObject.holder, 4);
         _MyNFTItem.holder = itemObject.holder;
         _MyNFTItem.royaltyOwner = itemObject.royaltyOwner;
         _MyNFTItem.tokenIdHex = itemObject.tokenIdHex;
