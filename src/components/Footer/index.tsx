@@ -1,6 +1,7 @@
 import React from 'react';
-import { Stack, Button, Typography, Link } from '@mui/material';
-import { SpacingProps } from '@mui/system';
+import { Link } from 'react-router-dom';
+import { Stack, Button, Typography, Link as ExternalLink } from '@mui/material';
+import { Box, SpacingProps } from '@mui/system';
 import { SocialButton } from './styles';
 import { Icon } from '@iconify/react';
 import generatedGitInfo from '../../generatedGitInfo.json';
@@ -25,7 +26,7 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 alignItems="center"
                 rowGap={3}
             >
-                <Link href="/">
+                <Link to="/" style={{ textDecoration: 'none' }}>
                     <Stack direction="row" alignItems="center" spacing={0.5}>
                         <img src="/assets/images/header/logo.svg" width={30} height={28} alt="" />
                         <img src="/assets/images/header/meteast_label.svg" width={126} height={15} alt="" />
@@ -33,11 +34,11 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                 </Link>
                 <Stack direction="row" spacing={1}>
                     {socialButtonsList.map((item, index) => (
-                        <Link href={item.url} target="_blank" key={`social-link-${index}`}>
+                        <ExternalLink href={item.url} target="_blank" key={`social-link-${index}`}>
                             <SocialButton size="small">
                                 <Icon icon={item.icon} fontSize={20} />
                             </SocialButton>
-                        </Link>
+                        </ExternalLink>
                     ))}
                 </Stack>
             </Stack>
@@ -72,14 +73,19 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
                     </Typography>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" rowGap={0} columnGap={2}>
-                    <Link href="../../tokenomics/index.html" target="_blank" sx={{ textDecoration: 'none' }}>
+                    <Link to="../../tokenomics/index.html" target="_blank" style={{ textDecoration: 'none' }}>
                         <Button
                             sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}
                         >
                             Tokenomics
                         </Button>
                     </Link>
-                    <Link href="../../TermsOfService/TermsOfService.pdf" target='_blank' rel='noopener noreferrer' sx={{ textDecoration: 'none' }}>
+                    <Link
+                        to="../../TermsOfService/TermsOfService.pdf"
+                        target="_blank"
+                        style={{ textDecoration: 'none' }}
+                        rel="noopener noreferrer"
+                    >
                         <Button
                             sx={{ fontSize: 12, fontWeight: 700, color: { xs: '#1890FF', sm: 'black' }, padding: 1 }}
                         >

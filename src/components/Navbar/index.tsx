@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { Box, Typography, Stack, Link } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Box, Typography, Stack } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { TypeMenuItem } from 'src/types/layout-types';
 import PageButton from './PageButton';
@@ -244,7 +245,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 paddingBottom={mobile ? 1.5 : 0}
             >
                 {!mobile && (
-                    <Link href="/">
+                    <Link to="/">
                         <Stack direction="row" alignItems="center" spacing={1.5}>
                             <img src="/assets/images/header/logo.svg" alt="" />
                             <Box display={{ xs: 'none', lg: 'block' }}>
