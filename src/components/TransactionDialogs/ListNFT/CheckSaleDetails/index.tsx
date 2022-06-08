@@ -10,7 +10,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
 import { defaultDlgState, useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
-import { isInAppBrowser } from 'src/services/wallet';
+import { addressZero, isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
@@ -51,7 +51,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         }, 120000);
         if (!unmounted) setDialogState(updatedState);
 
-        const _quoteToken = '0x0000000000000000000000000000000000000000'; // ELA
+        const _quoteToken = addressZero; // ELA
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
