@@ -11,7 +11,7 @@ const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
     const socialButtonsList = [
         { icon: 'ph:telegram-logo', url: 'https://t.me/MetEastofficial' },
         { icon: 'ph:discord-logo', url: 'https://discord.gg/s7DNxA8jd8' },
-        { icon: 'ph:twitter-logo', url: 'https://twitter.com/Meteast2022' },
+        { icon: 'ph:twitter-logo', url: 'https://twitter.com/MetEastNFT' },
         { icon: 'ph:instagram-logo', url: 'https://www.instagram.com/meteast2022/' },
         { icon: 'carbon:logo-medium', url: 'https://medium.com/@Meteast2022' },
         { icon: 'ph:github-logo', url: 'https://github.com/meteast' },
