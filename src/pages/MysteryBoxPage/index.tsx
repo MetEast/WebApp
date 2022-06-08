@@ -42,7 +42,8 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([]);
     const fillerItem = Array(pageSize).fill(blankBBItem);
-    let ELA2USD: number = 0;
+    let ELA2USDRate: number = 0;
+    const [ELA2USD, setELA2USD] = useState<number>(0);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -68,11 +69,14 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         }
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
-            if (pageNum === 1) ELA2USD = await getELA2USD();
+            if (pageNum === 1) {
+                ELA2USDRate = await getELA2USD();
+                setELA2USD(ELA2USDRate);
+            }
             const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
                 searchParams,
-                ELA2USD,
+                ELA2USDRate ? ELA2USDRate : ELA2USD,
                 signInDlgState.isLoggedIn,
                 signInDlgState.userDid,
             );
