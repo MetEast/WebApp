@@ -144,6 +144,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             let unmounted = false;
             login(2, checkSumAddress)
                 .then((token: string) => {
+                    console.log(token);
                     if (!unmounted && token) {
                         if (currentConnector === injected) {
                             linkType = 2;
@@ -163,7 +164,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             _state.signInDlgOpened = false;
                             _state.walletAccounts = [checkSumAddress];
                             _state.token = token;
-                            _state.userDid = user.did;
+                            _state.address = user.address;
                             if (user.name) _state.userName = user.name;
                             if (user.description) _state.userDescription = user.description;
                             if (user.avatar) _state.userAvatar = user.avatar;
@@ -264,6 +265,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             _state.isLoggedIn = true;
                             _state.loginType = '1';
                             _state.userDid = user.did;
+                            _state.address = user.address;
+                            _state.token = token;
                             if (user.name) _state.userName = user.name;
                             if (user.description) _state.userDescription = user.description;
                             if (user.avatar) _state.userAvatar = user.avatar;

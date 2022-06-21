@@ -17,10 +17,10 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
     const handleDelete = async () => {
         let unmounted = false;
         const removeNote = async () => {
-            const result = await removeNotifications(data.id);
+            const result = await removeNotifications(data._id);
             if (!unmounted && result) {
                 const notesList = notificationState.notesList;
-                const id = notesList.findIndex((item: TypeNotification) => item.id === data.id);
+                const id = notesList.findIndex((item: TypeNotification) => item._id === data._id);
                 notesList.splice(id, 1);
                 setNotificationState({
                     ...notificationState,

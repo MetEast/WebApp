@@ -211,6 +211,26 @@ export type TypeProductFetch = {
     isBlindbox: boolean;
 };
 
+export type TypeProductFetch2 = {
+    orderId: number;
+    createTime: number;
+    price: number;
+    seller: string;
+    tokenId: string;
+    orderType: number;
+    token: Token;
+}
+
+export type Token = {
+    category: string;
+    createTime: number;
+    description: string;
+    name: string;
+    royaltyFee: number;
+    royaltyOwner: string;
+    thumbnail: string;
+}
+
 export type TypeFavouritesFetch = {
     tokenId: string;
 };

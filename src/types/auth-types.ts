@@ -3,6 +3,7 @@ export type AuthContextType = {
 };
 
 export type UserTokenType = {
+    address: string;
     did: string;
     name: string;
     description: string;

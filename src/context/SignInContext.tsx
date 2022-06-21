@@ -12,6 +12,7 @@ export interface SignInState {
     signOut: boolean;
     // user info
     token: string;
+    address: string;
     userDid: string;
     userName: string;
     userDescription: string;
@@ -45,6 +46,7 @@ const defaultState: SignInState = {
     signOut: false,
     // user info
     token: '',
+    address: '',
     userDid: '',
     userName: '',
     userDescription: '',

@@ -7,7 +7,13 @@ import NFTPreview from 'src/components/NFTPreview';
 import 'swiper/swiper-bundle.css';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList, getNFTItemList, getPageBannerList } from 'src/services/fetch';
+import {
+    getELA2USD,
+    getMyFavouritesList,
+    getNFTItemList,
+    getNFTItemList2,
+    getPageBannerList,
+} from 'src/services/fetch';
 import { blankNFTItem } from 'src/constants/init-constants';
 import Container from 'src/components/Container';
 
@@ -38,13 +44,9 @@ const HomePage: React.FC = (): JSX.Element => {
         const fetchCollections = async () => {
             if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
+            const _newNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10});
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _newNFTList = await getNFTItemList('pageNum=1&pageSize=10', ELA2USD, likeList);
-            const _popularNFTList = await getNFTItemList(
-                'pageNum=1&pageSize=10&orderType=mostliked',
-                ELA2USD,
-                likeList,
-            );
+            const _popularNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10, orderType: 'mostliked'});
             if (!unmounted) {
                 setProductList(_newNFTList.data);
                 setCollectionList(_popularNFTList.data);

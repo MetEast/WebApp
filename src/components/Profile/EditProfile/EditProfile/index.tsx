@@ -100,7 +100,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         ? `meteast:image:${added.origin.path}`
                         : ''
                     : signInDlgState.userCoverImage;
-                return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
+                return handleSignMessage(signInDlgState.address, signInDlgState.walletAccounts[0]);
             })
             .then((signature: string) => {
                 setDialogState({ ...dialogState, progressBar: 70 });

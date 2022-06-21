@@ -15,9 +15,9 @@ import {
     enumTransactionType,
     enumBlindBoxNFTType,
     enumMyNFTType,
-    enumBadgeType,
+    enumBadgeType, TypeProductFetch2,
 } from 'src/types/product-types';
-import { TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
+import { NotificationParams, TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
 import { getImageFromAsset, reduceHexAddress, getTime } from 'src/services/common';
 import {
     blankNFTItem,
@@ -65,16 +65,16 @@ export const FETCH_CONFIG_JSON = {
 
 export const login = (loginType: number, address: string, presentation?: VerifiablePresentation) =>
     new Promise((resolve: (value: string) => void, reject: (value: string) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/login`;
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/login`;
         const reqBody =
             loginType === 1
                 ? {
-                      address: address,
+                      address,
                       presentation: presentation ? presentation.toJSON() : '',
                   }
                 : {
+                      address,
                       isMetaMask: 1,
-                      did: address,
                       name: '',
                       avatar: '',
                       description: '',
@@ -88,8 +88,8 @@ export const login = (loginType: number, address: string, presentation?: Verifia
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
-                    resolve(data.token);
+                if (data.status === 200) {
+                    resolve(data.data.access_token);
                 } else {
                     resolve('');
                 }
@@ -119,10 +119,10 @@ export const updateUserToken = async (address: string, did: string) => {
     return dataUserToken;
 };
 
-export const getNotificationList = async (address: string) => {
+export const getNotificationList = async (token: string) => {
     const resNotificationList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNotifications?address=${address}`,
-        FETCH_CONFIG_JSON,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getNotifications`,
+        {headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers}},
     );
     const jsonNotificationList = await resNotificationList.json();
     const arrNotificationList = jsonNotificationList.data;
@@ -131,16 +131,27 @@ export const getNotificationList = async (address: string) => {
     for (let i = 0; i < arrNotificationList.length; i++) {
         const itemObject: TypeNotificationFetch = arrNotificationList[i];
         const _Note: TypeNotification = { ...blankNotification };
-        _Note.id = itemObject._id;
-        _Note.title = itemObject.title;
-        _Note.content = itemObject.context;
+        _Note._id = itemObject._id;
+        _Note.title = itemObject.type === 1 ? 'New sale!' : 'Royalties Received!';
+        _Note.content = getNotificationCount(itemObject.type, itemObject.params);
+        _Note.type = itemObject.type;
+        _Note.params = itemObject.params;
         const timestamp = getTime(itemObject.date.toString());
         _Note.date = timestamp.date + ' ' + timestamp.time;
-        _Note.isRead = itemObject.isRead === 1 ? true : false;
+        _Note.isRead = itemObject.read === 1 ? true : false;
         _arrNotificationList.push(_Note);
     }
     return _arrNotificationList;
 };
+
+export const getNotificationCount = (type: number, params: NotificationParams) => {
+    switch (type) {
+        case 1:
+            return `Your <b>${params.tokenName}</b> project has been sold to <b>${params.buyer}</b> for <b>${params.price ? params.price/1e18: 0} ELA</b>`;
+        case 2:
+            return `You have received <b>${params.royaltyFee? params.royaltyFee/1e18: 0} ELA</b> in Roylties from the sale of the <b>${params.tokenName}</b> project.`;
+    }
+}
 
 export const markNotificationsAsRead = (token: string, ids: string) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
@@ -192,11 +203,11 @@ export const getShorternUrl = async (url: string) => {
 export const getELA2USD = async () => {
     try {
         const resElaUsdRate = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestElaPrice`,
+            `https://assist.trinity-feeds.app/feeds/api/v1/price`,
             FETCH_CONFIG_JSON,
         );
         const dataElaUsdRate = await resElaUsdRate.json();
-        if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.data);
+        if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.ELA);
         return 0;
     } catch (error) {
         return 0;
@@ -238,7 +249,7 @@ export const getPageBannerList = async (location: number) => {
 // Home Page & Product Page
 export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/listMarketTokens?${fetchParams}`,
+        `${process.env.REACT_APP_SERVICE_URL}/api/v1/listMarketTokens?${fetchParams}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTList = await resNFTList.json();
@@ -264,6 +275,43 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
             likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
                 ? false
                 : true;
+        _arrNFTList.push(_NFT);
+    }
+    return { total: totalCount, data: _arrNFTList };
+};
+
+export const getNFTItemList2 = async (body: {pageSize: number, pageNum: number, orderType?: string}) => {
+    const resNFTList = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketTokens`,
+        {
+            method: 'POST',
+            ...FETCH_CONFIG_JSON,
+            body: JSON.stringify(body),
+        }
+    );
+    const jsonNFTList = await resNFTList.json();
+    const totalCount: number = jsonNFTList.data.total;
+    const arrNFTList = jsonNFTList.data ? jsonNFTList.data.data : [];
+
+    const _arrNFTList: Array<TypeProduct> = [];
+    for (let i = 0; i < arrNFTList.length; i++) {
+        const itemObject: TypeProductFetch2 = arrNFTList[i];
+        const _NFT: TypeProduct = { ...blankNFTItem };
+        _NFT.tokenId = itemObject.tokenId;
+        _NFT.name = itemObject.token.name;
+        _NFT.image = getImageFromAsset(itemObject.token.thumbnail);
+        _NFT.price_ela = itemObject.price / 1e18;
+        // _NFT.price_usd = _NFT.price_ela * ELA2USD;
+        _NFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4)
+        _NFT.type = itemObject.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+        // _NFT.likes = itemObject.likes;
+        // _NFT.views = itemObject.views;
+        // _NFT.status = itemObject.status;
+        // _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+        // _NFT.isLike =
+        //     likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+        //         ? false
+        //         : true;
         _arrNFTList.push(_NFT);
     }
     return { total: totalCount, data: _arrNFTList };
@@ -995,9 +1043,8 @@ export const uploadUserProfile = (
     new Promise((resolve, reject) => {
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
         const reqBody = {
-            token: _token,
             address: _address,
-            did: _did,
+            did: _address,
             name: _name,
             description: _description,
             avatar: _urlAvatar,
@@ -1008,13 +1055,15 @@ export const uploadUserProfile = (
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${_token}`,
             },
             body: JSON.stringify(reqBody),
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
-                    resolve(data.token);
+                console.log(data);
+                if (data.status === 200) {
+                    resolve(data.data.access_token);
                 } else {
                     reject(data);
                 }

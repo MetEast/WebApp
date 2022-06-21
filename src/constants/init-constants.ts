@@ -183,13 +183,16 @@ export const blankContractMethodParam: TypeContractMethodPram = {
 };
 
 export const blankNotification: TypeNotification = {
-    id: '',
+    _id: '',
     title: '',
     content: '',
     date: '',
+    type: 0,
+    params: {tokenName: ''},
 };
 
 export const blankUserToken: UserTokenType = {
+    address: '',
     did: '',
     name: '',
     description: '',

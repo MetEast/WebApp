@@ -39,7 +39,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const getUnReadNotes = useCallback(() => {
         let unmounted = false;
         const fetchNotifications = async () => {
-            const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
+            const _notificationList = await getNotificationList(signInDlgState.token);
             const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
             if (!unmounted) {
                 setNotificationState({
