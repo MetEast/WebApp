@@ -207,7 +207,7 @@ export const getELA2USD = async () => {
             FETCH_CONFIG_JSON,
         );
         const dataElaUsdRate = await resElaUsdRate.json();
-        if (dataElaUsdRate && dataElaUsdRate.data) return parseFloat(dataElaUsdRate.ELA);
+        if (dataElaUsdRate) return parseFloat(dataElaUsdRate.ELA);
         return 0;
     } catch (error) {
         return 0;
@@ -223,6 +223,27 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
             );
             const dataFavouriteList = await resFavouriteList.json();
             return dataFavouriteList.data.result;
+        } catch (error) {
+            return [];
+        }
+    } else return [];
+};
+
+export const getMyFavouritesList2 = async (loginState: boolean, token: string) => {
+    if (loginState) {
+        try {
+            const resFavouriteList = await fetch(
+                `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible`,
+                {
+                    method: 'POST',
+                    headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
+                    body: JSON.stringify({pageSize: 100, pageNum: 1}),
+                },
+            );
+            const dataFavouriteList = await resFavouriteList.json();
+            let arrFavouriteList: Array<string> = [];
+            dataFavouriteList.data.data.map((item: string) => {arrFavouriteList.push(item)});
+            return arrFavouriteList;
         } catch (error) {
             return [];
         }
@@ -300,12 +321,12 @@ export const getNFTItemList2 = async (body: {pageSize: number, pageNum: number, 
         _NFT.tokenId = itemObject.tokenId;
         _NFT.name = itemObject.token.name;
         _NFT.image = getImageFromAsset(itemObject.token.thumbnail);
-        _NFT.price_ela = itemObject.price / 1e18;
+        _NFT.price_ela = itemObject.orderPrice / 1e18;
         // _NFT.price_usd = _NFT.price_ela * ELA2USD;
         _NFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4)
         _NFT.type = itemObject.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-        // _NFT.likes = itemObject.likes;
-        // _NFT.views = itemObject.views;
+        _NFT.likes = itemObject.token.likes;
+        _NFT.views = itemObject.token.views;
         // _NFT.status = itemObject.status;
         // _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
         // _NFT.isLike =

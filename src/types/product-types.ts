@@ -214,7 +214,7 @@ export type TypeProductFetch = {
 export type TypeProductFetch2 = {
     orderId: number;
     createTime: number;
-    price: number;
+    orderPrice: number;
     seller: string;
     tokenId: string;
     orderType: number;
@@ -229,6 +229,8 @@ export type Token = {
     royaltyFee: number;
     royaltyOwner: string;
     thumbnail: string;
+    views: number;
+    likes: number;
 }
 
 export type TypeFavouritesFetch = {
