@@ -233,7 +233,7 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
     if (loginState) {
         try {
             const resFavouriteList = await fetch(
-                `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible`,
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/getFavoritesCollectible`,
                 {
                     method: 'POST',
                     headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
@@ -242,7 +242,7 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
             );
             const dataFavouriteList = await resFavouriteList.json();
             let arrFavouriteList: Array<string> = [];
-            dataFavouriteList.data.data.map((item: string) => {arrFavouriteList.push(item)});
+            dataFavouriteList.data.map((item: { tokenId: string }) => {arrFavouriteList.push(item.tokenId)});
             return arrFavouriteList;
         } catch (error) {
             return [];
@@ -325,8 +325,8 @@ export const getNFTItemList2 = async (body: {pageSize: number, pageNum: number, 
         // _NFT.price_usd = _NFT.price_ela * ELA2USD;
         _NFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4)
         _NFT.type = itemObject.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-        _NFT.likes = itemObject.token.likes;
-        _NFT.views = itemObject.token.views;
+        _NFT.likes = itemObject.token.likes ? itemObject.token.likes : 0;
+        _NFT.views = itemObject.token.views ? itemObject.token.views : 0;
         // _NFT.status = itemObject.status;
         // _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
         // _NFT.isLike =

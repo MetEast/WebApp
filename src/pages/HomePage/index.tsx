@@ -62,6 +62,7 @@ const HomePage: React.FC = (): JSX.Element => {
         const updateTokenInfo = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.token);
+            console.log(likeList);
             setProductList((prevState) => {return prevState.map(item => {item.isLike = likeList.includes(item.tokenId); item.price_usd = item.price_ela * ELA2USD; return item;})})
             setCollectionList((prevState) => {return prevState.map(item => {item.isLike = likeList.includes(item.tokenId); item.price_usd = item.price_ela * ELA2USD; return item;})})
         }
