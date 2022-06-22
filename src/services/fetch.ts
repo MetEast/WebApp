@@ -15,7 +15,7 @@ import {
     enumTransactionType,
     enumBlindBoxNFTType,
     enumMyNFTType,
-    enumBadgeType, TypeProductFetch2,
+    enumBadgeType, TypeProductFetch2, OrderEventType,
 } from 'src/types/product-types';
 import { NotificationParams, TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
 import { getImageFromAsset, reduceHexAddress, getTime } from 'src/services/common';
@@ -452,48 +452,57 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
 export const getNFTItem = async (
     tokenId: string | undefined,
     ELA2USD: number,
-    likeList: Array<TypeFavouritesFetch>,
+    // likeList: Array<TypeFavouritesFetch>,
 ) => {
     const resNFTItem = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getMarketTokenByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTItem = await resNFTItem.json();
     const itemObject: TypeProductFetch = jsonNFTItem.data;
+
+    const resNFTItem2 = await fetch(
+        `${process.env.REACT_APP_SERVICE_URL}/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
+        FETCH_CONFIG_JSON,
+    );
+    const jsonNFTItem2 = await resNFTItem2.json();
+    const itemObject2: TypeProductFetch = jsonNFTItem2.data;
+
     const _NFTItem: TypeProduct = { ...blankNFTItem };
     if (itemObject !== undefined) {
-        _NFTItem.tokenId = itemObject.tokenId;
+        _NFTItem.tokenId = itemObject2.tokenId;
         _NFTItem.name = itemObject.name;
-        _NFTItem.image = getImageFromAsset(itemObject.asset);
-        _NFTItem.price_ela = itemObject.price / 1e18;
+        _NFTItem.image = getImageFromAsset(itemObject2.data.image);
+        _NFTItem.price_ela = itemObject.order?.orderPrice / 1e18;
         _NFTItem.price_usd = _NFTItem.price_ela * ELA2USD;
-        _NFTItem.type =
-            itemObject.status === 'NEW'
-                ? enumSingleNFTType.NotOnSale
-                : itemObject.endTime === '0'
-                ? enumSingleNFTType.BuyNow
-                : enumSingleNFTType.OnAuction;
+        _NFTItem.type = itemObject.order === undefined ? enumSingleNFTType.NotOnSale :
+            itemObject.order.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+            // itemObject.status === 'NEW'
+            //     ? enumSingleNFTType.NotOnSale
+            //     : itemObject.endTime === '0'
+            //     ? enumSingleNFTType.BuyNow
+            //     : enumSingleNFTType.OnAuction;
         _NFTItem.likes = itemObject.likes;
         _NFTItem.views = itemObject.views;
-        _NFTItem.isLike =
-            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-                ? false
-                : true;
+        // _NFTItem.isLike =
+        //     likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+        //         ? false
+        //         : true;
         _NFTItem.description = itemObject.description;
-        _NFTItem.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
-        _NFTItem.authorDescription = itemObject.authorDescription || ' ';
+        _NFTItem.author = itemObject2.creator?.name || reduceHexAddress(itemObject2.royaltyOwner, 4);
+        _NFTItem.authorDescription = itemObject2.creator?.description || '';
         _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _NFTItem.authorAddress = itemObject.royaltyOwner;
-        _NFTItem.holder = itemObject.holder;
+        _NFTItem.holder = itemObject2.tokenOwner;
         _NFTItem.holderName =
             itemObject.holder === itemObject.royaltyOwner
                 ? _NFTItem.author
                 : itemObject.holderName
                 ? itemObject.holderName
                 : reduceHexAddress(itemObject.holder, 4);
-        _NFTItem.orderId = itemObject.orderId;
-        _NFTItem.tokenIdHex = itemObject.tokenIdHex;
-        _NFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
+        _NFTItem.orderId = itemObject.order.orderId + '';
+        _NFTItem.tokenIdHex = itemObject2.tokenIdHex;
+        _NFTItem.royalties = itemObject.royaltyFee / 1e4;
         _NFTItem.category = itemObject.category;
         _NFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
@@ -507,7 +516,7 @@ export const getNFTItem = async (
             _NFTItem.endTime = ' ';
         }
         _NFTItem.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-        _NFTItem.isBlindbox = itemObject.isBlindbox;
+        _NFTItem.isBlindbox = itemObject.order?.isBlindBox;
     }
     return _NFTItem;
 };
@@ -636,6 +645,69 @@ export const getNFTLatestTxs = async (
     }
     return { txs: _NFTTxList, history: _NFTTxHistoryList };
 };
+
+export const getNFTLatestTxs2 = async (
+    tokenId: string | undefined,
+) => {
+    console.log(tokenId);
+    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTransHistoryByTokenId?tokenId=${tokenId}`;
+
+    const resNFTTxs = await fetch(fetchUrl, FETCH_CONFIG_JSON);
+    const jsonNFTTxs = await resNFTTxs.json();
+    const arrNFTTxs = jsonNFTTxs.data;
+
+    const _NFTTxList: Array<TypeNFTTransaction> = [];
+    for (let i = 0; i < arrNFTTxs.length; i++) {
+        const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
+        // if (itemObject.event === 'Transfer') continue;
+        const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
+        const lastEvent  = itemObject.events[itemObject.events.length - 1];
+        switch (lastEvent.eventType) {
+            // case 'Mint':
+            //     _NFTTx.type = enumTransactionType.CreatedBy;
+            //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
+            //     break;
+            case OrderEventType.OrderForSale:
+                _NFTTx.type = enumTransactionType.ForSale;
+                _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+                break;
+            case OrderEventType.OrderForAuction:
+                _NFTTx.type = enumTransactionType.OnAuction;
+                _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+                break;
+            // case OrderEventType.OrderBid:
+            //     _NFTTx.type = enumTransactionType.Bid;
+            //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
+            //     break;
+            // case 'ChangeOrderPrice':
+            //     _NFTTx.type = enumTransactionType.PriceChanged;
+            //     _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
+            //     break;
+            case OrderEventType.OrderCancelled:
+                _NFTTx.type = enumTransactionType.SaleCanceled;
+                _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+                break;
+            case OrderEventType.OrderFilled:
+                _NFTTx.type = enumTransactionType.SoldTo;
+                _NFTTx.user = itemObject.buyerInfo ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
+                break;
+            // case 'Transfer':
+            //     _NFTTx.type = enumTransactionType.Transfer;
+            //     break;
+            // case 'SettleBidOrder':
+            //     _NFTTx.type = enumTransactionType.SettleBidOrder;
+            //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
+            //     break;
+        }
+        _NFTTx.price = lastEvent.price ? lastEvent.price / 1e18 : 0;
+        _NFTTx.txHash = lastEvent.transactionHash;
+        const timestamp = getTime(lastEvent.timestamp.toString());
+        _NFTTx.time = timestamp.date + ' ' + timestamp.time;
+        _NFTTxList.push(_NFTTx);
+    }
+    return _NFTTxList;
+};
+
 
 export const getNFTLatestBids = async (
     tokenId: string | undefined,

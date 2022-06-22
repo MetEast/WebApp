@@ -72,7 +72,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
+            const _NFTItem = await getNFTItem(params.id, ELA2USD);
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.OnAuction) navigate(-1); // on auction
                 setProductDetail(_NFTItem);

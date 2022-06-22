@@ -68,14 +68,12 @@ const NFTPreview: React.FC<ComponentProps> = ({
             }`;
             const reqBody = isBlindBox
                 ? {
-                      token: signInDlgState.token,
                       blindBoxIndex: product.tokenId,
-                      did: signInDlgState.userDid,
+                      did: signInDlgState.address,
                   }
                 : {
-                      token: signInDlgState.token,
                       tokenId: product.tokenId,
-                      did: signInDlgState.userDid,
+                      did: signInDlgState.address,
                   };
             // change state first
             if (updateLikes !== undefined) updateLikes(index, likeState ? 'dec' : 'inc');
@@ -84,6 +82,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })

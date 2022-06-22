@@ -12,7 +12,7 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getMintCategory } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs, getNFTLatestTxs2 } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -39,7 +39,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
+            const _NFTItem = await getNFTItem(params.id, ELA2USD);
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
@@ -54,9 +54,9 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
+            const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.txs);
+                setTransactionsList(_NFTTxs);
             }
         };
         fetchLatestTxs().catch(console.error);

@@ -209,6 +209,33 @@ export type TypeProductFetch = {
     createdDescription: string;
     createdAvatar: string;
     isBlindbox: boolean;
+
+    tokenOwner: string,
+    royaltyFee: number,
+    tokenMinter: string,
+    updateTime: number,
+
+    creator: {
+        did: string,
+        description: string,
+        name: string
+    },
+    data: {
+        image: string,
+        kind: string,
+        size: number,
+        thumbnail: string
+    },
+
+    order: {
+        orderId: number,
+        createTime: number,
+        isBlindBox: boolean,
+        orderPrice: number,
+        orderState: number,
+        orderType: number,
+        seller: string,
+    }
 };
 
 export type TypeProductFetch2 = {
@@ -258,6 +285,16 @@ export type TypeVeiwsLikesFetch = {
     views: Array<TypeViewsFetchItem>;
 };
 
+export enum OrderEventType {
+    OrderForAuction,
+    OrderBid,
+    OrderForSale,
+    OrderFilled,
+    OrderCancelled,
+    OrderPriceChanged,
+    OrderTakenDown,
+}
+
 export type TypeNFTTransactionFetch = {
     blockNumber: number;
     from: string;
@@ -279,7 +316,44 @@ export type TypeNFTTransactionFetch = {
     royaltyOwner: string;
     tHash: string;
     // price: string;
+
+    sellerAddr: string;
+    sellerInfo: {
+        did: string;
+        description: string;
+        name: string;
+    }
+    buyerAddr: string;
+    buyerInfo: {
+        did: string;
+        description: string;
+        name: string;
+    }
+
+    events: Array<TransferEvent>;
 };
+
+export type TransferEvent = {
+    blockNumber: number,
+    transactionHash: string,
+    seller: string,
+    buyer: string,
+    orderId: number,
+    tokenId: string,
+    quoteToken: string,
+    minPrice: number,
+    price: number,
+    oldPrice: number,
+    newPrice: number,
+    endTime: number,
+    royaltyOwner: string,
+    royaltyFee: number,
+    platformAddress: string,
+    platformFee: number,
+    eventType: number,
+    gasFee: number,
+    timestamp: number,
+}
 
 export type TypeSingleNFTBidFetch = {
     orderId: string;
