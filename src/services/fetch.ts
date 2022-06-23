@@ -301,7 +301,11 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
     return { total: totalCount, data: _arrNFTList };
 };
 
-export const getNFTItemList2 = async (body: {pageSize: number, pageNum: number, orderType?: string}) => {
+export const getNFTItemList2 = async (
+    body: {pageSize: number, pageNum: number, orderType?: string},
+    ELA2USD: number | undefined,
+    likeList: Array<String> | undefined,
+) => {
     const resNFTList = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketTokens`,
         {
@@ -322,17 +326,14 @@ export const getNFTItemList2 = async (body: {pageSize: number, pageNum: number, 
         _NFT.name = itemObject.token.name;
         _NFT.image = getImageFromAsset(itemObject.token.thumbnail);
         _NFT.price_ela = itemObject.orderPrice / 1e18;
-        // _NFT.price_usd = _NFT.price_ela * ELA2USD;
+        _NFT.price_usd = ELA2USD ? _NFT.price_ela * ELA2USD : 0;
         _NFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4)
         _NFT.type = itemObject.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
         _NFT.likes = itemObject.token.likes ? itemObject.token.likes : 0;
         _NFT.views = itemObject.token.views ? itemObject.token.views : 0;
         // _NFT.status = itemObject.status;
         // _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-        // _NFT.isLike =
-        //     likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-        //         ? false
-        //         : true;
+        _NFT.isLike = likeList ? likeList.includes(itemObject.tokenId ) : false;
         _arrNFTList.push(_NFT);
     }
     return { total: totalCount, data: _arrNFTList };
@@ -396,6 +397,58 @@ export const getSearchParams = (
         searchParams += `&category=${category.value}`;
     }
     return searchParams;
+};
+
+export const getSearchParams2 = (
+    pageNum: number,
+    pageSize: number,
+    keyWord: string,
+    sortBy: TypeSelectItem | undefined,
+    filterRange: TypeFilterRange,
+    filters: Array<enumFilterOption>,
+    category: TypeSelectItem | undefined,
+) => {
+    let orderType, filterStatus, minPrice, maxPrice;
+    if (sortBy !== undefined) {
+        switch (sortBy.value) {
+            case 'low_to_high':
+                orderType = 'price_l_to_h';
+                break;
+            case 'high_to_low':
+                orderType = `price_h_to_l`;
+                break;
+            case 'most_viewed':
+                orderType = `mostviewed`;
+                break;
+            case 'most_liked':
+                orderType = `mostliked`;
+                break;
+            case 'most_recent':
+                orderType = `mostrecent`;
+                break;
+            case 'oldest':
+                orderType = `oldest`;
+                break;
+            default:
+                orderType = `mostrecent`;
+                break;
+        }
+    }
+    if (filterRange.min !== undefined) {
+        minPrice = filterRange.min;
+    }
+    if (filterRange.max !== undefined) {
+        maxPrice = filterRange.max;
+    }
+    if (filters.length !== 0) {
+        let filterStatus: string = '';
+        filters.forEach((item) => {
+            if (item === 0) filterStatus = 'ON AUCTION,';
+            else if (item === 1) filterStatus = 'BUY NOW,';
+        });
+    }
+
+    return {pageNum, pageSize, keyword: keyWord, orderType, filterStatus, minPrice, maxPrice, category: category?.value};
 };
 
 // Mystery Box Page

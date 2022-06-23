@@ -13,10 +13,10 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
     getELA2USD,
-    getMyFavouritesList,
-    getNFTItemList,
+    getMyFavouritesList, getMyFavouritesList2,
+    getNFTItemList, getNFTItemList2,
     getPageBannerList,
-    getSearchParams,
+    getSearchParams, getSearchParams2,
 } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
@@ -49,10 +49,10 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [ELA2USD, setELA2USD] = useState<number>(0);
-    const [myFavorList, setMyFavorList] = useState<Array<TypeFavouritesFetch>>([]);
+    const [myFavorList, setMyFavorList] = useState<Array<String>>([]);
     const fillerItem = Array(pageSize).fill(blankNFTItem);
     let ELA2USDRate: number = 0;
-    let likeList: Array<TypeFavouritesFetch> = [];
+    let likeList: Array<string> = [];
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -81,14 +81,14 @@ const ExplorePage: React.FC = (): JSX.Element => {
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
-                likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+                likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.address);
                 setMyFavorList(likeList);
             }
-            const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
-            const _searchedNFTList = await getNFTItemList(
+            const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
+            const _searchedNFTList = await getNFTItemList2(
                 searchParams,
-                ELA2USDRate ? ELA2USDRate : ELA2USD,
-                likeList.length ? likeList : myFavorList,
+                ELA2USD ? ELA2USD : ELA2USDRate,
+                likeList,
             );
             if (!unmounted) {
                 if (pageNum === 1) setProductList(_searchedNFTList.data);
@@ -98,12 +98,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 if (Math.ceil(_searchedNFTList.total / pageSize) > pageNum) setHasMore(true);
             }
         };
-        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
             getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord, category, pageNum]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, sortBy, filters, filterRange, keyWord, category, pageNum]); //, productViewMode
 
     const fetchMoreData = () => {
         if (!isLoadingNext) {

@@ -43,8 +43,8 @@ const HomePage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchCollections = async () => {
             if (!unmounted) setIsLoading(true);
-            const _newNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10});
-            const _popularNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10, orderType: 'mostliked'});
+            const _newNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10}, undefined, undefined);
+            const _popularNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10, orderType: 'mostliked'}, undefined, undefined);
             if (!unmounted) {
                 setProductList(_newNFTList.data);
                 setCollectionList(_popularNFTList.data);
