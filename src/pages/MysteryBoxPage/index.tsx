@@ -12,7 +12,7 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
+import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList, getSearchParams2 } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -73,12 +73,12 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
             }
-            const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
+            const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
-                searchParams,
+                JSON.stringify(searchParams),
                 ELA2USDRate ? ELA2USDRate : ELA2USD,
-                signInDlgState.isLoggedIn,
-                signInDlgState.userDid,
+                // signInDlgState.isLoggedIn,
+                // signInDlgState.address,
             );
             if (!unmounted) {
                 if (pageNum === 1) setBlindBoxList(_searchedBBList.data);

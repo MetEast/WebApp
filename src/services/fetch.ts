@@ -452,25 +452,29 @@ export const getSearchParams2 = (
 };
 
 // Mystery Box Page
-export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginState: boolean, did: string) => {
+export const getBBItemList = async (body: string, ELA2USD: number) => {
+    const curTimestamp = new Date().getTime() / 1000;
     const resBBList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/SearchBlindBox?${fetchParams}`,
-        FETCH_CONFIG_JSON,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketBlindBoxes`,
+        {
+            method: 'POST',
+            ...FETCH_CONFIG_JSON,
+            body: body,
+        }
     );
     const jsonBBList = await resBBList.json();
     const totalCount: number = jsonBBList.data.total;
-    const arrBBList = jsonBBList.data ? jsonBBList.data.result : [];
+    const arrBBList = jsonBBList.data ? jsonBBList.data.data : [];
 
     const _arrBBList: Array<TypeProduct> = [];
     for (let i = 0; i < arrBBList.length; i++) {
         const itemObject: TypeProductFetch = arrBBList[i];
         const _BBItem: TypeProduct = { ...blankBBItem };
-        _BBItem.tokenId = itemObject.blindBoxIndex.toString();
+        _BBItem.tokenId = itemObject._id;
         _BBItem.name = itemObject.name;
         _BBItem.image = getImageFromAsset(itemObject.thumbnail ? itemObject.thumbnail : itemObject.asset);
         _BBItem.price_ela = parseFloat(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
-        const curTimestamp = new Date().getTime() / 1000;
         _BBItem.type =
             itemObject.instock === 0
                 ? enumBlindBoxNFTType.SoldOut
@@ -481,14 +485,14 @@ export const getBBItemList = async (fetchParams: string, ELA2USD: number, loginS
         _BBItem.views = itemObject.views;
         _BBItem.author = itemObject.createdName
             ? itemObject.createdName
-            : reduceHexAddress(itemObject.createdAddress, 4);
-        _BBItem.royaltyOwner = itemObject.createdAddress;
-        _BBItem.isLike = loginState
-            ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === did) === -1
-                ? false
-                : true
-            : false;
-        _BBItem.sold = itemObject.sold || 0;
+            : reduceHexAddress(itemObject.address, 4);
+        _BBItem.royaltyOwner = itemObject.address;
+        // _BBItem.isLike = loginState
+        //     ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === did) === -1
+        //         ? false
+        //         : true
+        //     : false;
+        _BBItem.sold = itemObject.soldTokenIds?.length || 0;
         _BBItem.instock = itemObject.instock || 0;
         if (itemObject.saleBegin) {
             const endTime = getTime(itemObject.saleBegin);
@@ -577,8 +581,12 @@ export const getNFTItem = async (
 // BB sold product
 export const getNFTItems = async (tokenIds: string | undefined) => {
     const resNFTItems = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTokensByIds?ids=${tokenIds}`,
-        FETCH_CONFIG_JSON,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getTokenByIds`,
+        {
+            method: 'POST',
+            ...FETCH_CONFIG_JSON,
+            body: JSON.stringify(tokenIds?.split(',')),
+        }
     );
     const jsonNFTItems = await resNFTItems.json();
     const arrNFTItems = await jsonNFTItems.data;
@@ -824,22 +832,22 @@ export const getNFTLatestBids = async (
 };
 
 // BlindBoxProduct Page
-export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number, userDid: string) => {
+export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number) => {
     const resBBItem = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindboxById?blindBoxId=${blindBoxId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindBoxById?id=${blindBoxId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonBBItem = await resBBItem.json();
-    const itemObject: TypeProductFetch = jsonBBItem.data.result;
+    const itemObject: TypeProductFetch = jsonBBItem.data;
     const _BBItem: TypeProduct = { ...blankBBItem };
 
+    const curTimestamp = new Date().getTime() / 1000;
     if (itemObject !== undefined) {
-        _BBItem.tokenId = itemObject.blindBoxIndex.toString();
+        _BBItem.tokenId = itemObject._id;
         _BBItem.name = itemObject.name;
         _BBItem.image = getImageFromAsset(itemObject.asset);
         _BBItem.price_ela = parseFloat(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
-        const curTimestamp = new Date().getTime() / 1000;
         _BBItem.type =
             itemObject.instock === 0
                 ? enumBlindBoxNFTType.SoldOut
@@ -850,15 +858,15 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.views = itemObject.views;
         _BBItem.author = itemObject.createdName
             ? itemObject.createdName
-            : reduceHexAddress(itemObject.createdAddress, 4);
-        _BBItem.royaltyOwner = itemObject.createdAddress;
+            : reduceHexAddress(itemObject.address, 4);
+        _BBItem.royaltyOwner = itemObject.address;
         _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : '';
         _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default';
-        _BBItem.isLike =
-            itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
+        // _BBItem.isLike =
+        //     // itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
         _BBItem.description = itemObject.description;
         _BBItem.instock = itemObject.instock || 0;
-        _BBItem.sold = itemObject.sold || 0;
+        _BBItem.sold = itemObject.soldTokenIds?.length || 0;
         if (itemObject.saleBegin) {
             const endTime = getTime(itemObject.saleBegin);
             _BBItem.endTime = endTime.date + ' ' + endTime.time;
@@ -870,7 +878,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number,
         _BBItem.maxPurchases = parseInt(itemObject.maxPurchases);
         _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);
         _BBItem.did = itemObject.did;
-        _BBItem.soldIds = itemObject.sold_tokenIds;
+        _BBItem.soldIds = itemObject.soldTokenIds;
     }
     return _BBItem;
 };

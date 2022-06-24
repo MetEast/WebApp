@@ -40,7 +40,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
-            const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
+            const _BBItem = await getBBItem(params.id, ELA2USD);
             const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','));
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
@@ -52,7 +52,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.userDid, params.id]);
+    }, [signInDlgState.address, params.id]);
 
     // const changeBBStatus = async () => {
     //     let unmounted = false;
@@ -109,12 +109,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     console.log(error);
                 });
         };
-        if (blindBoxDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+        if (blindBoxDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.address)
             updateBlindBoxViews(blindBoxDetail.tokenId);
         return () => {
             unmounted = true;
         };
-    }, [blindBoxDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+    }, [blindBoxDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

@@ -190,6 +190,8 @@ export type TypeProductFetch = {
     orderId: string;
     category: string;
     //
+    _id:string;
+    address: string;
     blindBoxIndex: number;
     blindPrice: string;
     maxPurchases: string;
@@ -202,7 +204,7 @@ export type TypeProductFetch = {
     list_likes: Array<TypeBlindListLikes>;
     list_views: Array<TypeBlindListLikes>;
     did: string;
-    sold_tokenIds: string[];
+    soldTokenIds: string[];
     tokenIds: string[];
     createdName: string;
     createdAddress: string;
