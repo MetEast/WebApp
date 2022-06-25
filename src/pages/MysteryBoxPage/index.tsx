@@ -88,7 +88,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 if (Math.ceil(_searchedBBList.total / pageSize) > pageNum) setHasMore(true);
             }
         };
-        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
             getFetchData().catch(console.error);
         return () => {
             unmounted = true;

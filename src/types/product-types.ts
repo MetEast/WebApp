@@ -217,6 +217,8 @@ export type TypeProductFetch = {
     tokenMinter: string,
     updateTime: number,
 
+    orderPrice: number,
+
     creator: {
         did: string,
         description: string,
@@ -237,6 +239,18 @@ export type TypeProductFetch = {
         orderState: number,
         orderType: number,
         seller: string,
+    },
+
+    token: {
+        category: string,
+        createTime: number,
+        description: string,
+        name: string,
+        royaltyFee: number,
+        royaltyOwner: string,
+        thumbnail: string,
+        likes: number,
+        views: number,
     }
 };
 
@@ -392,6 +406,13 @@ export type TypeYourEarningFetch = {
     tokenId: string;
     thumbnail: string;
     updateTime: string;
+
+    platformFee: number;
+    price: number;
+    sellerAddr: string;
+    royaltyOwner: string;
+    royaltyFee: number;
+    token: { name: string, data: {thumbnail: string } };
 };
 
 export type TypeChartAxis = {

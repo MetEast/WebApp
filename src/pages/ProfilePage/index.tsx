@@ -21,7 +21,7 @@ import {
     getMyNFTItemList,
     getMyTodayEarned,
     getMyTotalEarned,
-    getMyEarnedList,
+    getMyEarnedList, getSearchParams2, getMyFavouritesList2,
 } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
@@ -92,10 +92,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [myNFTCount, setMyNFTCount] = useState<Array<number>>(Array(6).fill(0));
     const [isLoadingAssets, setIsLoadingAssets] = useState<Array<boolean>>(Array(6).fill(true));
     const [ELA2USD, setELA2USD] = useState<number>(0);
-    const [myFavorList, setMyFavorList] = useState<Array<TypeFavouritesFetch>>([]);
+    const [myFavorList, setMyFavorList] = useState<Array<String>>([]);
     const fillerItem = Array(pageSize).fill(blankMyNFTItem);
     let ELA2USDRate: number = 0;
-    let likeList: Array<TypeFavouritesFetch> = [];
+    let likeList: Array<String> = [];
 
     // -------------- Fetch Data -------------- //
     const setLoadingState = (id: number, state: boolean) => {
@@ -159,10 +159,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         if (pageNum === 1 && i === nTabId) {
                             ELA2USDRate = await getELA2USD();
                             setELA2USD(ELA2USDRate);
-                            likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+                            likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.token);
                             setMyFavorList(likeList);
                         }
-                        const searchParams = getSearchParams(
+                        const searchParams = getSearchParams2(
                             i === nTabId ? pageNum : 1,
                             i === nTabId ? pageSize : 1,
                             keyWord,
@@ -172,14 +172,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             category,
                         );
                         const _searchedMyNFTList = await getMyNFTItemList(
-                            searchParams,
-                            // i === nTabId ? ELA2USD : 1,
-                            // i === nTabId ? likeList : [],
+                            JSON.stringify({...searchParams, address: signInDlgState.address}),
                             ELA2USDRate ? ELA2USDRate : ELA2USD,
                             likeList.length ? likeList : myFavorList,
                             i,
-                            signInDlgState.walletAccounts[0],
-                            signInDlgState.userDid,
+                            signInDlgState.address,
+                            signInDlgState.token,
                         );
                         if (!unmounted) {
                             if (pageNum === 1) setMyNFTData(i, _searchedMyNFTList.data);
@@ -193,7 +191,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     }
                 });
         };
-        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length && signInDlgState.userDid) {
+        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length && signInDlgState.address) {
             getFetchData().catch(console.error);
         } else if (!signInDlgState.isLoggedIn) {
             navigate('/');

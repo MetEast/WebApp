@@ -48,12 +48,12 @@ import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
 import { addressZero } from './wallet';
 
 const fetchMyNFTAPIs = [
-    'getAllCollectibleByAddress',
-    'getOwnCollectible',
-    'getSelfCreateCollectible',
-    'getForSaleCollectible',
-    'getSoldCollectibles',
-    'getFavoritesCollectible',
+    'listAllMyTokens',
+    'listOwnedTokensByAddress',
+    'listCreatedTokensByAddress',
+    'listSaleTokensByAddress',
+    'listSoldTokensByAddress',
+    'listFavoritesTokens',
 ];
 
 export const FETCH_CONFIG_JSON = {
@@ -915,53 +915,78 @@ export const updateBBStatus = (token: string, BBId: number, status: 'online' | '
 export const getMyNFTItemList = async (
     fetchParams: string,
     ELA2USD: number,
-    likeList: Array<TypeFavouritesFetch>,
+    likeList: Array<String>,
     nTabId: number,
     walletAddress: string,
-    userDid: string,
+    token: string,
 ) => {
     const fetchUrl =
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/${fetchMyNFTAPIs[nTabId]}?` +
-        (nTabId === 5 ? `did=${userDid}` : `selfAddr=${walletAddress}`) +
-        `&${fetchParams}`;
-    const resMyNFTList = await fetch(fetchUrl, FETCH_CONFIG_JSON);
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/${fetchMyNFTAPIs[nTabId]}`;
+    const resMyNFTList = await fetch(fetchUrl, {
+        method: 'POST',
+        headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
+        body: fetchParams,
+    });
     const jsonMyNFTList = await resMyNFTList.json();
     const totalCount: number = jsonMyNFTList.data.total;
-    const arrMyNFTList = jsonMyNFTList.data ? jsonMyNFTList.data.result : [];
+    const arrMyNFTList = jsonMyNFTList.data ? jsonMyNFTList.data.data : [];
     const _arrMyNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrMyNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrMyNFTList[i];
         if (itemObject.holder === addressZero) continue;
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
-        _myNFT.tokenId = itemObject.tokenId;
-        _myNFT.name = itemObject.name;
-        _myNFT.image = itemObject.thumbnail ? getImageFromAsset(itemObject.thumbnail) : '';
-        _myNFT.price_ela = itemObject.status === 'NEW' ? 0 : itemObject.price / 1e18;
-        _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
-        _myNFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
         _myNFT.types = [];
-        if (nTabId === 0 || nTabId === 5) {
+        if (nTabId === 0 || nTabId === 1 || nTabId === 2) {
+
+            _myNFT.tokenId = itemObject.tokenId;
+            _myNFT.name = itemObject.name;
+            _myNFT.image = itemObject.thumbnail ? getImageFromAsset(itemObject.thumbnail) : '';
+            _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18: 0;
+            _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
+            _myNFT.author = reduceHexAddress(itemObject.royaltyOwner, 4);
+            _myNFT.likes = itemObject.likes;
+            _myNFT.views = itemObject.views;
+
+
             // all & liked
-            _myNFT.types.push(
-                itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased,
-            );
-            if (itemObject.holder === walletAddress) {
-                // owned
-                if (itemObject.status !== 'NEW')
-                    _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
-            } else {
-                // not owned
-                _myNFT.types.push(enumMyNFTType.Sold);
-            }
-        } else if (nTabId === 1) {
+            _myNFT.types.push(itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased);
+            // if (itemObject.holder === walletAddress) {
+            //     // owned
+            //     if (itemObject.status !== 'NEW')
+            //         _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
+            // } else {
+            //     // not owned
+            //     _myNFT.types.push(enumMyNFTType.Sold);
+            // }
+        } else if (nTabId === 5) {
+
+            _myNFT.tokenId = itemObject.tokenId;
+            _myNFT.name = itemObject.token.name;
+            _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
+            _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18: 0;
+            _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
+            _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
+            _myNFT.likes = itemObject.token.likes;
+            _myNFT.views = itemObject.token.views;
+
             // owned
-            _myNFT.type = itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased;
+            _myNFT.type = itemObject.token.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased;
             _myNFT.types.push(
-                itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased,
+                itemObject.token.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased,
             );
             if (itemObject.status !== 'NEW')
                 _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
-        } else if (nTabId === 2) {
+        } else {
+
+            _myNFT.tokenId = itemObject.tokenId;
+            _myNFT.name = itemObject.token.name;
+            _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
+            _myNFT.price_ela = itemObject.orderPrice  / 1e18;
+            _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
+            _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
+            _myNFT.likes = itemObject.token.likes;
+            _myNFT.views = itemObject.token.views;
+
             // created
             _myNFT.type = enumMyNFTType.Created;
             if (itemObject.holder === walletAddress) {
@@ -979,38 +1004,12 @@ export const getMyNFTItemList = async (
                     _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
                 }
             }
-        } else if (nTabId === 3) {
-            // for sale
-            // _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            _myNFT.types.push(
-                itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased,
-            );
-            _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
-        } else if (nTabId === 4) {
-            // _myNFT.type = enumMyNFTType.Sold;
-            _myNFT.types.push(enumMyNFTType.Sold);
-            if (itemObject.status !== 'NEW')
-                _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
         }
-        // set type to navigate to detail page
-        if (itemObject.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
-        else {
-            if (itemObject.status === 'NEW') {
-                _myNFT.type =
-                    itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased;
-            } else {
-                _myNFT.type = itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            }
-        }
-        _myNFT.likes = itemObject.likes;
-        _myNFT.views = itemObject.views;
         _myNFT.status = itemObject.status;
         _myNFT.isLike =
             nTabId === 5
                 ? true
-                : likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-                ? false
-                : true;
+                : likeList.includes(itemObject.tokenId)
         _arrMyNFTList.push(_myNFT);
     }
     return { total: totalCount, data: _arrMyNFTList };
@@ -1019,7 +1018,7 @@ export const getMyNFTItemList = async (
 export const getMyTotalEarned = async (address: string) => {
     try {
         const resTotalEarnedResult = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedByWalletAddress?address=${address}`,
+            `${process.env.REACT_APP_SERVICE_URL}/api/v1/getEarnedByAddress?address=${address}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -1029,7 +1028,7 @@ export const getMyTotalEarned = async (address: string) => {
         );
         const jsonTotalEarnedResult = await resTotalEarnedResult.json();
         if (jsonTotalEarnedResult && jsonTotalEarnedResult.data)
-            return parseFloat(jsonTotalEarnedResult.data).toFixed(2);
+            return parseFloat(String(jsonTotalEarnedResult.data / 1e18)).toFixed(2);
         return '0';
     } catch (error) {
         return '0';
@@ -1039,7 +1038,7 @@ export const getMyTotalEarned = async (address: string) => {
 export const getMyTodayEarned = async (address: string) => {
     try {
         const resTodayEarnedResult = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTodayEarnedByWalletAddress?address=${address}`,
+            `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTodayEarnedByAddress?address=${address}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -1049,7 +1048,7 @@ export const getMyTodayEarned = async (address: string) => {
         );
         const jsonTodayEarnedResult = await resTodayEarnedResult.json();
         if (jsonTodayEarnedResult && jsonTodayEarnedResult.data)
-            return parseFloat(jsonTodayEarnedResult.data).toFixed(2);
+            return parseFloat(String(jsonTodayEarnedResult.data / 1e18)).toFixed(2);
         return '0';
     } catch (error) {
         return '0';
@@ -1058,7 +1057,7 @@ export const getMyTodayEarned = async (address: string) => {
 
 export const getMyEarnedList = async (address: string) => {
     const resEarnedList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getEarnedListByAddress?address=${address}`,
+        `${process.env.REACT_APP_SERVICE_URL}/api/v1/getEarnedListByAddress?address=${address}`,
         FETCH_CONFIG_JSON,
     );
     const jsonEarnedList = await resEarnedList.json();
@@ -1068,13 +1067,27 @@ export const getMyEarnedList = async (address: string) => {
     for (let i = 0; i < arrEarnedList.length; i++) {
         const itemObject: TypeYourEarningFetch = arrEarnedList[i];
         const _myEarning: TypeYourEarning = { ...blankMyEarning };
+
+        let earn = 0, badge = '';
+        if(itemObject.royaltyOwner === address) {
+            badge = 'Badge';
+            if(itemObject.sellerAddr === address) {
+                earn = itemObject.price;
+            } else {
+                earn = itemObject.royaltyFee;
+            }
+        } else {
+            badge = 'Royalties'
+            earn = itemObject.price - itemObject.royaltyFee - itemObject.platformFee;
+        }
+
         // _earning.tokenId = itemObject.tokenId;
-        _myEarning.title = itemObject.name;
-        _myEarning.avatar = getImageFromAsset(itemObject.thumbnail);
-        _myEarning.price = itemObject.iEarned / 1e18;
+        _myEarning.title = itemObject.token.name;
+        _myEarning.avatar = getImageFromAsset(itemObject.token.data.thumbnail);
+        _myEarning.price = earn / 1e18;
         const timestamp = getTime(itemObject.updateTime);
         _myEarning.time = timestamp.date + ' ' + timestamp.time;
-        _myEarning.badge = itemObject.Badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
+        _myEarning.badge = badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
         _myEarningList.push(_myEarning);
     }
     return _myEarningList;
