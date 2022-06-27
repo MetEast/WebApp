@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import {
     enumBadgeType,
@@ -17,7 +17,14 @@ import { PrimaryButton, PinkButton, SecondaryButton } from 'src/components/Butto
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestBids, getNFTLatestTxs } from 'src/services/fetch';
+import {
+    getELA2USD,
+    getMyFavouritesList,
+    getNFTItem,
+    getNFTLatestBids,
+    getNFTLatestTxs,
+    getNFTLatestTxs2,
+} from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
@@ -35,6 +42,7 @@ import { reduceUserName } from 'src/services/common';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
+    const location = useLocation();
     const navigate = useNavigate();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
@@ -71,14 +79,16 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            // const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
+            // @ts-ignore
+            _NFTItem.isLike = location.state.isLiked
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.OnAuction) navigate(-1); // on auction
                 setProductDetail(_NFTItem);
             }
         };
-        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
             fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
@@ -88,9 +98,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
+            const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.txs);
+                setTransactionsList(_NFTTxs);
             }
         };
         fetchLatestTxs().catch(console.error);
@@ -120,14 +130,14 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         const updateProductViews = (tokenId: string) => {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -149,12 +159,12 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     console.log(error);
                 });
         };
-        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.address)
             updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>

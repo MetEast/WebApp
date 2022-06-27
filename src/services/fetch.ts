@@ -302,7 +302,7 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
 };
 
 export const getNFTItemList2 = async (
-    body: {pageSize: number, pageNum: number, orderType?: string},
+    body: {pageSize: number, pageNum: number, orderType?: string, filterStatus?: string, minPrice?: number, maxPrice?: number, category?: string},
     ELA2USD: number | undefined,
     likeList: Array<String> | undefined,
 ) => {
@@ -435,16 +435,15 @@ export const getSearchParams2 = (
         }
     }
     if (filterRange.min !== undefined) {
-        minPrice = filterRange.min;
+        minPrice = filterRange.min * 1e18;
     }
     if (filterRange.max !== undefined) {
-        maxPrice = filterRange.max;
+        maxPrice = filterRange.max * 1e18;
     }
     if (filters.length !== 0) {
-        let filterStatus: string = '';
         filters.forEach((item) => {
-            if (item === 0) filterStatus = 'ON AUCTION,';
-            else if (item === 1) filterStatus = 'BUY NOW,';
+            if (item === 0) filterStatus = 'ON AUCTION';
+            else if (item === 1) filterStatus = 'BUY NOW';
         });
     }
 
@@ -565,7 +564,7 @@ export const getNFTItem = async (
         const createTime = getTime(itemObject.createTime);
         _NFTItem.createTime = createTime.date + ' ' + createTime.time;
         _NFTItem.status = itemObject.status;
-        _NFTItem.endTimestamp = itemObject.endTime ? parseInt(itemObject.endTime) * 1000 : 0;
+        _NFTItem.endTimestamp = itemObject.endTime ? itemObject.order.endTime * 1000 : 0;
         if (itemObject.endTime) {
             const endTime = getTime(itemObject.endTime);
             _NFTItem.endTime = endTime.date + ' ' + endTime.time;

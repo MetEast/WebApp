@@ -43,7 +43,7 @@ const ELAPrice: React.FC<ComponentProps> = ({
                             display={detail_page ? 'block' : { xs: 'none', sm: 'none', md: 'block' }}
                         >
                             {/* {price_usd ? `${price_usd.toFixed(2)}ELA` : ''} */}
-                            {`~$${price_usd ? price_usd.toFixed(2) : 0}`}
+                            {`~ $${price_usd ? price_usd.toFixed(2) : 0}`}
                         </Typography>
                     )}
                 </>

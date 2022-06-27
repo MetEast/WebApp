@@ -461,10 +461,24 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             } else {
                 if (library) {
                     // alert('library');
+                    let token = cookies.METEAST_TOKEN;
+                    const user: UserTokenType = jwtDecode(token);
                     setSignInDlgState((prevState: SignInState) => {
                         const _state = { ...prevState };
                         _state.chainId = chainId || 0;
                         _state.walletAccounts = account ? [account] : [];
+
+                        _state.isLoggedIn = true;
+                        _state.loginType = '2';
+                        _state.userDid = user.did;
+                        _state.address = user.address;
+                        _state.token = token;
+                        if (user.name) _state.userName = user.name;
+                        if (user.description) _state.userDescription = user.description;
+                        if (user.avatar) _state.userAvatar = user.avatar;
+                        if (user.coverImage) _state.userCoverImage = user.coverImage;
+                        _state.userRole = parseInt(user.role);
+
                         return _state;
                     });
                     if (account) {
@@ -509,7 +523,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 const _state = { ...prevState };
                 _state.token = cookies.METEAST_TOKEN;
                 _state.didUri = didUri;
-                _state.userDid = user.did;
+                _state.userDid = user.address;
                 _state.userName = user.name ? user.name : '';
                 _state.userDescription = user.description ? user.description : '';
                 _state.userAvatar = user.avatar ? user.avatar : '';

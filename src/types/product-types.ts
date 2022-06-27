@@ -216,7 +216,6 @@ export type TypeProductFetch = {
     royaltyFee: number,
     tokenMinter: string,
     updateTime: number,
-
     orderPrice: number,
 
     creator: {
@@ -234,6 +233,7 @@ export type TypeProductFetch = {
     order: {
         orderId: number,
         createTime: number,
+        endTime: number,
         isBlindBox: boolean,
         orderPrice: number,
         orderState: number,

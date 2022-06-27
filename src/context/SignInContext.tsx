@@ -45,7 +45,7 @@ const defaultState: SignInState = {
     didUri: '',
     signOut: false,
     // user info
-    token: '',
+    token: document.cookie.split('; ').find((row) => row.startsWith('METEAST_TOKEN='))?.split('=')[1] || '',
     address: '',
     userDid: '',
     userName: '',

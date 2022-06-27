@@ -81,7 +81,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
-                likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.address);
+                likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.token);
                 setMyFavorList(likeList);
             }
             const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);

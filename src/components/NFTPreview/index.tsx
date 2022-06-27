@@ -110,7 +110,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
             <ProductImageContainer
                 sx={{ cursor: productType === 3 ? 'auto' : 'pointer' }}
                 onClick={() => {
-                    if (!isLoading && product.tokenId && productType !== 3) navigate(getUrl());
+                    if (!isLoading && product.tokenId && productType !== 3) navigate(getUrl(), {state: {isLiked: likeState}});
                 }}
             >
                 <ImageBox loading={isLoading ? 1 : 0}>

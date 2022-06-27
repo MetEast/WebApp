@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect, ComponentProps } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import { enumBadgeType, enumSingleNFTType } from 'src/types/product-types';
@@ -28,6 +28,7 @@ import { reduceUserName } from 'src/services/common';
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
@@ -38,18 +39,20 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+            // const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.address);
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
+            // @ts-ignore
+            _NFTItem.isLike = location.state.isLiked
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
             }
         };
-        if((signInDlgState.isLoggedIn && signInDlgState.userDid) || (!signInDlgState.isLoggedIn)) fetchNFTItem().catch(console.error);
+        if((signInDlgState.isLoggedIn && signInDlgState.address) || (!signInDlgState.isLoggedIn)) fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
     useEffect(() => {
         let unmounted = false;
@@ -79,14 +82,14 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         const updateProductViews = (tokenId: string) => {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + signInDlgState.token,
                 },
                 body: JSON.stringify(reqBody),
             })
