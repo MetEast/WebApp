@@ -1,47 +1,48 @@
 import {
-    TypeProduct,
+    enumBadgeType,
+    enumBlindBoxNFTType,
+    enumMyNFTType,
     enumSingleNFTType,
-    TypeProductFetch,
+    enumTransactionType,
+    OrderEventType,
+    TypeBlindBoxSelectItem,
     TypeFavouritesFetch,
-    TypeBlindListLikes,
+    TypeNFTHisotry,
     TypeNFTTransaction,
     TypeNFTTransactionFetch,
+    TypeProduct,
+    TypeProductFetch,
+    TypeProductFetch2,
     TypeSingleNFTBid,
     TypeSingleNFTBidFetch,
     TypeYourEarning,
     TypeYourEarningFetch,
-    TypeNFTHisotry,
-    TypeBlindBoxSelectItem,
-    enumTransactionType,
-    enumBlindBoxNFTType,
-    enumMyNFTType,
-    enumBadgeType, TypeProductFetch2, OrderEventType,
 } from 'src/types/product-types';
 import { NotificationParams, TypeNotification, TypeNotificationFetch } from 'src/types/notification-types';
-import { getImageFromAsset, reduceHexAddress, getTime } from 'src/services/common';
+import { getImageFromAsset, getTime, reduceHexAddress } from 'src/services/common';
 import {
-    blankNFTItem,
-    blankNFTTxs,
-    blankNFTBid,
-    blankBBItem,
-    blankMyNFTItem,
-    blankMyEarning,
-    blankMyNFTHistory,
-    blankBBCandidate,
+    blankAdminBannerItem,
     blankAdminNFTItem,
     blankAdminUserItem,
-    blankAdminBannerItem,
+    blankBBCandidate,
+    blankBBItem,
+    blankMyEarning,
+    blankMyNFTHistory,
+    blankMyNFTItem,
+    blankNFTBid,
+    blankNFTItem,
+    blankNFTTxs,
     blankNotification,
     blankUserInfo,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import {
+    AdminBannersItemFetchType,
+    AdminBannersItemType,
     AdminNFTItemType,
     AdminUsersItemFetchType,
     AdminUsersItemType,
-    AdminBannersItemType,
-    AdminBannersItemFetchType,
 } from 'src/types/admin-table-data-types';
 import { UserInfoType } from 'src/types/auth-types';
 import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
@@ -936,7 +937,6 @@ export const getMyNFTItemList = async (
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.types = [];
         if (nTabId === 0 || nTabId === 1 || nTabId === 2) {
-
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.name;
             _myNFT.image = itemObject.thumbnail ? getImageFromAsset(itemObject.thumbnail) : '';
@@ -946,19 +946,12 @@ export const getMyNFTItemList = async (
             _myNFT.likes = itemObject.likes;
             _myNFT.views = itemObject.views;
 
+            if( itemObject.royaltyOwner === walletAddress ) {
+                _myNFT.types.push(enumMyNFTType.Created);
+            }
+            _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
 
-            // all & liked
-            _myNFT.types.push(itemObject.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased);
-            // if (itemObject.holder === walletAddress) {
-            //     // owned
-            //     if (itemObject.status !== 'NEW')
-            //         _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
-            // } else {
-            //     // not owned
-            //     _myNFT.types.push(enumMyNFTType.Sold);
-            // }
-        } else if (nTabId === 5) {
-
+        } else if (nTabId === 5 || nTabId === 4) {
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.token.name;
             _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
@@ -968,15 +961,13 @@ export const getMyNFTItemList = async (
             _myNFT.likes = itemObject.token.likes;
             _myNFT.views = itemObject.token.views;
 
-            // owned
-            _myNFT.type = itemObject.token.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased;
-            _myNFT.types.push(
-                itemObject.token.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased,
-            );
-            if (itemObject.status !== 'NEW')
-                _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
-        } else {
+            if( itemObject.token.royaltyOwner === walletAddress ) {
+                _myNFT.types.push(enumMyNFTType.Created);
+            }
 
+            _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+
+        } else {
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.token.name;
             _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
@@ -986,24 +977,13 @@ export const getMyNFTItemList = async (
             _myNFT.likes = itemObject.token.likes;
             _myNFT.views = itemObject.token.views;
 
-            // created
-            _myNFT.type = enumMyNFTType.Created;
-            if (itemObject.holder === walletAddress) {
-                // owned
+            if( itemObject.token.royaltyOwner === walletAddress ) {
                 _myNFT.types.push(enumMyNFTType.Created);
-                if (itemObject.status !== 'NEW')
-                    _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
-            } else {
-                // not owned
-                if (itemObject.status === 'NEW') {
-                    _myNFT.types.push(enumMyNFTType.Created);
-                    _myNFT.types.push(enumMyNFTType.Sold);
-                } else {
-                    _myNFT.types.push(enumMyNFTType.Sold);
-                    _myNFT.types.push(itemObject.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction);
-                }
             }
+
+            _myNFT.type = itemObject.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
         }
+
         _myNFT.status = itemObject.status;
         _myNFT.isLike =
             nTabId === 5
@@ -1095,11 +1075,9 @@ export const getMyEarnedList = async (address: string) => {
 // MyNFT Page
 export const getMyNFTItem = async (
     tokenId: string | undefined,
-    ELA2USD: number,
-    likeList: Array<TypeFavouritesFetch>,
 ) => {
     const resMyNFTItem = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
+        `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTokenOrderByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonMyNFTItem = await resMyNFTItem.json();
@@ -1109,48 +1087,47 @@ export const getMyNFTItem = async (
     if (itemObject !== undefined) {
         _MyNFTItem.tokenId = itemObject.tokenId;
         _MyNFTItem.name = itemObject.name;
-        _MyNFTItem.image = getImageFromAsset(itemObject.asset);
-        _MyNFTItem.price_ela = itemObject.price / 1e18;
-        _MyNFTItem.price_usd = _MyNFTItem.price_ela * ELA2USD;
-        _MyNFTItem.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-        _MyNFTItem.likes = itemObject.likes;
-        _MyNFTItem.views = itemObject.views;
-        _MyNFTItem.isLike =
-            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-                ? false
-                : true;
+        _MyNFTItem.image = getImageFromAsset(itemObject.data.image);
         _MyNFTItem.description = itemObject.description;
-        _MyNFTItem.author = itemObject.authorName
-            ? itemObject.authorName
+        _MyNFTItem.author = itemObject.creator.name
+            ? itemObject.creator.name
             : reduceHexAddress(itemObject.royaltyOwner, 4);
-        _MyNFTItem.authorDescription = itemObject.authorDescription || ' ';
+        _MyNFTItem.authorDescription = itemObject.creator.description || ' ';
         _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
-            itemObject.holder === itemObject.royaltyOwner
+            itemObject.tokenOwner === itemObject.royaltyOwner
                 ? _MyNFTItem.author
                 : itemObject.holderName
                 ? itemObject.holderName
-                : reduceHexAddress(itemObject.holder, 4);
-        _MyNFTItem.holder = itemObject.holder;
+                : reduceHexAddress(itemObject.tokenOwner, 4);
+        _MyNFTItem.holder = itemObject.tokenOwner;
         _MyNFTItem.royaltyOwner = itemObject.royaltyOwner;
         _MyNFTItem.tokenIdHex = itemObject.tokenIdHex;
-        _MyNFTItem.royalties = parseInt(itemObject.royalties) / 1e4;
+        _MyNFTItem.royalties = itemObject.royaltyFee / 1e4;
         _MyNFTItem.category = itemObject.category;
         _MyNFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
         _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
-        if (itemObject.endTime && itemObject.endTime !== '0') {
-            const endTime = getTime(itemObject.endTime);
-            _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
-        } else {
-            _MyNFTItem.endTime = '0';
+
+        if(itemObject.order) {
+            _MyNFTItem.orderId = itemObject.order.orderId.toString();
+            _MyNFTItem.status = itemObject.order.orderState.toString();
+            _MyNFTItem.isExpired = Math.round(new Date().getTime() / 1000) > itemObject.order.endTime;
+            _MyNFTItem.isBlindbox = itemObject.order.isBlindBox;
+            _MyNFTItem.price_ela = itemObject.order.price / 1e18;
+
+            if(itemObject.order.bids > 0) {
+                _MyNFTItem.status = 'HAS BIDS'
+            }
+
+            if (itemObject.order.endTime) {
+                const endTime = getTime(itemObject.endTime);
+                _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
+            } else {
+                _MyNFTItem.endTime = '0';
+            }
         }
-        _MyNFTItem.holder = itemObject.holder;
-        _MyNFTItem.orderId = itemObject.orderId;
-        _MyNFTItem.status = itemObject.status;
-        _MyNFTItem.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-        _MyNFTItem.isBlindbox = itemObject.isBlindbox;
     }
     return _MyNFTItem;
 };

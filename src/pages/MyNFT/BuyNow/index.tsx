@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -15,7 +15,7 @@ import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { getMintCategory } from 'src/services/common';
 import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
-import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
+import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTLatestTxs2 } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -23,6 +23,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 import { reduceUserName } from 'src/services/common';
+import { useSnackbar } from 'notistack';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -32,55 +33,40 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
+    const { enqueueSnackbar } = useSnackbar();
+    const location = useLocation();
+
+    // @ts-ignore
+    let product: TypeProduct = location.state.product;
 
     useEffect(() => {
         let unmounted = false;
         const fetchMyNFTItem = async () => {
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            const _MyNFTItem = await getMyNFTItem(params.id);
+            _MyNFTItem.isLike = product.isLike;
+            _MyNFTItem.views = product.views
+            _MyNFTItem.likes = product.likes
+            _MyNFTItem.price_usd = product.price_usd
+
             if (!unmounted) {
-                if (
-                    !(
-                        signInDlgState.walletAccounts.length &&
-                        _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
-                        _MyNFTItem.status !== 'NEW' &&
-                        _MyNFTItem.endTime === '0'
-                    )
-                ) {
-                    navigate(-1);
-                    // detect previous path is null
-                    const timer = setTimeout(() => {
-                        clearTimeout(timer);
-                        if (
-                            !(
-                                signInDlgState.walletAccounts.length &&
-                                _MyNFTItem.holder === signInDlgState.walletAccounts[0] &&
-                                _MyNFTItem.status !== 'NEW' &&
-                                _MyNFTItem.endTime === '0'
-                            )
-                        ) {
-                            navigate('/');
-                        }
-                    }, 100);
-                } else setProductDetail(_MyNFTItem);
+                setProductDetail(_MyNFTItem);
             }
         };
         if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+            if (signInDlgState.address && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
         } else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, signInDlgState.userDid, params.id]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, signInDlgState.address, params.id]);
 
     useEffect(() => {
         let unmounted = false;
         const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 1000);
+            const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.txs.slice(0, 5));
-                setProdTransHistory(_NFTTxs.history.slice(0, 5));
+                setTransactionsList(_NFTTxs.slice(0, 5));
+                // setProdTransHistory(_NFTTxs.slice(0, 5));
             }
         };
         if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
@@ -94,14 +80,14 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         const updateProductViews = (tokenId: string) => {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -129,6 +115,142 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+
+    function ButtonGroup(product: TypeProduct) {
+        if(product.orderId) {
+            if(!product.isBlindbox) {
+                if(product.status === "1") {
+                    if(product.holder === signInDlgState.address) {
+                        return (
+                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
+                                <PinkButton
+                                    sx={{ width: '100%' }}
+                                    onClick={() => {
+                                        if (signInDlgState.isLoggedIn) {
+                                            setDialogState({
+                                                ...dialogState,
+                                                cancelSaleDlgOpened: true,
+                                                cancelSaleDlgStep: 0,
+                                                cancelSaleOrderId: productDetail.orderId || '',
+                                            });
+                                        } else {
+                                            setSignInDlgState((prevState: SignInState) => {
+                                                const _state = { ...prevState };
+                                                _state.signInDlgOpened = true;
+                                                return _state;
+                                            });
+                                        }
+                                    }}
+                                >
+                                    Cancel Sale
+                                </PinkButton>
+                                <PrimaryButton
+                                    sx={{ width: '100%' }}
+                                    onClick={() => {
+                                        if (signInDlgState.isLoggedIn) {
+                                            setDialogState({
+                                                ...dialogState,
+                                                changePriceDlgOpened: true,
+                                                changePriceDlgStep: 0,
+                                                changePriceCurPrice: productDetail.price_ela,
+                                                changePriceOrderId: productDetail.orderId || '',
+                                            });
+                                        } else {
+                                            setSignInDlgState((prevState: SignInState) => {
+                                                const _state = { ...prevState };
+                                                _state.signInDlgOpened = true;
+                                                return _state;
+                                            });
+                                        }
+                                    }}
+                                >
+                                    Change Price
+                                </PrimaryButton>
+                            </Stack>
+                        )
+                    } else {
+                        return (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (signInDlgState.isLoggedIn) {
+                                        setDialogState({
+                                            ...dialogState,
+                                            buyNowDlgOpened: true,
+                                            buyNowDlgStep: 0,
+                                            buyNowPrice: productDetail.price_ela,
+                                            buyNowName: productDetail.name,
+                                            buyNowOrderId: productDetail.orderId || '',
+                                        });
+                                    } else {
+                                        setSignInDlgState((prevState: SignInState) => {
+                                            const _state = { ...prevState };
+                                            _state.signInDlgOpened = true;
+                                            return _state;
+                                        });
+                                    }
+                                }}
+                            >
+                                buy now
+                            </PrimaryButton>
+                        )
+                    }
+                } else if(product.status === "2" || product.status === "3") {
+                    if(product.holder === signInDlgState.address) {
+                        return (
+                            <PrimaryButton
+                                sx={{ marginTop: 3, width: '100%' }}
+                                onClick={() => {
+                                    if (productDetail.status === 'DELETED') {
+                                        enqueueSnackbar(`This NFT is taken down by admin!`, {
+                                            variant: 'error',
+                                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                        });
+                                    } else {
+                                        setDialogState({
+                                            ...dialogState,
+                                            mintTokenId: productDetail.tokenIdHex,
+                                            createNFTDlgOpened: true,
+                                            createNFTDlgStep: 3,
+                                        });
+                                    }
+                                }}
+                            >
+                                Sell
+                            </PrimaryButton>
+                        )
+                    }
+                }
+            }
+
+            return (<></>)
+        } else {
+            if(product.royaltyOwner === signInDlgState.address) {
+                return (
+                    <PrimaryButton
+                        sx={{ marginTop: 3, width: '100%' }}
+                        onClick={() => {
+                            if (productDetail.status === 'DELETED') {
+                                enqueueSnackbar(`This NFT is taken down by admin!`, {
+                                    variant: 'error',
+                                    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                });
+                            } else {
+                                setDialogState({
+                                    ...dialogState,
+                                    mintTokenId: productDetail.tokenIdHex,
+                                    createNFTDlgOpened: true,
+                                    createNFTDlgStep: 3,
+                                });
+                            }
+                        }}
+                    >Sell</PrimaryButton>
+                )
+            } else {
+                return (<></>)
+            }
+        }
+    }
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -214,53 +336,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                                 price_usd={productDetail.price_usd}
                                 marginTop={3}
                             />
-                            {!productDetail.isBlindbox && (
-                                <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                    <PinkButton
-                                        sx={{ width: '100%' }}
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    cancelSaleDlgOpened: true,
-                                                    cancelSaleDlgStep: 0,
-                                                    cancelSaleOrderId: productDetail.orderId || '',
-                                                });
-                                            } else {
-                                                setSignInDlgState((prevState: SignInState) => {
-                                                    const _state = { ...prevState };
-                                                    _state.signInDlgOpened = true;
-                                                    return _state;
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        Cancel Sale
-                                    </PinkButton>
-                                    <PrimaryButton
-                                        sx={{ width: '100%' }}
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    changePriceDlgOpened: true,
-                                                    changePriceDlgStep: 0,
-                                                    changePriceCurPrice: productDetail.price_ela,
-                                                    changePriceOrderId: productDetail.orderId || '',
-                                                });
-                                            } else {
-                                                setSignInDlgState((prevState: SignInState) => {
-                                                    const _state = { ...prevState };
-                                                    _state.signInDlgOpened = true;
-                                                    return _state;
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        Change Price
-                                    </PrimaryButton>
-                                </Stack>
-                            )}
+                            <ButtonGroup {...productDetail} />
                         </>
                     )}
                 </Grid>

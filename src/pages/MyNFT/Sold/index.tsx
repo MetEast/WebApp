@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -28,12 +28,19 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
 
+    const location = useLocation();
+
+    // @ts-ignore
+    let product: TypeProduct = location.state.product;
+
     useEffect(() => {
         let unmounted = false;
         const fetchMyNFTItem = async () => {
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            const _MyNFTItem = await getMyNFTItem(params.id);
+            _MyNFTItem.isLike = product.isLike;
+            _MyNFTItem.views = product.views
+            _MyNFTItem.likes = product.likes
+            _MyNFTItem.price_usd = product.price_usd
             if (!unmounted) {
                 if (signInDlgState.walletAccounts.length && _MyNFTItem.holder === signInDlgState.walletAccounts[0]) {
                     navigate(-1);
@@ -51,12 +58,12 @@ const MyNFTSold: React.FC = (): JSX.Element => {
             }
         };
         if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+            if (signInDlgState.address && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
         } else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, signInDlgState.walletAccounts, params.id]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, signInDlgState.walletAccounts, params.id]);
 
     useEffect(() => {
         let unmounted = false;

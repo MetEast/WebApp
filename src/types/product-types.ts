@@ -210,13 +210,17 @@ export type TypeProductFetch = {
     createdAddress: string;
     createdDescription: string;
     createdAvatar: string;
-    isBlindbox: boolean;
+    isBlindBox: boolean;
 
+    orderState: number;
+    orderType: number;
+    seller: string;
     tokenOwner: string,
     royaltyFee: number,
     tokenMinter: string,
     updateTime: number,
     orderPrice: number,
+    buyer: string
 
     creator: {
         did: string,
@@ -239,6 +243,9 @@ export type TypeProductFetch = {
         orderState: number,
         orderType: number,
         seller: string,
+        buyer: string,
+        price: number,
+        bids: number
     },
 
     token: {

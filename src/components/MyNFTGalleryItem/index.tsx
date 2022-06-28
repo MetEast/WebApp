@@ -37,9 +37,8 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                 likeState ? 'decTokenLikes' : 'incTokenLikes'
             }`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: product.tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
@@ -48,6 +47,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -87,7 +87,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         <GalleryItemContainer>
             <ProductImageContainer
                 onClick={() => {
-                    if (!isLoading) navigate(getUrl());
+                    if (!isLoading) navigate(getUrl(), {state: {product}});
                 }}
             >
                 <ImageBox loading={isLoading ? 1 : 0}>

@@ -57,7 +57,7 @@ export const blankMyNFTItem: TypeProduct = {
     createTime: '',
     holderName: '',
     holder: '',
-    type: enumMyNFTType.Created,
+    type: enumMyNFTType.BuyNow,
     isLike: false,
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -33,12 +33,19 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
 
+    const location = useLocation();
+
+    // @ts-ignore
+    let product: TypeProduct = location.state.product;
+
     useEffect(() => {
         let unmounted = false;
         const fetchMyNFTItem = async () => {
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            const _MyNFTItem = await getMyNFTItem(params.id);
+            _MyNFTItem.isLike = product.isLike;
+            _MyNFTItem.views = product.views
+            _MyNFTItem.likes = product.likes
+            _MyNFTItem.price_usd = product.price_usd
             if (!unmounted) {
                 if (
                     !(
