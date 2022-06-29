@@ -23,14 +23,14 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
             FETCH_CONFIG_JSON,
         );
         const dataNFTList = await resNFTList.json();
-        const selectedTokens: Array<TypeBlindBoxCandidate> = dataNFTList.data.result;
+        const selectedTokens: Array<TypeBlindBoxCandidate> = dataNFTList.data;
         const arrOrderIds: string[] = [];
         const arrTokenIds: string[] = [];
         const arrAssets: string[] = [];
         const arrNames: string[] = [];
         const arrCreators: string[] = [];
         selectedTokens.forEach((item: TypeBlindBoxCandidate) => {
-            arrOrderIds.push(item.orderId);
+            arrOrderIds.push(item.orderId.toString());
             arrTokenIds.push(item.tokenId);
             arrAssets.push(getImageFromAsset(item.asset));
             arrNames.push(item.name);

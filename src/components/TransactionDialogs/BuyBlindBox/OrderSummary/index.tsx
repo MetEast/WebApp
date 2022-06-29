@@ -34,9 +34,8 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         let unmounted = false;
         const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
         const reqBody = {
-            token: signInDlgState.token,
-            blindBoxId: dialogState.buyBlindBoxId,
-            tokenIds: dialogState.buyBlindTokenIds,
+            id: dialogState.buyBlindBoxId,
+            orderIds: dialogState.buyBlindOrderIds.map((item: string) => Number(item)),
             buyer: signInDlgState.walletAccounts[0],
             totalPrice: dialogState.buyBlindPriceEla * dialogState.buyBlindOrderIds.length,
         };
@@ -44,6 +43,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${signInDlgState.token}`,
             },
             body: JSON.stringify(reqBody),
         })
@@ -90,6 +90,9 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             });
         }, 120000);
         if (!unmounted) setDialogState(updatedState);
+
+        console.log(dialogState.buyBlindOrderIds);
+        console.log(signInDlgState.didUri)
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,

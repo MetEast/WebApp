@@ -118,7 +118,7 @@ interface DlgState {
     // buy blind box
     buyBlindBoxDlgOpened: boolean;
     buyBlindBoxDlgStep: number;
-    buyBlindBoxId: number;
+    buyBlindBoxId: string;
     buyBlindName: string;
     buyBlindPriceEla: number;
     buyBlindPriceUsd: number;
@@ -259,7 +259,7 @@ export const defaultDlgState: DlgState = {
     // buy blind box
     buyBlindBoxDlgOpened: false,
     buyBlindBoxDlgStep: 0,
-    buyBlindBoxId: 0,
+    buyBlindBoxId: '',
     buyBlindName: '',
     buyBlindPriceEla: 0,
     buyBlindPriceUsd: 0,

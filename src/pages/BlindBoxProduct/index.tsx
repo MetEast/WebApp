@@ -235,7 +235,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                                     buyBlindPriceEla: blindBoxDetail.price_ela,
                                                     buyBlindPriceUsd: blindBoxDetail.price_usd,
                                                     buyBlindAmount: 1,
-                                                    buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
+                                                    buyBlindBoxId: blindBoxDetail.tokenId,
                                                     // buyBlindCreator:
                                                     //     blindBoxDetail.author === ''
                                                     //         ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
