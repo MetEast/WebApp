@@ -831,6 +831,7 @@ export const getNFTLatestBids = async (
     return { mine: _myNFTBidList, others: _otherNFTBidList };
 };
 
+
 // BlindBoxProduct Page
 export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number) => {
     const resBBItem = await fetch(
