@@ -38,28 +38,26 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
     const uploadCreatedBlindBoxInfo = (asset: string, thumbnail: string) =>
         new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
-            const formData = new FormData();
-            formData.append('token', signInDlgState.token);
-            formData.append('did', signInDlgState.userDid);
-            formData.append('address', signInDlgState.walletAccounts[0]);
-            formData.append('name', dialogState.crtBlindTitle);
-            formData.append('description', dialogState.crtBlindDescription);
-            formData.append('asset', asset);
-            formData.append('thumbnail', thumbnail);
-            formData.append('tokenIds', dialogState.crtBlindTokenIds);
-            // formData.append('status', dialogState.crtBlindStatus);
-            formData.append('maxQuantity', dialogState.crtBlindQuantity.toString());
-            formData.append('blindPrice', dialogState.crtBlindPrice.toString());
-            formData.append('saleBegin', dialogState.crtBlindSaleBegin);
-            // formData.append('saleEnd', (new Date(dialogState.crtBlindSaleEnd).getTime() / 1e3).toString());
-            formData.append('maxPurchases', dialogState.crtBlindPurchases.toString());
+            let body = {
+                name: dialogState.crtBlindTitle,
+                description: dialogState.crtBlindDescription,
+                asset,
+                thumbnail,
+                tokenIds: dialogState.crtBlindTokenIds.split(','),
+                maxQuantity: dialogState.crtBlindQuantity,
+                blindPrice: dialogState.crtBlindPrice,
+                saleBegin: dialogState.crtBlindSaleBegin,
+                maxPurchase: dialogState.crtBlindPurchases
+            }
+
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data',
+                    'Authorization': `Bearer ${signInDlgState.token}`
                 },
             };
             axios
-                .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, formData, config)
+                .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, JSON.stringify(body), config)
                 .then((response) => {
                     if (response.data.status === 200) {
                         resolve(true);

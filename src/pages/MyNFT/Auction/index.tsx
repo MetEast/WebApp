@@ -108,14 +108,14 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         const updateProductViews = (tokenId: string) => {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })

@@ -53,7 +53,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
-            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '');
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '', signInDlgState.token);
             let count = 0;
             for (let i = 0; i < _BBCandidatesList.length; i++) {
                 const itemObject: TypeProductFetch = _BBCandidatesList[i];

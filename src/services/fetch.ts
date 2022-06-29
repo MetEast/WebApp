@@ -949,7 +949,9 @@ export const getMyNFTItemList = async (
             if( itemObject.royaltyOwner === walletAddress ) {
                 _myNFT.types.push(enumMyNFTType.Created);
             }
-            _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            if(itemObject.order) {
+                _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            }
 
         } else if (nTabId === 5 || nTabId === 4) {
             _myNFT.tokenId = itemObject.tokenId;
@@ -965,7 +967,9 @@ export const getMyNFTItemList = async (
                 _myNFT.types.push(enumMyNFTType.Created);
             }
 
-            _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            if(itemObject.order) {
+                _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            }
 
         } else {
             _myNFT.tokenId = itemObject.tokenId;
@@ -1133,14 +1137,15 @@ export const getMyNFTItem = async (
 };
 
 // BB creation
-export const getBBCandiatesList = async (address: string, keyword: string) => {
+export const getBBCandiatesList = async (address: string, keyword: string, token: string) => {
     const resBBCandidateList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getBlindboxCandidate?address=${address}&keyword=${keyword}`,
-        FETCH_CONFIG_JSON,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getUserCandidateTokens?address=${address}&keyword=${keyword}`,
+        {
+            headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers}
+        }
     );
     const jsonBBCandidateList = await resBBCandidateList.json();
-    const arrBBCandidateList = jsonBBCandidateList.data === undefined ? [] : jsonBBCandidateList.data.result;
-    return arrBBCandidateList;
+    return jsonBBCandidateList.status === 200 ? jsonBBCandidateList.data : []
 };
 
 export const getBBCandiates = (arrBBCandidateList: Array<any>, selectedTokenIds: Array<string>) => {

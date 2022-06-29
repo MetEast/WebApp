@@ -44,7 +44,7 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): 
         let unmounted = false;
         const getFetchData = async () => {
             if (!unmounted) setLoadingItemsList(true);
-            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], keyWord);
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], keyWord, signInDlgState.token);
             if (!unmounted) {
                 setBBCandidateLists(_BBCandidatesList);
                 setLoadingItemsList(false);

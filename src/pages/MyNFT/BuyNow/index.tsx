@@ -117,6 +117,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
 
     function ButtonGroup(product: TypeProduct) {
+        console.log(product)
         if(product.orderId) {
             if(!product.isBlindbox) {
                 if(product.status === "1") {
