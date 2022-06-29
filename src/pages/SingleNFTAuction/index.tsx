@@ -143,7 +143,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                         if (!unmounted) {
                             setProductDetail((prevState: TypeProduct) => {
                                 const prodDetail: TypeProduct = { ...prevState };

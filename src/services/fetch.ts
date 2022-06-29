@@ -170,7 +170,7 @@ export const markNotificationsAsRead = (token: string, ids: string) =>
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
+                if (data.status === 200) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -476,7 +476,7 @@ export const getBBItemList = async (body: string, ELA2USD: number) => {
         _BBItem.price_ela = parseFloat(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
         _BBItem.type =
-            itemObject.instock === 0
+            itemObject.tokenIds?.length === 0
                 ? enumBlindBoxNFTType.SoldOut
                 : parseInt(itemObject.saleBegin) > curTimestamp
                 ? enumBlindBoxNFTType.ComingSoon
@@ -493,7 +493,7 @@ export const getBBItemList = async (body: string, ELA2USD: number) => {
         //         : true
         //     : false;
         _BBItem.sold = itemObject.soldTokenIds?.length || 0;
-        _BBItem.instock = itemObject.instock || 0;
+        _BBItem.instock = itemObject.tokenIds?.length || 0;
         if (itemObject.saleBegin) {
             const endTime = getTime(itemObject.saleBegin);
             _BBItem.endTime = endTime.date + ' ' + endTime.time;
@@ -849,7 +849,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
         _BBItem.price_ela = parseFloat(itemObject.blindPrice);
         _BBItem.price_usd = _BBItem.price_ela * ELA2USD;
         _BBItem.type =
-            itemObject.instock === 0
+            itemObject.tokenIds.length === 0
                 ? enumBlindBoxNFTType.SoldOut
                 : parseInt(itemObject.saleBegin) > curTimestamp
                 ? enumBlindBoxNFTType.ComingSoon
@@ -865,7 +865,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
         // _BBItem.isLike =
         //     // itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
         _BBItem.description = itemObject.description;
-        _BBItem.instock = itemObject.instock || 0;
+        _BBItem.instock = itemObject.tokenIds.length || 0;
         _BBItem.sold = itemObject.soldTokenIds?.length || 0;
         if (itemObject.saleBegin) {
             const endTime = getTime(itemObject.saleBegin);
@@ -900,7 +900,7 @@ export const updateBBStatus = (token: string, BBId: number, status: 'online' | '
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
+                if (data.status === 200) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -1365,7 +1365,7 @@ export const updateUserRole = (_token: string, _address: string, _role: number, 
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
+                if (data.status === 200) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -1483,7 +1483,7 @@ export const deleteAdminBanner = (token: string, id: number) =>
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
+                if (data.status === 200) {
                     resolve(true);
                 } else {
                     reject('error');

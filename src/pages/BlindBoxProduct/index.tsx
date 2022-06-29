@@ -80,20 +80,20 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         const updateBlindBoxViews = (tokenId: string) => {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 blindBoxIndex: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                         if (!unmounted) {
                             setBlindBoxDetail((prevState: TypeProduct) => {
                                 const blindDetail: TypeProduct = { ...prevState };
@@ -221,7 +221,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 (signInDlgState.walletAccounts.length !== 0 &&
                                     blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0])) &&
                                 blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                                blindBoxDetail.state === 'online' && (
+                                // blindBoxDetail.state === 'online' &&
+                                 (
                                     <PrimaryButton
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {

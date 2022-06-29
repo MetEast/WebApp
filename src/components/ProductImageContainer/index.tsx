@@ -27,14 +27,12 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
             }`;
             const reqBody = isBlindBox
                 ? {
-                      token: signInDlgState.token,
                       blindBoxIndex: product.tokenId,
-                      did: signInDlgState.userDid,
+                      address: signInDlgState.address,
                   }
                 : {
-                      token: signInDlgState.token,
                       tokenId: product.tokenId,
-                      did: signInDlgState.userDid,
+                      address: signInDlgState.address,
                   };
             // change state first
             updateLikes(likeState ? 'dec' : 'inc');
@@ -43,12 +41,13 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                         console.log('succeed');
                     } else {
                         console.log(data);

@@ -53,7 +53,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                     } else {
                         console.log(data);
                     }

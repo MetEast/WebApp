@@ -93,7 +93,7 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filterRange, keyWord, pageNum]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, sortBy, filterRange, keyWord, pageNum]); //, productViewMode
 
     const fetchMoreData = () => {
         if (!isLoadingNext) {

@@ -49,7 +49,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
+                if (data.status === 200) {
                     if (!unmounted) {
                         setOnProgress(false);
                         setDialogState({

@@ -61,7 +61,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
             axios
                 .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, formData, config)
                 .then((response) => {
-                    if (response.data.code === 200) {
+                    if (response.data.status === 200) {
                         resolve(true);
                     } else resolve(false);
                 })
