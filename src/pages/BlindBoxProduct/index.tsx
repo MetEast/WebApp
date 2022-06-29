@@ -78,7 +78,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateBlindBoxViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incBlindBoxViews`;
             const reqBody = {
                 blindBoxIndex: tokenId,
                 address: signInDlgState.address,
