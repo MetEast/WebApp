@@ -760,7 +760,7 @@ export const getNFTLatestTxs2 = async (
             //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
             //     break;
         }
-        _NFTTx.price = lastEvent.price ? lastEvent.price / 1e18 : 0;
+        _NFTTx.price = itemObject.price ? parseInt(itemObject.price) / 1e18 : 0;
         _NFTTx.txHash = lastEvent.transactionHash;
         const timestamp = getTime(lastEvent.timestamp.toString());
         _NFTTx.time = timestamp.date + ' ' + timestamp.time;
@@ -777,35 +777,42 @@ export const getNFTLatestBids = async (
     pageSize: number,
     sortBy?: string,
 ) => {
-    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getLatestBids?tokenId=${tokenId}&address=${userAddress}&pageNum=${pageNum}&pageSize=${pageSize}`;
-    switch (sortBy) {
-        case 'low_to_high':
-            fetchUrl += `&orderType=price_l_to_h`;
-            break;
-        case 'high_to_low':
-            fetchUrl += `&orderType=price_h_to_l`;
-            break;
-        case 'most_recent':
-            fetchUrl += `&orderType=mostrecent`;
-            break;
-        case 'oldest':
-            fetchUrl += `&orderType=oldest`;
-            break;
-        default:
-            fetchUrl += `&orderType=mostrecent`;
-            break;
-    }
-    const resNFTBids = await fetch(fetchUrl, FETCH_CONFIG_JSON);
+    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/api/v1/getLatestBids`;
+    // switch (sortBy) {
+    //     case 'low_to_high':
+    //         fetchUrl += `&orderType=price_l_to_h`;
+    //         break;
+    //     case 'high_to_low':
+    //         fetchUrl += `&orderType=price_h_to_l`;
+    //         break;
+    //     case 'most_recent':
+    //         fetchUrl += `&orderType=mostrecent`;
+    //         break;
+    //     case 'oldest':
+    //         fetchUrl += `&orderType=oldest`;
+    //         break;
+    //     default:
+    //         fetchUrl += `&orderType=mostrecent`;
+    //         break;
+    // }
+    let body = {tokenId, pageNum, pageSize}
+    const resNFTBids = await fetch(fetchUrl, {
+        method: 'POST',
+        headers: {
+            ...FETCH_CONFIG_JSON.headers
+        },
+        body: JSON.stringify(body),
+    });
     const jsonNFTBids = await resNFTBids.json();
     const arrNFTBids = jsonNFTBids.data;
 
     const _otherNFTBidList: Array<TypeSingleNFTBid> = [];
-    if (arrNFTBids !== undefined && arrNFTBids.others !== undefined) {
-        for (let i = 0; i < arrNFTBids.others.length; i++) {
-            const itemObject: TypeSingleNFTBidFetch = arrNFTBids.others[i];
+    if (arrNFTBids !== undefined && arrNFTBids.data !== undefined) {
+        for (let i = 0; i < arrNFTBids.data.length; i++) {
+            const itemObject: TypeSingleNFTBidFetch = arrNFTBids.data[i];
             const _otherNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
-            _otherNFTBid.user = itemObject.buyerName ? itemObject.buyerName : reduceHexAddress(itemObject.buyerAddr, 4);
-            _otherNFTBid.address = itemObject.buyerAddr;
+            _otherNFTBid.user = itemObject.buyerName ? itemObject.buyerName : reduceHexAddress(itemObject.buyer, 4);
+            _otherNFTBid.address = itemObject.buyer;
             _otherNFTBid.price = parseFloat(itemObject.price) / 1e18;
             _otherNFTBid.orderId = itemObject.orderId;
             const timestamp = getTime(itemObject.timestamp);

@@ -114,6 +114,7 @@ export type TypeNFTTransaction = {
     price: number;
     time: string;
     txHash: string;
+    eventType: number;
 };
 
 export type TypeNFTHisotry = {
@@ -342,7 +343,6 @@ export type TypeNFTTransactionFetch = {
     royaltyFee: string;
     royaltyOwner: string;
     tHash: string;
-    // price: string;
 
     sellerAddr: string;
     sellerInfo: {
@@ -401,6 +401,7 @@ export type TypeSingleNFTBidFetch = {
     price: string;
     timestamp: string;
     gasFee: number;
+    buyer: string;
 };
 
 export type TypePriceHistoryFetch = {

@@ -6,7 +6,7 @@ import {
     TypeProduct,
     TypeNFTTransaction,
     TypeSingleNFTBid,
-    enumSingleNFTType,
+    enumSingleNFTType, OrderEventType,
 } from 'src/types/product-types';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
