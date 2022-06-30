@@ -565,14 +565,14 @@ export const getNFTItem = async (
         const createTime = getTime(itemObject.createTime);
         _NFTItem.createTime = createTime.date + ' ' + createTime.time;
         _NFTItem.status = itemObject.status;
-        _NFTItem.endTimestamp = itemObject.endTime ? itemObject.order.endTime * 1000 : 0;
-        if (itemObject.endTime) {
-            const endTime = getTime(itemObject.endTime);
+        _NFTItem.endTimestamp = itemObject.order.endTime ? itemObject.order.endTime * 1000 : 0;
+        if (itemObject.order.endTime) {
+            const endTime = getTime(itemObject.order.endTime.toString());
             _NFTItem.endTime = endTime.date + ' ' + endTime.time;
         } else {
             _NFTItem.endTime = ' ';
         }
-        _NFTItem.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+        _NFTItem.isExpired = Math.round(new Date().getTime() / 1000) > itemObject.order.endTime;
         _NFTItem.isBlindbox = itemObject.order?.isBlindBox;
     }
     return _NFTItem;
@@ -1098,6 +1098,8 @@ export const getMyNFTItem = async (
     const itemObject: TypeProductFetch = jsonMyNFTItem.data;
     const _MyNFTItem: TypeProduct = { ...blankNFTItem };
 
+    console.log(itemObject);
+
     if (itemObject !== undefined) {
         _MyNFTItem.tokenId = itemObject.tokenId;
         _MyNFTItem.name = itemObject.name;
@@ -1133,6 +1135,9 @@ export const getMyNFTItem = async (
 
             if(itemObject.order.bids > 0) {
                 _MyNFTItem.status = 'HAS BIDS'
+                if(itemObject.order.orderState === 2) {
+                    _MyNFTItem.buyer = itemObject.order.buyer;
+                }
             }
 
             if (itemObject.order.endTime) {

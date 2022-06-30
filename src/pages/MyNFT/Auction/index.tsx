@@ -38,6 +38,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 // import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
 // import ReceivedBidsDlgContainer from 'src/components/TransactionDialogs/ReceivedBids';
 import { reduceHexAddress, reduceUserName } from 'src/services/common';
+import { useSnackbar } from 'notistack';
 
 const MyNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -48,7 +49,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-
+    const { enqueueSnackbar } = useSnackbar();
     const location = useLocation();
 
     // @ts-ignore
@@ -63,6 +64,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             _MyNFTItem.likes = product.likes
             _MyNFTItem.price_usd = product.price_usd
             if (!unmounted) {
+                console.log(_MyNFTItem)
                 setProductDetail(_MyNFTItem);
             }
         };
@@ -235,33 +237,62 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                 price_usd={productDetail.price_usd}
                                 marginTop={3}
                             />
-                            {productDetail.status === 'HAS BIDS' && (
-                                <PrimaryButton
-                                    sx={{ marginTop: 3, width: '100%' }}
-                                    onClick={() => {
-                                        if (signInDlgState.isLoggedIn) {
-                                            if (bidsList.length) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    receivedBidDlgOpened: true,
-                                                });
-                                            } else {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    noBidDlgOpened: true,
-                                                });
-                                            }
-                                        } else {
-                                            setSignInDlgState((prevState: SignInState) => {
-                                                const _state = { ...prevState };
-                                                _state.signInDlgOpened = true;
-                                                return _state;
-                                            });
-                                        }
-                                    }}
-                                >
-                                    View Bids
-                                </PrimaryButton>
+                            {productDetail.status === 'HAS BIDS' && ( <>
+                                    { productDetail.buyer === signInDlgState.address ? (
+                                        <>
+                                            <PrimaryButton
+                                                sx={{ marginTop: 3, width: '100%' }}
+                                                onClick={() => {
+                                                    if (productDetail.status === 'DELETED') {
+                                                        enqueueSnackbar(`This NFT is taken down by admin!`, {
+                                                            variant: 'error',
+                                                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                                        });
+                                                    } else {
+                                                        setDialogState({
+                                                            ...dialogState,
+                                                            mintTokenId: productDetail.tokenIdHex,
+                                                            createNFTDlgOpened: true,
+                                                            createNFTDlgStep: 3,
+                                                        });
+                                                    }
+                                                }}
+                                            >
+                                                Sell
+                                            </PrimaryButton>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <PrimaryButton
+                                                sx={{ marginTop: 3, width: '100%' }}
+                                                onClick={() => {
+                                                    if (signInDlgState.isLoggedIn) {
+                                                        if (bidsList.length) {
+                                                            setDialogState({
+                                                                ...dialogState,
+                                                                receivedBidDlgOpened: true,
+                                                            });
+                                                        } else {
+                                                            setDialogState({
+                                                                ...dialogState,
+                                                                noBidDlgOpened: true,
+                                                            });
+                                                        }
+                                                    } else {
+                                                        setSignInDlgState((prevState: SignInState) => {
+                                                            const _state = { ...prevState };
+                                                            _state.signInDlgOpened = true;
+                                                            return _state;
+                                                        });
+                                                    }
+                                                }}
+                                            >
+                                                View Bids
+                                            </PrimaryButton>
+                                        </>
+                                    )
+                                    }
+                                </>
                             )}
                             { productDetail.holder === signInDlgState.address && (
                                 <>

@@ -295,7 +295,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             let change = 0;
             // const likedList: Array<TypeProduct> = _myNFTList[5];
             if (type === 'inc') {
-                prodList[id].likes += 1;
+                prodList[id].likes = (prodList[id].likes ? prodList[id].likes : 0) + 1;
                 prodList[id].isLike = true;
                 // likedList.push(prodList[id]);
                 change++;

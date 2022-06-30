@@ -104,6 +104,8 @@ export type TypeProduct = {
     did?: string;
     isBlindbox?: boolean;
     soldIds?: string[];
+
+    buyer?: string;
 };
 
 export type TypeNFTTransaction = {
