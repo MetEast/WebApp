@@ -6,7 +6,7 @@ import {
     TypeProduct,
     TypeNFTTransaction,
     TypeSingleNFTBid,
-    enumSingleNFTType, OrderEventType,
+    enumSingleNFTType, OrderEventType, enumTransactionType,
 } from 'src/types/product-types';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -86,6 +86,17 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.OnAuction) navigate(-1); // on auction
                 setProductDetail(_NFTItem);
+
+                setTransactionsList((prevState: Array<TypeNFTTransaction>) => {
+                    prevState.push({
+                        type: enumTransactionType.CreatedBy,
+                        user: _NFTItem.author,
+                        price: 0,
+                        time: _NFTItem.createTime,
+                        txHash: ''
+                    })
+                    return [...prevState]
+                })
             }
         };
         if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)

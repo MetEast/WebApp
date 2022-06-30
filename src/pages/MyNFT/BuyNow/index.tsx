@@ -44,8 +44,8 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         const fetchMyNFTItem = async () => {
             const _MyNFTItem = await getMyNFTItem(params.id);
             _MyNFTItem.isLike = product.isLike;
-            _MyNFTItem.views = product.views
-            _MyNFTItem.likes = product.likes
+            _MyNFTItem.views = product.views ? product.views : 0;
+            _MyNFTItem.likes = product.likes ? product.likes : 0;
             _MyNFTItem.price_usd = product.price_usd
 
             if (!unmounted) {

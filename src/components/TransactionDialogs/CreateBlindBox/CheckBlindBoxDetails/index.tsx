@@ -46,13 +46,13 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 tokenIds: dialogState.crtBlindTokenIds.split(','),
                 maxQuantity: dialogState.crtBlindQuantity,
                 blindPrice: dialogState.crtBlindPrice,
-                saleBegin: dialogState.crtBlindSaleBegin,
+                saleBegin: parseInt(dialogState.crtBlindSaleBegin),
                 maxPurchase: dialogState.crtBlindPurchases
             }
 
             const config = {
                 headers: {
-                    'content-type': 'multipart/form-data',
+                    'content-type': 'application/json',
                     'Authorization': `Bearer ${signInDlgState.token}`
                 },
             };

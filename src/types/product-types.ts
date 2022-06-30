@@ -114,7 +114,6 @@ export type TypeNFTTransaction = {
     price: number;
     time: string;
     txHash: string;
-    eventType: number;
 };
 
 export type TypeNFTHisotry = {

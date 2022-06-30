@@ -62,7 +62,7 @@ export const blankMyNFTItem: TypeProduct = {
 };
 
 export const blankNFTTxs: TypeNFTTransaction = {
-    type: enumTransactionType.Bid,
+    type: enumTransactionType.SoldTo,
     user: '',
     price: 0,
     time: '',

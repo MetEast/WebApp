@@ -2,7 +2,7 @@ import React, { useState, useEffect, ComponentProps } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { enumBadgeType, enumSingleNFTType } from 'src/types/product-types';
+import { enumBadgeType, enumSingleNFTType, enumTransactionType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -46,6 +46,17 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
+
+                setTransactionsList((prevState: Array<TypeNFTTransaction>) => {
+                    prevState.push({
+                        type: enumTransactionType.CreatedBy,
+                        user: _NFTItem.author,
+                        price: 0,
+                        time: _NFTItem.createTime,
+                        txHash: ''
+                    })
+                    return [...prevState]
+                })
             }
         };
         if((signInDlgState.isLoggedIn && signInDlgState.address) || (!signInDlgState.isLoggedIn)) fetchNFTItem().catch(console.error);

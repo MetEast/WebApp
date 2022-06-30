@@ -539,8 +539,8 @@ export const getNFTItem = async (
             //     : itemObject.endTime === '0'
             //     ? enumSingleNFTType.BuyNow
             //     : enumSingleNFTType.OnAuction;
-        _NFTItem.likes = itemObject.likes;
-        _NFTItem.views = itemObject.views;
+        _NFTItem.likes = itemObject.likes ? itemObject.likes : 0;
+        _NFTItem.views = itemObject.views ? itemObject.views : 0;
         // _NFTItem.isLike =
         //     likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
         //         ? false
@@ -744,14 +744,14 @@ export const getNFTLatestTxs2 = async (
             //     _NFTTx.type = enumTransactionType.PriceChanged;
             //     _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
             //     break;
-            case OrderEventType.OrderCancelled:
-                _NFTTx.type = enumTransactionType.SaleCanceled;
-                _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-                break;
-            case OrderEventType.OrderFilled:
-                _NFTTx.type = enumTransactionType.SoldTo;
-                _NFTTx.user = itemObject.buyerInfo ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
-                break;
+            // case OrderEventType.OrderCancelled:
+            //     _NFTTx.type = enumTransactionType.SaleCanceled;
+            //     _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+            //     break;
+            // case OrderEventType.OrderFilled:
+            //     _NFTTx.type = enumTransactionType.SoldTo;
+            //     _NFTTx.user = itemObject.buyerInfo ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
+            //     break;
             // case 'Transfer':
             //     _NFTTx.type = enumTransactionType.Transfer;
             //     break;
@@ -759,6 +759,8 @@ export const getNFTLatestTxs2 = async (
             //     _NFTTx.type = enumTransactionType.SettleBidOrder;
             //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
             //     break;
+            default:
+                _NFTTx.user = itemObject.buyerInfo ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
         }
         _NFTTx.price = itemObject.price ? parseInt(itemObject.price) / 1e18 : 0;
         _NFTTx.txHash = lastEvent.transactionHash;
@@ -866,8 +868,8 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
         _BBItem.views = itemObject.views;
         _BBItem.author = itemObject.createdName
             ? itemObject.createdName
-            : reduceHexAddress(itemObject.address, 4);
-        _BBItem.royaltyOwner = itemObject.address;
+            : reduceHexAddress(itemObject.seller, 4);
+        _BBItem.royaltyOwner = itemObject.seller;
         _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : '';
         _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default';
         // _BBItem.isLike =
@@ -1148,7 +1150,7 @@ export const getMyNFTItem = async (
             }
 
             if (itemObject.order.endTime) {
-                const endTime = getTime(itemObject.endTime);
+                const endTime = getTime(itemObject.order.endTime.toString());
                 _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
             } else {
                 _MyNFTItem.endTime = '0';
