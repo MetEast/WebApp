@@ -952,6 +952,9 @@ export const getMyNFTItemList = async (
             }
             if(itemObject.order) {
                 _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                if(itemObject.order.orderState === 1) {
+                    _myNFT.types.push(enumMyNFTType.InBindBox);
+                }
             }
 
         } else if (nTabId === 5 || nTabId === 4) {
@@ -970,6 +973,9 @@ export const getMyNFTItemList = async (
 
             if(itemObject.order) {
                 _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                if(itemObject.order.orderState === 1) {
+                    _myNFT.types.push(enumMyNFTType.InBindBox);
+                }
             }
 
         } else {
@@ -987,6 +993,9 @@ export const getMyNFTItemList = async (
             }
 
             _myNFT.type = itemObject.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+            if(itemObject.order.orderState === 1) {
+                _myNFT.types.push(enumMyNFTType.InBindBox);
+            }
         }
 
         _myNFT.status = itemObject.status;

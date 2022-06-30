@@ -109,18 +109,18 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     console.log(error);
                 });
         };
-        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.address)
             updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     function ButtonGroup(product: TypeProduct) {
         console.log(product)
         if(product.orderId) {
-            if(!product.isBlindbox) {
-                if(product.status === "1") {
+            if(product.status === "1") {
+                if(!product.isBlindbox) {
                     if(product.holder === signInDlgState.address) {
                         return (
                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
@@ -196,31 +196,31 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                             </PrimaryButton>
                         )
                     }
-                } else if(product.status === "2" || product.status === "3") {
-                    if(product.holder === signInDlgState.address) {
-                        return (
-                            <PrimaryButton
-                                sx={{ marginTop: 3, width: '100%' }}
-                                onClick={() => {
-                                    if (productDetail.status === 'DELETED') {
-                                        enqueueSnackbar(`This NFT is taken down by admin!`, {
-                                            variant: 'error',
-                                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                        });
-                                    } else {
-                                        setDialogState({
-                                            ...dialogState,
-                                            mintTokenId: productDetail.tokenIdHex,
-                                            createNFTDlgOpened: true,
-                                            createNFTDlgStep: 3,
-                                        });
-                                    }
-                                }}
-                            >
-                                Sell
-                            </PrimaryButton>
-                        )
-                    }
+                }
+            } else if(product.status === "2" || product.status === "3") {
+                if(product.holder === signInDlgState.address) {
+                    return (
+                        <PrimaryButton
+                            sx={{ marginTop: 3, width: '100%' }}
+                            onClick={() => {
+                                if (productDetail.status === 'DELETED') {
+                                    enqueueSnackbar(`This NFT is taken down by admin!`, {
+                                        variant: 'error',
+                                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+                                    });
+                                } else {
+                                    setDialogState({
+                                        ...dialogState,
+                                        mintTokenId: productDetail.tokenIdHex,
+                                        createNFTDlgOpened: true,
+                                        createNFTDlgStep: 3,
+                                    });
+                                }
+                            }}
+                        >
+                            Sell
+                        </PrimaryButton>
+                    )
                 }
             }
 
@@ -329,7 +329,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                                 sx={{ marginTop: 1 }}
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                                <ProductBadge badgeType={enumBadgeType.BuyNow} />
+                                {/*<ProductBadge badgeType={enumBadgeType.BuyNow} />*/}
                                 <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                             </Stack>
                             <ELAPrice

@@ -17,6 +17,7 @@ export enum enumMyNFTType {
     Created = 'MyNFT - Created',
     Sold = 'MyNFT - Sold',
     Purchased = 'MyNFT - Purchased',
+    InBindBox = 'MyNFT - In BlindBox',
 }
 
 export enum enumBadgeType {
@@ -42,6 +43,7 @@ export enum enumBadgeType {
     Sold = 'Sold',
     Sale = 'Sale',
     Royalties = 'Royalties',
+    InBlindBox = 'In Mystery Box',
 }
 
 export enum enumTransactionType {
