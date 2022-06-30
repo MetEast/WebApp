@@ -54,21 +54,21 @@ const ReceivedBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         <Stack spacing={5} width={520}>
             <Stack direction="row" justifyContent="space-between">
                 <DialogTitleTypo>Received bids</DialogTitleTypo>
-                <Select
-                    titlebox={
-                        <SelectTitleBtn fullWidth isOpen={sortBySelectOpen ? 1 : 0}>
-                            <Icon icon="ph:sort-ascending" fontSize={20} />
-                            {sortby ? sortby.label : 'Sort by'}
-                            <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />
-                        </SelectTitleBtn>
-                    }
-                    selectedItem={sortby}
-                    options={viewAllDlgSortOptions}
-                    isOpen={sortBySelectOpen ? 1 : 0}
-                    setIsOpen={isSortBySelectOpen}
-                    handleClick={handleSortbyChange}
-                    width={160}
-                />
+                {/*<Select*/}
+                {/*    titlebox={*/}
+                {/*        <SelectTitleBtn fullWidth isOpen={sortBySelectOpen ? 1 : 0}>*/}
+                {/*            <Icon icon="ph:sort-ascending" fontSize={20} />*/}
+                {/*            {sortby ? sortby.label : 'Sort by'}*/}
+                {/*            <Icon icon="ph:caret-down" className="arrow-icon" style={{ marginBottom: 2 }} />*/}
+                {/*        </SelectTitleBtn>*/}
+                {/*    }*/}
+                {/*    selectedItem={sortby}*/}
+                {/*    options={viewAllDlgSortOptions}*/}
+                {/*    isOpen={sortBySelectOpen ? 1 : 0}*/}
+                {/*    setIsOpen={isSortBySelectOpen}*/}
+                {/*    handleClick={handleSortbyChange}*/}
+                {/*    width={160}*/}
+                {/*/>*/}
             </Stack>
             <Stack spacing={3}>
                 <Box>

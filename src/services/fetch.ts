@@ -485,8 +485,8 @@ export const getBBItemList = async (body: string, ELA2USD: number) => {
         _BBItem.views = itemObject.views;
         _BBItem.author = itemObject.createdName
             ? itemObject.createdName
-            : reduceHexAddress(itemObject.address, 4);
-        _BBItem.royaltyOwner = itemObject.address;
+            : reduceHexAddress(itemObject.seller, 4);
+        _BBItem.royaltyOwner = itemObject.seller;
         // _BBItem.isLike = loginState
         //     ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === did) === -1
         //         ? false
@@ -960,9 +960,10 @@ export const getMyNFTItemList = async (
                 _myNFT.types.push(enumMyNFTType.Created);
             }
             if(itemObject.order) {
-                _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                _myNFT.type = itemObject.order.orderType === 2 ? enumMyNFTType.OnAuction: enumMyNFTType.BuyNow;
                 if(itemObject.order.orderState === 1) {
-                    _myNFT.types.push(enumMyNFTType.InBindBox);
+                    itemObject.order.isBlindBox && _myNFT.types.push(enumMyNFTType.InBindBox);
+                    itemObject.order.orderType === 2 && _myNFT.types.push(enumMyNFTType.OnAuction);
                 }
             }
 
@@ -981,9 +982,10 @@ export const getMyNFTItemList = async (
             }
 
             if(itemObject.order) {
-                _myNFT.type = itemObject.order.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                _myNFT.type = itemObject.order.orderType === 2 ? enumMyNFTType.OnAuction: enumMyNFTType.BuyNow;
                 if(itemObject.order.orderState === 1) {
-                    _myNFT.types.push(enumMyNFTType.InBindBox);
+                    itemObject.order.isBlindBox && _myNFT.types.push(enumMyNFTType.InBindBox);
+                    itemObject.order.orderType === 2 && _myNFT.types.push(enumMyNFTType.OnAuction);
                 }
             }
 
@@ -1001,10 +1003,9 @@ export const getMyNFTItemList = async (
                 _myNFT.types.push(enumMyNFTType.Created);
             }
 
-            _myNFT.type = itemObject.orderType === 1 ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-            if(itemObject.order.orderState === 1) {
-                _myNFT.types.push(enumMyNFTType.InBindBox);
-            }
+            _myNFT.type = itemObject.orderType === 2 ? enumMyNFTType.OnAuction: enumMyNFTType.BuyNow;
+            itemObject.isBlindBox && _myNFT.types.push(enumMyNFTType.InBindBox);
+            itemObject.orderType === 2 && _myNFT.types.push(enumMyNFTType.OnAuction);
         }
 
         _myNFT.status = itemObject.status;
