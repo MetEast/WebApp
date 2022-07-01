@@ -105,6 +105,7 @@ export type TypeProduct = {
     isBlindbox?: boolean;
     soldIds?: string[];
 
+    bids: number;
     buyer?: string;
 };
 
@@ -342,6 +343,9 @@ export type TypeNFTTransactionFetch = {
     royaltyFee: string;
     royaltyOwner: string;
     tHash: string;
+
+    orderType: number;
+    orderState: number;
 
     sellerAddr: string;
     sellerInfo: {

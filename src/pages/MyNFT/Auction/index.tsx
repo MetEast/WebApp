@@ -223,7 +223,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                                 <ProductBadge badgeType={enumBadgeType.OnAuction} />
-                                {productDetail.status !== 'HAS BIDS' && (
+                                {productDetail.bids > 0 && (
                                     <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
                                 )}
                                 {productDetail.isExpired ? (
@@ -237,7 +237,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                 price_usd={productDetail.price_usd}
                                 marginTop={3}
                             />
-                            {productDetail.status === 'HAS BIDS' && ( <>
+                            {productDetail.bids > 0 && ( <>
                                     { productDetail.buyer === signInDlgState.address ? (
                                         <>
                                             <PrimaryButton
@@ -296,7 +296,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                             )}
                             { productDetail.holder === signInDlgState.address && (
                                 <>
-                                    {productDetail.isExpired ? (
+                                    {productDetail.isExpired && productDetail.status == "1" ? (
                                         <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                             <SecondaryButton
                                                 sx={{ width: '100%', height: 40 }}
@@ -336,7 +336,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                     ) : (
                                         <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                             <PinkButton
-                                                disabled={productDetail.status === 'HAS BIDS'}
+                                                disabled={productDetail.bids > 0}
                                                 sx={{ width: '100%', height: 40 }}
                                                 onClick={() => {
                                                     if (signInDlgState.isLoggedIn) {
@@ -358,7 +358,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                                 Cancel Sale
                                             </PinkButton>
                                             <SecondaryButton
-                                                disabled={productDetail.status === 'HAS BIDS'}
+                                                disabled={productDetail.bids > 0}
                                                 sx={{ width: '100%', height: 40 }}
                                                 onClick={() => {
                                                     if (signInDlgState.isLoggedIn) {

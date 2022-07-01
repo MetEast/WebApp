@@ -723,45 +723,32 @@ export const getNFTLatestTxs2 = async (
         // if (itemObject.event === 'Transfer') continue;
         const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
         const lastEvent  = itemObject.events[itemObject.events.length - 1];
-        switch (lastEvent.eventType) {
-            // case 'Mint':
-            //     _NFTTx.type = enumTransactionType.CreatedBy;
-            //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
-            //     break;
-            case OrderEventType.OrderForSale:
+
+        if(itemObject.orderType === 1) {
+            if(itemObject.orderState === 1) {
                 _NFTTx.type = enumTransactionType.ForSale;
-                _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-                break;
-            case OrderEventType.OrderForAuction:
+                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+            } else if(itemObject.orderState === 2) {
+                _NFTTx.type = enumTransactionType.SoldTo;
+                _NFTTx.user = itemObject.buyerInfo?.name ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
+            } else if(itemObject.orderState === 3 || itemObject.orderState === 4) {
+                _NFTTx.type = enumTransactionType.SaleCanceled;
+                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+            }
+        } else {
+            if(itemObject.orderState === 1) {
                 _NFTTx.type = enumTransactionType.OnAuction;
-                _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-                break;
-            // case OrderEventType.OrderBid:
-            //     _NFTTx.type = enumTransactionType.Bid;
-            //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
-            //     break;
-            // case 'ChangeOrderPrice':
-            //     _NFTTx.type = enumTransactionType.PriceChanged;
-            //     _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
-            //     break;
-            // case OrderEventType.OrderCancelled:
-            //     _NFTTx.type = enumTransactionType.SaleCanceled;
-            //     _NFTTx.user = itemObject.sellerInfo ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-            //     break;
-            // case OrderEventType.OrderFilled:
-            //     _NFTTx.type = enumTransactionType.SoldTo;
-            //     _NFTTx.user = itemObject.buyerInfo ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
-            //     break;
-            // case 'Transfer':
-            //     _NFTTx.type = enumTransactionType.Transfer;
-            //     break;
-            // case 'SettleBidOrder':
-            //     _NFTTx.type = enumTransactionType.SettleBidOrder;
-            //     _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
-            //     break;
-            default:
-                _NFTTx.user = itemObject.buyerInfo ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
+                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+            } else if(itemObject.orderState === 2) {
+                _NFTTx.type = enumTransactionType.SettleBidOrder;
+                _NFTTx.user = itemObject.buyerInfo?.name ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
+            } else if(itemObject.orderState === 3 || itemObject.orderState === 4) {
+                _NFTTx.type = enumTransactionType.SaleCanceled;
+                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+            }
         }
+
+
         _NFTTx.price = itemObject.price ? parseInt(itemObject.price) / 1e18 : 0;
         _NFTTx.txHash = lastEvent.transactionHash;
         const timestamp = getTime(lastEvent.timestamp.toString());
@@ -1142,9 +1129,9 @@ export const getMyNFTItem = async (
             _MyNFTItem.isExpired = Math.round(new Date().getTime() / 1000) > itemObject.order.endTime;
             _MyNFTItem.isBlindbox = itemObject.order.isBlindBox;
             _MyNFTItem.price_ela = itemObject.order.price / 1e18;
+            _MyNFTItem.bids = itemObject.order.bids;
 
             if(itemObject.order.bids > 0) {
-                _MyNFTItem.status = 'HAS BIDS'
                 if(itemObject.order.orderState === 2) {
                     _MyNFTItem.buyer = itemObject.order.buyer;
                 }
