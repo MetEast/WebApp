@@ -43,7 +43,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 description: dialogState.crtBlindDescription,
                 asset,
                 thumbnail,
-                tokenIds: dialogState.crtBlindTokenIds.split(','),
+                tokenIds: dialogState.crtBlindTokenIds.split(';'),
                 maxQuantity: dialogState.crtBlindQuantity,
                 blindPrice: dialogState.crtBlindPrice,
                 saleBegin: parseInt(dialogState.crtBlindSaleBegin),
