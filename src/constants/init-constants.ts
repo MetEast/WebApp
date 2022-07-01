@@ -37,6 +37,7 @@ export const blankNFTItem: TypeProduct = {
     holder: '',
     type: enumSingleNFTType.BuyNow,
     isLike: false,
+    bids: 0,
 };
 
 export const blankMyNFTItem: TypeProduct = {
@@ -59,6 +60,7 @@ export const blankMyNFTItem: TypeProduct = {
     holder: '',
     type: enumMyNFTType.BuyNow,
     isLike: false,
+    bids: 0
 };
 
 export const blankNFTTxs: TypeNFTTransaction = {
@@ -110,6 +112,7 @@ export const blankBBItem: TypeProduct = {
     isLike: false,
     sold: 0,
     instock: 0,
+    bids: 0,
 };
 
 export const blankBBCandidate: TypeBlindBoxSelectItem = {
