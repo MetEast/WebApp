@@ -4,7 +4,6 @@ import {
     enumMyNFTType,
     enumSingleNFTType,
     enumTransactionType,
-    OrderEventType,
     TypeBlindBoxSelectItem,
     TypeFavouritesFetch,
     TypeNFTHisotry,
@@ -736,41 +735,46 @@ export const getNFTLatestTxs2 = async (
     const _NFTTxList: Array<TypeNFTTransaction> = [];
     for (let i = 0; i < arrNFTTxs.length; i++) {
         const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
-        // if (itemObject.event === 'Transfer') continue;
-        const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
-        const lastEvent  = itemObject.events[itemObject.events.length - 1];
 
-        if(itemObject.orderType === 1) {
-            if(itemObject.orderState === 1) {
-                _NFTTx.type = enumTransactionType.ForSale;
+        let events = itemObject.events;
+        let events2 = events.sort((a, b) => {
+            return b.timestamp - a.timestamp;
+        })
+
+        for(let j = 0; j < events2.length; j++) {
+            const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
+
+            const event = events2[j];
+            console.log(event);
+            if(event.eventType === 0 || event.eventType === 2) {
+                _NFTTx.type = itemObject.orderType === 1 ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
                 _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-            } else if(itemObject.orderState === 2) {
-                _NFTTx.type = enumTransactionType.SoldTo;
-                _NFTTx.user = itemObject.buyerInfo?.name ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
-            } else if(itemObject.orderState === 3 || itemObject.orderState === 4) {
+            } else if(event.eventType === 1) {
+                _NFTTx.type = enumTransactionType.Bid;
+                _NFTTx.user =  reduceHexAddress(itemObject.events[j].buyer, 4);
+            } else if(event.eventType === 3) {
+                _NFTTx.type = itemObject.orderType === 1 ? enumTransactionType.SoldTo: enumTransactionType.SettleBidOrder;
+                _NFTTx.user = reduceHexAddress(event.buyer, 4);
+            } else if(event.eventType === 4) {
+                _NFTTx.type = enumTransactionType.SaleCanceled;
+                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+            } else if(event.eventType === 5) {
+                _NFTTx.type = enumTransactionType.PriceChanged;
+                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+            } else if(event.eventType === 6) {
                 _NFTTx.type = enumTransactionType.SaleCanceled;
                 _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
             }
-        } else {
-            if(itemObject.orderState === 1) {
-                _NFTTx.type = enumTransactionType.OnAuction;
-                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-            } else if(itemObject.orderState === 2) {
-                _NFTTx.type = enumTransactionType.SettleBidOrder;
-                _NFTTx.user = itemObject.buyerInfo?.name ? itemObject.buyerInfo.name : reduceHexAddress(itemObject.buyerAddr, 4);
-            } else if(itemObject.orderState === 3 || itemObject.orderState === 4) {
-                _NFTTx.type = enumTransactionType.SaleCanceled;
-                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-            }
+
+            _NFTTx.price = (event.price ? event.price : event.newPrice)/1e18;
+            _NFTTx.txHash = event.transactionHash;
+            const timestamp = getTime(event.timestamp.toString());
+            _NFTTx.time = timestamp.date + ' ' + timestamp.time;
+            _NFTTxList.push(_NFTTx);
         }
-
-
-        _NFTTx.price = itemObject.price ? parseInt(itemObject.price) / 1e18 : 0;
-        _NFTTx.txHash = lastEvent.transactionHash;
-        const timestamp = getTime(lastEvent.timestamp.toString());
-        _NFTTx.time = timestamp.date + ' ' + timestamp.time;
-        _NFTTxList.push(_NFTTx);
     }
+
+    console.log(_NFTTxList);
     return _NFTTxList;
 };
 

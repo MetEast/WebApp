@@ -14,7 +14,13 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { getMintCategory } from 'src/services/common';
-import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
+import {
+    enumBadgeType,
+    TypeProduct,
+    TypeNFTTransaction,
+    TypeNFTHisotry,
+    enumTransactionType,
+} from 'src/types/product-types';
 import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTLatestTxs2 } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -50,6 +56,16 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
 
             if (!unmounted) {
                 setProductDetail(_MyNFTItem);
+                setTransactionsList((prevState: Array<TypeNFTTransaction>) => {
+                    prevState.push({
+                        type: enumTransactionType.CreatedBy,
+                        user: _MyNFTItem.author,
+                        price: 0,
+                        time: _MyNFTItem.createTime,
+                        txHash: ''
+                    })
+                    return [...prevState]
+                })
             }
         };
         if (signInDlgState.isLoggedIn) {

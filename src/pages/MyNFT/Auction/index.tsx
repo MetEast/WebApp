@@ -19,7 +19,7 @@ import {
     TypeProduct,
     TypeNFTTransaction,
     TypeSingleNFTBid,
-    TypeNFTHisotry,
+    TypeNFTHisotry, enumTransactionType,
 } from 'src/types/product-types';
 import {
     getMyNFTItem,
@@ -66,6 +66,17 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 console.log(_MyNFTItem)
                 setProductDetail(_MyNFTItem);
+
+                setTransactionsList((prevState: Array<TypeNFTTransaction>) => {
+                    prevState.push({
+                        type: enumTransactionType.CreatedBy,
+                        user: _MyNFTItem.author,
+                        price: 0,
+                        time: _MyNFTItem.createTime,
+                        txHash: ''
+                    })
+                    return [...prevState]
+                })
             }
         };
         if (signInDlgState.isLoggedIn) {
