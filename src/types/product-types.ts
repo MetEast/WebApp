@@ -250,7 +250,8 @@ export type TypeProductFetch = {
         seller: string,
         buyer: string,
         price: number,
-        bids: number
+        bids: number,
+        buyerAddr: string,
     },
 
     token: {

@@ -1060,14 +1060,15 @@ export const getMyEarnedList = async (address: string) => {
 
         let earn = 0, badge = '';
         if(itemObject.royaltyOwner === address) {
-            badge = 'Badge';
             if(itemObject.sellerAddr === address) {
-                earn = itemObject.price;
+                badge = 'Badge';
+                earn = itemObject.price - itemObject.platformFee;
             } else {
+                badge = 'Royalties'
                 earn = itemObject.royaltyFee;
             }
         } else {
-            badge = 'Royalties'
+            badge = 'Badge';
             earn = itemObject.price - itemObject.royaltyFee - itemObject.platformFee;
         }
 
@@ -1133,7 +1134,7 @@ export const getMyNFTItem = async (
 
             if(itemObject.order.bids > 0) {
                 if(itemObject.order.orderState === 2) {
-                    _MyNFTItem.buyer = itemObject.order.buyer;
+                    _MyNFTItem.buyer = itemObject.order.buyerAddr;
                 }
             }
 
