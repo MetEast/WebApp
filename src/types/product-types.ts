@@ -423,6 +423,7 @@ export type TypeYourEarningFetch = {
     thumbnail: string;
     updateTime: string;
 
+    filled: number;
     platformFee: number;
     price: number;
     sellerAddr: string;

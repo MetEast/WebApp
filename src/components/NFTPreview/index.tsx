@@ -64,16 +64,16 @@ const NFTPreview: React.FC<ComponentProps> = ({
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
             const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
-                likeState ? 'decTokenLikes' : 'incTokenLikes'
+                likeState ? (isBlindBox ? 'decBlindBoxLikes' : 'decTokenLikes') : (isBlindBox ? 'incBlindBoxLikes': 'incTokenLikes')
             }`;
             const reqBody = isBlindBox
                 ? {
                       blindBoxIndex: product.tokenId,
-                      did: signInDlgState.address,
+                      address: signInDlgState.address,
                   }
                 : {
                       tokenId: product.tokenId,
-                      did: signInDlgState.address,
+                      address: signInDlgState.address,
                   };
             // change state first
             if (updateLikes !== undefined) updateLikes(index, likeState ? 'dec' : 'inc');

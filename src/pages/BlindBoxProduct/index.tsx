@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -33,6 +33,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
     const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([]);
     // const [onProgress, setOnProgress] = useState<boolean>(false);
+    const location = useLocation();
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -41,6 +42,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
             const _BBItem = await getBBItem(params.id, ELA2USD);
+            // @ts-ignore
+            _BBItem.isLike = location.state.isLiked;
             const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','));
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);

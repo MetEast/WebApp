@@ -238,7 +238,6 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
                 {
                     method: 'POST',
                     headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
-                    body: JSON.stringify({pageSize: 100, pageNum: 1}),
                 },
             );
             const dataFavouriteList = await resFavouriteList.json();
@@ -250,6 +249,27 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
         }
     } else return [];
 };
+
+export const getMyFavouritesList3 = async (loginState: boolean, token: string): Promise<string[]> => {
+    if (loginState) {
+        try {
+            const resFavouriteList = await fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/api/v1/getFavoritesBlindBox`,
+                {
+                    method: 'POST',
+                    headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
+                },
+            );
+            const dataFavouriteList = await resFavouriteList.json();
+            let arrFavouriteList: Array<string> = [];
+            dataFavouriteList.data.map((item: { blindBoxIndex: string }) => {arrFavouriteList.push(item.blindBoxIndex)});
+            return arrFavouriteList;
+        } catch (error) {
+            return [];
+        }
+    } else return [];
+};
+
 
 export const getPageBannerList = async (location: number) => {
     const resPageBannerList = await fetch(
@@ -452,7 +472,7 @@ export const getSearchParams2 = (
 };
 
 // Mystery Box Page
-export const getBBItemList = async (body: string, ELA2USD: number) => {
+export const getBBItemList = async (body: string, ELA2USD: number, list_likes: string[]) => {
     const curTimestamp = new Date().getTime() / 1000;
     const resBBList = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketBlindBoxes`,
@@ -487,11 +507,7 @@ export const getBBItemList = async (body: string, ELA2USD: number) => {
             ? itemObject.createdName
             : reduceHexAddress(itemObject.seller, 4);
         _BBItem.royaltyOwner = itemObject.seller;
-        // _BBItem.isLike = loginState
-        //     ? itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === did) === -1
-        //         ? false
-        //         : true
-        //     : false;
+        _BBItem.isLike = list_likes.includes(itemObject._id);
         _BBItem.sold = itemObject.soldTokenIds?.length || 0;
         _BBItem.instock = itemObject.tokenIds?.length || 0;
         if (itemObject.saleBegin) {
@@ -1062,14 +1078,14 @@ export const getMyEarnedList = async (address: string) => {
         if(itemObject.royaltyOwner === address) {
             if(itemObject.sellerAddr === address) {
                 badge = 'Badge';
-                earn = itemObject.price - itemObject.platformFee;
+                earn = itemObject.filled - itemObject.platformFee;
             } else {
                 badge = 'Royalties'
                 earn = itemObject.royaltyFee;
             }
         } else {
             badge = 'Badge';
-            earn = itemObject.price - itemObject.royaltyFee - itemObject.platformFee;
+            earn = itemObject.filled - itemObject.royaltyFee - itemObject.platformFee;
         }
 
         // _earning.tokenId = itemObject.tokenId;

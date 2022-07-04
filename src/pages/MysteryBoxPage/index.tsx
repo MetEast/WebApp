@@ -12,7 +12,14 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList, getSearchParams2 } from 'src/services/fetch';
+import {
+    getELA2USD,
+    getSearchParams,
+    getBBItemList,
+    getPageBannerList,
+    getSearchParams2,
+    getMyFavouritesList3,
+} from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -67,16 +74,19 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
             setPageNum(1);
             setBlindBoxList([]);
         }
+
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
             }
+            const likeList = await getMyFavouritesList3(signInDlgState.isLoggedIn, signInDlgState.token);
             const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
                 JSON.stringify(searchParams),
                 ELA2USDRate ? ELA2USDRate : ELA2USD,
+                likeList,
                 // signInDlgState.isLoggedIn,
                 // signInDlgState.address,
             );
