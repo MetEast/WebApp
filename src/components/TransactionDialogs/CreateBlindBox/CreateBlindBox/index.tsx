@@ -49,6 +49,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     // const [saleEndsError, setSaleEndsError] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
     const [maxLimit] = useState<number>(15);
+    const [selectImageButtonDisable, setSelectImageButtonDisable] = useState<boolean>(true);
 
     useEffect(() => {
         let unmounted = false;
@@ -63,7 +64,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 setBlindboxCandidateCount(count);
             }
         };
-        if (signInDlgState.walletAccounts.length) getFetchData().catch(console.error);
+        if (signInDlgState.walletAccounts.length) getFetchData().then(() => {setSelectImageButtonDisable(false)}).catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -164,6 +165,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     Items
                                 </Typography>
                                 <PrimaryButton
+                                    disabled={selectImageButtonDisable}
                                     fullWidth
                                     size="small"
                                     onClick={() => {
