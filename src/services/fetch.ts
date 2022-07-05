@@ -579,7 +579,7 @@ export const getNFTItem = async (
         _NFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
         _NFTItem.createTime = createTime.date + ' ' + createTime.time;
-        _NFTItem.status = itemObject.status;
+        _NFTItem.status = itemObject.order.orderState.toString();
         _NFTItem.endTimestamp = itemObject.order.endTime ? itemObject.order.endTime * 1000 : 0;
         if (itemObject.order.endTime) {
             const endTime = getTime(itemObject.order.endTime.toString());
@@ -766,7 +766,7 @@ export const getNFTLatestTxs2 = async (
                 _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
             }
 
-            _NFTTx.price = (event.price ? event.price : event.newPrice)/1e18;
+            _NFTTx.price = (event.price ? event.price : event.newPrice ? event.newPrice : event.minPrice)/1e18;
             _NFTTx.txHash = event.transactionHash;
             const timestamp = getTime(event.timestamp.toString());
             _NFTTx.time = timestamp.date + ' ' + timestamp.time;

@@ -375,7 +375,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                         </PrimaryButton>
                                     )}
                                     {!!signInDlgState.walletAccounts.length &&
-                                        productDetail.holder === signInDlgState.walletAccounts[0] &&
+                                        productDetail.holder === signInDlgState.walletAccounts[0] && productDetail.status === '1' &&
                                         !bidsList.length && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <PinkButton
