@@ -140,7 +140,7 @@ export type TypeYourEarning = {
     title: string;
     time: string;
     price: number;
-    badge: enumBadgeType;
+    badges: enumBadgeType[];
 };
 
 export type TypeBlindBoxSelectItem = {

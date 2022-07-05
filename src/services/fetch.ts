@@ -1078,17 +1078,18 @@ export const getMyEarnedList = async (address: string) => {
         const itemObject: TypeYourEarningFetch = arrEarnedList[i];
         const _myEarning: TypeYourEarning = { ...blankMyEarning };
 
-        let earn = 0, badge = '';
+        let earn = 0;
+        const badges:enumBadgeType[] = [];
         if(itemObject.royaltyOwner === address) {
+            badges.push(enumBadgeType.Royalties)
             if(itemObject.sellerAddr === address) {
-                badge = 'Badge';
+                badges.push(enumBadgeType.Sale)
                 earn = itemObject.filled - itemObject.platformFee;
             } else {
-                badge = 'Royalties'
                 earn = itemObject.royaltyFee;
             }
         } else {
-            badge = 'Badge';
+            badges.push(enumBadgeType.Sale)
             earn = itemObject.filled - itemObject.royaltyFee - itemObject.platformFee;
         }
 
@@ -1098,7 +1099,7 @@ export const getMyEarnedList = async (address: string) => {
         _myEarning.price = earn / 1e18;
         const timestamp = getTime(itemObject.updateTime);
         _myEarning.time = timestamp.date + ' ' + timestamp.time;
-        _myEarning.badge = badge === 'Badge' ? enumBadgeType.Sale : enumBadgeType.Royalties;
+        _myEarning.badges = badges
         _myEarningList.push(_myEarning);
     }
     return _myEarningList;

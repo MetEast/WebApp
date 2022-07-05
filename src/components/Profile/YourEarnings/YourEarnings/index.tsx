@@ -62,7 +62,11 @@ const YourEarnings: React.FC<ComponentProps> = ({ onClose, earnings }): JSX.Elem
                                 </Stack>
                                 <Stack alignItems="flex-end">
                                     <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
-                                    <ProductBadge badgeType={item.badge} />
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        {item.badges.map((badge, index) => (
+                                            <ProductBadge badgeType={badge} />
+                                        ))}
+                                    </Stack>
                                 </Stack>
                             </Stack>
                         ))}

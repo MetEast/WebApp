@@ -78,7 +78,7 @@ export const blankMyEarning: TypeYourEarning = {
     title: '',
     time: '',
     price: 0,
-    badge: enumBadgeType.Other,
+    badges: [],
 };
 
 export const blankMyNFTHistory: TypeNFTHisotry = {
