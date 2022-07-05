@@ -386,9 +386,9 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
                                 <ProductBadge badgeType={enumBadgeType.OnAuction} />
-                                {productDetail.bids > 0 && (
-                                    <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />
-                                )}
+                                {/*{productDetail.bids > 0 && (*/}
+                                {/*    <ProductBadge badgeType={enumBadgeType.ReservePriceNotMet} />*/}
+                                {/*)}*/}
                                 {productDetail.isExpired ? (
                                     <ProductBadge badgeType={enumBadgeType.SaleEnded} />
                                 ) : (

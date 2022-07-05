@@ -455,10 +455,10 @@ export const getSearchParams2 = (
         }
     }
     if (filterRange.min !== undefined) {
-        minPrice = filterRange.min * 1e18;
+        minPrice = filterRange.min;
     }
     if (filterRange.max !== undefined) {
-        maxPrice = filterRange.max * 1e18;
+        maxPrice = filterRange.max;
     }
     if (filters.length !== 0) {
         filters.forEach((item) => {
@@ -871,8 +871,8 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
                 : parseInt(itemObject.saleBegin) > curTimestamp
                 ? enumBlindBoxNFTType.ComingSoon
                 : enumBlindBoxNFTType.SaleEnds;
-        _BBItem.likes = itemObject.likes;
-        _BBItem.views = itemObject.views;
+        _BBItem.likes = itemObject.likes ? itemObject.likes: 0;
+        _BBItem.views = itemObject.views ? itemObject.views: 0;
         _BBItem.author = itemObject.createdName
             ? itemObject.createdName
             : reduceHexAddress(itemObject.seller, 4);
