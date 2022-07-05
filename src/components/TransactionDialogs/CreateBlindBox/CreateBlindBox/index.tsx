@@ -55,13 +55,13 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '', signInDlgState.token);
-            let count = 0;
-            for (let i = 0; i < _BBCandidatesList.length; i++) {
-                const itemObject: TypeProductFetch = _BBCandidatesList[i];
-                if (itemObject.status !== 'DELETED') count++;
-            }
+            // let count = 0;
+            // for (let i = 0; i < _BBCandidatesList.length; i++) {
+            //     const itemObject: TypeProductFetch = _BBCandidatesList[i];
+            //     if (itemObject.status !== 'DELETED') count++;
+            // }
             if (!unmounted) {
-                setBlindboxCandidateCount(count);
+                setBlindboxCandidateCount(_BBCandidatesList.length);
             }
         };
         if (signInDlgState.walletAccounts.length) getFetchData().then(() => {setSelectImageButtonDisable(false)}).catch(console.error);

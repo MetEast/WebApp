@@ -39,7 +39,6 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): 
     for (let i = 0; i < itemList.length; i++) allTokenIds.push(itemList[i].tokenId);
 
     // -------------- Fetch Data -------------- //
-    console.log(loadingItemsList);
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
@@ -110,6 +109,21 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): 
         }
     };
 
+    const handleKeywordChanged = (value: string) => {
+        if(!value) {
+            const _BBCandidates = getBBCandiates(bbCandidateLists, selectedTokenIds);
+            setItemList(_BBCandidates.candidates);
+            return;
+        }
+
+        setItemList((prevState: any[] ) => {
+            return prevState.filter((item: any) => {
+                const regex = new RegExp(value, 'gi');
+                return item.projectTitle.search(regex) !== -1;
+            });
+        });
+    }
+
     const theme = useTheme();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -132,7 +146,8 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): 
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <SearchField
                         emptyKeyword={emptyKeyword}
-                        handleChange={(value: string) => setKeyWord(value)}
+                        // handleChange={(value: string) => setKeyWord(value)}
+                        handleChange={(value: string) => {handleKeywordChanged(value)}}
                         sx={{ width: { xs: 200, md: 300 } }}
                     />
                     <Stack direction="row" alignItems="center" spacing={0.5} display={{ xs: 'flex', md: 'none' }}>
