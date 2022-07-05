@@ -960,8 +960,8 @@ export const getMyNFTItemList = async (
             _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18: 0;
             _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
             _myNFT.author = reduceHexAddress(itemObject.royaltyOwner, 4);
-            _myNFT.likes = itemObject.likes;
-            _myNFT.views = itemObject.views;
+            _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
+            _myNFT.views = itemObject.views ? itemObject.views : 0;
 
             if( itemObject.royaltyOwner === walletAddress ) {
                 _myNFT.types.push(enumMyNFTType.Created);
@@ -981,8 +981,8 @@ export const getMyNFTItemList = async (
             _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18: 0;
             _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
             _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
-            _myNFT.likes = itemObject.token.likes;
-            _myNFT.views = itemObject.token.views;
+            _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
+            _myNFT.views = itemObject.views ? itemObject.views : 0;
 
             if( itemObject.token.royaltyOwner === walletAddress ) {
                 _myNFT.types.push(enumMyNFTType.Created);
@@ -1003,8 +1003,8 @@ export const getMyNFTItemList = async (
             _myNFT.price_ela = itemObject.orderPrice  / 1e18;
             _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
             _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
-            _myNFT.likes = itemObject.token.likes;
-            _myNFT.views = itemObject.token.views;
+            _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
+            _myNFT.views = itemObject.views ? itemObject.views : 0;
 
             if( itemObject.token.royaltyOwner === walletAddress ) {
                 _myNFT.types.push(enumMyNFTType.Created);
