@@ -243,14 +243,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                                     //     blindBoxDetail.author === ''
                                                     //         ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
                                                     //         : blindBoxDetail.author,
-                                                    buyBlindMaxPurchases:
-                                                        blindBoxDetail.maxPurchases === undefined
-                                                            ? 0
-                                                            : blindBoxDetail.maxPurchases,
-                                                    buyBlindInstock:
-                                                        blindBoxDetail.instock === undefined
-                                                            ? 0
-                                                            : blindBoxDetail.instock,
+                                                    buyBlindMaxPurchases: blindBoxDetail.maxPurchases ? blindBoxDetail.maxPurchases : 0,
+                                                    buyBlindInstock: blindBoxDetail.instock ? blindBoxDetail.instock : 0,
                                                 });
                                             } else {
                                                 setSignInDlgState((prevState: SignInState) => {

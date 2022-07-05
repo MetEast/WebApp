@@ -199,7 +199,7 @@ export type TypeProductFetch = {
     address: string;
     blindBoxIndex: number;
     blindPrice: string;
-    maxPurchases: string;
+    maxPurchase: string;
     maxQuantity: string;
     maxViews: string;
     saleBegin: string;

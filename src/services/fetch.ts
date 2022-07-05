@@ -892,7 +892,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
         }
         // _BBItem.status = itemObject.status;
         _BBItem.state = itemObject.state;
-        _BBItem.maxPurchases = parseInt(itemObject.maxPurchases);
+        _BBItem.maxPurchases = parseInt(itemObject.maxPurchase);
         _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);
         _BBItem.did = itemObject.did;
         _BBItem.soldIds = itemObject.soldTokenIds;
