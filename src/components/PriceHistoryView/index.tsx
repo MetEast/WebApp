@@ -143,7 +143,7 @@ const PriceHistoryView: React.FC<ComponentProps> = ({ createdTime, creator }): J
 
     useEffect(() => {
         let unmounted = false;
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getNftPriceByTokenId?tokenId=${params.id}`)
+        fetch(`${process.env.REACT_APP_SERVICE_URL}/api/v1/getTokenPriceHistory?tokenId=${params.id}`)
             .then((response) => {
                 response.json().then((jsonPriceList) => {
                     if (!unmounted) {
