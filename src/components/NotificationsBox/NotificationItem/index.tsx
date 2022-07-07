@@ -6,6 +6,7 @@ import { TypeNotification } from 'src/types/notification-types';
 import { removeNotifications } from 'src/services/fetch';
 import { useNotificationContext } from 'src/context/NotificationContext';
 import { Markup } from 'interweave';
+import { useSignInContext } from '../../../context/SignInContext';
 
 interface ComponentProps {
     data: TypeNotification;
@@ -13,11 +14,12 @@ interface ComponentProps {
 
 const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
     const [notificationState, setNotificationState] = useNotificationContext();
+    const [signInDlgState] = useSignInContext();
 
     const handleDelete = async () => {
         let unmounted = false;
         const removeNote = async () => {
-            const result = await removeNotifications(data._id);
+            const result = await removeNotifications(signInDlgState.token, data._id);
             if (!unmounted && result) {
                 const notesList = notificationState.notesList;
                 const id = notesList.findIndex((item: TypeNotification) => item._id === data._id);

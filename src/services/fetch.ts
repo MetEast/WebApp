@@ -155,17 +155,17 @@ export const getNotificationCount = (type: number, params: NotificationParams) =
 
 export const markNotificationsAsRead = (token: string, ids: string) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
-        const reqUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/readNotifications`;
-        const reqBody = {
-            token: token,
-            ids: ids,
-        };
+        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/readNotifications`;
+        // const reqBody = {
+        //     ids: ids,
+        // };
         fetch(reqUrl, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(reqBody),
+            // body: JSON.stringify(reqBody),
         })
             .then((response) => response.json())
             .then((data) => {
@@ -180,13 +180,19 @@ export const markNotificationsAsRead = (token: string, ids: string) =>
             });
     });
 
-export const removeNotifications = async (ids: string) => {
+export const removeNotifications = async (token: string, id: string) => {
     const resRead = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/removeNotifications?ids=${ids}`,
-        FETCH_CONFIG_JSON,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/removeNotification?id=${id}`,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        },
     );
     const jsonRead = await resRead.json();
-    return jsonRead.code === 200;
+    return jsonRead.status === 200;
 };
 
 export const getShorternUrl = async (url: string) => {
