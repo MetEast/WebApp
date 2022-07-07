@@ -93,7 +93,13 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
                 setTransactionsList(_NFTTxs.slice(0, 5));
-                // setProdTransHistory(_NFTTxs.history.slice(0, 5));
+                const data: TypeNFTHisotry[] = [];
+                _NFTTxs.map((tx: TypeNFTTransaction) => {
+                    if(tx.type === enumTransactionType.SoldTo) {
+                        data.push({saleType: tx.type, type: tx.type, user: tx.user, price: tx.price, time: tx.time, txHash: tx.txHash})
+                    }
+                })
+                setProdTransHistory(data.slice(0, 5));
             }
         };
         if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
