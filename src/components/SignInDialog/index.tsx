@@ -504,7 +504,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }
             }
         }
-        if (chainId && !isSupportedNetwork(chainId)) showChainErrorSnackBar();
+        if (chainId && !isSupportedNetwork(chainId)) {
+            showChainErrorSnackBar()
+        }
         return () => {
             if (walletConnectProvider.removeListener) {
                 walletConnectProvider.removeListener('accountsChanged', handleEEAccountsChanged);
@@ -523,7 +525,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 const _state = { ...prevState };
                 _state.token = cookies.METEAST_TOKEN;
                 _state.didUri = didUri;
-                _state.userDid = user.address;
+                _state.userDid = user.did;
+                _state.address = user.address
                 _state.userName = user.name ? user.name : '';
                 _state.userDescription = user.description ? user.description : '';
                 _state.userAvatar = user.avatar ? user.avatar : '';
