@@ -66,17 +66,6 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 console.log(_MyNFTItem)
                 setProductDetail(_MyNFTItem);
-
-                setTransactionsList((prevState: Array<TypeNFTTransaction>) => {
-                    prevState.push({
-                        type: enumTransactionType.CreatedBy,
-                        user: _MyNFTItem.author,
-                        price: 0,
-                        time: _MyNFTItem.createTime,
-                        txHash: ''
-                    })
-                    return [...prevState]
-                })
             }
         };
         if (signInDlgState.isLoggedIn) {
@@ -92,7 +81,15 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.slice(0, 5));
+                let nftTx = _NFTTxs.slice(0, 5);
+                nftTx.push({
+                    type: enumTransactionType.CreatedBy,
+                    user: productDetail.author,
+                    price: 0,
+                    time: productDetail.createTime,
+                    txHash: ''
+                })
+                setTransactionsList(nftTx);
                 const data: TypeNFTHisotry[] = [];
                 _NFTTxs.map((tx: TypeNFTTransaction) => {
                     if(tx.type === enumTransactionType.SoldTo) {
@@ -106,7 +103,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [params.id, signInDlgState.walletAccounts]);
+    }, [productDetail]);
 
     useEffect(() => {
         let unmounted = false;

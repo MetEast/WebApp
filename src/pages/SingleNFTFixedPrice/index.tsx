@@ -46,17 +46,6 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
-
-                setTransactionsList((prevState: Array<TypeNFTTransaction>) => {
-                    prevState.push({
-                        type: enumTransactionType.CreatedBy,
-                        user: _NFTItem.author,
-                        price: 0,
-                        time: _NFTItem.createTime,
-                        txHash: ''
-                    })
-                    return [...prevState]
-                })
             }
         };
         if((signInDlgState.isLoggedIn && signInDlgState.address) || (!signInDlgState.isLoggedIn)) fetchNFTItem().catch(console.error);
@@ -70,14 +59,22 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.slice(0,5));
+                let nftTx = _NFTTxs.slice(0, 5);
+                nftTx.push({
+                    type: enumTransactionType.CreatedBy,
+                    user: productDetail.author,
+                    price: 0,
+                    time: productDetail.createTime,
+                    txHash: ''
+                })
+                setTransactionsList(nftTx);
             }
         };
         fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [params.id]);
+    }, [productDetail]);
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         if (signInDlgState.walletAccounts.length === 0) {

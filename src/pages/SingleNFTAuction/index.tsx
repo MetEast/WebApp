@@ -111,14 +111,22 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs);
+                let nftTx = _NFTTxs.slice(0, 5);
+                nftTx.push({
+                    type: enumTransactionType.CreatedBy,
+                    user: productDetail.author,
+                    price: 0,
+                    time: productDetail.createTime,
+                    txHash: ''
+                })
+                setTransactionsList(nftTx);
             }
         };
         fetchLatestTxs().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [params.id]);
+    }, [productDetail]);
 
     useEffect(() => {
         let unmounted = false;
