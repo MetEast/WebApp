@@ -70,7 +70,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs);
+                setTransactionsList(_NFTTxs.slice(0,5));
             }
         };
         fetchLatestTxs().catch(console.error);
