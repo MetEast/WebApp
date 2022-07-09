@@ -77,9 +77,6 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
     };
 
     const handleSpecificDate = () => {
-        console.log(timeValue)
-        console.log(dateValue)
-        console.log(new Date())
         if (dateValue < new Date()) {
             enqueueSnackbar('Past time can not be selected!', { variant: 'warning' });
             return;
@@ -99,12 +96,9 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
 
     const handleTimeChange = (event: any) => {
         let time = event.target.value;
-        console.log(`=============${time}`)
         if(!time) {
-            time = "00:00"
-        }
-        if(time === '12:00') {
-            time = "24:00"
+            let date = new Date();
+            time = date.getHours() + ':' + date.getMinutes();
         }
         const splitTime = time.split(':');
         const tempDate = dateValue;
