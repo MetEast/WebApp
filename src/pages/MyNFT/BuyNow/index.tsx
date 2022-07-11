@@ -93,7 +93,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [params.id, signInDlgState.walletAccounts]);
+    }, [productDetail]);
 
     useEffect(() => {
         let unmounted = false;
