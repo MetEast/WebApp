@@ -10,7 +10,7 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
-import { getBBItem, getELA2USD, getNFTItems } from 'src/services/fetch';
+import { getBBItem, getELA2USD, getNFTItems, checkBlindBoxLike } from 'src/services/fetch';
 // import { reduceHexAddress } from 'src/services/common';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -43,7 +43,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
             const ELA2USD = await getELA2USD();
             const _BBItem = await getBBItem(params.id, ELA2USD);
             // @ts-ignore
-            _BBItem.isLike = location.state.isLiked;
+            _BBItem.isLike = location.state !== null ? location.state.isLiked : await checkBlindBoxLike(params.id, signInDlgState.address);
             const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','));
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);

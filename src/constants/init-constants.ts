@@ -69,6 +69,7 @@ export const blankNFTTxs: TypeNFTTransaction = {
     price: 0,
     time: '',
     txHash: '',
+    saleType: enumTransactionType.ForSale
 };
 
 export const blankNFTBid: TypeSingleNFTBid = { user: '', address: '', price: 0, time: '', orderId: '' };

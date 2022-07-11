@@ -12,7 +12,7 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getMintCategory } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs, getNFTLatestTxs2 } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs, getNFTLatestTxs2, checkTokenLike } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -42,7 +42,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             // const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.address);
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
             // @ts-ignore
-            _NFTItem.isLike = location.state.isLiked
+            _NFTItem.isLike = location.state !== null ? location.state.isLiked : await checkTokenLike(params.id, signInDlgState.address);
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
@@ -65,7 +65,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     user: productDetail.author,
                     price: 0,
                     time: productDetail.createTime,
-                    txHash: ''
+                    txHash: '',
+                    saleType: enumTransactionType.CreatedBy
                 })
                 setTransactionsList(nftTx);
             }

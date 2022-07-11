@@ -220,6 +220,22 @@ export const getELA2USD = async () => {
     }
 };
 
+export const checkTokenLike = async (id: string, address: string) => {
+    const resCheckLike = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/checkTokenLike?address=${address}&id=${id}`,
+    );
+    const jsonCheckLike = await resCheckLike.json();
+    return jsonCheckLike.data ? jsonCheckLike.data : false;
+}
+
+export const checkBlindBoxLike = async (id: string, address: string) => {
+    const resCheckLike = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/checkBlindBoxLike?address=${address}&id=${id}`,
+    );
+    const jsonCheckLike = await resCheckLike.json();
+    return jsonCheckLike.data ? jsonCheckLike.data : false;
+}
+
 export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     if (loginState) {
         try {
@@ -772,6 +788,7 @@ export const getNFTLatestTxs2 = async (
                 _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
             }
 
+            _NFTTx.saleType = itemObject.orderType === 1 ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
             _NFTTx.price = (event.price ? event.price : event.newPrice ? event.newPrice : event.minPrice)/1e18;
             _NFTTx.txHash = event.transactionHash;
             const timestamp = getTime(event.timestamp.toString());

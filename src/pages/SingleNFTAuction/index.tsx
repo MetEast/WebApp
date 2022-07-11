@@ -18,6 +18,7 @@ import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import {
+    checkTokenLike,
     getELA2USD,
     getMyFavouritesList,
     getNFTItem,
@@ -82,21 +83,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             // const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
             // @ts-ignore
-            _NFTItem.isLike = location.state.isLiked
+            _NFTItem.isLike = location.state !== null ? location.state.isLiked : await checkTokenLike(params.id, signInDlgState.address);
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.OnAuction) navigate(-1); // on auction
                 setProductDetail(_NFTItem);
-
-                setTransactionsList((prevState: Array<TypeNFTTransaction>) => {
-                    prevState.push({
-                        type: enumTransactionType.CreatedBy,
-                        user: _NFTItem.author,
-                        price: 0,
-                        time: _NFTItem.createTime,
-                        txHash: ''
-                    })
-                    return [...prevState]
-                })
             }
         };
         if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
@@ -117,7 +107,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     user: productDetail.author,
                     price: 0,
                     time: productDetail.createTime,
-                    txHash: ''
+                    txHash: '',
+                    saleType: enumTransactionType.CreatedBy
                 })
                 setTransactionsList(nftTx);
             }

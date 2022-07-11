@@ -77,13 +77,14 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     user: productDetail.author,
                     price: 0,
                     time: productDetail.createTime,
-                    txHash: ''
+                    txHash: '',
+                    saleType: enumTransactionType.CreatedBy
                 })
                 setTransactionsList(nftTx);
                 const data: TypeNFTHisotry[] = [];
                 _NFTTxs.map((tx: TypeNFTTransaction) => {
-                    if(tx.type === enumTransactionType.SoldTo) {
-                        data.push({saleType: tx.type, type: tx.type, user: tx.user, price: tx.price, time: tx.time, txHash: tx.txHash})
+                    if(tx.type === enumTransactionType.SoldTo || tx.type === enumTransactionType.SettleBidOrder || tx.type === enumTransactionType.CreatedBy) {
+                        data.push({saleType: tx.saleType, type: tx.type, user: tx.user, price: tx.price, time: tx.time, txHash: tx.txHash})
                     }
                 })
                 setProdTransHistory(data.slice(0, 5));

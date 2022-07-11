@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Stack, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
 import ELAPrice from 'src/components/ELAPrice';
-import { PrimaryButton, PinkButton, SecondaryButton } from 'src/components/Buttons/styles';
+import { PinkButton, PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
@@ -16,19 +16,13 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import NFTBidTable from 'src/components/NFTBidTable';
 import {
     enumBadgeType,
-    TypeProduct,
+    enumTransactionType,
+    TypeNFTHisotry,
     TypeNFTTransaction,
+    TypeProduct,
     TypeSingleNFTBid,
-    TypeNFTHisotry, enumTransactionType,
 } from 'src/types/product-types';
-import {
-    getMyNFTItem,
-    getELA2USD,
-    getMyFavouritesList,
-    getNFTLatestTxs,
-    getNFTLatestBids,
-    getNFTLatestTxs2,
-} from 'src/services/fetch';
+import { getMyNFTItem, getNFTLatestBids, getNFTLatestTxs2 } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -87,13 +81,14 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     user: productDetail.author,
                     price: 0,
                     time: productDetail.createTime,
-                    txHash: ''
+                    txHash: '',
+                    saleType: enumTransactionType.CreatedBy
                 })
                 setTransactionsList(nftTx);
                 const data: TypeNFTHisotry[] = [];
                 _NFTTxs.map((tx: TypeNFTTransaction) => {
-                    if(tx.type === enumTransactionType.SoldTo) {
-                        data.push({saleType: tx.type, type: tx.type, user: tx.user, price: tx.price, time: tx.time, txHash: tx.txHash})
+                    if(tx.type === enumTransactionType.SoldTo || tx.type === enumTransactionType.SettleBidOrder || tx.type === enumTransactionType.CreatedBy) {
+                        data.push({saleType: tx.saleType, type: tx.type, user: tx.user, price: tx.price, time: tx.time, txHash: tx.txHash})
                     }
                 })
                 setProdTransHistory(data.slice(0, 5));

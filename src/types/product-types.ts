@@ -115,6 +115,7 @@ export type TypeNFTTransaction = {
     price: number;
     time: string;
     txHash: string;
+    saleType: enumTransactionType;
 };
 
 export type TypeNFTHisotry = {
