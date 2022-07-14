@@ -120,10 +120,9 @@ export const updateUserToken = async (address: string, did: string) => {
 };
 
 export const getNotificationList = async (token: string) => {
-    const resNotificationList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getNotifications`,
-        {headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers}},
-    );
+    const resNotificationList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getNotifications`, {
+        headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
+    });
     const jsonNotificationList = await resNotificationList.json();
     const arrNotificationList = jsonNotificationList.data;
 
@@ -147,11 +146,15 @@ export const getNotificationList = async (token: string) => {
 export const getNotificationCount = (type: number, params: NotificationParams) => {
     switch (type) {
         case 1:
-            return `Your <b>${params.tokenName}</b> project has been sold to <b>${params.buyer}</b> for <b>${params.price ? params.price/1e18: 0} ELA</b>`;
+            return `Your <b>${params.tokenName}</b> project has been sold to <b>${params.buyer}</b> for <b>${
+                params.price ? params.price / 1e18 : 0
+            } ELA</b>`;
         case 2:
-            return `You have received <b>${params.royaltyFee? params.royaltyFee/1e18: 0} ELA</b> in Roylties from the sale of the <b>${params.tokenName}</b> project.`;
+            return `You have received <b>${
+                params.royaltyFee ? params.royaltyFee / 1e18 : 0
+            } ELA</b> in Roylties from the sale of the <b>${params.tokenName}</b> project.`;
     }
-}
+};
 
 export const markNotificationsAsRead = (token: string, ids: string) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
@@ -181,16 +184,13 @@ export const markNotificationsAsRead = (token: string, ids: string) =>
     });
 
 export const removeNotifications = async (token: string, id: string) => {
-    const resRead = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/removeNotification?id=${id}`,
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
+    const resRead = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/removeNotification?id=${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
-    );
+    });
     const jsonRead = await resRead.json();
     return jsonRead.status === 200;
 };
@@ -208,10 +208,7 @@ export const getShorternUrl = async (url: string) => {
 
 export const getELA2USD = async () => {
     try {
-        const resElaUsdRate = await fetch(
-            `https://assist.trinity-feeds.app/feeds/api/v1/price`,
-            FETCH_CONFIG_JSON,
-        );
+        const resElaUsdRate = await fetch(`https://assist.trinity-feeds.app/feeds/api/v1/price`, FETCH_CONFIG_JSON);
         const dataElaUsdRate = await resElaUsdRate.json();
         if (dataElaUsdRate) return parseFloat(dataElaUsdRate.ELA);
         return 0;
@@ -226,7 +223,7 @@ export const checkTokenLike = async (id: string, address: string) => {
     );
     const jsonCheckLike = await resCheckLike.json();
     return jsonCheckLike.data ? jsonCheckLike.data : false;
-}
+};
 
 export const checkBlindBoxLike = async (id: string, address: string) => {
     const resCheckLike = await fetch(
@@ -234,7 +231,7 @@ export const checkBlindBoxLike = async (id: string, address: string) => {
     );
     const jsonCheckLike = await resCheckLike.json();
     return jsonCheckLike.data ? jsonCheckLike.data : false;
-}
+};
 
 export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     if (loginState) {
@@ -258,12 +255,14 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
                 `${process.env.REACT_APP_BACKEND_URL}/api/v1/getFavoritesCollectible`,
                 {
                     method: 'POST',
-                    headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
+                    headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
                 },
             );
             const dataFavouriteList = await resFavouriteList.json();
             let arrFavouriteList: Array<string> = [];
-            dataFavouriteList.data.map((item: { tokenId: string }) => {arrFavouriteList.push(item.tokenId)});
+            dataFavouriteList.data.map((item: { tokenId: string }) => {
+                arrFavouriteList.push(item.tokenId);
+            });
             return arrFavouriteList;
         } catch (error) {
             return [];
@@ -274,23 +273,21 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
 export const getMyFavouritesList3 = async (loginState: boolean, token: string): Promise<string[]> => {
     if (loginState) {
         try {
-            const resFavouriteList = await fetch(
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/getFavoritesBlindBox`,
-                {
-                    method: 'POST',
-                    headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
-                },
-            );
+            const resFavouriteList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getFavoritesBlindBox`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
+            });
             const dataFavouriteList = await resFavouriteList.json();
             let arrFavouriteList: Array<string> = [];
-            dataFavouriteList.data.map((item: { blindBoxIndex: string }) => {arrFavouriteList.push(item.blindBoxIndex)});
+            dataFavouriteList.data.map((item: { blindBoxIndex: string }) => {
+                arrFavouriteList.push(item.blindBoxIndex);
+            });
             return arrFavouriteList;
         } catch (error) {
             return [];
         }
     } else return [];
 };
-
 
 export const getPageBannerList = async (location: number) => {
     const resPageBannerList = await fetch(
@@ -344,18 +341,23 @@ export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeL
 };
 
 export const getNFTItemList2 = async (
-    body: {pageSize: number, pageNum: number, orderType?: string, filterStatus?: string, minPrice?: number, maxPrice?: number, category?: string},
+    body: {
+        pageSize: number;
+        pageNum: number;
+        orderType?: string;
+        filterStatus?: string;
+        minPrice?: number;
+        maxPrice?: number;
+        category?: string;
+    },
     ELA2USD: number | undefined,
     likeList: Array<String> | undefined,
 ) => {
-    const resNFTList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketTokens`,
-        {
-            method: 'POST',
-            ...FETCH_CONFIG_JSON,
-            body: JSON.stringify(body),
-        }
-    );
+    const resNFTList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketTokens`, {
+        method: 'POST',
+        ...FETCH_CONFIG_JSON,
+        body: JSON.stringify(body),
+    });
     const jsonNFTList = await resNFTList.json();
     const totalCount: number = jsonNFTList.data.total;
     const arrNFTList = jsonNFTList.data ? jsonNFTList.data.data : [];
@@ -369,13 +371,13 @@ export const getNFTItemList2 = async (
         _NFT.image = getImageFromAsset(itemObject.token.thumbnail);
         _NFT.price_ela = itemObject.orderPrice / 1e18;
         _NFT.price_usd = ELA2USD ? _NFT.price_ela * ELA2USD : 0;
-        _NFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4)
+        _NFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
         _NFT.type = itemObject.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
         _NFT.likes = itemObject.token.likes ? itemObject.token.likes : 0;
         _NFT.views = itemObject.token.views ? itemObject.token.views : 0;
         // _NFT.status = itemObject.status;
         // _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-        _NFT.isLike = likeList ? likeList.includes(itemObject.tokenId ) : false;
+        _NFT.isLike = likeList ? likeList.includes(itemObject.tokenId) : false;
         _arrNFTList.push(_NFT);
     }
     return { total: totalCount, data: _arrNFTList };
@@ -489,20 +491,26 @@ export const getSearchParams2 = (
         });
     }
 
-    return {pageNum, pageSize, keyword: keyWord, orderType, filterStatus, minPrice, maxPrice, category: category?.value};
+    return {
+        pageNum,
+        pageSize,
+        keyword: keyWord,
+        orderType,
+        filterStatus,
+        minPrice,
+        maxPrice,
+        category: category?.value,
+    };
 };
 
 // Mystery Box Page
 export const getBBItemList = async (body: string, ELA2USD: number, list_likes: string[]) => {
     const curTimestamp = new Date().getTime() / 1000;
-    const resBBList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketBlindBoxes`,
-        {
-            method: 'POST',
-            ...FETCH_CONFIG_JSON,
-            body: body,
-        }
-    );
+    const resBBList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketBlindBoxes`, {
+        method: 'POST',
+        ...FETCH_CONFIG_JSON,
+        body: body,
+    });
     const jsonBBList = await resBBList.json();
     const totalCount: number = jsonBBList.data.total;
     const arrBBList = jsonBBList.data ? jsonBBList.data.data : [];
@@ -524,9 +532,7 @@ export const getBBItemList = async (body: string, ELA2USD: number, list_likes: s
                 : enumBlindBoxNFTType.SaleEnds;
         _BBItem.likes = itemObject.likes;
         _BBItem.views = itemObject.views;
-        _BBItem.author = itemObject.createdName
-            ? itemObject.createdName
-            : reduceHexAddress(itemObject.seller, 4);
+        _BBItem.author = itemObject.createdName ? itemObject.createdName : reduceHexAddress(itemObject.seller, 4);
         _BBItem.royaltyOwner = itemObject.seller;
         _BBItem.isLike = list_likes.includes(itemObject._id);
         _BBItem.sold = itemObject.soldTokenIds?.length || 0;
@@ -569,13 +575,17 @@ export const getNFTItem = async (
         _NFTItem.image = getImageFromAsset(itemObject2.data.image);
         _NFTItem.price_ela = itemObject.order?.orderPrice / 1e18;
         _NFTItem.price_usd = _NFTItem.price_ela * ELA2USD;
-        _NFTItem.type = itemObject.order === undefined ? enumSingleNFTType.NotOnSale :
-            itemObject.order.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-            // itemObject.status === 'NEW'
-            //     ? enumSingleNFTType.NotOnSale
-            //     : itemObject.endTime === '0'
-            //     ? enumSingleNFTType.BuyNow
-            //     : enumSingleNFTType.OnAuction;
+        _NFTItem.type =
+            itemObject.order === undefined
+                ? enumSingleNFTType.NotOnSale
+                : itemObject.order.orderType === 1
+                ? enumSingleNFTType.BuyNow
+                : enumSingleNFTType.OnAuction;
+        // itemObject.status === 'NEW'
+        //     ? enumSingleNFTType.NotOnSale
+        //     : itemObject.endTime === '0'
+        //     ? enumSingleNFTType.BuyNow
+        //     : enumSingleNFTType.OnAuction;
         _NFTItem.likes = itemObject.likes ? itemObject.likes : 0;
         _NFTItem.views = itemObject.views ? itemObject.views : 0;
         // _NFTItem.isLike =
@@ -617,14 +627,11 @@ export const getNFTItem = async (
 
 // BB sold product
 export const getNFTItems = async (tokenIds: string | undefined) => {
-    const resNFTItems = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getTokenByIds`,
-        {
-            method: 'POST',
-            ...FETCH_CONFIG_JSON,
-            body: JSON.stringify(tokenIds?.split(',')),
-        }
-    );
+    const resNFTItems = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getTokenByIds`, {
+        method: 'POST',
+        ...FETCH_CONFIG_JSON,
+        body: JSON.stringify(tokenIds?.split(',')),
+    });
     const jsonNFTItems = await resNFTItems.json();
     const arrNFTItems = await jsonNFTItems.data;
     const _NFTItems: Array<TypeProduct> = [];
@@ -744,9 +751,7 @@ export const getNFTLatestTxs = async (
     return { txs: _NFTTxList, history: _NFTTxHistoryList };
 };
 
-export const getNFTLatestTxs2 = async (
-    tokenId: string | undefined,
-) => {
+export const getNFTLatestTxs2 = async (tokenId: string | undefined) => {
     console.log(tokenId);
     let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTransHistoryByTokenId?tokenId=${tokenId}`;
 
@@ -761,35 +766,44 @@ export const getNFTLatestTxs2 = async (
         let events = itemObject.events;
         let events2 = events.sort((a, b) => {
             return b.timestamp - a.timestamp;
-        })
+        });
 
-        for(let j = 0; j < events2.length; j++) {
+        for (let j = 0; j < events2.length; j++) {
             const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
 
             const event = events2[j];
             console.log(event);
-            if(event.eventType === 0 || event.eventType === 2) {
+            if (event.eventType === 0 || event.eventType === 2) {
                 _NFTTx.type = itemObject.orderType === 1 ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
-                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-            } else if(event.eventType === 1) {
+                _NFTTx.user = itemObject.sellerInfo?.name
+                    ? itemObject.sellerInfo.name
+                    : reduceHexAddress(itemObject.sellerAddr, 4);
+            } else if (event.eventType === 1) {
                 _NFTTx.type = enumTransactionType.Bid;
-                _NFTTx.user =  reduceHexAddress(itemObject.events[j].buyer, 4);
-            } else if(event.eventType === 3) {
-                _NFTTx.type = itemObject.orderType === 1 ? enumTransactionType.SoldTo: enumTransactionType.SettleBidOrder;
+                _NFTTx.user = reduceHexAddress(itemObject.events[j].buyer, 4);
+            } else if (event.eventType === 3) {
+                _NFTTx.type =
+                    itemObject.orderType === 1 ? enumTransactionType.SoldTo : enumTransactionType.SettleBidOrder;
                 _NFTTx.user = reduceHexAddress(event.buyer, 4);
-            } else if(event.eventType === 4) {
+            } else if (event.eventType === 4) {
                 _NFTTx.type = enumTransactionType.SaleCanceled;
-                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-            } else if(event.eventType === 5) {
+                _NFTTx.user = itemObject.sellerInfo?.name
+                    ? itemObject.sellerInfo.name
+                    : reduceHexAddress(itemObject.sellerAddr, 4);
+            } else if (event.eventType === 5) {
                 _NFTTx.type = enumTransactionType.PriceChanged;
-                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
-            } else if(event.eventType === 6) {
+                _NFTTx.user = itemObject.sellerInfo?.name
+                    ? itemObject.sellerInfo.name
+                    : reduceHexAddress(itemObject.sellerAddr, 4);
+            } else if (event.eventType === 6) {
                 _NFTTx.type = enumTransactionType.SaleCanceled;
-                _NFTTx.user = itemObject.sellerInfo?.name ? itemObject.sellerInfo.name : reduceHexAddress(itemObject.sellerAddr, 4);
+                _NFTTx.user = itemObject.sellerInfo?.name
+                    ? itemObject.sellerInfo.name
+                    : reduceHexAddress(itemObject.sellerAddr, 4);
             }
 
             _NFTTx.saleType = itemObject.orderType === 1 ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
-            _NFTTx.price = (event.price ? event.price : event.newPrice ? event.newPrice : event.minPrice)/1e18;
+            _NFTTx.price = (event.price ? event.price : event.newPrice ? event.newPrice : event.minPrice) / 1e18;
             _NFTTx.txHash = event.transactionHash;
             const timestamp = getTime(event.timestamp.toString());
             _NFTTx.time = timestamp.date + ' ' + timestamp.time;
@@ -800,7 +814,6 @@ export const getNFTLatestTxs2 = async (
     console.log(_NFTTxList);
     return _NFTTxList;
 };
-
 
 export const getNFTLatestBids = async (
     tokenId: string | undefined,
@@ -827,11 +840,11 @@ export const getNFTLatestBids = async (
     //         fetchUrl += `&orderType=mostrecent`;
     //         break;
     // }
-    let body = {tokenId, pageNum, pageSize}
+    let body = { tokenId, pageNum, pageSize };
     const resNFTBids = await fetch(fetchUrl, {
         method: 'POST',
         headers: {
-            ...FETCH_CONFIG_JSON.headers
+            ...FETCH_CONFIG_JSON.headers,
         },
         body: JSON.stringify(body),
     });
@@ -870,7 +883,6 @@ export const getNFTLatestBids = async (
     return { mine: _myNFTBidList, others: _otherNFTBidList };
 };
 
-
 // BlindBoxProduct Page
 export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number) => {
     const resBBItem = await fetch(
@@ -894,11 +906,9 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
                 : parseInt(itemObject.saleBegin) > curTimestamp
                 ? enumBlindBoxNFTType.ComingSoon
                 : enumBlindBoxNFTType.SaleEnds;
-        _BBItem.likes = itemObject.likes ? itemObject.likes: 0;
-        _BBItem.views = itemObject.views ? itemObject.views: 0;
-        _BBItem.author = itemObject.createdName
-            ? itemObject.createdName
-            : reduceHexAddress(itemObject.seller, 4);
+        _BBItem.likes = itemObject.likes ? itemObject.likes : 0;
+        _BBItem.views = itemObject.views ? itemObject.views : 0;
+        _BBItem.author = itemObject.createdName ? itemObject.createdName : reduceHexAddress(itemObject.seller, 4);
         _BBItem.royaltyOwner = itemObject.seller;
         _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : '';
         _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default';
@@ -960,11 +970,10 @@ export const getMyNFTItemList = async (
     walletAddress: string,
     token: string,
 ) => {
-    const fetchUrl =
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/${fetchMyNFTAPIs[nTabId]}`;
+    const fetchUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${fetchMyNFTAPIs[nTabId]}`;
     const resMyNFTList = await fetch(fetchUrl, {
         method: 'POST',
-        headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers},
+        headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
         body: fetchParams,
     });
     const jsonMyNFTList = await resMyNFTList.json();
@@ -976,73 +985,95 @@ export const getMyNFTItemList = async (
         if (itemObject.holder === addressZero) continue;
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.types = [];
+        // holder, status, endTime
         if (nTabId === 0 || nTabId === 1 || nTabId === 2) {
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.name;
             _myNFT.image = itemObject.thumbnail ? getImageFromAsset(itemObject.thumbnail) : '';
-            _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18: 0;
+            _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18 : 0;
             _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
             _myNFT.author = reduceHexAddress(itemObject.royaltyOwner, 4);
             _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
             _myNFT.views = itemObject.views ? itemObject.views : 0;
-
-            if( itemObject.royaltyOwner === walletAddress ) {
-                _myNFT.types.push(enumMyNFTType.Created);
-            }
-            if(itemObject.order) {
-                _myNFT.type = itemObject.order.orderType === 2 ? enumMyNFTType.OnAuction: enumMyNFTType.BuyNow;
-                if(itemObject.order.orderState === 1) {
-                    itemObject.order.isBlindBox && _myNFT.types.push(enumMyNFTType.InBindBox);
-                    itemObject.order.orderType === 2 && _myNFT.types.push(enumMyNFTType.OnAuction);
-                }
-            }
-
+            _myNFT.isBlindbox = itemObject.order?.isBlindBox ? itemObject.order?.isBlindBox : false;
+            _myNFT.royaltyOwner = itemObject.royaltyOwner;
+            _myNFT.holder = itemObject.order
+                ? itemObject.order.orderState === 2
+                    ? itemObject.order.buyer
+                    : itemObject.order.seller
+                : _myNFT.royaltyOwner;
+            _myNFT.endTime = itemObject.order?.endTime ? itemObject.order?.endTime.toString() : '0';
+            if (itemObject.order) {
+                if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1)
+                    _myNFT.status = '1'; // buynow
+                else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1)
+                    _myNFT.status = '2'; // auction
+                else _myNFT.status = '0';
+            } else _myNFT.status = '0';
         } else if (nTabId === 5 || nTabId === 4) {
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.token.name;
             _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
-            _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18: 0;
+            _myNFT.price_ela = itemObject.order?.orderPrice ? itemObject.order?.orderPrice / 1e18 : 0;
             _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
             _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
             _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
             _myNFT.views = itemObject.views ? itemObject.views : 0;
-
-            if( itemObject.token.royaltyOwner === walletAddress ) {
-                _myNFT.types.push(enumMyNFTType.Created);
-            }
-
-            if(itemObject.order) {
-                _myNFT.type = itemObject.order.orderType === 2 ? enumMyNFTType.OnAuction: enumMyNFTType.BuyNow;
-                if(itemObject.order.orderState === 1) {
-                    itemObject.order.isBlindBox && _myNFT.types.push(enumMyNFTType.InBindBox);
-                    itemObject.order.orderType === 2 && _myNFT.types.push(enumMyNFTType.OnAuction);
-                }
-            }
-
+            _myNFT.isBlindbox = itemObject.order?.isBlindBox ? itemObject.order?.isBlindBox : false;
+            _myNFT.royaltyOwner = itemObject.token.royaltyOwner;
+            _myNFT.holder = itemObject.order
+                ? itemObject.order.orderState === 2
+                    ? itemObject.order.buyer
+                    : itemObject.order.seller
+                : _myNFT.royaltyOwner;
+            _myNFT.endTime = itemObject.order?.endTime ? itemObject.order?.endTime.toString() : '0';
+            if (itemObject.order) {
+                if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1)
+                    _myNFT.status = '1'; // buynow
+                else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1)
+                    _myNFT.status = '2'; // auction
+                else _myNFT.status = '0';
+            } else _myNFT.status = '0';
         } else {
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.token.name;
             _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
-            _myNFT.price_ela = itemObject.orderPrice  / 1e18;
+            _myNFT.price_ela = itemObject.orderPrice / 1e18;
             _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
             _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
             _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
             _myNFT.views = itemObject.views ? itemObject.views : 0;
-
-            if( itemObject.token.royaltyOwner === walletAddress ) {
-                _myNFT.types.push(enumMyNFTType.Created);
-            }
-
-            _myNFT.type = itemObject.orderType === 2 ? enumMyNFTType.OnAuction: enumMyNFTType.BuyNow;
-            itemObject.isBlindBox && _myNFT.types.push(enumMyNFTType.InBindBox);
-            itemObject.orderType === 2 && _myNFT.types.push(enumMyNFTType.OnAuction);
+            _myNFT.isBlindbox = itemObject.isBlindBox;
+            _myNFT.royaltyOwner = itemObject.token.royaltyOwner;
+            _myNFT.holder = itemObject.orderState === 2 ? itemObject.buyer : itemObject.seller;
+            _myNFT.endTime = itemObject.endTime ? itemObject.endTime.toString() : '0';
+            if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1) _myNFT.status = '1'; // buynow
+            else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1)
+                _myNFT.status = '2'; // auction
+            else _myNFT.status = '0';
         }
-
-        _myNFT.status = itemObject.status;
-        _myNFT.isLike =
-            nTabId === 5
-                ? true
-                : likeList.includes(itemObject.tokenId)
+        // set type to navigate to detail page
+        if (_myNFT.isBlindbox) {
+            _myNFT.type = enumMyNFTType.BuyNow;
+            _myNFT.types = [enumMyNFTType.InBindBox];
+        } else {
+            if (_myNFT.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
+            else {
+                if (_myNFT.status === '0') {
+                    _myNFT.type =
+                        _myNFT.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased;
+                } else {
+                    _myNFT.type = _myNFT.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
+                }
+            }
+        }
+        console.log(_myNFT.price_usd, _myNFT.price_ela);
+        if (_myNFT.status === '0') {
+            _myNFT.price_ela = 0;
+            _myNFT.price_usd = 0;
+        }
+        if (!_myNFT.isBlindbox) _myNFT.types.push(_myNFT.type);
+        _myNFT.isLike = nTabId === 5 ? true : likeList.includes(itemObject.tokenId);
         _arrMyNFTList.push(_myNFT);
     }
     return { total: totalCount, data: _arrMyNFTList };
@@ -1102,17 +1133,17 @@ export const getMyEarnedList = async (address: string) => {
         const _myEarning: TypeYourEarning = { ...blankMyEarning };
 
         let earn = 0;
-        const badges:enumBadgeType[] = [];
-        if(itemObject.royaltyOwner === address) {
-            badges.push(enumBadgeType.Royalties)
-            if(itemObject.sellerAddr === address) {
-                badges.push(enumBadgeType.Sale)
+        const badges: enumBadgeType[] = [];
+        if (itemObject.royaltyOwner === address) {
+            badges.push(enumBadgeType.Royalties);
+            if (itemObject.sellerAddr === address) {
+                badges.push(enumBadgeType.Sale);
                 earn = itemObject.filled - itemObject.platformFee;
             } else {
                 earn = itemObject.royaltyFee;
             }
         } else {
-            badges.push(enumBadgeType.Sale)
+            badges.push(enumBadgeType.Sale);
             earn = itemObject.filled - itemObject.royaltyFee - itemObject.platformFee;
         }
 
@@ -1122,16 +1153,14 @@ export const getMyEarnedList = async (address: string) => {
         _myEarning.price = earn / 1e18;
         const timestamp = getTime(itemObject.updateTime);
         _myEarning.time = timestamp.date + ' ' + timestamp.time;
-        _myEarning.badges = badges
+        _myEarning.badges = badges;
         _myEarningList.push(_myEarning);
     }
     return _myEarningList;
 };
 
 // MyNFT Page
-export const getMyNFTItem = async (
-    tokenId: string | undefined,
-) => {
+export const getMyNFTItem = async (tokenId: string | undefined) => {
     const resMyNFTItem = await fetch(
         `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTokenOrderByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
@@ -1168,7 +1197,7 @@ export const getMyNFTItem = async (
         const createTime = getTime(itemObject.createTime);
         _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
 
-        if(itemObject.order) {
+        if (itemObject.order) {
             _MyNFTItem.orderId = itemObject.order.orderId.toString();
             _MyNFTItem.status = itemObject.order.orderState.toString();
             _MyNFTItem.isExpired = Math.round(new Date().getTime() / 1000) > itemObject.order.endTime;
@@ -1176,8 +1205,8 @@ export const getMyNFTItem = async (
             _MyNFTItem.price_ela = itemObject.order.price / 1e18;
             _MyNFTItem.bids = itemObject.order.bids;
 
-            if(itemObject.order.bids > 0) {
-                if(itemObject.order.orderState === 2) {
+            if (itemObject.order.bids > 0) {
+                if (itemObject.order.orderState === 2) {
                     _MyNFTItem.buyer = itemObject.order.buyerAddr;
                 }
             }
@@ -1198,11 +1227,11 @@ export const getBBCandiatesList = async (address: string, keyword: string, token
     const resBBCandidateList = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/v1/getUserCandidateTokens?address=${address}&keyword=${keyword}`,
         {
-            headers: {Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers}
-        }
+            headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
+        },
     );
     const jsonBBCandidateList = await resBBCandidateList.json();
-    return jsonBBCandidateList.status === 200 ? jsonBBCandidateList.data : []
+    return jsonBBCandidateList.status === 200 ? jsonBBCandidateList.data : [];
 };
 
 export const getBBCandiates = (arrBBCandidateList: Array<any>, selectedTokenIds: Array<string>) => {
@@ -1260,7 +1289,7 @@ export const uploadUserProfile = (
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${_token}`,
+                Authorization: `Bearer ${_token}`,
             },
             body: JSON.stringify(reqBody),
         })

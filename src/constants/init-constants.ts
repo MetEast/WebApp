@@ -60,7 +60,7 @@ export const blankMyNFTItem: TypeProduct = {
     holder: '',
     type: enumMyNFTType.BuyNow,
     isLike: false,
-    bids: 0
+    bids: 0,
 };
 
 export const blankNFTTxs: TypeNFTTransaction = {
@@ -69,7 +69,7 @@ export const blankNFTTxs: TypeNFTTransaction = {
     price: 0,
     time: '',
     txHash: '',
-    saleType: enumTransactionType.ForSale
+    saleType: enumTransactionType.ForSale,
 };
 
 export const blankNFTBid: TypeSingleNFTBid = { user: '', address: '', price: 0, time: '', orderId: '' };
@@ -192,7 +192,7 @@ export const blankNotification: TypeNotification = {
     content: '',
     date: '',
     type: 0,
-    params: {tokenName: ''},
+    params: { tokenName: '' },
 };
 
 export const blankUserToken: UserTokenType = {
