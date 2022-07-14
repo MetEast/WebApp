@@ -101,7 +101,17 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                         />
                     ) : (
                         <>
-                            <img src={product.image} alt="" />
+                            {/* <img src={product.image} alt="" /> */}
+                            <Box
+                                sx={{
+                                    background: `url(${product.image})`,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundSize: 'cover',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'center',
+                                }}
+                            />
                             <LikeBtn onClick={changeLikeState}>
                                 <Icon
                                     icon={likeState ? 'ph:heart-fill' : 'ph:heart'}
@@ -158,7 +168,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                             nfttype={product.type}
                             myNftTypes={product.types}
                             content={product.endTime}
-                            isReservedAuction={product.status === 'HAS BIDS'}
+                            isReservedAuction={product.status === '2'}
                         />
                     )}
                     {isLoading ? (
