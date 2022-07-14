@@ -1051,6 +1051,43 @@ export const getMyNFTItemList = async (
             } else _myNFT.status = '0';
             _myNFT.isBlindbox = itemObject.order?.isBlindBox && _myNFT.status === '1';
         }
+        // NFT label
+        if (nTabId === 0 || nTabId === 5) {
+            _myNFT.types.push(_myNFT.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased);
+            if (_myNFT.holder === walletAddress) {
+                if (_myNFT.status === '1') _myNFT.types.push(enumMyNFTType.BuyNow);
+                else if (_myNFT.status === '2') _myNFT.types.push(enumMyNFTType.OnAuction);
+            } else {
+                _myNFT.types.push(enumMyNFTType.Sold);
+            }
+        } else if (nTabId === 1) {
+            _myNFT.types.push(_myNFT.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased);
+            if (_myNFT.status === '1') _myNFT.types.push(enumMyNFTType.BuyNow);
+            else if (_myNFT.status === '2') _myNFT.types.push(enumMyNFTType.OnAuction);
+        } else if (nTabId === 2) {
+            if (_myNFT.holder === walletAddress) {
+                _myNFT.types.push(enumMyNFTType.Created);
+                if (_myNFT.status === '1') _myNFT.types.push(enumMyNFTType.BuyNow);
+                else if (_myNFT.status === '2') _myNFT.types.push(enumMyNFTType.OnAuction);
+            } else {
+                if (_myNFT.status === '0') {
+                    _myNFT.types.push(enumMyNFTType.Created);
+                    _myNFT.types.push(enumMyNFTType.Sold);
+                } else {
+                    _myNFT.types.push(enumMyNFTType.Sold);
+                    if (_myNFT.status === '1') _myNFT.types.push(enumMyNFTType.BuyNow);
+                    else if (_myNFT.status === '2') _myNFT.types.push(enumMyNFTType.OnAuction);
+                }
+            }
+        } else if (nTabId === 3) {
+            _myNFT.types.push(_myNFT.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased);
+            if (_myNFT.status === '1') _myNFT.types.push(enumMyNFTType.BuyNow);
+            else if (_myNFT.status === '2') _myNFT.types.push(enumMyNFTType.OnAuction);
+        } else if (nTabId === 4) {
+            _myNFT.types.push(enumMyNFTType.Sold);
+            if (_myNFT.status === '1') _myNFT.types.push(enumMyNFTType.BuyNow);
+            else if (_myNFT.status === '2') _myNFT.types.push(enumMyNFTType.OnAuction);
+        }
         // set type to navigate to detail page
         if (_myNFT.holder !== walletAddress) {
             _myNFT.type = enumMyNFTType.Sold;
@@ -1070,10 +1107,7 @@ export const getMyNFTItemList = async (
                 else _myNFT.type = enumMyNFTType.OnAuction;
             }
         }
-
-        // _myNFT.types.push(_myNFT.type);
         _myNFT.isLike = nTabId === 5 ? true : likeList.includes(itemObject.tokenId);
-        // console.log(_myNFT.name, _myNFT.holder, _myNFT.status, _myNFT.endTime, _myNFT.isBlindbox);
         // Hide unnecessary NFTs (1. deleted NFTs, 2. regained NFTs on sold tab)
         if (itemObject.holder === addressZero || (nTabId === 4 && _myNFT.holder === walletAddress)) {
             hideCount++;
