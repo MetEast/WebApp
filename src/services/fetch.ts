@@ -978,14 +978,13 @@ export const getMyNFTItemList = async (
     });
     const jsonMyNFTList = await resMyNFTList.json();
     const totalCount: number = jsonMyNFTList.data.total;
+    let hideCount: number = 0;
     const arrMyNFTList = jsonMyNFTList.data ? jsonMyNFTList.data.data : [];
     const _arrMyNFTList: Array<TypeProduct> = [];
     for (let i = 0; i < arrMyNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrMyNFTList[i];
-        if (itemObject.holder === addressZero) continue;
         const _myNFT: TypeProduct = { ...blankMyNFTItem };
         _myNFT.types = [];
-        // holder, status, endTime
         if (nTabId === 0 || nTabId === 1 || nTabId === 2) {
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.name;
@@ -995,7 +994,6 @@ export const getMyNFTItemList = async (
             _myNFT.author = reduceHexAddress(itemObject.royaltyOwner, 4);
             _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
             _myNFT.views = itemObject.views ? itemObject.views : 0;
-            _myNFT.isBlindbox = itemObject.order?.isBlindBox ? itemObject.order?.isBlindBox : false;
             _myNFT.royaltyOwner = itemObject.royaltyOwner;
             _myNFT.holder = itemObject.order
                 ? itemObject.order.orderState === 2
@@ -1010,7 +1008,25 @@ export const getMyNFTItemList = async (
                     _myNFT.status = '2'; // auction
                 else _myNFT.status = '0';
             } else _myNFT.status = '0';
-        } else if (nTabId === 5 || nTabId === 4) {
+            _myNFT.isBlindbox = itemObject.order?.isBlindBox && _myNFT.status === '1';
+        } else if (nTabId === 3) {
+            _myNFT.tokenId = itemObject.tokenId;
+            _myNFT.name = itemObject.token.name;
+            _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
+            _myNFT.price_ela = itemObject.orderPrice / 1e18;
+            _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
+            _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
+            _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
+            _myNFT.views = itemObject.views ? itemObject.views : 0;
+            _myNFT.royaltyOwner = itemObject.token.royaltyOwner;
+            _myNFT.holder = itemObject.orderState === 2 ? itemObject.buyer : itemObject.seller;
+            _myNFT.endTime = itemObject.endTime ? itemObject.endTime.toString() : '0';
+            if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1) _myNFT.status = '1'; // buynow
+            else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1)
+                _myNFT.status = '2'; // auction
+            else _myNFT.status = '0';
+            _myNFT.isBlindbox = itemObject.isBlindBox && _myNFT.status === '1';
+        } else {
             _myNFT.tokenId = itemObject.tokenId;
             _myNFT.name = itemObject.token.name;
             _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
@@ -1019,7 +1035,6 @@ export const getMyNFTItemList = async (
             _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
             _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
             _myNFT.views = itemObject.views ? itemObject.views : 0;
-            _myNFT.isBlindbox = itemObject.order?.isBlindBox ? itemObject.order?.isBlindBox : false;
             _myNFT.royaltyOwner = itemObject.token.royaltyOwner;
             _myNFT.holder = itemObject.order
                 ? itemObject.order.orderState === 2
@@ -1034,49 +1049,39 @@ export const getMyNFTItemList = async (
                     _myNFT.status = '2'; // auction
                 else _myNFT.status = '0';
             } else _myNFT.status = '0';
-        } else {
-            _myNFT.tokenId = itemObject.tokenId;
-            _myNFT.name = itemObject.token.name;
-            _myNFT.image = itemObject.token.thumbnail ? getImageFromAsset(itemObject.token.thumbnail) : '';
-            _myNFT.price_ela = itemObject.orderPrice / 1e18;
-            _myNFT.price_usd = _myNFT.price_ela * ELA2USD;
-            _myNFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
-            _myNFT.likes = itemObject.likes ? itemObject.likes : 0;
-            _myNFT.views = itemObject.views ? itemObject.views : 0;
-            _myNFT.isBlindbox = itemObject.isBlindBox;
-            _myNFT.royaltyOwner = itemObject.token.royaltyOwner;
-            _myNFT.holder = itemObject.orderState === 2 ? itemObject.buyer : itemObject.seller;
-            _myNFT.endTime = itemObject.endTime ? itemObject.endTime.toString() : '0';
-            if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1) _myNFT.status = '1'; // buynow
-            else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1)
-                _myNFT.status = '2'; // auction
-            else _myNFT.status = '0';
+            _myNFT.isBlindbox = itemObject.order?.isBlindBox && _myNFT.status === '1';
         }
         // set type to navigate to detail page
-        if (_myNFT.isBlindbox) {
-            _myNFT.type = enumMyNFTType.BuyNow;
-            _myNFT.types = [enumMyNFTType.InBindBox];
+        if (_myNFT.holder !== walletAddress) {
+            _myNFT.type = enumMyNFTType.Sold;
+            _myNFT.price_ela = 0;
+            _myNFT.price_usd = 0;
         } else {
-            if (_myNFT.holder !== walletAddress) _myNFT.type = enumMyNFTType.Sold;
-            else {
+            if (_myNFT.isBlindbox) {
+                _myNFT.type = enumMyNFTType.BuyNow;
+                _myNFT.types = [enumMyNFTType.InBindBox];
+            } else {
                 if (_myNFT.status === '0') {
                     _myNFT.type =
                         _myNFT.royaltyOwner === walletAddress ? enumMyNFTType.Created : enumMyNFTType.Purchased;
-                } else {
-                    _myNFT.type = _myNFT.endTime === '0' ? enumMyNFTType.BuyNow : enumMyNFTType.OnAuction;
-                }
+                    _myNFT.price_ela = 0;
+                    _myNFT.price_usd = 0;
+                } else if (_myNFT.status === '1') _myNFT.type = enumMyNFTType.BuyNow;
+                else _myNFT.type = enumMyNFTType.OnAuction;
             }
         }
-        console.log(_myNFT.price_usd, _myNFT.price_ela);
-        if (_myNFT.status === '0') {
-            _myNFT.price_ela = 0;
-            _myNFT.price_usd = 0;
-        }
-        if (!_myNFT.isBlindbox) _myNFT.types.push(_myNFT.type);
+
+        // _myNFT.types.push(_myNFT.type);
         _myNFT.isLike = nTabId === 5 ? true : likeList.includes(itemObject.tokenId);
+        // console.log(_myNFT.name, _myNFT.holder, _myNFT.status, _myNFT.endTime, _myNFT.isBlindbox);
+        // Hide unnecessary NFTs (1. deleted NFTs, 2. regained NFTs on sold tab)
+        if (itemObject.holder === addressZero || (nTabId === 4 && _myNFT.holder === walletAddress)) {
+            hideCount++;
+            continue;
+        }
         _arrMyNFTList.push(_myNFT);
     }
-    return { total: totalCount, data: _arrMyNFTList };
+    return { total: totalCount - hideCount, data: _arrMyNFTList };
 };
 
 export const getMyTotalEarned = async (address: string) => {
