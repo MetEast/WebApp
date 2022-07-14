@@ -220,7 +220,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 nfttype={product.type}
                                 content={product.endTime}
                                 myNftTypes={endedAuctionTypes}
-                                isReservedAuction={product.status === 'HAS BIDS'}
+                                isReservedAuction={product.status === '2'}
                             />
                         )}
                         {isLoading ? (

@@ -21,7 +21,9 @@ import {
     getMyNFTItemList,
     getMyTodayEarned,
     getMyTotalEarned,
-    getMyEarnedList, getSearchParams2, getMyFavouritesList2,
+    getMyEarnedList,
+    getSearchParams2,
+    getMyFavouritesList2,
 } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
@@ -172,7 +174,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             category,
                         );
                         const _searchedMyNFTList = await getMyNFTItemList(
-                            JSON.stringify({...searchParams, address: signInDlgState.address}),
+                            JSON.stringify({ ...searchParams, address: signInDlgState.address }),
                             ELA2USDRate ? ELA2USDRate : ELA2USD,
                             likeList.length ? likeList : myFavorList,
                             i,
