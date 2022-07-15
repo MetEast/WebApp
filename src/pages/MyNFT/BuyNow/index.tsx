@@ -14,14 +14,8 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { getMintCategory } from 'src/services/common';
-import {
-    enumBadgeType,
-    TypeProduct,
-    TypeNFTTransaction,
-    TypeNFTHisotry,
-    enumTransactionType,
-} from 'src/types/product-types';
-import { getMyNFTItem, getELA2USD, getMyFavouritesList, getNFTLatestTxs, getNFTLatestTxs2 } from 'src/services/fetch';
+import { TypeProduct, TypeNFTTransaction, TypeNFTHisotry, enumTransactionType } from 'src/types/product-types';
+import { getMyNFTItem, getNFTLatestTxs2 } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -52,7 +46,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             _MyNFTItem.isLike = product.isLike;
             _MyNFTItem.views = product.views ? product.views : 0;
             _MyNFTItem.likes = product.likes ? product.likes : 0;
-            _MyNFTItem.price_usd = product.price_usd
+            _MyNFTItem.price_usd = product.price_usd;
 
             if (!unmounted) {
                 setProductDetail(_MyNFTItem);
@@ -78,15 +72,26 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                     price: 0,
                     time: productDetail.createTime,
                     txHash: '',
-                    saleType: enumTransactionType.CreatedBy
-                })
+                    saleType: enumTransactionType.CreatedBy,
+                });
                 setTransactionsList(nftTx);
                 const data: TypeNFTHisotry[] = [];
                 _NFTTxs.map((tx: TypeNFTTransaction) => {
-                    if(tx.type === enumTransactionType.SoldTo || tx.type === enumTransactionType.SettleBidOrder || tx.type === enumTransactionType.CreatedBy) {
-                        data.push({saleType: tx.saleType, type: tx.type, user: tx.user, price: tx.price, time: tx.time, txHash: tx.txHash})
+                    if (
+                        tx.type === enumTransactionType.SoldTo ||
+                        tx.type === enumTransactionType.SettleBidOrder ||
+                        tx.type === enumTransactionType.CreatedBy
+                    ) {
+                        data.push({
+                            saleType: tx.saleType,
+                            type: tx.type,
+                            user: tx.user,
+                            price: tx.price,
+                            time: tx.time,
+                            txHash: tx.txHash,
+                        });
                     }
-                })
+                });
                 setProdTransHistory(data.slice(0, 5));
             }
         };
@@ -108,7 +113,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${signInDlgState.token}`,
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -138,10 +143,10 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     function ButtonGroup(product: TypeProduct) {
-        if(product.orderId) {
-            if(product.status === "1") {
-                if(!product.isBlindbox) {
-                    if(product.holder === signInDlgState.address) {
+        if (product.orderId) {
+            if (product.status === '1') {
+                if (!product.isBlindbox) {
+                    if (product.holder === signInDlgState.address) {
                         return (
                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                 <PinkButton
@@ -188,7 +193,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                                     Change Price
                                 </PrimaryButton>
                             </Stack>
-                        )
+                        );
                     } else {
                         return (
                             <PrimaryButton
@@ -214,11 +219,11 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                             >
                                 buy now
                             </PrimaryButton>
-                        )
+                        );
                     }
                 }
-            } else if(product.status === "2" || product.status === "3") {
-                if(product.holder === signInDlgState.address) {
+            } else if (product.status === '2' || product.status === '3') {
+                if (product.holder === signInDlgState.address) {
                     return (
                         <PrimaryButton
                             sx={{ marginTop: 3, width: '100%' }}
@@ -240,13 +245,13 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         >
                             Sell
                         </PrimaryButton>
-                    )
+                    );
                 }
             }
 
-            return (<></>)
+            return <></>;
         } else {
-            if(product.royaltyOwner === signInDlgState.address) {
+            if (product.royaltyOwner === signInDlgState.address) {
                 return (
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
@@ -265,10 +270,12 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                                 });
                             }
                         }}
-                    >Sell</PrimaryButton>
-                )
+                    >
+                        Sell
+                    </PrimaryButton>
+                );
             } else {
-                return (<></>)
+                return <></>;
             }
         }
     }

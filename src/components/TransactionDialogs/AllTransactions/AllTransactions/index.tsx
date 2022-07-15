@@ -13,6 +13,7 @@ import { TypeNFTTransaction } from 'src/types/product-types';
 import { getNFTLatestTxs, getNFTLatestTxs2 } from 'src/services/fetch';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import Username from 'src/components/Username';
+import { useDialogContext } from 'src/context/DialogContext';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -20,6 +21,7 @@ export interface ComponentProps {
 
 const AllTransactions: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const params = useParams();
+    const [dialogState] = useDialogContext();
     const [loadingData, setLoadingData] = useState(true);
     const [allTxsList, setAllTxsList] = useState<Array<TypeNFTTransaction>>([]);
     // const [sortby, setSortby] = React.useState<TypeSelectItem>();
@@ -33,6 +35,7 @@ const AllTransactions: React.FC<ComponentProps> = ({ onClose }): JSX.Element => 
         let unmounted = false;
         const fetchLatestTxs = async () => {
             const _NFTTxs = await getNFTLatestTxs2(params.id); // sort?.value
+            if (dialogState.allTxNFTCreation.user) _NFTTxs.push(dialogState.allTxNFTCreation);
             if (!unmounted) {
                 setAllTxsList(_NFTTxs);
             }

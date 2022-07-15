@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
+import { blankNFTTxs } from 'src/constants/init-constants';
+import { TypeNFTTransaction } from 'src/types/product-types';
 // import { TypeYourEarning } from 'src/types/product-types';
 import { TypeSelectItem } from 'src/types/select-types';
 
@@ -16,6 +18,7 @@ interface DlgState {
     errorMessageDlgOpened: boolean;
     // all transactions
     allTxDlgOpened: boolean;
+    allTxNFTCreation: TypeNFTTransaction;
     // all bids
     allBidDlgOpened: boolean;
     receivedBidDlgOpened: boolean;
@@ -157,6 +160,7 @@ export const defaultDlgState: DlgState = {
     errorMessageDlgOpened: false,
     // all transactions
     allTxDlgOpened: false,
+    allTxNFTCreation: blankNFTTxs,
     // all bids
     allBidDlgOpened: false,
     receivedBidDlgOpened: false,

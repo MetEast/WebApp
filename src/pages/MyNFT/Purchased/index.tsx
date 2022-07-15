@@ -15,7 +15,7 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import { getMintCategory } from 'src/services/common';
 import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
-import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
+import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs2 } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
@@ -29,6 +29,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const { enqueueSnackbar } = useSnackbar();
+    // const [isLoading, setIsLoading] = useState<boolean>(false);
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
@@ -46,6 +47,8 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
             _MyNFTItem.views = product.views
             _MyNFTItem.likes = product.likes
             _MyNFTItem.price_usd = product.price_usd
+
+            console.log(_MyNFTItem)
             if (!unmounted) {
                 if (
                     !(
@@ -87,10 +90,10 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 1000);
+            const _NFTTxs = await getNFTLatestTxs2(params.id);
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.txs.slice(0, 5));
-                setProdTransHistory(_NFTTxs.history.slice(0, 5));
+                setTransactionsList([]);
+                setProdTransHistory([]);
             }
         };
         if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
