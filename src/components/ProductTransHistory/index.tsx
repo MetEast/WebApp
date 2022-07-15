@@ -20,6 +20,7 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Ele
         setTxHashUrl(getESCExploreUrl(signInDlgState.chainId, ''));
     }, [signInDlgState.chainId]);
 
+    console.log('=======', historyList);
     return (
         <Stack spacing={2}>
             <Typography fontSize={22} fontWeight={700}>
@@ -36,11 +37,11 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Ele
                                 <Stack direction="row" alignItems="center" spacing={0.5}>
                                     <Icon
                                         icon={
-                                            item.type === 'Sold To'
+                                            item.type === enumTransactionType.CreatedBy
+                                                ? 'ph:palette'
+                                                : item.type === enumTransactionType.SoldTo
                                                 ? 'ph:sign-out'
-                                                : item.type === 'Bought From'
-                                                ? 'ph:sign-in'
-                                                : 'ph:palette'
+                                                : 'ph:sign-in'
                                         }
                                         fontSize={20}
                                     />
@@ -62,7 +63,7 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Ele
                                 <ELAPrice price_ela={item.price} price_ela_fontsize={14} />
                                 <ProductBadge
                                     badgeType={
-                                        item.type === 'Created'
+                                        item.saleType === enumTransactionType.CreatedBy
                                             ? enumBadgeType.Created
                                             : item.saleType === enumTransactionType.ForSale
                                             ? enumBadgeType.BuyNow
