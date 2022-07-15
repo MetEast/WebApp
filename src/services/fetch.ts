@@ -806,8 +806,6 @@ export const getNFTLatestTxs2 = async (tokenId: string | undefined) => {
             _NFTTxList.push(_NFTTx);
         }
     }
-
-    console.log(_NFTTxList);
     return _NFTTxList;
 };
 
@@ -1213,7 +1211,7 @@ export const getMyNFTItem = async (tokenId: string | undefined) => {
             ? itemObject.creator.name
             : reduceHexAddress(itemObject.royaltyOwner, 4);
         _MyNFTItem.authorDescription = itemObject.creator.description || ' ';
-        // _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
+        _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default'; // no author avatar
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
             itemObject.tokenOwner === itemObject.royaltyOwner
@@ -1229,7 +1227,8 @@ export const getMyNFTItem = async (tokenId: string | undefined) => {
         _MyNFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
         _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
-
+        _MyNFTItem.txHash = itemObject.tokenEvent?.transactionHash ? itemObject.tokenEvent?.transactionHash : '';
+        
         if (itemObject.order) {
             _MyNFTItem.orderId = itemObject.order.orderId.toString();
             if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1)
