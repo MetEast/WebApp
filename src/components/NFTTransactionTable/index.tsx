@@ -33,7 +33,13 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                 </Typography>
                 <ViewAllBtn
                     onClick={() => {
-                        setDialogState({ ...dialogState, allTxDlgOpened: true });
+                        if (transactionsList.length)
+                            setDialogState({
+                                ...dialogState,
+                                allTxDlgOpened: true,
+                                allTxNFTCreation: transactionsList[transactionsList.length - 1],
+                            });
+                        else setDialogState({ ...dialogState, allTxDlgOpened: true });
                     }}
                 >
                     View ALL
