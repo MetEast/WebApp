@@ -14,7 +14,13 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import { getMintCategory } from 'src/services/common';
-import { TypeProduct, TypeNFTTransaction, TypeNFTHisotry, enumTransactionType } from 'src/types/product-types';
+import {
+    TypeProduct,
+    TypeNFTTransaction,
+    TypeNFTHisotry,
+    enumBadgeType,
+    enumTransactionType,
+} from 'src/types/product-types';
 import { getMyNFTItem, getNFTLatestTxs2 } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -47,7 +53,6 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             _MyNFTItem.views = product.views ? product.views : 0;
             _MyNFTItem.likes = product.likes ? product.likes : 0;
             _MyNFTItem.price_usd = product.price_usd;
-            console.log(_MyNFTItem);
 
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             _NFTTxs.push({
@@ -357,7 +362,11 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                                 sx={{ marginTop: 1 }}
                             />
                             <Stack direction="row" alignItems="center" spacing={1} marginTop={3}>
-                                {/*<ProductBadge badgeType={enumBadgeType.BuyNow} />*/}
+                                <ProductBadge
+                                    badgeType={
+                                        productDetail.isBlindbox ? enumBadgeType.InBlindBox : enumBadgeType.BuyNow
+                                    }
+                                />
                                 <ProductBadge badgeType={getMintCategory(productDetail.category)} />
                             </Stack>
                             <ELAPrice
