@@ -77,7 +77,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                     });
                 }
             });
-            
+
             if (!unmounted) {
                 if (
                     !(
@@ -103,7 +103,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                 } else {
                     setProductDetail(_MyNFTItem);
                     setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
-                    setTransactionsList(_NFTTxs.slice(0, 5));
+                    setTransactionsList(_NFTTxs);
                     setProdTransHistory(data.slice(0, 5));
                 }
             }

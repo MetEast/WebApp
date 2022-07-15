@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Stack, Grid, Typography } from '@mui/material';
 import { ViewAllBtn } from './styles';
-import { TypeNFTTransaction } from 'src/types/product-types';
+import { enumTransactionType, TypeNFTTransaction } from 'src/types/product-types';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import ELAPrice from 'src/components/ELAPrice';
 import { useTheme } from '@mui/material/styles';
@@ -24,6 +24,11 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
     const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
     const priceAlign = matchDownSm ? true : false;
     const [dialogState, setDialogState] = useDialogContext();
+    const [transactions, setTransactions] = useState<Array<TypeNFTTransaction>>(transactionsList.slice(0, 5));
+
+    useEffect(() => {
+        setTransactions(transactionsList.slice(0, 5));
+    }, [transactionsList]);
 
     return (
         <Box>
@@ -33,7 +38,10 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                 </Typography>
                 <ViewAllBtn
                     onClick={() => {
-                        if (transactionsList.length)
+                        if (
+                            transactionsList.length &&
+                            transactionsList[transactionsList.length - 1].type === enumTransactionType.CreatedBy
+                        )
                             setDialogState({
                                 ...dialogState,
                                 allTxDlgOpened: true,
@@ -59,7 +67,7 @@ const NFTTransactionTable: React.FC<ComponentProps> = ({ transactionsList }): JS
                         {item.value}
                     </Grid>
                 ))}
-                {transactionsList.map((item, index) => (
+                {transactions.map((item, index) => (
                     <Grid container item key={index}>
                         <Grid item xs={6} sm={transactionsTblColumns[0].width} order={{ xs: 3, sm: 1 }}>
                             <SingleNFTTransactionType transactionType={item.type} transactionHash={item.txHash} />
