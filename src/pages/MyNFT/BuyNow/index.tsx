@@ -47,59 +47,60 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             _MyNFTItem.views = product.views ? product.views : 0;
             _MyNFTItem.likes = product.likes ? product.likes : 0;
             _MyNFTItem.price_usd = product.price_usd;
+            console.log(_MyNFTItem);
+
+            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            _NFTTxs.push({
+                type: enumTransactionType.CreatedBy,
+                user: _MyNFTItem.author,
+                price: 0,
+                time: _MyNFTItem.createTime,
+                txHash: _MyNFTItem.txHash || '',
+                saleType: enumTransactionType.CreatedBy,
+            });
+            const data: TypeNFTHisotry[] = [];
+            _NFTTxs.map((tx: TypeNFTTransaction) => {
+                if (
+                    tx.type === enumTransactionType.SoldTo ||
+                    tx.type === enumTransactionType.SettleBidOrder ||
+                    tx.type === enumTransactionType.CreatedBy
+                ) {
+                    data.push({
+                        saleType: tx.saleType,
+                        type: tx.type,
+                        user: tx.user,
+                        price: tx.price,
+                        time: tx.time,
+                        txHash: tx.txHash,
+                    });
+                }
+            });
 
             if (!unmounted) {
-                setProductDetail(_MyNFTItem);
+                if (!(_MyNFTItem.holder === signInDlgState.address && _MyNFTItem.status === '1')) {
+                    navigate(-1);
+                    // detect previous path is null
+                    const timer = setTimeout(() => {
+                        clearTimeout(timer);
+                        if (!(_MyNFTItem.holder === signInDlgState.address && _MyNFTItem.status === '1')) {
+                            navigate('/');
+                        }
+                    }, 100);
+                } else {
+                    setProductDetail(_MyNFTItem);
+                    setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
+                    setTransactionsList(_NFTTxs);
+                    setProdTransHistory(data.slice(0, 5));
+                }
             }
         };
         if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.address && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+            if (signInDlgState.address) fetchMyNFTItem().catch(console.error);
         } else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, signInDlgState.address, params.id]);
-
-    useEffect(() => {
-        let unmounted = false;
-        const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
-            if (!unmounted) {
-                let nftTx = _NFTTxs.slice(0, 5);
-                nftTx.push({
-                    type: enumTransactionType.CreatedBy,
-                    user: productDetail.author,
-                    price: 0,
-                    time: productDetail.createTime,
-                    txHash: '',
-                    saleType: enumTransactionType.CreatedBy,
-                });
-                setTransactionsList(nftTx);
-                const data: TypeNFTHisotry[] = [];
-                _NFTTxs.map((tx: TypeNFTTransaction) => {
-                    if (
-                        tx.type === enumTransactionType.SoldTo ||
-                        tx.type === enumTransactionType.SettleBidOrder ||
-                        tx.type === enumTransactionType.CreatedBy
-                    ) {
-                        data.push({
-                            saleType: tx.saleType,
-                            type: tx.type,
-                            user: tx.user,
-                            price: tx.price,
-                            time: tx.time,
-                            txHash: tx.txHash,
-                        });
-                    }
-                });
-                setProdTransHistory(data.slice(0, 5));
-            }
-        };
-        if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
-        return () => {
-            unmounted = true;
-        };
-    }, [productDetail]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
     useEffect(() => {
         let unmounted = false;
