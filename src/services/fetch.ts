@@ -46,6 +46,7 @@ import {
 import { UserInfoType } from 'src/types/auth-types';
 import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
 import { addressZero } from './wallet';
+import { apiConfig, polrConfig, serverConfig } from 'src/config';
 
 const fetchMyNFTAPIs = [
     'listAllMyTokens',
@@ -65,7 +66,7 @@ export const FETCH_CONFIG_JSON = {
 
 export const login = (loginType: number, address: string, presentation?: VerifiablePresentation) =>
     new Promise((resolve: (value: string) => void, reject: (value: string) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/login`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/login`;
         const reqBody =
             loginType === 1
                 ? {
@@ -101,7 +102,7 @@ export const login = (loginType: number, address: string, presentation?: Verifia
 
 export const getUserRole = async (address: string) => {
     const resUserRole = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/meteast/api/v1/getDidByAddress?address=${address}`,
+        `${serverConfig.assistServiceUrl}/meteast/api/v1/getDidByAddress?address=${address}`,
         FETCH_CONFIG_JSON,
     );
     const jsonUserRole = await resUserRole.json();
@@ -111,7 +112,7 @@ export const getUserRole = async (address: string) => {
 
 export const updateUserToken = async (address: string, did: string) => {
     const resUserToken = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/userByAddress?address=${address}&did=${did}`,
+        `${serverConfig.metServiceUrl}/api/v1/userByAddress?address=${address}&did=${did}`,
         FETCH_CONFIG_JSON,
     );
     const jsonUserToken = await resUserToken.json();
@@ -120,7 +121,7 @@ export const updateUserToken = async (address: string, did: string) => {
 };
 
 export const getNotificationList = async (token: string) => {
-    const resNotificationList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getNotifications`, {
+    const resNotificationList = await fetch(`${serverConfig.metServiceUrl}/api/v1/getNotifications`, {
         headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
     });
     const jsonNotificationList = await resNotificationList.json();
@@ -158,7 +159,7 @@ export const getNotificationCount = (type: number, params: NotificationParams) =
 
 export const markNotificationsAsRead = (token: string, ids: string) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/readNotifications`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/readNotifications`;
         // const reqBody = {
         //     ids: ids,
         // };
@@ -184,7 +185,7 @@ export const markNotificationsAsRead = (token: string, ids: string) =>
     });
 
 export const removeNotifications = async (token: string, id: string) => {
-    const resRead = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/removeNotification?id=${id}`, {
+    const resRead = await fetch(`${serverConfig.metServiceUrl}/api/v1/removeNotification?id=${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -198,7 +199,7 @@ export const removeNotifications = async (token: string, id: string) => {
 export const getShorternUrl = async (url: string) => {
     try {
         const resShorternUrl = await fetch(
-            `${process.env.REACT_APP_SHORTERN_SERVICE_URL}/api/v2/action/shorten?key=2b495b2175ec5470d35482f524ac87&url=${url}&is_secret=false`,
+            `${polrConfig.polrServerUrl}/api/v2/action/shorten?key=${polrConfig.polrAPIKey}&url=${url}&is_secret=false`,
         );
         return resShorternUrl.text();
     } catch (error) {
@@ -208,7 +209,7 @@ export const getShorternUrl = async (url: string) => {
 
 export const getELA2USD = async () => {
     try {
-        const resElaUsdRate = await fetch(`https://assist.trinity-feeds.app/feeds/api/v1/price`, FETCH_CONFIG_JSON);
+        const resElaUsdRate = await fetch(apiConfig.feedsELA2USDTUrl, FETCH_CONFIG_JSON);
         const dataElaUsdRate = await resElaUsdRate.json();
         if (dataElaUsdRate) return parseFloat(dataElaUsdRate.ELA);
         return 0;
@@ -218,16 +219,14 @@ export const getELA2USD = async () => {
 };
 
 export const checkTokenLike = async (id: string, address: string) => {
-    const resCheckLike = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/checkTokenLike?address=${address}&id=${id}`,
-    );
+    const resCheckLike = await fetch(`${serverConfig.metServiceUrl}/api/v1/checkTokenLike?address=${address}&id=${id}`);
     const jsonCheckLike = await resCheckLike.json();
     return jsonCheckLike.data ? jsonCheckLike.data : false;
 };
 
 export const checkBlindBoxLike = async (id: string, address: string) => {
     const resCheckLike = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/checkBlindBoxLike?address=${address}&id=${id}`,
+        `${serverConfig.metServiceUrl}/api/v1/checkBlindBoxLike?address=${address}&id=${id}`,
     );
     const jsonCheckLike = await resCheckLike.json();
     return jsonCheckLike.data ? jsonCheckLike.data : false;
@@ -237,7 +236,7 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
     if (loginState) {
         try {
             const resFavouriteList = await fetch(
-                `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
+                `${serverConfig.assistServiceUrl}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
                 FETCH_CONFIG_JSON,
             );
             const dataFavouriteList = await resFavouriteList.json();
@@ -251,13 +250,10 @@ export const getMyFavouritesList = async (loginState: boolean, did: string) => {
 export const getMyFavouritesList2 = async (loginState: boolean, token: string) => {
     if (loginState) {
         try {
-            const resFavouriteList = await fetch(
-                `${process.env.REACT_APP_BACKEND_URL}/api/v1/getFavoritesCollectible`,
-                {
-                    method: 'POST',
-                    headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
-                },
-            );
+            const resFavouriteList = await fetch(`${serverConfig.metServiceUrl}/api/v1/getFavoritesCollectible`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
+            });
             const dataFavouriteList = await resFavouriteList.json();
             let arrFavouriteList: Array<string> = [];
             dataFavouriteList.data.map((item: { tokenId: string }) => {
@@ -273,7 +269,7 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
 export const getMyFavouritesList3 = async (loginState: boolean, token: string): Promise<string[]> => {
     if (loginState) {
         try {
-            const resFavouriteList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getFavoritesBlindBox`, {
+            const resFavouriteList = await fetch(`${serverConfig.metServiceUrl}/api/v1/getFavoritesBlindBox`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
             });
@@ -291,7 +287,7 @@ export const getMyFavouritesList3 = async (loginState: boolean, token: string): 
 
 export const getPageBannerList = async (location: number) => {
     const resPageBannerList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/listBanner?location=${location}`,
+        `${serverConfig.metServiceUrl}/api/v1/listBanner?location=${location}`,
         FETCH_CONFIG_JSON,
     );
     const jsonPageBannerList = await resPageBannerList.json();
@@ -309,7 +305,7 @@ export const getPageBannerList = async (location: number) => {
 // Home Page & Product Page
 export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
     const resNFTList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/api/v1/listMarketTokens?${fetchParams}`,
+        `${serverConfig.assistServiceUrl}/api/v1/listMarketTokens?${fetchParams}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTList = await resNFTList.json();
@@ -353,7 +349,7 @@ export const getNFTItemList2 = async (
     ELA2USD: number | undefined,
     likeList: Array<String> | undefined,
 ) => {
-    const resNFTList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketTokens`, {
+    const resNFTList = await fetch(`${serverConfig.metServiceUrl}/api/v1/listMarketTokens`, {
         method: 'POST',
         ...FETCH_CONFIG_JSON,
         body: JSON.stringify(body),
@@ -506,7 +502,7 @@ export const getSearchParams2 = (
 // Mystery Box Page
 export const getBBItemList = async (body: string, ELA2USD: number, list_likes: string[]) => {
     const curTimestamp = new Date().getTime() / 1000;
-    const resBBList = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/listMarketBlindBoxes`, {
+    const resBBList = await fetch(`${serverConfig.metServiceUrl}/api/v1/listMarketBlindBoxes`, {
         method: 'POST',
         ...FETCH_CONFIG_JSON,
         body: body,
@@ -555,14 +551,14 @@ export const getNFTItem = async (
     // likeList: Array<TypeFavouritesFetch>,
 ) => {
     const resNFTItem = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getMarketTokenByTokenId?tokenId=${tokenId}`,
+        `${serverConfig.metServiceUrl}/api/v1/getMarketTokenByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTItem = await resNFTItem.json();
     const itemObject: TypeProductFetch = jsonNFTItem.data;
 
     const resNFTItem2 = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
+        `${serverConfig.assistServiceUrl}/api/v1/getCollectibleByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonNFTItem2 = await resNFTItem2.json();
@@ -627,7 +623,7 @@ export const getNFTItem = async (
 
 // BB sold product
 export const getNFTItems = async (tokenIds: string | undefined) => {
-    const resNFTItems = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getTokenByIds`, {
+    const resNFTItems = await fetch(`${serverConfig.metServiceUrl}/api/v1/getTokenByIds`, {
         method: 'POST',
         ...FETCH_CONFIG_JSON,
         body: JSON.stringify(tokenIds?.split(',')),
@@ -653,7 +649,7 @@ export const getNFTLatestTxs = async (
     pageSize: number,
     sortBy?: string,
 ) => {
-    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&pageSize=${pageSize}`;
+    let fetchUrl = `${serverConfig.assistServiceUrl}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&pageSize=${pageSize}`;
     switch (sortBy) {
         case 'low_to_high':
             fetchUrl += `&orderType=price_l_to_h`;
@@ -752,7 +748,7 @@ export const getNFTLatestTxs = async (
 };
 
 export const getNFTLatestTxs2 = async (tokenId: string | undefined) => {
-    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTransHistoryByTokenId?tokenId=${tokenId}`;
+    let fetchUrl = `${serverConfig.assistServiceUrl}/api/v1/getTransHistoryByTokenId?tokenId=${tokenId}`;
 
     const resNFTTxs = await fetch(fetchUrl, FETCH_CONFIG_JSON);
     const jsonNFTTxs = await resNFTTxs.json();
@@ -815,7 +811,7 @@ export const getNFTLatestBids = async (
     pageSize: number,
     sortBy?: string,
 ) => {
-    let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/api/v1/getLatestBids`;
+    let fetchUrl = `${serverConfig.assistServiceUrl}/api/v1/getLatestBids`;
     // switch (sortBy) {
     //     case 'low_to_high':
     //         fetchUrl += `&orderType=price_l_to_h`;
@@ -879,7 +875,7 @@ export const getNFTLatestBids = async (
 // BlindBoxProduct Page
 export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number) => {
     const resBBItem = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getBlindBoxById?id=${blindBoxId}`,
+        `${serverConfig.metServiceUrl}/api/v1/getBlindBoxById?id=${blindBoxId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonBBItem = await resBBItem.json();
@@ -928,7 +924,7 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
 
 export const updateBBStatus = (token: string, BBId: number, status: 'online' | 'offline') =>
     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateBlindboxStatusById`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/updateBlindboxStatusById`;
         const reqBody = {
             token: token,
             blindBoxId: BBId,
@@ -963,7 +959,7 @@ export const getMyNFTItemList = async (
     walletAddress: string,
     token: string,
 ) => {
-    const fetchUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${fetchMyNFTAPIs[nTabId]}`;
+    const fetchUrl = `${serverConfig.metServiceUrl}/api/v1/${fetchMyNFTAPIs[nTabId]}`;
     const resMyNFTList = await fetch(fetchUrl, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
@@ -1114,7 +1110,7 @@ export const getMyNFTItemList = async (
 export const getMyTotalEarned = async (address: string) => {
     try {
         const resTotalEarnedResult = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/api/v1/getEarnedByAddress?address=${address}`,
+            `${serverConfig.assistServiceUrl}/api/v1/getEarnedByAddress?address=${address}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -1134,7 +1130,7 @@ export const getMyTotalEarned = async (address: string) => {
 export const getMyTodayEarned = async (address: string) => {
     try {
         const resTodayEarnedResult = await fetch(
-            `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTodayEarnedByAddress?address=${address}`,
+            `${serverConfig.assistServiceUrl}/api/v1/getTodayEarnedByAddress?address=${address}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -1153,7 +1149,7 @@ export const getMyTodayEarned = async (address: string) => {
 
 export const getMyEarnedList = async (address: string) => {
     const resEarnedList = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/api/v1/getEarnedListByAddress?address=${address}`,
+        `${serverConfig.assistServiceUrl}/api/v1/getEarnedListByAddress?address=${address}`,
         FETCH_CONFIG_JSON,
     );
     const jsonEarnedList = await resEarnedList.json();
@@ -1194,7 +1190,7 @@ export const getMyEarnedList = async (address: string) => {
 // MyNFT Page
 export const getMyNFTItem = async (tokenId: string | undefined) => {
     const resMyNFTItem = await fetch(
-        `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTokenOrderByTokenId?tokenId=${tokenId}`,
+        `${serverConfig.assistServiceUrl}/api/v1/getTokenOrderByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
     );
     const jsonMyNFTItem = await resMyNFTItem.json();
@@ -1227,7 +1223,7 @@ export const getMyNFTItem = async (tokenId: string | undefined) => {
         const createTime = getTime(itemObject.createTime);
         _MyNFTItem.createTime = createTime.date + ' ' + createTime.time;
         _MyNFTItem.txHash = itemObject.tokenEvent?.transactionHash ? itemObject.tokenEvent?.transactionHash : '';
-        
+
         if (itemObject.order) {
             _MyNFTItem.orderId = itemObject.order.orderId.toString();
             if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1)
@@ -1256,7 +1252,7 @@ export const getMyNFTItem = async (tokenId: string | undefined) => {
 // BB creation
 export const getBBCandiatesList = async (address: string, keyword: string, token: string) => {
     const resBBCandidateList = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/getUserCandidateTokens?address=${address}&keyword=${keyword}`,
+        `${serverConfig.metServiceUrl}/api/v1/getUserCandidateTokens?address=${address}&keyword=${keyword}`,
         {
             headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
         },
@@ -1306,7 +1302,7 @@ export const uploadUserProfile = (
     _signature: string,
 ) =>
     new Promise((resolve, reject) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/updateUserProfile`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/updateUserProfile`;
         const reqBody = {
             address: _address,
             did: _address,
@@ -1326,7 +1322,6 @@ export const uploadUserProfile = (
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 if (data.status === 200) {
                     resolve(data.data.access_token);
                 } else {
@@ -1365,16 +1360,13 @@ export const getAdminSearchParams = (
 };
 
 export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) => {
-    let url = `${process.env.REACT_APP_SERVICE_URL}/admin/api/v1/listMarketTokens?${fetchParams}`;
+    let url = `${serverConfig.assistServiceUrl}/admin/api/v1/listMarketTokens?${fetchParams}`;
     if (keyWord !== '') url += `&keyword=${keyWord}`;
-
-    console.log('URL:', url);
     const resAdminNFTList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminNFTList = await resAdminNFTList.json();
     const totalCount = jsonAdminNFTList.data === undefined ? 0 : jsonAdminNFTList.data.total;
     const arrAdminNFTList = jsonAdminNFTList.data === undefined ? [] : jsonAdminNFTList.data.result;
     const _arrAdminNFTList: Array<AdminNFTItemType> = [];
-    console.log('result count:', arrAdminNFTList.length);
     for (let i = 0; i < arrAdminNFTList.length; i++) {
         const itemObject: TypeProductFetch = arrAdminNFTList[i];
         // if (keyWord === '' && itemObject.status !== 'DELETED') continue;
@@ -1404,23 +1396,17 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
         }
         _arrAdminNFTList.push(_AdminNFT);
     }
-    console.log('filtered count:', _arrAdminNFTList.length);
     return { totalCount: totalCount, arrAdminNFTList: _arrAdminNFTList };
 };
 
 export const getAdminUserList = async (keyWord: string, fetchParams: string, role: number) => {
-    let url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listaddress?${fetchParams}`;
+    let url = `${serverConfig.metServiceUrl}/api/v1/admin/listaddress?${fetchParams}`;
     if (keyWord !== '') url += `&keyword=${keyWord}`;
     url += `&type=${role}`;
-
-    console.log('URL:', url);
     const resAdminUserList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminUserList = await resAdminUserList.json();
     const totalCount = jsonAdminUserList.total;
     const arrAdminUserList = jsonAdminUserList.data === undefined ? [] : jsonAdminUserList.data;
-
-    console.log('result count:', arrAdminUserList.length);
-
     if (
         totalCount === 1 &&
         arrAdminUserList.length === 1 &&
@@ -1464,14 +1450,13 @@ export const getAdminUserList = async (keyWord: string, fetchParams: string, rol
         _AdminUser.remarks = role !== 3 ? '' : itemObject.remarks;
         _arrAdminUserList.push(_AdminUser);
     }
-    console.log('filtered count:', _arrAdminUserList.length);
 
     return { result: 0, totalCount: totalCount, data: _arrAdminUserList };
 };
 
 export const updateUserRole = (_token: string, _address: string, _role: number, _remarks: string) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateRole`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/admin/updateRole`;
         const reqBody = {
             token: _token,
             address: _address,
@@ -1499,9 +1484,8 @@ export const updateUserRole = (_token: string, _address: string, _role: number, 
     });
 
 export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
-    let url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/listBanner?pageNum=${pageNum}&pageSize=${pageSize}`;
+    let url = `${serverConfig.metServiceUrl}/api/v1/admin/listBanner?pageNum=${pageNum}&pageSize=${pageSize}`;
 
-    console.log('URL:', url);
     const resAdminBannerList = await fetch(url, FETCH_CONFIG_JSON);
     const jsonAdminBannerList = await resAdminBannerList.json();
     const totalCount = jsonAdminBannerList.total;
@@ -1525,13 +1509,12 @@ export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
         _AdminBanner.created = createdTime.date + ' ' + createdTime.time;
         _arrAdminBannerList.push(_AdminBanner);
     }
-    console.log('result count:', _arrAdminBannerList.length);
     return { totalCount: totalCount, data: _arrAdminBannerList };
 };
 
 export const addAdminBanner = (token: string, image: string, location: number, status: number, sort: number) =>
     new Promise((resolve: (value: number) => void, reject: (value: string) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/createBanner`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/admin/createBanner`;
         const reqBody = {
             token: token,
             image: image,
@@ -1564,7 +1547,7 @@ export const updateAdminBanner = (
     sort: number,
 ) =>
     new Promise((resolve: (value: number) => void, reject: (value: string) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/updateBanner`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/admin/updateBanner`;
         const reqBody = {
             token: token,
             id: id.toString(),
@@ -1591,7 +1574,7 @@ export const updateAdminBanner = (
 
 export const deleteAdminBanner = (token: string, id: number) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: string) => void) => {
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/admin/deleteBanner`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/admin/deleteBanner`;
         const reqBody = {
             token: token,
             id: id.toString(),

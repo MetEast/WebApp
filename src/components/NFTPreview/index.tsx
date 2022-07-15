@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {
     isLoading: boolean;
@@ -63,8 +64,14 @@ const NFTPreview: React.FC<ComponentProps> = ({
         event.preventDefault(); //
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
-                likeState ? (isBlindBox ? 'decBlindBoxLikes' : 'decTokenLikes') : (isBlindBox ? 'incBlindBoxLikes': 'incTokenLikes')
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/${
+                likeState
+                    ? isBlindBox
+                        ? 'decBlindBoxLikes'
+                        : 'decTokenLikes'
+                    : isBlindBox
+                    ? 'incBlindBoxLikes'
+                    : 'incTokenLikes'
             }`;
             const reqBody = isBlindBox
                 ? {
@@ -82,7 +89,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${signInDlgState.token}`,
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -110,7 +117,8 @@ const NFTPreview: React.FC<ComponentProps> = ({
             <ProductImageContainer
                 sx={{ cursor: productType === 3 ? 'auto' : 'pointer' }}
                 onClick={() => {
-                    if (!isLoading && product.tokenId && productType !== 3) navigate(getUrl(), {state: {isLiked: likeState}});
+                    if (!isLoading && product.tokenId && productType !== 3)
+                        navigate(getUrl(), { state: { isLiked: likeState } });
                 }}
             >
                 <ImageBox loading={isLoading ? 1 : 0}>

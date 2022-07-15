@@ -14,6 +14,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {}
 
@@ -32,7 +33,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
 
     const sendSoldBlindBoxTokenIds = (txHash: string) => {
         let unmounted = false;
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/soldTokenFromBlindbox`;
         const reqBody = {
             id: dialogState.buyBlindBoxId,
             orderIds: dialogState.buyBlindOrderIds.map((item: string) => Number(item)),
@@ -43,7 +44,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${signInDlgState.token}`,
+                Authorization: `Bearer ${signInDlgState.token}`,
             },
             body: JSON.stringify(reqBody),
         })
@@ -92,7 +93,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         if (!unmounted) setDialogState(updatedState);
 
         console.log(dialogState.buyBlindOrderIds);
-        console.log(signInDlgState.didUri)
+        console.log(signInDlgState.didUri);
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
@@ -147,7 +148,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Unit Price</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{(dialogState.buyBlindPriceEla).toFixed(2)} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla.toFixed(2)} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Amount</DetailedInfoTitleTypo>

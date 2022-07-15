@@ -1,21 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Stack, Button, Typography, Link as ExternalLink } from '@mui/material';
-import { Box, SpacingProps } from '@mui/system';
+import { SpacingProps } from '@mui/system';
 import { SocialButton } from './styles';
 import { Icon } from '@iconify/react';
 import generatedGitInfo from '../../generatedGitInfo.json';
+import { contactConfig } from 'src/config';
 
 export interface ComponentProps extends SpacingProps {}
 
 const Footer: React.FC<ComponentProps> = ({ ...otherProps }): JSX.Element => {
     const socialButtonsList = [
-        { icon: 'ph:telegram-logo', url: 'https://t.me/MetEastofficial' },
-        { icon: 'ph:discord-logo', url: 'https://discord.gg/s7DNxA8jd8' },
-        { icon: 'ph:twitter-logo', url: 'https://twitter.com/MetEastNFT' },
-        { icon: 'ph:instagram-logo', url: 'https://www.instagram.com/meteast2022/' },
-        { icon: 'carbon:logo-medium', url: 'https://medium.com/@Meteast2022' },
-        { icon: 'ph:github-logo', url: 'https://github.com/meteast' },
+        { icon: 'ph:telegram-logo', url: contactConfig.telegram },
+        { icon: 'ph:discord-logo', url: contactConfig.discord },
+        { icon: 'ph:twitter-logo', url: contactConfig.twitter },
+        { icon: 'ph:instagram-logo', url: contactConfig.instagram },
+        { icon: 'carbon:logo-medium', url: contactConfig.medium },
+        { icon: 'ph:github-logo', url: contactConfig.github },
     ];
 
     return (

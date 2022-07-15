@@ -4,9 +4,9 @@ import Web3 from 'web3';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { create } from 'ipfs-http-client';
 import axios from 'axios';
-import { isProductEnv } from './common';
+import { apiConfig, ipfsConfig, isProductEnv, chainConfig } from 'src/config';
 
-const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
+const client = create({ url: ipfsConfig.ipfsUploadUrl });
 
 declare global {
     interface Window {
@@ -25,7 +25,7 @@ export const isSupportedNetwork = (chainId: number) => {
 
 export const getESCExploreUrl = (chainId: number, txHash: string) => {
     if (chainId === 20) return `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`;
-    if (chainId === 21) return `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`;
+    else if (chainId === 21) return `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`;
     return '';
 };
 
@@ -131,10 +131,10 @@ export const getELA2USDRate = async () => {
 
 export const getERC20TokenPrice = async (tokenAddress: string, connectProvider = null) => {
     let walletConnectWeb3;
-    const rpcURL: string = isProductEnv() ? 'https://api.elastos.io/esc' : 'https://api-testnet.elastos.io/eth';
+    const rpcUrl = chainConfig.rpcUrl || '';
     if (connectProvider) walletConnectWeb3 = new Web3(connectProvider);
     else if (Web3.givenProvider || window.ethereum) walletConnectWeb3 = new Web3(Web3.givenProvider || window.ethereum);
-    else walletConnectWeb3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
+    else walletConnectWeb3 = new Web3(new Web3.providers.HttpProvider(rpcUrl));
 
     try {
         const blockNumber = await walletConnectWeb3.eth.getBlockNumber();
@@ -145,7 +145,7 @@ export const getERC20TokenPrice = async (tokenAddress: string, connectProvider =
         };
         const response: any = await axios({
             method: 'POST',
-            url: 'https://api.glidefinance.io/subgraphs/name/glide/exchange',
+            url: apiConfig.glideELA2USDTUrl,
             headers: {
                 'content-type': 'application/json',
                 // "x-rapidapi-host": "reddit-graphql-proxy.p.rapidapi.com",

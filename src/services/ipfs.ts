@@ -1,6 +1,7 @@
 import { create } from 'ipfs-http-client';
+import { ipfsConfig } from 'src/config';
 
-const client = create({ url: process.env.REACT_APP_IPFS_UPLOAD_URL });
+const client = create({ url: ipfsConfig.ipfsUploadUrl });
 
 const zoomImgSize = (imgWidth: number, imgHeight: number, maxWidth: number, maxHeight: number): [number, number] => {
     let newWidth = imgWidth;

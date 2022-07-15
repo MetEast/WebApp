@@ -14,7 +14,13 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import { getMintCategory } from 'src/services/common';
-import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry, enumTransactionType } from 'src/types/product-types';
+import {
+    enumBadgeType,
+    TypeProduct,
+    TypeNFTTransaction,
+    TypeNFTHisotry,
+    enumTransactionType,
+} from 'src/types/product-types';
 import { getMyNFTItem, getNFTLatestTxs2 } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -22,6 +28,7 @@ import { useSnackbar } from 'notistack';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const MyNFTPurchased: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -72,7 +79,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                     });
                 }
             });
-            
+
             if (!unmounted) {
                 if (
                     !(
@@ -117,7 +124,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incTokenViews`;
             const reqBody = {
                 tokenId: tokenId,
                 address: signInDlgState.address,

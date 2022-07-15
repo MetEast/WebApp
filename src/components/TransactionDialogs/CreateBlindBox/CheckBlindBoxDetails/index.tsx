@@ -20,6 +20,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { getTime } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {}
 
@@ -47,17 +48,17 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 maxQuantity: dialogState.crtBlindQuantity,
                 blindPrice: dialogState.crtBlindPrice,
                 saleBegin: parseInt(dialogState.crtBlindSaleBegin),
-                maxPurchase: dialogState.crtBlindPurchases
-            }
+                maxPurchase: dialogState.crtBlindPurchases,
+            };
 
             const config = {
                 headers: {
                     'content-type': 'application/json',
-                    'Authorization': `Bearer ${signInDlgState.token}`
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
             };
             axios
-                .post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/createBlindBox`, JSON.stringify(body), config)
+                .post(`${serverConfig.metServiceUrl}/api/v1/createBlindBox`, JSON.stringify(body), config)
                 .then((response) => {
                     if (response.data.status === 200) {
                         resolve(true);

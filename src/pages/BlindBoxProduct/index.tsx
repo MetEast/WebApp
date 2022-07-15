@@ -22,6 +22,7 @@ import NFTPreview from 'src/components/NFTPreview';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 // import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -81,7 +82,7 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateBlindBoxViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incBlindBoxViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incBlindBoxViews`;
             const reqBody = {
                 blindBoxIndex: tokenId,
                 address: signInDlgState.address,
@@ -223,9 +224,8 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                             {(signInDlgState.walletAccounts.length === 0 ||
                                 (signInDlgState.walletAccounts.length !== 0 &&
                                     blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0])) &&
-                                blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                                // blindBoxDetail.state === 'online' &&
-                                 (
+                                blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds && (
+                                    // blindBoxDetail.state === 'online' &&
                                     <PrimaryButton
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
@@ -243,8 +243,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                                     //     blindBoxDetail.author === ''
                                                     //         ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
                                                     //         : blindBoxDetail.author,
-                                                    buyBlindMaxPurchases: blindBoxDetail.maxPurchases ? blindBoxDetail.maxPurchases : 0,
-                                                    buyBlindInstock: blindBoxDetail.instock ? blindBoxDetail.instock : 0,
+                                                    buyBlindMaxPurchases: blindBoxDetail.maxPurchases
+                                                        ? blindBoxDetail.maxPurchases
+                                                        : 0,
+                                                    buyBlindInstock: blindBoxDetail.instock
+                                                        ? blindBoxDetail.instock
+                                                        : 0,
                                                 });
                                             } else {
                                                 setSignInDlgState((prevState: SignInState) => {
