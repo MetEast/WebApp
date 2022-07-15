@@ -76,6 +76,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (
                     !(
+                        signInDlgState.address &&
                         _MyNFTItem.holder === signInDlgState.address &&
                         _MyNFTItem.status === '0' &&
                         _MyNFTItem.royaltyOwner !== signInDlgState.addresss
@@ -87,6 +88,7 @@ const MyNFTPurchased: React.FC = (): JSX.Element => {
                         clearTimeout(timer);
                         if (
                             !(
+                                signInDlgState.address &&
                                 _MyNFTItem.holder === signInDlgState.address &&
                                 _MyNFTItem.status === '0' &&
                                 _MyNFTItem.royaltyOwner !== signInDlgState.address

@@ -87,12 +87,24 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             });
 
             if (!unmounted) {
-                if (!(_MyNFTItem.holder === signInDlgState.address && _MyNFTItem.status === '2')) {
+                if (
+                    !(
+                        signInDlgState.address &&
+                        _MyNFTItem.holder === signInDlgState.address &&
+                        _MyNFTItem.status === '2'
+                    )
+                ) {
                     navigate(-1);
                     // detect previous path is null
                     const timer = setTimeout(() => {
                         clearTimeout(timer);
-                        if (!(_MyNFTItem.holder === signInDlgState.address && _MyNFTItem.status === '2')) {
+                        if (
+                            !(
+                                signInDlgState.address &&
+                                _MyNFTItem.holder === signInDlgState.address &&
+                                _MyNFTItem.status === '2'
+                            )
+                        ) {
                             navigate('/');
                         }
                     }, 100);
