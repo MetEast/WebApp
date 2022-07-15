@@ -56,63 +56,75 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             _MyNFTItem.isLike = product.isLike;
             _MyNFTItem.views = product.views ? product.views : 0;
             _MyNFTItem.likes = product.likes ? product.likes : 0;
-            _MyNFTItem.price_usd = product.price_usd
+            _MyNFTItem.price_usd = product.price_usd;
+            console.log(_MyNFTItem);
+
+            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            _NFTTxs.push({
+                type: enumTransactionType.CreatedBy,
+                user: _MyNFTItem.author,
+                price: 0,
+                time: _MyNFTItem.createTime,
+                txHash: _MyNFTItem.txHash || '',
+                saleType: enumTransactionType.CreatedBy,
+            });
+            const data: TypeNFTHisotry[] = [];
+            _NFTTxs.map((tx: TypeNFTTransaction) => {
+                if (
+                    tx.type === enumTransactionType.SoldTo ||
+                    tx.type === enumTransactionType.SettleBidOrder ||
+                    tx.type === enumTransactionType.CreatedBy
+                ) {
+                    data.push({
+                        saleType: tx.saleType,
+                        type: tx.type,
+                        user: tx.user,
+                        price: tx.price,
+                        time: tx.time,
+                        txHash: tx.txHash,
+                    });
+                }
+            });
+
             if (!unmounted) {
-                console.log(_MyNFTItem)
-                setProductDetail(_MyNFTItem);
+                if (!(_MyNFTItem.holder === signInDlgState.address && _MyNFTItem.status === '2')) {
+                    navigate(-1);
+                    // detect previous path is null
+                    const timer = setTimeout(() => {
+                        clearTimeout(timer);
+                        if (!(_MyNFTItem.holder === signInDlgState.address && _MyNFTItem.status === '2')) {
+                            navigate('/');
+                        }
+                    }, 100);
+                } else {
+                    setProductDetail(_MyNFTItem);
+                    setDialogState({ ...dialogState, burnTokenId: _MyNFTItem.tokenId });
+                    setTransactionsList(_NFTTxs);
+                    setProdTransHistory(data.slice(0, 5));
+                }
             }
         };
         if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.address && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+            if (signInDlgState.address) fetchMyNFTItem().catch(console.error);
         } else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts, signInDlgState.address, params.id]);
-
-    useEffect(() => {
-        let unmounted = false;
-        const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
-            if (!unmounted) {
-                let nftTx = _NFTTxs.slice(0, 5);
-                nftTx.push({
-                    type: enumTransactionType.CreatedBy,
-                    user: productDetail.author,
-                    price: 0,
-                    time: productDetail.createTime,
-                    txHash: '',
-                    saleType: enumTransactionType.CreatedBy
-                })
-                setTransactionsList(nftTx);
-                const data: TypeNFTHisotry[] = [];
-                _NFTTxs.map((tx: TypeNFTTransaction) => {
-                    if(tx.type === enumTransactionType.SoldTo || tx.type === enumTransactionType.SettleBidOrder || tx.type === enumTransactionType.CreatedBy) {
-                        data.push({saleType: tx.saleType, type: tx.type, user: tx.user, price: tx.price, time: tx.time, txHash: tx.txHash})
-                    }
-                })
-                setProdTransHistory(data.slice(0, 5));
-            }
-        };
-        if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
-        return () => {
-            unmounted = true;
-        };
-    }, [productDetail]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
     useEffect(() => {
         let unmounted = false;
         const fetchNFTLatestBids = async () => {
-            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.walletAccounts[0], 1, 5);
+            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.address, 1, 5);
             if (!unmounted) {
                 setBidsList(_NFTBids.others);
             }
         };
-        if (signInDlgState.walletAccounts.length) fetchNFTLatestBids().catch(console.error);
+        if (signInDlgState.address) fetchNFTLatestBids().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts, params.id]);
+    }, [signInDlgState.address, params.id]);
 
     useEffect(() => {
         let unmounted = false;
@@ -126,7 +138,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${signInDlgState.token}`,
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -156,10 +168,10 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
     }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     const OperationButtons = (product: TypeProduct) => {
-        if(product.holder === signInDlgState.address) {
-            if(product.status === "1") {
-                if(!product.isExpired) {
-                    if(product.bids === 0) {
+        if (product.holder === signInDlgState.address) {
+            if (product.status === '1') {
+                if (!product.isExpired) {
+                    if (product.bids === 0) {
                         return (
                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                 <PinkButton
@@ -208,7 +220,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                     Change Price
                                 </SecondaryButton>
                             </Stack>
-                        )
+                        );
                     } else {
                         return (
                             <PrimaryButton
@@ -237,7 +249,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                             >
                                 View Bids
                             </PrimaryButton>
-                        )
+                        );
                     }
                 } else {
                     return (
@@ -252,8 +264,8 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                             topBid > 0
                                                 ? bidsList[0].user
                                                 : productDetail.holderName
-                                                    ? productDetail.holderName
-                                                    : reduceHexAddress(productDetail.holder, 4);
+                                                ? productDetail.holderName
+                                                : reduceHexAddress(productDetail.holder, 4);
                                         const bidOrderId =
                                             topBid > 0 ? bidsList[0].orderId : productDetail.orderId || '';
                                         setDialogState({
@@ -277,9 +289,9 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                                 Settle Auction
                             </SecondaryButton>
                         </Stack>
-                    )
+                    );
                 }
-            } else if(product.status === "2" || product.status === "3") {
+            } else if (product.status === '2' || product.status === '3') {
                 return (
                     <PrimaryButton
                         sx={{ marginTop: 3, width: '100%' }}
@@ -301,11 +313,11 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
                     >
                         Sell
                     </PrimaryButton>
-                )
+                );
             }
         }
-        return (<></>)
-    }
+        return <></>;
+    };
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
