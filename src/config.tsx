@@ -38,7 +38,7 @@ export const ipfsConfig = {
 
 export const polrConfig = {
     polrServerUrl: process.env.REACT_APP_SHORTERN_SERVICE_URL,
-    polrAPIKey: process.env.REACT_APP_POLR_API_KEY,
+    polrAPIKey: '2b495b2175ec5470d35482f524ac87',
 };
 
 export const contactConfig = {
