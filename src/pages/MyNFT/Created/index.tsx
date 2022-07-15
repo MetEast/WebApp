@@ -51,7 +51,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             _MyNFTItem.views = product.views;
             _MyNFTItem.likes = product.likes;
             _MyNFTItem.price_usd = product.price_usd;
-            
+
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
@@ -82,6 +82,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             if (!unmounted) {
                 if (
                     !(
+                        signInDlgState.address &&
                         _MyNFTItem.holder === signInDlgState.address &&
                         _MyNFTItem.status === '0' &&
                         _MyNFTItem.royaltyOwner === signInDlgState.address
@@ -93,6 +94,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                         clearTimeout(timer);
                         if (
                             !(
+                                signInDlgState.address &&
                                 _MyNFTItem.holder === signInDlgState.address &&
                                 _MyNFTItem.status === '0' &&
                                 _MyNFTItem.royaltyOwner === signInDlgState.address

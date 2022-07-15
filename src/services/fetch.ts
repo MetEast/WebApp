@@ -768,7 +768,6 @@ export const getNFTLatestTxs2 = async (tokenId: string | undefined) => {
         for (let j = 0; j < events2.length; j++) {
             const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
             const event = events2[j];
-            console.log(event);
             if (event.eventType === 0 || event.eventType === 2) {
                 _NFTTx.type = itemObject.orderType === 1 ? enumTransactionType.ForSale : enumTransactionType.OnAuction;
                 _NFTTx.user = itemObject.sellerInfo?.name
