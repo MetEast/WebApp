@@ -51,6 +51,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             _MyNFTItem.views = product.views;
             _MyNFTItem.likes = product.likes;
             _MyNFTItem.price_usd = product.price_usd;
+            
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
