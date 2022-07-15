@@ -30,6 +30,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 import { reduceUserName } from 'src/services/common';
 import { useSnackbar } from 'notistack';
+import { serverConfig } from 'src/config';
 
 const MyNFTBuyNow: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -122,7 +123,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incTokenViews`;
             const reqBody = {
                 tokenId: tokenId,
                 address: signInDlgState.address,

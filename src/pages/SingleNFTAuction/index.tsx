@@ -6,7 +6,9 @@ import {
     TypeProduct,
     TypeNFTTransaction,
     TypeSingleNFTBid,
-    enumSingleNFTType, OrderEventType, enumTransactionType,
+    enumSingleNFTType,
+    OrderEventType,
+    enumTransactionType,
 } from 'src/types/product-types';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -20,10 +22,8 @@ import PriceHistoryView from 'src/components/PriceHistoryView';
 import {
     checkTokenLike,
     getELA2USD,
-    getMyFavouritesList,
     getNFTItem,
     getNFTLatestBids,
-    getNFTLatestTxs,
     getNFTLatestTxs2,
 } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
@@ -40,6 +40,7 @@ import { getMintCategory, reduceHexAddress } from 'src/services/common';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 // import AcceptBidDlgContainer from 'src/components/TransactionDialogs/AcceptBid';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const SingleNFTAuction: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -80,7 +81,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
-            // const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
             // @ts-ignore
             _NFTItem.isLike = location.state !== null ? location.state.isLiked : await checkTokenLike(params.id, signInDlgState.address);
@@ -108,8 +108,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     price: 0,
                     time: productDetail.createTime,
                     txHash: '',
-                    saleType: enumTransactionType.CreatedBy
-                })
+                    saleType: enumTransactionType.CreatedBy,
+                });
                 setTransactionsList(nftTx);
             }
         };
@@ -138,7 +138,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incTokenViews`;
             const reqBody = {
                 tokenId: tokenId,
                 address: signInDlgState.address,
@@ -147,7 +147,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${signInDlgState.token}`,
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -374,7 +374,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                         </PrimaryButton>
                                     )}
                                     {!!signInDlgState.walletAccounts.length &&
-                                        productDetail.holder === signInDlgState.walletAccounts[0] && productDetail.status === '1' &&
+                                        productDetail.holder === signInDlgState.walletAccounts[0] &&
+                                        productDetail.status === '1' &&
                                         !bidsList.length && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <PinkButton

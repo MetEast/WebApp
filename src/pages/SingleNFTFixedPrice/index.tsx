@@ -12,7 +12,14 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getMintCategory } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs, getNFTLatestTxs2, checkTokenLike } from 'src/services/fetch';
+import {
+    getELA2USD,
+    getMyFavouritesList,
+    getNFTItem,
+    getNFTLatestTxs,
+    getNFTLatestTxs2,
+    checkTokenLike,
+} from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -24,6 +31,7 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -48,7 +56,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 setProductDetail(_NFTItem);
             }
         };
-        if((signInDlgState.isLoggedIn && signInDlgState.address) || (!signInDlgState.isLoggedIn)) fetchNFTItem().catch(console.error);
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
+            fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -66,8 +75,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     price: 0,
                     time: productDetail.createTime,
                     txHash: '',
-                    saleType: enumTransactionType.CreatedBy
-                })
+                    saleType: enumTransactionType.CreatedBy,
+                });
                 setTransactionsList(nftTx);
             }
         };
@@ -89,7 +98,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incTokenViews`;
             const reqBody = {
                 tokenId: tokenId,
                 address: signInDlgState.address,
@@ -98,7 +107,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + signInDlgState.token,
+                    Authorization: 'Bearer ' + signInDlgState.token,
                 },
                 body: JSON.stringify(reqBody),
             })

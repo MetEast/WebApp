@@ -11,6 +11,7 @@ import { SelectBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { priceHistoryUnitSelectOptions } from 'src/constants/select-constants';
 import ReactApexChart from 'react-apexcharts';
+import { serverConfig } from 'src/config';
 
 interface ComponentProps {
     createdTime: number;
@@ -143,7 +144,7 @@ const PriceHistoryView: React.FC<ComponentProps> = ({ createdTime, creator }): J
 
     useEffect(() => {
         let unmounted = false;
-        fetch(`${process.env.REACT_APP_SERVICE_URL}/api/v1/getTokenPriceHistory?tokenId=${params.id}`)
+        fetch(`${serverConfig.assistServiceUrl}/api/v1/getTokenPriceHistory?tokenId=${params.id}`)
             .then((response) => {
                 response.json().then((jsonPriceList) => {
                     if (!unmounted) {

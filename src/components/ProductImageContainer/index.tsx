@@ -3,6 +3,7 @@ import { Container, LikeBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
+import { serverConfig } from 'src/config';
 // import { Box, Skeleton } from '@mui/material';
 
 export interface ComponentProps {
@@ -22,8 +23,14 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
-                likeState ? (isBlindBox? 'decBlindBoxLikes' :'decTokenLikes') : (isBlindBox? 'incBlindBoxLikes': 'incTokenLikes')
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/${
+                likeState
+                    ? isBlindBox
+                        ? 'decBlindBoxLikes'
+                        : 'decTokenLikes'
+                    : isBlindBox
+                    ? 'incBlindBoxLikes'
+                    : 'incTokenLikes'
             }`;
             const reqBody = isBlindBox
                 ? {
@@ -41,7 +48,7 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${signInDlgState.token}`,
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })

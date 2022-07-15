@@ -11,7 +11,7 @@ import { SnackbarProvider } from 'notistack';
 import { CookiesProvider } from 'react-cookie';
 import { SignInContextProvider } from 'src/context/SignInContext';
 import { NotificationContextProvider } from 'src/context/NotificationContext';
-import { isProductEnv } from 'src/services/common';
+import { isProductEnv } from 'src/config';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any): Web3Provider => {

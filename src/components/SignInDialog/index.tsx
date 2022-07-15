@@ -34,7 +34,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
 import { login, updateUserToken } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
-import { isProductEnv } from 'src/services/common';
+import { serverConfig, isProductEnv, chainConfig } from 'src/config';
 
 export interface ComponentProps {}
 
@@ -79,12 +79,11 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         // Check if MetaMask is installed
         // MetaMask injects the global API into window.ethereum
         if (window.ethereum) {
-            const targetChainId = isProductEnv() ? '0x14' : '0x15';
             try {
                 // check if the chain to connect to is installed
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: targetChainId }], // chainId must be in hexadecimal numbers
+                    params: [{ chainId: chainConfig.id }], // chainId must be in hexadecimal numbers
                 });
             } catch (error: any) {
                 // This error code indicates that the chain has not been added to MetaMask
@@ -95,21 +94,15 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             method: 'wallet_addEthereumChain',
                             params: [
                                 {
-                                    chainId: isProductEnv() ? '0x14' : '0x15',
-                                    chainName: isProductEnv() ? 'Elastos Main Network' : 'Elastos Test Network',
+                                    chainId: chainConfig.id,
+                                    chainName: chainConfig.name,
                                     nativeCurrency: {
                                         name: 'Elastos',
                                         symbol: 'ELA', // 2-6 characters long
                                         decimals: 18,
                                     },
-                                    rpcUrls: [
-                                        isProductEnv()
-                                            ? 'https://api.elastos.io/esc'
-                                            : 'https://api-testnet.elastos.io/eth',
-                                    ],
-                                    blockExplorerUrls: [
-                                        isProductEnv() ? 'https://api.elastos.io/' : 'https://eth-testnet.elastos.io',
-                                    ],
+                                    rpcUrls: [chainConfig.rpcUrl],
+                                    blockExplorerUrls: [chainConfig.blockUrl],
                                 },
                             ],
                         });
@@ -179,7 +172,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                     if (!unmounted) {
                         console.log(error);
                         enqueueSnackbar(
-                            `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
+                            `Failed to call the backend API. Check your connectivity and make sure ${serverConfig.metServiceUrl} is reachable.`,
                             { variant: 'error', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
                         );
                         try {
@@ -292,7 +285,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 .catch((error) => {
                     console.log(error);
                     enqueueSnackbar(
-                        `Failed to call the backend API. Check your connectivity and make sure ${process.env.REACT_APP_BACKEND_URL} is reachable.`,
+                        `Failed to call the backend API. Check your connectivity and make sure ${serverConfig.metServiceUrl} is reachable.`,
                         { variant: 'error', anchorOrigin: { horizontal: 'right', vertical: 'top' } },
                     );
                     try {
@@ -505,7 +498,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             }
         }
         if (chainId && !isSupportedNetwork(chainId)) {
-            showChainErrorSnackBar()
+            showChainErrorSnackBar();
         }
         return () => {
             if (walletConnectProvider.removeListener) {
@@ -526,7 +519,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 _state.token = cookies.METEAST_TOKEN;
                 _state.didUri = didUri;
                 _state.userDid = user.did;
-                _state.address = user.address
+                _state.address = user.address;
                 _state.userName = user.name ? user.name : '';
                 _state.userDescription = user.description ? user.description : '';
                 _state.userAvatar = user.avatar ? user.avatar : '';

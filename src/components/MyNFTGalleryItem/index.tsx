@@ -9,6 +9,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -33,9 +34,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         event.preventDefault();
         event.stopPropagation();
         if (signInDlgState.isLoggedIn) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
-                likeState ? 'decTokenLikes' : 'incTokenLikes'
-            }`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
             const reqBody = {
                 tokenId: product.tokenId,
                 address: signInDlgState.address,
@@ -47,7 +46,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${signInDlgState.token}`,
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
@@ -87,7 +86,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         <GalleryItemContainer>
             <ProductImageContainer
                 onClick={() => {
-                    if (!isLoading) navigate(getUrl(), {state: {product}});
+                    if (!isLoading) navigate(getUrl(), { state: { product } });
                 }}
             >
                 <ImageBox loading={isLoading ? 1 : 0}>

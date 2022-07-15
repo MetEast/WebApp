@@ -5,6 +5,7 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import ViewOnExplorerButton from 'src/components/Buttons/ViewOnExplorerButton';
 import { useDialogContext } from 'src/context/DialogContext';
 import { getImageFromAsset } from '../../../../services/common';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {}
 
@@ -12,25 +13,33 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
     const [dialogState, setDialogState] = useDialogContext();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/getNFTFromBlindBox`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify(dialogState.buyBlindOrderIds.map((item: string) => Number(item))),
-            }).then((response) => response.json()).then((data) => {
+        fetch(`${serverConfig.metServiceUrl}/api/v1/getNFTFromBlindBox`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify(dialogState.buyBlindOrderIds.map((item: string) => Number(item))),
+        })
+            .then((response) => response.json())
+            .then((data) => {
                 console.log(data);
-                const names:string[] = [], images:string[] = [], creators:string[] = [];
+                const names: string[] = [],
+                    images: string[] = [],
+                    creators: string[] = [];
                 data.data.forEach((item: any) => {
                     names.push(item.name);
                     images.push(getImageFromAsset(item.thumbnail));
                     creators.push(item.royaltyOwner);
-                })
-            setDialogState({...dialogState, buyBlindNames: names, buyBlindImages: images, buyBlindCreators: creators});
-        });
-    }, [])
+                });
+                setDialogState({
+                    ...dialogState,
+                    buyBlindNames: names,
+                    buyBlindImages: images,
+                    buyBlindCreators: creators,
+                });
+            });
+    }, []);
 
     return (
         <Stack spacing={5} width={320}>
@@ -59,5 +68,3 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
 };
 
 export default PurchaseSuccess;
-
-

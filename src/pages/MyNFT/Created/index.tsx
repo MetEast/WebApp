@@ -27,6 +27,7 @@ import { useSnackbar } from 'notistack';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const MyNFTCreated: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -123,7 +124,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incTokenViews`;
             const reqBody = {
                 tokenId: tokenId,
                 address: signInDlgState.address,
