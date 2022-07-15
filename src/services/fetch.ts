@@ -752,7 +752,6 @@ export const getNFTLatestTxs = async (
 };
 
 export const getNFTLatestTxs2 = async (tokenId: string | undefined) => {
-    console.log(tokenId);
     let fetchUrl = `${process.env.REACT_APP_SERVICE_URL}/api/v1/getTransHistoryByTokenId?tokenId=${tokenId}`;
 
     const resNFTTxs = await fetch(fetchUrl, FETCH_CONFIG_JSON);
@@ -762,15 +761,12 @@ export const getNFTLatestTxs2 = async (tokenId: string | undefined) => {
     const _NFTTxList: Array<TypeNFTTransaction> = [];
     for (let i = 0; i < arrNFTTxs.length; i++) {
         const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
-
-        let events = itemObject.events;
-        let events2 = events.sort((a, b) => {
+        const events = itemObject.events;
+        const events2 = events.sort((a, b) => {
             return b.timestamp - a.timestamp;
         });
-
         for (let j = 0; j < events2.length; j++) {
             const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
-
             const event = events2[j];
             console.log(event);
             if (event.eventType === 0 || event.eventType === 2) {
@@ -1208,8 +1204,6 @@ export const getMyNFTItem = async (tokenId: string | undefined) => {
     const itemObject: TypeProductFetch = jsonMyNFTItem.data;
     const _MyNFTItem: TypeProduct = { ...blankNFTItem };
 
-    console.log(itemObject);
-
     if (itemObject !== undefined) {
         _MyNFTItem.tokenId = itemObject.tokenId;
         _MyNFTItem.name = itemObject.name;
@@ -1219,7 +1213,7 @@ export const getMyNFTItem = async (tokenId: string | undefined) => {
             ? itemObject.creator.name
             : reduceHexAddress(itemObject.royaltyOwner, 4);
         _MyNFTItem.authorDescription = itemObject.creator.description || ' ';
-        _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
+        // _MyNFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _MyNFTItem.authorAddress = itemObject.royaltyOwner;
         _MyNFTItem.holderName =
             itemObject.tokenOwner === itemObject.royaltyOwner
@@ -1238,25 +1232,25 @@ export const getMyNFTItem = async (tokenId: string | undefined) => {
 
         if (itemObject.order) {
             _MyNFTItem.orderId = itemObject.order.orderId.toString();
-            _MyNFTItem.status = itemObject.order.orderState.toString();
+            if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1)
+                _MyNFTItem.status = '1'; // buynow
+            else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1)
+                _MyNFTItem.status = '2'; // auction
+            else _MyNFTItem.status = '0';
+            _MyNFTItem.isBlindbox = itemObject.order.isBlindBox && _MyNFTItem.status === '1';
+            _MyNFTItem.price_ela = _MyNFTItem.status === '0' ? 0 : itemObject.order.price / 1e18;
+            if (itemObject.order.endTime) {
+                const endTime = getTime(itemObject.order.endTime.toString());
+                _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
+            } else _MyNFTItem.endTime = '0';
             _MyNFTItem.isExpired = Math.round(new Date().getTime() / 1000) > itemObject.order.endTime;
-            _MyNFTItem.isBlindbox = itemObject.order.isBlindBox;
-            _MyNFTItem.price_ela = itemObject.order.price / 1e18;
             _MyNFTItem.bids = itemObject.order.bids;
-
             if (itemObject.order.bids > 0) {
                 if (itemObject.order.orderState === 2) {
                     _MyNFTItem.buyer = itemObject.order.buyerAddr;
                 }
             }
-
-            if (itemObject.order.endTime) {
-                const endTime = getTime(itemObject.order.endTime.toString());
-                _MyNFTItem.endTime = endTime.date + ' ' + endTime.time;
-            } else {
-                _MyNFTItem.endTime = '0';
-            }
-        }
+        } else _MyNFTItem.status = '0';
     }
     return _MyNFTItem;
 };
