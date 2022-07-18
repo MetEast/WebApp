@@ -49,11 +49,11 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 });
             }
         };
-        if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
+        if (signInDlgState.token) fetchNotifications().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+    }, [signInDlgState.token]);
 
     useEffect(() => {
         getUnReadNotes();
