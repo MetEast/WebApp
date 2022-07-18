@@ -3,6 +3,7 @@ import { enumBadgeType } from 'src/types/product-types';
 
 export const getImageFromAsset = (id: string) => {
     if (!id) return '';
+    if (typeof id !== 'string') return '';
     const prefixLen = id.split(':', 2).join(':').length;
     if (prefixLen >= id.length) return '';
     const uri = id.substring(prefixLen + 1);
