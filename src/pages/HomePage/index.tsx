@@ -7,13 +7,7 @@ import NFTPreview from 'src/components/NFTPreview';
 import 'swiper/swiper-bundle.css';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-import {
-    getELA2USD,
-    getMyFavouritesList, getMyFavouritesList2,
-    getNFTItemList,
-    getNFTItemList2,
-    getPageBannerList,
-} from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesList2, getNFTItemList2, getPageBannerList } from 'src/services/fetch';
 import { blankNFTItem } from 'src/constants/init-constants';
 import Container from 'src/components/Container';
 
@@ -29,9 +23,7 @@ const HomePage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(1);
-            if (!unmounted) {
-                setAdBanners(_adBanners);
-            }
+            if (!unmounted) setAdBanners(_adBanners);
         };
         fetchBanners().catch(console.error);
         return () => {
@@ -43,8 +35,12 @@ const HomePage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchCollections = async () => {
             if (!unmounted) setIsLoading(true);
-            const _newNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10}, undefined, undefined);
-            const _popularNFTList = await getNFTItemList2({pageNum: 1, pageSize: 10, orderType: 'mostliked'}, undefined, undefined);
+            const _newNFTList = await getNFTItemList2({ pageNum: 1, pageSize: 10 }, undefined, undefined);
+            const _popularNFTList = await getNFTItemList2(
+                { pageNum: 1, pageSize: 10, orderType: 'mostliked' },
+                undefined,
+                undefined,
+            );
             if (!unmounted) {
                 setProductList(_newNFTList.data);
                 setCollectionList(_popularNFTList.data);
@@ -62,12 +58,23 @@ const HomePage: React.FC = (): JSX.Element => {
         const updateTokenInfo = async () => {
             const ELA2USD = await getELA2USD();
             const likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.token);
-            console.log(likeList);
-            setProductList((prevState) => {return prevState.map(item => {item.isLike = likeList.includes(item.tokenId); item.price_usd = item.price_ela * ELA2USD; return item;})})
-            setCollectionList((prevState) => {return prevState.map(item => {item.isLike = likeList.includes(item.tokenId); item.price_usd = item.price_ela * ELA2USD; return item;})})
-        }
+            setProductList((prevState) => {
+                return prevState.map((item) => {
+                    item.isLike = likeList.includes(item.tokenId);
+                    item.price_usd = item.price_ela * ELA2USD;
+                    return item;
+                });
+            });
+            setCollectionList((prevState) => {
+                return prevState.map((item) => {
+                    item.isLike = likeList.includes(item.tokenId);
+                    item.price_usd = item.price_ela * ELA2USD;
+                    return item;
+                });
+            });
+        };
         setTimeout(updateTokenInfo, 5000);
-    }, [signInDlgState.isLoggedIn, signInDlgState.address])
+    }, [signInDlgState.isLoggedIn, signInDlgState.token]);
     // -------------- Fetch Data -------------- //
 
     // -------------- Likes -------------- //

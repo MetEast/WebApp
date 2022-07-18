@@ -281,6 +281,7 @@ export type TypeProductFetch2 = {
     tokenId: string;
     orderType: number;
     token: Token;
+    endTime: number;
 };
 
 export type Token = {
