@@ -182,7 +182,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
 
     const OperationButtons = (product: TypeProduct) => {
         if (product.holder === signInDlgState.address) {
-            if (product.status === '1') {
+            if (product.status === '2') {
                 if (!product.isExpired) {
                     if (product.bids === 0) {
                         return (
