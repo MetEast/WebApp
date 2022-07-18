@@ -217,21 +217,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         let presentation;
         console.log('Trying to sign in using the connectivity SDK');
         try {
-            // presentation = await didAccess.getCredentials({
-            //     claims: {
-            //         name: false,
-            //         avatar: {
-            //             required: false,
-            //             reason: 'For test',
-            //         },
-            //         description: {
-            //             required: false,
-            //             reason: 'For test',
-            //         },
-            //     },
-            // });
             presentation = await didAccess.requestCredentials({
                 claims: [
+                    DID.simpleIdClaim('Your avatar', 'avatar', false),
                     DID.simpleIdClaim('Your name', 'name', false),
                     DID.simpleIdClaim('Your description', 'description', false),
                 ],
