@@ -119,22 +119,15 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                 return walletConnectWeb3.eth.getGasPrice();
             })
             .then(async (_gasPrice: string) => {
-                // gasPrice = _gasPrice;
                 gasPrice = parseInt(_gasPrice) > 20 * 1e9 ? (20 * 1e9).toString() : gasPrice;
-                // return contractMethod.estimateGas({ from: accounts[0], gas: 8000000, value: param.price });
-                // return 1;
-                if(param.method === 'createOrderForSaleBatch') {
+                if (param.method === 'createOrderForSaleBatch')
                     return await contractMethod.estimateGas({ from: accounts[0], gas: 8000000, value: param.price });
-                } else {
-                    return 3231451;
-                }
+                else return 3231451;
             })
             .then((_estimatedGas: number) => {
-                // const gasLimit = parseInt((_estimatedGas * 1.5).toString());
                 const transactionParams = {
                     from: accounts[0],
                     gasPrice: gasPrice,
-                    // gas: gasLimit > 8000000 ? 8000000 : gasLimit,
                     gas: _estimatedGas,
                     value: param.price,
                 };
