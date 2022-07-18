@@ -124,7 +124,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     };
 
     // ------------------------------ MM Connection ------------------------------ //
-    const signInWithWallet = async (wallet: string) => {
+    const signInWithWallet = async (wallet: enumAuthType) => {
         await switchNetworkForMM();
         let currentConnector: any = null;
         if (wallet === enumAuthType.MetaMask) {
@@ -140,7 +140,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         const checkSumAddress = injectedWeb3.utils.toChecksumAddress(retAddress);
         if (checkSumAddress) {
             let unmounted = false;
-            login(enumAuthType.MetaMask, checkSumAddress)
+            login(wallet, checkSumAddress)
                 .then((token: string) => {
                     console.log(token);
                     if (!unmounted && token) {
@@ -271,7 +271,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             }
                             return _state;
                         });
-                        showSucceedSnackBar();
+                        if (!signInDlgState.walletAccounts.length) showSucceedSnackBar();
                     }
                 })
                 .catch((error) => {
@@ -351,9 +351,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             // change user role
             const previousAccount = refAccount.current;
             if (previousAccount && accounts.length && previousAccount !== accounts[0]) {
-                updateUserToken(accounts[0], signInDlgState.userDid).then((token: string) => {
-                    setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
-                });
+                signInWithEssentials();
             }
             getEssentialsWalletBalance().then((balance: string) => {
                 setSignInDlgState((prevState: SignInState) => {
@@ -581,7 +579,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 }}
             >
                 <ConnectDID
-                    onConnect={async (wallet: string) => {
+                    onConnect={async (wallet: enumAuthType) => {
                         if (wallet === enumAuthType.ElastosEssentials) {
                             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
                                 await signOutWithEssentialsWithoutRefresh();

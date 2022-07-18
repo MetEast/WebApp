@@ -8,7 +8,7 @@ import { Icon } from '@iconify/react';
 import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {
-    onConnect: (wallet: string) => void;
+    onConnect: (wallet: enumAuthType) => void;
 }
 
 const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
