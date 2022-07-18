@@ -219,7 +219,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         try {
             presentation = await didAccess.requestCredentials({
                 claims: [
-                    DID.simpleIdClaim('Your avatar', 'avatar', false),
                     DID.simpleIdClaim('Your name', 'name', false),
                     DID.simpleIdClaim('Your description', 'description', false),
                 ],
