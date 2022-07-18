@@ -245,7 +245,7 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
                 headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },
             });
             const dataFavouriteList = await resFavouriteList.json();
-            let arrFavouriteList: Array<string> = [];
+            const arrFavouriteList: Array<string> = [];
             dataFavouriteList.data.map((item: { tokenId: string }) => {
                 arrFavouriteList.push(item.tokenId);
             });
@@ -361,8 +361,8 @@ export const getNFTItemList2 = async (
         _NFT.type = itemObject.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
         _NFT.likes = itemObject.token.likes ? itemObject.token.likes : 0;
         _NFT.views = itemObject.token.views ? itemObject.token.views : 0;
-        // _NFT.status = itemObject.status;
-        // _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+        const endTime: number = itemObject.endTime ? itemObject.endTime : 0;
+        _NFT.isExpired = itemObject.orderType === 2 && Math.round(new Date().getTime() / 1000) > endTime;
         _NFT.isLike = likeList ? likeList.includes(itemObject.tokenId) : false;
         _arrNFTList.push(_NFT);
     }
