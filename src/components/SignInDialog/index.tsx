@@ -24,7 +24,7 @@ import {
     isInAppBrowser,
     isSupportedNetwork,
 } from 'src/services/wallet';
-import { UserTokenType } from 'src/types/auth-types';
+import { enumAuthType, UserTokenType } from 'src/types/auth-types';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
@@ -55,7 +55,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         null,
     );
     const [walletConnectProvider] = useState<WalletConnectProvider>(essentialsConnector.getWalletConnectProvider());
-    let linkType = cookies.METEAST_LINK;
+    let authType = cookies.METEAST_LINK;
     const refAccount = useRef();
     useEffect(() => {
         if (signInDlgState.walletAccounts.length) refAccount.current = signInDlgState.walletAccounts[0];
@@ -127,10 +127,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const signInWithWallet = async (wallet: string) => {
         await switchNetworkForMM();
         let currentConnector: any = null;
-        if (wallet === 'MM') {
+        if (wallet === enumAuthType.MetaMask) {
             currentConnector = injected;
             await activate(currentConnector);
-        } else if (wallet === 'WC') {
+        } else if (wallet === enumAuthType.WalletConnect) {
             currentConnector = walletconnect;
             resetWalletConnector(currentConnector);
             await activate(currentConnector);
@@ -140,17 +140,17 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         const checkSumAddress = injectedWeb3.utils.toChecksumAddress(retAddress);
         if (checkSumAddress) {
             let unmounted = false;
-            login(2, checkSumAddress)
+            login(enumAuthType.MetaMask, checkSumAddress)
                 .then((token: string) => {
                     console.log(token);
                     if (!unmounted && token) {
                         if (currentConnector === injected) {
-                            linkType = 2;
+                            authType = enumAuthType.MetaMask;
                         } else if (currentConnector === walletconnect) {
-                            linkType = 3;
+                            authType = enumAuthType.WalletConnect;
                         }
                         setActivatingConnector(currentConnector);
-                        setCookies('METEAST_LINK', linkType, { path: '/', sameSite: 'none', secure: true });
+                        setCookies('METEAST_LINK', authType, { path: '/', sameSite: 'none', secure: true });
                         setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with MM: setting user to:', user);
@@ -158,7 +158,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         setSignInDlgState((prevState: SignInState) => {
                             const _state = { ...prevState };
                             _state.isLoggedIn = true;
-                            _state.loginType = '2';
+                            _state.loginType = enumAuthType.MetaMask;
                             _state.signInDlgOpened = false;
                             _state.walletAccounts = [checkSumAddress];
                             _state.token = token;
@@ -237,18 +237,18 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             let unmounted = false;
             // const did = presentation.getHolder().getMethodSpecificId() || '';
             const walletAccounts = getEssentialsWalletAddress();
-            login(1, walletAccounts[0], presentation)
+            login(enumAuthType.ElastosEssentials, walletAccounts[0], presentation)
                 .then((token: string) => {
                     if (!unmounted && token) {
-                        linkType = '1';
-                        setCookies('METEAST_LINK', '1', { path: '/', sameSite: 'none', secure: true });
+                        authType = enumAuthType.ElastosEssentials;
+                        setCookies('METEAST_LINK', authType, { path: '/', sameSite: 'none', secure: true });
                         setCookies('METEAST_TOKEN', token, { path: '/', sameSite: 'none', secure: true });
                         const user: UserTokenType = jwtDecode(token);
                         console.log('Sign in with EE: setting user to:', user);
                         setSignInDlgState((prevState: SignInState) => {
                             const _state = { ...prevState };
                             _state.isLoggedIn = true;
-                            _state.loginType = '1';
+                            _state.loginType = enumAuthType.ElastosEssentials;
                             _state.userDid = user.did;
                             _state.address = user.address;
                             _state.token = token;
@@ -323,7 +323,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         setSignInDlgState((prevState: SignInState) => {
             const _state = { ...prevState };
             _state.isLoggedIn = false;
-            _state.loginType = '';
+            _state.loginType = enumAuthType.NotConnected;
             _state.signOut = false;
             return _state;
         });
@@ -406,7 +406,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             walletConnectProvider.on('error', handleEEError);
         }
         // MM
-        if (linkType === undefined) {
+        if (authType === undefined) {
             if (active) {
                 // alert('new sign in');
                 if (account) {
@@ -425,7 +425,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             } else {
                 // alert('log out');
             }
-        } else if (linkType === '2') {
+        } else if (authType === enumAuthType.MetaMask) {
             if (!active) {
                 if (activatingConnector !== null) {
                     // alert('disconnect');
@@ -433,10 +433,10 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 } else {
                     // alert('refresh');
                     const timer = setTimeout(async () => {
-                        if (linkType === '2') {
+                        if (authType === enumAuthType.MetaMask) {
                             setActivatingConnector(injected);
                             await activate(injected);
-                        } else if (linkType === '3') {
+                        } else if (authType === enumAuthType.WalletConnect) {
                             setActivatingConnector(walletconnect);
                             await activate(walletconnect);
                         }
@@ -452,9 +452,8 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                         const _state = { ...prevState };
                         _state.chainId = chainId || 0;
                         _state.walletAccounts = account ? [account] : [];
-
                         _state.isLoggedIn = true;
-                        _state.loginType = '2';
+                        _state.loginType = enumAuthType.MetaMask;
                         _state.userDid = user.did;
                         _state.address = user.address;
                         _state.token = token;
@@ -473,7 +472,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                             account &&
                             signInDlgState.walletAccounts[0] !== account
                         ) {
-                            signInWithWallet('MM');
+                            signInWithWallet(enumAuthType.MetaMask);
                         }
                         // must be placed here
                         getWalletBalance(library, account).then((balance: string) => {
@@ -525,14 +524,14 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     // listen for disconnect
     useEffect(() => {
         if (signInDlgState.isLoggedIn && signInDlgState.signOut) {
-            if (signInDlgState.loginType === '1') signOutWithEssentials();
+            if (signInDlgState.loginType === enumAuthType.ElastosEssentials) signOutWithEssentials();
             else signOutWithWallet();
         }
     }, [signInDlgState]);
 
     // update wallet balance after every transactions
     useEffect(() => {
-        if (linkType === '1') {
+        if (authType === enumAuthType.ElastosEssentials) {
             getEssentialsWalletBalance().then((balance: string) => {
                 setSignInDlgState((prevState: SignInState) => {
                     const _state = { ...prevState };
@@ -566,8 +565,9 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
         dialogState.buyBlindBoxDlgStep,
     ]);
 
-    if (linkType === '1') initConnectivitySDK();
+    if (authType === enumAuthType.ElastosEssentials) initConnectivitySDK();
 
+    console.log('+++++', signInDlgState);
     return (
         <>
             <ModalDialog
@@ -582,7 +582,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             >
                 <ConnectDID
                     onConnect={async (wallet: string) => {
-                        if (wallet === 'EE') {
+                        if (wallet === enumAuthType.ElastosEssentials) {
                             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession()) {
                                 await signOutWithEssentialsWithoutRefresh();
                                 await signInWithEssentials();

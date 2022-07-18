@@ -21,3 +21,10 @@ export type UserInfoType = {
     role: number;
     _id: string;
 };
+
+export enum enumAuthType {
+    NotConnected = '',
+    ElastosEssentials = '1',
+    MetaMask = '2',
+    WalletConnect = '3',
+}

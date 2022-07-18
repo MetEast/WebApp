@@ -64,11 +64,11 @@ export const FETCH_CONFIG_JSON = {
     },
 };
 
-export const login = (loginType: number, address: string, presentation?: VerifiablePresentation) =>
+export const login = (authType: string, address: string, presentation?: VerifiablePresentation) =>
     new Promise((resolve: (value: string) => void, reject: (value: string) => void) => {
         const reqUrl = `${serverConfig.metServiceUrl}/api/v1/login`;
         const reqBody =
-            loginType === 1
+            authType === '1'
                 ? {
                       address,
                       presentation: presentation ? presentation.toJSON() : '',
