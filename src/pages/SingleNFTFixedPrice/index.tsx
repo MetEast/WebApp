@@ -47,10 +47,10 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
-                user: productDetail.author,
+                user: _NFTItem.author,
                 price: 0,
-                time: productDetail.createTime,
-                txHash: productDetail.txHash || '',
+                time: _NFTItem.createTime,
+                txHash: _NFTItem.txHash || '',
                 saleType: enumTransactionType.CreatedBy,
             });
             if (!unmounted) {
