@@ -40,6 +40,8 @@ const NFTPreview: React.FC<ComponentProps> = ({
         setLikeState(product.isLike);
     }, [product.isLike]);
 
+    console.log('-----', product);
+
     const getUrl = () => {
         if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
         else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
@@ -132,7 +134,6 @@ const NFTPreview: React.FC<ComponentProps> = ({
                         />
                     ) : (
                         <>
-                            {/* <img src={product.image} alt="" /> */}
                             <Box
                                 sx={{
                                     background: `url(${product.image})`,
@@ -228,7 +229,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 nfttype={product.type}
                                 content={product.endTime}
                                 myNftTypes={endedAuctionTypes}
-                                isReservedAuction={product.status === '2'}
+                                isReservedAuction
                             />
                         )}
                         {isLoading ? (
