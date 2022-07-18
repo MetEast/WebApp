@@ -110,16 +110,6 @@ export const getUserRole = async (address: string) => {
     return dataUserRole.role;
 };
 
-export const updateUserToken = async (address: string, did: string) => {
-    const resUserToken = await fetch(
-        `${serverConfig.metServiceUrl}/api/v1/userByAddress?address=${address}&did=${did}`,
-        FETCH_CONFIG_JSON,
-    );
-    const jsonUserToken = await resUserToken.json();
-    const dataUserToken: string = jsonUserToken.token ? jsonUserToken.token : '';
-    return dataUserToken;
-};
-
 export const getNotificationList = async (token: string) => {
     const resNotificationList = await fetch(`${serverConfig.metServiceUrl}/api/v1/getNotifications`, {
         headers: { Authorization: `Bearer ${token}`, ...FETCH_CONFIG_JSON.headers },

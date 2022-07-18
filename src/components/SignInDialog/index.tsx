@@ -32,7 +32,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import Web3 from 'web3';
 import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
-import { login, updateUserToken } from 'src/services/fetch';
+import { login } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
 import { serverConfig, chainConfig, firebaseConfig } from 'src/config';
 import firebase from 'firebase/compat/app';
@@ -565,7 +565,6 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     if (authType === enumAuthType.ElastosEssentials) initConnectivitySDK();
 
-    console.log('+++++', signInDlgState);
     return (
         <>
             <ModalDialog
