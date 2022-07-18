@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ComponentProps } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
@@ -12,14 +12,7 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getMintCategory } from 'src/services/common';
-import {
-    getELA2USD,
-    getMyFavouritesList,
-    getNFTItem,
-    getNFTLatestTxs,
-    getNFTLatestTxs2,
-    checkTokenLike,
-} from 'src/services/fetch';
+import { getELA2USD, getNFTItem, getNFTLatestTxs2, checkTokenLike } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -47,13 +40,23 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
-            // const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.address);
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
             // @ts-ignore
             _NFTItem.isLike = location.state !== null ? location.state.isLiked : await checkTokenLike(params.id, signInDlgState.address);
+
+            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            _NFTTxs.push({
+                type: enumTransactionType.CreatedBy,
+                user: productDetail.author,
+                price: 0,
+                time: productDetail.createTime,
+                txHash: productDetail.txHash || '',
+                saleType: enumTransactionType.CreatedBy,
+            });
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
                 setProductDetail(_NFTItem);
+                setTransactionsList(_NFTTxs);
             }
         };
         if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
@@ -63,37 +66,15 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
-    useEffect(() => {
-        let unmounted = false;
-        const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
-            if (!unmounted) {
-                let nftTx = _NFTTxs.slice(0, 5);
-                nftTx.push({
-                    type: enumTransactionType.CreatedBy,
-                    user: productDetail.author,
-                    price: 0,
-                    time: productDetail.createTime,
-                    txHash: '',
-                    saleType: enumTransactionType.CreatedBy,
-                });
-                setTransactionsList(nftTx);
-            }
-        };
-        fetchLatestTxs().catch(console.error);
-        return () => {
-            unmounted = true;
-        };
-    }, [productDetail]);
     // -------------- Fetch Data -------------- //
     useEffect(() => {
-        if (signInDlgState.walletAccounts.length === 0) {
+        if (signInDlgState.address) {
             setShowBuyNowBtn(true);
         } else {
-            if (signInDlgState.walletAccounts[0] === productDetail.holder) setShowBuyNowBtn(false);
+            if (signInDlgState.address === productDetail.holder) setShowBuyNowBtn(false);
             else setShowBuyNowBtn(true);
         }
-    }, [signInDlgState.walletAccounts, productDetail]);
+    }, [signInDlgState.address, productDetail]);
     // -------------- Likes & Views -------------- //
     useEffect(() => {
         let unmounted = false;
