@@ -76,7 +76,8 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             const ELA2USD = await getELA2USD();
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
             // @ts-ignore
-            _NFTItem.isLike = location.state !== null ? location.state.isLiked : await checkTokenLike(params.id, signInDlgState.address);
+            if (signInDlgState.isLoggedIn) _NFTItem.isLike = location.state && location.state?.isLoggedIn ? location.state.isLiked : await checkTokenLike(params.id || '', signInDlgState.address);
+
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
@@ -248,9 +249,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 detail_page={true}
                                 marginTop={3}
                             />
-                            {!!signInDlgState.walletAccounts.length &&
-                                productDetail.holder === signInDlgState.walletAccounts[0] &&
-                                productDetail.status === 'HAS BIDS' && (
+                            {signInDlgState.address &&
+                                productDetail.holder === signInDlgState.address &&
+                                !!bidsList.length && (
                                     <PrimaryButton
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
@@ -280,9 +281,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 )}
                             {productDetail.isExpired ? (
                                 <>
-                                    {!!signInDlgState.walletAccounts.length &&
-                                        (signInDlgState.walletAccounts[0] === productDetail.holder ||
-                                            signInDlgState.walletAccounts[0] === lastBidderAddress) && (
+                                    {signInDlgState.address &&
+                                        (signInDlgState.address === productDetail.holder ||
+                                            signInDlgState.address === lastBidderAddress) && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <SecondaryButton
                                                     sx={{ width: '100%', height: 40 }}
@@ -313,9 +314,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 </>
                             ) : (
                                 <>
-                                    {(!signInDlgState.walletAccounts.length ||
-                                        (signInDlgState.walletAccounts.length &&
-                                            productDetail.holder !== signInDlgState.walletAccounts[0])) && (
+                                    {(!signInDlgState.address ||
+                                        (signInDlgState.address &&
+                                            productDetail.holder !== signInDlgState.address)) && (
                                         <PrimaryButton
                                             sx={{ marginTop: 3, width: '100%' }}
                                             onClick={() => {
@@ -353,9 +354,9 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                             Place Bid
                                         </PrimaryButton>
                                     )}
-                                    {!!signInDlgState.walletAccounts.length &&
-                                        productDetail.holder === signInDlgState.walletAccounts[0] &&
-                                        productDetail.status === '1' &&
+                                    {signInDlgState.address &&
+                                        productDetail.holder === signInDlgState.address &&
+                                        productDetail.status === '2' &&
                                         !bidsList.length && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <PinkButton
