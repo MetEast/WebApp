@@ -524,11 +524,9 @@ export const getBBItemList = async (body: string, ELA2USD: number, list_likes: s
         _BBItem.sold = itemObject.soldTokenIds?.length || 0;
         _BBItem.instock = itemObject.tokenIds?.length || 0;
         if (itemObject.saleBegin) {
-            const endTime = getTime(itemObject.saleBegin);
-            _BBItem.endTime = endTime.date + ' ' + endTime.time;
-        } else {
-            _BBItem.endTime = '';
-        }
+            const saleBegin = getTime(itemObject.saleBegin);
+            _BBItem.endTime = `${saleBegin.date} ${saleBegin.time}`;
+        } else _BBItem.endTime = '';
         _arrBBList.push(_BBItem);
     }
     return { total: totalCount, data: _arrBBList };
