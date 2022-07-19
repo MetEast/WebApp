@@ -844,26 +844,19 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
                 : enumBlindBoxNFTType.SaleEnds;
         _BBItem.likes = itemObject.likes ? itemObject.likes : 0;
         _BBItem.views = itemObject.views ? itemObject.views : 0;
-        _BBItem.author = itemObject.createdName ? itemObject.createdName : reduceHexAddress(itemObject.seller, 4);
+        _BBItem.author = itemObject.createdName ? itemObject.createdName : reduceHexAddress(itemObject.seller, 4); // no createdName
         _BBItem.royaltyOwner = itemObject.seller;
-        _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : '';
-        _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default';
-        // _BBItem.isLike =
-        //     // itemObject.list_likes.findIndex((value: TypeBlindListLikes) => value.did === userDid) === -1 ? false : true;
+        _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : ''; // no createdDescription
+        _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default'; // no createdAvatar
         _BBItem.description = itemObject.description;
         _BBItem.instock = itemObject.tokenIds.length || 0;
         _BBItem.sold = itemObject.soldTokenIds?.length || 0;
         if (itemObject.saleBegin) {
-            const endTime = getTime(itemObject.saleBegin);
-            _BBItem.endTime = endTime.date + ' ' + endTime.time;
-        } else {
-            _BBItem.endTime = '';
-        }
-        // _BBItem.status = itemObject.status;
-        _BBItem.state = itemObject.state;
+            const saleBegin = getTime(itemObject.saleBegin);
+            _BBItem.endTime = `${saleBegin.date} ${saleBegin.time}`;
+        } else _BBItem.endTime = '';
         _BBItem.maxPurchases = parseInt(itemObject.maxPurchase);
         _BBItem.maxQuantity = parseInt(itemObject.maxQuantity);
-        _BBItem.did = itemObject.did;
         _BBItem.soldIds = itemObject.soldTokenIds;
     }
     return _BBItem;
