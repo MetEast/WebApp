@@ -43,17 +43,17 @@ const SearchBlindBoxItems: React.FC<ComponentProps> = ({ maxSelect, onClose }): 
         let unmounted = false;
         const getFetchData = async () => {
             if (!unmounted) setLoadingItemsList(true);
-            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], keyWord, signInDlgState.token);
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.address, keyWord, signInDlgState.token);
             if (!unmounted) {
                 setBBCandidateLists(_BBCandidatesList);
                 setLoadingItemsList(false);
             }
         };
-        if (signInDlgState.walletAccounts.length) getFetchData().catch(console.error);
+        if (signInDlgState.address) getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts, keyWord]);
+    }, [signInDlgState.address, signInDlgState.token, keyWord]);
     // -------------- Fetch Data -------------- //
 
     useEffect(() => {
