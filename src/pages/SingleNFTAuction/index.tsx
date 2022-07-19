@@ -412,6 +412,12 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                     <Grid item md={4} xs={12}>
                         <Stack spacing={5}>
                             <ProjectDescription description={productDetail.description} />
+                            <SingleNFTBidsTable
+                                isLoggedIn={signInDlgState.isLoggedIn}
+                                myBidsList={myBidsList}
+                                bidsList={bidsList}
+                                onlyShowDownSm
+                            />
                             <AboutAuthor
                                 name={productDetail.author}
                                 description={productDetail.authorDescription}
