@@ -42,9 +42,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             const ELA2USD = await getELA2USD();
             const _NFTItem = await getNFTItem(params.id, ELA2USD);
             // @ts-ignore
-            _NFTItem.isLike = location.state ? location.state.isLiked : await checkTokenLike(params.id || '', signInDlgState.address);
-            console.log(_NFTItem.isLike)
-            console.log(await checkTokenLike(params.id || '', signInDlgState.address))
+            if (signInDlgState.isLoggedIn) _NFTItem.isLike = location.state && location.state?.isLoggedIn ? location.state.isLiked : await checkTokenLike(params.id || '', signInDlgState.address);
+
             const _NFTTxs = await getNFTLatestTxs2(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
