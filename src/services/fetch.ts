@@ -555,20 +555,13 @@ export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number) =
         _NFTItem.image = getImageFromAsset(itemObject2.data.image);
         _NFTItem.price_ela = itemObject.order?.orderPrice / 1e18;
         _NFTItem.price_usd = _NFTItem.price_ela * ELA2USD;
-        // _NFTItem.type =
-        //     itemObject.order === undefined
-        //         ? enumSingleNFTType.NotOnSale
-        //         : itemObject.order.orderType === 1
-        //         ? enumSingleNFTType.BuyNow
-        //         : enumSingleNFTType.OnAuction;
         _NFTItem.type = enumSingleNFTType.NotOnSale;
         _NFTItem.status = '0';
         if (itemObject.order) {
             if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1) {
                 _NFTItem.type = enumSingleNFTType.BuyNow;
                 _NFTItem.status = '1';
-            }
-            else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1) {
+            } else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1) {
                 _NFTItem.type = enumSingleNFTType.OnAuction;
                 _NFTItem.status = '2';
             }
@@ -594,7 +587,6 @@ export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number) =
         _NFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
         _NFTItem.createTime = `${createTime.date} ${createTime.time}`;
-        // _NFTItem.status = itemObject.order.orderState.toString();
         _NFTItem.endTimestamp = itemObject.order.endTime ? itemObject.order.endTime * 1000 : 0;
         if (itemObject.order.endTime) {
             const endTime = getTime(itemObject.order.endTime.toString());
@@ -808,36 +800,24 @@ export const getNFTLatestBids = async (
     const jsonNFTBids = await resNFTBids.json();
     const arrNFTBids = jsonNFTBids.data;
 
-    const _otherNFTBidList: Array<TypeSingleNFTBid> = [];
-    if (arrNFTBids !== undefined && arrNFTBids.data !== undefined) {
+    const _NFTBidList: Array<TypeSingleNFTBid> = [];
+    const _myNFTBidList: Array<TypeSingleNFTBid> = [];
+    if (arrNFTBids && arrNFTBids.data) {
         for (let i = 0; i < arrNFTBids.data.length; i++) {
             const itemObject: TypeSingleNFTBidFetch = arrNFTBids.data[i];
-            const _otherNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
-            _otherNFTBid.user = itemObject.buyerName ? itemObject.buyerName : reduceHexAddress(itemObject.buyer, 4);
-            _otherNFTBid.address = itemObject.buyer;
-            _otherNFTBid.price = parseFloat(itemObject.price) / 1e18;
-            _otherNFTBid.orderId = itemObject.orderId;
+            const _NFTBid: TypeSingleNFTBid = { ...blankNFTBid };
+            _NFTBid.user = itemObject.buyerName ? itemObject.buyerName : reduceHexAddress(itemObject.buyer, 4);
+            _NFTBid.address = itemObject.buyer;
+            _NFTBid.price = parseFloat(itemObject.price) / 1e18;
+            _NFTBid.orderId = itemObject.orderId;
             const timestamp = getTime(itemObject.timestamp);
-            _otherNFTBid.time = timestamp.date + ' ' + timestamp.time;
-            _otherNFTBidList.push(_otherNFTBid);
+            _NFTBid.time = `${timestamp.date} ${timestamp.time}`;
+            if (userAddress && _myNFTBidList.length === 0 && userAddress === _NFTBid.address)
+                _myNFTBidList.push(_NFTBid);
+            _NFTBidList.push(_NFTBid);
         }
     }
-
-    const _myNFTBidList: Array<TypeSingleNFTBid> = [];
-    if (arrNFTBids !== undefined && arrNFTBids.yours !== undefined) {
-        for (let i = 0; i < arrNFTBids.yours.length; i++) {
-            const itemObject: TypeSingleNFTBidFetch = arrNFTBids.yours[i];
-            const _myNFTBid: TypeSingleNFTBid = { ...blankNFTBid };
-            _myNFTBid.user = itemObject.buyerName ? itemObject.buyerName : reduceHexAddress(itemObject.buyerAddr, 4);
-            _myNFTBid.address = itemObject.buyerAddr;
-            _myNFTBid.price = parseFloat(itemObject.price) / 1e18;
-            _myNFTBid.orderId = itemObject.orderId;
-            const timestamp = getTime(itemObject.timestamp);
-            _myNFTBid.time = timestamp.date + ' ' + timestamp.time;
-            _myNFTBidList.push(_myNFTBid);
-        }
-    }
-    return { mine: _myNFTBidList, others: _otherNFTBidList };
+    return { mine: _myNFTBidList, all: _NFTBidList };
 };
 
 // BlindBoxProduct Page
