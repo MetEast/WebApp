@@ -55,21 +55,20 @@ const SingleNFTBidsTable: React.FC<ComponentProps> = ({
                             <Typography fontSize={16} fontWeight={700} marginTop={3}>
                                 Your Bid
                             </Typography>
-                            <Grid container alignItems="center" rowSpacing={2} marginTop={0}>
-                                {myBidsList.map((item, index) => (
-                                    <Grid container item key={index}>
-                                        <Grid item xs={bidsTblColumns[0].width}></Grid>
-                                        <Grid item xs={bidsTblColumns[1].width}>
-                                            <Typography fontSize={12} fontWeight={500}>
-                                                {item.time}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={bidsTblColumns[2].width}>
-                                            <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
-                                        </Grid>
-                                    </Grid>
-                                ))}
-                            </Grid>
+                            {myBidsList.map((item, index) => (
+                                <Stack
+                                    direction="row"
+                                    key={`mybid-${index}`}
+                                    justifyContent="space-between"
+                                    width="100%"
+                                    mt={2}
+                                >
+                                    <Typography fontSize={12} fontWeight={500}>
+                                        {item.time}
+                                    </Typography>
+                                    <ELAPrice price_ela={item.price} price_ela_fontsize={14} alignRight />
+                                </Stack>
+                            ))}
                         </>
                     )}
                     {bidsList.length !== 0 && (

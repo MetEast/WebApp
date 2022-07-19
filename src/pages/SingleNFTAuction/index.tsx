@@ -219,159 +219,176 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                 detail_page={true}
                                 marginTop={3}
                             />
-                            {signInDlgState.address &&
-                                productDetail.holder === signInDlgState.address &&
-                                bidsList.length > 0 && (
-                                    <PrimaryButton
-                                        sx={{ marginTop: 3, width: '100%' }}
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                if (bidsList.length) {
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        receivedBidDlgOpened: true,
-                                                    });
-                                                } else {
-                                                    setDialogState({
-                                                        ...dialogState,
-                                                        noBidDlgOpened: true,
-                                                    });
-                                                }
-                                            } else {
-                                                setSignInDlgState((prevState: SignInState) => {
-                                                    const _state = { ...prevState };
-                                                    _state.signInDlgOpened = true;
-                                                    return _state;
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        View Bids
-                                    </PrimaryButton>
-                                )}
-                            {productDetail.isExpired ? (
+                            {productDetail.status === '2' && (
                                 <>
-                                    {signInDlgState.address &&
-                                        (signInDlgState.address === productDetail.holder ||
-                                            signInDlgState.address === lastBidderAddress) && (
-                                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                                <SecondaryButton
-                                                    sx={{ width: '100%', height: 40 }}
-                                                    onClick={() => {
-                                                        if (signInDlgState.isLoggedIn) {
-                                                            setDialogState({
-                                                                ...dialogState,
-                                                                acceptBidDlgOpened: true,
-                                                                acceptBidDlgStep: 0,
-                                                                acceptBidName: lastBidderName,
-                                                                acceptBidOrderId: lastBidOrderId,
-                                                                acceptBidPrice: lastBidPrice,
-                                                                progressBar: 0,
-                                                            });
-                                                        } else {
-                                                            setSignInDlgState((prevState: SignInState) => {
-                                                                const _state = { ...prevState };
-                                                                _state.signInDlgOpened = true;
-                                                                return _state;
-                                                            });
-                                                        }
-                                                    }}
-                                                >
-                                                    Settle Auction
-                                                </SecondaryButton>
-                                            </Stack>
-                                        )}
-                                </>
-                            ) : (
-                                <>
-                                    {(!signInDlgState.address ||
-                                        (signInDlgState.address &&
-                                            productDetail.holder !== signInDlgState.address)) && (
-                                        <PrimaryButton
-                                            sx={{ marginTop: 3, width: '100%' }}
-                                            onClick={() => {
-                                                if (signInDlgState.isLoggedIn) {
-                                                    const endTimeStamp = productDetail.endTimestamp
-                                                        ? productDetail.endTimestamp
-                                                        : 0;
-                                                    if (new Date().getTime() <= endTimeStamp) {
-                                                        setDialogState({
-                                                            ...dialogState,
-                                                            placeBidDlgOpened: true,
-                                                            placeBidDlgStep: 0,
-                                                            placeBidName: productDetail.name,
-                                                            placeBidOrderId: productDetail.orderId || '',
-                                                            placeBidMinLimit: productDetail.price_ela,
-                                                            placeBidLastBid: lastBidPrice,
-                                                        });
-                                                    } else {
-                                                        enqueueSnackbar(`Auction has expired.`, {
-                                                            variant: 'error',
-                                                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                                                        });
-                                                        window.location.reload();
-                                                    }
-                                                } else {
-                                                    setSignInDlgState((prevState: SignInState) => {
-                                                        const _state = { ...prevState };
-                                                        _state.signInDlgOpened = true;
-                                                        return _state;
-                                                    });
-                                                }
-                                            }}
-                                        >
-                                            Place Bid
-                                        </PrimaryButton>
-                                    )}
                                     {signInDlgState.address &&
                                         productDetail.holder === signInDlgState.address &&
-                                        bidsList.length === 0 && (
-                                            <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
-                                                <PinkButton
-                                                    sx={{ width: '100%', height: 40 }}
-                                                    onClick={() => {
-                                                        if (signInDlgState.isLoggedIn) {
+                                        bidsList.length > 0 && (
+                                            <PrimaryButton
+                                                sx={{ marginTop: 3, width: '100%' }}
+                                                onClick={() => {
+                                                    if (signInDlgState.isLoggedIn) {
+                                                        if (bidsList.length) {
                                                             setDialogState({
                                                                 ...dialogState,
-                                                                cancelSaleDlgOpened: true,
-                                                                cancelSaleDlgStep: 0,
-                                                                cancelSaleOrderId: productDetail.orderId || '',
+                                                                receivedBidDlgOpened: true,
                                                             });
                                                         } else {
-                                                            setSignInDlgState((prevState: SignInState) => {
-                                                                const _state = { ...prevState };
-                                                                _state.signInDlgOpened = true;
-                                                                return _state;
-                                                            });
-                                                        }
-                                                    }}
-                                                >
-                                                    Cancel Sale
-                                                </PinkButton>
-                                                <SecondaryButton
-                                                    sx={{ width: '100%', height: 40 }}
-                                                    onClick={() => {
-                                                        if (signInDlgState.isLoggedIn) {
                                                             setDialogState({
                                                                 ...dialogState,
-                                                                changePriceDlgOpened: true,
-                                                                changePriceDlgStep: 0,
-                                                                changePriceCurPrice: productDetail.price_ela,
-                                                                changePriceOrderId: productDetail.orderId || '',
-                                                            });
-                                                        } else {
-                                                            setSignInDlgState((prevState: SignInState) => {
-                                                                const _state = { ...prevState };
-                                                                _state.signInDlgOpened = true;
-                                                                return _state;
+                                                                noBidDlgOpened: true,
                                                             });
                                                         }
-                                                    }}
-                                                >
-                                                    Change Price
-                                                </SecondaryButton>
-                                            </Stack>
+                                                    } else {
+                                                        setSignInDlgState((prevState: SignInState) => {
+                                                            const _state = { ...prevState };
+                                                            _state.signInDlgOpened = true;
+                                                            return _state;
+                                                        });
+                                                    }
+                                                }}
+                                            >
+                                                View Bids
+                                            </PrimaryButton>
                                         )}
+                                    {productDetail.isExpired ? (
+                                        <>
+                                            {signInDlgState.address &&
+                                                (signInDlgState.address === productDetail.holder ||
+                                                    signInDlgState.address === lastBidderAddress) && (
+                                                    <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        spacing={2}
+                                                        marginTop={3}
+                                                    >
+                                                        <SecondaryButton
+                                                            sx={{ width: '100%', height: 40 }}
+                                                            onClick={() => {
+                                                                if (signInDlgState.isLoggedIn) {
+                                                                    setDialogState({
+                                                                        ...dialogState,
+                                                                        acceptBidDlgOpened: true,
+                                                                        acceptBidDlgStep: 0,
+                                                                        acceptBidName: lastBidderName,
+                                                                        acceptBidOrderId: lastBidOrderId,
+                                                                        acceptBidPrice: lastBidPrice,
+                                                                        progressBar: 0,
+                                                                    });
+                                                                } else {
+                                                                    setSignInDlgState((prevState: SignInState) => {
+                                                                        const _state = { ...prevState };
+                                                                        _state.signInDlgOpened = true;
+                                                                        return _state;
+                                                                    });
+                                                                }
+                                                            }}
+                                                        >
+                                                            Settle Auction
+                                                        </SecondaryButton>
+                                                    </Stack>
+                                                )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {(!signInDlgState.address ||
+                                                (signInDlgState.address &&
+                                                    productDetail.holder !== signInDlgState.address)) && (
+                                                <PrimaryButton
+                                                    sx={{ marginTop: 3, width: '100%' }}
+                                                    onClick={() => {
+                                                        if (signInDlgState.isLoggedIn) {
+                                                            const endTimeStamp = productDetail.endTimestamp
+                                                                ? productDetail.endTimestamp
+                                                                : 0;
+                                                            if (new Date().getTime() <= endTimeStamp) {
+                                                                setDialogState({
+                                                                    ...dialogState,
+                                                                    placeBidDlgOpened: true,
+                                                                    placeBidDlgStep: 0,
+                                                                    placeBidName: productDetail.name,
+                                                                    placeBidOrderId: productDetail.orderId || '',
+                                                                    placeBidMinLimit: productDetail.price_ela,
+                                                                    placeBidLastBid: lastBidPrice,
+                                                                });
+                                                            } else {
+                                                                enqueueSnackbar(`Auction has expired.`, {
+                                                                    variant: 'error',
+                                                                    anchorOrigin: {
+                                                                        horizontal: 'right',
+                                                                        vertical: 'top',
+                                                                    },
+                                                                });
+                                                                window.location.reload();
+                                                            }
+                                                        } else {
+                                                            setSignInDlgState((prevState: SignInState) => {
+                                                                const _state = { ...prevState };
+                                                                _state.signInDlgOpened = true;
+                                                                return _state;
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+                                                    Place Bid
+                                                </PrimaryButton>
+                                            )}
+                                            {signInDlgState.address &&
+                                                productDetail.holder === signInDlgState.address &&
+                                                bidsList.length === 0 && (
+                                                    <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        spacing={2}
+                                                        marginTop={3}
+                                                    >
+                                                        <PinkButton
+                                                            sx={{ width: '100%', height: 40 }}
+                                                            onClick={() => {
+                                                                if (signInDlgState.isLoggedIn) {
+                                                                    setDialogState({
+                                                                        ...dialogState,
+                                                                        cancelSaleDlgOpened: true,
+                                                                        cancelSaleDlgStep: 0,
+                                                                        cancelSaleOrderId: productDetail.orderId || '',
+                                                                    });
+                                                                } else {
+                                                                    setSignInDlgState((prevState: SignInState) => {
+                                                                        const _state = { ...prevState };
+                                                                        _state.signInDlgOpened = true;
+                                                                        return _state;
+                                                                    });
+                                                                }
+                                                            }}
+                                                        >
+                                                            Cancel Sale
+                                                        </PinkButton>
+                                                        <SecondaryButton
+                                                            sx={{ width: '100%', height: 40 }}
+                                                            onClick={() => {
+                                                                if (signInDlgState.isLoggedIn) {
+                                                                    setDialogState({
+                                                                        ...dialogState,
+                                                                        changePriceDlgOpened: true,
+                                                                        changePriceDlgStep: 0,
+                                                                        changePriceCurPrice: productDetail.price_ela,
+                                                                        changePriceOrderId: productDetail.orderId || '',
+                                                                    });
+                                                                } else {
+                                                                    setSignInDlgState((prevState: SignInState) => {
+                                                                        const _state = { ...prevState };
+                                                                        _state.signInDlgOpened = true;
+                                                                        return _state;
+                                                                    });
+                                                                }
+                                                            }}
+                                                        >
+                                                            Change Price
+                                                        </SecondaryButton>
+                                                    </Stack>
+                                                )}
+                                        </>
+                                    )}
                                 </>
                             )}
                         </>
