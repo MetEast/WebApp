@@ -796,25 +796,8 @@ export const getNFTLatestBids = async (
     pageSize: number,
     sortBy?: string,
 ) => {
-    let fetchUrl = `${serverConfig.assistServiceUrl}/api/v1/getLatestBids`;
-    // switch (sortBy) {
-    //     case 'low_to_high':
-    //         fetchUrl += `&orderType=price_l_to_h`;
-    //         break;
-    //     case 'high_to_low':
-    //         fetchUrl += `&orderType=price_h_to_l`;
-    //         break;
-    //     case 'most_recent':
-    //         fetchUrl += `&orderType=mostrecent`;
-    //         break;
-    //     case 'oldest':
-    //         fetchUrl += `&orderType=oldest`;
-    //         break;
-    //     default:
-    //         fetchUrl += `&orderType=mostrecent`;
-    //         break;
-    // }
-    let body = { tokenId, pageNum, pageSize };
+    const fetchUrl = `${serverConfig.assistServiceUrl}/api/v1/getLatestBids`;
+    const body = { tokenId, pageNum, pageSize };
     const resNFTBids = await fetch(fetchUrl, {
         method: 'POST',
         headers: {
