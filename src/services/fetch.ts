@@ -533,11 +533,7 @@ export const getBBItemList = async (body: string, ELA2USD: number, list_likes: s
 };
 
 // SingleNFTFixedPrice & SingleNFTAuction
-export const getNFTItem = async (
-    tokenId: string | undefined,
-    ELA2USD: number,
-    // likeList: Array<TypeFavouritesFetch>,
-) => {
+export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number) => {
     const resNFTItem = await fetch(
         `${serverConfig.metServiceUrl}/api/v1/getMarketTokenByTokenId?tokenId=${tokenId}`,
         FETCH_CONFIG_JSON,
@@ -559,51 +555,52 @@ export const getNFTItem = async (
         _NFTItem.image = getImageFromAsset(itemObject2.data.image);
         _NFTItem.price_ela = itemObject.order?.orderPrice / 1e18;
         _NFTItem.price_usd = _NFTItem.price_ela * ELA2USD;
-        _NFTItem.type =
-            itemObject.order === undefined
-                ? enumSingleNFTType.NotOnSale
-                : itemObject.order.orderType === 1
-                ? enumSingleNFTType.BuyNow
-                : enumSingleNFTType.OnAuction;
-        // itemObject.status === 'NEW'
-        //     ? enumSingleNFTType.NotOnSale
-        //     : itemObject.endTime === '0'
-        //     ? enumSingleNFTType.BuyNow
-        //     : enumSingleNFTType.OnAuction;
+        // _NFTItem.type =
+        //     itemObject.order === undefined
+        //         ? enumSingleNFTType.NotOnSale
+        //         : itemObject.order.orderType === 1
+        //         ? enumSingleNFTType.BuyNow
+        //         : enumSingleNFTType.OnAuction;
+        _NFTItem.type = enumSingleNFTType.NotOnSale;
+        _NFTItem.status = '0';
+        if (itemObject.order) {
+            if (itemObject.order.orderType === 1 && itemObject.order.orderState === 1) {
+                _NFTItem.type = enumSingleNFTType.BuyNow;
+                _NFTItem.status = '1';
+            }
+            else if (itemObject.order.orderType === 2 && itemObject.order.orderState === 1) {
+                _NFTItem.type = enumSingleNFTType.OnAuction;
+                _NFTItem.status = '2';
+            }
+        }
         _NFTItem.likes = itemObject.likes ? itemObject.likes : 0;
         _NFTItem.views = itemObject.views ? itemObject.views : 0;
-        // _NFTItem.isLike =
-        //     likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-        //         ? false
-        //         : true;
         _NFTItem.description = itemObject.description;
         _NFTItem.author = itemObject2.creator?.name || reduceHexAddress(itemObject2.royaltyOwner, 4);
         _NFTItem.authorDescription = itemObject2.creator?.description || '';
-        _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
+        _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default'; // no author avatar
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject2.tokenOwner;
         _NFTItem.holderName =
-            itemObject.holder === itemObject.royaltyOwner
+            _NFTItem.holder === _NFTItem.authorAddress
                 ? _NFTItem.author
                 : itemObject.holderName
                 ? itemObject.holderName
-                : reduceHexAddress(itemObject.holder, 4);
+                : reduceHexAddress(_NFTItem.holder, 4); // no holder name
         _NFTItem.orderId = itemObject.order.orderId + '';
         _NFTItem.tokenIdHex = itemObject2.tokenIdHex;
         _NFTItem.royalties = itemObject.royaltyFee / 1e4;
         _NFTItem.category = itemObject.category;
         _NFTItem.timestamp = parseInt(itemObject.createTime) * 1000;
         const createTime = getTime(itemObject.createTime);
-        _NFTItem.createTime = createTime.date + ' ' + createTime.time;
-        _NFTItem.status = itemObject.order.orderState.toString();
+        _NFTItem.createTime = `${createTime.date} ${createTime.time}`;
+        // _NFTItem.status = itemObject.order.orderState.toString();
         _NFTItem.endTimestamp = itemObject.order.endTime ? itemObject.order.endTime * 1000 : 0;
         if (itemObject.order.endTime) {
             const endTime = getTime(itemObject.order.endTime.toString());
-            _NFTItem.endTime = endTime.date + ' ' + endTime.time;
-        } else {
-            _NFTItem.endTime = ' ';
-        }
-        _NFTItem.isExpired = Math.round(new Date().getTime() / 1000) > itemObject.order.endTime;
+            _NFTItem.endTime = `${endTime.date} ${endTime.time}`;
+        } else _NFTItem.endTime = ' ';
+        _NFTItem.isExpired = new Date().getTime() > _NFTItem.endTimestamp;
         _NFTItem.isBlindbox = itemObject.order?.isBlindBox;
     }
     return _NFTItem;
