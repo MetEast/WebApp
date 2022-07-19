@@ -4,7 +4,6 @@ import { Icon } from '@iconify/react';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
 import { serverConfig } from 'src/config';
-// import { Box, Skeleton } from '@mui/material';
 
 export interface ComponentProps {
     product: TypeProduct;
