@@ -130,7 +130,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
         const fetchNFTLatestBids = async () => {
             const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.address, 1, 5);
             if (!unmounted) {
-                setBidsList(_NFTBids.others);
+                setBidsList(_NFTBids.all);
             }
         };
         if (signInDlgState.address) fetchNFTLatestBids().catch(console.error);
