@@ -45,7 +45,7 @@ const AllTransactions: React.FC<ComponentProps> = ({ onClose }): JSX.Element => 
         return () => {
             unmounted = true;
         };
-    }, [params.id]); // sort
+    }, [params.id, dialogState.allTxNFTCreation]); // sort
 
     return (
         <Stack

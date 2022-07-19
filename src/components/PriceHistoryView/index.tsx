@@ -175,7 +175,7 @@ const PriceHistoryView: React.FC<ComponentProps> = ({ createdTime, creator }): J
         return () => {
             unmounted = true;
         };
-    }, [params.id]);
+    }, [params.id, createdTime, creator]);
 
     return (
         <>

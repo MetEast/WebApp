@@ -10,17 +10,17 @@ import { PrimaryButton } from '../Buttons/styles';
 import { getDateTimeString, getTimeZone } from 'src/services/common';
 import { SelectChangeEvent } from '@mui/material';
 
-const MenuProps = {
-    anchorOrigin: {
-        vertical: 'bottom',
-        horizontal: 'left',
-    },
-    transformOrigin: {
-        vertical: 'top',
-        horizontal: 'left',
-    },
-    variant: 'menu',
-};
+// const MenuProps = {
+//     anchorOrigin: {
+//         vertical: 'bottom',
+//         horizontal: 'left',
+//     },
+//     transformOrigin: {
+//         vertical: 'top',
+//         horizontal: 'left',
+//     },
+//     variant: 'menu',
+// };
 const menuItems = ['', '1 DAY', '1 WEEK', '1 MONTH', 'Pick a specific date'];
 const pickDateIndex = 4;
 

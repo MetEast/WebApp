@@ -78,6 +78,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
                         txHash: tx.txHash,
                     });
                 }
+                return data;
             });
 
             if (!unmounted) {

@@ -12,7 +12,6 @@ import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import ModalDialog from 'src/components/ModalDialog';
 import SearchBlindBoxItems from '../SearchBlindBoxItems';
 import { getBBCandiatesList } from 'src/services/fetch';
-import { TypeProductFetch } from 'src/types/product-types';
 import DateTimePicker from 'src/components/DateTimePicker/DateTimePicker';
 
 export interface ComponentProps {}
@@ -54,7 +53,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
-            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '', signInDlgState.token);
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.address, '', signInDlgState.token);
             // let count = 0;
             // for (let i = 0; i < _BBCandidatesList.length; i++) {
             //     const itemObject: TypeProductFetch = _BBCandidatesList[i];
@@ -64,11 +63,11 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 setBlindboxCandidateCount(_BBCandidatesList.length);
             }
         };
-        if (signInDlgState.walletAccounts.length) getFetchData().then(() => {setSelectImageButtonDisable(false)}).catch(console.error);
+        if (signInDlgState.address) getFetchData().then(() => {setSelectImageButtonDisable(false)}).catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+    }, [signInDlgState.address, signInDlgState.token]);
 
     const handleFileChange = (files: Array<File>) => {
         if (files === null || files.length === 0) return;
