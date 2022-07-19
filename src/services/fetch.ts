@@ -337,7 +337,7 @@ export const getNFTItemList2 = async (
         category?: string;
     },
     ELA2USD: number | undefined,
-    likeList: Array<String> | undefined,
+    likeList: Array<string> | undefined,
 ) => {
     const resNFTList = await fetch(`${serverConfig.metServiceUrl}/api/v1/listMarketTokens`, {
         method: 'POST',

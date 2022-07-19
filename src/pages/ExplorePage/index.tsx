@@ -49,19 +49,17 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [ELA2USD, setELA2USD] = useState<number>(0);
-    const [myFavorList, setMyFavorList] = useState<Array<String>>([]);
-    const fillerItem = Array(pageSize).fill(blankNFTItem);
+    const [myFavorList, setMyFavorList] = useState<Array<string>>([]);
     let ELA2USDRate: number = 0;
     let likeList: Array<string> = [];
+    const fillerItem = Array(pageSize).fill(blankNFTItem);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(2);
-            if (!unmounted) {
-                setAdBanners(_adBanners);
-            }
+            if (!unmounted) setAdBanners(_adBanners);
         };
         fetchBanners().catch(console.error);
         return () => {

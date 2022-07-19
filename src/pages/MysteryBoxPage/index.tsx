@@ -14,7 +14,6 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
     getELA2USD,
-    getSearchParams,
     getBBItemList,
     getPageBannerList,
     getSearchParams2,
@@ -48,18 +47,18 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([]);
-    const fillerItem = Array(pageSize).fill(blankBBItem);
-    let ELA2USDRate: number = 0;
     const [ELA2USD, setELA2USD] = useState<number>(0);
+    const [myFavorList, setMyFavorList] = useState<Array<string>>([]);
+    let ELA2USDRate: number = 0;
+    let likeList: Array<string> = [];
+    const fillerItem = Array(pageSize).fill(blankBBItem);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(3);
-            if (!unmounted) {
-                setAdBanners(_adBanners);
-            }
+            if (!unmounted) setAdBanners(_adBanners);
         };
         fetchBanners().catch(console.error);
         return () => {
@@ -74,21 +73,19 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
             setPageNum(1);
             setBlindBoxList([]);
         }
-
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
+                likeList = await getMyFavouritesList3(signInDlgState.isLoggedIn, signInDlgState.token);
+                setMyFavorList(likeList);
             }
-            const likeList = await getMyFavouritesList3(signInDlgState.isLoggedIn, signInDlgState.token);
             const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
                 JSON.stringify(searchParams),
                 ELA2USDRate ? ELA2USDRate : ELA2USD,
-                likeList,
-                // signInDlgState.isLoggedIn,
-                // signInDlgState.address,
+                likeList.length ? likeList : myFavorList,
             );
             if (!unmounted) {
                 if (pageNum === 1) setBlindBoxList(_searchedBBList.data);
