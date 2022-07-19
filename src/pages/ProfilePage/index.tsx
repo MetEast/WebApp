@@ -12,12 +12,10 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, NotificationTypo } from './styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, TypeYourEarning, TypeFavouritesFetch } from 'src/types/product-types';
+import { TypeProduct, TypeYourEarning } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, reduceUserName } from 'src/services/common';
 import {
     getELA2USD,
-    getMyFavouritesList,
-    getSearchParams,
     getMyNFTItemList,
     getMyTodayEarned,
     getMyTotalEarned,
@@ -193,7 +191,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     }
                 });
         };
-        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length && signInDlgState.address) {
+        if (signInDlgState.isLoggedIn && signInDlgState.address && signInDlgState.token) {
             getFetchData().catch(console.error);
         } else if (!signInDlgState.isLoggedIn) {
             navigate('/');
@@ -203,8 +201,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
         };
     }, [
         signInDlgState.isLoggedIn,
-        signInDlgState.walletAccounts,
-        signInDlgState.userDid,
+        signInDlgState.address,
+        signInDlgState.token,
         sortBy,
         filters,
         filterRange,
@@ -219,9 +217,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchUserProfit = async () => {
-            const _totalEarned = await getMyTotalEarned(signInDlgState.walletAccounts[0]);
-            const _todayEarned = await getMyTodayEarned(signInDlgState.walletAccounts[0]);
-            const _myEarnedList = await getMyEarnedList(signInDlgState.walletAccounts[0]);
+            const _totalEarned = await getMyTotalEarned(signInDlgState.address);
+            const _todayEarned = await getMyTodayEarned(signInDlgState.address);
+            const _myEarnedList = await getMyEarnedList(signInDlgState.address);
             if (!unmounted) {
                 setTotalEarned(_totalEarned);
                 setTodayEarned(_todayEarned);
@@ -229,14 +227,13 @@ const ProfilePage: React.FC = (): JSX.Element => {
             }
         };
         if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.walletAccounts.length) fetchUserProfit().catch(console.error);
-        } else {
-            navigate('/');
-        }
+            if (signInDlgState.address) fetchUserProfit().catch(console.error);
+        } else navigate('/');
+
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.address]);
 
     const fetchMoreData = () => {
         if (!isLoadingNext) {
@@ -448,7 +445,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                             ? signInDlgState.userName.length > 40
                                                 ? reduceUserName(signInDlgState.userName, 4)
                                                 : signInDlgState.userName
-                                            : reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
+                                            : reduceHexAddress(signInDlgState.address, 4)}
                                     </Typography>
                                     <SecondaryButton
                                         sx={{
