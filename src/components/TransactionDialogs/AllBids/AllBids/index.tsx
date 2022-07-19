@@ -42,7 +42,7 @@ const AllBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 // sortby?.value,
             );
             if (!unmounted) {
-                setBidsList(_NFTBids.others);
+                setBidsList(_NFTBids.all);
                 setMyBidsList(_NFTBids.mine);
             }
         };

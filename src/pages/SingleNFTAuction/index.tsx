@@ -87,10 +87,14 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 txHash: _NFTItem.txHash || '',
                 saleType: enumTransactionType.CreatedBy,
             });
+
+            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.address, 1, 5);
             if (!unmounted) {
                 if (_NFTItem.type !== enumSingleNFTType.OnAuction) navigate(-1); // on auction
                 setProductDetail(_NFTItem);
                 setTransactionsList(_NFTTxs);
+                setMyBidsList(_NFTBids.mine);
+                setBidsList(_NFTBids.all);
             }
         };
         if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
@@ -99,21 +103,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             unmounted = true;
         };
     }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
-
-    useEffect(() => {
-        let unmounted = false;
-        const fetchLatestBids = async () => {
-            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.address, 1, 5);
-            if (!unmounted) {
-                setMyBidsList(_NFTBids.mine);
-                setBidsList(_NFTBids.others);
-            }
-        };
-        fetchLatestBids().catch(console.error);
-        return () => {
-            unmounted = true;
-        };
-    }, [signInDlgState.address, params.id]);
     // -------------- Fetch Data -------------- //
     // -------------- Likes & Views -------------- //
     useEffect(() => {
@@ -251,7 +240,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                             />
                             {signInDlgState.address &&
                                 productDetail.holder === signInDlgState.address &&
-                                !!bidsList.length && (
+                                (!!bidsList.length || !!myBidsList.length) && (
                                     <PrimaryButton
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
@@ -325,6 +314,15 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                         ? productDetail.endTimestamp
                                                         : 0;
                                                     if (new Date().getTime() <= endTimeStamp) {
+                                                        console.log(endTimeStamp);
+                                                        console.log(productDetail.name);
+                                                        console.log(productDetail.orderId);
+                                                        console.log(productDetail.price_ela);
+                                                        console.log(
+                                                            topSelfBid,
+                                                            topOtherBid,
+                                                            topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
+                                                        );
                                                         setDialogState({
                                                             ...dialogState,
                                                             placeBidDlgOpened: true,
