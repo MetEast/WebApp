@@ -10,7 +10,7 @@ import ELAPrice from 'src/components/ELAPrice';
 // import { Icon } from '@iconify/react';
 import { TypeNFTTransaction } from 'src/types/product-types';
 // import { viewAllDlgSortOptions } from 'src/constants/select-constants';
-import { getNFTLatestTxs, getNFTLatestTxs2 } from 'src/services/fetch';
+import { getNFTLatestTxs2 } from 'src/services/fetch';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import Username from 'src/components/Username';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -38,8 +38,8 @@ const AllTransactions: React.FC<ComponentProps> = ({ onClose }): JSX.Element => 
             if (dialogState.allTxNFTCreation.user) _NFTTxs.push(dialogState.allTxNFTCreation);
             if (!unmounted) {
                 setAllTxsList(_NFTTxs);
+                setLoadingData(false);
             }
-            setLoadingData(false);
         };
         fetchLatestTxs().catch(console.error);
         return () => {
@@ -103,7 +103,7 @@ const AllTransactions: React.FC<ComponentProps> = ({ onClose }): JSX.Element => 
                             alignItems="center"
                             columnSpacing={1}
                             rowGap={1}
-                            key={`transaction-row-${index}`}
+                            key={`all-transaction-row-${index}`}
                         >
                             <Grid item xs={6} sm={4} order={{ xs: 2, sm: 0 }}>
                                 {loadingData ? (
