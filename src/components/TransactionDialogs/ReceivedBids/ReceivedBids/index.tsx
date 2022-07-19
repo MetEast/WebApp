@@ -38,7 +38,7 @@ const ReceivedBids: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 signInDlgState.walletAccounts[0],
                 1,
                 1000,
-                sortby?.value,
+                // sortby?.value,
             );
             if (!unmounted) {
                 setBidsList(_NFTBids.all);

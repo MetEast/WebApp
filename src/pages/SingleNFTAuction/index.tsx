@@ -27,7 +27,7 @@ import { blankNFTItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
-import { getMintCategory, reduceHexAddress } from 'src/services/common';
+import { getMintCategory } from 'src/services/common';
 // import PlaceBidDlgContainer from 'src/components/TransactionDialogs/PlaceBid';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
@@ -46,29 +46,10 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
     const [bidsList, setBidsList] = useState<Array<TypeSingleNFTBid>>([]);
     const [myBidsList, setMyBidsList] = useState<Array<TypeSingleNFTBid>>([]);
-    let lastBidder = 0;
-    let lastBidPrice = 0;
-    let lastBidderName = productDetail.holderName
-        ? productDetail.holderName
-        : reduceHexAddress(productDetail.holder, 4);
-    let lastBidderAddress = '';
-    let lastBidOrderId = productDetail.orderId || '';
-    // check for latest bidder and bid price
-    const topSelfBid = myBidsList.length ? myBidsList[0].price : 0;
-    const topOtherBid = bidsList.length ? bidsList[0].price : 0;
-    if (topSelfBid > topOtherBid) lastBidder = 1;
-    else if (topSelfBid < topOtherBid) lastBidder = 2;
-    if (lastBidder === 1) {
-        lastBidPrice = topSelfBid;
-        lastBidderName = signInDlgState.userName;
-        lastBidderAddress = myBidsList[0].address;
-        lastBidOrderId = myBidsList[0].orderId;
-    } else if (lastBidder === 2) {
-        lastBidPrice = topOtherBid;
-        lastBidderName = bidsList[0].user;
-        lastBidderAddress = bidsList[0].address;
-        lastBidOrderId = bidsList[0].orderId;
-    }
+    const lastBidderName = bidsList.length ? bidsList[0].user : productDetail.holderName;
+    const lastBidderAddress = bidsList.length ? bidsList[0].address : productDetail.holder;
+    const lastBidOrderId = bidsList.length ? bidsList[0].orderId : productDetail.orderId || '';
+    const lastBidPrice = bidsList.length ? bidsList[0].price : 0;
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
@@ -88,13 +69,13 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                 saleType: enumTransactionType.CreatedBy,
             });
 
-            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.address, 1, 5);
+            const _NFTBids = await getNFTLatestBids(params.id, signInDlgState.address, 1, 1000);
             if (!unmounted) {
-                if (_NFTItem.type !== enumSingleNFTType.OnAuction) navigate(-1); // on auction
+                if (!(_NFTItem.type === enumSingleNFTType.OnAuction && _NFTItem.status === '2')) navigate(-1); // on auction
                 setProductDetail(_NFTItem);
                 setTransactionsList(_NFTTxs);
                 setMyBidsList(_NFTBids.mine);
-                setBidsList(_NFTBids.all);
+                setBidsList(_NFTBids.all.slice(0, 5));
             }
         };
         if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
@@ -240,7 +221,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                             />
                             {signInDlgState.address &&
                                 productDetail.holder === signInDlgState.address &&
-                                (!!bidsList.length || !!myBidsList.length) && (
+                                bidsList.length > 0 && (
                                     <PrimaryButton
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
@@ -314,15 +295,6 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                         ? productDetail.endTimestamp
                                                         : 0;
                                                     if (new Date().getTime() <= endTimeStamp) {
-                                                        console.log(endTimeStamp);
-                                                        console.log(productDetail.name);
-                                                        console.log(productDetail.orderId);
-                                                        console.log(productDetail.price_ela);
-                                                        console.log(
-                                                            topSelfBid,
-                                                            topOtherBid,
-                                                            topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
-                                                        );
                                                         setDialogState({
                                                             ...dialogState,
                                                             placeBidDlgOpened: true,
@@ -330,8 +302,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                                             placeBidName: productDetail.name,
                                                             placeBidOrderId: productDetail.orderId || '',
                                                             placeBidMinLimit: productDetail.price_ela,
-                                                            placeBidLastBid:
-                                                                topSelfBid >= topOtherBid ? topSelfBid : topOtherBid,
+                                                            placeBidLastBid: lastBidPrice,
                                                         });
                                                     } else {
                                                         enqueueSnackbar(`Auction has expired.`, {
@@ -354,8 +325,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
                                     )}
                                     {signInDlgState.address &&
                                         productDetail.holder === signInDlgState.address &&
-                                        productDetail.status === '2' &&
-                                        !bidsList.length && (
+                                        bidsList.length === 0 && (
                                             <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                                 <PinkButton
                                                     sx={{ width: '100%', height: 40 }}

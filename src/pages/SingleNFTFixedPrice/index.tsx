@@ -54,7 +54,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                 saleType: enumTransactionType.CreatedBy,
             });
             if (!unmounted) {
-                if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
+                if (!(_NFTItem.type === enumSingleNFTType.BuyNow && _NFTItem.status === '1')) navigate(-1); // on buynow
                 setProductDetail(_NFTItem);
                 setTransactionsList(_NFTTxs);
             }
