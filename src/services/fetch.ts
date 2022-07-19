@@ -786,7 +786,6 @@ export const getNFTLatestBids = async (
     userAddress: string,
     pageNum: number,
     pageSize: number,
-    sortBy?: string,
 ) => {
     const fetchUrl = `${serverConfig.assistServiceUrl}/api/v1/getLatestBids`;
     const body = { tokenId, pageNum, pageSize };
