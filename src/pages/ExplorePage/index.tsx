@@ -8,15 +8,15 @@ import OptionsBar from 'src/components/OptionsBar';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
-import { TypeProduct, TypeFavouritesFetch } from 'src/types/product-types';
+import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
     getELA2USD,
-    getMyFavouritesList, getMyFavouritesList2,
-    getNFTItemList, getNFTItemList2,
+    getMyFavouritesList2,
+    getNFTItemList2,
     getPageBannerList,
-    getSearchParams, getSearchParams2,
+    getSearchParams2,
 } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
@@ -87,8 +87,8 @@ const ExplorePage: React.FC = (): JSX.Element => {
             const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
             const _searchedNFTList = await getNFTItemList2(
                 searchParams,
-                ELA2USD ? ELA2USD : ELA2USDRate,
-                likeList,
+                ELA2USDRate ? ELA2USDRate : ELA2USD,
+                likeList.length ? likeList : myFavorList,
             );
             if (!unmounted) {
                 if (pageNum === 1) setProductList(_searchedNFTList.data);

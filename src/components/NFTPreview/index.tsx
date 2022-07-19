@@ -40,8 +40,6 @@ const NFTPreview: React.FC<ComponentProps> = ({
         setLikeState(product.isLike);
     }, [product.isLike]);
 
-    console.log('-----', product);
-
     const getUrl = () => {
         if (product.type === enumSingleNFTType.BuyNow) return `/products/fixed-price/${product.tokenId}`;
         else if (product.type === enumSingleNFTType.OnAuction) return `/products/auction/${product.tokenId}`;
