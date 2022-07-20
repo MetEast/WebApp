@@ -103,6 +103,7 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             showChainErrorSnackBar();
             setDialogState({ ...defaultDlgState });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         dialogState.errorMessageDlgOpened,
         dialogState.createNFTDlgOpened,

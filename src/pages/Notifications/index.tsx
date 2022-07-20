@@ -22,10 +22,10 @@ const NotificationsPage: React.FC = (): JSX.Element => {
         setTimeout(() => {
             setRefetch(!refetch);
         }, 10 * 60 * 1000);
-
         return () => {
             unmounted = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState.token, refetch]);
 
     return (

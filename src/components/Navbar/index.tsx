@@ -53,6 +53,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         return () => {
             unmounted = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState.token]);
 
     useEffect(() => {
@@ -60,6 +61,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
         setTimeout(() => {
             setRefetch(!refetch);
         }, 10 * 60 * 1000);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState.walletAccounts, refetch]);
 
     const menuItemsList: Array<TypeMenuItem> = [

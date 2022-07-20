@@ -101,6 +101,7 @@ const MyNFTSold: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
     useEffect(() => {

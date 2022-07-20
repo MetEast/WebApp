@@ -16,6 +16,7 @@ const AdminPage: FC<PropsWithChildren<ComponentProps>> = ({ children }): JSX.Ele
     useEffect(() => {
         const user: UserTokenType = cookies.METEAST_TOKEN ? jwtDecode(cookies.METEAST_TOKEN) : blankUserToken;
         if (user.role === '' || parseInt(user.role) >= 2 || isNaN(parseInt(user.role)))  navigate('/');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cookies]);
     
     return (

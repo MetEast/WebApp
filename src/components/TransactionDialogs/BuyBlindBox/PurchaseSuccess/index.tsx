@@ -39,6 +39,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                     buyBlindCreators: creators,
                 });
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

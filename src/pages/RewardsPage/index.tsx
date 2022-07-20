@@ -87,6 +87,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         library,
         signInDlgState.loginType,
@@ -198,6 +199,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [library, signInDlgState.loginType, signInDlgState.walletAccounts, reload]);
 
     const withdrawReward = (rewardType: number) => {

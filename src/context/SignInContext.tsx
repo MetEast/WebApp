@@ -27,13 +27,12 @@ export interface SignInState {
 const defaultState: SignInState = {
     signInDlgOpened: false,
     downloadEssentialsDlgOpened: false,
-    isLoggedIn:
-        document.cookie
-            .split('; ')
-            .find((row) => row.startsWith('METEAST_LINK='))
-            ?.split('=')[1] || '' !== ''
-            ? true
-            : false,
+    isLoggedIn: document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('METEAST_LINK='))
+        ?.split('=')[1]
+        ? true
+        : false,
     loginType:
         document.cookie
             .split('; ')
@@ -45,7 +44,11 @@ const defaultState: SignInState = {
     didUri: '',
     signOut: false,
     // user info
-    token: document.cookie.split('; ').find((row) => row.startsWith('METEAST_TOKEN='))?.split('=')[1] || '',
+    token:
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('METEAST_TOKEN='))
+            ?.split('=')[1] || '',
     address: '',
     userDid: '',
     userName: '',

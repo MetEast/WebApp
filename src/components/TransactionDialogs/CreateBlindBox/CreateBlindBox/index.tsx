@@ -63,7 +63,12 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                 setBlindboxCandidateCount(_BBCandidatesList.length);
             }
         };
-        if (signInDlgState.address) getFetchData().then(() => {setSelectImageButtonDisable(false)}).catch(console.error);
+        if (signInDlgState.address)
+            getFetchData()
+                .then(() => {
+                    setSelectImageButtonDisable(false);
+                })
+                .catch(console.error);
         return () => {
             unmounted = true;
         };
@@ -93,6 +98,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         if (blindboxQuantityError >= 0) {
             setBlindboxQuantityError(tokenIds.length);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dialogState.crtBlindTokenIds]);
 
     useEffect(() => {

@@ -233,6 +233,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState.isLoggedIn, signInDlgState.address]);
 
     const fetchMoreData = () => {
@@ -333,6 +334,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) setReload(!reload);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nftGalleryFilterBtnSelected]);
 
     const theme = useTheme();
