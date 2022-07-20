@@ -15,9 +15,9 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
-import { METEAST_STAKING_TOKEN_CONTRACT_ADDRESS } from 'src/contracts/METokenStaking';
 import { enumCallMethodType, enumMETokenContractType } from 'src/types/contract-types';
 import { enumAuthType } from 'src/types/auth-types';
+import { contractConfig } from 'src/config';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -89,7 +89,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     callType: enumCallMethodType.CALL,
                     method: 'allowance',
                     price: '0',
-                    address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
+                    address: contractConfig.MET_STAKING_CONTRACT,
                 })
                     .then((allowance: string) => {
                         if (!unmounted) setDialogState({ ...updatedState, progressBar: 50 });
@@ -100,7 +100,7 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                 callType: enumCallMethodType.SEND,
                                 method: 'approve',
                                 price: '0',
-                                address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
+                                address: contractConfig.MET_STAKING_CONTRACT,
                                 _price: BigInt(10000 * 1e18).toString(),
                             });
                         }

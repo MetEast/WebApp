@@ -6,7 +6,6 @@ import WarningTypo from '../../components/WarningTypo';
 import ELAPrice from 'src/components/ELAPrice';
 import { useStyles, InfoItemWrapper } from './styles';
 import Web3 from 'web3';
-import { METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -20,7 +19,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { getTime } from 'src/services/common';
-import { serverConfig } from 'src/config';
+import { contractConfig, serverConfig } from 'src/config';
 import { enumMetEastContractType } from 'src/types/contract-types';
 import { enumAuthType } from 'src/types/auth-types';
 
@@ -102,7 +101,7 @@ const CheckBlindBoxDetails: React.FC<ComponentProps> = (): JSX.Element => {
                 contractType: enumMetEastContractType.METEAST,
                 method: 'setApprovalForAll',
                 price: '0',
-                operator: METEAST_MARKET_CONTRACT_ADDRESS,
+                operator: contractConfig.METEAST_MARKET_CONTRACT,
                 approved: true,
             })
                 .then((result: string) => {
