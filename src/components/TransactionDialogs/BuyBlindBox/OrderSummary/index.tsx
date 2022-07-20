@@ -16,6 +16,7 @@ import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { serverConfig } from 'src/config';
 import { enumMetEastContractType } from 'src/types/contract-types';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {}
 
@@ -29,7 +30,9 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
 
     const sendSoldBlindBoxTokenIds = (txHash: string) => {

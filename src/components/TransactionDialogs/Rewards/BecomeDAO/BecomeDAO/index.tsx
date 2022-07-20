@@ -17,6 +17,7 @@ import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { METEAST_STAKING_TOKEN_CONTRACT_ADDRESS } from 'src/contracts/METokenStaking';
 import { enumCallMethodType, enumMETokenContractType } from 'src/types/contract-types';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -32,7 +33,9 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
 
     const handleStake = () => {
@@ -79,53 +82,55 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     }
                     return;
                 }
-                if (!unmounted) setDialogState({...updatedState, progressBar: 30});
+                if (!unmounted) setDialogState({ ...updatedState, progressBar: 30 });
                 callTokenomicsContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
-                    contractType: enumMETokenContractType.MET_BASE, 
+                    contractType: enumMETokenContractType.MET_BASE,
                     callType: enumCallMethodType.CALL,
                     method: 'allowance',
                     price: '0',
                     address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
-                }).then((allowance: string) => {
-                    if (!unmounted) setDialogState({...updatedState, progressBar: 50});
-                    if ((parseInt(allowance) / 1e18) < 10000) {
+                })
+                    .then((allowance: string) => {
+                        if (!unmounted) setDialogState({ ...updatedState, progressBar: 50 });
+                        if (parseInt(allowance) / 1e18 < 10000) {
+                            return callTokenomicsContractMethod(walletConnectWeb3, {
+                                ...blankContractMethodParam,
+                                contractType: enumMETokenContractType.MET_BASE,
+                                callType: enumCallMethodType.SEND,
+                                method: 'approve',
+                                price: '0',
+                                address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
+                                _price: BigInt(10000 * 1e18).toString(),
+                            });
+                        }
+                        return 'pass';
+                    })
+                    .then((result: string) => {
+                        if (!unmounted) setDialogState({ ...updatedState, progressBar: 70 });
                         return callTokenomicsContractMethod(walletConnectWeb3, {
                             ...blankContractMethodParam,
-                            contractType: enumMETokenContractType.MET_BASE, 
+                            contractType: enumMETokenContractType.MET_STAKING, // staking
                             callType: enumCallMethodType.SEND,
-                            method: 'approve',
+                            method: 'stake',
                             price: '0',
-                            address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
                             _price: BigInt(10000 * 1e18).toString(),
                         });
-                    }
-                    return 'pass';
-                }).then((result: string) => {
-                    if (!unmounted) setDialogState({...updatedState, progressBar: 70});
-                    return callTokenomicsContractMethod(walletConnectWeb3, {
-                        ...blankContractMethodParam,
-                        contractType: enumMETokenContractType.MET_STAKING, // staking 
-                        callType: enumCallMethodType.SEND,
-                        method: 'stake',
-                        price: '0',
-                        _price: BigInt(10000 * 1e18).toString(),
-                    });
-                })
-                .then(() => {
-                    enqueueSnackbar('Lock up succeed!', {
-                        variant: 'success',
-                        anchorOrigin: { horizontal: 'right', vertical: 'top' },
-                    });
-                    if (!unmounted) {
-                        setDialogState({
-                            ...updatedState,
-                            becomeDAODlgOpened: false,
-                            waitingConfirmDlgOpened: false,
-                            progressBar: 100,
+                    })
+                    .then(() => {
+                        enqueueSnackbar('Lock up succeed!', {
+                            variant: 'success',
+                            anchorOrigin: { horizontal: 'right', vertical: 'top' },
                         });
-                    }
-                });
+                        if (!unmounted) {
+                            setDialogState({
+                                ...updatedState,
+                                becomeDAODlgOpened: false,
+                                waitingConfirmDlgOpened: false,
+                                progressBar: 100,
+                            });
+                        }
+                    });
             })
             .catch((error) => {
                 enqueueSnackbar(`Lock up error.`, {

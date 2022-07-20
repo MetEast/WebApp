@@ -43,10 +43,10 @@ const TransactionDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     //     : essentialsConnector.getWalletConnectProvider();
     // const { library } = useWeb3React<Web3Provider>();
     // const walletConnectWeb3 = new Web3(
-    //     signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+    //     signInDlgState.loginType === enumAuthType.ElastosEssentials ? (walletConnectProvider as any) : (library?.provider as any),
     // );
     // useEffect(() => {
-    //     if (signInDlgState.loginType === '1' || (library && signInDlgState.loginType === '2')) {
+    //     if (signInDlgState.loginType === enumAuthType.ElastosEssentials || (library && signInDlgState.loginType === enumAuthType.MetaMask)) {
     //         getChainGasPrice(walletConnectWeb3, 5000000).then((gasPrice: number) => {
     //             setDialogState({
     //                 ...dialogState,

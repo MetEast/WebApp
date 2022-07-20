@@ -19,6 +19,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -47,7 +48,9 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
     const classes = useStyles();
     const handleSelectAvatar = (e: any) => {
