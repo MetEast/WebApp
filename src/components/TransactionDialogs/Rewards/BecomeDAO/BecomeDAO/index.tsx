@@ -16,6 +16,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { METEAST_STAKING_TOKEN_CONTRACT_ADDRESS } from 'src/contracts/METokenStaking';
+import { enumCallMethodType, enumMETokenContractType } from 'src/types/contract-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -57,8 +58,8 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
         callTokenomicsContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 3, // staking
-            callType: 2,
+            contractType: enumMETokenContractType.MET_STAKING,
+            callType: enumCallMethodType.CALL,
             method: 'stakedAmount',
             price: '0',
         })
@@ -81,8 +82,8 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 if (!unmounted) setDialogState({...updatedState, progressBar: 30});
                 callTokenomicsContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
-                    contractType: 1, // token 
-                    callType: 2,
+                    contractType: enumMETokenContractType.MET_BASE, 
+                    callType: enumCallMethodType.CALL,
                     method: 'allowance',
                     price: '0',
                     address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
@@ -91,8 +92,8 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     if ((parseInt(allowance) / 1e18) < 10000) {
                         return callTokenomicsContractMethod(walletConnectWeb3, {
                             ...blankContractMethodParam,
-                            contractType: 1, // token 
-                            callType: 1,
+                            contractType: enumMETokenContractType.MET_BASE, 
+                            callType: enumCallMethodType.SEND,
                             method: 'approve',
                             price: '0',
                             address: METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
@@ -104,8 +105,8 @@ const BecomeDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                     if (!unmounted) setDialogState({...updatedState, progressBar: 70});
                     return callTokenomicsContractMethod(walletConnectWeb3, {
                         ...blankContractMethodParam,
-                        contractType: 3, // staking 
-                        callType: 1,
+                        contractType: enumMETokenContractType.MET_STAKING, // staking 
+                        callType: enumCallMethodType.SEND,
                         method: 'stake',
                         price: '0',
                         _price: BigInt(10000 * 1e18).toString(),
