@@ -18,6 +18,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { enumMetEastContractType } from 'src/types/contract-types';
 
 export interface ComponentProps {
     user2Edit: AdminUsersItemType;
@@ -46,15 +47,14 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
-        }
-        else if (dialogState.adminUserBannedTxFee > signInDlgState.walletBalance) {
+        } else if (dialogState.adminUserBannedTxFee > signInDlgState.walletBalance) {
             enqueueSnackbar('Insufficient balance!', {
                 variant: 'error',
                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
             });
             return;
         }
-        
+
         let role = -1;
         setOnProgress(true);
         let unmounted = false;
@@ -72,7 +72,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 1,
+            contractType: enumMetEastContractType.METEAST,
             method: methodName,
             price: '0',
             address: user2Edit.address,
@@ -83,7 +83,7 @@ const BannedUsers: React.FC<ComponentProps> = ({ user2Edit, onClose, handleUserU
                 if (!unmounted) setDialogState({ ...updatedState, progressBar: 40 });
                 return callContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
-                    contractType: 2,
+                    contractType: enumMetEastContractType.METEAST_MARKET,
                     method: methodName,
                     price: '0',
                     address: user2Edit.address,

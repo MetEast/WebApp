@@ -444,10 +444,3 @@ export type TypeChartAxis = {
     y: number;
     username: string;
 };
-
-export type TypeMiningReward = {
-    lastReceipt: number;
-    availableToken: number;
-    availablePrice: number;
-    receivedReward: number;
-};

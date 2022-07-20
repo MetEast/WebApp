@@ -19,6 +19,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { enumMetEastContractType } from 'src/types/contract-types';
 
 export interface ComponentProps {}
 
@@ -66,7 +67,7 @@ const UpdateBid: React.FC<ComponentProps> = (): JSX.Element => {
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 2,
+            contractType: enumMetEastContractType.METEAST_MARKET,
             method: 'changeOrderPrice',
             price: '0',
             orderId: dialogState.updateBidOrderId,

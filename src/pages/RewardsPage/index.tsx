@@ -17,8 +17,9 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam, blankMiningReward } from 'src/constants/init-constants';
-import { TypeMiningReward } from 'src/types/product-types';
+import { TypeMiningReward } from 'src/types/contract-types';
 import { Icon } from '@iconify/react';
+import { enumAuthType } from 'src/types/auth-types';
 
 const RewardsPage: React.FC = (): JSX.Element => {
     const theme = useTheme();
@@ -42,7 +43,10 @@ const RewardsPage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        if (signInDlgState.loginType === '1' || (library && signInDlgState.loginType === '2')) {
+        if (
+            signInDlgState.loginType === enumAuthType.ElastosEssentials ||
+            (library && signInDlgState.loginType === enumAuthType.MetaMask)
+        ) {
             callTokenomicsContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,
                 contractType: 1, // token
@@ -81,7 +85,13 @@ const RewardsPage: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [library, signInDlgState.loginType, signInDlgState.walletAccounts, dialogState.becomeDAODlgOpened, dialogState.removeDAODlgOpened]);
+    }, [
+        library,
+        signInDlgState.loginType,
+        signInDlgState.walletAccounts,
+        dialogState.becomeDAODlgOpened,
+        dialogState.removeDAODlgOpened,
+    ]);
 
     useEffect(() => {
         let unmounted = false;
@@ -256,7 +266,7 @@ const RewardsPage: React.FC = (): JSX.Element => {
                         <Stack height="100%" justifyContent="center" alignItems="flex-start">
                             <Stack direction="row" alignItems="flex-end">
                                 <Typography
-                                    component='div'
+                                    component="div"
                                     fontSize={{ xs: 32, sm: 48, md: 62 }}
                                     fontWeight={600}
                                     lineHeight={1}
