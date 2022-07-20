@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';

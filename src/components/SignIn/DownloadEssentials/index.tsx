@@ -9,6 +9,7 @@ import { apiConfig } from 'src/config';
 export interface ComponentProps {}
 
 const DownloadEssentials: React.FC<ComponentProps> = (): JSX.Element => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [signInDlgState, setSignInDlgState] = useSignInContext();
 
     return (

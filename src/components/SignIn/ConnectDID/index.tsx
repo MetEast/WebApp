@@ -13,6 +13,7 @@ export interface ComponentProps {
 
 const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
     const navigate = useNavigate();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [signInDlgState, setSignInDlgState] = useSignInContext();
 
     document.addEventListener('keydown', (event) => {
