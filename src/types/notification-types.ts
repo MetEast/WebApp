@@ -1,7 +1,9 @@
 export type TypeNotification = {
-    id: string;
-    title: string;
-    content: string;
+    _id: string;
+    title?: string;
+    content?: string;
+    type: number;
+    params:NotificationParams;
     date: string;
     isRead?: boolean;
 };
@@ -12,7 +14,9 @@ export type TypeNotificationFetch = {
     context: string;
     date: number;
     to: string;
-    isRead: number;
+    read: number;
+    type: number;
+    params:NotificationParams;
 };
 
 export type TypeNotificationFSocket = {
@@ -22,3 +26,10 @@ export type TypeNotificationFSocket = {
     type: string;
     to?: string;
 };
+
+export type NotificationParams = {
+    tokenName: string;
+    price?: number;
+    buyer?: string;
+    royaltyFee?: number;
+}

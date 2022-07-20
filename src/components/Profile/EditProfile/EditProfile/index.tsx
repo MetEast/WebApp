@@ -19,6 +19,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { isInAppBrowser } from 'src/services/wallet';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -27,6 +28,7 @@ export interface ComponentProps {
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [cookies, setCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
@@ -47,7 +49,9 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
     const classes = useStyles();
     const handleSelectAvatar = (e: any) => {
@@ -100,7 +104,7 @@ const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                         ? `meteast:image:${added.origin.path}`
                         : ''
                     : signInDlgState.userCoverImage;
-                return handleSignMessage(signInDlgState.userDid, signInDlgState.walletAccounts[0]);
+                return handleSignMessage(signInDlgState.address, signInDlgState.walletAccounts[0]);
             })
             .then((signature: string) => {
                 setDialogState({ ...dialogState, progressBar: 70 });

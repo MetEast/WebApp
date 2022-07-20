@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { BecomeDAOBtn } from './styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeMiningReward } from 'src/types/product-types';
+import { TypeMiningReward } from 'src/types/contract-types';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 
 interface ComponentProps {

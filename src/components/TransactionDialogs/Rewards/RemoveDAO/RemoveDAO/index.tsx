@@ -15,6 +15,8 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { enumCallMethodType, enumMETokenContractType } from 'src/types/contract-types';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -30,7 +32,9 @@ const RemoveDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
 
     const handleWithdraw = () => {
@@ -56,8 +60,8 @@ const RemoveDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
         callTokenomicsContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 3, // staking
-            callType: 2,
+            contractType: enumMETokenContractType.MET_STAKING,
+            callType: enumCallMethodType.CALL,
             method: 'stakedAmount',
             price: '0',
         })
@@ -80,8 +84,8 @@ const RemoveDAO: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                 if (!unmounted) setDialogState({ ...updatedState, progressBar: 70 });
                 callTokenomicsContractMethod(walletConnectWeb3, {
                     ...blankContractMethodParam,
-                    contractType: 3, // staking
-                    callType: 1,
+                    contractType: enumMETokenContractType.MET_STAKING,
+                    callType: enumCallMethodType.SEND,
                     method: 'withdraw',
                     price: '0',
                 }).then(() => {

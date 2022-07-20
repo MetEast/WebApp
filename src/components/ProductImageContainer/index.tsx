@@ -3,7 +3,7 @@ import { Container, LikeBtn } from './styles';
 import { Icon } from '@iconify/react';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-// import { Box, Skeleton } from '@mui/material';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -22,19 +22,23 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
     const changeLikeState = (event: React.MouseEvent) => {
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
-                likeState ? 'decTokenLikes' : 'incTokenLikes'
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/${
+                likeState
+                    ? isBlindBox
+                        ? 'decBlindBoxLikes'
+                        : 'decTokenLikes'
+                    : isBlindBox
+                    ? 'incBlindBoxLikes'
+                    : 'incTokenLikes'
             }`;
             const reqBody = isBlindBox
                 ? {
-                      token: signInDlgState.token,
                       blindBoxIndex: product.tokenId,
-                      did: signInDlgState.userDid,
+                      address: signInDlgState.address,
                   }
                 : {
-                      token: signInDlgState.token,
                       tokenId: product.tokenId,
-                      did: signInDlgState.userDid,
+                      address: signInDlgState.address,
                   };
             // change state first
             updateLikes(likeState ? 'dec' : 'inc');
@@ -43,12 +47,13 @@ const ProductImageContainer: React.FC<ComponentProps> = ({ product, updateLikes,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                         console.log('succeed');
                     } else {
                         console.log(data);

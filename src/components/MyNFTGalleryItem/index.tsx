@@ -9,6 +9,7 @@ import ELAPrice from 'src/components/ELAPrice';
 import ProductSnippets from 'src/components/ProductSnippets';
 import { useNavigate } from 'react-router-dom';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {
     product: TypeProduct;
@@ -33,13 +34,10 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         event.preventDefault();
         event.stopPropagation();
         if (signInDlgState.isLoggedIn) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
-                likeState ? 'decTokenLikes' : 'incTokenLikes'
-            }`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/${likeState ? 'decTokenLikes' : 'incTokenLikes'}`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: product.tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             // change state first
             updateLikes(index, likeState ? 'dec' : 'inc');
@@ -48,12 +46,13 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                     } else {
                         console.log(data);
                     }
@@ -87,7 +86,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
         <GalleryItemContainer>
             <ProductImageContainer
                 onClick={() => {
-                    if (!isLoading) navigate(getUrl());
+                    if (!isLoading) navigate(getUrl(), { state: { product } });
                 }}
             >
                 <ImageBox loading={isLoading ? 1 : 0}>
@@ -101,7 +100,17 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                         />
                     ) : (
                         <>
-                            <img src={product.image} alt="" />
+                            {/* <img src={product.image} alt="" /> */}
+                            <Box
+                                sx={{
+                                    background: `url(${product.image})`,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundSize: 'cover',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'center',
+                                }}
+                            />
                             <LikeBtn onClick={changeLikeState}>
                                 <Icon
                                     icon={likeState ? 'ph:heart-fill' : 'ph:heart'}
@@ -158,7 +167,7 @@ const MyNFTGalleryItem: React.FC<ComponentProps> = ({
                             nfttype={product.type}
                             myNftTypes={product.types}
                             content={product.endTime}
-                            isReservedAuction={product.status === 'HAS BIDS'}
+                            isReservedAuction={product.status === '2'}
                         />
                     )}
                     {isLoading ? (

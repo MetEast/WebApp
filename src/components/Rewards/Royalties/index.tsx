@@ -4,7 +4,7 @@ import ClaimBox from '../ClaimBox';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { TypeMiningReward } from 'src/types/product-types';
+import { TypeMiningReward } from 'src/types/contract-types';
 
 interface ComponentProps {
     rewards: TypeMiningReward;

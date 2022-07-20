@@ -10,17 +10,17 @@ import { PrimaryButton } from '../Buttons/styles';
 import { getDateTimeString, getTimeZone } from 'src/services/common';
 import { SelectChangeEvent } from '@mui/material';
 
-const MenuProps = {
-    anchorOrigin: {
-        vertical: 'bottom',
-        horizontal: 'left',
-    },
-    transformOrigin: {
-        vertical: 'top',
-        horizontal: 'left',
-    },
-    variant: 'menu',
-};
+// const MenuProps = {
+//     anchorOrigin: {
+//         vertical: 'bottom',
+//         horizontal: 'left',
+//     },
+//     transformOrigin: {
+//         vertical: 'top',
+//         horizontal: 'left',
+//     },
+//     variant: 'menu',
+// };
 const menuItems = ['', '1 DAY', '1 WEEK', '1 MONTH', 'Pick a specific date'];
 const pickDateIndex = 4;
 
@@ -77,6 +77,10 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
     };
 
     const handleSpecificDate = () => {
+        if (dateValue < new Date()) {
+            enqueueSnackbar('Past time can not be selected!', { variant: 'warning' });
+            return;
+        }
         setOpenPicker(false);
     };
 
@@ -91,16 +95,21 @@ const DateTimePicker: React.FC<ComponentProps> = ({ onChangeDate, value, error }
     };
 
     const handleTimeChange = (event: any) => {
-        const splitTime = event.target.value.split(':');
+        let time = event.target.value;
+        if(!time) {
+            let date = new Date();
+            time = date.getHours() + ':' + date.getMinutes();
+        }
+        const splitTime = time.split(':');
         const tempDate = dateValue;
         tempDate.setHours(splitTime[0]);
         tempDate.setMinutes(splitTime[1]);
         tempDate.setSeconds(0);
-        if (tempDate < new Date()) {
-            enqueueSnackbar('Past time can not be selected!', { variant: 'warning' });
-            return;
-        }
-        setTimeValue(event.target.value);
+        // if (tempDate < new Date()) {
+        //     enqueueSnackbar('Past time can not be selected!', { variant: 'warning' });
+        //     return;
+        // }
+        setTimeValue(time);
         setDateValue(tempDate);
         onChangeDate(tempDate);
     };

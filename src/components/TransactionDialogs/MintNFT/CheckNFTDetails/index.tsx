@@ -18,6 +18,8 @@ import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { ImageBox } from './styles';
 import { reduceUserName } from 'src/services/common';
+import { enumMetEastContractType } from 'src/types/contract-types';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {}
 
@@ -31,7 +33,9 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
 
     const mint2net = (paramObj: any) => {
@@ -53,7 +57,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 1,
+            contractType: enumMetEastContractType.METEAST,
             method: 'mint',
             price: '0',
             tokenId: paramObj._id,

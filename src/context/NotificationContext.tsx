@@ -7,7 +7,6 @@ export interface NotificationState {
 }
 
 const defaultState: NotificationState = {
-    // notification
     notesUnreadCnt: 0,
     notesList: [],
 };

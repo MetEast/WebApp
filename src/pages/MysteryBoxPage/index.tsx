@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
@@ -12,7 +13,13 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
-import { getELA2USD, getSearchParams, getBBItemList, getPageBannerList } from 'src/services/fetch';
+import {
+    getELA2USD,
+    getBBItemList,
+    getPageBannerList,
+    getSearchParams,
+    getMyFavouritesBB,
+} from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
@@ -41,18 +48,18 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [blindBoxList, setBlindBoxList] = useState<Array<TypeProduct>>([]);
-    const fillerItem = Array(pageSize).fill(blankBBItem);
-    let ELA2USDRate: number = 0;
     const [ELA2USD, setELA2USD] = useState<number>(0);
+    const [myFavorList, setMyFavorList] = useState<Array<string>>([]);
+    let ELA2USDRate: number = 0;
+    let likeList: Array<string> = [];
+    const fillerItem = Array(pageSize).fill(blankBBItem);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(3);
-            if (!unmounted) {
-                setAdBanners(_adBanners);
-            }
+            if (!unmounted) setAdBanners(_adBanners);
         };
         fetchBanners().catch(console.error);
         return () => {
@@ -72,13 +79,14 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
+                likeList = await getMyFavouritesBB(signInDlgState.isLoggedIn, signInDlgState.token);
+                setMyFavorList(likeList);
             }
             const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
-                searchParams,
+                JSON.stringify(searchParams),
                 ELA2USDRate ? ELA2USDRate : ELA2USD,
-                signInDlgState.isLoggedIn,
-                signInDlgState.userDid,
+                likeList.length ? likeList : myFavorList,
             );
             if (!unmounted) {
                 if (pageNum === 1) setBlindBoxList(_searchedBBList.data);
@@ -88,12 +96,12 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
                 if (Math.ceil(_searchedBBList.total / pageSize) > pageNum) setHasMore(true);
             }
         };
-        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
             getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filterRange, keyWord, pageNum]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, sortBy, filterRange, keyWord, pageNum]); //, productViewMode
 
     const fetchMoreData = () => {
         if (!isLoadingNext) {

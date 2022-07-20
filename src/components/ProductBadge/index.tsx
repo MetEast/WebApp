@@ -123,6 +123,11 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
             color: '#E0822C',
             icon: <Icon icon="ph:palette" />,
         },
+        [enumBadgeType.InBlindBox]: {
+            background: '#24AECC1A',
+            color: '#24AECC',
+            icon: <Icon icon="ph:leaf" />,
+        },
     };
 
     return (
@@ -135,7 +140,7 @@ const ProductBadge: React.FC<ProductBadgeProps> = ({ badgeType, content }): JSX.
         >
             {styles[badgeType].icon !== '' && styles[badgeType].icon}
             {/* <Typography fontSize={14} fontWeight={500} color={styles[badgeType].color}>
-                
+
                 {`${badgeType}${content ? `: ${content}` : ''}`}
             </Typography> */}
             <Grid

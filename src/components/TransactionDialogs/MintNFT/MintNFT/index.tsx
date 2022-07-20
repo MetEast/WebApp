@@ -77,7 +77,7 @@ const MintNFT: React.FC<ComponentProps> = (): JSX.Element => {
                         <CustomTextField
                             title="Project Title"
                             inputValue={title}
-                            placeholder="Placeholder Text"
+                            placeholder="Enter Title"
                             error={titleError}
                             errorText="Project title can not be empty."
                             changeHandler={(value: string) => setTitle(value)}

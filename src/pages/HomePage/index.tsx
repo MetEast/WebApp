@@ -7,7 +7,7 @@ import NFTPreview from 'src/components/NFTPreview';
 import 'swiper/swiper-bundle.css';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList, getNFTItemList, getPageBannerList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesNFT, getNFTItemList, getPageBannerList } from 'src/services/fetch';
 import { blankNFTItem } from 'src/constants/init-constants';
 import Container from 'src/components/Container';
 
@@ -23,9 +23,7 @@ const HomePage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(1);
-            if (!unmounted) {
-                setAdBanners(_adBanners);
-            }
+            if (!unmounted) setAdBanners(_adBanners);
         };
         fetchBanners().catch(console.error);
         return () => {
@@ -37,13 +35,11 @@ const HomePage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchCollections = async () => {
             if (!unmounted) setIsLoading(true);
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _newNFTList = await getNFTItemList('pageNum=1&pageSize=10', ELA2USD, likeList);
+            const _newNFTList = await getNFTItemList({ pageNum: 1, pageSize: 10 }, undefined, undefined);
             const _popularNFTList = await getNFTItemList(
-                'pageNum=1&pageSize=10&orderType=mostliked',
-                ELA2USD,
-                likeList,
+                { pageNum: 1, pageSize: 10, orderType: 'mostliked' },
+                undefined,
+                undefined,
             );
             if (!unmounted) {
                 setProductList(_newNFTList.data);
@@ -51,12 +47,34 @@ const HomePage: React.FC = (): JSX.Element => {
                 setIsLoading(false);
             }
         };
-        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
             fetchCollections().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid]);
+    }, [signInDlgState.isLoggedIn, signInDlgState.address]);
+
+    useEffect(() => {
+        const updateTokenInfo = async () => {
+            const ELA2USD = await getELA2USD();
+            const likeList = await getMyFavouritesNFT(signInDlgState.isLoggedIn, signInDlgState.token);
+            setProductList((prevState) => {
+                return prevState.map((item) => {
+                    item.isLike = likeList.includes(item.tokenId);
+                    item.price_usd = item.price_ela * ELA2USD;
+                    return item;
+                });
+            });
+            setCollectionList((prevState) => {
+                return prevState.map((item) => {
+                    item.isLike = likeList.includes(item.tokenId);
+                    item.price_usd = item.price_ela * ELA2USD;
+                    return item;
+                });
+            });
+        };
+        setTimeout(updateTokenInfo, 5000);
+    }, [signInDlgState.isLoggedIn, signInDlgState.token]);
     // -------------- Fetch Data -------------- //
 
     // -------------- Likes -------------- //

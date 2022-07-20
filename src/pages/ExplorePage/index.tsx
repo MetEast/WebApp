@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react';
@@ -8,12 +9,12 @@ import OptionsBar from 'src/components/OptionsBar';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
 import { sortOptions } from 'src/constants/select-constants';
 import { TypeSelectItem } from 'src/types/select-types';
-import { TypeProduct, TypeFavouritesFetch } from 'src/types/product-types';
+import { TypeProduct } from 'src/types/product-types';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
     getELA2USD,
-    getMyFavouritesList,
+    getMyFavouritesNFT,
     getNFTItemList,
     getPageBannerList,
     getSearchParams,
@@ -49,19 +50,17 @@ const ExplorePage: React.FC = (): JSX.Element => {
     const [isLoadingNext, setIsLoadingNext] = useState<boolean>(true);
     const [productList, setProductList] = useState<Array<TypeProduct>>([]);
     const [ELA2USD, setELA2USD] = useState<number>(0);
-    const [myFavorList, setMyFavorList] = useState<Array<TypeFavouritesFetch>>([]);
-    const fillerItem = Array(pageSize).fill(blankNFTItem);
+    const [myFavorList, setMyFavorList] = useState<Array<string>>([]);
     let ELA2USDRate: number = 0;
-    let likeList: Array<TypeFavouritesFetch> = [];
+    let likeList: Array<string> = [];
+    const fillerItem = Array(pageSize).fill(blankNFTItem);
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const fetchBanners = async () => {
             const _adBanners = await getPageBannerList(2);
-            if (!unmounted) {
-                setAdBanners(_adBanners);
-            }
+            if (!unmounted) setAdBanners(_adBanners);
         };
         fetchBanners().catch(console.error);
         return () => {
@@ -81,7 +80,7 @@ const ExplorePage: React.FC = (): JSX.Element => {
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
-                likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+                likeList = await getMyFavouritesNFT(signInDlgState.isLoggedIn, signInDlgState.token);
                 setMyFavorList(likeList);
             }
             const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
@@ -98,12 +97,12 @@ const ExplorePage: React.FC = (): JSX.Element => {
                 if (Math.ceil(_searchedNFTList.total / pageSize) > pageNum) setHasMore(true);
             }
         };
-        if ((signInDlgState.isLoggedIn && signInDlgState.userDid) || !signInDlgState.isLoggedIn)
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
             getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, sortBy, filters, filterRange, keyWord, category, pageNum]); //, productViewMode
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, sortBy, filters, filterRange, keyWord, category, pageNum]); //, productViewMode
 
     const fetchMoreData = () => {
         if (!isLoadingNext) {

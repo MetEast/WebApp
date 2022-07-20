@@ -26,7 +26,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const t = event.target.value;
-        const value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+        const value = t.indexOf('.') >= 0 ? t.substr(0, t.indexOf('.')) + t.substr(t.indexOf('.'), 3) : t;
         if (!isNaN(Number(value))) setInput(value);
 
         handleChange(parseFloat(value));
@@ -38,6 +38,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
 
     React.useEffect(() => {
         setInvalid(Number(input) === 0 || (!!minValue && Number(input) <= minValue));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [input]);
 
     return (
@@ -58,7 +59,7 @@ const ELAPriceInput: React.FC<ComponentProps> = ({
             >
                 <TextField
                     placeholder={placeholder}
-                    value={(input)}
+                    value={input}
                     onChange={handleInputChange}
                     onFocus={() => setStatus('active')}
                     onBlur={() => setStatus('none')}

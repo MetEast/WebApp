@@ -3,6 +3,7 @@ export type AuthContextType = {
 };
 
 export type UserTokenType = {
+    address: string;
     did: string;
     name: string;
     description: string;
@@ -20,3 +21,10 @@ export type UserInfoType = {
     role: number;
     _id: string;
 };
+
+export enum enumAuthType {
+    NotConnected = '',
+    ElastosEssentials = '1',
+    MetaMask = '2',
+    WalletConnect = '3',
+}

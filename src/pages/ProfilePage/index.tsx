@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { DismissCircle24Filled } from '@fluentui/react-icons';
 import { Box, Grid, Typography, Stack, Skeleton } from '@mui/material';
@@ -12,16 +13,16 @@ import { TypeSelectItem } from 'src/types/select-types';
 import { FilterItemTypography, FilterButton, ProfileImageWrapper, ProfileImage, NotificationTypo } from './styles';
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import { useDialogContext } from 'src/context/DialogContext';
-import { TypeProduct, TypeYourEarning, TypeFavouritesFetch } from 'src/types/product-types';
+import { TypeProduct, TypeYourEarning } from 'src/types/product-types';
 import { getImageFromAsset, reduceHexAddress, reduceUserName } from 'src/services/common';
 import {
     getELA2USD,
-    getMyFavouritesList,
-    getSearchParams,
     getMyNFTItemList,
     getMyTodayEarned,
     getMyTotalEarned,
     getMyEarnedList,
+    getSearchParams,
+    getMyFavouritesNFT,
 } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
@@ -92,10 +93,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
     const [myNFTCount, setMyNFTCount] = useState<Array<number>>(Array(6).fill(0));
     const [isLoadingAssets, setIsLoadingAssets] = useState<Array<boolean>>(Array(6).fill(true));
     const [ELA2USD, setELA2USD] = useState<number>(0);
-    const [myFavorList, setMyFavorList] = useState<Array<TypeFavouritesFetch>>([]);
+    const [myFavorList, setMyFavorList] = useState<Array<String>>([]);
     const fillerItem = Array(pageSize).fill(blankMyNFTItem);
     let ELA2USDRate: number = 0;
-    let likeList: Array<TypeFavouritesFetch> = [];
+    let likeList: Array<String> = [];
 
     // -------------- Fetch Data -------------- //
     const setLoadingState = (id: number, state: boolean) => {
@@ -159,7 +160,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         if (pageNum === 1 && i === nTabId) {
                             ELA2USDRate = await getELA2USD();
                             setELA2USD(ELA2USDRate);
-                            likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
+                            likeList = await getMyFavouritesNFT(signInDlgState.isLoggedIn, signInDlgState.token);
                             setMyFavorList(likeList);
                         }
                         const searchParams = getSearchParams(
@@ -172,14 +173,12 @@ const ProfilePage: React.FC = (): JSX.Element => {
                             category,
                         );
                         const _searchedMyNFTList = await getMyNFTItemList(
-                            searchParams,
-                            // i === nTabId ? ELA2USD : 1,
-                            // i === nTabId ? likeList : [],
+                            JSON.stringify({ ...searchParams, address: signInDlgState.address }),
                             ELA2USDRate ? ELA2USDRate : ELA2USD,
                             likeList.length ? likeList : myFavorList,
                             i,
-                            signInDlgState.walletAccounts[0],
-                            signInDlgState.userDid,
+                            signInDlgState.address,
+                            signInDlgState.token,
                         );
                         if (!unmounted) {
                             if (pageNum === 1) setMyNFTData(i, _searchedMyNFTList.data);
@@ -193,7 +192,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                     }
                 });
         };
-        if (signInDlgState.isLoggedIn && signInDlgState.walletAccounts.length && signInDlgState.userDid) {
+        if (signInDlgState.isLoggedIn && signInDlgState.address && signInDlgState.token) {
             getFetchData().catch(console.error);
         } else if (!signInDlgState.isLoggedIn) {
             navigate('/');
@@ -203,8 +202,8 @@ const ProfilePage: React.FC = (): JSX.Element => {
         };
     }, [
         signInDlgState.isLoggedIn,
-        signInDlgState.walletAccounts,
-        signInDlgState.userDid,
+        signInDlgState.address,
+        signInDlgState.token,
         sortBy,
         filters,
         filterRange,
@@ -219,9 +218,9 @@ const ProfilePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchUserProfit = async () => {
-            const _totalEarned = await getMyTotalEarned(signInDlgState.walletAccounts[0]);
-            const _todayEarned = await getMyTodayEarned(signInDlgState.walletAccounts[0]);
-            const _myEarnedList = await getMyEarnedList(signInDlgState.walletAccounts[0]);
+            const _totalEarned = await getMyTotalEarned(signInDlgState.address);
+            const _todayEarned = await getMyTodayEarned(signInDlgState.address);
+            const _myEarnedList = await getMyEarnedList(signInDlgState.address);
             if (!unmounted) {
                 setTotalEarned(_totalEarned);
                 setTodayEarned(_todayEarned);
@@ -229,14 +228,14 @@ const ProfilePage: React.FC = (): JSX.Element => {
             }
         };
         if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.walletAccounts.length) fetchUserProfit().catch(console.error);
-        } else {
-            navigate('/');
-        }
+            if (signInDlgState.address) fetchUserProfit().catch(console.error);
+        } else navigate('/');
+
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.walletAccounts]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signInDlgState.isLoggedIn, signInDlgState.address]);
 
     const fetchMoreData = () => {
         if (!isLoadingNext) {
@@ -297,7 +296,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
             let change = 0;
             // const likedList: Array<TypeProduct> = _myNFTList[5];
             if (type === 'inc') {
-                prodList[id].likes += 1;
+                prodList[id].likes = (prodList[id].likes ? prodList[id].likes : 0) + 1;
                 prodList[id].isLike = true;
                 // likedList.push(prodList[id]);
                 change++;
@@ -336,6 +335,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (nftGalleryFilterBtnSelected === nftGalleryFilterBtnTypes.Liked) setReload(!reload);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nftGalleryFilterBtnSelected]);
 
     const theme = useTheme();
@@ -448,7 +448,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                             ? signInDlgState.userName.length > 40
                                                 ? reduceUserName(signInDlgState.userName, 4)
                                                 : signInDlgState.userName
-                                            : reduceHexAddress(signInDlgState.walletAccounts[0], 4)}
+                                            : reduceHexAddress(signInDlgState.address, 4)}
                                     </Typography>
                                     <SecondaryButton
                                         sx={{

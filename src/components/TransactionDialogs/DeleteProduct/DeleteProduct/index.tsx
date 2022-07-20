@@ -14,6 +14,8 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { useNavigate } from 'react-router-dom';
+import { enumMetEastContractType } from 'src/types/contract-types';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {
     onClose: () => void;
@@ -30,7 +32,9 @@ const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
 
     const handleBurn = () => {
@@ -56,7 +60,7 @@ const DeleteProduct: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 1,
+            contractType: enumMetEastContractType.METEAST,
             method: 'burn',
             price: '0',
             tokenId: dialogState.burnTokenId,

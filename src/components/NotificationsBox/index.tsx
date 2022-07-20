@@ -24,7 +24,7 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
         const markAsRead = async () => {
             const arrNoteIds: string[] = [];
             notificationsList.forEach((item: TypeNotification) => {
-                arrNoteIds.push(item.id);
+                arrNoteIds.push(item._id);
             });
             const result = await markNotificationsAsRead(signInDlgState.token, arrNoteIds.join(','));
             if (!unmounted && result) {

@@ -12,7 +12,6 @@ import UploadSingleFile from 'src/components/Upload/UploadSingleFile';
 import ModalDialog from 'src/components/ModalDialog';
 import SearchBlindBoxItems from '../SearchBlindBoxItems';
 import { getBBCandiatesList } from 'src/services/fetch';
-import { TypeProductFetch } from 'src/types/product-types';
 import DateTimePicker from 'src/components/DateTimePicker/DateTimePicker';
 
 export interface ComponentProps {}
@@ -49,25 +48,31 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     // const [saleEndsError, setSaleEndsError] = useState(false);
     const [selectDlgOpened, setSelectDlgOpened] = useState<boolean>(false);
     const [maxLimit] = useState<number>(15);
+    const [selectImageButtonDisable, setSelectImageButtonDisable] = useState<boolean>(true);
 
     useEffect(() => {
         let unmounted = false;
         const getFetchData = async () => {
-            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.walletAccounts[0], '');
-            let count = 0;
-            for (let i = 0; i < _BBCandidatesList.length; i++) {
-                const itemObject: TypeProductFetch = _BBCandidatesList[i];
-                if (itemObject.status !== 'DELETED') count++;
-            }
+            const _BBCandidatesList = await getBBCandiatesList(signInDlgState.address, '', signInDlgState.token);
+            // let count = 0;
+            // for (let i = 0; i < _BBCandidatesList.length; i++) {
+            //     const itemObject: TypeProductFetch = _BBCandidatesList[i];
+            //     if (itemObject.status !== 'DELETED') count++;
+            // }
             if (!unmounted) {
-                setBlindboxCandidateCount(count);
+                setBlindboxCandidateCount(_BBCandidatesList.length);
             }
         };
-        if (signInDlgState.walletAccounts.length) getFetchData().catch(console.error);
+        if (signInDlgState.address)
+            getFetchData()
+                .then(() => {
+                    setSelectImageButtonDisable(false);
+                })
+                .catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+    }, [signInDlgState.address, signInDlgState.token]);
 
     const handleFileChange = (files: Array<File>) => {
         if (files === null || files.length === 0) return;
@@ -93,6 +98,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
         if (blindboxQuantityError >= 0) {
             setBlindboxQuantityError(tokenIds.length);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dialogState.crtBlindTokenIds]);
 
     useEffect(() => {
@@ -164,6 +170,7 @@ const CreateBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                                     Items
                                 </Typography>
                                 <PrimaryButton
+                                    disabled={selectImageButtonDisable}
                                     fullWidth
                                     size="small"
                                     onClick={() => {

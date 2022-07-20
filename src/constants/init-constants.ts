@@ -14,8 +14,8 @@ import {
     enumMyNFTType,
     enumTransactionType,
     enumBadgeType,
-    TypeMiningReward,
 } from 'src/types/product-types';
+import { TypeMiningReward } from 'src/types/contract-types';
 
 export const blankNFTItem: TypeProduct = {
     tokenId: '',
@@ -37,6 +37,7 @@ export const blankNFTItem: TypeProduct = {
     holder: '',
     type: enumSingleNFTType.BuyNow,
     isLike: false,
+    bids: 0,
 };
 
 export const blankMyNFTItem: TypeProduct = {
@@ -57,16 +58,18 @@ export const blankMyNFTItem: TypeProduct = {
     createTime: '',
     holderName: '',
     holder: '',
-    type: enumMyNFTType.Created,
+    type: enumMyNFTType.BuyNow,
     isLike: false,
+    bids: 0,
 };
 
 export const blankNFTTxs: TypeNFTTransaction = {
-    type: enumTransactionType.Bid,
+    type: enumTransactionType.SoldTo,
     user: '',
     price: 0,
     time: '',
     txHash: '',
+    saleType: enumTransactionType.ForSale,
 };
 
 export const blankNFTBid: TypeSingleNFTBid = { user: '', address: '', price: 0, time: '', orderId: '' };
@@ -76,7 +79,7 @@ export const blankMyEarning: TypeYourEarning = {
     title: '',
     time: '',
     price: 0,
-    badge: enumBadgeType.Other,
+    badges: [],
 };
 
 export const blankMyNFTHistory: TypeNFTHisotry = {
@@ -110,6 +113,7 @@ export const blankBBItem: TypeProduct = {
     isLike: false,
     sold: 0,
     instock: 0,
+    bids: 0,
 };
 
 export const blankBBCandidate: TypeBlindBoxSelectItem = {
@@ -183,13 +187,16 @@ export const blankContractMethodParam: TypeContractMethodPram = {
 };
 
 export const blankNotification: TypeNotification = {
-    id: '',
+    _id: '',
     title: '',
     content: '',
     date: '',
+    type: 0,
+    params: { tokenName: '' },
 };
 
 export const blankUserToken: UserTokenType = {
+    address: '',
     did: '',
     name: '',
     description: '',

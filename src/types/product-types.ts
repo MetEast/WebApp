@@ -17,6 +17,7 @@ export enum enumMyNFTType {
     Created = 'MyNFT - Created',
     Sold = 'MyNFT - Sold',
     Purchased = 'MyNFT - Purchased',
+    InBindBox = 'MyNFT - In BlindBox',
 }
 
 export enum enumBadgeType {
@@ -42,6 +43,7 @@ export enum enumBadgeType {
     Sold = 'Sold',
     Sale = 'Sale',
     Royalties = 'Royalties',
+    InBlindBox = 'In Mystery Box',
 }
 
 export enum enumTransactionType {
@@ -102,6 +104,10 @@ export type TypeProduct = {
     did?: string;
     isBlindbox?: boolean;
     soldIds?: string[];
+
+    bids: number;
+    buyer?: string;
+    txHash?: string;
 };
 
 export type TypeNFTTransaction = {
@@ -110,6 +116,7 @@ export type TypeNFTTransaction = {
     price: number;
     time: string;
     txHash: string;
+    saleType: enumTransactionType;
 };
 
 export type TypeNFTHisotry = {
@@ -135,7 +142,7 @@ export type TypeYourEarning = {
     title: string;
     time: string;
     price: number;
-    badge: enumBadgeType;
+    badges: enumBadgeType[];
 };
 
 export type TypeBlindBoxSelectItem = {
@@ -190,9 +197,11 @@ export type TypeProductFetch = {
     orderId: string;
     category: string;
     //
+    _id: string;
+    address: string;
     blindBoxIndex: number;
     blindPrice: string;
-    maxPurchases: string;
+    maxPurchase: string;
     maxQuantity: string;
     maxViews: string;
     saleBegin: string;
@@ -202,13 +211,89 @@ export type TypeProductFetch = {
     list_likes: Array<TypeBlindListLikes>;
     list_views: Array<TypeBlindListLikes>;
     did: string;
-    sold_tokenIds: string[];
+    soldTokenIds: string[];
     tokenIds: string[];
     createdName: string;
     createdAddress: string;
     createdDescription: string;
     createdAvatar: string;
-    isBlindbox: boolean;
+    isBlindBox: boolean;
+
+    orderState: number;
+    orderType: number;
+    seller: string;
+    tokenOwner: string;
+    royaltyFee: number;
+    tokenMinter: string;
+    updateTime: number;
+    orderPrice: number;
+    buyer: string;
+
+    creator: {
+        did: string;
+        description: string;
+        name: string;
+    };
+    data: {
+        image: string;
+        kind: string;
+        size: number;
+        thumbnail: string;
+    };
+
+    order: {
+        orderId: number;
+        createTime: number;
+        endTime: number;
+        isBlindBox: boolean;
+        orderPrice: number;
+        orderState: number;
+        orderType: number;
+        seller: string;
+        buyer: string;
+        price: number;
+        bids: number;
+        buyerAddr: string;
+    };
+
+    token: {
+        category: string;
+        createTime: number;
+        description: string;
+        name: string;
+        royaltyFee: number;
+        royaltyOwner: string;
+        thumbnail: string;
+        likes: number;
+        views: number;
+    };
+
+    tokenEvent: {
+        transactionHash: string;
+    };
+};
+
+export type TypeProductFetch2 = {
+    orderId: number;
+    createTime: number;
+    orderPrice: number;
+    seller: string;
+    tokenId: string;
+    orderType: number;
+    token: Token;
+    endTime: number;
+};
+
+export type Token = {
+    category: string;
+    createTime: number;
+    description: string;
+    name: string;
+    royaltyFee: number;
+    royaltyOwner: string;
+    thumbnail: string;
+    views: number;
+    likes: number;
 };
 
 export type TypeFavouritesFetch = {
@@ -236,6 +321,16 @@ export type TypeVeiwsLikesFetch = {
     views: Array<TypeViewsFetchItem>;
 };
 
+export enum OrderEventType {
+    OrderForAuction,
+    OrderBid,
+    OrderForSale,
+    OrderFilled,
+    OrderCancelled,
+    OrderPriceChanged,
+    OrderTakenDown,
+}
+
 export type TypeNFTTransactionFetch = {
     blockNumber: number;
     from: string;
@@ -256,7 +351,46 @@ export type TypeNFTTransactionFetch = {
     royaltyFee: string;
     royaltyOwner: string;
     tHash: string;
-    // price: string;
+
+    orderType: number;
+    orderState: number;
+
+    sellerAddr: string;
+    sellerInfo: {
+        did: string;
+        description: string;
+        name: string;
+    };
+    buyerAddr: string;
+    buyerInfo: {
+        did: string;
+        description: string;
+        name: string;
+    };
+
+    events: Array<TransferEvent>;
+};
+
+export type TransferEvent = {
+    blockNumber: number;
+    transactionHash: string;
+    seller: string;
+    buyer: string;
+    orderId: number;
+    tokenId: string;
+    quoteToken: string;
+    minPrice: number;
+    price: number;
+    oldPrice: number;
+    newPrice: number;
+    endTime: number;
+    royaltyOwner: string;
+    royaltyFee: number;
+    platformAddress: string;
+    platformFee: number;
+    eventType: number;
+    gasFee: number;
+    timestamp: number;
 };
 
 export type TypeSingleNFTBidFetch = {
@@ -278,6 +412,7 @@ export type TypeSingleNFTBidFetch = {
     price: string;
     timestamp: string;
     gasFee: number;
+    buyer: string;
 };
 
 export type TypePriceHistoryFetch = {
@@ -294,17 +429,18 @@ export type TypeYourEarningFetch = {
     tokenId: string;
     thumbnail: string;
     updateTime: string;
+
+    filled: number;
+    platformFee: number;
+    price: number;
+    sellerAddr: string;
+    royaltyOwner: string;
+    royaltyFee: number;
+    token: { name: string; data: { thumbnail: string } };
 };
 
 export type TypeChartAxis = {
     x: number;
     y: number;
     username: string;
-};
-
-export type TypeMiningReward = {
-    lastReceipt: number;
-    availableToken: number;
-    availablePrice: number;
-    receivedReward: number;
 };

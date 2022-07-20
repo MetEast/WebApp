@@ -39,7 +39,7 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
     const getUnReadNotes = useCallback(() => {
         let unmounted = false;
         const fetchNotifications = async () => {
-            const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
+            const _notificationList = await getNotificationList(signInDlgState.token);
             const _unReadNotes = _notificationList.filter((item: TypeNotification) => item.isRead === false);
             if (!unmounted) {
                 setNotificationState({
@@ -49,17 +49,19 @@ const Navbar: React.FC<ComponentProps> = ({ mobile = false }): JSX.Element => {
                 });
             }
         };
-        if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
+        if (signInDlgState.token) fetchNotifications().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signInDlgState.token]);
 
     useEffect(() => {
         getUnReadNotes();
         setTimeout(() => {
             setRefetch(!refetch);
         }, 10 * 60 * 1000);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState.walletAccounts, refetch]);
 
     const menuItemsList: Array<TypeMenuItem> = [

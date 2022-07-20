@@ -4,13 +4,12 @@ import { Typography, Stack, Button } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { Icon } from '@iconify/react';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
+import { apiConfig } from 'src/config';
 
 export interface ComponentProps {}
 
-const GooglePlayLink = 'https://play.google.com/store/apps/details?id=org.elastos.essentials.app&hl=en_US&gl=US';
-const AppStoreLink = 'https://apps.apple.com/us/app/elastos-essentials/id1568931743';
-
 const DownloadEssentials: React.FC<ComponentProps> = (): JSX.Element => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [signInDlgState, setSignInDlgState] = useSignInContext();
 
     return (
@@ -23,7 +22,7 @@ const DownloadEssentials: React.FC<ComponentProps> = (): JSX.Element => {
                 fullWidth
                 sx={{ marginTop: 4 }}
                 onClick={() => {
-                    window.open(GooglePlayLink, '_blank');
+                    window.open(apiConfig.eeGooglePlayLink, '_blank');
                 }}
             >
                 <img src="/assets/icons/googleplay.svg" alt="" style={{ marginRight: 8 }} />
@@ -33,7 +32,7 @@ const DownloadEssentials: React.FC<ComponentProps> = (): JSX.Element => {
                 fullWidth
                 sx={{ marginTop: 2 }}
                 onClick={() => {
-                    window.open(AppStoreLink, '_blank');
+                    window.open(apiConfig.eeAppStoreLink, '_blank');
                 }}
             >
                 <img src="/assets/icons/appstore.svg" alt="" style={{ marginRight: 8 }} />

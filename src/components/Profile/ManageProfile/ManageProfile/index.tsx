@@ -25,11 +25,11 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [toatlEarned, setTotalEarned] = useState<string>('0');
     const [todayEarned, setTodayEarned] = useState<string>('0');
     const [earningList, setEarningList] = useState<Array<TypeYourEarning>>([]);
-    const arrStrDid = signInDlgState.userDid.split(':').filter((value: string) => value.length > 0);
+    const arrStrDid = signInDlgState.address.split(':').filter((value: string) => value.length > 0);
     const strUserDid =
         arrStrDid.length === 3
             ? `did:elastos:${reduceHexAddress(arrStrDid[2], 7)}`
-            : reduceHexAddress(signInDlgState.userDid, 10);
+            : reduceHexAddress(signInDlgState.address, 10);
 
     const showSnackBar = () => {
         enqueueSnackbar('Copied to Clipboard!', {
@@ -129,9 +129,11 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         </Typography>
                                     </Stack>
                                 )}
-                                {/* {signInDlgState.loginType === '1' && ( */}
                                 <Stack direction="row" spacing={0.5}>
-                                    <CopyToClipboard text={signInDlgState.userDid} onCopy={showSnackBar}>
+                                    <CopyToClipboard
+                                        text={signInDlgState.userDid ? signInDlgState.userDid : signInDlgState.address}
+                                        onCopy={showSnackBar}
+                                    >
                                         <CopyToClipboardButton>
                                             <Icon
                                                 icon="ph:copy"
@@ -144,7 +146,6 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         {strUserDid}
                                     </Typography>
                                 </Stack>
-                                {/* )} */}
                             </>
                         )}
                     </Grid>

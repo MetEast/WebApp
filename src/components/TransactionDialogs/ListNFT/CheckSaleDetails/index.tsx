@@ -4,7 +4,6 @@ import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLab
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import Web3 from 'web3';
-import { METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -16,6 +15,9 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { getTime } from 'src/services/common';
+import { enumMetEastContractType } from 'src/types/contract-types';
+import { enumAuthType } from 'src/types/auth-types';
+import { contractConfig } from 'src/config';
 
 export interface ComponentProps {}
 
@@ -29,7 +31,9 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
     const handleSell = () => {
         if (dialogState.sellTxFee > signInDlgState.walletBalance) {
@@ -55,10 +59,10 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 1,
+            contractType: enumMetEastContractType.METEAST,
             method: 'setApprovalForAll',
             price: '0',
-            operator: METEAST_MARKET_CONTRACT_ADDRESS,
+            operator: contractConfig.METEAST_MARKET_CONTRACT,
             approved: true,
         })
             .then((result: string) => {
@@ -73,7 +77,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     dialogState.sellSaleType === 'buynow'
                         ? {
                               ...blankContractMethodParam,
-                              contractType: 2,
+                              contractType: enumMetEastContractType.METEAST_MARKET,
                               method: 'createOrderForSale',
                               price: '0',
                               tokenId: dialogState.mintTokenId,
@@ -84,7 +88,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                           }
                         : {
                               ...blankContractMethodParam,
-                              contractType: 2,
+                              contractType: enumMetEastContractType.METEAST_MARKET,
                               method: 'createOrderForAuction',
                               price: '0',
                               tokenId: dialogState.mintTokenId,

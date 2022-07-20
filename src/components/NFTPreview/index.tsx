@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {
     isLoading: boolean;
@@ -63,19 +64,23 @@ const NFTPreview: React.FC<ComponentProps> = ({
         event.preventDefault(); //
         event.stopPropagation(); //
         if (signInDlgState.isLoggedIn) {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/${
-                likeState ? 'decTokenLikes' : 'incTokenLikes'
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/${
+                likeState
+                    ? isBlindBox
+                        ? 'decBlindBoxLikes'
+                        : 'decTokenLikes'
+                    : isBlindBox
+                    ? 'incBlindBoxLikes'
+                    : 'incTokenLikes'
             }`;
             const reqBody = isBlindBox
                 ? {
-                      token: signInDlgState.token,
                       blindBoxIndex: product.tokenId,
-                      did: signInDlgState.userDid,
+                      address: signInDlgState.address,
                   }
                 : {
-                      token: signInDlgState.token,
                       tokenId: product.tokenId,
-                      did: signInDlgState.userDid,
+                      address: signInDlgState.address,
                   };
             // change state first
             if (updateLikes !== undefined) updateLikes(index, likeState ? 'dec' : 'inc');
@@ -84,12 +89,13 @@ const NFTPreview: React.FC<ComponentProps> = ({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                     } else {
                         console.log(data);
                     }
@@ -111,7 +117,8 @@ const NFTPreview: React.FC<ComponentProps> = ({
             <ProductImageContainer
                 sx={{ cursor: productType === 3 ? 'auto' : 'pointer' }}
                 onClick={() => {
-                    if (!isLoading && product.tokenId && productType !== 3) navigate(getUrl());
+                    if (!isLoading && product.tokenId && productType !== 3)
+                        navigate(getUrl(), { state: { isLiked: likeState, isLoggedIn: signInDlgState.isLoggedIn } });
                 }}
             >
                 <ImageBox loading={isLoading ? 1 : 0}>
@@ -125,7 +132,6 @@ const NFTPreview: React.FC<ComponentProps> = ({
                         />
                     ) : (
                         <>
-                            {/* <img src={product.image} alt="" /> */}
                             <Box
                                 sx={{
                                     background: `url(${product.image})`,
@@ -221,7 +227,7 @@ const NFTPreview: React.FC<ComponentProps> = ({
                                 nfttype={product.type}
                                 content={product.endTime}
                                 myNftTypes={endedAuctionTypes}
-                                isReservedAuction={product.status === 'HAS BIDS'}
+                                isReservedAuction
                             />
                         )}
                         {isLoading ? (

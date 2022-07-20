@@ -13,20 +13,20 @@ const NotificationsPage: React.FC = (): JSX.Element => {
     useEffect(() => {
         let unmounted = false;
         const fetchNotifications = async () => {
-            const _notificationList = await getNotificationList(signInDlgState.walletAccounts[0]);
+            const _notificationList = await getNotificationList(signInDlgState.token);
             if (!unmounted) {
                 setNotificationState({ ...notificationState, notesList: _notificationList });
             }
         };
-        if (signInDlgState.walletAccounts.length) fetchNotifications().catch(console.error);
+        if (signInDlgState.token) fetchNotifications().catch(console.error);
         setTimeout(() => {
             setRefetch(!refetch);
         }, 10 * 60 * 1000);
-
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.walletAccounts, refetch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signInDlgState.token, refetch]);
 
     return (
         <Stack direction="column">

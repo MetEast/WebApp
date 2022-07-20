@@ -1,21 +1,18 @@
+import { ipfsConfig } from 'src/config';
 import { enumBadgeType } from 'src/types/product-types';
-
-// custome
-export const isProductEnv = () => {
-    return process.env.REACT_APP_PUBLIC_ENV !== 'development';
-};
 
 export const getImageFromAsset = (id: string) => {
     if (!id) return '';
+    if (typeof id !== 'string') return '';
     const prefixLen = id.split(':', 2).join(':').length;
     if (prefixLen >= id.length) return '';
     const uri = id.substring(prefixLen + 1);
-    return `${process.env.REACT_APP_IPFS_NODE_URL}/${uri}`;
+    return `${ipfsConfig.ipfsNodeUrl}/${uri}`;
 };
 
 export const getAssetFromImage = (url: string) => {
     if (!url) return '';
-    const asset = url.replace(`${process.env.REACT_APP_IPFS_NODE_URL}/`, '');
+    const asset = url.replace(`${ipfsConfig.ipfsNodeUrl}/`, '');
     return `meteast:image:${asset}`;
 };
 

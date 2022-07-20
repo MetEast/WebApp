@@ -63,7 +63,7 @@ const AdminHomePopular: React.FC = (): JSX.Element => {
         [],
     );
 
-    const [tabledata, setTabledata] = useState(data);
+    const [tabledata] = useState(data);
 
     const [showAddPoularItemDlg, setShowAddPoularItemDlg] = useState<boolean>(false);
     const [showEditPoularItemDlg, setShowEditPoularItemDlg] = useState<boolean>(false);

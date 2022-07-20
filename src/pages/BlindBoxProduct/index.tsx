@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -10,29 +10,25 @@ import { PrimaryButton } from 'src/components/Buttons/styles';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { enumBadgeType, enumBlindBoxNFTType, TypeProduct } from 'src/types/product-types';
-import { getBBItem, getELA2USD, getNFTItems } from 'src/services/fetch';
-// import { reduceHexAddress } from 'src/services/common';
+import { getBBItem, getELA2USD, getNFTItems, checkBlindBoxLike } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankBBItem } from 'src/constants/init-constants';
 import ProjectDescription from 'src/components/SingleNFTMoreInfo/ProjectDescription';
 import AboutAuthor from 'src/components/SingleNFTMoreInfo/AboutAuthor';
 import NFTPreview from 'src/components/NFTPreview';
-// import { useSnackbar } from 'notistack';
-// import SnackMessage from 'src/components/SnackMessage';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
-// import BuyBlindBoxDlgContainer from 'src/components/TransactionDialogs/BuyBlindBox';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const BlindBoxProduct: React.FC = (): JSX.Element => {
     const params = useParams();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
-    // const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [blindBoxDetail, setBlindBoxDetail] = useState<TypeProduct>(blankBBItem);
     const [pageType, setPageType] = useState<'details' | 'sold'>('details');
     const [nftSoldList, setNftSoldList] = useState<Array<TypeProduct>>([]);
-    // const [onProgress, setOnProgress] = useState<boolean>(false);
+    const location = useLocation();
 
     // -------------- Fetch Data -------------- //
     useEffect(() => {
@@ -40,7 +36,10 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
         const getFetchData = async () => {
             if (!unmounted) setIsLoading(true);
             const ELA2USD = await getELA2USD();
-            const _BBItem = await getBBItem(params.id, ELA2USD, signInDlgState.userDid);
+            const _BBItem = await getBBItem(params.id, ELA2USD);
+            // @ts-ignore
+            if (signInDlgState.isLoggedIn) _BBItem.isLike = location.state && location.state?.isLoggedIn ? location.state.isLiked : await checkBlindBoxLike(params.id || '', signInDlgState.address);
+
             const _BBSoldNFTs = await getNFTItems(_BBItem.soldIds?.join(','));
             if (!unmounted) {
                 setBlindBoxDetail(_BBItem);
@@ -48,52 +47,33 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                 setIsLoading(false);
             }
         };
-        getFetchData().catch(console.error);
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
+            getFetchData().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.userDid, params.id]);
-
-    // const changeBBStatus = async () => {
-    //     let unmounted = false;
-    //     setOnProgress(true);
-    //     updateBBStatus(signInDlgState.token, parseInt(blindBoxDetail.tokenId), 'online').then((success: boolean) => {
-    //         if (!unmounted && success) {
-    //             const _BBItem = { ...blindBoxDetail };
-    //             _BBItem.status = 'online';
-    //             setBlindBoxDetail(_BBItem);
-    //             setOnProgress(false);
-    //             enqueueSnackbar('', {
-    //                 anchorOrigin: { horizontal: 'right', vertical: 'top' },
-    //                 autoHideDuration: 3000,
-    //                 content: (key) => <SnackMessage id={key} message="Put online succeed." variant="success" />,
-    //             });
-    //         }
-    //     });
-    //     return () => {
-    //         unmounted = true;
-    //     };
-    // };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
     useEffect(() => {
         let unmounted = false;
         const updateBlindBoxViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incBlindBoxViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 blindBoxIndex: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                         if (!unmounted) {
                             setBlindBoxDetail((prevState: TypeProduct) => {
                                 const blindDetail: TypeProduct = { ...prevState };
@@ -109,12 +89,12 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                     console.log(error);
                 });
         };
-        if (blindBoxDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+        if (blindBoxDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.address)
             updateBlindBoxViews(blindBoxDetail.tokenId);
         return () => {
             unmounted = true;
         };
-    }, [blindBoxDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+    }, [blindBoxDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -217,11 +197,9 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                 price_usd={blindBoxDetail.price_usd}
                                 marginTop={3}
                             />
-                            {(signInDlgState.walletAccounts.length === 0 ||
-                                (signInDlgState.walletAccounts.length !== 0 &&
-                                    blindBoxDetail.royaltyOwner !== signInDlgState.walletAccounts[0])) &&
-                                blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds &&
-                                blindBoxDetail.state === 'online' && (
+                            {(!signInDlgState.address ||
+                                (signInDlgState.address && blindBoxDetail.royaltyOwner !== signInDlgState.address)) &&
+                                blindBoxDetail.type === enumBlindBoxNFTType.SaleEnds && (
                                     <PrimaryButton
                                         sx={{ marginTop: 3, width: '100%' }}
                                         onClick={() => {
@@ -234,19 +212,13 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                                     buyBlindPriceEla: blindBoxDetail.price_ela,
                                                     buyBlindPriceUsd: blindBoxDetail.price_usd,
                                                     buyBlindAmount: 1,
-                                                    buyBlindBoxId: parseInt(blindBoxDetail.tokenId),
-                                                    // buyBlindCreator:
-                                                    //     blindBoxDetail.author === ''
-                                                    //         ? reduceHexAddress(blindBoxDetail.royaltyOwner || '', 4)
-                                                    //         : blindBoxDetail.author,
-                                                    buyBlindMaxPurchases:
-                                                        blindBoxDetail.maxPurchases === undefined
-                                                            ? 0
-                                                            : blindBoxDetail.maxPurchases,
-                                                    buyBlindInstock:
-                                                        blindBoxDetail.instock === undefined
-                                                            ? 0
-                                                            : blindBoxDetail.instock,
+                                                    buyBlindBoxId: blindBoxDetail.tokenId,
+                                                    buyBlindMaxPurchases: blindBoxDetail.maxPurchases
+                                                        ? blindBoxDetail.maxPurchases
+                                                        : 0,
+                                                    buyBlindInstock: blindBoxDetail.instock
+                                                        ? blindBoxDetail.instock
+                                                        : 0,
                                                 });
                                             } else {
                                                 setSignInDlgState((prevState: SignInState) => {
@@ -260,17 +232,6 @@ const BlindBoxProduct: React.FC = (): JSX.Element => {
                                         Buy Now
                                     </PrimaryButton>
                                 )}
-                            {/* {signInDlgState.walletAccounts.length !== 0 &&
-                                blindBoxDetail.royaltyOwner === signInDlgState.walletAccounts[0] &&
-                                blindBoxDetail.status === 'offline' && (
-                                    <PrimaryButton
-                                        sx={{ marginTop: 3, width: '100%' }}
-                                        disabled={onProgress}
-                                        onClick={changeBBStatus}
-                                    >
-                                        Put online
-                                    </PrimaryButton>
-                                )} */}
                         </>
                     )}
                 </Grid>

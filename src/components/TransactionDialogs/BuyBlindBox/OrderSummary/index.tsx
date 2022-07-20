@@ -14,6 +14,9 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
+import { serverConfig } from 'src/config';
+import { enumMetEastContractType } from 'src/types/contract-types';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {}
 
@@ -27,16 +30,17 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
 
     const sendSoldBlindBoxTokenIds = (txHash: string) => {
         let unmounted = false;
-        const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/soldTokenFromBlindbox`;
+        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/soldTokenFromBlindbox`;
         const reqBody = {
-            token: signInDlgState.token,
-            blindBoxId: dialogState.buyBlindBoxId,
-            tokenIds: dialogState.buyBlindTokenIds,
+            id: dialogState.buyBlindBoxId,
+            orderIds: dialogState.buyBlindOrderIds.map((item: string) => Number(item)),
             buyer: signInDlgState.walletAccounts[0],
             totalPrice: dialogState.buyBlindPriceEla * dialogState.buyBlindOrderIds.length,
         };
@@ -44,12 +48,13 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${signInDlgState.token}`,
             },
             body: JSON.stringify(reqBody),
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.code === 200) {
+                if (data.status === 200) {
                     if (!unmounted) {
                         setOnProgress(false);
                         setDialogState({
@@ -91,9 +96,12 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
         }, 120000);
         if (!unmounted) setDialogState(updatedState);
 
+        console.log(dialogState.buyBlindOrderIds);
+        console.log(signInDlgState.didUri);
+
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 2,
+            contractType: enumMetEastContractType.METEAST_MARKET,
             method: 'buyOrderBatch',
             price: BigInt(dialogState.buyBlindPriceEla * 1e18 * dialogState.buyBlindOrderIds.length).toString(),
             orderIds: dialogState.buyBlindOrderIds,
@@ -144,7 +152,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
                         <DetailedInfoTitleTypo>Unit Price</DetailedInfoTitleTypo>
                     </Grid>
                     <Grid item xs={6}>
-                        <DetailedInfoLabelTypo>{(dialogState.buyBlindPriceEla).toFixed(2)} ELA</DetailedInfoLabelTypo>
+                        <DetailedInfoLabelTypo>{dialogState.buyBlindPriceEla.toFixed(2)} ELA</DetailedInfoLabelTypo>
                     </Grid>
                     <Grid item xs={6}>
                         <DetailedInfoTitleTypo>Amount</DetailedInfoTitleTypo>

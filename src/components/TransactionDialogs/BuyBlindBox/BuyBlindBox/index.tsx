@@ -9,6 +9,7 @@ import { useDialogContext } from 'src/context/DialogContext';
 import { TypeBlindBoxCandidate } from 'src/types/product-types';
 import { getImageFromAsset } from 'src/services/common';
 import { FETCH_CONFIG_JSON } from 'src/services/fetch';
+import { serverConfig } from 'src/config';
 
 export interface ComponentProps {}
 
@@ -19,18 +20,18 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
     const selectFromBlindBox = async () => {
         let unmounted = false;
         const resNFTList = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/api/v1/selectBlindBoxToken?id=${dialogState.buyBlindBoxId}&count=${amount}`,
+            `${serverConfig.metServiceUrl}/api/v1/selectBlindBoxToken?id=${dialogState.buyBlindBoxId}&count=${amount}`,
             FETCH_CONFIG_JSON,
         );
         const dataNFTList = await resNFTList.json();
-        const selectedTokens: Array<TypeBlindBoxCandidate> = dataNFTList.data.result;
+        const selectedTokens: Array<TypeBlindBoxCandidate> = dataNFTList.data;
         const arrOrderIds: string[] = [];
         const arrTokenIds: string[] = [];
         const arrAssets: string[] = [];
         const arrNames: string[] = [];
         const arrCreators: string[] = [];
         selectedTokens.forEach((item: TypeBlindBoxCandidate) => {
-            arrOrderIds.push(item.orderId);
+            arrOrderIds.push(item.orderId.toString());
             arrTokenIds.push(item.tokenId);
             arrAssets.push(getImageFromAsset(item.asset));
             arrNames.push(item.name);
@@ -99,7 +100,9 @@ const BuyBlindBox: React.FC<ComponentProps> = (): JSX.Element => {
                     />
                     <IconBtn
                         onClick={() => {
-                            dialogState.buyBlindMaxPurchases > amount && dialogState.buyBlindInstock > amount && setAmount(amount + 1);
+                            dialogState.buyBlindMaxPurchases > amount &&
+                                dialogState.buyBlindInstock > amount &&
+                                setAmount(amount + 1);
                         }}
                     >
                         <Icon icon="ph:plus" color="#1890FF" />

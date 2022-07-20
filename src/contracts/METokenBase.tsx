@@ -1,4 +1,3 @@
-export const METEAST_BASE_TOKEN_CONTRACT_ADDRESS = '0x3A84a2B672d2c98095E788Ecb453CC0e50F4AfF5';
 export const METEAST_BASE_TOKEN_CONTRACT_ABI = [
     {
         inputs: [],

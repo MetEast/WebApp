@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Stack, Grid, Box, Typography, Skeleton } from '@mui/material';
 import ProductPageHeader from 'src/components/ProductPageHeader';
-import { enumBadgeType, enumSingleNFTType } from 'src/types/product-types';
+import { enumBadgeType, enumSingleNFTType, enumTransactionType } from 'src/types/product-types';
 import ProductImageContainer from 'src/components/ProductImageContainer';
 import ProductSnippets from 'src/components/ProductSnippets';
 import ProductBadge from 'src/components/ProductBadge';
@@ -12,7 +12,7 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getMintCategory } from 'src/services/common';
-import { getELA2USD, getMyFavouritesList, getNFTItem, getNFTLatestTxs } from 'src/services/fetch';
+import { getELA2USD, getNFTItem, getNFTLatestTxs, checkTokenLike } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -24,75 +24,76 @@ import ChainDetails from 'src/components/SingleNFTMoreInfo/ChainDetails';
 // import ChangePriceDlgContainer from 'src/components/TransactionDialogs/ChangePrice';
 // import CancelSaleDlgContainer from 'src/components/TransactionDialogs/CancelSale';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
     const params = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [productDetail, setProductDetail] = useState<TypeProduct>(blankNFTItem);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
-    const [showBuyNowBtn, setShowBuyNowBtn] = useState<boolean>(false);
+    const [isNFTHolder, setIsNFTHolder] = useState<boolean>(false);
     // -------------- Fetch Data -------------- //
     useEffect(() => {
         let unmounted = false;
         const fetchNFTItem = async () => {
             const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _NFTItem = await getNFTItem(params.id, ELA2USD, likeList);
-            if (!unmounted) {
-                if (_NFTItem.type !== enumSingleNFTType.BuyNow) navigate(-1); // on fixed sale
-                setProductDetail(_NFTItem);
-            }
-        };
-        if((signInDlgState.isLoggedIn && signInDlgState.userDid) || (!signInDlgState.isLoggedIn)) fetchNFTItem().catch(console.error);
-        return () => {
-            unmounted = true;
-        };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, params.id]);
+            const _NFTItem = await getNFTItem(params.id, ELA2USD);
+            // @ts-ignore
+            if (signInDlgState.isLoggedIn) _NFTItem.isLike = location.state && location.state?.isLoggedIn ? location.state.isLiked : await checkTokenLike(params.id || '', signInDlgState.address);
 
-    useEffect(() => {
-        let unmounted = false;
-        const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, '', 1, 5);
+            const _NFTTxs = await getNFTLatestTxs(params.id);
+            _NFTTxs.push({
+                type: enumTransactionType.CreatedBy,
+                user: _NFTItem.author,
+                price: 0,
+                time: _NFTItem.createTime,
+                txHash: _NFTItem.txHash || '',
+                saleType: enumTransactionType.CreatedBy,
+            });
             if (!unmounted) {
-                setTransactionsList(_NFTTxs.txs);
+                if (!(_NFTItem.type === enumSingleNFTType.BuyNow && _NFTItem.status === '1')) navigate(-1); // on buynow
+                setProductDetail(_NFTItem);
+                setTransactionsList(_NFTTxs);
             }
         };
-        fetchLatestTxs().catch(console.error);
+        if ((signInDlgState.isLoggedIn && signInDlgState.address) || !signInDlgState.isLoggedIn)
+            fetchNFTItem().catch(console.error);
         return () => {
             unmounted = true;
         };
-    }, [params.id]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
+
     // -------------- Fetch Data -------------- //
     useEffect(() => {
-        if (signInDlgState.walletAccounts.length === 0) {
-            setShowBuyNowBtn(true);
-        } else {
-            if (signInDlgState.walletAccounts[0] === productDetail.holder) setShowBuyNowBtn(false);
-            else setShowBuyNowBtn(true);
-        }
-    }, [signInDlgState.walletAccounts, productDetail]);
+        if (signInDlgState.address) {
+            if (signInDlgState.address === productDetail.holder) setIsNFTHolder(true);
+            else setIsNFTHolder(false);
+        } else setIsNFTHolder(false);
+    }, [signInDlgState.address, productDetail]);
     // -------------- Likes & Views -------------- //
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incTokenViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + signInDlgState.token,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                         if (!unmounted) {
                             setProductDetail((prevState: TypeProduct) => {
                                 const prodDetail: TypeProduct = { ...prevState };
@@ -108,12 +109,12 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                     console.log(error);
                 });
         };
-        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.address)
             updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
@@ -202,32 +203,8 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                 detail_page={true}
                                 marginTop={3}
                             />
-                            {productDetail.status !== 'NEW' &&
-                                (showBuyNowBtn ? (
-                                    <PrimaryButton
-                                        sx={{ marginTop: 3, width: '100%' }}
-                                        onClick={() => {
-                                            if (signInDlgState.isLoggedIn) {
-                                                setDialogState({
-                                                    ...dialogState,
-                                                    buyNowDlgOpened: true,
-                                                    buyNowDlgStep: 0,
-                                                    buyNowPrice: productDetail.price_ela,
-                                                    buyNowName: productDetail.name,
-                                                    buyNowOrderId: productDetail.orderId || '',
-                                                });
-                                            } else {
-                                                setSignInDlgState((prevState: SignInState) => {
-                                                    const _state = { ...prevState };
-                                                    _state.signInDlgOpened = true;
-                                                    return _state;
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        buy now
-                                    </PrimaryButton>
-                                ) : (
+                            {productDetail.status === '1' &&
+                                (isNFTHolder ? (
                                     <Stack direction="row" alignItems="center" spacing={2} marginTop={3}>
                                         <PinkButton
                                             sx={{ width: '100%' }}
@@ -273,6 +250,30 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
                                             Change Price
                                         </PrimaryButton>
                                     </Stack>
+                                ) : (
+                                    <PrimaryButton
+                                        sx={{ marginTop: 3, width: '100%' }}
+                                        onClick={() => {
+                                            if (signInDlgState.isLoggedIn) {
+                                                setDialogState({
+                                                    ...dialogState,
+                                                    buyNowDlgOpened: true,
+                                                    buyNowDlgStep: 0,
+                                                    buyNowPrice: productDetail.price_ela,
+                                                    buyNowName: productDetail.name,
+                                                    buyNowOrderId: productDetail.orderId || '',
+                                                });
+                                            } else {
+                                                setSignInDlgState((prevState: SignInState) => {
+                                                    const _state = { ...prevState };
+                                                    _state.signInDlgOpened = true;
+                                                    return _state;
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        buy now
+                                    </PrimaryButton>
                                 ))}
                         </>
                     )}

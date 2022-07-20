@@ -5,13 +5,15 @@ import { Typography, Stack, Button } from '@mui/material';
 import { DialogTitleTypo } from 'src/components/ModalDialog/styles';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { Icon } from '@iconify/react';
+import { enumAuthType } from 'src/types/auth-types';
 
 export interface ComponentProps {
-    onConnect: (wallet: string) => void;
+    onConnect: (wallet: enumAuthType) => void;
 }
 
 const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
     const navigate = useNavigate();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [signInDlgState, setSignInDlgState] = useSignInContext();
 
     document.addEventListener('keydown', (event) => {
@@ -48,11 +50,11 @@ const ConnectDID: React.FC<ComponentProps> = ({ onConnect }): JSX.Element => {
                 Please connect your wallet
             </Typography>
             <Stack width="100%" alignItems="center" spacing={2} paddingX={4} marginTop={5} boxSizing="border-box">
-                <PrimaryButton fullWidth onClick={() => onConnect('EE')}>
+                <PrimaryButton fullWidth onClick={() => onConnect(enumAuthType.ElastosEssentials)}>
                     <img src="/assets/icons/elastos-essential.svg" alt="" style={{ marginRight: 8 }} />
                     {`Elastos Essentials`}
                 </PrimaryButton>
-                <SecondaryButton fullWidth onClick={() => onConnect('MM')}>
+                <SecondaryButton fullWidth onClick={() => onConnect(enumAuthType.MetaMask)}>
                     <img src="/assets/icons/metamask.svg" alt="" style={{ marginRight: 8 }} />
                     {`Metamask`}
                 </SecondaryButton>

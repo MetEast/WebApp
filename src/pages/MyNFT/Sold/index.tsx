@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ProductPageHeader from 'src/components/ProductPageHeader';
 import { Stack, Grid, Box, Skeleton, Typography } from '@mui/material';
 import ProductImageContainer from 'src/components/ProductImageContainer';
@@ -13,12 +13,19 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import ProductTransHistory from 'src/components/ProductTransHistory';
 import { getMintCategory } from 'src/services/common';
-import { enumBadgeType, TypeProduct, TypeNFTTransaction, TypeNFTHisotry } from 'src/types/product-types';
-import { getELA2USD, getMyNFTItem, getMyFavouritesList, getNFTLatestTxs } from 'src/services/fetch';
+import {
+    enumBadgeType,
+    TypeProduct,
+    TypeNFTTransaction,
+    TypeNFTHisotry,
+    enumTransactionType,
+} from 'src/types/product-types';
+import { getMyNFTItem, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
 import { reduceUserName } from 'src/services/common';
+import { serverConfig } from 'src/config';
 
 const MyNFTSold: React.FC = (): JSX.Element => {
     const params = useParams();
@@ -28,70 +35,94 @@ const MyNFTSold: React.FC = (): JSX.Element => {
     const [prodTransHistory, setProdTransHistory] = useState<Array<TypeNFTHisotry>>([]);
     const [transactionsList, setTransactionsList] = useState<Array<TypeNFTTransaction>>([]);
 
+    const location = useLocation();
+
+    // @ts-ignore
+    let product: TypeProduct = location.state.product;
+
     useEffect(() => {
         let unmounted = false;
         const fetchMyNFTItem = async () => {
-            const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList(signInDlgState.isLoggedIn, signInDlgState.userDid);
-            const _MyNFTItem = await getMyNFTItem(params.id, ELA2USD, likeList);
+            const _MyNFTItem = await getMyNFTItem(params.id);
+            _MyNFTItem.isLike = product.isLike;
+            _MyNFTItem.views = product.views;
+            _MyNFTItem.likes = product.likes;
+            _MyNFTItem.price_usd = product.price_usd;
+
+            const _NFTTxs = await getNFTLatestTxs(params.id);
+            _NFTTxs.push({
+                type: enumTransactionType.CreatedBy,
+                user: _MyNFTItem.author,
+                price: 0,
+                time: _MyNFTItem.createTime,
+                txHash: _MyNFTItem.txHash || '',
+                saleType: enumTransactionType.CreatedBy,
+            });
+            const data: TypeNFTHisotry[] = [];
+            _NFTTxs.map((tx: TypeNFTTransaction) => {
+                if (
+                    tx.type === enumTransactionType.SoldTo ||
+                    tx.type === enumTransactionType.SettleBidOrder ||
+                    tx.type === enumTransactionType.CreatedBy
+                ) {
+                    data.push({
+                        saleType: tx.saleType,
+                        type: tx.type,
+                        user: tx.user,
+                        price: tx.price,
+                        time: tx.time,
+                        txHash: tx.txHash,
+                    });
+                }
+                return data;
+            });
+
             if (!unmounted) {
-                if (signInDlgState.walletAccounts.length && _MyNFTItem.holder === signInDlgState.walletAccounts[0]) {
+                if (signInDlgState.address && _MyNFTItem.holder === signInDlgState.address) {
                     navigate(-1);
                     // detect previous path is null
                     const timer = setTimeout(() => {
                         clearTimeout(timer);
-                        if (
-                            signInDlgState.walletAccounts.length &&
-                            _MyNFTItem.holder === signInDlgState.walletAccounts[0]
-                        ) {
+                        if (signInDlgState.address && _MyNFTItem.holder === signInDlgState.address) {
                             navigate('/');
                         }
                     }, 100);
-                } else setProductDetail(_MyNFTItem);
+                } else {
+                    setProductDetail(_MyNFTItem);
+                    setTransactionsList(_NFTTxs);
+                    setProdTransHistory(data.slice(0, 5));
+                }
             }
         };
+
         if (signInDlgState.isLoggedIn) {
-            if (signInDlgState.userDid && signInDlgState.walletAccounts.length) fetchMyNFTItem().catch(console.error);
+            if (signInDlgState.address) fetchMyNFTItem().catch(console.error);
         } else navigate('/');
         return () => {
             unmounted = true;
         };
-    }, [signInDlgState.isLoggedIn, signInDlgState.userDid, signInDlgState.walletAccounts, params.id]);
-
-    useEffect(() => {
-        let unmounted = false;
-        const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs(params.id, signInDlgState.walletAccounts[0], 1, 1000);
-            if (!unmounted) {
-                setTransactionsList(_NFTTxs.txs.slice(0, 5));
-                setProdTransHistory(_NFTTxs.history.slice(0, 5));
-            }
-        };
-        if (signInDlgState.walletAccounts.length) fetchLatestTxs().catch(console.error);
-        return () => {
-            unmounted = true;
-        };
-    }, [params.id, signInDlgState.walletAccounts]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
     useEffect(() => {
         let unmounted = false;
         const updateProductViews = (tokenId: string) => {
-            const reqUrl = `${process.env.REACT_APP_BACKEND_URL}/api/v1/incTokenViews`;
+            const reqUrl = `${serverConfig.metServiceUrl}/api/v1/incTokenViews`;
             const reqBody = {
-                token: signInDlgState.token,
                 tokenId: tokenId,
-                did: signInDlgState.userDid,
+                address: signInDlgState.address,
             };
             fetch(reqUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${signInDlgState.token}`,
                 },
                 body: JSON.stringify(reqBody),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.code === 200) {
+                    if (data.status === 200) {
                         if (!unmounted) {
                             setProductDetail((prevState: TypeProduct) => {
                                 const prodDetail: TypeProduct = { ...prevState };
@@ -107,12 +138,12 @@ const MyNFTSold: React.FC = (): JSX.Element => {
                     console.log(error);
                 });
         };
-        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.userDid)
+        if (productDetail.tokenId && signInDlgState.isLoggedIn && signInDlgState.token && signInDlgState.address)
             updateProductViews(productDetail.tokenId);
         return () => {
             unmounted = true;
         };
-    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.userDid]);
+    }, [productDetail.tokenId, signInDlgState.isLoggedIn, signInDlgState.token, signInDlgState.address]);
 
     return (
         <Container sx={{ paddingTop: { xs: 4, sm: 0 } }}>
