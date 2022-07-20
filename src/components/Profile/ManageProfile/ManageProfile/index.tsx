@@ -129,9 +129,11 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         </Typography>
                                     </Stack>
                                 )}
-                                {/* {signInDlgState.loginType === '1' && ( */}
                                 <Stack direction="row" spacing={0.5}>
-                                    <CopyToClipboard text={signInDlgState.userDid ? signInDlgState.userDid : signInDlgState.address} onCopy={showSnackBar}>
+                                    <CopyToClipboard
+                                        text={signInDlgState.userDid ? signInDlgState.userDid : signInDlgState.address}
+                                        onCopy={showSnackBar}
+                                    >
                                         <CopyToClipboardButton>
                                             <Icon
                                                 icon="ph:copy"
@@ -144,7 +146,6 @@ const ManageProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
                                         {strUserDid}
                                     </Typography>
                                 </Stack>
-                                {/* )} */}
                             </>
                         )}
                     </Grid>

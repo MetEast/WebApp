@@ -34,7 +34,9 @@ const RewardsPage: React.FC = (): JSX.Element => {
         : essentialsConnector.getWalletConnectProvider();
     const { library } = useWeb3React<Web3Provider>();
     const walletConnectWeb3 = new Web3(
-        signInDlgState.loginType === '1' ? (walletConnectProvider as any) : (library?.provider as any),
+        signInDlgState.loginType === enumAuthType.ElastosEssentials
+            ? (walletConnectProvider as any)
+            : (library?.provider as any),
     );
     const [creatorRewards, setCreatorRewards] = useState<TypeMiningReward>(blankMiningReward);
     const [buyerRewards, setBuyerRewards] = useState<TypeMiningReward>(blankMiningReward);
@@ -95,7 +97,10 @@ const RewardsPage: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         let unmounted = false;
-        if (signInDlgState.loginType === '1' || (library && signInDlgState.loginType === '2')) {
+        if (
+            signInDlgState.loginType === enumAuthType.ElastosEssentials ||
+            (library && signInDlgState.loginType === enumAuthType.MetaMask)
+        ) {
             callTokenomicsContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,
                 contractType: enumMETokenContractType.MET_MINING_REWARD,

@@ -42,6 +42,7 @@ import {
 import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
 import { addressZero } from './wallet';
 import { apiConfig, polrConfig, serverConfig } from 'src/config';
+import { enumAuthType } from 'src/types/auth-types';
 
 const fetchMyNFTAPIs = [
     'listAllMyTokens',
@@ -63,7 +64,7 @@ export const login = (authType: string, address: string, presentation?: Verifiab
     new Promise((resolve: (value: string) => void, reject: (value: string) => void) => {
         const reqUrl = `${serverConfig.metServiceUrl}/api/v1/login`;
         const reqBody =
-            authType === '1'
+            authType === enumAuthType.ElastosEssentials
                 ? {
                       address,
                       presentation: presentation ? presentation.toJSON() : '',
