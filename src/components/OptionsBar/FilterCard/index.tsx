@@ -45,6 +45,7 @@ const FilterCard: React.FC<ComponentProps> = ({ changeHandler, clearOption }): J
             setCategory(undefined);
             changeHandler(-1, '', '', undefined, true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [clearOption]);
 
     return (

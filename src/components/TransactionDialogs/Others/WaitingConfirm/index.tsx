@@ -14,6 +14,7 @@ const WaitingConfirmDlgContainer: React.FC<ComponentProps> = (): JSX.Element => 
         if (dialogState.waitingConfirmDlgTimer && !dialogState.waitingConfirmDlgOpened && dlgOpened) {
             clearTimeout(dialogState.waitingConfirmDlgTimer);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dialogState.waitingConfirmDlgOpened]);
 
     return (

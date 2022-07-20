@@ -80,6 +80,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
                         txHash: tx.txHash,
                     });
                 }
+                return data;
             });
 
             if (!unmounted) {
@@ -118,6 +119,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState.isLoggedIn, signInDlgState.address, params.id]);
 
     useEffect(() => {

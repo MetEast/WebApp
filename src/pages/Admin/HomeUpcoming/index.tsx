@@ -60,7 +60,7 @@ const AdminHomeUpcoming: React.FC = (): JSX.Element => {
         [],
     );
 
-    const [tabledata, setTabledata] = useState(data);
+    const [tabledata] = useState(data);
 
     return (
         <Stack height="100%" spacing={4}>

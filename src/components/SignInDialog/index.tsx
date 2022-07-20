@@ -497,6 +497,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 walletConnectProvider.removeListener('error', handleEEError);
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [walletConnectProvider, chainId, account, active, library]);
 
     // signInDlgContext track
@@ -517,6 +518,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 return _state;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cookies.METEAST_TOKEN]);
 
     // listen for disconnect
@@ -525,6 +527,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             if (signInDlgState.loginType === enumAuthType.ElastosEssentials) signOutWithEssentials();
             else signOutWithWallet();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInDlgState]);
 
     // update wallet balance after every transactions
@@ -549,6 +552,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
                 return _state;
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         library,
         dialogState.createNFTDlgStep,

@@ -57,15 +57,17 @@ const CustomTextField: React.FC<ComponentProps> = ({
 
     React.useEffect(() => {
         setInvalid(number ? text === '' || isNaN(Number(text)) : !text);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [text]);
 
     React.useEffect(() => {
         setText(inputValue === undefined || (number && inputValue === 'NaN') ? '' : inputValue);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputValue]);
 
     React.useEffect(() => {
         if (error) setInvalid(true);
-    },[error])
+    }, [error]);
 
     return (
         <Stack spacing={0.5} sx={{ ...sx }}>
