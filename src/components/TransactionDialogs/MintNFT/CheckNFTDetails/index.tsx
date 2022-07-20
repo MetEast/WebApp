@@ -18,6 +18,7 @@ import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { ImageBox } from './styles';
 import { reduceUserName } from 'src/services/common';
+import { enumMetEastContractType } from 'src/types/contract-types';
 
 export interface ComponentProps {}
 
@@ -53,7 +54,7 @@ const CheckNFTDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 1,
+            contractType: enumMetEastContractType.METEAST,
             method: 'mint',
             price: '0',
             tokenId: paramObj._id,

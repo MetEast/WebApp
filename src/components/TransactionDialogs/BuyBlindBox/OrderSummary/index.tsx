@@ -15,6 +15,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { serverConfig } from 'src/config';
+import { enumMetEastContractType } from 'src/types/contract-types';
 
 export interface ComponentProps {}
 
@@ -97,7 +98,7 @@ const OrderSummary: React.FC<ComponentProps> = (): JSX.Element => {
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 2,
+            contractType: enumMetEastContractType.METEAST_MARKET,
             method: 'buyOrderBatch',
             price: BigInt(dialogState.buyBlindPriceEla * 1e18 * dialogState.buyBlindOrderIds.length).toString(),
             orderIds: dialogState.buyBlindOrderIds,

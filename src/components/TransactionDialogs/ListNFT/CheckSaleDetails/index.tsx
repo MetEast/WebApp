@@ -16,6 +16,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { callContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam } from 'src/constants/init-constants';
 import { getTime } from 'src/services/common';
+import { enumMetEastContractType } from 'src/types/contract-types';
 
 export interface ComponentProps {}
 
@@ -55,7 +56,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
 
         callContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 1,
+            contractType: enumMetEastContractType.METEAST,
             method: 'setApprovalForAll',
             price: '0',
             operator: METEAST_MARKET_CONTRACT_ADDRESS,
@@ -73,7 +74,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                     dialogState.sellSaleType === 'buynow'
                         ? {
                               ...blankContractMethodParam,
-                              contractType: 2,
+                              contractType: enumMetEastContractType.METEAST_MARKET,
                               method: 'createOrderForSale',
                               price: '0',
                               tokenId: dialogState.mintTokenId,
@@ -84,7 +85,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
                           }
                         : {
                               ...blankContractMethodParam,
-                              contractType: 2,
+                              contractType: enumMetEastContractType.METEAST_MARKET,
                               method: 'createOrderForAuction',
                               price: '0',
                               tokenId: dialogState.mintTokenId,

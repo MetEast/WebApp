@@ -14,8 +14,8 @@ import {
     enumMyNFTType,
     enumTransactionType,
     enumBadgeType,
-    TypeMiningReward,
 } from 'src/types/product-types';
+import { TypeMiningReward } from 'src/types/contract-types';
 
 export const blankNFTItem: TypeProduct = {
     tokenId: '',
