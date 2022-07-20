@@ -7,7 +7,7 @@ import NFTPreview from 'src/components/NFTPreview';
 import 'swiper/swiper-bundle.css';
 import { useSignInContext } from 'src/context/SignInContext';
 import { TypeProduct } from 'src/types/product-types';
-import { getELA2USD, getMyFavouritesList2, getNFTItemList2, getPageBannerList } from 'src/services/fetch';
+import { getELA2USD, getMyFavouritesNFT, getNFTItemList, getPageBannerList } from 'src/services/fetch';
 import { blankNFTItem } from 'src/constants/init-constants';
 import Container from 'src/components/Container';
 
@@ -35,8 +35,8 @@ const HomePage: React.FC = (): JSX.Element => {
         let unmounted = false;
         const fetchCollections = async () => {
             if (!unmounted) setIsLoading(true);
-            const _newNFTList = await getNFTItemList2({ pageNum: 1, pageSize: 10 }, undefined, undefined);
-            const _popularNFTList = await getNFTItemList2(
+            const _newNFTList = await getNFTItemList({ pageNum: 1, pageSize: 10 }, undefined, undefined);
+            const _popularNFTList = await getNFTItemList(
                 { pageNum: 1, pageSize: 10, orderType: 'mostliked' },
                 undefined,
                 undefined,
@@ -57,7 +57,7 @@ const HomePage: React.FC = (): JSX.Element => {
     useEffect(() => {
         const updateTokenInfo = async () => {
             const ELA2USD = await getELA2USD();
-            const likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.token);
+            const likeList = await getMyFavouritesNFT(signInDlgState.isLoggedIn, signInDlgState.token);
             setProductList((prevState) => {
                 return prevState.map((item) => {
                     item.isLike = likeList.includes(item.tokenId);

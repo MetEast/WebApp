@@ -16,8 +16,8 @@ import {
     getELA2USD,
     getBBItemList,
     getPageBannerList,
-    getSearchParams2,
-    getMyFavouritesList3,
+    getSearchParams,
+    getMyFavouritesBB,
 } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import Container from 'src/components/Container';
@@ -78,10 +78,10 @@ const MysteryBoxPage: React.FC = (): JSX.Element => {
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
-                likeList = await getMyFavouritesList3(signInDlgState.isLoggedIn, signInDlgState.token);
+                likeList = await getMyFavouritesBB(signInDlgState.isLoggedIn, signInDlgState.token);
                 setMyFavorList(likeList);
             }
-            const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
+            const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, [], undefined);
             const _searchedBBList = await getBBItemList(
                 JSON.stringify(searchParams),
                 ELA2USDRate ? ELA2USDRate : ELA2USD,

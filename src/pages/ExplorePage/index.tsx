@@ -13,10 +13,10 @@ import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import {
     getELA2USD,
-    getMyFavouritesList2,
-    getNFTItemList2,
+    getMyFavouritesNFT,
+    getNFTItemList,
     getPageBannerList,
-    getSearchParams2,
+    getSearchParams,
 } from 'src/services/fetch';
 import Container from 'src/components/Container';
 import { blankNFTItem } from 'src/constants/init-constants';
@@ -79,11 +79,11 @@ const ExplorePage: React.FC = (): JSX.Element => {
             if (pageNum === 1) {
                 ELA2USDRate = await getELA2USD();
                 setELA2USD(ELA2USDRate);
-                likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.token);
+                likeList = await getMyFavouritesNFT(signInDlgState.isLoggedIn, signInDlgState.token);
                 setMyFavorList(likeList);
             }
-            const searchParams = getSearchParams2(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
-            const _searchedNFTList = await getNFTItemList2(
+            const searchParams = getSearchParams(pageNum, pageSize, keyWord, sortBy, filterRange, filters, category);
+            const _searchedNFTList = await getNFTItemList(
                 searchParams,
                 ELA2USDRate ? ELA2USDRate : ELA2USD,
                 likeList.length ? likeList : myFavorList,

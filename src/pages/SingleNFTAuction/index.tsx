@@ -18,7 +18,7 @@ import { PrimaryButton, PinkButton, SecondaryButton } from 'src/components/Butto
 import SingleNFTBidsTable from 'src/components/SingleNFTBidsTable';
 import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
-import { checkTokenLike, getELA2USD, getNFTItem, getNFTLatestBids, getNFTLatestTxs2 } from 'src/services/fetch';
+import { checkTokenLike, getELA2USD, getNFTItem, getNFTLatestBids, getNFTLatestTxs } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
@@ -59,7 +59,7 @@ const SingleNFTAuction: React.FC = (): JSX.Element => {
             // @ts-ignore
             if (signInDlgState.isLoggedIn) _NFTItem.isLike = location.state && location.state?.isLoggedIn ? location.state.isLiked : await checkTokenLike(params.id || '', signInDlgState.address);
 
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            const _NFTTxs = await getNFTLatestTxs(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
                 user: _NFTItem.author,

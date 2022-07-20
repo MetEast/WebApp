@@ -5,8 +5,6 @@ import {
     enumSingleNFTType,
     enumTransactionType,
     TypeBlindBoxSelectItem,
-    TypeFavouritesFetch,
-    TypeNFTHisotry,
     TypeNFTTransaction,
     TypeNFTTransactionFetch,
     TypeProduct,
@@ -26,13 +24,11 @@ import {
     blankBBCandidate,
     blankBBItem,
     blankMyEarning,
-    blankMyNFTHistory,
     blankMyNFTItem,
     blankNFTBid,
     blankNFTItem,
     blankNFTTxs,
     blankNotification,
-    blankUserInfo,
 } from 'src/constants/init-constants';
 import { TypeSelectItem } from 'src/types/select-types';
 import { enumFilterOption, TypeFilterRange } from 'src/types/filter-types';
@@ -43,7 +39,6 @@ import {
     AdminUsersItemFetchType,
     AdminUsersItemType,
 } from 'src/types/admin-table-data-types';
-import { UserInfoType } from 'src/types/auth-types';
 import { VerifiablePresentation } from '@elastosfoundation/did-js-sdk/typings';
 import { addressZero } from './wallet';
 import { apiConfig, polrConfig, serverConfig } from 'src/config';
@@ -100,15 +95,15 @@ export const login = (authType: string, address: string, presentation?: Verifiab
             });
     });
 
-export const getUserRole = async (address: string) => {
-    const resUserRole = await fetch(
-        `${serverConfig.assistServiceUrl}/meteast/api/v1/getDidByAddress?address=${address}`,
-        FETCH_CONFIG_JSON,
-    );
-    const jsonUserRole = await resUserRole.json();
-    const dataUserRole: UserInfoType = jsonUserRole.data ? jsonUserRole.data : blankUserInfo;
-    return dataUserRole.role;
-};
+// export const getUserRole = async (address: string) => {
+//     const resUserRole = await fetch(
+//         `${serverConfig.assistServiceUrl}/meteast/api/v1/getDidByAddress?address=${address}`,
+//         FETCH_CONFIG_JSON,
+//     );
+//     const jsonUserRole = await resUserRole.json();
+//     const dataUserRole: UserInfoType = jsonUserRole.data ? jsonUserRole.data : blankUserInfo;
+//     return dataUserRole.role;
+// };
 
 export const getNotificationList = async (token: string) => {
     const resNotificationList = await fetch(`${serverConfig.metServiceUrl}/api/v1/getNotifications`, {
@@ -222,22 +217,22 @@ export const checkBlindBoxLike = async (id: string, address: string) => {
     return jsonCheckLike.data ? jsonCheckLike.data : false;
 };
 
-export const getMyFavouritesList = async (loginState: boolean, did: string) => {
-    if (loginState) {
-        try {
-            const resFavouriteList = await fetch(
-                `${serverConfig.assistServiceUrl}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
-                FETCH_CONFIG_JSON,
-            );
-            const dataFavouriteList = await resFavouriteList.json();
-            return dataFavouriteList.data.result;
-        } catch (error) {
-            return [];
-        }
-    } else return [];
-};
+// export const getMyFavouritesList = async (loginState: boolean, did: string) => {
+//     if (loginState) {
+//         try {
+//             const resFavouriteList = await fetch(
+//                 `${serverConfig.assistServiceUrl}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
+//                 FETCH_CONFIG_JSON,
+//             );
+//             const dataFavouriteList = await resFavouriteList.json();
+//             return dataFavouriteList.data.result;
+//         } catch (error) {
+//             return [];
+//         }
+//     } else return [];
+// };
 
-export const getMyFavouritesList2 = async (loginState: boolean, token: string) => {
+export const getMyFavouritesNFT = async (loginState: boolean, token: string) => {
     if (loginState) {
         try {
             const resFavouriteList = await fetch(`${serverConfig.metServiceUrl}/api/v1/getFavoritesCollectible`, {
@@ -248,6 +243,7 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
             const arrFavouriteList: Array<string> = [];
             dataFavouriteList.data.map((item: { tokenId: string }) => {
                 arrFavouriteList.push(item.tokenId);
+                return arrFavouriteList;
             });
             return arrFavouriteList;
         } catch (error) {
@@ -256,7 +252,7 @@ export const getMyFavouritesList2 = async (loginState: boolean, token: string) =
     } else return [];
 };
 
-export const getMyFavouritesList3 = async (loginState: boolean, token: string): Promise<string[]> => {
+export const getMyFavouritesBB = async (loginState: boolean, token: string): Promise<string[]> => {
     if (loginState) {
         try {
             const resFavouriteList = await fetch(`${serverConfig.metServiceUrl}/api/v1/getFavoritesBlindBox`, {
@@ -267,6 +263,7 @@ export const getMyFavouritesList3 = async (loginState: boolean, token: string): 
             let arrFavouriteList: Array<string> = [];
             dataFavouriteList.data.map((item: { blindBoxIndex: string }) => {
                 arrFavouriteList.push(item.blindBoxIndex);
+                return arrFavouriteList;
             });
             return arrFavouriteList;
         } catch (error) {
@@ -293,40 +290,40 @@ export const getPageBannerList = async (location: number) => {
 };
 
 // Home Page & Product Page
-export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
-    const resNFTList = await fetch(
-        `${serverConfig.assistServiceUrl}/api/v1/listMarketTokens?${fetchParams}`,
-        FETCH_CONFIG_JSON,
-    );
-    const jsonNFTList = await resNFTList.json();
-    const totalCount: number = jsonNFTList.data.total;
-    const arrNFTList = jsonNFTList.data ? jsonNFTList.data.result : [];
+// export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
+//     const resNFTList = await fetch(
+//         `${serverConfig.assistServiceUrl}/api/v1/listMarketTokens?${fetchParams}`,
+//         FETCH_CONFIG_JSON,
+//     );
+//     const jsonNFTList = await resNFTList.json();
+//     const totalCount: number = jsonNFTList.data.total;
+//     const arrNFTList = jsonNFTList.data ? jsonNFTList.data.result : [];
 
-    const _arrNFTList: Array<TypeProduct> = [];
-    for (let i = 0; i < arrNFTList.length; i++) {
-        const itemObject: TypeProductFetch = arrNFTList[i];
-        const _NFT: TypeProduct = { ...blankNFTItem };
-        _NFT.tokenId = itemObject.tokenId;
-        _NFT.name = itemObject.name;
-        _NFT.image = getImageFromAsset(itemObject.thumbnail);
-        _NFT.price_ela = itemObject.price / 1e18;
-        _NFT.price_usd = _NFT.price_ela * ELA2USD;
-        _NFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
-        _NFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-        _NFT.likes = itemObject.likes;
-        _NFT.views = itemObject.views;
-        _NFT.status = itemObject.status;
-        _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-        _NFT.isLike =
-            likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-                ? false
-                : true;
-        _arrNFTList.push(_NFT);
-    }
-    return { total: totalCount, data: _arrNFTList };
-};
+//     const _arrNFTList: Array<TypeProduct> = [];
+//     for (let i = 0; i < arrNFTList.length; i++) {
+//         const itemObject: TypeProductFetch = arrNFTList[i];
+//         const _NFT: TypeProduct = { ...blankNFTItem };
+//         _NFT.tokenId = itemObject.tokenId;
+//         _NFT.name = itemObject.name;
+//         _NFT.image = getImageFromAsset(itemObject.thumbnail);
+//         _NFT.price_ela = itemObject.price / 1e18;
+//         _NFT.price_usd = _NFT.price_ela * ELA2USD;
+//         _NFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
+//         _NFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
+//         _NFT.likes = itemObject.likes;
+//         _NFT.views = itemObject.views;
+//         _NFT.status = itemObject.status;
+//         _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
+//         _NFT.isLike =
+//             likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
+//                 ? false
+//                 : true;
+//         _arrNFTList.push(_NFT);
+//     }
+//     return { total: totalCount, data: _arrNFTList };
+// };
 
-export const getNFTItemList2 = async (
+export const getNFTItemList = async (
     body: {
         pageSize: number;
         pageNum: number;
@@ -370,66 +367,66 @@ export const getNFTItemList2 = async (
 };
 
 // Product Page
-export const getSearchParams = (
-    pageNum: number,
-    pageSize: number,
-    keyWord: string,
-    sortBy: TypeSelectItem | undefined,
-    filterRange: TypeFilterRange,
-    filters: Array<enumFilterOption>,
-    category: TypeSelectItem | undefined,
-) => {
-    let searchParams = `pageNum=${pageNum}&pageSize=${pageSize}&keyword=${keyWord}`;
-    if (sortBy !== undefined) {
-        switch (sortBy.value) {
-            case 'low_to_high':
-                searchParams += `&orderType=price_l_to_h`;
-                break;
-            case 'high_to_low':
-                searchParams += `&orderType=price_h_to_l`;
-                break;
-            case 'most_viewed':
-                searchParams += `&orderType=mostviewed`;
-                break;
-            case 'most_liked':
-                searchParams += `&orderType=mostliked`;
-                break;
-            case 'most_recent':
-                searchParams += `&orderType=mostrecent`;
-                break;
-            case 'oldest':
-                searchParams += `&orderType=oldest`;
-                break;
-            case 'ending_soon':
-                searchParams += `&orderType=endingsoon`;
-                break;
-            default:
-                searchParams += `&orderType=mostrecent`;
-                break;
-        }
-    }
-    if (filterRange.min !== undefined) {
-        searchParams += `&filter_min_price=${filterRange.min}`;
-    }
-    if (filterRange.max !== undefined) {
-        searchParams += `&filter_max_price=${filterRange.max}`;
-    }
-    if (filters.length !== 0) {
-        let filterStatus: string = '';
-        filters.forEach((item) => {
-            if (item === 0) filterStatus += 'ON AUCTION,';
-            else if (item === 1) filterStatus += 'BUY NOW,';
-            else if (item === 2) filterStatus += 'HAS BIDS,';
-        });
-        searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
-    }
-    if (category !== undefined) {
-        searchParams += `&category=${category.value}`;
-    }
-    return searchParams;
-};
+// export const getSearchParams = (
+//     pageNum: number,
+//     pageSize: number,
+//     keyWord: string,
+//     sortBy: TypeSelectItem | undefined,
+//     filterRange: TypeFilterRange,
+//     filters: Array<enumFilterOption>,
+//     category: TypeSelectItem | undefined,
+// ) => {
+//     let searchParams = `pageNum=${pageNum}&pageSize=${pageSize}&keyword=${keyWord}`;
+//     if (sortBy !== undefined) {
+//         switch (sortBy.value) {
+//             case 'low_to_high':
+//                 searchParams += `&orderType=price_l_to_h`;
+//                 break;
+//             case 'high_to_low':
+//                 searchParams += `&orderType=price_h_to_l`;
+//                 break;
+//             case 'most_viewed':
+//                 searchParams += `&orderType=mostviewed`;
+//                 break;
+//             case 'most_liked':
+//                 searchParams += `&orderType=mostliked`;
+//                 break;
+//             case 'most_recent':
+//                 searchParams += `&orderType=mostrecent`;
+//                 break;
+//             case 'oldest':
+//                 searchParams += `&orderType=oldest`;
+//                 break;
+//             case 'ending_soon':
+//                 searchParams += `&orderType=endingsoon`;
+//                 break;
+//             default:
+//                 searchParams += `&orderType=mostrecent`;
+//                 break;
+//         }
+//     }
+//     if (filterRange.min !== undefined) {
+//         searchParams += `&filter_min_price=${filterRange.min}`;
+//     }
+//     if (filterRange.max !== undefined) {
+//         searchParams += `&filter_max_price=${filterRange.max}`;
+//     }
+//     if (filters.length !== 0) {
+//         let filterStatus: string = '';
+//         filters.forEach((item) => {
+//             if (item === 0) filterStatus += 'ON AUCTION,';
+//             else if (item === 1) filterStatus += 'BUY NOW,';
+//             else if (item === 2) filterStatus += 'HAS BIDS,';
+//         });
+//         searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
+//     }
+//     if (category !== undefined) {
+//         searchParams += `&category=${category.value}`;
+//     }
+//     return searchParams;
+// };
 
-export const getSearchParams2 = (
+export const getSearchParams = (
     pageNum: number,
     pageSize: number,
     keyWord: string,
@@ -619,112 +616,112 @@ export const getNFTItems = async (tokenIds: string | undefined) => {
     return _NFTItems;
 };
 
-export const getNFTLatestTxs = async (
-    tokenId: string | undefined,
-    address: string,
-    pageNum: number,
-    pageSize: number,
-    sortBy?: string,
-) => {
-    let fetchUrl = `${serverConfig.assistServiceUrl}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&pageSize=${pageSize}`;
-    switch (sortBy) {
-        case 'low_to_high':
-            fetchUrl += `&orderType=price_l_to_h`;
-            break;
-        case 'high_to_low':
-            fetchUrl += `&orderType=price_h_to_l`;
-            break;
-        case 'most_recent':
-            fetchUrl += `&orderType=mostrecent`;
-            break;
-        case 'oldest':
-            fetchUrl += `&orderType=oldest`;
-            break;
-        default:
-            fetchUrl += `&orderType=mostrecent`;
-            break;
-    }
-    const resNFTTxs = await fetch(fetchUrl, FETCH_CONFIG_JSON);
-    const jsonNFTTxs = await resNFTTxs.json();
-    const arrNFTTxs = jsonNFTTxs.data;
+// export const getNFTLatestTxs = async (
+//     tokenId: string | undefined,
+//     address: string,
+//     pageNum: number,
+//     pageSize: number,
+//     sortBy?: string,
+// ) => {
+//     let fetchUrl = `${serverConfig.assistServiceUrl}/sticker/api/v1/getTranDetailsByTokenId?tokenId=${tokenId}&pageNum=${pageNum}&pageSize=${pageSize}`;
+//     switch (sortBy) {
+//         case 'low_to_high':
+//             fetchUrl += `&orderType=price_l_to_h`;
+//             break;
+//         case 'high_to_low':
+//             fetchUrl += `&orderType=price_h_to_l`;
+//             break;
+//         case 'most_recent':
+//             fetchUrl += `&orderType=mostrecent`;
+//             break;
+//         case 'oldest':
+//             fetchUrl += `&orderType=oldest`;
+//             break;
+//         default:
+//             fetchUrl += `&orderType=mostrecent`;
+//             break;
+//     }
+//     const resNFTTxs = await fetch(fetchUrl, FETCH_CONFIG_JSON);
+//     const jsonNFTTxs = await resNFTTxs.json();
+//     const arrNFTTxs = jsonNFTTxs.data;
 
-    const _NFTTxList: Array<TypeNFTTransaction> = [];
-    const _NFTTxHistoryList: Array<TypeNFTHisotry> = [];
-    for (let i = 0; i < arrNFTTxs.length; i++) {
-        const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
-        if (itemObject.event === 'Transfer') continue;
-        const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
-        switch (itemObject.event) {
-            case 'Mint':
-                _NFTTx.type = enumTransactionType.CreatedBy;
-                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
-                break;
-            case 'CreateOrderForSale':
-                _NFTTx.type = enumTransactionType.ForSale;
-                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
-                break;
-            case 'CreateOrderForAuction':
-                _NFTTx.type = enumTransactionType.OnAuction;
-                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
-                break;
-            case 'BidOrder':
-                _NFTTx.type = enumTransactionType.Bid;
-                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
-                break;
-            case 'ChangeOrderPrice':
-                _NFTTx.type = enumTransactionType.PriceChanged;
-                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
-                break;
-            case 'CancelOrder':
-                _NFTTx.type = enumTransactionType.SaleCanceled;
-                _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
-                break;
-            case 'BuyOrder':
-                _NFTTx.type = enumTransactionType.SoldTo;
-                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
-                break;
-            // case 'Transfer':
-            //     _NFTTx.type = enumTransactionType.Transfer;
-            //     break;
-            case 'SettleBidOrder':
-                _NFTTx.type = enumTransactionType.SettleBidOrder;
-                _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
-                break;
-        }
-        _NFTTx.price = parseInt(itemObject.price) / 1e18;
-        _NFTTx.txHash = itemObject.tHash;
-        const timestamp = getTime(itemObject.timestamp.toString());
-        _NFTTx.time = timestamp.date + ' ' + timestamp.time;
-        _NFTTxList.push(_NFTTx);
-        // for my nft history
-        if (address !== '' && (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder')) {
-            const _NFTTxHistory: TypeNFTHisotry = { ...blankMyNFTHistory };
-            _NFTTxHistory.type =
-                itemObject.event === 'Mint' ? 'Created' : itemObject.to === address ? 'Bought From' : 'Sold To';
-            _NFTTxHistory.price = parseInt(itemObject.price) / 1e18;
-            _NFTTxHistory.user =
-                _NFTTxHistory.type === 'Bought From'
-                    ? itemObject.fromName
-                        ? itemObject.fromName
-                        : reduceHexAddress(itemObject.from, 4)
-                    : itemObject.toName
-                    ? itemObject.toName
-                    : reduceHexAddress(itemObject.to, 4);
-            const prodTransTimestamp = getTime(itemObject.timestamp.toString());
-            _NFTTxHistory.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
-            if (itemObject.event === 'BuyOrder')
-                _NFTTxHistory.saleType =
-                    arrNFTTxs[i + 1].event === 'CreateOrderForSale'
-                        ? enumTransactionType.ForSale
-                        : enumTransactionType.OnAuction;
-            _NFTTxHistory.txHash = itemObject.tHash;
-            _NFTTxHistoryList.push(_NFTTxHistory);
-        }
-    }
-    return { txs: _NFTTxList, history: _NFTTxHistoryList };
-};
+//     const _NFTTxList: Array<TypeNFTTransaction> = [];
+//     const _NFTTxHistoryList: Array<TypeNFTHisotry> = [];
+//     for (let i = 0; i < arrNFTTxs.length; i++) {
+//         const itemObject: TypeNFTTransactionFetch = arrNFTTxs[i];
+//         if (itemObject.event === 'Transfer') continue;
+//         const _NFTTx: TypeNFTTransaction = { ...blankNFTTxs };
+//         switch (itemObject.event) {
+//             case 'Mint':
+//                 _NFTTx.type = enumTransactionType.CreatedBy;
+//                 _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
+//                 break;
+//             case 'CreateOrderForSale':
+//                 _NFTTx.type = enumTransactionType.ForSale;
+//                 _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
+//                 break;
+//             case 'CreateOrderForAuction':
+//                 _NFTTx.type = enumTransactionType.OnAuction;
+//                 _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
+//                 break;
+//             case 'BidOrder':
+//                 _NFTTx.type = enumTransactionType.Bid;
+//                 _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
+//                 break;
+//             case 'ChangeOrderPrice':
+//                 _NFTTx.type = enumTransactionType.PriceChanged;
+//                 _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
+//                 break;
+//             case 'CancelOrder':
+//                 _NFTTx.type = enumTransactionType.SaleCanceled;
+//                 _NFTTx.user = itemObject.fromName ? itemObject.fromName : reduceHexAddress(itemObject.from, 4);
+//                 break;
+//             case 'BuyOrder':
+//                 _NFTTx.type = enumTransactionType.SoldTo;
+//                 _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
+//                 break;
+//             // case 'Transfer':
+//             //     _NFTTx.type = enumTransactionType.Transfer;
+//             //     break;
+//             case 'SettleBidOrder':
+//                 _NFTTx.type = enumTransactionType.SettleBidOrder;
+//                 _NFTTx.user = itemObject.toName ? itemObject.toName : reduceHexAddress(itemObject.to, 4);
+//                 break;
+//         }
+//         _NFTTx.price = parseInt(itemObject.price) / 1e18;
+//         _NFTTx.txHash = itemObject.tHash;
+//         const timestamp = getTime(itemObject.timestamp.toString());
+//         _NFTTx.time = timestamp.date + ' ' + timestamp.time;
+//         _NFTTxList.push(_NFTTx);
+//         // for my nft history
+//         if (address !== '' && (itemObject.event === 'Mint' || itemObject.event === 'BuyOrder')) {
+//             const _NFTTxHistory: TypeNFTHisotry = { ...blankMyNFTHistory };
+//             _NFTTxHistory.type =
+//                 itemObject.event === 'Mint' ? 'Created' : itemObject.to === address ? 'Bought From' : 'Sold To';
+//             _NFTTxHistory.price = parseInt(itemObject.price) / 1e18;
+//             _NFTTxHistory.user =
+//                 _NFTTxHistory.type === 'Bought From'
+//                     ? itemObject.fromName
+//                         ? itemObject.fromName
+//                         : reduceHexAddress(itemObject.from, 4)
+//                     : itemObject.toName
+//                     ? itemObject.toName
+//                     : reduceHexAddress(itemObject.to, 4);
+//             const prodTransTimestamp = getTime(itemObject.timestamp.toString());
+//             _NFTTxHistory.time = prodTransTimestamp.date + ' ' + prodTransTimestamp.time;
+//             if (itemObject.event === 'BuyOrder')
+//                 _NFTTxHistory.saleType =
+//                     arrNFTTxs[i + 1].event === 'CreateOrderForSale'
+//                         ? enumTransactionType.ForSale
+//                         : enumTransactionType.OnAuction;
+//             _NFTTxHistory.txHash = itemObject.tHash;
+//             _NFTTxHistoryList.push(_NFTTxHistory);
+//         }
+//     }
+//     return { txs: _NFTTxList, history: _NFTTxHistoryList };
+// };
 
-export const getNFTLatestTxs2 = async (tokenId: string | undefined) => {
+export const getNFTLatestTxs = async (tokenId: string | undefined) => {
     let fetchUrl = `${serverConfig.assistServiceUrl}/api/v1/getTransHistoryByTokenId?tokenId=${tokenId}`;
 
     const resNFTTxs = await fetch(fetchUrl, FETCH_CONFIG_JSON);
@@ -862,33 +859,33 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
     return _BBItem;
 };
 
-export const updateBBStatus = (token: string, BBId: number, status: 'online' | 'offline') =>
-    new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
-        const reqUrl = `${serverConfig.metServiceUrl}/api/v1/updateBlindboxStatusById`;
-        const reqBody = {
-            token: token,
-            blindBoxId: BBId,
-            status: status,
-        };
-        fetch(reqUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(reqBody),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === 200) {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            })
-            .catch((error) => {
-                reject(false);
-            });
-    });
+// export const updateBBStatus = (token: string, BBId: number, status: 'online' | 'offline') =>
+//     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
+//         const reqUrl = `${serverConfig.metServiceUrl}/api/v1/updateBlindboxStatusById`;
+//         const reqBody = {
+//             token: token,
+//             blindBoxId: BBId,
+//             status: status,
+//         };
+//         fetch(reqUrl, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(reqBody),
+//         })
+//             .then((response) => response.json())
+//             .then((data) => {
+//                 if (data.status === 200) {
+//                     resolve(true);
+//                 } else {
+//                     resolve(false);
+//                 }
+//             })
+//             .catch((error) => {
+//                 reject(false);
+//             });
+//     });
 
 // Profile Page
 export const getMyNFTItemList = async (

@@ -12,7 +12,7 @@ import NFTTransactionTable from 'src/components/NFTTransactionTable';
 import PriceHistoryView from 'src/components/PriceHistoryView';
 import { TypeNFTTransaction, TypeProduct } from 'src/types/product-types';
 import { getMintCategory } from 'src/services/common';
-import { getELA2USD, getNFTItem, getNFTLatestTxs2, checkTokenLike } from 'src/services/fetch';
+import { getELA2USD, getNFTItem, getNFTLatestTxs, checkTokenLike } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -44,7 +44,7 @@ const SingleNFTFixedPrice: React.FC = (): JSX.Element => {
             // @ts-ignore
             if (signInDlgState.isLoggedIn) _NFTItem.isLike = location.state && location.state?.isLoggedIn ? location.state.isLiked : await checkTokenLike(params.id || '', signInDlgState.address);
 
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            const _NFTTxs = await getNFTLatestTxs(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
                 user: _NFTItem.author,
