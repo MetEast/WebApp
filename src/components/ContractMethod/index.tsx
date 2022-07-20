@@ -1,22 +1,14 @@
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { METEAST_CONTRACT_ABI, METEAST_CONTRACT_ADDRESS } from 'src/contracts/MET';
-import { METEAST_MARKET_CONTRACT_ABI, METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
+import { METEAST_CONTRACT_ABI } from 'src/contracts/MET';
+import { METEAST_MARKET_CONTRACT_ABI } from 'src/contracts/METMarket';
 import { TypeContractMethodPram } from 'src/types/mint-types';
-import {
-    METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI,
-    METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS,
-} from 'src/contracts/METokenMiningReward';
-import {
-    METEAST_STAKING_TOKEN_CONTRACT_ABI,
-    METEAST_STAKING_TOKEN_CONTRACT_ADDRESS,
-} from 'src/contracts/METokenStaking';
-import { METEAST_BASE_TOKEN_CONTRACT_ABI, METEAST_BASE_TOKEN_CONTRACT_ADDRESS } from 'src/contracts/METokenBase';
-import {
-    METEAST_VESTING_TOKEN_CONTRACT_ABI,
-    METEAST_VESTING_TOKEN_CONTRACT_ADDRESS,
-} from 'src/contracts/METokenVesting';
+import { METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI } from 'src/contracts/METokenMiningReward';
+import { METEAST_STAKING_TOKEN_CONTRACT_ABI } from 'src/contracts/METokenStaking';
+import { METEAST_BASE_TOKEN_CONTRACT_ABI } from 'src/contracts/METokenBase';
+import { METEAST_VESTING_TOKEN_CONTRACT_ABI } from 'src/contracts/METokenVesting';
 import { enumCallMethodType, enumMetEastContractType, enumMETokenContractType } from 'src/types/contract-types';
+import { contractConfig } from 'src/config';
 
 export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractMethodPram) =>
     new Promise((resolve: (value: string) => void, reject: (error: string) => void) => {
@@ -24,8 +16,8 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
             param.contractType === enumMetEastContractType.METEAST ? METEAST_CONTRACT_ABI : METEAST_MARKET_CONTRACT_ABI;
         const contractAddress =
             param.contractType === enumMetEastContractType.METEAST
-                ? METEAST_CONTRACT_ADDRESS
-                : METEAST_MARKET_CONTRACT_ADDRESS;
+                ? contractConfig.METEAST_CONTRACT
+                : contractConfig.METEAST_MARKET_CONTRACT;
         const smartContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
         let accounts: string[] = [];
         let gasPrice: string = '';
@@ -168,16 +160,16 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
 export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: TypeContractMethodPram) =>
     new Promise((resolve: (value: string) => void, reject: (error: string) => void) => {
         let contractAbi: any = METEAST_BASE_TOKEN_CONTRACT_ABI;
-        let contractAddress = METEAST_BASE_TOKEN_CONTRACT_ADDRESS;
+        let contractAddress = contractConfig.MET_BASE_CONTRACT;
         if (param.contractType === enumMETokenContractType.MET_VESTING) {
             contractAbi = METEAST_VESTING_TOKEN_CONTRACT_ABI;
-            contractAddress = METEAST_VESTING_TOKEN_CONTRACT_ADDRESS;
+            contractAddress = contractConfig.MET_VESTING_CONTRACT;
         } else if (param.contractType === enumMETokenContractType.MET_STAKING) {
             contractAbi = METEAST_STAKING_TOKEN_CONTRACT_ABI;
-            contractAddress = METEAST_STAKING_TOKEN_CONTRACT_ADDRESS;
+            contractAddress = contractConfig.MET_STAKING_CONTRACT;
         } else if (param.contractType === enumMETokenContractType.MET_MINING_REWARD) {
             contractAbi = METEAST_MINING_REWARD_TOKEN_CONTRACT_ABI;
-            contractAddress = METEAST_MINING_REWARD_TOKEN_CONTRACT_ADDRESS;
+            contractAddress = contractConfig.MET_MINING_REWARD_CONTRACT;
         }
         const smartContract = new walletConnectWeb3.eth.Contract(contractAbi as AbiItem[], contractAddress);
         let accounts: string[] = [];

@@ -4,7 +4,6 @@ import { DialogTitleTypo, PageNumberTypo, DetailedInfoTitleTypo, DetailedInfoLab
 import { PrimaryButton, SecondaryButton } from 'src/components/Buttons/styles';
 import WarningTypo from '../../components/WarningTypo';
 import Web3 from 'web3';
-import { METEAST_MARKET_CONTRACT_ADDRESS } from 'src/contracts/METMarket';
 import { essentialsConnector } from 'src/components/ConnectWallet/EssentialsConnectivity';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useSignInContext } from 'src/context/SignInContext';
@@ -18,6 +17,7 @@ import { blankContractMethodParam } from 'src/constants/init-constants';
 import { getTime } from 'src/services/common';
 import { enumMetEastContractType } from 'src/types/contract-types';
 import { enumAuthType } from 'src/types/auth-types';
+import { contractConfig } from 'src/config';
 
 export interface ComponentProps {}
 
@@ -62,7 +62,7 @@ const CheckSaleDetails: React.FC<ComponentProps> = (): JSX.Element => {
             contractType: enumMetEastContractType.METEAST,
             method: 'setApprovalForAll',
             price: '0',
-            operator: METEAST_MARKET_CONTRACT_ADDRESS,
+            operator: contractConfig.METEAST_MARKET_CONTRACT,
             approved: true,
         })
             .then((result: string) => {
