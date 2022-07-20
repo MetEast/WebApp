@@ -20,7 +20,7 @@ import {
     TypeNFTHisotry,
     enumTransactionType,
 } from 'src/types/product-types';
-import { getMyNFTItem, getNFTLatestTxs2 } from 'src/services/fetch';
+import { getMyNFTItem, getNFTLatestTxs } from 'src/services/fetch';
 import { useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import { useSnackbar } from 'notistack';
@@ -53,7 +53,7 @@ const MyNFTCreated: React.FC = (): JSX.Element => {
             _MyNFTItem.likes = product.likes;
             _MyNFTItem.price_usd = product.price_usd;
 
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            const _NFTTxs = await getNFTLatestTxs(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
                 user: _MyNFTItem.author,

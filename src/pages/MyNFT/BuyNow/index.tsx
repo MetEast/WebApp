@@ -21,7 +21,7 @@ import {
     enumBadgeType,
     enumTransactionType,
 } from 'src/types/product-types';
-import { getMyNFTItem, getNFTLatestTxs2 } from 'src/services/fetch';
+import { getMyNFTItem, getNFTLatestTxs } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -55,7 +55,7 @@ const MyNFTBuyNow: React.FC = (): JSX.Element => {
             _MyNFTItem.likes = product.likes ? product.likes : 0;
             _MyNFTItem.price_usd = product.price_usd;
 
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            const _NFTTxs = await getNFTLatestTxs(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
                 user: _MyNFTItem.author,

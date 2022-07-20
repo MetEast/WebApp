@@ -10,7 +10,7 @@ import ELAPrice from 'src/components/ELAPrice';
 // import { Icon } from '@iconify/react';
 import { TypeNFTTransaction } from 'src/types/product-types';
 // import { viewAllDlgSortOptions } from 'src/constants/select-constants';
-import { getNFTLatestTxs2 } from 'src/services/fetch';
+import { getNFTLatestTxs } from 'src/services/fetch';
 import SingleNFTTransactionType from 'src/components/SingleNFTTransactionType';
 import Username from 'src/components/Username';
 import { useDialogContext } from 'src/context/DialogContext';
@@ -34,7 +34,7 @@ const AllTransactions: React.FC<ComponentProps> = ({ onClose }): JSX.Element => 
     useEffect(() => {
         let unmounted = false;
         const fetchLatestTxs = async () => {
-            const _NFTTxs = await getNFTLatestTxs2(params.id); // sort?.value
+            const _NFTTxs = await getNFTLatestTxs(params.id); // sort?.value
             if (dialogState.allTxNFTCreation.user) _NFTTxs.push(dialogState.allTxNFTCreation);
             if (!unmounted) {
                 setAllTxsList(_NFTTxs);

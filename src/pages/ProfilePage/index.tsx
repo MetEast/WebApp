@@ -20,8 +20,8 @@ import {
     getMyTodayEarned,
     getMyTotalEarned,
     getMyEarnedList,
-    getSearchParams2,
-    getMyFavouritesList2,
+    getSearchParams,
+    getMyFavouritesNFT,
 } from 'src/services/fetch';
 import LooksEmptyBox from 'src/components/Profile/LooksEmptyBox';
 import { Icon } from '@iconify/react';
@@ -159,10 +159,10 @@ const ProfilePage: React.FC = (): JSX.Element => {
                         if (pageNum === 1 && i === nTabId) {
                             ELA2USDRate = await getELA2USD();
                             setELA2USD(ELA2USDRate);
-                            likeList = await getMyFavouritesList2(signInDlgState.isLoggedIn, signInDlgState.token);
+                            likeList = await getMyFavouritesNFT(signInDlgState.isLoggedIn, signInDlgState.token);
                             setMyFavorList(likeList);
                         }
-                        const searchParams = getSearchParams2(
+                        const searchParams = getSearchParams(
                             i === nTabId ? pageNum : 1,
                             i === nTabId ? pageSize : 1,
                             keyWord,

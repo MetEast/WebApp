@@ -22,7 +22,7 @@ import {
     TypeProduct,
     TypeSingleNFTBid,
 } from 'src/types/product-types';
-import { getMyNFTItem, getNFTLatestBids, getNFTLatestTxs2 } from 'src/services/fetch';
+import { getMyNFTItem, getNFTLatestBids, getNFTLatestTxs } from 'src/services/fetch';
 import { SignInState, useSignInContext } from 'src/context/SignInContext';
 import { useDialogContext } from 'src/context/DialogContext';
 import Container from 'src/components/Container';
@@ -60,7 +60,7 @@ const MyNFTAuction: React.FC = (): JSX.Element => {
             _MyNFTItem.price_usd = product.price_usd;
             console.log(_MyNFTItem);
 
-            const _NFTTxs = await getNFTLatestTxs2(params.id);
+            const _NFTTxs = await getNFTLatestTxs(params.id);
             _NFTTxs.push({
                 type: enumTransactionType.CreatedBy,
                 user: _MyNFTItem.author,
