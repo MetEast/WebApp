@@ -1,3 +1,4 @@
+import { enumCallMethodType, enumMetEastContractType, enumMETokenContractType } from "./contract-types";
 import { TypeSelectItem } from "./select-types";
 
 export type TypeMintInputForm = {
@@ -60,8 +61,8 @@ export type TypeIpfsUploadInfo = {
 }
 
 export type TypeContractMethodPram = {
-    contractType: number; // Tokenomics- 1: Token, 2: Vesting, 3: Staking, 4: Reward  NFT Contract- 1: MET, 2: MARKET
-    callType: number; // 1: send, 2: call
+    contractType: enumMetEastContractType | enumMETokenContractType;
+    callType: enumCallMethodType;
     method: string;
     price: string;
     tokenId: string;

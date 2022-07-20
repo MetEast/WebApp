@@ -17,7 +17,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { callTokenomicsContractMethod } from 'src/components/ContractMethod';
 import { blankContractMethodParam, blankMiningReward } from 'src/constants/init-constants';
-import { TypeMiningReward } from 'src/types/contract-types';
+import { enumCallMethodType, enumMETokenContractType, TypeMiningReward } from 'src/types/contract-types';
 import { Icon } from '@iconify/react';
 import { enumAuthType } from 'src/types/auth-types';
 
@@ -49,8 +49,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
         ) {
             callTokenomicsContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,
-                contractType: 1, // token
-                callType: 2,
+                contractType: enumMETokenContractType.MET_BASE,
+                callType: enumCallMethodType.CALL,
                 method: 'balanceOf',
             })
                 .then((balance: string) => {
@@ -63,8 +63,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     }
                     return callTokenomicsContractMethod(walletConnectWeb3, {
                         ...blankContractMethodParam,
-                        contractType: 3, // staking
-                        callType: 2,
+                        contractType: enumMETokenContractType.MET_STAKING,
+                        callType: enumCallMethodType.CALL,
                         method: 'stakedAmount',
                     });
                 })
@@ -98,8 +98,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
         if (signInDlgState.loginType === '1' || (library && signInDlgState.loginType === '2')) {
             callTokenomicsContractMethod(walletConnectWeb3, {
                 ...blankContractMethodParam,
-                contractType: 4,
-                callType: 2,
+                contractType: enumMETokenContractType.MET_MINING_REWARD,
+                callType: enumCallMethodType.CALL,
                 method: 'getReceivedRewardAsBuyer',
             })
                 .then((_receivedReward: string) => {
@@ -112,8 +112,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     }
                     return callTokenomicsContractMethod(walletConnectWeb3, {
                         ...blankContractMethodParam,
-                        contractType: 4,
-                        callType: 2,
+                        contractType: enumMETokenContractType.MET_MINING_REWARD,
+                        callType: enumCallMethodType.CALL,
                         method: 'getAvailableRewardAsBuyer',
                     });
                 })
@@ -127,8 +127,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     }
                     return callTokenomicsContractMethod(walletConnectWeb3, {
                         ...blankContractMethodParam,
-                        contractType: 4,
-                        callType: 2,
+                        contractType: enumMETokenContractType.MET_MINING_REWARD,
+                        callType: enumCallMethodType.CALL,
                         method: 'getReceivedRewardAsCreator',
                     });
                 })
@@ -142,8 +142,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     }
                     return callTokenomicsContractMethod(walletConnectWeb3, {
                         ...blankContractMethodParam,
-                        contractType: 4,
-                        callType: 2,
+                        contractType: enumMETokenContractType.MET_MINING_REWARD,
+                        callType: enumCallMethodType.CALL,
                         method: 'getAvailableRewardAsCreator',
                     });
                 })
@@ -157,8 +157,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     }
                     return callTokenomicsContractMethod(walletConnectWeb3, {
                         ...blankContractMethodParam,
-                        contractType: 4,
-                        callType: 2,
+                        contractType: enumMETokenContractType.MET_MINING_REWARD,
+                        callType: enumCallMethodType.CALL,
                         method: 'getReceivedRewardAsStaker',
                     });
                 })
@@ -172,8 +172,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                     }
                     return callTokenomicsContractMethod(walletConnectWeb3, {
                         ...blankContractMethodParam,
-                        contractType: 4,
-                        callType: 2,
+                        contractType: enumMETokenContractType.MET_MINING_REWARD,
+                        callType: enumCallMethodType.CALL,
                         method: 'getAvailableRewardAsStaker',
                     });
                 })
@@ -222,8 +222,8 @@ const RewardsPage: React.FC = (): JSX.Element => {
                 : 'withdrawStakerReward';
         callTokenomicsContractMethod(walletConnectWeb3, {
             ...blankContractMethodParam,
-            contractType: 4,
-            callType: 1,
+            contractType: enumMETokenContractType.MET_MINING_REWARD,
+            callType: enumCallMethodType.SEND,
             method: methodName,
         })
             .then((txHash: string) => {
