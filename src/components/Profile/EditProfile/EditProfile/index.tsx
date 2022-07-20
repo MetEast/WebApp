@@ -28,6 +28,7 @@ export interface ComponentProps {
 const EditProfile: React.FC<ComponentProps> = ({ onClose }): JSX.Element => {
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [cookies, setCookies] = useCookies(['METEAST_TOKEN']);
     const { enqueueSnackbar } = useSnackbar();
     const [onProgress, setOnProgress] = useState<boolean>(false);
