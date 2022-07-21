@@ -197,7 +197,7 @@ export const callTokenomicsContractMethod = (walletConnectWeb3: Web3, param: Typ
                 return walletConnectWeb3.eth.getGasPrice();
             })
             .then((_gasPrice: string) => {
-                gasPrice = _gasPrice;
+                gasPrice = parseInt(_gasPrice) > 20 * 1e9 ? (20 * 1e9).toString() : gasPrice;
 
                 switch (param.method) {
                     case 'balanceOf':
