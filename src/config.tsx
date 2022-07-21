@@ -42,12 +42,30 @@ export const polrConfig = {
 };
 
 export const contractConfig = {
-    METEAST_CONTRACT: process.env.REACT_APP_METEAST_CONTRACT_ADDRESS || '',
-    METEAST_MARKET_CONTRACT: process.env.REACT_APP_METEAST_MARKET_CONTRACT_ADDRESS || '',
-    MET_BASE_CONTRACT: process.env.REACT_APP_ME_TOKEN_BASE_CONTRACT_ADDRESS || '',
-    MET_VESTING_CONTRACT: process.env.REACT_APP_ME_TOKEN_VESTING_CONTRACT_ADDRESS || '',
-    MET_STAKING_CONTRACT: process.env.REACT_APP_ME_TOKEN_STAKING_CONTRACT_ADDRESS || '',
-    MET_MINING_REWARD_CONTRACT: process.env.REACT_APP_ME_TOKEN_MINING_REWARD_CONTRACT_ADDRESS || '',
+    METEAST_CONTRACT:
+        (isProductEnv()
+            ? process.env.REACT_APP_METEAST_CONTRACT_ADDRESS_MAIN_NET
+            : process.env.REACT_APP_METEAST_CONTRACT_ADDRESS_TEST_NET) || '',
+    METEAST_MARKET_CONTRACT:
+        (isProductEnv()
+            ? process.env.REACT_APP_METEAST_MARKET_CONTRACT_ADDRESS_MAIN_NET
+            : process.env.REACT_APP_METEAST_MARKET_CONTRACT_ADDRESS_TEST_NET) || '',
+    MET_BASE_CONTRACT:
+        (isProductEnv()
+            ? process.env.REACT_APP_ME_TOKEN_BASE_CONTRACT_ADDRESS_MAIN_NET
+            : process.env.REACT_APP_ME_TOKEN_BASE_CONTRACT_ADDRESS_TEST_NET) || '',
+    MET_VESTING_CONTRACT:
+        (isProductEnv()
+            ? process.env.REACT_APP_ME_TOKEN_VESTING_CONTRACT_ADDRESS_MAIN_NET
+            : process.env.REACT_APP_ME_TOKEN_VESTING_CONTRACT_ADDRESS_TEST_NET) || '',
+    MET_STAKING_CONTRACT:
+        (isProductEnv()
+            ? process.env.REACT_APP_ME_TOKEN_STAKING_CONTRACT_ADDRESS_MAIN_NET
+            : process.env.REACT_APP_ME_TOKEN_STAKING_CONTRACT_ADDRESS_TEST_NET) || '',
+    MET_MINING_REWARD_CONTRACT:
+        (isProductEnv()
+            ? process.env.REACT_APP_ME_TOKEN_MINING_REWARD_CONTRACT_ADDRESS_MAIN_NET
+            : process.env.REACT_APP_ME_TOKEN_MINING_REWARD_CONTRACT_ADDRESS_TEST_NET) || '',
 };
 
 export const contactConfig = {
