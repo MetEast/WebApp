@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { create } from 'ipfs-http-client';
 import axios from 'axios';
-import { apiConfig, ipfsConfig, isProductEnv, chainConfig } from 'src/config';
+import { apiConfig, ipfsConfig, chainConfig } from 'src/config';
 
 const client = create({ url: ipfsConfig.ipfsUploadUrl });
 
@@ -19,15 +19,7 @@ declare global {
 
 export const addressZero = '0x0000000000000000000000000000000000000000';
 
-export const isSupportedNetwork = (chainId: number) => {
-    return (isProductEnv() && chainId === 20) || (!isProductEnv() && chainId === 21);
-};
-
-export const getESCExploreUrl = (chainId: number, txHash: string) => {
-    if (chainId === 20) return `${process.env.REACT_APP_ELASTOS_ESC_MAIN_NET}/tx/${txHash}`;
-    else if (chainId === 21) return `${process.env.REACT_APP_ELASTOS_ESC_TEST_NET}/tx/${txHash}`;
-    return '';
-};
+export const isSupportedNetwork = (chainId: number) => chainId === parseInt(chainConfig.id);
 
 export const getEssentialsWalletAddress = () => {
     if (isInAppBrowser()) {
@@ -148,8 +140,6 @@ export const getERC20TokenPrice = async (tokenAddress: string, connectProvider =
             url: apiConfig.glideELA2USDTUrl,
             headers: {
                 'content-type': 'application/json',
-                // "x-rapidapi-host": "reddit-graphql-proxy.p.rapidapi.com",
-                // "x-rapidapi-key": process.env.RAPIDAPI_KEY,
                 accept: 'application/json',
             },
             data: graphQLParams,
