@@ -33,7 +33,7 @@ const WebSocketContainer: React.FC<ComponentProps> = (): JSX.Element => {
     //     }
     //     // Only set up the websocket once
     //     // if (!clientRef.current) {
-    //     //     const client = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || '');
+    //     //     const client = new WebSocket(serverConfig.socketServiceUrl || '');
     //     //     clientRef.current = client;
     //     //     window.client = client;
     //     //

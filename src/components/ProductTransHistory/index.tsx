@@ -1,26 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Stack, Typography, Box, Link } from '@mui/material';
 import { Icon } from '@iconify/react';
 import ELAPrice from 'src/components/ELAPrice';
 import ProductBadge from 'src/components/ProductBadge';
 import { enumBadgeType, enumTransactionType, TypeNFTHisotry } from 'src/types/product-types';
-import { useSignInContext } from 'src/context/SignInContext';
 import Username from 'src/components/Username';
-import { getESCExploreUrl } from 'src/services/wallet';
+import { chainConfig } from 'src/config';
 
 interface ComponentProps {
     historyList: Array<TypeNFTHisotry>;
 }
 
 const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Element => {
-    const [signInDlgState] = useSignInContext();
-    const [txHashUrl, setTxHashUrl] = useState<string>(getESCExploreUrl(signInDlgState.chainId, ''));
-
-    useEffect(() => {
-        setTxHashUrl(getESCExploreUrl(signInDlgState.chainId, ''));
-    }, [signInDlgState.chainId]);
-
-    console.log('=======', historyList);
     return (
         <Stack spacing={2}>
             <Typography fontSize={22} fontWeight={700}>
@@ -48,7 +39,11 @@ const ProductTransHistory: React.FC<ComponentProps> = ({ historyList }): JSX.Ele
                                     <Typography fontSize={16} fontWeight={700}>
                                         {item.type}
                                     </Typography>
-                                    <Link href={`${txHashUrl}${item.txHash}`} underline="none" target="_blank">
+                                    <Link
+                                        href={`${chainConfig.exploreUrl}/tx/${item.txHash}`}
+                                        underline="none"
+                                        target="_blank"
+                                    >
                                         <Icon
                                             icon="ph:arrow-square-out-bold"
                                             fontSize={16}
