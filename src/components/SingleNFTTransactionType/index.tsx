@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useSignInContext } from 'src/context/SignInContext';
+import React from 'react';
 import { enumTransactionType } from 'src/types/product-types';
 import { Icon } from '@iconify/react';
 import { Typography, Stack, Link } from '@mui/material';
-import { getESCExploreUrl } from 'src/services/wallet';
+import { chainConfig } from 'src/config';
 
 interface ComponentProps {
     transactionType: enumTransactionType;
@@ -44,20 +43,13 @@ const SingleNFTTransactionType: React.FC<ComponentProps> = ({ transactionType, t
         },
     };
 
-    const [signInDlgState] = useSignInContext();
-    const [txHashUrl, setTxHashUrl] = useState<string>(getESCExploreUrl(signInDlgState.chainId, transactionHash));
-
-    useEffect(() => {
-        setTxHashUrl(getESCExploreUrl(signInDlgState.chainId, transactionHash));
-    }, [signInDlgState.chainId, transactionHash]);
-
     return (
         <Stack direction="row" alignItems="center" spacing={1}>
             {styles[transactionType].icon}
             <Typography fontSize={16} fontWeight={700}>
                 {transactionType}
             </Typography>
-            <Link href={txHashUrl} underline="none" target="_blank">
+            <Link href={`${chainConfig.exploreUrl}/tx/${transactionHash}`} underline="none" target="_blank">
                 <Icon
                     icon="ph:arrow-square-out-bold"
                     fontSize={16}

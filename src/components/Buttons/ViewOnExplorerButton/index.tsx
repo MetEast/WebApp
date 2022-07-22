@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useSignInContext } from 'src/context/SignInContext';
+import React from 'react';
 import { Button } from './styles';
 import { Icon } from '@iconify/react';
 import { Link } from '@mui/material';
-import { getESCExploreUrl } from 'src/services/wallet';
+import { chainConfig } from 'src/config';
 
 export interface ComponentProps {
     txHash: string;
 }
 
 const ViewOnExplorerButton: React.FC<ComponentProps> = ({ txHash }): JSX.Element => {
-    const [signInDlgState] = useSignInContext();
-    const [txHashUrl, setTxHashUrl] = useState<string>(getESCExploreUrl(signInDlgState.chainId, txHash));
-
-    useEffect(() => {
-        setTxHashUrl(getESCExploreUrl(signInDlgState.chainId, txHash));
-    }, [signInDlgState.chainId, txHash]);
-
     return (
-        <Link href={txHashUrl} underline="none" target="_blank">
+        <Link href={`${chainConfig.exploreUrl}/tx/${txHash}`} underline="none" target="_blank">
             <Button>
                 {`View on explorer`}
                 <Icon
