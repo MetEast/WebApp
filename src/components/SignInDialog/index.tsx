@@ -34,12 +34,12 @@ import { Web3Provider } from '@ethersproject/providers';
 import SnackMessage from 'src/components/SnackMessage';
 import { login } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
-import { serverConfig, chainConfig, firebaseConfig } from 'src/config';
-import firebase from 'firebase/compat/app';
-import { getAnalytics } from 'firebase/analytics';
+import { serverConfig, chainConfig } from 'src/config';
+// import firebase from 'firebase/compat/app';
+// import { getAnalytics } from 'firebase/analytics';
 
-const app = firebase.initializeApp(firebaseConfig);
-getAnalytics(app);
+// const app = firebase.initializeApp(firebaseConfig);
+// getAnalytics(app);
 
 export interface ComponentProps {}
 
