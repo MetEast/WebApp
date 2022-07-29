@@ -556,8 +556,11 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     selected={items.label === nftGalleryFilterBtnSelected}
                                     loading={isLoadingAssets[index] ? 1 : 0}
                                     onClick={() => {
-                                        setNftGalleryFilterBtnSelected(items.label);
-                                        document.cookie = `METEAST_PROFILE=${items.label}; Path=/; SameSite=None; Secure`;
+                                        if (items.label === nftGalleryFilterBtnSelected) setReload(true);
+                                        else {
+                                            setNftGalleryFilterBtnSelected(items.label);
+                                            document.cookie = `METEAST_PROFILE=${items.label}; Path=/; SameSite=None; Secure`;
+                                        }
                                         setLoadingState(index, true);
                                         setMyNFTData(index, []);
                                     }}
