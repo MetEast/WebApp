@@ -556,7 +556,7 @@ const ProfilePage: React.FC = (): JSX.Element => {
                                     selected={items.label === nftGalleryFilterBtnSelected}
                                     loading={isLoadingAssets[index] ? 1 : 0}
                                     onClick={() => {
-                                        if (items.label === nftGalleryFilterBtnSelected) setReload(true);
+                                        if (items.label === nftGalleryFilterBtnSelected) setReload(!reload);
                                         else {
                                             setNftGalleryFilterBtnSelected(items.label);
                                             document.cookie = `METEAST_PROFILE=${items.label}; Path=/; SameSite=None; Secure`;
