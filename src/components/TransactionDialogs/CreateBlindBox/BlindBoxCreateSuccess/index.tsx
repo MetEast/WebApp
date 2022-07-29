@@ -26,7 +26,22 @@ const BlindBoxCreateSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 <PrimaryButton
                     fullWidth
                     onClick={() => {
-                        setDialogState({ ...dialogState, createBlindBoxDlgOpened: false });
+                        setDialogState({
+                            ...dialogState,
+                            createBlindBoxDlgOpened: false,
+                            createBlindBoxDlgStep: 0,
+                            crtBlindTitle: '',
+                            crtBlindDescription: '',
+                            crtBlindImage: new File([''], ''),
+                            crtBlindTokenIds: '',
+                            // crtBlindStatus: 'offline',
+                            crtBlindQuantity: 0,
+                            crtBlindPrice: 0,
+                            crtBlindSaleBegin: '',
+                            // crtBlindSaleEnd: '',
+                            crtBlindPurchases: 0,
+                            progressBar: 0,
+                        });
                         if (location.pathname.indexOf('/blind-box') !== -1) window.location.reload();
                         else navigate('/blind-box');
                     }}
