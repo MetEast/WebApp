@@ -116,7 +116,7 @@ export const callContractMethod = (walletConnectWeb3: Web3, param: TypeContractM
                 return walletConnectWeb3.eth.getGasPrice();
             })
             .then(async (_gasPrice: string) => {
-                gasPrice = parseInt(_gasPrice) > 20 * 1e9 ? (20 * 1e9).toString() : gasPrice;
+                gasPrice = parseInt(_gasPrice) > 20 * 1e9 ? (20 * 1e9).toString() : _gasPrice;
                 if (param.method === 'createOrderForSaleBatch')
                     return await contractMethod.estimateGas({ from: accounts[0], gas: 8000000, value: param.price });
                 else return 3231451;
