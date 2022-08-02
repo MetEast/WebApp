@@ -35,11 +35,12 @@ import SnackMessage from 'src/components/SnackMessage';
 import { login } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
 import { serverConfig, chainConfig, firebaseConfig } from 'src/config';
-import firebase from 'firebase/compat/app';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 if (firebaseConfig.apiKey) {
-    const app = firebase.initializeApp(firebaseConfig);
-    firebase.analytics(app);
+    const app = initializeApp(firebaseConfig);
+    getAnalytics(app);
 }
 
 export interface ComponentProps {}
