@@ -36,11 +36,10 @@ import { login } from 'src/services/fetch';
 import { blankUserToken } from 'src/constants/init-constants';
 import { serverConfig, chainConfig, firebaseConfig } from 'src/config';
 import firebase from 'firebase/compat/app';
-import { getAnalytics } from 'firebase/analytics';
 
 if (firebaseConfig.apiKey) {
     const app = firebase.initializeApp(firebaseConfig);
-    getAnalytics(app);
+    firebase.analytics(app);
 }
 
 export interface ComponentProps {}
