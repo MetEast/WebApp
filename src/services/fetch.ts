@@ -183,6 +183,7 @@ export const removeNotifications = async (token: string, id: string) => {
 };
 
 export const getShorternUrl = async (url: string) => {
+    if (!(polrConfig.polrServerUrl && polrConfig.polrAPIKey)) return '';
     try {
         const resShorternUrl = await fetch(
             `${polrConfig.polrServerUrl}/api/v2/action/shorten?key=${polrConfig.polrAPIKey}&url=${url}&is_secret=false`,
