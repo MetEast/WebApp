@@ -50,7 +50,7 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
     const location = useLocation();
     const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState] = useDialogContext();
-    const [cookies, setCookies] = useCookies(['METEAST_LINK', 'METEAST_TOKEN']);
+    const [cookies, setCookies, removeCookie] = useCookies(['METEAST_LINK', 'METEAST_TOKEN', 'METEAST_PROFILE']);
     const { enqueueSnackbar } = useSnackbar();
     const { activate, active, library, chainId, account } = useWeb3React<Web3Provider>();
     const [activatingConnector, setActivatingConnector] = useState<InjectedConnector | WalletConnectConnector | null>(
@@ -202,9 +202,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
 
     const signOutWithWallet = async () => {
         if (activatingConnector !== null) activatingConnector.deactivate();
-        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
+        removeCookie('METEAST_LINK');
+        removeCookie('METEAST_TOKEN');
+        removeCookie('METEAST_PROFILE');
         setActivatingConnector(null);
         if (location.pathname.indexOf('/profile') !== -1 || location.pathname.indexOf('/mynft') !== -1) {
             navigate('/');
@@ -307,9 +310,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             _state.isLoggedIn = false;
             return _state;
         });
-        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
+        removeCookie('METEAST_LINK');
+        removeCookie('METEAST_TOKEN');
+        removeCookie('METEAST_PROFILE');
         try {
             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
                 await essentialsConnector.getWalletConnectProvider().disconnect();
@@ -329,9 +335,12 @@ const SignInDlgContainer: React.FC<ComponentProps> = (): JSX.Element => {
             _state.signOut = false;
             return _state;
         });
-        document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
-        document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_LINK=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_TOKEN=; Path=/; Expires=${new Date().toUTCString()};`;
+        // document.cookie += `METEAST_PROFILE=; Path=/; Expires=${new Date().toUTCString()};`;
+        removeCookie('METEAST_LINK');
+        removeCookie('METEAST_TOKEN');
+        removeCookie('METEAST_PROFILE');
         try {
             if (isUsingEssentialsConnector() && essentialsConnector.hasWalletConnectSession())
                 await essentialsConnector.getWalletConnectProvider().disconnect();
