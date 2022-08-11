@@ -294,6 +294,7 @@ export type Token = {
     thumbnail: string;
     views: number;
     likes: number;
+    authorName: string;
 };
 
 export type TypeFavouritesFetch = {

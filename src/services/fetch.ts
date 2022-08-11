@@ -356,7 +356,9 @@ export const getNFTItemList = async (
         _NFT.image = getImageFromAsset(itemObject.token.thumbnail);
         _NFT.price_ela = itemObject.orderPrice / 1e18;
         _NFT.price_usd = ELA2USD ? _NFT.price_ela * ELA2USD : 0;
-        _NFT.author = reduceHexAddress(itemObject.token.royaltyOwner, 4);
+        _NFT.author = itemObject.token.authorName
+            ? itemObject.token.authorName
+            : reduceHexAddress(itemObject.token.royaltyOwner, 4);
         _NFT.type = itemObject.orderType === 1 ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
         _NFT.likes = itemObject.token.likes ? itemObject.token.likes : 0;
         _NFT.views = itemObject.token.views ? itemObject.token.views : 0;
