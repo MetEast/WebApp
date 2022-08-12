@@ -146,16 +146,12 @@ export const getNotificationCount = (type: number, params: NotificationParams) =
 export const markNotificationsAsRead = (token: string, ids: string) =>
     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
         const reqUrl = `${serverConfig.metServiceUrl}/api/v1/readNotifications`;
-        // const reqBody = {
-        //     ids: ids,
-        // };
         fetch(reqUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            // body: JSON.stringify(reqBody),
         })
             .then((response) => response.json())
             .then((data) => {
@@ -219,21 +215,6 @@ export const checkBlindBoxLike = async (id: string, address: string) => {
     return jsonCheckLike.data ? jsonCheckLike.data : false;
 };
 
-// export const getMyFavouritesList = async (loginState: boolean, did: string) => {
-//     if (loginState) {
-//         try {
-//             const resFavouriteList = await fetch(
-//                 `${serverConfig.assistServiceUrl}/sticker/api/v1/getFavoritesCollectible?did=${did}`,
-//                 FETCH_CONFIG_JSON,
-//             );
-//             const dataFavouriteList = await resFavouriteList.json();
-//             return dataFavouriteList.data.result;
-//         } catch (error) {
-//             return [];
-//         }
-//     } else return [];
-// };
-
 export const getMyFavouritesNFT = async (loginState: boolean, token: string) => {
     if (loginState) {
         try {
@@ -292,39 +273,6 @@ export const getPageBannerList = async (location: number) => {
 };
 
 // Home Page & Product Page
-// export const getNFTItemList = async (fetchParams: string, ELA2USD: number, likeList: Array<TypeFavouritesFetch>) => {
-//     const resNFTList = await fetch(
-//         `${serverConfig.assistServiceUrl}/api/v1/listMarketTokens?${fetchParams}`,
-//         FETCH_CONFIG_JSON,
-//     );
-//     const jsonNFTList = await resNFTList.json();
-//     const totalCount: number = jsonNFTList.data.total;
-//     const arrNFTList = jsonNFTList.data ? jsonNFTList.data.result : [];
-
-//     const _arrNFTList: Array<TypeProduct> = [];
-//     for (let i = 0; i < arrNFTList.length; i++) {
-//         const itemObject: TypeProductFetch = arrNFTList[i];
-//         const _NFT: TypeProduct = { ...blankNFTItem };
-//         _NFT.tokenId = itemObject.tokenId;
-//         _NFT.name = itemObject.name;
-//         _NFT.image = getImageFromAsset(itemObject.thumbnail);
-//         _NFT.price_ela = itemObject.price / 1e18;
-//         _NFT.price_usd = _NFT.price_ela * ELA2USD;
-//         _NFT.author = itemObject.authorName ? itemObject.authorName : reduceHexAddress(itemObject.royaltyOwner, 4);
-//         _NFT.type = itemObject.endTime === '0' ? enumSingleNFTType.BuyNow : enumSingleNFTType.OnAuction;
-//         _NFT.likes = itemObject.likes;
-//         _NFT.views = itemObject.views;
-//         _NFT.status = itemObject.status;
-//         _NFT.isExpired = Math.round(new Date().getTime() / 1000) > parseInt(itemObject.endTime);
-//         _NFT.isLike =
-//             likeList.findIndex((value: TypeFavouritesFetch) => value.tokenId === itemObject.tokenId) === -1
-//                 ? false
-//                 : true;
-//         _arrNFTList.push(_NFT);
-//     }
-//     return { total: totalCount, data: _arrNFTList };
-// };
-
 export const getNFTItemList = async (
     body: {
         pageSize: number;
@@ -371,65 +319,6 @@ export const getNFTItemList = async (
 };
 
 // Product Page
-// export const getSearchParams = (
-//     pageNum: number,
-//     pageSize: number,
-//     keyWord: string,
-//     sortBy: TypeSelectItem | undefined,
-//     filterRange: TypeFilterRange,
-//     filters: Array<enumFilterOption>,
-//     category: TypeSelectItem | undefined,
-// ) => {
-//     let searchParams = `pageNum=${pageNum}&pageSize=${pageSize}&keyword=${keyWord}`;
-//     if (sortBy !== undefined) {
-//         switch (sortBy.value) {
-//             case 'low_to_high':
-//                 searchParams += `&orderType=price_l_to_h`;
-//                 break;
-//             case 'high_to_low':
-//                 searchParams += `&orderType=price_h_to_l`;
-//                 break;
-//             case 'most_viewed':
-//                 searchParams += `&orderType=mostviewed`;
-//                 break;
-//             case 'most_liked':
-//                 searchParams += `&orderType=mostliked`;
-//                 break;
-//             case 'most_recent':
-//                 searchParams += `&orderType=mostrecent`;
-//                 break;
-//             case 'oldest':
-//                 searchParams += `&orderType=oldest`;
-//                 break;
-//             case 'ending_soon':
-//                 searchParams += `&orderType=endingsoon`;
-//                 break;
-//             default:
-//                 searchParams += `&orderType=mostrecent`;
-//                 break;
-//         }
-//     }
-//     if (filterRange.min !== undefined) {
-//         searchParams += `&filter_min_price=${filterRange.min}`;
-//     }
-//     if (filterRange.max !== undefined) {
-//         searchParams += `&filter_max_price=${filterRange.max}`;
-//     }
-//     if (filters.length !== 0) {
-//         let filterStatus: string = '';
-//         filters.forEach((item) => {
-//             if (item === 0) filterStatus += 'ON AUCTION,';
-//             else if (item === 1) filterStatus += 'BUY NOW,';
-//             else if (item === 2) filterStatus += 'HAS BIDS,';
-//         });
-//         searchParams += `&filter_status=${filterStatus.slice(0, filterStatus.length - 1)}`;
-//     }
-//     if (category !== undefined) {
-//         searchParams += `&category=${category.value}`;
-//     }
-//     return searchParams;
-// };
-
 export const getSearchParams = (
     pageNum: number,
     pageSize: number,
@@ -572,7 +461,7 @@ export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number) =
         _NFTItem.description = itemObject.description;
         _NFTItem.author = itemObject2.creator?.name || reduceHexAddress(itemObject2.royaltyOwner, 4);
         _NFTItem.authorDescription = itemObject2.creator?.description || '';
-        _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default'; // no author avatar
+        _NFTItem.authorImg = itemObject.authorAvatar ? getImageFromAsset(itemObject.authorAvatar) : 'default';
         _NFTItem.authorAddress = itemObject.royaltyOwner;
         _NFTItem.holder = itemObject2.tokenOwner;
         _NFTItem.holderName =
@@ -580,7 +469,7 @@ export const getNFTItem = async (tokenId: string | undefined, ELA2USD: number) =
                 ? _NFTItem.author
                 : itemObject.holderName
                 ? itemObject.holderName
-                : reduceHexAddress(_NFTItem.holder, 4); // no holder name
+                : reduceHexAddress(_NFTItem.holder, 4);
         _NFTItem.orderId = itemObject.order.orderId + '';
         _NFTItem.tokenIdHex = itemObject2.tokenIdHex;
         _NFTItem.royalties = itemObject.royaltyFee / 1e4;
@@ -845,10 +734,10 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
                 : enumBlindBoxNFTType.SaleEnds;
         _BBItem.likes = itemObject.likes ? itemObject.likes : 0;
         _BBItem.views = itemObject.views ? itemObject.views : 0;
-        _BBItem.author = itemObject.createdName ? itemObject.createdName : reduceHexAddress(itemObject.seller, 4); // no createdName
+        _BBItem.author = itemObject.createdName ? itemObject.createdName : reduceHexAddress(itemObject.seller, 4);
         _BBItem.royaltyOwner = itemObject.seller;
-        _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : ''; // no createdDescription
-        _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default'; // no createdAvatar
+        _BBItem.authorDescription = itemObject.createdDescription ? itemObject.createdDescription : '';
+        _BBItem.authorImg = itemObject.createdAvatar ? getImageFromAsset(itemObject.createdAvatar) : 'default';
         _BBItem.description = itemObject.description;
         _BBItem.instock = itemObject.tokenIds.length || 0;
         _BBItem.sold = itemObject.soldTokenIds?.length || 0;
@@ -862,34 +751,6 @@ export const getBBItem = async (blindBoxId: string | undefined, ELA2USD: number)
     }
     return _BBItem;
 };
-
-// export const updateBBStatus = (token: string, BBId: number, status: 'online' | 'offline') =>
-//     new Promise((resolve: (value: boolean) => void, reject: (value: boolean) => void) => {
-//         const reqUrl = `${serverConfig.metServiceUrl}/api/v1/updateBlindboxStatusById`;
-//         const reqBody = {
-//             token: token,
-//             blindBoxId: BBId,
-//             status: status,
-//         };
-//         fetch(reqUrl, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(reqBody),
-//         })
-//             .then((response) => response.json())
-//             .then((data) => {
-//                 if (data.status === 200) {
-//                     resolve(true);
-//                 } else {
-//                     resolve(false);
-//                 }
-//             })
-//             .catch((error) => {
-//                 reject(false);
-//             });
-//     });
 
 // Profile Page
 export const getMyNFTItemList = async (
