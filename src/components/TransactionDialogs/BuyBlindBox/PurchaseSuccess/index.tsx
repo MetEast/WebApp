@@ -30,7 +30,7 @@ const PurchaseSuccess: React.FC<ComponentProps> = (): JSX.Element => {
                 data.data.forEach((item: any) => {
                     names.push(item.name);
                     images.push(getImageFromAsset(item.thumbnail));
-                    creators.push(item.royaltyOwner);
+                    creators.push(item.authorName ? item.authorName : item.royaltyOwner);
                 });
                 setDialogState({
                     ...dialogState,
