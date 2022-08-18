@@ -1202,7 +1202,7 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
 };
 
 export const getAdminUserList = async (keyWord: string, fetchParams: string, role: number, token: string) => {
-    let url = `${serverConfig.metServiceUrl}/api/v1/admin/listaddress?${fetchParams}`;
+    let url = `${serverConfig.metServiceUrl}/api/v1/admin/listAddress?${fetchParams}`;
     if (keyWord !== '') url += `&keyword=${keyWord}`;
     url += `&type=${role}`;
     const resAdminUserList = await fetch(url, {
@@ -1340,6 +1340,7 @@ export const addAdminBanner = (token: string, image: string, location: number, s
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(reqBody),
         })
@@ -1374,6 +1375,7 @@ export const updateAdminBanner = (
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(reqBody),
         })
@@ -1397,6 +1399,7 @@ export const deleteAdminBanner = (token: string, id: number) =>
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(reqBody),
         })
