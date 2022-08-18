@@ -1201,14 +1201,20 @@ export const getAdminNFTItemList = async (keyWord: string, fetchParams: string) 
     return { totalCount: totalCount, arrAdminNFTList: _arrAdminNFTList };
 };
 
-export const getAdminUserList = async (keyWord: string, fetchParams: string, role: number) => {
+export const getAdminUserList = async (keyWord: string, fetchParams: string, role: number, token: string) => {
     let url = `${serverConfig.metServiceUrl}/api/v1/admin/listaddress?${fetchParams}`;
     if (keyWord !== '') url += `&keyword=${keyWord}`;
     url += `&type=${role}`;
-    const resAdminUserList = await fetch(url, FETCH_CONFIG_JSON);
+    const resAdminUserList = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
     const jsonAdminUserList = await resAdminUserList.json();
-    const totalCount = jsonAdminUserList.total;
-    const arrAdminUserList = jsonAdminUserList.data === undefined ? [] : jsonAdminUserList.data;
+    const totalCount = jsonAdminUserList.data.total;
+    const arrAdminUserList = jsonAdminUserList.data.data === undefined ? [] : jsonAdminUserList.data.data;
     if (
         totalCount === 1 &&
         arrAdminUserList.length === 1 &&
@@ -1285,13 +1291,19 @@ export const updateUserRole = (_token: string, _address: string, _role: number, 
             });
     });
 
-export const getAdminBannerList = async (pageNum: number, pageSize: number) => {
+export const getAdminBannerList = async (pageNum: number, pageSize: number, token: string) => {
     let url = `${serverConfig.metServiceUrl}/api/v1/admin/listBanner?pageNum=${pageNum}&pageSize=${pageSize}`;
 
-    const resAdminBannerList = await fetch(url, FETCH_CONFIG_JSON);
+    const resAdminBannerList = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
     const jsonAdminBannerList = await resAdminBannerList.json();
-    const totalCount = jsonAdminBannerList.total;
-    const arrAdminBannerList = jsonAdminBannerList.data === undefined ? [] : jsonAdminBannerList.data;
+    const totalCount = jsonAdminBannerList.data.total;
+    const arrAdminBannerList = jsonAdminBannerList.data.data === undefined ? [] : jsonAdminBannerList.data.data;
 
     const _arrAdminBannerList: Array<AdminBannersItemType> = [];
     for (let i = 0; i < arrAdminBannerList.length; i++) {

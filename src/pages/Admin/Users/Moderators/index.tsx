@@ -91,7 +91,6 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
     ];
 
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
-
     const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [totalCount, setTotalCount] = useState<number>(0);
@@ -113,6 +112,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
                 keyWord,
                 getAdminSearchParams(undefined, undefined, pageNum + 1, pageSize),
                 1 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
+                signInDlgState.token
             );
             if (!unmounted) {
                 setEmptyString(

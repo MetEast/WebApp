@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react';
 import { reduceHexAddress } from 'src/services/common';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
 import { blankAdminUserItem } from 'src/constants/init-constants';
+import { useSignInContext } from '../../../../context/SignInContext';
 
 const AdminUserAdmins: React.FC = (): JSX.Element => {
     const statusValues = [{ label: 'Admin', bgcolor: '#C9F5DC', color: '#1EA557' }];
@@ -67,7 +68,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
     ];
 
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
-
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [pageNum, setPageNum] = useState<number>(0);
     const [pageSize, setPageSize] = useState<number>(5);
@@ -82,6 +83,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
                 '',
                 getAdminSearchParams(undefined, undefined, pageNum + 1, pageSize),
                 0 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
+                signInDlgState.token
             );
             if (!unmounted) {
                 setTotalCount(_adminUserList.totalCount);

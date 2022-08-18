@@ -11,6 +11,7 @@ import BannedUsers from 'src/components/Admin/Dialogs/Users/BannedUsers';
 import { reduceHexAddress } from 'src/services/common';
 import { getAdminSearchParams, getAdminUserList } from 'src/services/fetch';
 import { useDialogContext } from 'src/context/DialogContext';
+import { useSignInContext } from '../../../../context/SignInContext';
 
 const AdminBannedUsers: React.FC = (): JSX.Element => {
     const statusValues = [
@@ -94,7 +95,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
         },
     ];
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
-
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [pageNum, setPageNum] = useState<number>(0);
@@ -115,6 +116,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
                 keyWord,
                 getAdminSearchParams(undefined, undefined, pageNum + 1, pageSize),
                 3 /** 0: from Admin page, 1: from Moderators page, 2: from Banned Users page */,
+                signInDlgState.token
             );
             if (!unmounted) {
                 setEmptyString(

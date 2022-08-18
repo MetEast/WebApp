@@ -10,6 +10,7 @@ import EditBanner from 'src/components/Admin/Dialogs/EditBanner';
 import DeleteBanner from 'src/components/Admin/Dialogs/DeleteBanner';
 import { getAdminBannerList } from 'src/services/fetch';
 import { blankAdminBannerItem } from 'src/constants/init-constants';
+import { useSignInContext } from '../../../context/SignInContext';
 
 const AdminBanners: React.FC = (): JSX.Element => {
     const columns: AdminTableColumn[] = [
@@ -94,7 +95,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
     ];
 
     const data: AdminBannersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminBannerItem), []);
-
+    const [signInDlgState, setSignInDlgState] = useSignInContext();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [pageNum, setPageNum] = useState<number>(0);
     const [pageSize, setPageSize] = useState<number>(5);
@@ -110,7 +111,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         let unmounted = false;
         const getFetchData = async () => {
             setIsLoading(true);
-            const _adminBannerList = await getAdminBannerList(pageNum + 1, pageSize);
+            const _adminBannerList = await getAdminBannerList(pageNum + 1, pageSize, signInDlgState.token);
             if (!unmounted) {
                 setTotalCount(_adminBannerList.totalCount);
                 setTableData(_adminBannerList.data);
