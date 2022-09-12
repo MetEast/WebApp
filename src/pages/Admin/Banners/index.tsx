@@ -95,7 +95,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
     ];
 
     const data: AdminBannersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminBannerItem), []);
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [signInDlgState] = useSignInContext();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [pageNum, setPageNum] = useState<number>(0);
     const [pageSize, setPageSize] = useState<number>(5);
@@ -122,7 +122,7 @@ const AdminBanners: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [reload, pageNum, pageSize]);
+    }, [reload, pageNum, pageSize, signInDlgState.token]);
 
     const onEditBanner = (event: React.MouseEvent, data: AdminBannersItemType) => {
         event.stopPropagation();

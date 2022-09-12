@@ -68,7 +68,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
     ];
 
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [signInDlgState] = useSignInContext();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [pageNum, setPageNum] = useState<number>(0);
     const [pageSize, setPageSize] = useState<number>(5);
@@ -95,7 +95,7 @@ const AdminUserAdmins: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [pageNum, pageSize]);
+    }, [pageNum, pageSize, signInDlgState.token]);
 
     return (
         <>

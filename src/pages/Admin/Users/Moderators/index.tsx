@@ -131,7 +131,7 @@ const AdminUserModerators: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [keyWord, pageNum, pageSize]);
+    }, [keyWord, pageNum, pageSize, signInDlgState.token]);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();

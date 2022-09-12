@@ -95,7 +95,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
         },
     ];
     const data: AdminUsersItemType[] = useMemo(() => [...Array(1).keys()].map((item) => blankAdminUserItem), []);
-    const [signInDlgState, setSignInDlgState] = useSignInContext();
+    const [signInDlgState] = useSignInContext();
     const [dialogState, setDialogState] = useDialogContext();
     const [totalCount, setTotalCount] = useState<number>(0);
     const [pageNum, setPageNum] = useState<number>(0);
@@ -135,7 +135,7 @@ const AdminBannedUsers: React.FC = (): JSX.Element => {
         return () => {
             unmounted = true;
         };
-    }, [keyWord, pageNum, pageSize]);
+    }, [keyWord, pageNum, pageSize, signInDlgState.token]);
 
     const onEdit = (event: React.MouseEvent, data: AdminUsersItemType) => {
         event.stopPropagation();
