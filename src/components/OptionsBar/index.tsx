@@ -105,7 +105,7 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
                                     opened: boolean,
                                 ) => {
                                     handlerFilterChange(status, minPrice, maxPrice, category, opened);
-                                    if (!opened) setShowFiltersCard(opened);
+                                    setShowFiltersCard(false);
                                 }}
                                 clearOption={clearOption}
                             />
