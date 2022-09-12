@@ -41,7 +41,7 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
     return (
         <Stack spacing={0.5}>
             <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography fontSize={16} fontWeight={700} sx={{ textTransform: 'capitalize' }}>
+                <Typography fontSize={16} fontWeight={700} sx={{ textTransform: 'capitalize' }} noWrap>
                     {data.title}
                 </Typography>
                 {!data.isRead && (
@@ -54,6 +54,7 @@ const NotificationItem: React.FC<ComponentProps> = ({ data }): JSX.Element => {
                         paddingBottom="0"
                         border="1px solid #1890FF"
                         borderRadius={2}
+                        noWrap
                     >
                         Unread
                     </Typography>

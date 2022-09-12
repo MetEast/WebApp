@@ -19,7 +19,7 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
     const emptyNotifications = notificationsList.length === 0;
     const unReadNotes = notificationsList.filter((item: TypeNotification) => item.isRead === false);
 
-    const handleMarkAsUnread = async () => {
+    const handleMarkAsRead = async () => {
         let unmounted = false;
         const markAsRead = async () => {
             const arrNoteIds: string[] = [];
@@ -82,7 +82,7 @@ const NotificationsBox: React.FC<ComponentProps> = ({ notificationsList, onClose
                             <PrimaryButton
                                 size="small"
                                 sx={{ width: 108, height: 32, fontSize: 12 }}
-                                onClick={handleMarkAsUnread}
+                                onClick={handleMarkAsRead}
                             >
                                 Mark as read
                             </PrimaryButton>
